@@ -360,7 +360,7 @@ main.flow-main {
   transition: width .25s ease, opacity .25s ease;
   overflow: hidden;
 }
-.sidebar.hidden { width: 0; opacity: 0; pointer-events: none; border: none; }
+/* .sidebar.hidden removed — sidebar is always visible */
 
 .sidebar-head {
   background: var(--p281);
@@ -371,12 +371,6 @@ main.flow-main {
 }
 .sidebar-head h2 { font-size: 13px; font-weight: 600; letter-spacing: .04em; }
 .sidebar-head .sub { font-size: 10.5px; opacity: .7; margin-top: 2px; }
-.sidebar-close {
-  background: rgba(255,255,255,.12); border: none; color: #fff;
-  border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px;
-  transition: background .15s;
-}
-.sidebar-close:hover { background: rgba(255,255,255,.22); }
 
 .sidebar-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
 
@@ -508,8 +502,7 @@ footer.site {
    ═══════════════════════════════════════════════════ */
 @media (max-width: 1024px) {
   .sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 300; min-height: 100vh; box-shadow: -4px 0 24px rgba(0,32,91,.15); }
-  .sidebar.hidden { width: 0; }
-  .btn-sidebar-toggle { display: inline-flex; }
+  .sidebar { width: 300px; }
   .app-body { max-width: 100%; }
 }
 @media (max-width: 640px) {
@@ -647,10 +640,6 @@ footer.site {
         <strong>Análise de Condutas</strong>
         Lei nº 8.112/90 — Apoio à apuração
       </div>
-      <button class="btn-sidebar-toggle" id="btnSidebarToggle" onclick="toggleSidebar()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg>
-        Contexto
-      </button>
       <button class="btn-dl" onclick="downloadHtml()">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Baixar HTML
@@ -688,7 +677,6 @@ footer.site {
         <h2>Contexto CGU</h2>
         <div class="sub">Notas Técnicas · Orientações</div>
       </div>
-      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
     </div>
     <div class="sidebar-body" id="sidebarBody"></div>
   </aside>
@@ -1314,7 +1302,6 @@ function svgRestart(){ return `<svg width="15" height="15" viewBox="0 0 24 24" f
    STATE
    ═══════════════════════════════════════════════════ */
 let history    = [{ id: "start", chosen: null }];
-let sidebarVis = true;
 
 const flowEl     = document.getElementById('flow');
 const resultRoot = document.getElementById('resultRoot');
@@ -1472,12 +1459,6 @@ function renderSidebar() {
     </div>`).join('');
 }
 
-function toggleSidebar() {
-  sidebarVis = !sidebarVis;
-  document.getElementById('sidebar').classList.toggle('hidden', !sidebarVis);
-  const btn = document.getElementById('btnSidebarToggle');
-  if (btn) btn.textContent = sidebarVis ? '✕ Ocultar' : '📋 Contexto';
-}
 
 /* ═══════════════════════════════════════════════════
    REPORT MODAL
