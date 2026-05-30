@@ -1,1752 +1,1654 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Condutas — Integritas | Ferramentas Coger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --rfb-blue: #003087;
-    --rfb-blue-dark: #002060;
-    --rfb-blue-light: #e8eef7;
-    --rfb-green: #4a7c00;
-    --rfb-green-light: #eef4e8;
-    --rfb-red: #c0392b;
-    --rfb-red-light: #fdecea;
-    --rfb-yellow: #b8860b;
-    --rfb-yellow-light: #fdf8e1;
-    --rfb-gray: #6b7280;
-    --rfb-gray-light: #f3f4f6;
-    --rfb-gray-border: #d1d5db;
-    --rfb-white: #ffffff;
-    --rfb-text: #1a1a2e;
-    --sidebar-width: 360px;
-    --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    --font-mono: 'Courier New', monospace;
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — identidade visual RFB / Ferramentas COGER
+   ═══════════════════════════════════════════════════ */
+:root {
+  /* Pantone 281 — azul institucional RFB */
+  --p281:     #00205B;
+  --p281-700: #001a4a;
+  --p281-300: #4a5f96;
+  --p281-100: #dde2ee;
+  --p281-050: #eef1f7;
+
+  /* Pantone 369 — verde */
+  --p369:     #00843D;
+  --p369-700: #006c31;
+  --p369-100: #d7ecdd;
+  --p369-050: #eaf4ee;
+
+  --ink:          #14213d;
+  --ink-2:        #475275;
+  --ink-3:        #7e87a3;
+  --line:         #e2e6ef;
+  --line-strong:  #c8cee0;
+  --bg:           #f3f5fa;
+  --bg-2:         #e9edf6;
+  --warn:         #b76e00;
+  --warn-bg:      #fff6e6;
+
+  --shadow-sm: 0 1px 2px rgba(0,32,91,.06), 0 1px 1px rgba(0,32,91,.04);
+  --shadow-md: 0 4px 14px rgba(0,32,91,.07), 0 2px 4px rgba(0,32,91,.05);
+  --shadow-lg: 0 18px 40px -12px rgba(0,32,91,.18), 0 4px 10px rgba(0,32,91,.06);
+
+  --radius:    14px;
+  --radius-sm: 10px;
+
+  --font-sans:  "IBM Plex Sans",  -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+  --font-mono:  "IBM Plex Mono",  "Courier New", monospace;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESET & BASE
+   ═══════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background:
+    radial-gradient(1200px 600px at 80% -200px, var(--p281-050) 0%, transparent 60%),
+    radial-gradient(1000px 500px at -200px 200px, var(--p369-050) 0%, transparent 55%),
+    var(--bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════ */
+header.site {
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  position: relative;
+  flex-shrink: 0;
+  z-index: 10;
+}
+header.site::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: -3px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--p281) 0%, var(--p281) 62%, var(--p369) 62%, var(--p369) 100%);
+}
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  flex-wrap: wrap;
+}
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand-shield {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--p281) 0%, var(--p281-700) 100%);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand-shield svg { width: 26px; height: 26px; }
+.brand .divider { width: 1px; height: 38px; background: var(--line-strong); }
+.brand .wordmark { line-height: 1; }
+.brand .wordmark .eyebrow {
+  font-size: 10.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 600; margin-bottom: 5px;
+}
+.brand .wordmark .name {
+  font-family: var(--font-serif);
+  font-size: 21px; font-weight: 500; color: var(--p281); letter-spacing: -.01em;
+}
+.brand .wordmark .name b { font-weight: 600; color: var(--p369); }
+.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.org-tag { text-align: right; font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+.org-tag strong {
+  color: var(--p281); font-weight: 600; display: block;
+  letter-spacing: .04em; text-transform: uppercase; font-size: 11.5px;
+}
+.btn-dl {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--p281); color: #fff;
+  border: none; border-radius: 8px;
+  padding: 8px 16px; font: 600 13px/1 var(--font-sans);
+  cursor: pointer; transition: background .15s ease; white-space: nowrap;
+}
+.btn-dl:hover { background: var(--p281-700); }
+.btn-sidebar-toggle {
+  display: none;
+  align-items: center; gap: 7px;
+  background: var(--bg-2); color: var(--p281);
+  border: 1px solid var(--line-strong); border-radius: 8px;
+  padding: 8px 14px; font: 600 13px/1 var(--font-sans);
+  cursor: pointer; transition: background .15s ease;
+}
+.btn-sidebar-toggle:hover { background: var(--p281-050); }
+
+/* ═══════════════════════════════════════════════════
+   APP BODY — two-column layout
+   ═══════════════════════════════════════════════════ */
+.app-body {
+  flex: 1;
+  display: flex;
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+/* ═══════════════════════════════════════════════════
+   MAIN
+   ═══════════════════════════════════════════════════ */
+main.flow-main {
+  flex: 1;
+  min-width: 0;
+  padding: 48px 32px 40px;
+}
+
+.hero { margin-bottom: 32px; }
+.hero .kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11.5px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--p369-700);
+  background: var(--p369-050); border: 1px solid var(--p369-100);
+  padding: 6px 12px; border-radius: 999px; margin-bottom: 16px;
+}
+.hero .kicker .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--p369); }
+.hero h1 {
+  font-family: var(--font-serif);
+  font-size: 40px; font-weight: 500; letter-spacing: -.025em;
+  margin: 0 0 10px; color: var(--p281); line-height: 1.08;
+}
+.hero p { margin: 0; color: var(--ink-2); font-size: 15.5px; max-width: 56ch; }
+
+/* ── Stepper / Trail ── */
+.stepper {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; margin: 24px 0 20px; min-height: 30px;
+}
+.step-counter {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; font-weight: 600; color: var(--p281);
+  background: var(--p281-050); border: 1px solid var(--p281-100);
+  padding: 5px 10px; border-radius: 8px;
+}
+.step-counter .num { font-family: var(--font-mono); font-weight: 600; }
+.crumbs { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.crumb {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fff; border: 1px solid var(--line); border-radius: 999px;
+  padding: 4px 10px 4px 6px; font-size: 12px; color: var(--ink-2);
+  cursor: pointer; transition: all .15s ease;
+}
+.crumb:hover { border-color: var(--p281-300); color: var(--p281); }
+.crumb .ans {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 18px; height: 18px; border-radius: 50%;
+  font-size: 10px; font-weight: 700; color: #fff;
+}
+.crumb .ans.sim { background: var(--p369); }
+.crumb .ans.nao { background: var(--p281); }
+.crumb .ans.alt { background: var(--warn); }
+
+/* ── Question card ── */
+.card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--radius);
+  box-shadow: var(--shadow-md); padding: 34px 36px 30px;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; background: var(--p281);
+}
+.axis-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 20px;
+}
+.axis {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--p281);
+}
+.axis .swatch { width: 10px; height: 10px; border-radius: 2px; background: var(--p281); display: inline-block; }
+.axis.sex .swatch   { background: #6b2c91; } .axis.sex   { color: #6b2c91; }
+.axis.disc .swatch  { background: var(--warn); } .axis.disc  { color: var(--warn); }
+.axis.moral .swatch { background: var(--p369); } .axis.moral { color: var(--p369-700); }
+.axis.subj .swatch  { background: var(--ink-2); } .axis.subj  { color: var(--ink-2); }
+
+.quest {
+  font-family: var(--font-serif);
+  font-size: 26px; font-weight: 500; letter-spacing: -.015em;
+  color: var(--ink); margin: 0 0 8px; line-height: 1.22;
+}
+.quest em {
+  font-style: normal;
+  background: linear-gradient(180deg, transparent 62%, rgba(0,132,61,.18) 62%);
+  padding: 0 2px;
+}
+.help { color: var(--ink-2); font-size: 14px; margin: 0 0 26px; max-width: 58ch; }
+
+.options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.options.three { grid-template-columns: 1fr 1fr 1fr; }
+.opt {
+  appearance: none; border: 1px solid var(--line-strong); background: #fff;
+  border-radius: var(--radius-sm); padding: 16px 18px; text-align: left;
+  cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font: inherit; color: var(--ink); transition: all .18s ease;
+}
+.opt:hover { border-color: var(--p281); transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.opt .lbl { display: flex; flex-direction: column; gap: 2px; }
+.opt .lbl .main { font-weight: 600; font-size: 14.5px; letter-spacing: .02em; }
+.opt .lbl .sub { font-size: 12px; color: var(--ink-3); font-weight: 400; }
+.opt .arrow {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--bg); color: var(--ink-2); flex-shrink: 0; transition: all .18s ease;
+}
+.opt:hover .arrow { background: var(--p281); color: #fff; transform: translateX(2px); }
+.opt.sim:hover { border-color: var(--p369); }
+.opt.sim:hover .arrow { background: var(--p369); }
+.opt.alt:hover { border-color: var(--warn); }
+.opt.alt:hover .arrow { background: var(--warn); }
+
+.card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--line);
+  font-size: 13px; color: var(--ink-3);
+}
+.back-btn {
+  appearance: none; background: transparent; border: none;
+  color: var(--ink-2); font: inherit; font-size: 13px;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 4px 0;
+}
+.back-btn:hover { color: var(--p281); }
+.back-btn[disabled] { color: var(--line-strong); cursor: not-allowed; }
+
+/* ── Result card ── */
+.result { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; }
+.result-head {
+  padding: 26px 36px 20px;
+  background: linear-gradient(135deg, var(--p281) 0%, var(--p281-700) 100%);
+  color: #fff;
+}
+.result-head.green  { background: linear-gradient(135deg, var(--p369-700) 0%, #005525 100%); }
+.result-head.amber  { background: linear-gradient(135deg, #8a5a00 0%, #5b3b00 100%); }
+.result-head .label { font-size: 11px; letter-spacing: .2em; text-transform: uppercase; opacity: .8; font-weight: 600; margin-bottom: 8px; }
+.result-head .title { font-family: var(--font-serif); font-size: 30px; font-weight: 500; letter-spacing: -.015em; margin: 0; line-height: 1.18; }
+.result-head .article-badge {
+  display: inline-flex; align-items: center; gap: 10px; margin-top: 16px;
+  background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22);
+  padding: 7px 14px; border-radius: 999px;
+  font-family: var(--font-mono); font-weight: 600; font-size: 13px; color: #fff;
+}
+.result-head .article-badge .lex {
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  color: rgba(255,255,255,.7); font-family: var(--font-sans); font-weight: 600;
+  border-right: 1px solid rgba(255,255,255,.25); padding-right: 10px;
+}
+.result-body { padding: 26px 36px 30px; }
+.result-body .desc { font-size: 15px; color: var(--ink); margin: 0 0 20px; }
+.result-body .law-card {
+  border: 1px solid var(--line); border-radius: var(--radius-sm);
+  padding: 16px 20px; background: var(--p281-050); margin-bottom: 20px;
+}
+.result-body .law-card .head {
+  font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--p281); font-weight: 600; margin-bottom: 7px;
+}
+.result-body .law-card .text { font-size: 14px; color: var(--ink); line-height: 1.55; }
+.result-body .law-card .text q { quotes: "\201C" "\201D"; font-style: italic; color: var(--ink-2); }
+.result-body .path-summary {
+  background: var(--bg); border-radius: var(--radius-sm);
+  padding: 14px 18px; margin-bottom: 18px;
+}
+.result-body .path-summary .head {
+  font-size: 11.5px; letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-3); font-weight: 600; margin-bottom: 10px;
+}
+.result-body .path-summary ol { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.result-body .path-summary li { display: flex; gap: 10px; font-size: 13px; color: var(--ink-2); align-items: flex-start; }
+.result-body .path-summary li .ix { font-family: var(--font-mono); font-weight: 600; color: var(--ink-3); flex-shrink: 0; min-width: 22px; }
+.result-body .path-summary li .ans {
+  margin-left: auto; font-weight: 600; font-size: 11px;
+  padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;
+}
+.result-body .path-summary li .ans.sim { background: var(--p369-050); color: var(--p369-700); }
+.result-body .path-summary li .ans.nao { background: var(--p281-050); color: var(--p281); }
+.result-body .path-summary li .ans.alt { background: var(--warn-bg); color: var(--warn); }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  appearance: none; border: 1px solid transparent; padding: 11px 18px;
+  border-radius: var(--radius-sm); font: 600 14px/1 var(--font-sans); cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; transition: all .15s ease;
+}
+.btn-primary { background: var(--p281); color: #fff; }
+.btn-primary:hover { background: var(--p281-700); }
+.btn-ghost { background: #fff; color: var(--p281); border-color: var(--line-strong); }
+.btn-ghost:hover { border-color: var(--p281); }
+.btn-green { background: var(--p369); color: #fff; }
+.btn-green:hover { background: var(--p369-700); }
+
+/* ── Animation ── */
+.step { display: none; }
+.step.active { display: block; animation: fadeIn .3s ease both; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(7px); } to { opacity:1; transform:translateY(0); } }
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR — Contexto CGU
+   ═══════════════════════════════════════════════════ */
+.sidebar {
+  width: 340px;
+  flex-shrink: 0;
+  border-left: 1px solid var(--line);
+  background: #fff;
+  min-height: calc(100vh - 64px);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: width .25s ease, opacity .25s ease;
+  overflow: hidden;
+}
+.sidebar.hidden { width: 0; opacity: 0; pointer-events: none; border: none; }
+
+.sidebar-head {
+  background: var(--p281);
+  color: #fff;
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.sidebar-head h2 { font-size: 13px; font-weight: 600; letter-spacing: .04em; }
+.sidebar-head .sub { font-size: 10.5px; opacity: .7; margin-top: 2px; }
+.sidebar-close {
+  background: rgba(255,255,255,.12); border: none; color: #fff;
+  border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px;
+  transition: background .15s;
+}
+.sidebar-close:hover { background: rgba(255,255,255,.22); }
+
+.sidebar-body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+
+.ctx-block { border: 1px solid var(--line); border-radius: var(--radius-sm); overflow: hidden; }
+.ctx-block-title {
+  background: var(--bg); padding: 9px 13px;
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+  color: var(--ink-3); display: flex; align-items: center; gap: 6px;
+}
+.ctx-block-body { padding: 11px 13px; font-size: 12.5px; line-height: 1.6; color: var(--ink); }
+.ctx-block-body p { margin-bottom: 7px; }
+.ctx-block-body p:last-child { margin-bottom: 0; }
+.ctx-block-body ul { padding-left: 16px; }
+.ctx-block-body li { margin-bottom: 4px; }
+.ctx-tag {
+  display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .5px; padding: 2px 7px; border-radius: 4px; margin-bottom: 7px;
+}
+.ctx-tag.blue  { background: var(--p281-050); color: var(--p281); }
+.ctx-tag.green { background: var(--p369-050); color: var(--p369-700); }
+.ctx-tag.amber { background: var(--warn-bg);  color: var(--warn); }
+.ctx-hl {
+  background: var(--warn-bg); border-left: 3px solid var(--warn);
+  padding: 7px 10px; border-radius: 0 6px 6px 0;
+  font-size: 12px; line-height: 1.55; margin-top: 7px;
+}
+.ctx-source { font-size: 10.5px; color: var(--ink-3); margin-top: 7px; font-style: italic; }
+
+/* ═══════════════════════════════════════════════════
+   MODAL — Relatório
+   ═══════════════════════════════════════════════════ */
+.modal-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.5); z-index: 500;
+  align-items: flex-start; justify-content: center;
+  padding: 28px 16px; overflow-y: auto;
+}
+.modal-backdrop.open { display: flex; }
+.modal {
+  background: #fff; border-radius: var(--radius); width: 100%; max-width: 720px;
+  box-shadow: var(--shadow-lg); animation: fadeIn .25s ease; margin: auto;
+}
+.modal-hd {
+  background: linear-gradient(135deg, var(--p281) 0%, var(--p281-700) 100%);
+  color: #fff; padding: 20px 26px; border-radius: var(--radius) var(--radius) 0 0;
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+}
+.modal-hd h2 { font-family: var(--font-serif); font-size: 20px; font-weight: 500; }
+.modal-hd .sub { font-size: 11.5px; opacity: .7; margin-top: 3px; }
+.modal-close {
+  background: rgba(255,255,255,.15); border: none; color: #fff;
+  border-radius: 7px; padding: 6px 10px; cursor: pointer; font-size: 14px;
+  transition: background .15s; flex-shrink: 0;
+}
+.modal-close:hover { background: rgba(255,255,255,.25); }
+.modal-body { padding: 26px; max-height: 65vh; overflow-y: auto; }
+.modal-ft {
+  padding: 14px 26px 20px; border-top: 1px solid var(--line);
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+
+.rep-section { margin-bottom: 24px; }
+.rep-section-title {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px;
+  color: var(--ink-3); border-bottom: 1px solid var(--line); padding-bottom: 7px; margin-bottom: 13px;
+  display: flex; align-items: center; gap: 7px;
+}
+.rep-result-banner {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; border-radius: var(--radius-sm); margin-bottom: 18px;
+}
+.rep-result-banner.navy  { background: var(--p281-050); border-left: 4px solid var(--p281); }
+.rep-result-banner.green { background: var(--p369-050); border-left: 4px solid var(--p369); }
+.rep-result-banner.amber { background: var(--warn-bg);  border-left: 4px solid var(--warn); }
+.rep-result-banner .rr-title { font-family: var(--font-serif); font-size: 20px; font-weight: 500; margin-bottom: 3px; }
+.rep-result-banner.navy  .rr-title { color: var(--p281); }
+.rep-result-banner.green .rr-title { color: var(--p369-700); }
+.rep-result-banner.amber .rr-title { color: var(--warn); }
+.rep-result-banner .rr-article { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; opacity: .65; margin-bottom: 6px; }
+.rep-result-banner .rr-desc { font-size: 13px; line-height: 1.55; color: var(--ink-2); }
+
+.path-item { display: flex; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--bg-2); }
+.path-item:last-child { border-bottom: none; }
+.path-num {
+  width: 22px; height: 22px; border-radius: 50%; background: var(--p281);
+  color: #fff; font-size: 10.5px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 2px; font-family: var(--font-mono);
+}
+.path-content { flex: 1; }
+.path-question { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+.path-answer {
+  display: inline-block; font-size: 11.5px; font-weight: 700;
+  padding: 2px 9px; border-radius: 4px; margin-bottom: 6px;
+  background: var(--p281-050); color: var(--p281);
+}
+.path-answer.sim { background: var(--p369-050); color: var(--p369-700); }
+.path-answer.alt { background: var(--warn-bg); color: var(--warn); }
+.path-just {
+  font-size: 12px; line-height: 1.58; color: var(--ink-2);
+  background: var(--bg); border-left: 2.5px solid var(--p369);
+  padding: 6px 10px; border-radius: 0 6px 6px 0;
+}
+.path-just strong { color: var(--p281); }
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════ */
+footer.site {
+  border-top: 1px solid var(--line); background: #fff; flex-shrink: 0;
+}
+.footer-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 22px 28px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.footer-brand { display: flex; align-items: center; gap: 14px; }
+.footer-shield {
+  width: 32px; height: 32px; background: var(--p281); border-radius: 7px;
+  display: flex; align-items: center; justify-content: center; opacity: .85;
+}
+.footer-shield svg { width: 18px; height: 18px; }
+.footer-text { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+.footer-text strong { color: var(--p281); font-weight: 600; }
+.footer-meta { font-size: 11.5px; color: var(--ink-3); letter-spacing: .04em; text-align: right; line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .sidebar { position: fixed; right: 0; top: 0; bottom: 0; z-index: 300; min-height: 100vh; box-shadow: -4px 0 24px rgba(0,32,91,.15); }
+  .sidebar.hidden { width: 0; }
+  .btn-sidebar-toggle { display: inline-flex; }
+  .app-body { max-width: 100%; }
+}
+@media (max-width: 640px) {
+  .header-inner { padding: 12px 16px; }
+  .brand .wordmark .name { font-size: 17px; }
+  .org-tag { display: none; }
+  main.flow-main { padding: 28px 16px 24px; }
+  .hero h1 { font-size: 28px; }
+  .card { padding: 22px 20px; }
+  .quest { font-size: 20px; }
+  .options, .options.three { grid-template-columns: 1fr; }
+  .result-head, .result-body { padding: 20px; }
+  .actions .btn { width: 100%; justify-content: center; }
+}
+
+/* ═══════════════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════════════ */
+#printPage { display: none; }
+
+@media print {
+  @page { size: A4 portrait; margin: 18mm 16mm 20mm 20mm; }
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  body, html { background: white !important; }
+  header.site, .app-body, .modal-backdrop, footer.site { display: none !important; }
+  #printPage { display: block !important; font-family: var(--font-sans); color: var(--ink); font-size: 9.5pt; line-height: 1.55; }
+
+  /* Print header */
+  .ph-wrap {
+    margin-bottom: 18pt;
+    padding-bottom: 10pt;
+  }
+  .ph-stripe {
+    height: 3pt;
+    background: linear-gradient(90deg, var(--p281) 0%, var(--p281) 62%, var(--p369) 62%, var(--p369) 100%);
+    margin-bottom: 12pt;
+    border-radius: 1pt;
+  }
+  .ph-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 14pt; }
+  .ph-left {}
+  .ph-gov { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1pt; color: var(--ink-3); margin-bottom: 4pt; }
+  .ph-title { font-family: var(--font-serif); font-size: 20pt; font-weight: 500; color: var(--p281); letter-spacing: -.3pt; line-height: 1.1; }
+  .ph-sub { font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: .7pt; color: var(--p369-700); margin-top: 4pt; }
+  .ph-meta { text-align: right; font-size: 7.5pt; color: var(--ink-2); line-height: 1.7; }
+  .ph-meta strong { color: var(--p281); }
+  .ph-divider { border: none; border-bottom: 1.5pt solid var(--p281); margin-top: 10pt; }
+
+  /* Print section titles */
+  .ps-title {
+    font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: .9pt;
+    color: var(--p281); border-bottom: 1pt solid var(--p281-100);
+    padding-bottom: 4pt; margin-bottom: 9pt; margin-top: 16pt;
+    display: flex; align-items: center; gap: 5pt;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: var(--font-sans);
-    background: #f0f4fa;
-    color: var(--rfb-text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
+  /* Result banner */
+  .pr-banner {
+    border-radius: 5pt; padding: 11pt 15pt; margin-bottom: 14pt;
+    display: flex; align-items: flex-start; gap: 12pt; page-break-inside: avoid;
   }
+  .pr-banner.navy  { background: var(--p281-050); border-left: 5pt solid var(--p281); }
+  .pr-banner.green { background: var(--p369-050); border-left: 5pt solid var(--p369); }
+  .pr-banner.amber { background: var(--warn-bg);  border-left: 5pt solid var(--warn); }
+  .pr-banner .prb-article { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: .5pt; color: var(--ink-3); margin-bottom: 3pt; }
+  .pr-banner .prb-title { font-family: var(--font-serif); font-size: 15pt; font-weight: 500; margin-bottom: 4pt; }
+  .pr-banner.navy  .prb-title { color: var(--p281); }
+  .pr-banner.green .prb-title { color: var(--p369-700); }
+  .pr-banner.amber .prb-title { color: var(--warn); }
+  .pr-banner .prb-desc { font-size: 8.5pt; line-height: 1.6; color: var(--ink); }
 
-  header {
-    background: var(--rfb-blue-dark);
-    color: white;
-    padding: 12px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    box-shadow: 0 2px 8px rgba(0,0,0,.3);
-    flex-shrink: 0;
+  /* Law box */
+  .pr-law {
+    background: var(--p281-050); border-left: 4pt solid var(--p281);
+    border-radius: 0 5pt 5pt 0; padding: 9pt 13pt; margin-bottom: 14pt; page-break-inside: avoid;
   }
+  .pr-law-title { font-size: 7pt; font-weight: 700; text-transform: uppercase; letter-spacing: .7pt; color: var(--p281); margin-bottom: 5pt; }
+  .pr-law p { font-size: 8.5pt; line-height: 1.6; color: var(--ink); }
+  .pr-law q { quotes: "\201C" "\201D"; font-style: italic; color: var(--ink-2); }
 
-  header .brand {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  /* Path items */
+  .pr-path-item { display: flex; gap: 9pt; padding: 8pt 0; border-bottom: .75pt solid var(--line); page-break-inside: avoid; }
+  .pr-path-item:last-child { border-bottom: none; }
+  .pr-pnum {
+    width: 16pt; height: 16pt; border-radius: 50%; background: var(--p281);
+    color: #fff; font-size: 7pt; font-weight: 700; font-family: var(--font-mono);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1pt;
   }
+  .pr-pcontent { flex: 1; }
+  .pr-pq { font-size: 8.5pt; font-weight: 700; color: var(--ink); margin-bottom: 3pt; }
+  .pr-pans { display: inline-block; font-size: 7.5pt; font-weight: 700; padding: 1.5pt 7pt; border-radius: 3pt; margin-bottom: 4pt; background: var(--p281-050); color: var(--p281); }
+  .pr-pans.sim { background: var(--p369-050); color: var(--p369-700); }
+  .pr-pans.alt { background: var(--warn-bg); color: var(--warn); }
+  .pr-pjust { font-size: 8pt; line-height: 1.58; color: var(--ink-2); background: var(--bg); border-left: 2.5pt solid var(--p369); padding: 5pt 8pt; border-radius: 0 3pt 3pt 0; }
 
-  header .brand-icon {
-    width: 36px; height: 36px;
-    background: var(--rfb-green);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
+  /* Disclaimer */
+  .pr-disclaimer {
+    background: var(--warn-bg); border: .75pt solid var(--warn);
+    border-radius: 4pt; padding: 7pt 10pt; font-size: 7.5pt; color: #7a5c00;
+    margin-top: 14pt; page-break-inside: avoid;
   }
+  .pr-disclaimer strong { color: var(--warn); }
 
-  header h1 {
-    font-size: 1.1rem;
-    font-weight: 700;
-    letter-spacing: .3px;
+  /* Footer */
+  .pr-footer {
+    margin-top: 18pt; padding-top: 7pt; border-top: 1pt solid var(--p281-100);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    font-size: 7pt; color: var(--ink-3);
   }
-
-  header .subtitle {
-    font-size: .75rem;
-    opacity: .75;
-    margin-top: 1px;
-  }
-
-  header .header-actions {
-    display: flex;
-    gap: 8px;
-  }
-
-  .btn-header {
-    background: rgba(255,255,255,.12);
-    color: white;
-    border: 1px solid rgba(255,255,255,.25);
-    border-radius: 6px;
-    padding: 6px 14px;
-    font-size: .8rem;
-    cursor: pointer;
-    transition: background .2s;
-    display: flex; align-items: center; gap: 6px;
-    text-decoration: none;
-  }
-
-  .btn-header:hover { background: rgba(255,255,255,.22); }
-
-  .app-body {
-    display: flex;
-    flex: 1;
-    overflow: hidden;
-  }
-
-  /* ─── MAIN CONTENT ─── */
-  .main-content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 28px 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* ─── BREADCRUMB / PROGRESS ─── */
-  .progress-bar-wrap {
-    background: white;
-    border-radius: 10px;
-    padding: 14px 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-  }
-
-  .progress-label {
-    font-size: .7rem;
-    text-transform: uppercase;
-    letter-spacing: .8px;
-    color: var(--rfb-gray);
-    margin-bottom: 6px;
-  }
-
-  .progress-bar {
-    height: 6px;
-    background: var(--rfb-gray-light);
-    border-radius: 3px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--rfb-blue), var(--rfb-green));
-    border-radius: 3px;
-    transition: width .4s ease;
-  }
-
-  .breadcrumb {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px;
-    margin-top: 10px;
-    align-items: center;
-  }
-
-  .breadcrumb-item {
-    font-size: .72rem;
-    color: var(--rfb-gray);
-    padding: 2px 8px;
-    background: var(--rfb-gray-light);
-    border-radius: 20px;
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .breadcrumb-item.current {
-    background: var(--rfb-blue-light);
-    color: var(--rfb-blue);
-    font-weight: 600;
-  }
-
-  .breadcrumb-sep { color: var(--rfb-gray-border); font-size: .7rem; }
-
-  /* ─── STEP CARD ─── */
-  .step-card {
-    background: white;
-    border-radius: 14px;
-    padding: 28px 32px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.08);
-    animation: fadeIn .3s ease;
-  }
-
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-
-  .axis-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--rfb-blue-light);
-    color: var(--rfb-blue);
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-  }
-
-  .step-question {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.45;
-    color: var(--rfb-text);
-    margin-bottom: 10px;
-  }
-
-  .step-help {
-    font-size: .88rem;
-    color: var(--rfb-gray);
-    line-height: 1.6;
-    margin-bottom: 24px;
-    padding: 12px 16px;
-    background: var(--rfb-gray-light);
-    border-left: 3px solid var(--rfb-blue);
-    border-radius: 0 8px 8px 0;
-  }
-
-  .options-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .option-btn {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 16px 20px;
-    border: 2px solid var(--rfb-gray-border);
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    transition: border-color .2s, background .2s, transform .1s;
-    text-align: left;
-    width: 100%;
-  }
-
-  .option-btn:hover {
-    border-color: var(--rfb-blue);
-    background: var(--rfb-blue-light);
-    transform: translateX(3px);
-  }
-
-  .option-dot {
-    width: 20px; height: 20px;
-    border-radius: 50%;
-    border: 2px solid var(--rfb-gray-border);
-    flex-shrink: 0;
-    margin-top: 2px;
-    transition: border-color .2s, background .2s;
-  }
-
-  .option-btn:hover .option-dot {
-    border-color: var(--rfb-blue);
-    background: var(--rfb-blue);
-  }
-
-  .option-text { flex: 1; }
-  .option-label { font-size: .95rem; font-weight: 600; color: var(--rfb-text); }
-  .option-sub { font-size: .8rem; color: var(--rfb-gray); margin-top: 3px; }
-
-  /* ─── RESULT CARD ─── */
-  .result-card {
-    background: white;
-    border-radius: 14px;
-    padding: 32px;
-    box-shadow: 0 2px 10px rgba(0,0,0,.08);
-    animation: fadeIn .3s ease;
-  }
-
-  .result-header {
-    display: flex;
-    align-items: flex-start;
-    gap: 18px;
-    margin-bottom: 24px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--rfb-gray-border);
-  }
-
-  .result-icon {
-    width: 56px; height: 56px;
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
-    flex-shrink: 0;
-  }
-
-  .result-icon.green { background: var(--rfb-green-light); }
-  .result-icon.red { background: var(--rfb-red-light); }
-  .result-icon.yellow { background: var(--rfb-yellow-light); }
-  .result-icon.blue { background: var(--rfb-blue-light); }
-
-  .result-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 4px; }
-  .result-article { font-size: .8rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; opacity: .7; margin-bottom: 8px; }
-  .result-desc { font-size: .9rem; line-height: 1.6; color: var(--rfb-gray); }
-
-  .result-law {
-    background: var(--rfb-blue-light);
-    border-radius: 10px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-  }
-
-  .result-law-title { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--rfb-blue); margin-bottom: 8px; }
-  .result-law-text { font-size: .88rem; line-height: 1.6; color: var(--rfb-text); }
-
-  .result-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .btn-primary {
-    background: var(--rfb-blue);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: .88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background .2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .btn-primary:hover { background: var(--rfb-blue-dark); }
-
-  .btn-secondary {
-    background: white;
-    color: var(--rfb-blue);
-    border: 2px solid var(--rfb-blue);
-    border-radius: 8px;
-    padding: 10px 20px;
-    font-size: .88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background .2s;
-    display: flex; align-items: center; gap: 8px;
-  }
-
-  .btn-secondary:hover { background: var(--rfb-blue-light); }
-
-  /* ─── BACK BUTTON ─── */
-  .btn-back {
-    background: none;
-    border: none;
-    color: var(--rfb-blue);
-    font-size: .85rem;
-    cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    padding: 6px 0;
-    font-family: inherit;
-    font-weight: 500;
-  }
-
-  .btn-back:hover { text-decoration: underline; }
-  .btn-back:disabled { opacity: .35; cursor: default; }
-  .btn-back:disabled:hover { text-decoration: none; }
-
-  /* ─── SIDEBAR ─── */
-  .sidebar {
-    width: var(--sidebar-width);
-    background: white;
-    border-left: 1px solid var(--rfb-gray-border);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    flex-shrink: 0;
-    transition: width .3s ease;
-  }
-
-  .sidebar.collapsed { width: 0; }
-
-  .sidebar-header {
-    background: var(--rfb-blue-dark);
-    color: white;
-    padding: 14px 18px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-  }
-
-  .sidebar-header h2 { font-size: .85rem; font-weight: 700; letter-spacing: .3px; }
-  .sidebar-header .sidebar-sub { font-size: .7rem; opacity: .7; margin-top: 2px; }
-
-  .sidebar-toggle {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 2px 4px;
-    opacity: .8;
-  }
-
-  .sidebar-toggle:hover { opacity: 1; }
-
-  .sidebar-body {
-    flex: 1;
-    overflow-y: auto;
-    padding: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .ctx-section {
-    border: 1px solid var(--rfb-gray-border);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .ctx-section-title {
-    background: var(--rfb-gray-light);
-    padding: 10px 14px;
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .6px;
-    color: var(--rfb-gray);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .ctx-section-body {
-    padding: 12px 14px;
-    font-size: .82rem;
-    line-height: 1.65;
-    color: var(--rfb-text);
-  }
-
-  .ctx-section-body p { margin-bottom: 8px; }
-  .ctx-section-body p:last-child { margin-bottom: 0; }
-
-  .ctx-tag {
-    display: inline-block;
-    font-size: .68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .5px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-  }
-
-  .ctx-tag.blue { background: var(--rfb-blue-light); color: var(--rfb-blue); }
-  .ctx-tag.green { background: var(--rfb-green-light); color: var(--rfb-green); }
-  .ctx-tag.red { background: var(--rfb-red-light); color: var(--rfb-red); }
-  .ctx-tag.yellow { background: var(--rfb-yellow-light); color: var(--rfb-yellow); }
-
-  .ctx-list { padding-left: 16px; }
-  .ctx-list li { margin-bottom: 5px; font-size: .82rem; line-height: 1.5; }
-
-  .ctx-highlight {
-    background: var(--rfb-yellow-light);
-    border-left: 3px solid var(--rfb-yellow);
-    padding: 8px 12px;
-    border-radius: 0 6px 6px 0;
-    font-size: .82rem;
-    line-height: 1.55;
-    margin-top: 8px;
-  }
-
-  .ctx-source {
-    font-size: .68rem;
-    color: var(--rfb-gray);
-    margin-top: 8px;
-    font-style: italic;
-  }
-
-  /* ─── REPORT MODAL ─── */
-  .modal-overlay {
-    display: none;
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,.55);
-    z-index: 1000;
-    justify-content: center;
-    align-items: flex-start;
-    padding: 24px;
-    overflow-y: auto;
-  }
-
-  .modal-overlay.open { display: flex; }
-
-  .modal {
-    background: white;
-    border-radius: 16px;
-    width: 100%;
-    max-width: 760px;
-    box-shadow: 0 20px 60px rgba(0,0,0,.25);
-    animation: slideUp .3s ease;
-    margin: auto;
-  }
-
-  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
-
-  .modal-header {
-    background: var(--rfb-blue-dark);
-    color: white;
-    padding: 20px 28px;
-    border-radius: 16px 16px 0 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .modal-header h2 { font-size: 1.1rem; }
-  .modal-header .modal-sub { font-size: .8rem; opacity: .7; margin-top: 3px; }
-
-  .modal-close {
-    background: rgba(255,255,255,.15);
-    border: none;
-    color: white;
-    border-radius: 6px;
-    padding: 6px 10px;
-    cursor: pointer;
-    font-size: 1.1rem;
-  }
-
-  .modal-close:hover { background: rgba(255,255,255,.25); }
-
-  .modal-body {
-    padding: 28px;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-
-  .report-section { margin-bottom: 28px; }
-
-  .report-section-title {
-    font-size: .72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .7px;
-    color: var(--rfb-gray);
-    border-bottom: 1px solid var(--rfb-gray-border);
-    padding-bottom: 8px;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .report-result-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 18px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-  }
-
-  .report-result-badge .rr-icon { font-size: 1.6rem; }
-  .report-result-badge .rr-label { font-size: 1.1rem; font-weight: 800; }
-  .report-result-badge .rr-article { font-size: .78rem; opacity: .7; margin-top: 2px; }
-
-  .path-item {
-    display: flex;
-    gap: 14px;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--rfb-gray-light);
-    animation: fadeIn .2s ease;
-  }
-
-  .path-item:last-child { border-bottom: none; }
-
-  .path-num {
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background: var(--rfb-blue);
-    color: white;
-    font-size: .72rem;
-    font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    margin-top: 1px;
-  }
-
-  .path-content { flex: 1; }
-
-  .path-question {
-    font-size: .85rem;
-    font-weight: 600;
-    color: var(--rfb-text);
-    margin-bottom: 4px;
-  }
-
-  .path-answer {
-    font-size: .82rem;
-    font-weight: 700;
-    color: var(--rfb-blue);
-    margin-bottom: 8px;
-    padding: 3px 10px;
-    background: var(--rfb-blue-light);
-    border-radius: 4px;
-    display: inline-block;
-  }
-
-  .path-justification {
-    font-size: .8rem;
-    line-height: 1.6;
-    color: var(--rfb-gray);
-    background: var(--rfb-gray-light);
-    padding: 10px 12px;
-    border-radius: 6px;
-    border-left: 3px solid var(--rfb-blue);
-  }
-
-  .path-justification strong { color: var(--rfb-blue); }
-
-  .modal-footer {
-    padding: 16px 28px 24px;
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-    border-top: 1px solid var(--rfb-gray-border);
-  }
-
-  /* ─── SIDEBAR TOGGLE FLOAT ─── */
-  .sidebar-float-toggle {
-    position: fixed;
-    right: 18px;
-    bottom: 24px;
-    background: var(--rfb-blue);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 48px; height: 48px;
-    font-size: 1.1rem;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,48,135,.35);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    transition: background .2s;
-  }
-
-  .sidebar-float-toggle:hover { background: var(--rfb-blue-dark); }
-
-  @media (max-width: 900px) {
-    .sidebar {
-      position: fixed;
-      right: 0; top: 56px; bottom: 0;
-      z-index: 200;
-      box-shadow: -4px 0 20px rgba(0,0,0,.15);
-    }
-    .sidebar.collapsed { width: 0; }
-    .sidebar-float-toggle { display: flex; }
-    .main-content { padding: 16px; }
-  }
-
-  /* ─── PRINT LAYOUT ─── */
-  #printPage { display: none; }
-
-  @media print {
-    @page {
-      size: A4 portrait;
-      margin: 18mm 16mm 20mm 20mm;
-    }
-
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-
-    body, html { background: white !important; }
-
-    /* Hide everything except the print page */
-    header, .app-body, .modal-overlay, .sidebar-float-toggle { display: none !important; }
-
-    #printPage { display: block !important; font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; font-size: 9.5pt; line-height: 1.55; }
-
-    /* ── Print Header ── */
-    .print-header {
-      display: flex;
-      align-items: stretch;
-      border-bottom: 4px solid #72B431;
-      margin-bottom: 18pt;
-      padding-bottom: 10pt;
-    }
-
-    .print-header-stripe {
-      width: 8px;
-      background: #003087;
-      border-radius: 3px 0 0 3px;
-      margin-right: 14pt;
-      flex-shrink: 0;
-    }
-
-    .print-header-content { flex: 1; }
-
-    .print-org {
-      font-size: 7pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: #003087;
-      margin-bottom: 3pt;
-    }
-
-    .print-tool-name {
-      font-size: 16pt;
-      font-weight: 800;
-      color: #003087;
-      letter-spacing: -.3px;
-      line-height: 1.1;
-    }
-
-    .print-tool-sub {
-      font-size: 8pt;
-      color: #72B431;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      margin-top: 3pt;
-    }
-
-    .print-doc-meta {
-      text-align: right;
-      font-size: 7.5pt;
-      color: #555;
-      line-height: 1.7;
-    }
-
-    .print-doc-meta strong { color: #003087; }
-
-    /* ── Result Banner ── */
-    .print-result-banner {
-      border-radius: 6pt;
-      padding: 12pt 16pt;
-      margin-bottom: 16pt;
-      display: flex;
-      align-items: center;
-      gap: 12pt;
-      page-break-inside: avoid;
-    }
-
-    .print-result-banner.red { background: #fdecea; border-left: 5pt solid #c0392b; }
-    .print-result-banner.yellow { background: #fdf8e1; border-left: 5pt solid #b8860b; }
-    .print-result-banner.green { background: #eef4e8; border-left: 5pt solid #72B431; }
-    .print-result-banner.blue { background: #e8eef7; border-left: 5pt solid #003087; }
-
-    .print-banner-icon { font-size: 22pt; flex-shrink: 0; }
-
-    .print-banner-title {
-      font-size: 13pt;
-      font-weight: 800;
-      margin-bottom: 2pt;
-    }
-
-    .print-banner-title.red { color: #c0392b; }
-    .print-banner-title.yellow { color: #b8860b; }
-    .print-banner-title.green { color: #72B431; }
-    .print-banner-title.blue { color: #003087; }
-
-    .print-banner-article {
-      font-size: 7.5pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .5px;
-      color: #555;
-      margin-bottom: 4pt;
-    }
-
-    .print-banner-desc { font-size: 8.5pt; color: #333; line-height: 1.6; }
-
-    /* ── Section titles ── */
-    .print-section-title {
-      font-size: 7pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #003087;
-      border-bottom: 1.5pt solid #003087;
-      padding-bottom: 4pt;
-      margin-bottom: 10pt;
-      margin-top: 18pt;
-    }
-
-    /* ── Legal box ── */
-    .print-law-box {
-      background: #e8eef7;
-      border-left: 4pt solid #003087;
-      border-radius: 0 5pt 5pt 0;
-      padding: 10pt 14pt;
-      margin-bottom: 16pt;
-      page-break-inside: avoid;
-    }
-
-    .print-law-box-title {
-      font-size: 7pt;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .8px;
-      color: #003087;
-      margin-bottom: 5pt;
-    }
-
-    .print-law-box p { font-size: 8.5pt; line-height: 1.6; color: #1a1a2e; }
-
-    /* ── Path items ── */
-    .print-path-item {
-      display: flex;
-      gap: 10pt;
-      padding: 9pt 0;
-      border-bottom: .75pt solid #e5e7eb;
-      page-break-inside: avoid;
-    }
-
-    .print-path-item:last-child { border-bottom: none; }
-
-    .print-path-num {
-      width: 18pt; height: 18pt;
-      border-radius: 50%;
-      background: #003087;
-      color: white;
-      font-size: 7pt;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1pt;
-    }
-
-    .print-path-content { flex: 1; }
-
-    .print-path-question {
-      font-size: 8.5pt;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 3pt;
-    }
-
-    .print-path-answer {
-      display: inline-block;
-      font-size: 8pt;
-      font-weight: 700;
-      color: #003087;
-      background: #e8eef7;
-      border-radius: 3pt;
-      padding: 1.5pt 7pt;
-      margin-bottom: 5pt;
-    }
-
-    .print-path-justification {
-      font-size: 8pt;
-      line-height: 1.58;
-      color: #444;
-      background: #f9fafb;
-      border-left: 2.5pt solid #72B431;
-      padding: 5pt 8pt;
-      border-radius: 0 3pt 3pt 0;
-    }
-
-    /* ── Footer ── */
-    .print-footer {
-      margin-top: 20pt;
-      padding-top: 8pt;
-      border-top: 1.5pt solid #003087;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      font-size: 7pt;
-      color: #666;
-    }
-
-    .print-footer-left { line-height: 1.8; }
-    .print-footer-right { text-align: right; line-height: 1.8; }
-
-    .print-footer-stripe {
-      height: 3pt;
-      background: linear-gradient(90deg, #003087 60%, #72B431 100%);
-      margin-top: 6pt;
-      border-radius: 2pt;
-    }
-
-    .print-disclaimer {
-      background: #fffbe6;
-      border: .75pt solid #b8860b;
-      border-radius: 4pt;
-      padding: 7pt 10pt;
-      font-size: 7.5pt;
-      color: #7a5c00;
-      margin-top: 14pt;
-      page-break-inside: avoid;
-    }
-
-    .print-disclaimer strong { color: #b8860b; }
-  }
+  .pr-footer-l { line-height: 1.8; }
+  .pr-footer-r { text-align: right; line-height: 1.8; }
+  .pr-footer-stripe { height: 3pt; background: linear-gradient(90deg, var(--p281) 62%, var(--p369) 100%); margin-top: 6pt; border-radius: 2pt; }
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brand">
-    <div class="brand-icon">⚖️</div>
-    <div>
-      <div class="subtitle">Ferramentas Coger · Receita Federal do Brasil</div>
-      <h1>Condutas — Integritas</h1>
+<!-- ═════════════════ HEADER ═════════════════ -->
+<header class="site">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-shield">
+        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13 2L4 6v6c0 5.25 3.8 10.15 9 11.35C18.2 22.15 22 17.25 22 12V6L13 2z" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.6)" stroke-width="1.4"/>
+          <path d="M9.5 13l2.5 2.5 5-5" stroke="#00843D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="divider"></div>
+      <div class="wordmark">
+        <div class="eyebrow">Corregedoria · Coger</div>
+        <div class="name">Integri<b>tas</b></div>
+      </div>
     </div>
-  </div>
-  <div class="header-actions">
-    <button class="btn-header" onclick="downloadHtml()">⬇ Baixar HTML</button>
-    <button class="btn-header" onclick="resetFlow()">↺ Reiniciar</button>
+    <div class="header-right">
+      <div class="org-tag">
+        <strong>Análise de Condutas</strong>
+        Lei nº 8.112/90 — Apoio à apuração
+      </div>
+      <button class="btn-sidebar-toggle" id="btnSidebarToggle" onclick="toggleSidebar()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M15 3v18"/></svg>
+        Contexto
+      </button>
+      <button class="btn-dl" onclick="downloadHtml()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Baixar HTML
+      </button>
+    </div>
   </div>
 </header>
 
+<!-- ═════════════════ APP BODY ═════════════════ -->
 <div class="app-body">
-  <main class="main-content" id="mainContent">
-    <!-- rendered by JS -->
+
+  <!-- MAIN -->
+  <main class="flow-main">
+
+    <section class="hero">
+      <div class="kicker"><span class="dot"></span> Ferramenta interativa</div>
+      <h1>Condutas funcionais —<br>guia decisório</h1>
+      <p>Responda à sequência de perguntas para identificar a tipificação adequada da conduta sob análise, conforme o fluxo apuratório da Corregedoria. Esta ferramenta é de apoio à reflexão e não substitui o juízo técnico do servidor responsável.</p>
+    </section>
+
+    <div class="stepper" id="stepper">
+      <div class="step-counter">Etapa <span class="num" id="stepNum">1</span></div>
+      <div class="crumbs" id="crumbs"></div>
+    </div>
+
+    <div id="flow"></div>
+    <div id="resultRoot"></div>
+
   </main>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
+    <div class="sidebar-head">
       <div>
-        <h2>📋 Contexto CGU</h2>
-        <div class="sidebar-sub">Notas Técnicas · Orientações</div>
+        <h2>Contexto CGU</h2>
+        <div class="sub">Notas Técnicas · Orientações</div>
       </div>
-      <button class="sidebar-toggle" onclick="toggleSidebar()" title="Recolher painel">✕</button>
+      <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
     </div>
-    <div class="sidebar-body" id="sidebarBody">
-      <!-- rendered by JS -->
-    </div>
+    <div class="sidebar-body" id="sidebarBody"></div>
   </aside>
+
 </div>
 
-<button class="sidebar-float-toggle" id="sidebarFloat" onclick="toggleSidebar()">📋</button>
-
-<!-- Print-only page (hidden on screen, rendered on print) -->
+<!-- PRINT PAGE (hidden on screen) -->
 <div id="printPage"></div>
 
-<!-- Report Modal -->
-<div class="modal-overlay" id="reportModal">
+<!-- REPORT MODAL -->
+<div class="modal-backdrop" id="reportModal">
   <div class="modal">
-    <div class="modal-header">
+    <div class="modal-hd">
       <div>
-        <h2>📄 Relatório de Análise de Conduta</h2>
-        <div class="modal-sub">Ferramentas Coger · Condutas — Integritas</div>
+        <h2>Relatório de Análise de Conduta</h2>
+        <div class="sub">Ferramentas COGER · Condutas — Integritas</div>
       </div>
       <button class="modal-close" onclick="closeReport()">✕</button>
     </div>
     <div class="modal-body" id="reportBody"></div>
-    <div class="modal-footer">
-      <button class="btn-primary" onclick="printReport()">🖨 Imprimir Relatório</button>
-      <button class="btn-primary" onclick="copyReportText()">📋 Copiar Texto</button>
-      <button class="btn-secondary" onclick="closeReport()">Fechar</button>
+    <div class="modal-ft">
+      <button class="btn btn-primary" onclick="printReport()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir
+      </button>
+      <button class="btn btn-green" onclick="copyReport()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Copiar texto
+      </button>
+      <button class="btn btn-ghost" onclick="closeReport()">Fechar</button>
     </div>
   </div>
 </div>
 
+<!-- ═════════════════ FOOTER ═════════════════ -->
+<footer class="site">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-shield">
+        <svg viewBox="0 0 26 26" fill="none"><path d="M13 2L4 6v6c0 5.25 3.8 10.15 9 11.35C18.2 22.15 22 17.25 22 12V6L13 2z" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.5)" stroke-width="1.4"/><path d="M9.5 13l2.5 2.5 5-5" stroke="#00843D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="footer-text">
+        <strong>Corregedoria — Coger</strong><br>
+        Secretaria Especial da Receita Federal do Brasil
+      </div>
+    </div>
+    <div class="footer-meta">
+      Ferramentas COGER · Análise de Condutas<br>
+      Integritas · Lei nº 8.112/90
+    </div>
+  </div>
+</footer>
+
 <script>
-// ─────────────────────────────────────────────────────────
-//  FLOWCHART DATA
-// ─────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════
+   FLOW DATA  —  idêntico ao arquivo original
+   ═══════════════════════════════════════════════════ */
 const STEPS = {
   "start": {
-    axis: "Identificação da Conduta",
-    question: "A conduta envolveu contato físico (agressão, toque não consentido ou vias de fato)?",
-    help: "Considere qualquer forma de contato corporal não consentido, inclusive empurrões, tapas, apertos ou restrição de movimentos.",
+    axis: "Análise Inicial", axisKey: "ini",
+    question: "Houve <em>agressão física</em>?",
+    help: "Considere apenas o ato físico concreto contra a integridade corporal de outra pessoa.",
     options: [
-      { label: "Sim", sub: "Houve contato físico ou vias de fato", value: "sim", next: "agr-lesao" },
-      { label: "Não", sub: "Não houve contato físico", value: "nao", next: "sexual-conotacao" }
-    ]
+      { label: "Sim", sub: "Houve ofensa física",       value: "sim", next: "ag-legitima" },
+      { label: "Não", sub: "Outro tipo de conduta",     value: "nao", next: "sex-conotacao" },
+    ],
   },
-  "agr-lesao": {
-    axis: "Agressão Física",
-    question: "A conduta resultou em lesão corporal comprovada (atestado médico, laudo pericial ou registro hospitalar)?",
-    help: "Lesão corporal exige evidência objetiva de dano à integridade física: hematomas, fraturas, cortes etc., documentados por profissional de saúde ou perícia.",
+  "ag-legitima": {
+    axis: "Eixo Agressão", axisKey: "ini",
+    question: "Foi em <em>legítima defesa</em>?",
+    help: "Reação proporcional a injusta agressão atual ou iminente, nos termos da lei.",
     options: [
-      { label: "Sim", sub: "Há comprovação de lesão corporal", value: "sim", next: "agr-serv-pub" },
-      { label: "Não", sub: "Vias de fato sem lesão comprovada", value: "nao", next: "agr-vf-serv-pub" }
-    ]
+      { label: "Sim", sub: "Excludente de ilicitude",   value: "sim", next: "res-sem-ilicito" },
+      { label: "Não", sub: "Ato agressivo injustificado", value: "nao", next: "res-ag-132" },
+    ],
   },
-  "agr-serv-pub": {
-    axis: "Agressão Física com Lesão",
-    question: "A vítima é servidor público federal em exercício de suas funções?",
-    help: "Servidor em exercício de funções inclui situações em que ele está atuando ou identificado como agente público, mesmo fora do horário de expediente habitual.",
+  "sex-conotacao": {
+    axis: "Eixo Sexual", axisKey: "sex",
+    question: "A conduta possui <em>conotação sexual</em>?",
+    help: "Aproximação, comentário, gesto ou ato com carga sexual perceptível.",
     options: [
-      { label: "Sim", sub: "Vítima é servidor federal em exercício", value: "sim", next: "res-lesao-serv" },
-      { label: "Não", sub: "Vítima é particular ou servidor fora de função", value: "nao", next: "res-lesao-part" }
-    ]
+      { label: "Sim", sub: "Conduta com conteúdo sexual", value: "sim", next: "sex-consentida" },
+      { label: "Não", sub: "Sem conotação sexual",        value: "nao", next: "disc-fator" },
+    ],
   },
-  "agr-vf-serv-pub": {
-    axis: "Vias de Fato",
-    question: "A vítima das vias de fato é servidor público federal em exercício?",
-    help: "Mesma lógica: vias de fato (contato físico sem lesão) contra servidor em função configura infração disciplinar específica.",
+  "sex-consentida": {
+    axis: "Eixo Sexual", axisKey: "sex",
+    question: "Foi conduta <em>consentida</em>?",
+    help: "Consentimento livre e válido entre todas as pessoas envolvidas.",
     options: [
-      { label: "Sim", sub: "Vítima é servidor em exercício", value: "sim", next: "res-vf-serv" },
-      { label: "Não", sub: "Vítima é particular", value: "nao", next: "res-vf-part" }
-    ]
+      { label: "Sim", sub: "Houve consentimento",  value: "sim", next: "sex-moralidade-cons" },
+      { label: "Não", sub: "Sem consentimento",    value: "nao", next: "sex-impacto" },
+    ],
   },
-  "sexual-conotacao": {
-    axis: "Conotação Sexual",
-    question: "A conduta possui conotação sexual (verbal, gestual, virtual ou física)?",
-    help: "Conotação sexual abrange: propostas, comentários, piadas, exibição de material pornográfico, contato físico indesejado de natureza sexual, insinuações ou mensagens com conteúdo sexualizado.",
+  "sex-moralidade-cons": {
+    axis: "Eixo Sexual", axisKey: "sex",
+    question: "Há <em>grave ofensa à moralidade administrativa</em>?",
+    help: "Mesmo consentida, a conduta repercute negativamente sobre a função pública?",
     options: [
-      { label: "Sim", sub: "Conduta com conteúdo ou insinuação sexual", value: "sim", next: "sexual-consentimento" },
-      { label: "Não", sub: "Sem conotação sexual", value: "nao", next: "discriminatorio-fator" }
-    ]
+      { label: "Sim", sub: "Afeta a moralidade",     value: "sim", next: "res-outras-sex" },
+      { label: "Não", sub: "Sem ofensa relevante",   value: "nao", next: "res-sem-ilicito" },
+    ],
   },
-  "sexual-consentimento": {
-    axis: "Assédio Sexual",
-    question: "A conduta foi praticada com prevalência de cargo, função ou autoridade hierárquica?",
-    help: "Prevalência hierárquica é elemento essencial do assédio sexual na forma típica (art. 216-A CP). Sem ela, pode-se tratar de importunação sexual ou conduta diversa. A CGU ressalta que a relação de poder não precisa ser formal — basta que o agente se valha da posição para constranger.",
+  "sex-impacto": {
+    axis: "Eixo Sexual", axisKey: "sex",
+    question: "Houve <em>grave impacto</em> à dignidade ou liberdade?",
+    help: "Avalie a severidade da lesão a direitos fundamentais da vítima.",
     options: [
-      { label: "Sim", sub: "Houve uso de posição hierárquica ou funcional", value: "sim", next: "res-assedio-sexual" },
-      { label: "Não", sub: "Sem prevalência de hierarquia", value: "nao", next: "res-importunacao" }
-    ]
+      { label: "Sim", sub: "Impacto grave",     value: "sim", next: "res-sex-132" },
+      { label: "Não", sub: "Impacto não grave", value: "nao", next: "sex-cargo" },
+    ],
   },
-  "discriminatorio-fator": {
-    axis: "Fator Protegido",
-    question: "A conduta foi motivada por fator protegido (raça, cor, sexo, religião, origem, deficiência, orientação sexual, identidade de gênero ou outro)?",
-    help: "Fatores protegidos são características que não podem fundamentar tratamento diferenciado prejudicial. A Nota Técnica CGU/DECOR nº 02/2021 lista os principais fatores protegidos no serviço público federal.",
+  "sex-cargo": {
+    axis: "Eixo Sexual", axisKey: "sex",
+    question: "Houve <em>uso do cargo, poder ou ascendência</em>?",
+    help: "Valimento do cargo público para a prática da conduta.",
     options: [
-      { label: "Sim", sub: "Motivação discriminatória identificada", value: "sim", next: "res-discriminacao" },
-      { label: "Não", sub: "Sem fator discriminatório", value: "nao", next: "moral-repeticao" }
-    ]
+      { label: "Sim", sub: "Valimento do cargo",  value: "sim", next: "res-sex-117" },
+      { label: "Não", sub: "Sem uso do cargo",    value: "nao", next: "res-outras-sex" },
+    ],
   },
-  "moral-repeticao": {
-    axis: "Assédio Moral",
-    question: "A conduta foi reiterada ou sistemática (repetição ao longo do tempo)?",
-    help: "O assédio moral exige habitualidade — condutas isoladas, em regra, não configuram assédio moral, podendo ser tipificadas como desrespeito ou descortesia. A CGU orienta verificar frequência, duração e padrão de comportamento.",
+  "disc-fator": {
+    axis: "Eixo Discriminatório", axisKey: "disc",
+    question: "A conduta se baseia em <em>fator protegido</em>?",
+    help: "Raça, cor, etnia, religião, gênero, orientação sexual, idade, deficiência etc.",
     options: [
-      { label: "Sim", sub: "Conduta repetitiva ou padrão sistemático", value: "sim", next: "moral-dano" },
-      { label: "Não", sub: "Fato isolado ou único episódio", value: "nao", next: "moral-isolado-tipo" }
-    ]
+      { label: "Sim", sub: "Há fator protegido",    value: "sim", next: "disc-alvo" },
+      { label: "Não", sub: "Sem fator protegido",   value: "nao", next: "moral-isolado" },
+    ],
+  },
+  "disc-alvo": {
+    axis: "Eixo Discriminatório", axisKey: "disc",
+    question: "Há <em>alvo específico</em>?",
+    help: "A conduta foi direcionada a pessoa ou grupo identificável?",
+    options: [
+      { label: "Sim", sub: "Alvo identificável",   value: "sim", next: "disc-gravidade" },
+      { label: "Não", sub: "Sem alvo definido",    value: "nao", next: "res-cond-imp" },
+    ],
+  },
+  "disc-gravidade": {
+    axis: "Eixo Discriminatório", axisKey: "disc",
+    question: "Qual o grau de <em>ofensa à igualdade ou dignidade</em>?",
+    help: "Pondere intensidade, repercussão e impacto sobre a vítima.",
+    threeCol: true,
+    options: [
+      { label: "ALTA",         sub: "Grave ofensa",   value: "alta",  next: "res-disc-132" },
+      { label: "BAIXA / MÉDIA", sub: "Ofensa menor",  value: "baixa", next: "res-cond-imp", style: "alt" },
+    ],
+  },
+  "moral-isolado": {
+    axis: "Eixo Moral", axisKey: "moral",
+    question: "Foi ato <em>isolado</em>?",
+    help: "Conduta pontual ou padrão de repetição/perseguição?",
+    options: [
+      { label: "Sim", sub: "Ato pontual",         value: "sim", next: "moral-dano" },
+      { label: "Não", sub: "Conduta reiterada",   value: "nao", next: "moral-cargo" },
+    ],
   },
   "moral-dano": {
-    axis: "Assédio Moral",
-    question: "A conduta visou degradar as condições de trabalho ou atingiu a dignidade/saúde psíquica da vítima?",
-    help: "O objeto do assédio moral é humilhar, constranger, isolar ou prejudicar a vítima no ambiente de trabalho. É necessário que exista nexo entre a conduta e o dano ao ambiente laboral ou à saúde psíquica, ainda que potencial.",
+    axis: "Eixo Moral", axisKey: "moral",
+    question: "Houve <em>dano ou repercussão grave</em>?",
+    help: "Lesão concreta à vítima, ao serviço ou à imagem da administração.",
     options: [
-      { label: "Sim", sub: "Dano à dignidade ou condições de trabalho", value: "sim", next: "moral-hierarquia" },
-      { label: "Não", sub: "Sem dano identificado ao ambiente ou saúde", value: "nao", next: "res-desrespeito" }
-    ]
+      { label: "Sim", sub: "Dano relevante",       value: "sim", next: "moral-moralidade-final" },
+      { label: "Não", sub: "Sem dano relevante",   value: "nao", next: "res-sem-ilicito" },
+    ],
   },
-  "moral-hierarquia": {
-    axis: "Assédio Moral",
-    question: "O agressor ocupava posição hierárquica superior à da vítima (chefia, coordenação, gerência)?",
-    help: "O assédio moral vertical descendente (chefe → subordinado) é a forma mais comum e grave. Existe também o assédio horizontal (entre pares) e o ascendente (subordinado → chefe), mas o enquadramento legal pode variar.",
+  "moral-cargo": {
+    axis: "Eixo Moral", axisKey: "moral",
+    question: "Houve <em>uso do cargo ou poder</em>?",
+    help: "Aproveitamento de hierarquia ou posição funcional.",
     options: [
-      { label: "Sim", sub: "Agressor era superior hierárquico", value: "sim", next: "res-assedio-moral-v" },
-      { label: "Não", sub: "Mesma hierarquia ou subordinado", value: "nao", next: "res-assedio-moral-h" }
-    ]
+      { label: "Sim", sub: "Valimento do cargo",   value: "sim", next: "moral-trabalho" },
+      { label: "Não", sub: "Sem uso do cargo",     value: "nao", next: "moral-moralidade-final" },
+    ],
   },
-  "moral-isolado-tipo": {
-    axis: "Conduta Isolada",
-    question: "A conduta isolada envolveu linguagem ofensiva, xingamentos ou descortesia grave?",
-    help: "Mesmo sem reiteração, condutas graves de desrespeito podem configurar infração ao dever de urbanidade (art. 116, XI, Lei 8.112/90). Avalie a gravidade objetiva do episódio.",
+  "moral-moralidade-final": {
+    axis: "Eixo Moral", axisKey: "moral",
+    question: "Há <em>grave ofensa à moralidade administrativa</em>?",
+    help: "A conduta compromete os deveres éticos do serviço público?",
     options: [
-      { label: "Sim", sub: "Linguagem ofensiva ou falta grave de urbanidade", value: "sim", next: "res-desrespeito" },
-      { label: "Não", sub: "Conduta não enquadrada nos tipos anteriores", value: "nao", next: "res-sem-ilicito" }
-    ]
-  }
+      { label: "Sim", sub: "Ofensa grave",       value: "sim", next: "res-moral-132" },
+      { label: "Não", sub: "Sem ofensa grave",   value: "nao", next: "res-cond-imp" },
+    ],
+  },
+  "moral-trabalho": {
+    axis: "Eixo Moral", axisKey: "moral",
+    question: "Relaciona-se à <em>organização do trabalho</em>?",
+    help: "Decisões e práticas inerentes à gestão da equipe e do serviço.",
+    options: [
+      { label: "Sim", sub: "Contexto gerencial",   value: "sim", next: "q-moral-subjetivo" },
+      { label: "Não", sub: "Fora da gestão",       value: "nao", next: "res-moral-117" },
+    ],
+  },
+  "q-moral-subjetivo": {
+    axis: "Análise Subjetiva", axisKey: "subj",
+    question: "Qual o <em>elemento subjetivo</em> identificado?",
+    help: "Avalie a vontade do agente na prática da conduta.",
+    threeCol: true,
+    options: [
+      { label: "DOLO",   sub: "Vontade dirigida",        value: "dolo",   next: "res-moral-117" },
+      { label: "CULPA",  sub: "Sem dolo, com falha",     value: "culpa",  next: "res-cond-imp-org", style: "alt" },
+      { label: "NÃO HÁ", sub: "Sem elemento subjetivo", value: "nenhum", next: "res-sem-ilicito",  style: "alt" },
+    ],
+  },
 };
 
 const RESULTS = {
   "res-sem-ilicito": {
     tone: "green",
-    icon: "✅",
-    label: "Sem Ilícito Disciplinar Identificado",
-    title: "Conduta não enquadrada",
-    article: "Análise negativa — sem tipificação",
-    desc: "Com base nas respostas fornecidas, a conduta analisada não preenche os elementos constitutivos de nenhuma das infrações disciplinares mapeadas por este fluxograma. Recomenda-se, todavia, avaliar se há outros dispositivos aplicáveis ou registrar o fato para fins de monitoramento.",
-    law: "A ausência de tipificação não impede o registro do fato nem a adoção de medidas preventivas ou de gestão. Consulte a Nota Técnica CGU/DECOR nº 01/2020 para orientações sobre medidas não punitivas."
+    label: "Conclusão",
+    title: "Sem ilícito disciplinar",
+    article: null,
+    desc: "A análise indica que a conduta examinada não configura infração disciplinar passível de apuração pela Corregedoria.",
+    law: { head: "Encaminhamento sugerido", text: "Arquivamento ou tratamento administrativo não disciplinar, conforme avaliação técnica do caso concreto." },
   },
-  "res-lesao-serv": {
-    tone: "red",
-    icon: "🚨",
-    label: "Lesão Corporal em Servidor",
-    title: "Ofensa física a servidor",
-    article: "Art. 132, VII c/c Art. 116, V — Lei nº 8.112/90",
-    desc: "Agressão física com lesão corporal contra servidor público federal no exercício de suas funções. Conduta gravíssima que, em regra, enseja demissão, além da responsabilização penal pelo crime de lesão corporal (art. 129, CP) com possível qualificadora (art. 129, §9º, CP).",
-    law: "Lei nº 8.112/90, art. 132, VII: demissão por ofensa física em serviço. Código Penal, art. 129. Nota Técnica CGU/DECOR nº 03/2021, item 4.1: 'a comprovação da lesão por documento médico é suficiente para lastrear a infração disciplinar, independentemente de inquérito policial'."
+  "res-ag-132": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Ofensa física",
+    article: "Art. 132, VII",
+    desc: "A conduta caracteriza ofensa física em serviço, hipótese de demissão prevista na Lei nº 8.112/90.",
+    law: { head: "Lei nº 8.112/90 — Art. 132, VII", text: "<q>A demissão será aplicada nos casos de: […] VII — ofensa física, em serviço, a servidor ou a particular, salvo em legítima defesa própria ou de outrem.</q>" },
   },
-  "res-lesao-part": {
-    tone: "red",
-    icon: "⚠️",
-    label: "Lesão Corporal em Particular",
-    title: "Agressão com lesão a particular",
-    article: "Art. 116, III — Lei nº 8.112/90 · Art. 129 CP",
-    desc: "Agressão física com lesão contra pessoa não investida de função pública. Configura infração disciplinar grave (procedimento irregular) e, concomitantemente, ilícito penal. A responsabilização disciplinar é independente da criminal.",
-    law: "Lei nº 8.112/90, art. 116, III (manter conduta compatível com a moralidade administrativa). Nota Técnica CGU/DECOR nº 03/2021: 'a conduta do servidor fora do serviço que importe em crime doloso pode repercutir na esfera disciplinar quando revelar incompatibilidade com o cargo'."
+  "res-sex-117": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Assédio sexual (valimento)",
+    article: "Art. 117, IX",
+    desc: "A conduta sexual praticada com uso do cargo, poder ou ascendência configura proibição funcional, com possibilidade de pena que pode chegar à demissão.",
+    law: { head: "Lei nº 8.112/90 — Art. 117, IX", text: "<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>" },
   },
-  "res-vf-serv": {
-    tone: "red",
-    icon: "✋",
-    label: "Vias de Fato em Servidor",
-    title: "Vias de fato contra servidor",
-    article: "Art. 132, VII — Lei nº 8.112/90",
-    desc: "Contato físico não consentido (sem lesão comprovada) contra servidor público em exercício. Embora menos grave que a lesão corporal, as vias de fato configuram ofensa física e podem ensejar demissão conforme gradação da falta.",
-    law: "Lei nº 8.112/90, art. 132, VII. Nota Técnica CGU/DECOR nº 03/2021, item 4.2: 'as vias de fato, ainda que sem lesão, configuram ofensa física relevante para fins disciplinares'."
+  "res-sex-132": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Assédio sexual (gravidade)",
+    article: "Art. 132, V",
+    desc: "A conduta sexual não consentida com grave impacto à dignidade ou liberdade caracteriza incontinência pública e conduta escandalosa, hipótese de demissão.",
+    law: { head: "Lei nº 8.112/90 — Art. 132, V", text: "<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>" },
   },
-  "res-vf-part": {
-    tone: "yellow",
-    icon: "⚠️",
-    label: "Vias de Fato em Particular",
-    title: "Vias de fato — particular",
-    article: "Art. 116, III — Lei nº 8.112/90",
-    desc: "Contato físico sem lesão comprovada contra particular. A gravidade deve ser ponderada no contexto do caso. Pode configurar infração disciplinar de procedimento irregular e, penalmente, contravenção de vias de fato (art. 21, LCP).",
-    law: "Lei nº 8.112/90, art. 116, III. Lei das Contravenções Penais, art. 21. CGU orienta avaliar o grau de violência e contexto para a penalidade disciplinar adequada."
+  "res-outras-sex": {
+    tone: "amber",
+    label: "Tipificação",
+    title: "Outras condutas de natureza sexual",
+    article: "Art. 116, II, IX e XI",
+    desc: "Há descumprimento de deveres funcionais. Aplicáveis advertência ou suspensão, conforme dosimetria.",
+    law: { head: "Lei nº 8.112/90 — Art. 116", text: "<q>São deveres do servidor: II — ser leal às instituições a que servir; IX — manter conduta compatível com a moralidade administrativa; XI — tratar com urbanidade as pessoas.</q>" },
   },
-  "res-assedio-sexual": {
-    tone: "red",
-    icon: "🚫",
-    label: "Assédio Sexual",
-    title: "Assédio sexual com prevalência hierárquica",
-    article: "Art. 132, XIII — Lei nº 8.112/90 · Art. 216-A CP",
-    desc: "Conduta de conotação sexual praticada com prevalência de cargo ou função, visando obter vantagem ou favorecimento sexual. Infração gravíssima sujeita a demissão e, cumulativamente, a processo criminal por assédio sexual.",
-    law: "Lei nº 8.112/90, art. 132, XIII (incluído pela Lei nº 13.286/2016). Código Penal, art. 216-A. Nota Técnica CGU/DECOR nº 02/2021: 'a prevalência hierárquica deve ser aferida em sentido amplo, englobando qualquer relação de poder funcional, não apenas a chefia direta'."
+  "res-disc-132": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Discriminação grave",
+    article: "Art. 132, V",
+    desc: "Conduta discriminatória dirigida a alvo específico com grave ofensa à igualdade e dignidade configura hipótese de demissão.",
+    law: { head: "Lei nº 8.112/90 — Art. 132, V", text: "<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>" },
   },
-  "res-importunacao": {
-    tone: "yellow",
-    icon: "⚠️",
-    label: "Importunação / Conduta Sexual sem Hierarquia",
-    title: "Conduta sexual sem prevalência hierárquica",
-    article: "Art. 116, III e XI — Lei nº 8.112/90",
-    desc: "Conduta de conotação sexual sem prevalência de cargo. Pode configurar importunação sexual (Lei nº 13.718/2018, art. 215-A CP) e infração disciplinar por procedimento irregular e falta de urbanidade. Avaliar gravidade e circunstâncias.",
-    law: "Lei nº 8.112/90, arts. 116, III e XI. Código Penal, art. 215-A (importunação sexual). Nota Técnica CGU/DECOR nº 02/2021, item 3: 'mesmo sem hierarquia, condutas sexuais indesejadas no ambiente de trabalho violam deveres funcionais de urbanidade e procedimento regular'."
+  "res-cond-imp": {
+    tone: "amber",
+    label: "Tipificação",
+    title: "Conduta imprópria",
+    article: "Art. 116, II, IX e XI",
+    desc: "A conduta caracteriza descumprimento de deveres funcionais sem o grau de gravidade que justifique demissão. Sujeita a advertência ou suspensão.",
+    law: { head: "Lei nº 8.112/90 — Art. 116", text: "<q>São deveres do servidor: II — ser leal às instituições a que servir; IX — manter conduta compatível com a moralidade administrativa; XI — tratar com urbanidade as pessoas.</q>" },
   },
-  "res-discriminacao": {
-    tone: "red",
-    icon: "🚫",
-    label: "Conduta Discriminatória",
-    title: "Discriminação por fator protegido",
-    article: "Art. 116, III e XI — Lei nº 8.112/90 · Lei nº 9.029/95 · Lei nº 7.716/89",
-    desc: "Conduta motivada por fator protegido (raça, cor, sexo, religião, origem, deficiência, orientação sexual etc.). Configura infração disciplinar grave e pode constituir crime de discriminação ou preconceito, conforme a Lei nº 7.716/89.",
-    law: "Lei nº 8.112/90, art. 116, III. Lei nº 7.716/89 (crimes de preconceito). Nota Técnica CGU/DECOR nº 02/2021, itens 5-7: 'o elemento motivador (fator protegido) é suficiente para qualificar a conduta como discriminatória, mesmo sem intenção explícita declarada pelo agente'."
+  "res-moral-132": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Assédio moral",
+    article: "Art. 132, V",
+    desc: "Conduta com grave ofensa à moralidade administrativa caracteriza assédio moral em hipótese de demissão.",
+    law: { head: "Lei nº 8.112/90 — Art. 132, V", text: "<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>" },
   },
-  "res-assedio-moral-v": {
-    tone: "red",
-    icon: "🔴",
-    label: "Assédio Moral Vertical",
-    title: "Assédio moral — superior hierárquico",
-    article: "Art. 116, III e XI — Lei nº 8.112/90 · Lei nº 14.457/2022",
-    desc: "Conduta reiterada de superior hierárquico que degrada as condições de trabalho ou a dignidade psíquica do subordinado. Forma mais grave de assédio moral, sujeita a penalidades severas, inclusive demissão por decisão administrativa fundamentada.",
-    law: "Lei nº 8.112/90, arts. 116, III e XI; 117, I. Lei nº 14.457/2022 (Programa Emprega + Mulheres — art. 4º cria obrigações de prevenção ao assédio). Nota Técnica CGU/DECOR nº 04/2022: 'a hierarquia agrava a culpabilidade do agressor e reforça o dever institucional de apuração imediata'."
+  "res-moral-117": {
+    tone: "navy",
+    label: "Tipificação",
+    title: "Assédio moral",
+    article: "Art. 117, IX",
+    desc: "Conduta moral reiterada com uso do cargo caracteriza valimento do cargo, com pena que pode chegar à demissão.",
+    law: { head: "Lei nº 8.112/90 — Art. 117, IX", text: "<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>" },
   },
-  "res-assedio-moral-h": {
-    tone: "yellow",
-    icon: "🟡",
-    label: "Assédio Moral Horizontal",
-    title: "Assédio moral — entre pares",
-    article: "Art. 116, III e XI — Lei nº 8.112/90",
-    desc: "Conduta reiterada entre servidores de mesma hierarquia (ou de subordinado para superior) que degrada as condições de trabalho. Embora menos agravado, configura infração disciplinar por violação de dever de urbanidade e procedimento regular.",
-    law: "Lei nº 8.112/90, arts. 116, III e XI. Nota Técnica CGU/DECOR nº 04/2022, item 6: 'o assédio horizontal é igualmente sancionável, devendo a autoridade avaliar a gravidade e reiteração para dosimetria da pena'."
+  "res-cond-imp-org": {
+    tone: "amber",
+    label: "Tipificação",
+    title: "Conduta imprópria (organização do trabalho)",
+    article: "Art. 116, II, IX e XI",
+    desc: "Falha culposa no exercício da gestão. Aplicáveis advertência ou suspensão, observada a dosimetria.",
+    law: { head: "Lei nº 8.112/90 — Art. 116", text: "<q>São deveres do servidor: II — ser leal às instituições a que servir; IX — manter conduta compatível com a moralidade administrativa; XI — tratar com urbanidade as pessoas.</q>" },
   },
-  "res-desrespeito": {
-    tone: "yellow",
-    icon: "⚠️",
-    label: "Desrespeito / Falta de Urbanidade",
-    title: "Conduta desrespeitosa ou descortesia grave",
-    article: "Art. 116, XI — Lei nº 8.112/90",
-    desc: "Linguagem ofensiva, xingamentos ou descortesia grave em episódio isolado. Configura violação ao dever de urbanidade, tipificada como infração de menor potencial, sujeita em regra à advertência ou suspensão, conforme gravidade.",
-    law: "Lei nº 8.112/90, art. 116, XI: 'tratar com urbanidade as pessoas'. Nota Técnica CGU/DECOR nº 01/2020, item 8: 'a descortesia isolada, sem reiteração ou dano maior, configura infração leve, devendo ser apenada com advertência salvo circunstâncias agravantes'."
-  }
 };
 
-// ─────────────────────────────────────────────────────────
-//  CGU SIDEBAR CONTEXT  (por etapa)
-// ─────────────────────────────────────────────────────────
-const SIDEBAR_CTX = {
-  "start": {
-    sections: [
-      {
-        title: "📌 Como usar este fluxograma",
-        body: `<p>Este instrumento orienta a análise de condutas funcionais de servidores federais com base nas Notas Técnicas da CGU e na Lei nº 8.112/90.</p>
-               <p>Responda cada pergunta com base nos fatos apurados, não na intenção declarada do agente.</p>
-               <div class="ctx-highlight">⚠️ Em caso de dúvida entre duas alternativas, selecione a que melhor descreve o fato principal da conduta.</div>`
-      },
-      {
-        title: "📖 Conceito: Contato Físico",
-        body: `<span class="ctx-tag blue">Lei 8.112/90 · Art. 132, VII</span>
-               <p>Contato físico inclui qualquer forma de toque corporal não consentido, mesmo sem deixar marcas visíveis. Exemplos:</p>
-               <ul class="ctx-list">
-                 <li>Empurrões, tapas, socos</li>
-                 <li>Restrição de movimentos (pegar pelo braço, bloquear saída)</li>
-                 <li>Toque íntimo indesejado</li>
-               </ul>
-               <p class="ctx-source">Fonte: NT CGU/DECOR nº 03/2021, item 2.1</p>`
-      }
-    ]
-  },
-  "agr-lesao": {
-    sections: [
-      {
-        title: "🩺 Comprovação de Lesão",
-        body: `<span class="ctx-tag red">Elemento Probatório</span>
-               <p>Para fins disciplinares, a lesão corporal exige documentação objetiva:</p>
-               <ul class="ctx-list">
-                 <li>Atestado ou relatório médico</li>
-                 <li>Laudo pericial do IML</li>
-                 <li>Registro hospitalar ou de pronto-socorro</li>
-                 <li>Fotos com data (evidência complementar)</li>
-               </ul>
-               <div class="ctx-highlight">A CGU não exige que o processo penal esteja encerrado para fins disciplinares — a esfera disciplinar é independente.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 03/2021, item 4.1</p>`
-      },
-      {
-        title: "⚖️ Vias de Fato vs. Lesão",
-        body: `<p><strong>Vias de fato:</strong> contato físico sem lesão comprovada (ex: empurrão sem hematoma).</p>
-               <p><strong>Lesão corporal:</strong> dano à integridade física com evidência médica.</p>
-               <p>A distinção afeta a tipificação e a pena disciplinar aplicável.</p>`
-      }
-    ]
-  },
-  "agr-serv-pub": {
-    sections: [
-      {
-        title: "👮 Servidor em Exercício de Funções",
-        body: `<span class="ctx-tag blue">Conceito</span>
-               <p>Considera-se "em exercício" o servidor que:</p>
-               <ul class="ctx-list">
-                 <li>Está em horário de trabalho regular</li>
-                 <li>Usa uniforme, crachá ou símbolo oficial</li>
-                 <li>Pratica ato de ofício, mesmo fora do horário</li>
-                 <li>Está em missão oficial ou deslocamento a serviço</li>
-               </ul>
-               <div class="ctx-highlight">A identidade funcional visível (crachá, uniforme) é suficiente para caracterizar o exercício para fins disciplinares.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 03/2021, item 3.2</p>`
-      }
-    ]
-  },
-  "agr-vf-serv-pub": {
-    sections: [
-      {
-        title: "✋ Vias de Fato — Definição",
-        body: `<span class="ctx-tag yellow">Art. 132, VII</span>
-               <p>Vias de fato = contato físico agressivo sem resultado de lesão corporal. Mesmo sem dano físico evidente, configura ofensa física relevante.</p>
-               <p>O contexto (local, relação hierárquica, frequência) é importante para gradação da pena.</p>
-               <p class="ctx-source">NT CGU/DECOR nº 03/2021, item 4.2</p>`
-      }
-    ]
-  },
-  "sexual-conotacao": {
-    sections: [
-      {
-        title: "🚫 O que é Conotação Sexual",
-        body: `<span class="ctx-tag red">NT CGU/DECOR nº 02/2021</span>
-               <p>Condutas com conotação sexual incluem:</p>
-               <ul class="ctx-list">
-                 <li>Comentários sobre corpo ou aparência física com cunho sexual</li>
-                 <li>Piadas, insinuações ou convites sexuais</li>
-                 <li>Exibição de imagens, vídeos ou materiais pornográficos</li>
-                 <li>Mensagens virtuais com conteúdo sexualizado</li>
-                 <li>Toque físico indesejado de natureza sexual</li>
-               </ul>
-               <div class="ctx-highlight">Não é necessário que haja intenção explícita de obter favorecimento sexual — basta que a conduta tenha caráter sexualizado perceptível.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 2.1</p>`
-      }
-    ]
-  },
-  "sexual-consentimento": {
-    sections: [
-      {
-        title: "🏛 Prevalência de Cargo/Função",
-        body: `<span class="ctx-tag red">Art. 216-A CP · Art. 132, XIII Lei 8.112</span>
-               <p>A CGU interpreta "prevalência" em sentido amplo:</p>
-               <ul class="ctx-list">
-                 <li>Chefia direta ou indireta</li>
-                 <li>Controle de benefícios (férias, progressão, avaliações)</li>
-                 <li>Influência sobre condições de trabalho</li>
-                 <li>Qualquer relação de poder funcional, mesmo informal</li>
-               </ul>
-               <div class="ctx-highlight">A hierarquia não precisa ser formal no organograma — basta que o agente se valha de posição de influência para constranger.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 3.1</p>`
-      },
-      {
-        title: "📋 Assédio Sexual vs. Importunação",
-        body: `<p><strong>Assédio sexual</strong> (art. 216-A CP): exige prevalência hierárquica e finalidade de obter vantagem ou favorecimento sexual.</p>
-               <p><strong>Importunação sexual</strong> (art. 215-A CP): qualquer ato libidinoso sem consentimento, sem exigência de hierarquia.</p>`
-      }
-    ]
-  },
-  "discriminatorio-fator": {
-    sections: [
-      {
-        title: "🛡 Fatores Protegidos",
-        body: `<span class="ctx-tag blue">NT CGU/DECOR nº 02/2021 · Lei 7.716/89</span>
-               <p>São fatores protegidos no serviço público federal:</p>
-               <ul class="ctx-list">
-                 <li>Raça, cor ou etnia</li>
-                 <li>Sexo e gênero</li>
-                 <li>Orientação sexual e identidade de gênero</li>
-                 <li>Religião ou crença</li>
-                 <li>Origem nacional ou regional</li>
-                 <li>Deficiência (física, intelectual, sensorial)</li>
-                 <li>Idade (ageismo)</li>
-                 <li>Aparência física</li>
-               </ul>
-               <div class="ctx-highlight">O elemento motivador é o que qualifica a conduta como discriminatória — não é necessário que o agente declare explicitamente o preconceito.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 02/2021, itens 5-7</p>`
-      }
-    ]
-  },
-  "moral-repeticao": {
-    sections: [
-      {
-        title: "🔁 Habitualidade no Assédio Moral",
-        body: `<span class="ctx-tag yellow">NT CGU/DECOR nº 04/2022</span>
-               <p>O assédio moral exige <strong>reiteração</strong>. A CGU orienta considerar:</p>
-               <ul class="ctx-list">
-                 <li>Frequência dos episódios (semanal, mensal etc.)</li>
-                 <li>Duração no tempo (semanas, meses, anos)</li>
-                 <li>Padrão consistente de comportamento</li>
-               </ul>
-               <div class="ctx-highlight">Um único episódio grave pode configurar desrespeito ou descortesia, mas raramente assédio moral — a repetição é elemento definidor.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 3.1</p>`
-      }
-    ]
-  },
-  "moral-dano": {
-    sections: [
-      {
-        title: "💼 Dano ao Ambiente de Trabalho",
-        body: `<span class="ctx-tag red">Elemento Material</span>
-               <p>O assédio moral visa ou produz:</p>
-               <ul class="ctx-list">
-                 <li>Humilhação pública ou privada reiterada</li>
-                 <li>Isolamento profissional ou social</li>
-                 <li>Sobrecarga injustificada de trabalho</li>
-                 <li>Esvaziamento de funções (exclusão de tarefas)</li>
-                 <li>Críticas excessivas e infundadas</li>
-                 <li>Dano à saúde psíquica (ansiedade, depressão)</li>
-               </ul>
-               <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 4</p>`
-      }
-    ]
-  },
-  "moral-hierarquia": {
-    sections: [
-      {
-        title: "📊 Tipos de Assédio Moral",
-        body: `<p><strong>Vertical descendente</strong> (mais grave): chefe → subordinado. Agravado pelo dever de cuidado da chefia.</p>
-               <p><strong>Horizontal:</strong> entre servidores do mesmo nível. Igualmente sancionável.</p>
-               <p><strong>Ascendente</strong> (raro): subordinado → chefe.</p>
-               <div class="ctx-highlight">A posição hierárquica do agressor é circunstância agravante na dosimetria da penalidade.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 04/2022, itens 5-6</p>`
-      }
-    ]
-  },
-  "moral-isolado-tipo": {
-    sections: [
-      {
-        title: "🗣 Urbanidade e Descortesia",
-        body: `<span class="ctx-tag yellow">Art. 116, XI — Lei 8.112/90</span>
-               <p>O dever de urbanidade inclui:</p>
-               <ul class="ctx-list">
-                 <li>Tratamento respeitoso a colegas, chefias, subordinados e público</li>
-                 <li>Evitar xingamentos, insultos e linguagem ofensiva</li>
-                 <li>Manutenção de decoro no ambiente de trabalho</li>
-               </ul>
-               <div class="ctx-highlight">Mesmo um único episódio de xingamento grave pode configurar infração disciplinar por falta de urbanidade, sujeita a advertência.</div>
-               <p class="ctx-source">NT CGU/DECOR nº 01/2020, item 8</p>`
-      }
-    ]
-  }
-};
-
-// Default sidebar content
-const SIDEBAR_DEFAULT = {
-  sections: [
+/* ═══════════════════════════════════════════════════
+   SIDEBAR CONTEXT  —  por etapa
+   ═══════════════════════════════════════════════════ */
+const CTX = {
+  "start": [
     {
-      title: "ℹ️ Resultado da Análise",
-      body: `<p>O fluxograma chegou a um enquadramento. Revise o resultado e, se necessário, reinicie a análise.</p>
-             <p>Utilize o botão <strong>"Gerar Relatório"</strong> para obter a análise completa com fundamentação jurídica.</p>`
+      title: "Como usar este fluxograma",
+      body: `<p>Responda cada pergunta com base nos <strong>fatos apurados</strong>, não na intenção declarada do agente. O fluxo cobrirá os quatro eixos principais: agressão física, conduta sexual, discriminação e assédio moral.</p>
+             <div class="ctx-hl">Em caso de dúvida entre duas alternativas, selecione a que melhor descreve o <strong>fato principal</strong> da conduta.</div>`
     },
     {
-      title: "📚 Base Legal",
+      title: "Conceito: Agressão Física",
+      body: `<span class="ctx-tag blue">Art. 132, VII — Lei 8.112/90</span>
+             <p>Considera-se agressão física qualquer ato concreto contra a integridade corporal de outra pessoa: socos, tapas, empurrões, chutes ou qualquer contato físico violento.</p>
+             <p class="ctx-source">Nota Técnica CGU/DECOR nº 03/2021, item 2.1</p>`
+    }
+  ],
+  "ag-legitima": [
+    {
+      title: "Legítima Defesa — Conceito",
+      body: `<span class="ctx-tag blue">Art. 23, II — Código Penal</span>
+             <p>Reconhece-se legítima defesa quando o agente repele, usando moderadamente os meios necessários, injusta agressão atual ou iminente, a direito seu ou de outrem.</p>
+             <p>Requisitos cumulativos:</p>
+             <ul><li>Agressão injusta, atual ou iminente</li><li>Defesa de direito próprio ou alheio</li><li>Uso moderado dos meios necessários</li></ul>
+             <div class="ctx-hl">Excesso doloso ou culposo na legítima defesa não exclui a ilicitude disciplinar.</div>
+             <p class="ctx-source">NT CGU/DECOR nº 03/2021, item 3.1</p>`
+    }
+  ],
+  "sex-conotacao": [
+    {
+      title: "O que é Conotação Sexual",
+      body: `<span class="ctx-tag amber">NT CGU/DECOR nº 02/2021</span>
+             <p>Condutas com conotação sexual incluem:</p>
+             <ul>
+               <li>Comentários sobre corpo com cunho sexual</li>
+               <li>Piadas, insinuações ou convites sexuais</li>
+               <li>Exibição de imagens ou materiais pornográficos</li>
+               <li>Mensagens virtuais com conteúdo sexualizado</li>
+               <li>Toque físico indesejado de natureza sexual</li>
+             </ul>
+             <div class="ctx-hl">Não é necessário intenção explícita de obter favorecimento — basta que a conduta tenha caráter sexualizado perceptível.</div>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 2.1</p>`
+    }
+  ],
+  "sex-consentida": [
+    {
+      title: "Consentimento Válido",
+      body: `<span class="ctx-tag green">Análise fática</span>
+             <p>O consentimento deve ser <strong>livre</strong> (sem coerção), <strong>expresso</strong> ou inequivocamente demonstrado, e prestado por <strong>pessoa capaz</strong>.</p>
+             <p>Não há consentimento válido quando há relação de poder ou dependência hierárquica que possa comprometer a liberdade de escolha.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 2.2</p>`
+    }
+  ],
+  "sex-moralidade-cons": [
+    {
+      title: "Moralidade Administrativa",
+      body: `<span class="ctx-tag blue">Art. 37 — CF/88</span>
+             <p>Mesmo condutas consentidas podem violar a moralidade administrativa quando:</p>
+             <ul>
+               <li>Ocorrem em local público ou repartição</li>
+               <li>Causam escândalo ou constrangimento institucional</li>
+               <li>São incompatíveis com a seriedade da função pública</li>
+             </ul>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 3.3</p>`
+    }
+  ],
+  "sex-impacto": [
+    {
+      title: "Gravidade do Impacto",
+      body: `<span class="ctx-tag amber">Elemento qualificador</span>
+             <p>Avalie a severidade da lesão a direitos fundamentais:</p>
+             <ul>
+               <li><strong>Grave:</strong> trauma psicológico documentado, violência física, coação intensa</li>
+               <li><strong>Não grave:</strong> episódio isolado sem consequências duradouras à vítima</li>
+             </ul>
+             <p>A avaliação deve considerar a percepção da vítima e as consequências objetivas.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 3.2</p>`
+    }
+  ],
+  "sex-cargo": [
+    {
+      title: "Valimento do Cargo — Assédio",
+      body: `<span class="ctx-tag blue">Art. 117, IX — Lei 8.112/90</span>
+             <p>A CGU interpreta "valimento do cargo" em sentido amplo:</p>
+             <ul>
+               <li>Chefia direta ou indireta</li>
+               <li>Controle de benefícios, férias, avaliações</li>
+               <li>Qualquer relação de poder funcional, mesmo informal</li>
+             </ul>
+             <div class="ctx-hl">A hierarquia não precisa ser formal — basta que o agente se valha de posição de influência para constranger.</div>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 3.1</p>`
+    }
+  ],
+  "disc-fator": [
+    {
+      title: "Fatores Protegidos",
+      body: `<span class="ctx-tag blue">Lei 7.716/89 · Lei 9.029/95</span>
+             <p>São fatores protegidos no serviço público federal:</p>
+             <ul>
+               <li>Raça, cor ou etnia</li>
+               <li>Sexo, gênero e identidade de gênero</li>
+               <li>Orientação sexual</li>
+               <li>Religião ou crença</li>
+               <li>Origem nacional ou regional</li>
+               <li>Deficiência (física, intelectual, sensorial)</li>
+               <li>Idade (ageismo)</li>
+               <li>Aparência física</li>
+             </ul>
+             <div class="ctx-hl">O elemento motivador (fator protegido) é suficiente — não é necessário que o agente declare explicitamente o preconceito.</div>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, itens 5-7</p>`
+    }
+  ],
+  "disc-alvo": [
+    {
+      title: "Alvo Específico",
+      body: `<span class="ctx-tag amber">Elemento diferenciador</span>
+             <p><strong>Com alvo:</strong> conduta direcionada a pessoa ou grupo identificável, com maior potencial ofensivo e tipificação mais grave.</p>
+             <p><strong>Sem alvo definido:</strong> conduta difusa (ex: comentário preconceituoso geral) — pode configurar conduta imprópria, mas com tipificação distinta.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 6.1</p>`
+    }
+  ],
+  "disc-gravidade": [
+    {
+      title: "Dosimetria da Discriminação",
+      body: `<span class="ctx-tag amber">Elemento qualificador</span>
+             <p>Para aferição da gravidade, considere:</p>
+             <ul>
+               <li>Intensidade e reiteração da conduta</li>
+               <li>Repercussão no ambiente de trabalho</li>
+               <li>Impacto concreto sobre a vítima</li>
+               <li>Posição hierárquica do agente</li>
+             </ul>
+             <p><strong>Alta gravidade</strong> → Art. 132, V (demissão)<br>
+             <strong>Baixa/média</strong> → Art. 116 (advertência/suspensão)</p>
+             <p class="ctx-source">NT CGU/DECOR nº 02/2021, item 7.2</p>`
+    }
+  ],
+  "moral-isolado": [
+    {
+      title: "Habitualidade no Assédio Moral",
+      body: `<span class="ctx-tag green">NT CGU/DECOR nº 04/2022</span>
+             <p>O assédio moral exige <strong>reiteração</strong>. Considere:</p>
+             <ul>
+               <li>Frequência dos episódios</li>
+               <li>Duração no tempo (semanas, meses)</li>
+               <li>Padrão consistente de comportamento</li>
+             </ul>
+             <div class="ctx-hl">Um único episódio grave pode configurar descortesia, mas raramente assédio moral — a repetição é elemento definidor.</div>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 3.1</p>`
+    }
+  ],
+  "moral-dano": [
+    {
+      title: "Dano Relevante — Conceito",
+      body: `<span class="ctx-tag amber">Elemento material</span>
+             <p>Para ato isolado, a verificação do dano é critério de tipificação:</p>
+             <ul>
+               <li>Lesão à vítima (saúde, dignidade, carreira)</li>
+               <li>Prejuízo ao serviço público</li>
+               <li>Dano à imagem da administração</li>
+             </ul>
+             <p>Sem dano relevante e sem reiteração, a conduta tende a não atingir o patamar de ilícito disciplinar.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 4.1</p>`
+    }
+  ],
+  "moral-cargo": [
+    {
+      title: "Uso do Cargo — Assédio Moral",
+      body: `<span class="ctx-tag blue">Art. 117, IX — Lei 8.112/90</span>
+             <p>O uso do cargo no assédio moral se caracteriza quando a chefia:</p>
+             <ul>
+               <li>Impõe condições humilhantes valendo-se da hierarquia</li>
+               <li>Ameaça ou controla a vítima via poder funcional</li>
+               <li>Usa avaliações, promoções ou punições como instrumentos de pressão</li>
+             </ul>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 5.1</p>`
+    }
+  ],
+  "moral-moralidade-final": [
+    {
+      title: "Ofensa Grave à Moralidade",
+      body: `<span class="ctx-tag amber">Critério de tipificação</span>
+             <p>A ofensa grave à moralidade administrativa ocorre quando a conduta:</p>
+             <ul>
+               <li>Viola de forma flagrante princípios éticos do serviço público</li>
+               <li>Causa escândalo ou descrédito institucional</li>
+               <li>Compromete o ambiente de trabalho de forma duradoura</li>
+             </ul>
+             <p>A ausência desse elemento direciona para conduta imprópria (penalidade menor).</p>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 4.2</p>`
+    }
+  ],
+  "moral-trabalho": [
+    {
+      title: "Gestão vs. Assédio Moral",
+      body: `<span class="ctx-tag green">Distinção fundamental</span>
+             <p>Nem todo ato de gestão rigoroso é assédio moral. A distinção está na <strong>finalidade</strong>:</p>
+             <p><strong>Organização do trabalho</strong> (gestão legítima): cobranças, redistribuição de tarefas, disciplina funcional — mesmo que causem desconforto.</p>
+             <p><strong>Assédio moral:</strong> conduta que visa humilhar, isolar ou prejudicar o servidor, sem finalidade legítima de serviço.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 6.1</p>`
+    }
+  ],
+  "q-moral-subjetivo": [
+    {
+      title: "Elemento Subjetivo",
+      body: `<span class="ctx-tag blue">Análise da culpabilidade</span>
+             <p><strong>Dolo:</strong> o agente quis o resultado ou assumiu o risco de produzi-lo. Tipificação mais grave (Art. 117, IX).</p>
+             <p><strong>Culpa:</strong> o agente agiu com negligência, imprudência ou imperícia, sem vontade dirigida ao resultado lesivo. Tipificação mais branda.</p>
+             <p><strong>Sem elemento subjetivo:</strong> exercício regular de gestão sem falha identificável → sem ilícito disciplinar.</p>
+             <p class="ctx-source">NT CGU/DECOR nº 04/2022, item 7</p>`
+    }
+  ],
+  "_result": [
+    {
+      title: "Resultado da Análise",
+      body: `<p>O fluxograma chegou a um enquadramento. Utilize o botão <strong>"Gerar Relatório"</strong> para obter a análise completa com fundamentação jurídica de cada escolha.</p>
+             <p>Se necessário, revise uma ou mais respostas clicando nos itens do caminho percorrido.</p>`
+    },
+    {
+      title: "Base Normativa",
       body: `<p><strong>Lei nº 8.112/90</strong> — Regime Jurídico dos Servidores Públicos Federais</p>
-             <p><strong>Notas Técnicas CGU/DECOR</strong> — Orientações sobre condutas funcionais</p>
-             <p><strong>Lei nº 14.457/2022</strong> — Prevenção de assédio no ambiente de trabalho</p>`
+             <p><strong>NT CGU/DECOR nº 01/2020</strong> — Condutas e deveres funcionais</p>
+             <p><strong>NT CGU/DECOR nº 02/2021</strong> — Assédio sexual e discriminação</p>
+             <p><strong>NT CGU/DECOR nº 03/2021</strong> — Ofensas físicas</p>
+             <p><strong>NT CGU/DECOR nº 04/2022</strong> — Assédio moral</p>
+             <p><strong>Lei nº 14.457/2022</strong> — Prevenção de assédio</p>`
     }
   ]
 };
 
-// ─────────────────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────────────────
-let history = [{ id: "start", chosen: null }]; // {id, chosen: {label, value, next} | null}
-let sidebarOpen = true;
+/* ═══════════════════════════════════════════════════
+   JUSTIFICATIVAS  —  por etapa e resposta
+   ═══════════════════════════════════════════════════ */
+const JUST = {
+  "start": {
+    "sim": "A presença de contato físico direciona a análise para o eixo de agressão física (Art. 132, VII), exigindo verificação da excludente de legítima defesa. NT CGU/DECOR nº 03/2021.",
+    "nao": "A ausência de agressão física direciona a análise para os eixos de conduta sexual, discriminação ou assédio moral, conforme a estrutura lógica das Notas Técnicas CGU.",
+  },
+  "ag-legitima": {
+    "sim": "A legítima defesa é excludente de ilicitude (art. 23, II, CP) aplicável ao Direito Disciplinar por analogia. Afasta a infração disciplinar quando presentes todos os requisitos legais. NT CGU/DECOR nº 03/2021, item 3.1.",
+    "nao": "Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90, sujeita a demissão. A responsabilidade disciplinar independe da criminal. NT CGU/DECOR nº 03/2021.",
+  },
+  "sex-conotacao": {
+    "sim": "A conotação sexual é elemento definidor do eixo de assédio sexual. Exige verificação de consentimento e, posteriormente, do grau de impacto ou uso do cargo. NT CGU/DECOR nº 02/2021, item 2.",
+    "nao": "Sem conotação sexual, a análise prossegue para verificar eventual motivação discriminatória ou padrão de assédio moral. NT CGU.",
+  },
+  "sex-consentida": {
+    "sim": "O consentimento afasta o assédio sexual na forma típica. Porém, mesmo consentida, a conduta pode violar a moralidade administrativa se ocorrer na repartição ou causar escândalo. NT CGU/DECOR nº 02/2021, item 2.2.",
+    "nao": "A ausência de consentimento é elemento essencial das condutas sexuais ilícitas mais graves. Direciona a análise para aferição do impacto à dignidade/liberdade da vítima. NT CGU/DECOR nº 02/2021.",
+  },
+  "sex-moralidade-cons": {
+    "sim": "Mesmo consentida, a conduta que viola a moralidade administrativa configura infração disciplinar (art. 116, II e IX). A CGU destaca que o local e o contexto funcional são determinantes. NT CGU/DECOR nº 02/2021, item 3.3.",
+    "nao": "Conduta consentida sem ofensa à moralidade administrativa não configura ilícito disciplinar identificável pelo fluxo. NT CGU/DECOR nº 02/2021.",
+  },
+  "sex-impacto": {
+    "sim": "O grave impacto à dignidade ou liberdade caracteriza incontinência pública e conduta escandalosa (art. 132, V), hipótese de demissão, sem necessidade de verificar uso do cargo. NT CGU/DECOR nº 02/2021, item 3.2.",
+    "nao": "Sem grave impacto, a conduta sexual não consentida ainda pode configurar infração pelo uso do cargo (art. 117, IX) ou conduta imprópria (art. 116). NT CGU/DECOR nº 02/2021.",
+  },
+  "sex-cargo": {
+    "sim": "O uso do cargo para obter proveito sexual caracteriza violação do art. 117, IX (valimento do cargo), com pena que pode chegar à demissão. NT CGU/DECOR nº 02/2021, item 3.1.",
+    "nao": "Sem uso do cargo e sem grave impacto, a conduta sexual não consentida é tipificada como conduta imprópria (art. 116), sujeita a advertência ou suspensão. NT CGU/DECOR nº 02/2021.",
+  },
+  "disc-fator": {
+    "sim": "A motivação por fator protegido qualifica a conduta como discriminatória, podendo configurar crime (Lei 7.716/89) e infração disciplinar grave. NT CGU/DECOR nº 02/2021, itens 5-7.",
+    "nao": "Sem fator discriminatório, a análise prossegue para o eixo de assédio moral (verificação de reiteração). NT CGU.",
+  },
+  "disc-alvo": {
+    "sim": "A existência de alvo específico agrava a conduta discriminatória, pois o dano à vítima é direto e identificável. Exige aferição da gravidade para a tipificação final. NT CGU/DECOR nº 02/2021, item 6.1.",
+    "nao": "A ausência de alvo definido reduz a gravidade da conduta discriminatória, tipificada como conduta imprópria (art. 116). NT CGU/DECOR nº 02/2021.",
+  },
+  "disc-gravidade": {
+    "alta":  "A alta gravidade da ofensa discriminatória com alvo específico configura incontinência pública (art. 132, V), hipótese de demissão. NT CGU/DECOR nº 02/2021, item 7.2.",
+    "baixa": "A ofensa de baixa ou média gravidade, mesmo com alvo, não atinge o patamar do art. 132. Tipifica-se como conduta imprópria (art. 116), sujeita a advertência ou suspensão. NT CGU/DECOR nº 02/2021.",
+  },
+  "moral-isolado": {
+    "sim": "Ato isolado afasta o assédio moral por ausência de habitualidade. A análise prossegue para verificar se há dano relevante que justifique a tipificação como conduta imprópria. NT CGU/DECOR nº 04/2022, item 3.1.",
+    "nao": "A reiteração é elemento definidor do assédio moral. Condutas repetitivas ou sistemáticas configuram padrão de perseguição, independentemente da gravidade de cada episódio isolado. NT CGU/DECOR nº 04/2022.",
+  },
+  "moral-dano": {
+    "sim": "O dano ou repercussão grave do ato isolado justifica a investigação de ofensa à moralidade administrativa (art. 132, V) ou conduta imprópria (art. 116). NT CGU/DECOR nº 04/2022, item 4.1.",
+    "nao": "Ato isolado sem dano relevante não atinge o patamar de ilícito disciplinar identificável pelo fluxo. NT CGU/DECOR nº 04/2022.",
+  },
+  "moral-cargo": {
+    "sim": "O uso do cargo no assédio moral reiterado configura valimento do cargo (art. 117, IX), agravando a tipificação. A chefia tem dever especial de cuidado para com subordinados. NT CGU/DECOR nº 04/2022, item 5.",
+    "nao": "Assédio moral reiterado sem uso do cargo ainda viola deveres funcionais, mas a tipificação direciona para verificação da ofensa à moralidade. NT CGU/DECOR nº 04/2022.",
+  },
+  "moral-moralidade-final": {
+    "sim": "A grave ofensa à moralidade administrativa — seja por ato isolado grave ou assédio moral sem uso do cargo — configura incontinência pública (art. 132, V). NT CGU/DECOR nº 04/2022, item 4.2.",
+    "nao": "Sem ofensa grave à moralidade, a conduta é tipificada como conduta imprópria (art. 116), sujeita a penalidades menores. NT CGU/DECOR nº 04/2022.",
+  },
+  "moral-trabalho": {
+    "sim": "A relação com a organização do trabalho exige análise do elemento subjetivo para distinguir gestão legítima (mesmo que rigorosa) de assédio moral com dolo ou culpa. NT CGU/DECOR nº 04/2022, item 6.1.",
+    "nao": "Conduta reiterada com uso do cargo não relacionada à organização do trabalho configura diretamente valimento do cargo (art. 117, IX). NT CGU/DECOR nº 04/2022.",
+  },
+  "q-moral-subjetivo": {
+    "dolo":   "O dolo na conduta de gestão reiterada que assedia o subordinado configura valimento do cargo (art. 117, IX), com pena que pode chegar à demissão. NT CGU/DECOR nº 04/2022, item 7.",
+    "culpa":  "A falha culposa na gestão — sem vontade dirigida ao dano — configura conduta imprópria (art. 116), sujeita a advertência ou suspensão, com dosimetria proporcional à negligência. NT CGU/DECOR nº 04/2022.",
+    "nenhum": "A ausência de elemento subjetivo identificável afasta a responsabilidade disciplinar. O ato de gestão regular, mesmo que cause desconforto, não configura ilícito. NT CGU/DECOR nº 04/2022.",
+  },
+};
 
-const TOTAL_STEPS_ESTIMATE = 4; // avg depth for progress bar
+/* ═══════════════════════════════════════════════════
+   HELPERS
+   ═══════════════════════════════════════════════════ */
+const Q_LABELS = {
+  "start":               "Agressão física?",
+  "ag-legitima":         "Legítima defesa?",
+  "sex-conotacao":       "Conotação sexual?",
+  "sex-consentida":      "Consentida?",
+  "sex-moralidade-cons": "Ofensa à moralidade?",
+  "sex-impacto":         "Impacto grave?",
+  "sex-cargo":           "Uso do cargo?",
+  "disc-fator":          "Fator protegido?",
+  "disc-alvo":           "Alvo específico?",
+  "disc-gravidade":      "Gravidade?",
+  "moral-isolado":       "Ato isolado?",
+  "moral-dano":          "Dano grave?",
+  "moral-cargo":         "Uso do cargo?",
+  "moral-moralidade-final": "Ofensa à moralidade?",
+  "moral-trabalho":      "Organização do trabalho?",
+  "q-moral-subjetivo":   "Elemento subjetivo?",
+};
 
-// ─────────────────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────────────────
-function render() {
-  const current = history[history.length - 1];
-  const isResult = current.id in RESULTS;
-  renderMain(current, isResult);
-  renderSidebar(current.id, isResult);
-  renderProgress();
-}
+function qLabel(id)  { return Q_LABELS[id] || id; }
+function ansKind(v)  { return v === "sim" ? "sim" : v === "nao" ? "nao" : "alt"; }
+function ansShort(v) { return ({sim:"S",nao:"N",alta:"A",baixa:"B",dolo:"D",culpa:"C",nenhum:"—"})[v] || "?"; }
+function ansLabel(v) { return ({sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",dolo:"Dolo",culpa:"Culpa",nenhum:"Não há"})[v] || v; }
+function svgArrow()  { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>`; }
+function svgBack()   { return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>`; }
+function svgRestart(){ return `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>`; }
 
-function renderProgress() {
-  const depth = history.length - 1;
-  const pct = Math.min(100, Math.round((depth / TOTAL_STEPS_ESTIMATE) * 100));
-  const wrap = document.getElementById('progressWrap');
-  if (!wrap) return;
-  wrap.querySelector('.progress-fill').style.width = pct + '%';
-  wrap.querySelector('.progress-label').textContent = `Etapa ${depth + 1} — ${pct}% concluído`;
+/* ═══════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════ */
+let history    = [{ id: "start", chosen: null }];
+let sidebarVis = true;
 
-  // Breadcrumb
-  const bc = wrap.querySelector('.breadcrumb');
-  bc.innerHTML = '';
-  history.forEach((h, i) => {
-    if (i > 0) bc.insertAdjacentHTML('beforeend', '<span class="breadcrumb-sep">›</span>');
-    const isLast = i === history.length - 1;
-    const label = h.chosen ? h.chosen.label : (STEPS[h.id] ? 'Início' : RESULTS[h.id]?.label || h.id);
-    bc.insertAdjacentHTML('beforeend',
-      `<span class="breadcrumb-item ${isLast ? 'current' : ''}" title="${label}">${label}</span>`);
+const flowEl     = document.getElementById('flow');
+const resultRoot = document.getElementById('resultRoot');
+const crumbsEl   = document.getElementById('crumbs');
+const stepNumEl  = document.getElementById('stepNum');
+
+/* ═══════════════════════════════════════════════════
+   RENDER — FLOW
+   ═══════════════════════════════════════════════════ */
+function renderCrumbs() {
+  crumbsEl.innerHTML = "";
+  history.slice(0, -1).forEach((h, i) => {
+    const sp = document.createElement('span');
+    sp.className = "crumb";
+    sp.title = `Voltar: ${qLabel(h.id)}`;
+    sp.innerHTML = `<span class="ans ${ansKind(h.chosen)}">${ansShort(h.chosen)}</span><span>${qLabel(h.id)}</span>`;
+    sp.addEventListener('click', () => goBackTo(i));
+    crumbsEl.appendChild(sp);
   });
 }
 
-function renderMain(current, isResult) {
-  const el = document.getElementById('mainContent');
+function renderCurrent() {
+  resultRoot.innerHTML = "";
+  const cur = history[history.length - 1];
+  const id  = cur.id;
+  stepNumEl.textContent = history.length;
+  renderCrumbs();
 
-  if (isResult) {
-    const r = RESULTS[current.id];
-    const colorMap = { red: '#c0392b', yellow: '#b8860b', green: '#4a7c00', blue: '#003087' };
-    const bgMap = { red: 'var(--rfb-red-light)', yellow: 'var(--rfb-yellow-light)', green: 'var(--rfb-green-light)', blue: 'var(--rfb-blue-light)' };
-    el.innerHTML = `
-      ${progressHtml()}
-      <div class="result-card">
-        <div class="result-header">
-          <div class="result-icon ${r.tone}">${r.icon}</div>
-          <div>
-            <div class="result-article">${r.article}</div>
-            <div class="result-title" style="color:${colorMap[r.tone]}">${r.title}</div>
-            <div class="result-desc">${r.desc}</div>
-          </div>
-        </div>
-        <div class="result-law">
-          <div class="result-law-title">⚖️ Fundamentação Legal</div>
-          <div class="result-law-text">${r.law}</div>
-        </div>
-        <div class="result-actions">
-          <button class="btn-primary" onclick="showReport()">📄 Gerar Relatório Completo</button>
-          <button class="btn-secondary" onclick="goBack()">← Voltar</button>
-          <button class="btn-secondary" onclick="resetFlow()">↺ Nova Análise</button>
-        </div>
-      </div>`;
-  } else {
-    const s = STEPS[current.id];
-    el.innerHTML = `
-      ${progressHtml()}
-      <div class="step-card">
-        <button class="btn-back" onclick="goBack()" ${history.length <= 1 ? 'disabled' : ''}>← Pergunta anterior</button>
-        <br><br>
-        <div class="axis-badge">📌 ${s.axis}</div>
-        <div class="step-question">${s.question}</div>
-        ${s.help ? `<div class="step-help">${s.help}</div>` : ''}
-        <div class="options-grid">
-          ${s.options.map(o => `
-            <button class="option-btn" onclick="choose(${JSON.stringify(o).replace(/"/g, '&quot;')})">
-              <div class="option-dot"></div>
-              <div class="option-text">
-                <div class="option-label">${o.label}</div>
-                ${o.sub ? `<div class="option-sub">${o.sub}</div>` : ''}
-              </div>
-            </button>`).join('')}
-        </div>
-      </div>`;
-  }
+  if (RESULTS[id]) { renderResult(id); flowEl.innerHTML = ""; return; }
+
+  const step = STEPS[id];
+  if (!step) return;
+
+  flowEl.innerHTML = `
+    <article class="card step active" data-id="${id}">
+      <div class="axis-row">
+        <div class="axis ${step.axisKey || ''}"><span class="swatch"></span>${step.axis}</div>
+        <div class="legend" style="font-size:12px;color:var(--ink-3)">Pergunta ${history.length}</div>
+      </div>
+      <h2 class="quest">${step.question}</h2>
+      <p class="help">${step.help || ""}</p>
+      <div class="options ${step.threeCol ? 'three' : ''}">
+        ${step.options.map((o, idx) => `
+          <button class="opt ${o.style || (o.value==='sim'?'sim':o.value==='nao'?'nao':'alt')}" data-idx="${idx}">
+            <span class="lbl">
+              <span class="main">${o.label}</span>
+              <span class="sub">${o.sub || ""}</span>
+            </span>
+            <span class="arrow" aria-hidden="true">${svgArrow()}</span>
+          </button>`).join("")}
+      </div>
+      <div class="card-foot">
+        <button class="back-btn" id="backBtn" ${history.length===1?'disabled':''}>
+          ${svgBack()} Voltar à pergunta anterior
+        </button>
+        <span style="font-size:12px;color:var(--ink-3)">Fluxo Coger · Lei nº 8.112/90</span>
+      </div>
+    </article>`;
+
+  flowEl.querySelectorAll('.opt').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const opt = step.options[parseInt(btn.dataset.idx, 10)];
+      cur.chosen = opt.value;
+      history.push({ id: opt.next, chosen: null });
+      renderCurrent();
+      renderSidebar();
+      window.scrollTo({ top: document.querySelector('.stepper').offsetTop - 20, behavior: 'smooth' });
+    });
+  });
+
+  const back = flowEl.querySelector('#backBtn');
+  if (back) back.addEventListener('click', goBack);
+
+  renderSidebar();
 }
 
-function progressHtml() {
-  return `<div class="progress-bar-wrap" id="progressWrap">
-    <div class="progress-label">Etapa 1</div>
-    <div class="progress-bar"><div class="progress-fill" style="width:0%"></div></div>
-    <div class="breadcrumb"></div>
-  </div>`;
-}
+function renderResult(id) {
+  const r    = RESULTS[id];
+  const path = history.slice(0, -1);
+  resultRoot.innerHTML = `
+    <article class="result step active">
+      <div class="result-head ${r.tone==='green'?'green':r.tone==='amber'?'amber':''}">
+        <div class="label">${r.label}</div>
+        <h2 class="title">${r.title}</h2>
+        ${r.article ? `<div class="article-badge"><span class="lex">Lei 8.112/90</span><span>${r.article}</span></div>` : ''}
+      </div>
+      <div class="result-body">
+        <p class="desc">${r.desc}</p>
+        ${r.law ? `<div class="law-card"><div class="head">${r.law.head}</div><div class="text">${r.law.text}</div></div>` : ''}
+        ${path.length ? `
+          <div class="path-summary">
+            <div class="head">Caminho percorrido</div>
+            <ol>
+              ${path.map((h,i) => `
+                <li>
+                  <span class="ix">${String(i+1).padStart(2,'0')}</span>
+                  <span>${qLabel(h.id)}</span>
+                  <span class="ans ${ansKind(h.chosen)}">${ansLabel(h.chosen)}</span>
+                </li>`).join("")}
+            </ol>
+          </div>` : ''}
+        <div class="actions">
+          <button class="btn btn-primary" id="btnReport">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            Gerar Relatório
+          </button>
+          <button class="btn btn-ghost" id="btnRestart">
+            ${svgRestart()} Nova análise
+          </button>
+          <button class="btn btn-ghost" id="btnGoback">
+            ${svgBack()} Revisar última resposta
+          </button>
+        </div>
+      </div>
+    </article>`;
 
-function renderSidebar(stepId, isResult) {
-  const ctx = isResult ? SIDEBAR_DEFAULT : (SIDEBAR_CTX[stepId] || SIDEBAR_DEFAULT);
-  const body = document.getElementById('sidebarBody');
-  body.innerHTML = ctx.sections.map(s => `
-    <div class="ctx-section">
-      <div class="ctx-section-title">${s.title}</div>
-      <div class="ctx-section-body">${s.body}</div>
-    </div>`).join('');
-}
+  flowEl.innerHTML = "";
+  document.getElementById('btnReport').addEventListener('click', showReport);
+  document.getElementById('btnRestart').addEventListener('click', () => { history=[{id:"start",chosen:null}]; renderCurrent(); renderSidebar(); window.scrollTo({top:0,behavior:'smooth'}); });
+  document.getElementById('btnGoback').addEventListener('click', goBack);
 
-// ─────────────────────────────────────────────────────────
-//  ACTIONS
-// ─────────────────────────────────────────────────────────
-function choose(option) {
-  history[history.length - 1].chosen = option;
-  history.push({ id: option.next, chosen: null });
-  render();
+  renderSidebar();
 }
 
 function goBack() {
-  if (history.length <= 1) return;
-  history.pop();
-  history[history.length - 1].chosen = null;
-  render();
+  if (history.length > 1) {
+    history.pop();
+    history[history.length-1].chosen = null;
+    renderCurrent();
+    renderSidebar();
+  }
 }
 
-function resetFlow() {
-  history = [{ id: 'start', chosen: null }];
-  render();
+function goBackTo(idx) {
+  history = history.slice(0, idx+1);
+  history[history.length-1].chosen = null;
+  renderCurrent();
+  renderSidebar();
+  window.scrollTo({ top: document.querySelector('.stepper').offsetTop - 20, behavior: 'smooth' });
+}
+
+/* ═══════════════════════════════════════════════════
+   SIDEBAR
+   ═══════════════════════════════════════════════════ */
+function renderSidebar() {
+  const cur = history[history.length-1];
+  const isResult = !!RESULTS[cur.id];
+  const key = isResult ? "_result" : cur.id;
+  const sections = CTX[key] || CTX["_result"];
+
+  document.getElementById('sidebarBody').innerHTML = sections.map(s => `
+    <div class="ctx-block">
+      <div class="ctx-block-title">${s.title}</div>
+      <div class="ctx-block-body">${s.body}</div>
+    </div>`).join('');
 }
 
 function toggleSidebar() {
-  sidebarOpen = !sidebarOpen;
-  document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+  sidebarVis = !sidebarVis;
+  document.getElementById('sidebar').classList.toggle('hidden', !sidebarVis);
+  const btn = document.getElementById('btnSidebarToggle');
+  if (btn) btn.textContent = sidebarVis ? '✕ Ocultar' : '📋 Contexto';
 }
 
-// ─────────────────────────────────────────────────────────
-//  REPORT GENERATION
-// ─────────────────────────────────────────────────────────
-function buildJustification(stepId, chosen) {
-  const justifications = {
-    "start": {
-      "sim": "A presença de contato físico é o critério inicial para classificar a conduta no eixo de agressão física (ofensa física), conforme a NT CGU/DECOR nº 03/2021.",
-      "nao": "A ausência de contato físico direciona a análise para outros eixos de conduta (sexual, discriminatório ou assédio moral), seguindo a estrutura lógica das NT CGU."
-    },
-    "agr-lesao": {
-      "sim": "A comprovação médica da lesão é elemento essencial para tipificar a conduta como 'lesão corporal' (art. 129 CP), distinguindo-a de meras vias de fato. NT CGU/DECOR nº 03/2021, item 4.1.",
-      "nao": "Sem comprovação documental de lesão, a conduta é tipificada como 'vias de fato' — contato físico agressivo sem dano corporal comprovado. NT CGU/DECOR nº 03/2021, item 4.2."
-    },
-    "agr-serv-pub": {
-      "sim": "A qualidade de servidor federal em exercício agrava a infração, pois a ofensa atinge também a dignidade da função pública. Aplica-se o art. 132, VII, Lei 8.112/90. NT CGU/DECOR nº 03/2021, item 3.2.",
-      "nao": "A vítima não ser servidor em exercício afasta o agravante funcional, mas a conduta ainda viola o dever de procedimento regular (art. 116, III, Lei 8.112/90). NT CGU/DECOR nº 03/2021."
-    },
-    "agr-vf-serv-pub": {
-      "sim": "Vias de fato contra servidor em exercício configuram ofensa física relevante para fins disciplinares, sujeita ao art. 132, VII, Lei 8.112/90. NT CGU/DECOR nº 03/2021, item 4.2.",
-      "nao": "Vias de fato contra particular podem configurar contravenção penal (art. 21 LCP) e infração disciplinar por procedimento irregular, mas sem o agravante funcional."
-    },
-    "sexual-conotacao": {
-      "sim": "A presença de conotação sexual direciona a análise para o eixo de assédio sexual, exigindo verificação da prevalência hierárquica. NT CGU/DECOR nº 02/2021, item 2.1.",
-      "nao": "Sem conotação sexual, a análise prossegue para verificar eventual motivação discriminatória ou padrão de assédio moral. NT CGU."
-    },
-    "sexual-consentimento": {
-      "sim": "A prevalência hierárquica é elemento constitutivo do assédio sexual (art. 216-A CP e art. 132, XIII, Lei 8.112/90). NT CGU/DECOR nº 02/2021, item 3.1: interpretação ampla de prevalência.",
-      "nao": "Sem prevalência hierárquica, a conduta sexual indesejada pode configurar importunação sexual (art. 215-A CP) e infração por falta de urbanidade. NT CGU/DECOR nº 02/2021, item 3."
-    },
-    "discriminatorio-fator": {
-      "sim": "A motivação por fator protegido qualifica a conduta como discriminatória, podendo configurar crime (Lei 7.716/89) e infração disciplinar grave. NT CGU/DECOR nº 02/2021, itens 5-7.",
-      "nao": "A ausência de fator discriminatório direciona a análise para verificar padrão de assédio moral (reiteração e dano). NT CGU."
-    },
-    "moral-repeticao": {
-      "sim": "A reiteração é elemento definidor do assédio moral — sem habitualidade, em regra, não há assédio moral. NT CGU/DECOR nº 04/2022, item 3.1.",
-      "nao": "A ausência de reiteração afasta o assédio moral, mas o episódio isolado pode configurar desrespeito ou falta de urbanidade. NT CGU/DECOR nº 01/2020."
-    },
-    "moral-dano": {
-      "sim": "O dano à dignidade ou às condições de trabalho é elemento material do assédio moral, diferenciando-o de mera incidência gerencial. NT CGU/DECOR nº 04/2022, item 4.",
-      "nao": "Sem dano identificado ao ambiente ou saúde da vítima, a conduta se enquadra como desrespeito/descortesia, não assédio moral. NT CGU/DECOR nº 01/2020."
-    },
-    "moral-hierarquia": {
-      "sim": "A posição de superior hierárquico agrava a culpabilidade — a chefia tem dever especial de cuidado para com subordinados. NT CGU/DECOR nº 04/2022, item 5.",
-      "nao": "O assédio horizontal (entre pares) é igualmente sancionável, mas sem o agravante hierárquico. NT CGU/DECOR nº 04/2022, item 6."
-    },
-    "moral-isolado-tipo": {
-      "sim": "Mesmo um único episódio de linguagem ofensiva grave viola o dever de urbanidade (art. 116, XI, Lei 8.112/90). NT CGU/DECOR nº 01/2020, item 8.",
-      "nao": "A conduta não se enquadra nos tipos mapeados — ausência de ilícito disciplinar identificado pelo fluxograma."
-    }
-  };
-
-  return (justifications[stepId] && justifications[stepId][chosen.value])
-    || "Escolha registrada para fins de rastreabilidade do caminho decisório.";
-}
-
+/* ═══════════════════════════════════════════════════
+   REPORT MODAL
+   ═══════════════════════════════════════════════════ */
 function showReport() {
-  const lastEntry = history[history.length - 1];
-  const result = RESULTS[lastEntry.id];
+  const cur    = history[history.length-1];
+  const result = RESULTS[cur.id];
   if (!result) return;
 
-  const colorMap = { red: '#c0392b', yellow: '#b8860b', green: '#4a7c00', blue: '#003087' };
-  const bgMap = { red: 'var(--rfb-red-light)', yellow: 'var(--rfb-yellow-light)', green: 'var(--rfb-green-light)', blue: 'var(--rfb-blue-light)' };
+  const path = history.slice(0, -1).filter(h => h.chosen !== null);
+  const now  = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR', {day:'2-digit',month:'long',year:'numeric'});
+  const docId   = 'INT-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + String(now.getDate()).padStart(2,'0') + '-' + (Math.floor(Math.random()*9000)+1000);
 
-  // Build path items (exclude last entry which is the result node)
-  const pathItems = history.slice(0, -1).filter(h => h.chosen !== null);
-
-  const pathHtml = pathItems.map((h, idx) => {
+  const pathHtml = path.map((h, idx) => {
     const step = STEPS[h.id];
     if (!step) return '';
-    const just = buildJustification(h.id, h.chosen);
-    return `
-      <div class="path-item">
-        <div class="path-num">${idx + 1}</div>
-        <div class="path-content">
-          <div class="path-question">${step.question}</div>
-          <span class="path-answer">↳ ${h.chosen.label}${h.chosen.sub ? ' — ' + h.chosen.sub : ''}</span>
-          <div class="path-justification"><strong>Fundamentação CGU:</strong> ${just}</div>
-        </div>
-      </div>`;
+    const just = (JUST[h.id] && JUST[h.id][h.chosen]) || 'Escolha registrada para rastreabilidade do caminho decisório.';
+    const kind = ansKind(h.chosen);
+    return `<div class="path-item">
+      <div class="path-num">${idx+1}</div>
+      <div class="path-content">
+        <div class="path-question">${step.question.replace(/<\/?em>/g,'')}</div>
+        <span class="path-answer ${kind}">↳ ${ansLabel(h.chosen)}</span>
+        <div class="path-just"><strong>Fundamentação:</strong> ${just}</div>
+      </div>
+    </div>`;
   }).join('');
 
-  const now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-
   document.getElementById('reportBody').innerHTML = `
-    <div class="report-section">
-      <div class="report-section-title">📋 RESULTADO DO ENQUADRAMENTO</div>
-      <div class="report-result-badge" style="background:${bgMap[result.tone]}; color:${colorMap[result.tone]}">
-        <span class="rr-icon">${result.icon}</span>
+    <div class="rep-section">
+      <div class="rep-section-title">Resultado do enquadramento disciplinar</div>
+      <div class="rep-result-banner ${result.tone}">
         <div>
-          <div class="rr-label">${result.title}</div>
-          <div class="rr-article">${result.article}</div>
+          <div class="rr-article">${result.article || 'Sem tipificação'}</div>
+          <div class="rr-title">${result.title}</div>
+          <div class="rr-desc">${result.desc}</div>
         </div>
       </div>
-      <p style="font-size:.88rem;line-height:1.65;color:#444;margin-bottom:12px">${result.desc}</p>
-      <div class="result-law" style="margin-bottom:0">
-        <div class="result-law-title">⚖️ Fundamentação Legal Principal</div>
-        <div class="result-law-text" style="font-size:.85rem">${result.law}</div>
-      </div>
+      ${result.law ? `<div style="background:var(--p281-050);border-left:4px solid var(--p281);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:4px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--p281);margin-bottom:6px">${result.law.head}</div>
+        <div style="font-size:13px;line-height:1.6;color:var(--ink)">${result.law.text}</div>
+      </div>` : ''}
     </div>
-
-    <div class="report-section">
-      <div class="report-section-title">🗺 CAMINHO PERCORRIDO NA ANÁLISE (${pathItems.length} pergunta${pathItems.length !== 1 ? 's' : ''})</div>
-      ${pathHtml || '<p style="color:#888;font-size:.85rem">Sem perguntas registradas.</p>'}
+    <div class="rep-section">
+      <div class="rep-section-title">Caminho percorrido — ${path.length} pergunta${path.length!==1?'s':''}</div>
+      ${pathHtml || '<p style="font-size:13px;color:var(--ink-3)">Sem perguntas registradas.</p>'}
     </div>
-
-    <div class="report-section">
-      <div class="report-section-title">📅 DADOS DO RELATÓRIO</div>
-      <p style="font-size:.82rem;color:#555;line-height:1.7">
-        <strong>Ferramenta:</strong> Condutas — Integritas · Ferramentas Coger / RFB<br>
-        <strong>Data da análise:</strong> ${now}<br>
-        <strong>Base normativa:</strong> Lei nº 8.112/90, Notas Técnicas CGU/DECOR nº 01/2020, 02/2021, 03/2021, 04/2022<br>
-        <strong>Aviso:</strong> Este relatório é um instrumento de apoio à análise disciplinar. Não substitui parecer jurídico ou decisão administrativa fundamentada.
+    <div class="rep-section">
+      <div class="rep-section-title">Dados do relatório</div>
+      <p style="font-size:12.5px;color:var(--ink-2);line-height:1.8">
+        <strong>Ferramenta:</strong> Condutas — Integritas · Ferramentas COGER / RFB<br>
+        <strong>Data:</strong> ${dateStr}<br>
+        <strong>Referência:</strong> ${docId}<br>
+        <strong>Base normativa:</strong> Lei nº 8.112/90 · NT CGU/DECOR nº 01/2020, 02/2021, 03/2021, 04/2022 · Lei nº 14.457/2022<br>
+        <strong>Aviso:</strong> instrumento de apoio à análise disciplinar. Não substitui parecer jurídico ou decisão administrativa fundamentada.
       </p>
     </div>`;
+
+  // Populate print page
+  populatePrintPage(result, path, dateStr, docId, now);
 
   document.getElementById('reportModal').classList.add('open');
 }
 
-function closeReport() {
-  document.getElementById('reportModal').classList.remove('open');
+function closeReport() { document.getElementById('reportModal').classList.remove('open'); }
+
+document.getElementById('reportModal').addEventListener('click', e => { if (e.target === document.getElementById('reportModal')) closeReport(); });
+
+function copyReport() {
+  const text = document.getElementById('reportBody').innerText || '';
+  navigator.clipboard.writeText(text)
+    .then(() => alert('Texto do relatório copiado para a área de transferência.'))
+    .catch(() => prompt('Copie o texto:', text));
 }
 
-function printReport() {
-  const lastEntry = history[history.length - 1];
-  const result = RESULTS[lastEntry.id];
-  if (!result) return;
+/* ═══════════════════════════════════════════════════
+   PRINT
+   ═══════════════════════════════════════════════════ */
+function populatePrintPage(result, path, dateStr, docId, dateObj) {
+  const timeStr = dateObj.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
 
-  const now = new Date();
-  const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-  const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-  const docId = 'INT-' + now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2) + '-' + Math.floor(Math.random()*9000+1000);
-
-  const colorMap = { red: '#c0392b', yellow: '#b8860b', green: '#72B431', blue: '#003087' };
-
-  const pathItems = history.slice(0, -1).filter(h => h.chosen !== null);
-
-  const pathHtml = pathItems.map((h, idx) => {
+  const pathHtml = path.map((h, idx) => {
     const step = STEPS[h.id];
     if (!step) return '';
-    const just = buildJustification(h.id, h.chosen);
-    return `<div class="print-path-item">
-      <div class="print-path-num">${idx + 1}</div>
-      <div class="print-path-content">
-        <div class="print-path-question">${step.question}</div>
-        <span class="print-path-answer">↳ ${h.chosen.label}${h.chosen.sub ? ' — ' + h.chosen.sub : ''}</span>
-        <div class="print-path-justification"><strong>Fundamentação CGU:</strong> ${just}</div>
+    const just = (JUST[h.id] && JUST[h.id][h.chosen]) || 'Escolha registrada para rastreabilidade.';
+    const kind = ansKind(h.chosen);
+    return `<div class="pr-path-item">
+      <div class="pr-pnum">${idx+1}</div>
+      <div class="pr-pcontent">
+        <div class="pr-pq">${step.question.replace(/<\/?em>/g,'')}</div>
+        <span class="pr-pans ${kind}">↳ ${ansLabel(h.chosen)}</span>
+        <div class="pr-pjust"><strong>Fundamentação:</strong> ${just}</div>
       </div>
     </div>`;
   }).join('');
 
   document.getElementById('printPage').innerHTML = `
-    <div class="print-header">
-      <div class="print-header-stripe"></div>
-      <div class="print-header-content">
-        <div class="print-org">Ministério da Fazenda · Receita Federal do Brasil · COGER</div>
-        <div class="print-tool-name">Condutas — Integritas</div>
-        <div class="print-tool-sub">Ferramentas COGER · Análise de Condutas Funcionais</div>
+    <div class="ph-wrap">
+      <div class="ph-stripe"></div>
+      <div class="ph-inner">
+        <div class="ph-left">
+          <div class="ph-gov">Ministério da Fazenda · Receita Federal do Brasil · COGER</div>
+          <div class="ph-title">Condutas — Integritas</div>
+          <div class="ph-sub">Ferramentas COGER · Análise de Condutas Funcionais</div>
+        </div>
+        <div class="ph-meta">
+          <div><strong>Ref.:</strong> ${docId}</div>
+          <div><strong>Data:</strong> ${dateStr}</div>
+          <div><strong>Hora:</strong> ${timeStr}</div>
+          <div><strong>Lei nº 8.112/90</strong></div>
+        </div>
       </div>
-      <div class="print-doc-meta">
-        <div><strong>Nº Documento:</strong> ${docId}</div>
-        <div><strong>Data:</strong> ${dateStr}</div>
-        <div><strong>Hora:</strong> ${timeStr}</div>
-        <div><strong>Base legal:</strong> Lei nº 8.112/90</div>
-      </div>
+      <hr class="ph-divider">
     </div>
 
-    <div class="print-section-title">Resultado do Enquadramento Disciplinar</div>
-
-    <div class="print-result-banner ${result.tone}">
-      <div class="print-banner-icon">${result.icon}</div>
+    <div class="ps-title">Resultado do enquadramento disciplinar</div>
+    <div class="pr-banner ${result.tone}">
       <div>
-        <div class="print-banner-article">${result.article}</div>
-        <div class="print-banner-title ${result.tone}">${result.title}</div>
-        <div class="print-banner-desc">${result.desc}</div>
+        <div class="prb-article">${result.article || 'Sem tipificação específica'}</div>
+        <div class="prb-title">${result.title}</div>
+        <div class="prb-desc">${result.desc}</div>
       </div>
     </div>
 
-    <div class="print-law-box">
-      <div class="print-law-box-title">⚖ Fundamentação Legal Principal</div>
-      <p>${result.law}</p>
-    </div>
+    ${result.law ? `<div class="pr-law">
+      <div class="pr-law-title">${result.law.head}</div>
+      <p>${result.law.text}</p>
+    </div>` : ''}
 
-    <div class="print-section-title">Caminho Percorrido na Análise (${pathItems.length} pergunta${pathItems.length !== 1 ? 's' : ''})</div>
+    <div class="ps-title">Caminho percorrido na análise — ${path.length} pergunta${path.length!==1?'s':''}</div>
     ${pathHtml || '<p style="font-size:8.5pt;color:#888">Sem perguntas registradas.</p>'}
 
-    <div class="print-disclaimer">
-      <strong>Aviso:</strong> Este relatório é um instrumento de apoio à análise disciplinar, gerado automaticamente pela ferramenta Condutas — Integritas (Ferramentas COGER/RFB). Não substitui parecer jurídico, despacho ou decisão administrativa fundamentada. As Notas Técnicas CGU/DECOR citadas são orientativas e devem ser consultadas na íntegra. A autoridade competente é responsável pela decisão final no processo disciplinar.
+    <div class="pr-disclaimer">
+      <strong>Aviso legal:</strong> Este relatório é instrumento de apoio à análise disciplinar, gerado pela ferramenta Condutas — Integritas (Ferramentas COGER/RFB). Não substitui parecer jurídico, despacho ou decisão administrativa fundamentada. As Notas Técnicas CGU/DECOR citadas são orientativas e devem ser consultadas na íntegra.
     </div>
 
-    <div class="print-footer">
-      <div class="print-footer-left">
+    <div class="pr-footer">
+      <div class="pr-footer-l">
         <div><strong>Ferramentas COGER</strong> — Coordenação-Geral de Correição · RFB</div>
-        <div>Base normativa: NT CGU/DECOR nº 01/2020, 02/2021, 03/2021, 04/2022 · Lei nº 8.112/90 · Lei nº 14.457/2022</div>
-        <div>Documento gerado em ${dateStr} às ${timeStr} — Ref. ${docId}</div>
+        <div>NT CGU/DECOR nº 01/2020, 02/2021, 03/2021, 04/2022 · Lei nº 8.112/90 · Lei nº 14.457/2022</div>
+        <div>Gerado em ${dateStr} às ${timeStr} — Ref. ${docId} — USO INTERNO</div>
       </div>
-      <div class="print-footer-right">
+      <div class="pr-footer-r">
+        <div>Condutas — Integritas</div>
         <div>USO INTERNO</div>
-        <div>Condutas — Integritas v1.0</div>
       </div>
     </div>
-    <div class="print-footer-stripe"></div>`;
-
-  setTimeout(() => window.print(), 80);
+    <div class="pr-footer-stripe"></div>`;
 }
 
-function copyReportText() {
-  const body = document.getElementById('reportBody');
-  const text = body.innerText || body.textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    alert('Relatório copiado para a área de transferência.');
-  }).catch(() => {
-    prompt('Copie o texto abaixo:', text);
-  });
+function printReport() {
+  closeReport();
+  setTimeout(() => window.print(), 100);
 }
 
-// ─────────────────────────────────────────────────────────
-//  DOWNLOAD HTML
-// ─────────────────────────────────────────────────────────
+/* ═══════════════════════════════════════════════════
+   DOWNLOAD
+   ═══════════════════════════════════════════════════ */
 function downloadHtml() {
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'condutas-integritas.html';
+  const blob = new Blob([document.documentElement.outerHTML], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = Object.assign(document.createElement('a'), { href: url, download: 'condutas-integritas.html' });
   a.click();
   URL.revokeObjectURL(url);
 }
 
-// ─────────────────────────────────────────────────────────
-//  CLOSE MODAL ON OVERLAY CLICK
-// ─────────────────────────────────────────────────────────
-document.getElementById('reportModal').addEventListener('click', function(e) {
-  if (e.target === this) closeReport();
-});
-
-// ─────────────────────────────────────────────────────────
-//  INIT
-// ─────────────────────────────────────────────────────────
-render();
+/* ═══════════════════════════════════════════════════
+   INIT
+   ═══════════════════════════════════════════════════ */
+renderCurrent();
 </script>
 </body>
 </html>
