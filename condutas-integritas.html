@@ -476,26 +476,6 @@ main.flow-main {
 }
 .path-just strong { color: var(--p281); }
 
-/* ═══════════════════════════════════════════════════
-   FOOTER
-   ═══════════════════════════════════════════════════ */
-footer.site {
-  border-top: 1px solid var(--line); background: #fff; flex-shrink: 0;
-}
-.footer-inner {
-  max-width: 1280px; margin: 0 auto;
-  padding: 22px 28px;
-  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-}
-.footer-brand { display: flex; align-items: center; gap: 14px; }
-.footer-shield {
-  width: 32px; height: 32px; background: var(--p281); border-radius: 7px;
-  display: flex; align-items: center; justify-content: center; opacity: .85;
-}
-.footer-shield svg { width: 18px; height: 18px; }
-.footer-text { font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
-.footer-text strong { color: var(--p281); font-weight: 600; }
-.footer-meta { font-size: 11.5px; color: var(--ink-3); letter-spacing: .04em; text-align: right; line-height: 1.6; }
 
 /* ═══════════════════════════════════════════════════
    RESPONSIVE
@@ -527,7 +507,7 @@ footer.site {
   @page { size: A4 portrait; margin: 18mm 16mm 20mm 20mm; }
   * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   body, html { background: white !important; }
-  header.site, .app-body, .modal-backdrop, footer.site { display: none !important; }
+  header.site, .app-body, .modal-backdrop { display: none !important; }
   #printPage { display: block !important; font-family: var(--font-sans); color: var(--ink); font-size: 9.5pt; line-height: 1.55; }
 
   /* Print header */
@@ -711,24 +691,6 @@ footer.site {
   </div>
 </div>
 
-<!-- ═════════════════ FOOTER ═════════════════ -->
-<footer class="site">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-shield">
-        <svg viewBox="0 0 26 26" fill="none"><path d="M13 2L4 6v6c0 5.25 3.8 10.15 9 11.35C18.2 22.15 22 17.25 22 12V6L13 2z" fill="rgba(255,255,255,.15)" stroke="rgba(255,255,255,.5)" stroke-width="1.4"/><path d="M9.5 13l2.5 2.5 5-5" stroke="#00843D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <div class="footer-text">
-        <strong>Corregedoria — Coger</strong><br>
-        Secretaria Especial da Receita Federal do Brasil
-      </div>
-    </div>
-    <div class="footer-meta">
-      Ferramentas COGER · Análise de Condutas<br>
-      Integritas · Lei nº 8.112/90
-    </div>
-  </div>
-</footer>
 
 <script>
 /* ═══════════════════════════════════════════════════
@@ -1611,8 +1573,9 @@ function populatePrintPage(result, path, dateStr, docId, dateObj) {
 }
 
 function printReport() {
-  closeReport();
-  setTimeout(() => window.print(), 100);
+  // #printPage is already populated by showReport(); just trigger print.
+  // The modal-backdrop is hidden by @media print CSS, so no need to close it first.
+  window.print();
 }
 
 /* ═══════════════════════════════════════════════════
