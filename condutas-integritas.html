@@ -649,9 +649,241 @@
     .main-content { padding: 16px; }
   }
 
+  /* ─── PRINT LAYOUT ─── */
+  #printPage { display: none; }
+
   @media print {
-    .app-body { display: block; }
-    .sidebar, header, .progress-bar-wrap, .btn-back, .result-actions { display: none !important; }
+    @page {
+      size: A4 portrait;
+      margin: 18mm 16mm 20mm 20mm;
+    }
+
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+    body, html { background: white !important; }
+
+    /* Hide everything except the print page */
+    header, .app-body, .modal-overlay, .sidebar-float-toggle { display: none !important; }
+
+    #printPage { display: block !important; font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a2e; font-size: 9.5pt; line-height: 1.55; }
+
+    /* ── Print Header ── */
+    .print-header {
+      display: flex;
+      align-items: stretch;
+      border-bottom: 4px solid #72B431;
+      margin-bottom: 18pt;
+      padding-bottom: 10pt;
+    }
+
+    .print-header-stripe {
+      width: 8px;
+      background: #003087;
+      border-radius: 3px 0 0 3px;
+      margin-right: 14pt;
+      flex-shrink: 0;
+    }
+
+    .print-header-content { flex: 1; }
+
+    .print-org {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #003087;
+      margin-bottom: 3pt;
+    }
+
+    .print-tool-name {
+      font-size: 16pt;
+      font-weight: 800;
+      color: #003087;
+      letter-spacing: -.3px;
+      line-height: 1.1;
+    }
+
+    .print-tool-sub {
+      font-size: 8pt;
+      color: #72B431;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      margin-top: 3pt;
+    }
+
+    .print-doc-meta {
+      text-align: right;
+      font-size: 7.5pt;
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .print-doc-meta strong { color: #003087; }
+
+    /* ── Result Banner ── */
+    .print-result-banner {
+      border-radius: 6pt;
+      padding: 12pt 16pt;
+      margin-bottom: 16pt;
+      display: flex;
+      align-items: center;
+      gap: 12pt;
+      page-break-inside: avoid;
+    }
+
+    .print-result-banner.red { background: #fdecea; border-left: 5pt solid #c0392b; }
+    .print-result-banner.yellow { background: #fdf8e1; border-left: 5pt solid #b8860b; }
+    .print-result-banner.green { background: #eef4e8; border-left: 5pt solid #72B431; }
+    .print-result-banner.blue { background: #e8eef7; border-left: 5pt solid #003087; }
+
+    .print-banner-icon { font-size: 22pt; flex-shrink: 0; }
+
+    .print-banner-title {
+      font-size: 13pt;
+      font-weight: 800;
+      margin-bottom: 2pt;
+    }
+
+    .print-banner-title.red { color: #c0392b; }
+    .print-banner-title.yellow { color: #b8860b; }
+    .print-banner-title.green { color: #72B431; }
+    .print-banner-title.blue { color: #003087; }
+
+    .print-banner-article {
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      color: #555;
+      margin-bottom: 4pt;
+    }
+
+    .print-banner-desc { font-size: 8.5pt; color: #333; line-height: 1.6; }
+
+    /* ── Section titles ── */
+    .print-section-title {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #003087;
+      border-bottom: 1.5pt solid #003087;
+      padding-bottom: 4pt;
+      margin-bottom: 10pt;
+      margin-top: 18pt;
+    }
+
+    /* ── Legal box ── */
+    .print-law-box {
+      background: #e8eef7;
+      border-left: 4pt solid #003087;
+      border-radius: 0 5pt 5pt 0;
+      padding: 10pt 14pt;
+      margin-bottom: 16pt;
+      page-break-inside: avoid;
+    }
+
+    .print-law-box-title {
+      font-size: 7pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: #003087;
+      margin-bottom: 5pt;
+    }
+
+    .print-law-box p { font-size: 8.5pt; line-height: 1.6; color: #1a1a2e; }
+
+    /* ── Path items ── */
+    .print-path-item {
+      display: flex;
+      gap: 10pt;
+      padding: 9pt 0;
+      border-bottom: .75pt solid #e5e7eb;
+      page-break-inside: avoid;
+    }
+
+    .print-path-item:last-child { border-bottom: none; }
+
+    .print-path-num {
+      width: 18pt; height: 18pt;
+      border-radius: 50%;
+      background: #003087;
+      color: white;
+      font-size: 7pt;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1pt;
+    }
+
+    .print-path-content { flex: 1; }
+
+    .print-path-question {
+      font-size: 8.5pt;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 3pt;
+    }
+
+    .print-path-answer {
+      display: inline-block;
+      font-size: 8pt;
+      font-weight: 700;
+      color: #003087;
+      background: #e8eef7;
+      border-radius: 3pt;
+      padding: 1.5pt 7pt;
+      margin-bottom: 5pt;
+    }
+
+    .print-path-justification {
+      font-size: 8pt;
+      line-height: 1.58;
+      color: #444;
+      background: #f9fafb;
+      border-left: 2.5pt solid #72B431;
+      padding: 5pt 8pt;
+      border-radius: 0 3pt 3pt 0;
+    }
+
+    /* ── Footer ── */
+    .print-footer {
+      margin-top: 20pt;
+      padding-top: 8pt;
+      border-top: 1.5pt solid #003087;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      font-size: 7pt;
+      color: #666;
+    }
+
+    .print-footer-left { line-height: 1.8; }
+    .print-footer-right { text-align: right; line-height: 1.8; }
+
+    .print-footer-stripe {
+      height: 3pt;
+      background: linear-gradient(90deg, #003087 60%, #72B431 100%);
+      margin-top: 6pt;
+      border-radius: 2pt;
+    }
+
+    .print-disclaimer {
+      background: #fffbe6;
+      border: .75pt solid #b8860b;
+      border-radius: 4pt;
+      padding: 7pt 10pt;
+      font-size: 7.5pt;
+      color: #7a5c00;
+      margin-top: 14pt;
+      page-break-inside: avoid;
+    }
+
+    .print-disclaimer strong { color: #b8860b; }
   }
 </style>
 </head>
@@ -691,6 +923,9 @@
 </div>
 
 <button class="sidebar-float-toggle" id="sidebarFloat" onclick="toggleSidebar()">📋</button>
+
+<!-- Print-only page (hidden on screen, rendered on print) -->
+<div id="printPage"></div>
 
 <!-- Report Modal -->
 <div class="modal-overlay" id="reportModal">
@@ -1395,7 +1630,86 @@ function closeReport() {
 }
 
 function printReport() {
-  window.print();
+  const lastEntry = history[history.length - 1];
+  const result = RESULTS[lastEntry.id];
+  if (!result) return;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+  const timeStr = now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  const docId = 'INT-' + now.getFullYear() + ('0'+(now.getMonth()+1)).slice(-2) + ('0'+now.getDate()).slice(-2) + '-' + Math.floor(Math.random()*9000+1000);
+
+  const colorMap = { red: '#c0392b', yellow: '#b8860b', green: '#72B431', blue: '#003087' };
+
+  const pathItems = history.slice(0, -1).filter(h => h.chosen !== null);
+
+  const pathHtml = pathItems.map((h, idx) => {
+    const step = STEPS[h.id];
+    if (!step) return '';
+    const just = buildJustification(h.id, h.chosen);
+    return `<div class="print-path-item">
+      <div class="print-path-num">${idx + 1}</div>
+      <div class="print-path-content">
+        <div class="print-path-question">${step.question}</div>
+        <span class="print-path-answer">↳ ${h.chosen.label}${h.chosen.sub ? ' — ' + h.chosen.sub : ''}</span>
+        <div class="print-path-justification"><strong>Fundamentação CGU:</strong> ${just}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('printPage').innerHTML = `
+    <div class="print-header">
+      <div class="print-header-stripe"></div>
+      <div class="print-header-content">
+        <div class="print-org">Ministério da Fazenda · Receita Federal do Brasil · COGER</div>
+        <div class="print-tool-name">Condutas — Integritas</div>
+        <div class="print-tool-sub">Ferramentas COGER · Análise de Condutas Funcionais</div>
+      </div>
+      <div class="print-doc-meta">
+        <div><strong>Nº Documento:</strong> ${docId}</div>
+        <div><strong>Data:</strong> ${dateStr}</div>
+        <div><strong>Hora:</strong> ${timeStr}</div>
+        <div><strong>Base legal:</strong> Lei nº 8.112/90</div>
+      </div>
+    </div>
+
+    <div class="print-section-title">Resultado do Enquadramento Disciplinar</div>
+
+    <div class="print-result-banner ${result.tone}">
+      <div class="print-banner-icon">${result.icon}</div>
+      <div>
+        <div class="print-banner-article">${result.article}</div>
+        <div class="print-banner-title ${result.tone}">${result.title}</div>
+        <div class="print-banner-desc">${result.desc}</div>
+      </div>
+    </div>
+
+    <div class="print-law-box">
+      <div class="print-law-box-title">⚖ Fundamentação Legal Principal</div>
+      <p>${result.law}</p>
+    </div>
+
+    <div class="print-section-title">Caminho Percorrido na Análise (${pathItems.length} pergunta${pathItems.length !== 1 ? 's' : ''})</div>
+    ${pathHtml || '<p style="font-size:8.5pt;color:#888">Sem perguntas registradas.</p>'}
+
+    <div class="print-disclaimer">
+      <strong>Aviso:</strong> Este relatório é um instrumento de apoio à análise disciplinar, gerado automaticamente pela ferramenta Condutas — Integritas (Ferramentas COGER/RFB). Não substitui parecer jurídico, despacho ou decisão administrativa fundamentada. As Notas Técnicas CGU/DECOR citadas são orientativas e devem ser consultadas na íntegra. A autoridade competente é responsável pela decisão final no processo disciplinar.
+    </div>
+
+    <div class="print-footer">
+      <div class="print-footer-left">
+        <div><strong>Ferramentas COGER</strong> — Coordenação-Geral de Correição · RFB</div>
+        <div>Base normativa: NT CGU/DECOR nº 01/2020, 02/2021, 03/2021, 04/2022 · Lei nº 8.112/90 · Lei nº 14.457/2022</div>
+        <div>Documento gerado em ${dateStr} às ${timeStr} — Ref. ${docId}</div>
+      </div>
+      <div class="print-footer-right">
+        <div>USO INTERNO</div>
+        <div>Condutas — Integritas v1.0</div>
+      </div>
+    </div>
+    <div class="print-footer-stripe"></div>`;
+
+  setTimeout(() => window.print(), 80);
 }
 
 function copyReportText() {
