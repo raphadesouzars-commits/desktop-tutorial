@@ -1158,8 +1158,7 @@ document.getElementById("bpr").onclick=function(){
   // I — Descrição
   if(descricao){
     html += sec("Descrição sumária da conduta")
-      +"<div style='font-size:10pt;color:#1A2740;line-height:1.75;padding:9pt 12pt;background:#F5F7FA;border-radius:4pt;border:1pt solid #DCE6F4'>"+descricao.replace(/
-/g,"<br/>")+"</div>";
+      +"<div style='font-size:10pt;color:#1A2740;line-height:1.75;padding:9pt 12pt;background:#F5F7FA;border-radius:4pt;border:1pt solid #DCE6F4'>"+descricao.replace(/\n/g,"<br/>")+"</div>";
   }
 
   // Base normativa
