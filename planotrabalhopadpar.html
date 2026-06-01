@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Planejamento — PAD / PAR</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --azul:#0D2B4E;
+  --azul-m:#185FA5;
+  --azul-l:#E6F1FB;
+  --azul-b:#B5D4F4;
+  --par:#3C3489;
+  --par-l:#EEEDFE;
+  --par-b:#CECBF6;
+  --cinza-bg:#F5F4F0;
+  --cinza-card:#FFFFFF;
+  --cinza-bd:#D3D1C7;
+  --cinza-t:#2C2C2A;
+  --cinza-m:#5F5E5A;
+  --cinza-lt:#888780;
+  --verde:#3B6D11;
+  --verde-bg:#EAF3DE;
+  --verde-b:#C0DD97;
+  --amarelo-bg:#FAEEDA;
+  --amarelo-b:#FAC775;
+  --amarelo:#854F0B;
+  --vermelho:#A32D2D;
+  --vermelho-bg:#FCEBEB;
+  --r:6px;
+  --sombra:0 2px 8px rgba(0,0,0,0.08);
+}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--cinza-bg);color:var(--cinza-t);font-size:14px;line-height:1.6;min-height:100vh}
+
+/* ── TELA LANDING ── */
+#tela-landing{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.landing-card{background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);max-width:560px;width:100%;overflow:hidden}
+.landing-header{background:var(--azul);padding:3rem;text-align:center}
+.landing-header .icone{font-size:2.5rem;margin-bottom:1rem}
+.landing-header h1{font-size:1.5rem;color:white;font-weight:normal;letter-spacing:0.04em;line-height:1.3}
+.landing-header p{color:#85B7EB;font-size:13px;font-family:'Courier New',monospace;margin-top:0.5rem;letter-spacing:0.06em}
+.landing-body{padding:2.5rem}
+.landing-subtitle{font-size:11px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--cinza-lt);margin-bottom:1.25rem;text-align:center}
+.landing-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.landing-btn{border:2px solid var(--cinza-bd);border-radius:var(--r);padding:1.5rem 1rem;cursor:pointer;background:white;transition:all 0.2s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px}
+.landing-btn:hover{border-color:var(--azul-m);box-shadow:0 0 0 4px var(--azul-l)}
+.landing-btn.primary{background:var(--azul);border-color:var(--azul);color:white}
+.landing-btn.primary:hover{background:var(--azul-m);border-color:var(--azul-m)}
+.landing-btn .lb-icon{font-size:1.6rem}
+.landing-btn .lb-title{font-size:13px;font-family:'Courier New',monospace;font-weight:bold;letter-spacing:0.05em}
+.landing-btn .lb-desc{font-size:10px;color:var(--cinza-lt);line-height:1.4}
+.landing-btn.primary .lb-desc{color:rgba(255,255,255,0.65)}
+.landing-erro{margin-top:1rem;padding:10px 14px;background:var(--vermelho-bg);border:1px solid #F09595;border-radius:4px;font-size:12px;font-family:'Courier New',monospace;color:var(--vermelho);display:none}
+
+/* ── TELA DE BOAS-VINDAS ── */
+#tela-inicio{display:none;align-items:center;justify-content:center;min-height:100vh;padding:2rem}
+.inicio-card{background:white;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);max-width:720px;width:100%;overflow:hidden}
+.inicio-header{background:var(--azul);padding:3rem;text-align:center}
+.inicio-header .icone{font-size:2.5rem;margin-bottom:1rem}
+.inicio-header h1{font-size:1.5rem;color:white;font-weight:normal;letter-spacing:0.04em;line-height:1.3}
+.inicio-header p{color:#85B7EB;font-size:13px;font-family:'Courier New',monospace;margin-top:0.5rem;letter-spacing:0.06em}
+.inicio-body{padding:2.5rem}
+.tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem}
+.tipo-btn{border:2px solid var(--cinza-bd);border-radius:var(--r);padding:1.5rem;cursor:pointer;background:white;transition:all 0.2s;text-align:left;position:relative}
+.tipo-btn:hover{border-color:var(--azul-m);box-shadow:0 0 0 4px var(--azul-l)}
+.tipo-btn.selecionado-pad{border-color:var(--azul-m);background:var(--azul-l);box-shadow:0 0 0 4px rgba(24,95,165,0.15)}
+.tipo-btn.selecionado-par{border-color:var(--par);background:var(--par-l);box-shadow:0 0 0 4px rgba(60,52,137,0.15)}
+.tipo-sigla{font-size:2rem;font-family:'Courier New',monospace;font-weight:bold;line-height:1;margin-bottom:0.5rem}
+.tipo-btn.selecionado-pad .tipo-sigla{color:var(--azul)}
+.tipo-btn.selecionado-par .tipo-sigla{color:var(--par)}
+.tipo-nome{font-size:12px;font-weight:bold;color:var(--cinza-t);margin-bottom:4px}
+.tipo-desc{font-size:11px;color:var(--cinza-m);line-height:1.4;font-family:'Courier New',monospace}
+.tipo-lei{font-size:10px;color:var(--cinza-lt);font-family:'Courier New',monospace;margin-top:6px}
+.check-tipo{position:absolute;top:10px;right:10px;width:20px;height:20px;border-radius:50%;border:2px solid var(--cinza-bd);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;transition:all 0.2s}
+.tipo-btn.selecionado-pad .check-tipo{background:var(--azul-m);border-color:var(--azul-m)}
+.tipo-btn.selecionado-par .check-tipo{background:var(--par);border-color:var(--par)}
+
+.cabecalho-form{display:none}
+.cabecalho-form.visivel{display:block}
+.form-titulo{font-size:11px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--cinza-lt);margin-bottom:1rem;padding-bottom:0.5rem;border-bottom:1px solid var(--cinza-bd)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-grid.tres{grid-template-columns:repeat(3,1fr)}
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;color:var(--cinza-m)}
+.form-group input{padding:8px 10px;border:1px solid var(--cinza-bd);border-radius:4px;font-family:Georgia,serif;font-size:13px;color:var(--cinza-t);background:white;transition:border-color 0.2s}
+.form-group input:focus{outline:none;border-color:var(--azul-m)}
+.membro-bloco{background:var(--cinza-bg);border-radius:6px;padding:12px;margin-bottom:8px}
+.membro-role{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--azul-m);margin-bottom:8px;font-weight:bold}
+.membro-bloco.par-role .membro-role{color:var(--par)}
+
+.btn-iniciar{width:100%;padding:14px;background:var(--azul);color:white;border:none;border-radius:var(--r);font-size:13px;font-family:'Courier New',monospace;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:background 0.2s;margin-top:1.5rem}
+.btn-iniciar:hover{background:var(--azul-m)}
+.btn-iniciar.par{background:var(--par)}
+.btn-iniciar.par:hover{background:#534AB7}
+.btn-iniciar:disabled{opacity:0.4;cursor:not-allowed}
+.btn-voltar-landing{width:100%;padding:10px;background:none;color:var(--cinza-lt);border:1px solid var(--cinza-bd);border-radius:var(--r);font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.06em;cursor:pointer;margin-top:8px;transition:all 0.2s}
+.btn-voltar-landing:hover{border-color:var(--cinza-m);color:var(--cinza-m)}
+
+/* ── APP ── */
+#tela-app{display:none}
+.app-layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+
+/* Sidebar */
+.sidebar{background:var(--azul);color:#EBF0F7;padding:1.5rem;display:flex;flex-direction:column;gap:1rem;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar.par-mode{background:var(--par)}
+.sidebar-logo h1{font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.1em;text-transform:uppercase;color:#85B7EB;font-weight:normal}
+.sidebar-logo h1.par-cor{color:#AFA9EC}
+.sidebar-logo h2{font-size:14px;color:white;font-weight:normal;margin-top:4px;line-height:1.3}
+.processo-info{background:rgba(255,255,255,0.08);border-radius:6px;padding:10px 12px}
+.proc-num{font-size:12px;font-family:'Courier New',monospace;color:#EBF0F7;word-break:break-all}
+.proc-local{font-size:11px;color:rgba(255,255,255,0.5);margin-top:2px}
+
+/* Status indicator */
+.status-indicator{display:flex;align-items:center;gap:6px;padding:6px 10px;border-radius:5px;background:rgba(255,255,255,0.07);font-size:10px;font-family:'Courier New',monospace;margin-top:4px}
+.status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.status-dot.rascunho{background:#FAC775}
+.status-dot.concluido{background:#7EB8F7}
+.status-dot.aprovado{background:#97C459}
+.status-text{color:rgba(255,255,255,0.7);line-height:1.3}
+
+/* Banner sidebar aprovado */
+.banner-aprovado-sid{background:rgba(59,109,17,0.35);border:1px solid #97C459;border-radius:5px;padding:8px 10px;font-size:10px;font-family:'Courier New',monospace;color:#C0DD97;line-height:1.4;display:none}
+.banner-concluido-sid{background:rgba(24,95,165,0.3);border:1px solid #7EB8F7;border-radius:5px;padding:8px 10px;font-size:10px;font-family:'Courier New',monospace;color:#B5D4F4;line-height:1.4;display:none}
+
+/* Fases nav */
+.fases-nav-titulo{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.4);margin-bottom:6px}
+.fase-nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:5px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;text-align:left;color:#EBF0F7}
+.fase-nav-item:hover{background:rgba(255,255,255,0.1)}
+.fase-nav-item.ativa{background:rgba(255,255,255,0.18)}
+.fase-num-circle{width:24px;height:24px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Courier New',monospace;flex-shrink:0;transition:all 0.2s}
+.fase-nav-item.ativa .fase-num-circle{border-color:white;background:white;color:var(--azul)}
+.sidebar.par-mode .fase-nav-item.ativa .fase-num-circle{color:var(--par)}
+.fase-nav-item.completa .fase-num-circle{background:rgba(151,196,89,0.3);border-color:#97C459;color:#C0DD97}
+.fase-nav-nome{font-size:11px;line-height:1.3;flex:1}
+.fase-nav-badge{font-size:9px;font-family:'Courier New',monospace;background:rgba(255,255,255,0.1);padding:2px 5px;border-radius:3px;color:rgba(255,255,255,0.5)}
+
+/* Progresso geral */
+.prog-geral{margin-top:auto}
+.prog-label{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.4);font-family:'Courier New',monospace;margin-bottom:4px}
+.prog-track{height:3px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#378ADD,#97C459);transition:width 0.4s}
+.duracao-sid{font-size:11px;font-family:'Courier New',monospace;color:rgba(255,255,255,0.5);margin-top:6px}
+
+/* Salvar rascunho na sidebar */
+.btn-sid-salvar{width:100%;padding:9px;background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.2);border-radius:5px;font-size:10px;font-family:'Courier New',monospace;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s;text-align:center}
+.btn-sid-salvar:hover{background:rgba(255,255,255,0.18);color:white}
+
+/* ── CONTEÚDO PRINCIPAL ── */
+.main-content{padding:2rem;max-width:860px}
+
+/* Banner de status no topo do conteúdo */
+.banner-status{padding:12px 16px;border-radius:var(--r);font-size:12px;font-family:'Courier New',monospace;margin-bottom:1.5rem;line-height:1.5;display:none}
+.banner-status.concluido{background:var(--amarelo-bg);border:1px solid var(--amarelo-b);color:var(--amarelo);display:block}
+.banner-status.aprovado{background:var(--verde-bg);border:1px solid var(--verde-b);color:var(--verde);display:block}
+
+/* Cabeçalho da fase */
+.fase-header-bar{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:2px solid var(--cinza-bd)}
+.fase-numero-grande{width:44px;height:44px;border-radius:50%;background:var(--azul);color:white;display:flex;align-items:center;justify-content:center;font-size:16px;font-family:'Courier New',monospace;font-weight:bold;flex-shrink:0}
+.fase-numero-grande.par{background:var(--par)}
+.fase-titulo-h{flex:1}
+.fase-titulo-h h2{font-size:1.1rem;color:var(--azul);font-weight:normal;letter-spacing:0.02em}
+.fase-titulo-h h2.par{color:var(--par)}
+.fase-titulo-h p{font-size:11px;color:var(--cinza-m);font-family:'Courier New',monospace;margin-top:2px}
+
+/* Navegação fases */
+.nav-fases{display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-wrap:wrap}
+.btn-nav{padding:7px 16px;border-radius:4px;border:1px solid var(--cinza-bd);background:white;font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.05em;cursor:pointer;transition:all 0.15s;color:var(--cinza-t)}
+.btn-nav:hover{border-color:var(--azul-m);color:var(--azul-m)}
+.btn-nav.avancar{background:var(--azul);border-color:var(--azul);color:white}
+.btn-nav.avancar:hover{background:var(--azul-m)}
+.btn-nav.avancar.par{background:var(--par);border-color:var(--par)}
+.btn-nav.avancar.par:hover{background:#534AB7}
+.btn-nav.exportar{background:#27500A;border-color:#27500A;color:white}
+.btn-nav.exportar:hover{background:var(--verde)}
+.btn-nav.salvar-json{background:#5F5E5A;border-color:#5F5E5A;color:white}
+.btn-nav.salvar-json:hover{background:#3a3937}
+.btn-nav.aprovar{background:#3B6D11;border-color:#3B6D11;color:white}
+.btn-nav.aprovar:hover{background:#2d5209}
+
+/* Painel construtor Fase II */
+.construtor-panel{background:white;border:1px solid var(--cinza-bd);border-radius:var(--r);padding:1.25rem;margin-bottom:1.5rem;box-shadow:var(--sombra)}
+.construtor-titulo{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--cinza-lt);margin-bottom:1rem;padding-bottom:8px;border-bottom:1px solid var(--cinza-bd)}
+.construtor-row{display:grid;grid-template-columns:1fr 150px auto;gap:10px;align-items:end;margin-bottom:10px}
+label{display:block;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.07em;color:var(--cinza-m);margin-bottom:4px}
+select,input[type="date"],input[type="text"]{width:100%;padding:8px 10px;border:1px solid var(--cinza-bd);border-radius:4px;font-family:Georgia,serif;font-size:13px;color:var(--cinza-t);background:white;transition:border-color 0.2s}
+select:focus,input:focus{outline:none;border-color:var(--azul-m)}
+textarea{width:100%;padding:8px 10px;border:1px solid var(--cinza-bd);border-radius:4px;font-family:Georgia,serif;font-size:12px;color:var(--cinza-t);resize:vertical;min-height:46px}
+textarea:focus{outline:none;border-color:var(--azul-m)}
+.btn-add{padding:8px 16px;background:var(--azul);color:white;border:none;border-radius:4px;font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.05em;cursor:pointer;white-space:nowrap;transition:background 0.2s}
+.btn-add:hover{background:var(--azul-m)}
+.btn-add.par{background:var(--par)}
+.btn-add.par:hover{background:#534AB7}
+
+/* Tabelas */
+.fase-card{background:white;border-radius:var(--r);border:1px solid var(--cinza-bd);box-shadow:var(--sombra);overflow:hidden}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{background:var(--azul);color:white;padding:8px 10px;text-align:left;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal}
+thead th.par-head{background:var(--par)}
+tbody tr{border-bottom:1px solid #EEECEA;transition:background 0.12s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:#FAFAF8}
+tbody tr.tem-data{background:#F6FAF0}
+tbody tr.tem-data:hover{background:#EFF7E4}
+td{padding:8px 10px;vertical-align:top;color:var(--cinza-t)}
+td:first-child{font-family:'Courier New',monospace;font-size:11px;color:var(--cinza-lt);white-space:nowrap}
+td strong{color:var(--azul);display:block;margin-bottom:1px}
+td strong.par{color:var(--par)}
+.desc-ato{font-size:11px;color:var(--cinza-lt);display:block;margin-top:2px}
+.obs-display{font-size:11px;color:var(--amarelo);font-style:italic;margin-top:4px;padding:4px 8px;background:var(--amarelo-bg);border-left:2px solid var(--amarelo-b);border-radius:0 3px 3px 0}
+.resp-badge{font-size:10px;font-family:'Courier New',monospace;padding:2px 6px;background:var(--cinza-bg);border-radius:3px;color:var(--cinza-m);white-space:nowrap;display:inline-block}
+td input[type="date"]{width:130px;padding:5px 7px;font-size:11px;font-family:'Courier New',monospace;border-radius:3px}
+td input[type="date"].ok{border-color:var(--verde-b);background:var(--verde-bg);color:var(--verde)}
+.btn-rm{background:none;border:1px solid transparent;color:var(--cinza-lt);cursor:pointer;padding:3px 6px;border-radius:3px;font-size:11px;transition:all 0.15s}
+.btn-rm:hover{background:var(--vermelho-bg);border-color:#F09595;color:var(--vermelho)}
+
+.fase-vazia{padding:2.5rem;text-align:center;color:var(--cinza-lt);font-size:12px;font-family:'Courier New',monospace;border:1.5px dashed var(--cinza-bd);border-radius:var(--r);margin-top:0}
+#outros-wrapper{background:var(--amarelo-bg);border:1px solid var(--amarelo-b);border-radius:4px;padding:10px 12px}
+#outros-wrapper label{color:var(--amarelo)}
+#outros-wrapper input{border-color:var(--amarelo-b)!important;background:white}
+#outros-wrapper input:focus{border-color:var(--amarelo)!important}
+
+/* Bloco assinaturas */
+.assinaturas-bloco{background:white;border-radius:var(--r);border:1px solid var(--cinza-bd);padding:2rem;margin-top:1.5rem;box-shadow:var(--sombra)}
+.assin-titulo{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--cinza-lt);margin-bottom:1.5rem;padding-bottom:8px;border-bottom:1px solid var(--cinza-bd)}
+.assin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-bottom:2rem}
+.assin-linha{text-align:center}
+.assin-nome{font-size:13px;font-family:Georgia,serif;font-weight:bold;color:var(--azul);min-height:20px;margin-bottom:2px}
+.assin-nome.par{color:var(--par)}
+.assin-mat{font-size:10px;font-family:'Courier New',monospace;color:var(--cinza-lt);margin-bottom:8px}
+.assin-cargo{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.06em;color:var(--cinza-m);padding-top:8px;border-top:1px solid var(--cinza-t)}
+
+/* Despacho */
+.despacho-bloco{background:var(--cinza-bg);border:1px solid var(--cinza-bd);border-radius:var(--r);padding:1.25rem}
+.despacho-bloco.aguardando{border-color:var(--amarelo-b);background:var(--amarelo-bg);animation:pulseBorder 2s ease-in-out infinite}
+@keyframes pulseBorder{0%,100%{box-shadow:0 0 0 0 rgba(250,199,117,0.4)}50%{box-shadow:0 0 0 6px rgba(250,199,117,0)}}
+.despacho-titulo{font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--azul);margin-bottom:1rem}
+.despacho-titulo.par{color:var(--par)}
+.despacho-opcao{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:12px}
+.cb{width:16px;height:16px;border:1px solid var(--cinza-bd);border-radius:3px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:10px;transition:all 0.15s;user-select:none}
+.cb.on{background:var(--azul);border-color:var(--azul);color:white}
+.cb.on.par{background:var(--par);border-color:var(--par)}
+.despacho-grid{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end;margin-top:1rem}
+.despacho-grid input{padding:7px 10px;border:1px solid var(--cinza-bd);border-radius:4px;font-family:Georgia,serif;font-size:12px}
+
+/* Indicador de fase na topo */
+.steps-bar{display:flex;align-items:center;gap:4px;margin-bottom:1.5rem}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--cinza-bd);transition:all 0.2s;flex-shrink:0}
+.step-dot.ativa{background:var(--azul);transform:scale(1.3)}
+.step-dot.ativa.par{background:var(--par)}
+.step-dot.feita{background:var(--verde)}
+.step-sep{flex:1;height:1px;background:var(--cinza-bd)}
+.step-sep.feita{background:var(--verde-b)}
+
+/* Toast */
+.toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--azul);color:white;padding:10px 20px;border-radius:6px;font-size:12px;font-family:'Courier New',monospace;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Somente leitura */
+.readonly-overlay{pointer-events:none;opacity:0.7}
+input[disabled],textarea[disabled],select[disabled]{background:#F5F4F0!important;color:var(--cinza-lt)!important;cursor:not-allowed}
+
+/* ── PDF (oculta UI) ── */
+@media print{
+  #tela-inicio,#tela-landing,.sidebar,.construtor-panel,.btn-nav,.btn-rm,.nav-fases,.fase-header-bar .nav-fases,.steps-bar,.banner-status{display:none!important}
+  body{background:white;font-size:11px}
+  .app-layout{grid-template-columns:1fr}
+  .main-content{padding:0;max-width:100%}
+  #tela-app{display:block!important}
+  table{page-break-inside:auto}
+  tr{page-break-inside:avoid}
+  .fase-card{box-shadow:none;border:1px solid #ccc;margin-bottom:1cm}
+  .assinaturas-bloco{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     TELA LANDING — ESCOLHA DE CAMINHO
+══════════════════════════════════════════ -->
+<div id="tela-landing">
+  <div class="landing-card">
+    <div class="landing-header">
+      <div class="icone">⚖️</div>
+      <h1>Sistema de Planejamento de Processos Administrativos</h1>
+      <p>Ministério da Fazenda · Receita Federal do Brasil</p>
+    </div>
+    <div class="landing-body">
+      <div class="landing-subtitle">Selecione uma opção para continuar</div>
+      <div class="landing-grid">
+        <button class="landing-btn primary" onclick="mostrarNovoPlano()">
+          <span class="lb-icon">＋</span>
+          <span class="lb-title">Novo Plano</span>
+          <span class="lb-desc">Iniciar um PAD ou PAR do zero com novo preenchimento.</span>
+        </button>
+        <button class="landing-btn" onclick="document.getElementById('file-input-json').click()">
+          <span class="lb-icon">↑</span>
+          <span class="lb-title">Carregar Plano</span>
+          <span class="lb-desc">Retomar ou aprovar um plano salvo anteriormente (.json).</span>
+        </button>
+      </div>
+      <div class="landing-erro" id="landing-erro"></div>
+    </div>
+  </div>
+  <input type="file" id="file-input-json" accept=".json" style="display:none" onchange="carregarJson(this)">
+</div>
+
+<!-- ══════════════════════════════════════════
+     TELA 0 — SELEÇÃO E CABEÇALHO
+══════════════════════════════════════════ -->
+<div id="tela-inicio">
+  <div class="inicio-card">
+    <div class="inicio-header">
+      <div class="icone">⚖️</div>
+      <h1>Sistema de Planejamento de Processos Administrativos</h1>
+      <p>Ministério da Fazenda · Receita Federal do Brasil</p>
+    </div>
+    <div class="inicio-body">
+      <div style="font-size:11px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:var(--cinza-lt);margin-bottom:12px">
+        Selecione o tipo de processo
+      </div>
+      <div class="tipo-grid">
+        <button class="tipo-btn" id="btn-pad" onclick="selecionarTipo('PAD')">
+          <div class="check-tipo" id="check-pad"></div>
+          <div class="tipo-sigla" style="color:var(--azul)">PAD</div>
+          <div class="tipo-nome">Processo Administrativo Disciplinar</div>
+          <div class="tipo-desc">Apuração de infrações disciplinares praticadas por servidores públicos federais</div>
+          <div class="tipo-lei">Lei 8.112/1990 · Arts. 148–182</div>
+        </button>
+        <button class="tipo-btn" id="btn-par" onclick="selecionarTipo('PAR')">
+          <div class="check-tipo" id="check-par"></div>
+          <div class="tipo-sigla" style="color:var(--par)">PAR</div>
+          <div class="tipo-nome">Processo Administrativo de Responsabilização</div>
+          <div class="tipo-desc">Apuração de atos lesivos ao Estado praticados por pessoas jurídicas</div>
+          <div class="tipo-lei">Lei 12.846/2013 · Decreto 11.129/2022</div>
+        </button>
+      </div>
+
+      <div class="cabecalho-form" id="form-cabecalho">
+        <div class="form-titulo">Dados do Processo</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Número do Processo</label>
+            <input type="text" id="f-num" placeholder="Ex.: 10380.000000/2026-00">
+          </div>
+          <div class="form-group">
+            <label>Data de Instalação</label>
+            <input type="date" id="f-data">
+          </div>
+          <div class="form-group full">
+            <label>Localidade / Unidade</label>
+            <input type="text" id="f-local" placeholder="Ex.: DRF Curitiba / PR — 2.ª Delegacia">
+          </div>
+        </div>
+
+        <div class="form-titulo" id="titulo-membros" style="margin-top:1rem">Composição da Comissão</div>
+
+        <div id="membros-pad">
+          <div class="membro-bloco">
+            <div class="membro-role">Presidente da Comissão</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="p-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="p-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="p-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+          <div class="membro-bloco">
+            <div class="membro-role">Membro Vogal</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="v-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="v-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="v-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+          <div class="membro-bloco">
+            <div class="membro-role">Secretário(a) da Comissão</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="s-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="s-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="s-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="membros-par" style="display:none">
+          <div class="membro-bloco par-role">
+            <div class="membro-role">Presidente da Comissão PAR</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="pr-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="pr-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="pr-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+          <div class="membro-bloco par-role">
+            <div class="membro-role">Membro Instrutor</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="mi-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="mi-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="mi-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+          <div class="membro-bloco par-role">
+            <div class="membro-role">Secretário(a) da Comissão</div>
+            <div class="form-grid tres">
+              <div class="form-group full"><label>Nome Completo</label><input type="text" id="sr-nome" placeholder="Nome completo"></div>
+              <div class="form-group"><label>Matrícula SIAPE</label><input type="text" id="sr-mat" placeholder="0000000"></div>
+              <div class="form-group"><label>Cargo / Classe</label><input type="text" id="sr-cargo" placeholder="Ex.: AFRFB"></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-iniciar" id="btn-iniciar" onclick="iniciarApp()">Iniciar Planejamento →</button>
+        <button class="btn-voltar-landing" onclick="voltarLanding()">← Voltar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     TELA 1 — APP PRINCIPAL
+══════════════════════════════════════════ -->
+<div id="tela-app">
+  <div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h1 id="sid-tipo-label">PAD</h1>
+        <h2 id="sid-titulo">Plano de Trabalho — Comissão de Inquérito</h2>
+      </div>
+      <div class="processo-info">
+        <div class="proc-num" id="sid-num">—</div>
+        <div class="proc-local" id="sid-local">—</div>
+        <div class="status-indicator" id="status-indicator">
+          <div class="status-dot rascunho" id="status-dot"></div>
+          <div class="status-text" id="status-text">Rascunho — em elaboração</div>
+        </div>
+      </div>
+
+      <div class="banner-aprovado-sid" id="banner-aprovado-sid"></div>
+      <div class="banner-concluido-sid" id="banner-concluido-sid">
+        Este plano está aguardando aprovação do supervisor.
+      </div>
+
+      <div>
+        <div class="fases-nav-titulo">Navegação por Fases</div>
+        <div id="fases-nav"></div>
+      </div>
+
+      <div class="prog-geral">
+        <div class="prog-label">
+          <span>Preenchimento</span>
+          <span id="pct-label">0%</span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+        <div class="duracao-sid" id="dur-sid"></div>
+      </div>
+
+      <button class="btn-sid-salvar" id="btn-sid-salvar" onclick="salvarJson('rascunho')">↓ Salvar rascunho</button>
+    </aside>
+
+    <!-- Conteúdo -->
+    <main class="main-content" id="main-content">
+      <!-- renderizado por JS -->
+    </main>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════
+//   DADOS DOS FLUXOS
+// ════════════════════════════
+const FLUXOS = {
+  PAD: {
+    titulo: 'Processo Administrativo Disciplinar',
+    subtitulo: 'Comissão de Inquérito — Lei 8.112/1990',
+    cor: 'var(--azul)',
+    fases: [
+      {
+        id:'f1', titulo:'Atos Iniciais do PAD', subtitulo:'Instalação e notificações',
+        dinamica: false,
+        atos:[
+          {cod:'1.1', nome:'Ata de instalação e início dos trabalhos', resp:'Comissão'},
+          {cod:'1.2', nome:'Foco apuratório e planejamento — matriz de responsabilização', resp:'Comissão'},
+          {cod:'1.3', nome:'Definição das incumbências do secretário da comissão', resp:'Secretário'},
+          {cod:'1.4', nome:'Comunicação formal ao MPF e ao TCU sobre o início dos trabalhos', resp:'Presidente'},
+          {cod:'1.5', nome:'Expedição da Notificação Inicial ao acusado', desc:'Garantia de entrega de cópia integral digitalizada dos autos.', resp:'Comissão'},
+        ]
+      },
+      {
+        id:'f2', titulo:'Instrução Probatória e Incidentes', subtitulo:'Construção dinâmica dos atos de prova',
+        dinamica: true,
+        catalogo:[
+          {g:'Atos de Instrução Padrão', itens:[
+            {v:'Reunião Deliberativa', desc:'Análise de pedidos da defesa ou provas pré-constituídas.', resp:'Comissão'},
+            {v:'Oitiva de Testemunha / Declarante', desc:'Gravação em áudio/vídeo, análise de preliminares e lavratura de termo.', resp:'Comissão'},
+            {v:'Diligência de Campo / Reconhecimento', desc:'Constatações in loco com notificação do réu e registro em termo.', resp:'Comissão'},
+            {v:'Acareação', desc:'Confronto presencial ou gravado entre testemunhas ou com o acusado.', resp:'Comissão'},
+            {v:'Prova Emprestada / Compartilhada', desc:'Compartilhamento de provas de outro processo administrativo ou judicial.', resp:'Comissão'},
+            {v:'Consultas e Requisições (RFB/PGFN)', desc:'Consultas internas a unidades da RFB ou requisições de pareceres à PGFN.', resp:'Presidente'},
+          ]},
+          {g:'Incidentes Complexos', itens:[
+            {v:'Afastamento de Sigilo Judicial', desc:'Representação fundamentada para quebra de sigilo bancário, fiscal ou telemático.', resp:'Presidente / AGU'},
+            {v:'Busca e Apreensão Interna', desc:'Arrecadação formal e acautelamento de bens ou documentos em unidade da RFB.', resp:'Comissão'},
+            {v:'Apuração Especial SERPRO', desc:'Solicitação de trilhas de auditoria, logs de acesso e segurança de sistemas.', resp:'Presidente'},
+            {v:'Exame Grafotécnico ou Pericial', desc:'Designação de perito técnico para análise laboratorial de autenticidade documental.', resp:'Perito / Comissão'},
+            {v:'Incidente de Sanidade Mental', desc:'Submissão à junta médica oficial com suspensão do prazo processual principal.', resp:'Comissão / Junta Médica'},
+          ]},
+          {g:'Outro Ato', itens:[
+            {v:'__OUTROS__', desc:'', resp:'Comissão'},
+          ]}
+        ],
+        atos:[]
+      },
+      {
+        id:'f3', titulo:'Interrogatório e Encerramento da Instrução', subtitulo:'',
+        dinamica: false,
+        atos:[
+          {cod:'3.1', nome:'Expedição de atos de comunicação e intimação para o interrogatório', resp:'Secretário'},
+          {cod:'3.2', nome:'Realização do Interrogatório do Acusado', desc:'Leitura de prerrogativas (direito ao silêncio) e lavratura de termo.', resp:'Comissão'},
+          {cod:'3.3', nome:'Termo de Encerramento da Busca de Provas', resp:'Comissão'},
+        ]
+      },
+      {
+        id:'f4', titulo:'Indiciação, Citação e Defesa Escrita', subtitulo:'Fase de defesa processual',
+        dinamica: false,
+        atos:[
+          {cod:'4.1', nome:'Elaboração e redação do Termo de Indiciação', desc:'Tipificação minuciosa de condutas, fatos e evidências.', resp:'Comissão'},
+          {cod:'4.2', nome:'Expedição e execução do Mandado de Citação do Indiciado', resp:'Secretário'},
+          {cod:'4.3', nome:'Decurso do prazo legal para entrega da Defesa Escrita', resp:'Acusado'},
+        ]
+      },
+      {
+        id:'f5', titulo:'Análise da Defesa e Relatório Final', subtitulo:'Encerramento e remessa dos autos',
+        dinamica: false,
+        atos:[
+          {cod:'5.1', nome:'Análise minuciosa das teses apresentadas na Defesa Escrita', resp:'Comissão'},
+          {cod:'5.2', nome:'Redação e fechamento do Relatório Final do PAD', resp:'Comissão'},
+          {cod:'5.3', nome:'Encerramento dos autos e remessa à Autoridade Julgadora', resp:'Presidente'},
+        ]
+      },
+    ],
+    membros: [
+      {id:'p', cargo:'Presidente da Comissão'},
+      {id:'v', cargo:'Membro Vogal'},
+      {id:'s', cargo:'Secretário(a) da Comissão'},
+    ]
+  },
+
+  PAR: {
+    titulo: 'Processo Administrativo de Responsabilização',
+    subtitulo: 'Comissão PAR — Lei 12.846/2013 · Decreto 11.129/2022',
+    cor: 'var(--par)',
+    fases: [
+      {
+        id:'r1', titulo:'Atos Iniciais do PAR', subtitulo:'Instauração e notificação da PJ investigada',
+        dinamica: false,
+        atos:[
+          {cod:'1.1', nome:'Portaria de instauração do PAR e designação da Comissão', resp:'Autoridade Máxima'},
+          {cod:'1.2', nome:'Reunião de instalação e definição do plano de trabalho inicial', resp:'Comissão'},
+          {cod:'1.3', nome:'Comunicação à CGU e demais órgãos de controle competentes', resp:'Presidente'},
+          {cod:'1.4', nome:'Levantamento preliminar de contratos e vínculos da PJ com o poder público', resp:'Comissão'},
+          {cod:'1.5', nome:'Notificação formal da Pessoa Jurídica investigada', desc:'Ciência da instauração e prazo para apresentação de documentos societários.', resp:'Secretário'},
+        ]
+      },
+      {
+        id:'r2', titulo:'Instrução Probatória', subtitulo:'Construção dinâmica dos atos de prova',
+        dinamica: true,
+        catalogo:[
+          {g:'Atos de Instrução — Pessoa Jurídica', itens:[
+            {v:'Requisição de Documentos Societários', desc:'Contrato social, alterações, quadro de sócios e administradores.', resp:'Comissão'},
+            {v:'Análise de Contratos com o Poder Público', desc:'Mapeamento e análise de todos os contratos públicos da PJ investigada.', resp:'Comissão'},
+            {v:'Oitiva de Representantes Legais / Sócios', desc:'Tomada de declarações de dirigentes e representantes da pessoa jurídica.', resp:'Comissão'},
+            {v:'Due Diligence de Compliance', desc:'Avaliação do programa de integridade pré-existente da PJ (art. 7.º, VIII, Lei 12.846).', resp:'Comissão'},
+            {v:'Perícia Contábil e Financeira', desc:'Designação de perito para análise de fluxos financeiros e benefícios auferidos.', resp:'Perito / Comissão'},
+            {v:'Acareação entre Declarantes', desc:'Confronto formal entre declarações divergentes de representantes e testemunhas.', resp:'Comissão'},
+          ]},
+          {g:'Incidentes e Diligências Especiais', itens:[
+            {v:'Afastamento de Sigilo Bancário / Fiscal', desc:'Representação fundamentada ao juízo competente para quebra de sigilo financeiro.', resp:'Presidente / AGU'},
+            {v:'Apuração de Trilhas SERPRO / SIASG', desc:'Solicitação de logs de acesso, histórico de contratos e licitações nos sistemas federais.', resp:'Presidente'},
+            {v:'Coleta de Prova Emprestada', desc:'Compartilhamento formal de provas produzidas em ação penal ou inquérito civil público.', resp:'Comissão'},
+            {v:'Busca e Apreensão de Documentos', desc:'Arrecadação cautelar de documentos e arquivos digitais vinculados aos atos lesivos.', resp:'Comissão / AGU'},
+            {v:'Consulta ao CADE / TCU / CGU', desc:'Requisição de informações e pareceres técnicos a órgãos externos.', resp:'Presidente'},
+          ]},
+          {g:'Outro Ato', itens:[
+            {v:'__OUTROS__', desc:'', resp:'Comissão'},
+          ]}
+        ],
+        atos:[]
+      },
+      {
+        id:'r3', titulo:'Notificação para Manifestação Final da PJ', subtitulo:'Garantia do contraditório — arts. 10 e 11, Lei 12.846',
+        dinamica: false,
+        atos:[
+          {cod:'3.1', nome:'Consolidação do conjunto probatório e deliberação da Comissão', resp:'Comissão'},
+          {cod:'3.2', nome:'Expedição de Notificação para Manifestação Final (prazo legal: 30 dias)', desc:'A PJ pode solicitar prorrogação por igual período mediante justificativa.', resp:'Secretário'},
+          {cod:'3.3', nome:'Análise do Programa de Integridade apresentado pela PJ', desc:'Avaliação conforme critérios do Decreto 11.129/2022, arts. 36–41.', resp:'Comissão'},
+          {cod:'3.4', nome:'Análise da manifestação final e das provas apresentadas pela PJ', resp:'Comissão'},
+        ]
+      },
+      {
+        id:'r4', titulo:'Julgamento e Dosimetria das Sanções', subtitulo:'Cálculo de multa e análise de acordo de leniência',
+        dinamica: false,
+        atos:[
+          {cod:'4.1', nome:'Análise dos fatores agravantes e atenuantes (art. 7.º, Lei 12.846)', desc:'Gravidade, vantagem auferida, cooperação, reincidência e outros.', resp:'Comissão'},
+          {cod:'4.2', nome:'Cálculo fundamentado da multa (0,1% a 20% do faturamento bruto)', desc:'Na impossibilidade de apurar o faturamento, aplica-se R$ 6.000 a R$ 60.000.000.', resp:'Comissão'},
+          {cod:'4.3', nome:'Deliberação sobre proposta de Acordo de Leniência', desc:'Análise de viabilidade e encaminhamento à CGU ou MPF, conforme competência.', resp:'Presidente / CGU'},
+          {cod:'4.4', nome:'Elaboração do Termo de Julgamento e de imposição de sanções', resp:'Comissão'},
+        ]
+      },
+      {
+        id:'r5', titulo:'Relatório Final e Encaminhamentos', subtitulo:'Publicização e inscrição nos cadastros nacionais',
+        dinamica: false,
+        atos:[
+          {cod:'5.1', nome:'Redação e fechamento do Relatório Circunstanciado Final', resp:'Comissão'},
+          {cod:'5.2', nome:'Remessa do relatório à Autoridade Máxima do Órgão para decisão', resp:'Presidente'},
+          {cod:'5.3', nome:'Publicação da decisão no Diário Oficial da União', resp:'Autoridade Máxima'},
+          {cod:'5.4', nome:'Inscrição da PJ no CNEP e no CEIS, conforme cabível', desc:'Cadastro Nacional de Empresas Punidas e Cadastro de Inidôneos e Suspensos.', resp:'Secretário'},
+        ]
+      },
+    ],
+    membros: [
+      {id:'pr', cargo:'Presidente da Comissão PAR'},
+      {id:'mi', cargo:'Membro Instrutor'},
+      {id:'sr', cargo:'Secretário(a) da Comissão'},
+    ]
+  }
+};
+
+// ════════════════════════════
+//   ESTADO
+// ════════════════════════════
+let tipo = null;
+let faseAtual = 0;
+let fluxo = null;
+let contF2 = 0;
+
+// Novos campos de estado
+let statusPlano = 'rascunho'; // 'rascunho' | 'concluido' | 'aprovado'
+let aprovadoEm = null;        // string ISO ou null
+let modoSomenteLeitura = false;
+
+// Estado do despacho (persistido em memória entre renders)
+let dadosDespacho = {
+  cb1: false,
+  cb2: false,
+  observacoes: '',
+  autoridade: '',
+  dataDespacho: ''
+};
+
+// ════════════════════════════
+//   TELA LANDING
+// ════════════════════════════
+function mostrarNovoPlano() {
+  document.getElementById('tela-landing').style.display = 'none';
+  document.getElementById('tela-inicio').style.display = 'flex';
+}
+
+function voltarLanding() {
+  document.getElementById('tela-inicio').style.display = 'none';
+  document.getElementById('tela-landing').style.display = 'flex';
+  // Resetar seleção
+  tipo = null;
+  document.getElementById('form-cabecalho').className = 'cabecalho-form';
+  ['pad','par'].forEach(x => {
+    document.getElementById('btn-'+x).className = 'tipo-btn';
+    document.getElementById('check-'+x).textContent = '';
+  });
+}
+
+// ════════════════════════════
+//   TELA INICIAL
+// ════════════════════════════
+function selecionarTipo(t) {
+  tipo = t;
+  ['PAD','PAR'].forEach(x => {
+    document.getElementById('btn-'+x.toLowerCase()).className = 'tipo-btn' + (x===t?' selecionado-'+x.toLowerCase():'');
+    document.getElementById('check-'+x.toLowerCase()).textContent = x===t ? '✓' : '';
+  });
+  document.getElementById('form-cabecalho').className = 'cabecalho-form visivel';
+  document.getElementById('membros-pad').style.display = t==='PAD' ? '' : 'none';
+  document.getElementById('membros-par').style.display = t==='PAR' ? '' : 'none';
+  document.getElementById('titulo-membros').textContent = t==='PAD' ? 'Composição da Comissão' : 'Composição da Comissão PAR';
+  const btn = document.getElementById('btn-iniciar');
+  btn.className = 'btn-iniciar' + (t==='PAR' ? ' par' : '');
+}
+
+function iniciarApp() {
+  if (!tipo) { toast('Selecione PAD ou PAR.'); return; }
+  statusPlano = 'rascunho';
+  aprovadoEm = null;
+  modoSomenteLeitura = false;
+  dadosDespacho = { cb1:false, cb2:false, observacoes:'', autoridade:'', dataDespacho:'' };
+  fluxo = JSON.parse(JSON.stringify(FLUXOS[tipo]));
+  abrirApp();
+}
+
+function abrirApp() {
+  document.getElementById('tela-inicio').style.display = 'none';
+  document.getElementById('tela-landing').style.display = 'none';
+  document.getElementById('tela-app').style.display = 'block';
+
+  const isPar = tipo === 'PAR';
+  if (isPar) {
+    document.getElementById('sidebar').classList.add('par-mode');
+    document.getElementById('sid-tipo-label').textContent = 'PAR';
+    document.getElementById('sid-tipo-label').className = 'par-cor';
+    document.getElementById('sid-titulo').textContent = 'Plano de Trabalho — Comissão PAR';
+  } else {
+    document.getElementById('sidebar').classList.remove('par-mode');
+    document.getElementById('sid-tipo-label').textContent = 'PAD';
+    document.getElementById('sid-tipo-label').className = '';
+    document.getElementById('sid-titulo').textContent = 'Plano de Trabalho — Comissão de Inquérito';
+  }
+
+  document.getElementById('sid-num').textContent = document.getElementById('f-num').value || '(sem número)';
+  document.getElementById('sid-local').textContent = document.getElementById('f-local').value || '';
+
+  // Salvar rascunho na sidebar: ocultar se aprovado
+  const btnSid = document.getElementById('btn-sid-salvar');
+  btnSid.style.display = modoSomenteLeitura ? 'none' : '';
+
+  atualizarStatusIndicador();
+  renderSidebarNav();
+  renderFase(0);
+}
+
+// ════════════════════════════
+//   SIDEBAR NAV
+// ════════════════════════════
+function renderSidebarNav() {
+  const nav = document.getElementById('fases-nav');
+  nav.innerHTML = '';
+  fluxo.fases.forEach((f, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'fase-nav-item' + (i === faseAtual ? ' ativa' : '');
+    btn.id = 'nav-f-'+i;
+    btn.onclick = () => renderFase(i);
+    const totalDatas = contarDatas(i);
+    const totalAtos = f.atos.length;
+    btn.innerHTML = `
+      <div class="fase-num-circle">${romanos[i]}</div>
+      <div class="fase-nav-nome">${f.titulo}</div>
+      <div class="fase-nav-badge">${totalAtos > 0 ? totalDatas+'/'+totalAtos : '—'}</div>
+    `;
+    nav.appendChild(btn);
+  });
+}
+
+const romanos = ['I','II','III','IV','V','VI'];
+
+function contarDatas(fi) {
+  return fluxo.fases[fi].atos.filter(a => a.data).length;
+}
+
+function atualizarNavAtiva(fi) {
+  document.querySelectorAll('.fase-nav-item').forEach((el,i) => {
+    el.className = 'fase-nav-item' + (i === fi ? ' ativa' : (contarDatas(i) > 0 ? ' completa' : ''));
+  });
+}
+
+// ════════════════════════════
+//   INDICADOR DE STATUS
+// ════════════════════════════
+function atualizarStatusIndicador() {
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  const bannerApr = document.getElementById('banner-aprovado-sid');
+  const bannerConc = document.getElementById('banner-concluido-sid');
+
+  dot.className = 'status-dot ' + statusPlano;
+
+  if (statusPlano === 'rascunho') {
+    txt.textContent = 'Rascunho — em elaboração';
+    bannerApr.style.display = 'none';
+    bannerConc.style.display = 'none';
+  } else if (statusPlano === 'concluido') {
+    txt.textContent = 'Concluído — aguardando aprovação';
+    bannerApr.style.display = 'none';
+    bannerConc.style.display = 'block';
+  } else if (statusPlano === 'aprovado') {
+    const dataFmt = aprovadoEm ? new Date(aprovadoEm).toLocaleDateString('pt-BR') : '—';
+    txt.textContent = 'Aprovado — ' + dataFmt;
+    bannerConc.style.display = 'none';
+    bannerApr.style.display = 'block';
+    bannerApr.textContent = 'Plano aprovado em ' + dataFmt + '. Somente leitura.';
+  }
+}
+
+// ════════════════════════════
+//   RENDER DE FASE
+// ════════════════════════════
+function renderFase(fi) {
+  faseAtual = fi;
+  atualizarNavAtiva(fi);
+  const f = fluxo.fases[fi];
+  const isPar = tipo === 'PAR';
+  const corClass = isPar ? 'par' : '';
+  const main = document.getElementById('main-content');
+
+  // Steps bar
+  const steps = fluxo.fases.map((_,i) => {
+    if (i < fi) return `<div class="step-dot feita"></div>${i < fluxo.fases.length-1 ? '<div class="step-sep feita"></div>' : ''}`;
+    if (i === fi) return `<div class="step-dot ativa ${corClass}"></div>${i < fluxo.fases.length-1 ? '<div class="step-sep"></div>' : ''}`;
+    return `<div class="step-dot"></div>${i < fluxo.fases.length-1 ? '<div class="step-sep"></div>' : ''}`;
+  }).join('');
+
+  // Banner de status no conteúdo principal
+  let bannerHtml = '';
+  if (statusPlano === 'concluido') {
+    bannerHtml = `<div class="banner-status concluido">
+      ⚠️ Este plano está aguardando aprovação. Navegue pelas fases, preencha o despacho na última fase e clique em "Aprovar e Arquivar".
+    </div>`;
+  } else if (statusPlano === 'aprovado') {
+    const dataFmt = aprovadoEm ? new Date(aprovadoEm).toLocaleDateString('pt-BR') : '—';
+    bannerHtml = `<div class="banner-status aprovado">
+      ✅ Plano aprovado em ${dataFmt}. Documento em modo somente leitura — apenas a exportação em PDF está disponível.
+    </div>`;
+  }
+
+  // Botões de navegação
+  const btnVoltar = fi > 0
+    ? `<button class="btn-nav" onclick="renderFase(${fi-1})">← Fase Anterior</button>` : '';
+
+  let btnsUltimaFase = '';
+  if (fi === fluxo.fases.length - 1) {
+    const btnJsonFinal = !modoSomenteLeitura
+      ? `<button class="btn-nav salvar-json" onclick="salvarJson('concluido')">↓ Salvar JSON final</button>` : '';
+    const btnAprovar = (statusPlano === 'concluido' && !modoSomenteLeitura)
+      ? `<button class="btn-nav aprovar" onclick="aprovarEArquivar()">✓ Aprovar e Arquivar</button>` : '';
+    btnsUltimaFase = `
+      <button class="btn-nav exportar" onclick="exportarPDF()">↓ Exportar PDF</button>
+      ${btnJsonFinal}
+      ${btnAprovar}
+    `;
+  }
+
+  const btnAvancar = fi < fluxo.fases.length - 1
+    ? `<button class="btn-nav avancar ${corClass}" onclick="renderFase(${fi+1})">Próxima Fase →</button>`
+    : btnsUltimaFase;
+
+  // Construtor (fase dinâmica) — oculto em somente leitura
+  let construtor = '';
+  if (f.dinamica && !modoSomenteLeitura) {
+    const opts = f.catalogo.map(g =>
+      `<optgroup label="${g.g}">${g.itens.map(it =>
+        `<option value="${it.v}" data-desc="${it.desc||''}" data-resp="${it.resp}">${it.v === '__OUTROS__' ? 'Outro ato (especificar)' : it.v}</option>`
+      ).join('')}</optgroup>`
+    ).join('');
+    construtor = `
+    <div class="construtor-panel">
+      <div class="construtor-titulo">Adicionar ato à Fase ${romanos[fi]}</div>
+      <div class="construtor-row">
+        <div>
+          <label>Ato / Procedimento</label>
+          <select id="sel-ato" onchange="toggleOutros(this)">${'<option value="">— Selecione —</option>'}${opts}</select>
+        </div>
+        <div>
+          <label>Data Prevista</label>
+          <input type="date" id="inp-data-ato">
+        </div>
+        <div style="padding-bottom:0">
+          <button class="btn-add ${corClass}" onclick="adicionarAto(${fi})">+ Adicionar</button>
+        </div>
+      </div>
+      <div id="outros-wrapper" style="display:none;margin-bottom:8px">
+        <label>Descrição do ato praticado <span style="color:var(--vermelho)">*</span></label>
+        <input type="text" id="inp-outros-nome" placeholder="Descreva o ato praticado pela comissão..." style="border-color:var(--cinza-bd)">
+      </div>
+      <div>
+        <label>Observação / Notas (opcional)</label>
+        <textarea id="inp-obs-ato" placeholder="Ex.: Serão ouvidas 3 testemunhas; solicitar sala com gravação em vídeo."></textarea>
+      </div>
+    </div>`;
+  }
+
+  // Tabela de atos
+  const temAtos = f.atos.length > 0;
+  const tabelaOuVazia = temAtos
+    ? `<div class="fase-card">
+        <table>
+          <thead><tr>
+            <th style="width:7%">Cód.</th>
+            <th style="width:${f.dinamica ? '46%' : '53%'}">Ato Processual / Deliberação</th>
+            <th style="width:22%">Data Prevista</th>
+            <th style="width:19%">Responsável</th>
+            ${f.dinamica && !modoSomenteLeitura ? '<th style="width:6%"></th>' : ''}
+          </tr></thead>
+          <tbody id="tbody-fase">${f.atos.map((a,ai) => renderLinha(a, ai, fi, f.dinamica, corClass)).join('')}</tbody>
+        </table>
+      </div>`
+    : (f.dinamica && !modoSomenteLeitura
+        ? `<div class="fase-vazia">Nenhum ato adicionado. Use o construtor acima para montar esta fase.</div>`
+        : `<div class="fase-vazia">Nenhum ato registrado nesta fase.</div>`);
+
+  // Bloco assinaturas (última fase)
+  let assinaturas = '';
+  if (fi === fluxo.fases.length - 1) {
+    assinaturas = renderAssinaturas(isPar);
+  }
+
+  main.innerHTML = `
+    ${bannerHtml}
+    <div class="steps-bar">${steps}</div>
+    <div class="fase-header-bar">
+      <div class="fase-numero-grande ${corClass}">${romanos[fi]}</div>
+      <div class="fase-titulo-h">
+        <h2 class="${corClass}">Fase ${romanos[fi]} — ${f.titulo}</h2>
+        ${f.subtitulo ? `<p>${f.subtitulo}</p>` : ''}
+      </div>
+      <div class="nav-fases">${btnVoltar}${btnAvancar}</div>
+    </div>
+    ${construtor}
+    ${tabelaOuVazia}
+    ${assinaturas}
+  `;
+
+  // Restaurar estado do despacho se estiver na última fase
+  if (fi === fluxo.fases.length - 1) {
+    restaurarDespacho(corClass);
+  }
+
+  // Aplicar somente leitura nos inputs de data da tabela
+  if (modoSomenteLeitura) {
+    main.querySelectorAll('input, textarea, select').forEach(el => { el.disabled = true; });
+  }
+
+  atualizarProgresso();
+}
+
+function renderLinha(a, ai, fi, dinamica, corClass) {
+  const tr_class = a.data ? 'tem-data' : '';
+  const inp_class = a.data ? 'ok' : '';
+  const disabled = modoSomenteLeitura ? 'disabled' : '';
+  return `<tr class="${tr_class}" id="tr-${fi}-${ai}">
+    <td>${a.cod}</td>
+    <td>
+      <strong class="${corClass}">${a.nome}</strong>
+      ${a.desc ? `<span class="desc-ato">${a.desc}</span>` : ''}
+      ${a.obs ? `<div class="obs-display">${a.obs}</div>` : ''}
+    </td>
+    <td><input type="date" value="${a.data||''}" class="${inp_class}" ${disabled} onchange="salvarData(${fi},${ai},this)"></td>
+    <td><span class="resp-badge">${a.resp}</span></td>
+    ${dinamica && !modoSomenteLeitura ? `<td><button class="btn-rm" onclick="removerAto(${fi},${ai})">✕</button></td>` : ''}
+  </tr>`;
+}
+
+function renderAssinaturas(isPar) {
+  const membros = fluxo.membros || FLUXOS[tipo].membros;
+  const corClass = isPar ? 'par' : '';
+  const assinGrid = membros.map(m => {
+    const nome = document.getElementById(m.id+'-nome')?.value || '';
+    const mat = document.getElementById(m.id+'-mat')?.value || '';
+    const cargo = document.getElementById(m.id+'-cargo')?.value || '';
+    return `<div class="assin-linha">
+      <div class="assin-nome ${corClass}">${nome || '___________________________'}</div>
+      <div class="assin-mat">${mat ? 'SIAPE '+mat : ''}${cargo ? ' · '+cargo : ''}</div>
+      <div class="assin-cargo">${m.cargo}</div>
+    </div>`;
+  }).join('');
+
+  const tituloDespacho = isPar
+    ? 'Despacho de Aprovação e Acompanhamento — Autoridade Máxima do Órgão (art. 10, Lei 12.846/2013)'
+    : 'Despacho de Aprovação e Acompanhamento da Autoridade Competente';
+
+  const aguardando = statusPlano === 'concluido' && !modoSomenteLeitura;
+  const despachoClass = aguardando ? 'despacho-bloco aguardando' : 'despacho-bloco';
+
+  return `
+  <div class="assinaturas-bloco">
+    <div class="assin-titulo">Assinaturas da Comissão</div>
+    <p style="font-size:11px;font-family:'Courier New',monospace;color:var(--cinza-lt);text-align:center;margin-bottom:2rem">
+      Local e Data: ___________________________, _____ de _______________ de 2026.
+    </p>
+    <div class="assin-grid">${assinGrid}</div>
+
+    <div class="${despachoClass}">
+      <div class="despacho-titulo ${corClass}">${tituloDespacho}</div>
+      <div class="despacho-opcao">
+        <div class="cb" id="cb1" onclick="toggleCb('cb1','${corClass}')"></div>
+        <span>Aprovo o planejamento cronológico proposto pela comissão.</span>
+      </div>
+      <div class="despacho-opcao">
+        <div class="cb" id="cb2" onclick="toggleCb('cb2','${corClass}')"></div>
+        <span>Determino as seguintes adequações de prazos ou atos:</span>
+      </div>
+      <textarea id="desp-obs" placeholder="Registre aqui as adequações determinadas pela autoridade, se houver..." style="margin-top:8px" oninput="syncDespacho()"></textarea>
+      <div class="despacho-grid">
+        <div>
+          <label>Nome e Cargo da Autoridade</label>
+          <input type="text" id="desp-autoridade" placeholder="Nome completo e cargo" oninput="syncDespacho()">
+        </div>
+        <div>
+          <label>Data do Despacho</label>
+          <input type="date" id="desp-data" oninput="syncDespacho()">
+        </div>
+        <div>
+          <label>Assinatura</label>
+          <input type="text" placeholder="(campo de assinatura)">
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function restaurarDespacho(corClass) {
+  // Restaurar checkboxes
+  const cb1 = document.getElementById('cb1');
+  const cb2 = document.getElementById('cb2');
+  if (cb1) {
+    cb1.classList.toggle('on', dadosDespacho.cb1);
+    if (corClass === 'par') cb1.classList.toggle('par', dadosDespacho.cb1);
+    cb1.textContent = dadosDespacho.cb1 ? '✓' : '';
+  }
+  if (cb2) {
+    cb2.classList.toggle('on', dadosDespacho.cb2);
+    if (corClass === 'par') cb2.classList.toggle('par', dadosDespacho.cb2);
+    cb2.textContent = dadosDespacho.cb2 ? '✓' : '';
+  }
+  const obs = document.getElementById('desp-obs');
+  if (obs) obs.value = dadosDespacho.observacoes || '';
+  const aut = document.getElementById('desp-autoridade');
+  if (aut) aut.value = dadosDespacho.autoridade || '';
+  const dt = document.getElementById('desp-data');
+  if (dt) dt.value = dadosDespacho.dataDespacho || '';
+}
+
+function syncDespacho() {
+  dadosDespacho.observacoes = document.getElementById('desp-obs')?.value || '';
+  dadosDespacho.autoridade = document.getElementById('desp-autoridade')?.value || '';
+  dadosDespacho.dataDespacho = document.getElementById('desp-data')?.value || '';
+}
+
+// ════════════════════════════
+//   AÇÕES
+// ════════════════════════════
+function salvarData(fi, ai, inp) {
+  fluxo.fases[fi].atos[ai].data = inp.value;
+  inp.className = inp.value ? 'ok' : '';
+  const tr = inp.closest('tr');
+  tr.className = inp.value ? 'tem-data' : '';
+  atualizarProgresso();
+  renderSidebarNav();
+}
+
+function toggleOutros(sel) {
+  const wrapper = document.getElementById('outros-wrapper');
+  if (wrapper) wrapper.style.display = sel.value === '__OUTROS__' ? '' : 'none';
+  if (sel.value !== '__OUTROS__') {
+    const inp = document.getElementById('inp-outros-nome');
+    if (inp) inp.value = '';
+  }
+}
+
+function adicionarAto(fi) {
+  const sel = document.getElementById('sel-ato');
+  const data = document.getElementById('inp-data-ato').value;
+  const obs = document.getElementById('inp-obs-ato').value.trim();
+  if (!sel.value) { toast('Selecione um ato.'); return; }
+
+  const isOutros = sel.value === '__OUTROS__';
+  const outrosNome = isOutros ? (document.getElementById('inp-outros-nome')?.value.trim() || '') : '';
+  if (isOutros && !outrosNome) { toast('Descreva o ato praticado no campo de texto.'); return; }
+
+  const opt = sel.options[sel.selectedIndex];
+  const f = fluxo.fases[fi];
+  contF2++;
+  const n = f.atos.length + 1;
+  const prefixo = fi + 1;
+  const ato = {
+    cod: prefixo+'.'+n,
+    nome: isOutros ? outrosNome : sel.value,
+    desc: isOutros ? '' : (opt.getAttribute('data-desc') || ''),
+    resp: isOutros ? 'Comissão' : (opt.getAttribute('data-resp') || 'Comissão'),
+    obs: obs,
+    data: data,
+    dinamica: true,
+    outros: isOutros
+  };
+  f.atos.push(ato);
+  sel.value = '';
+  const wrapper = document.getElementById('outros-wrapper');
+  if (wrapper) wrapper.style.display = 'none';
+  if (document.getElementById('inp-outros-nome')) document.getElementById('inp-outros-nome').value = '';
+  document.getElementById('inp-data-ato').value = '';
+  document.getElementById('inp-obs-ato').value = '';
+  renderFase(fi);
+  toast('Ato adicionado.');
+}
+
+function removerAto(fi, ai) {
+  fluxo.fases[fi].atos.splice(ai, 1);
+  fluxo.fases[fi].atos.forEach((a,i) => { a.cod = (fi+1)+'.'+(i+1); });
+  renderFase(fi);
+  atualizarProgresso();
+}
+
+function toggleCb(id, corClass) {
+  if (modoSomenteLeitura) return;
+  const el = document.getElementById(id);
+  el.classList.toggle('on');
+  if (corClass === 'par') el.classList.toggle('par', el.classList.contains('on'));
+  el.textContent = el.classList.contains('on') ? '✓' : '';
+  dadosDespacho[id] = el.classList.contains('on');
+}
+
+// ════════════════════════════
+//   PROGRESSO
+// ════════════════════════════
+function atualizarProgresso() {
+  let total = 0, prench = 0;
+  const todasDatas = [];
+  fluxo.fases.forEach(f => {
+    f.atos.forEach(a => {
+      total++;
+      if (a.data) { prench++; todasDatas.push(new Date(a.data)); }
+    });
+  });
+  const pct = total > 0 ? Math.round((prench/total)*100) : 0;
+  document.getElementById('pct-label').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  if (todasDatas.length >= 2) {
+    todasDatas.sort((a,b)=>a-b);
+    const dias = Math.round((todasDatas[todasDatas.length-1]-todasDatas[0])/86400000);
+    document.getElementById('dur-sid').textContent = '≈ ' + dias + ' dias corridos';
+  } else {
+    document.getElementById('dur-sid').textContent = '';
+  }
+  renderSidebarNav();
+}
+
+// ════════════════════════════
+//   COLETA DE DADOS DO CABEÇALHO
+// ════════════════════════════
+function coletarCabecalho() {
+  const ids = ['f-num','f-data','f-local',
+    'p-nome','p-mat','p-cargo',
+    'v-nome','v-mat','v-cargo',
+    's-nome','s-mat','s-cargo',
+    'pr-nome','pr-mat','pr-cargo',
+    'mi-nome','mi-mat','mi-cargo',
+    'sr-nome','sr-mat','sr-cargo'];
+  const dados = {};
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) dados[id] = el.value;
+  });
+  return dados;
+}
+
+function repopularCabecalho(dados) {
+  Object.entries(dados).forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
+  });
+}
+
+// ════════════════════════════
+//   SALVAR JSON
+// ════════════════════════════
+function salvarJson(novoStatus) {
+  if (modoSomenteLeitura) {
+    toast('Plano aprovado — não é possível salvar nova versão.');
+    return;
+  }
+
+  // Sincronizar despacho antes de salvar
+  syncDespacho();
+
+  const num = document.getElementById('f-num')?.value || 'processo';
+  const numSanitizado = num.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const nomeBase = tipo + '_' + (numSanitizado || 'processo');
+
+  const payload = {
+    sistema: 'PAD-PAR-Planejamento',
+    versao: '1.0',
+    status: novoStatus,
+    tipo: tipo,
+    exportadoEm: new Date().toISOString(),
+    aprovadoEm: aprovadoEm || null,
+    nomeArquivo: nomeBase + '_' + novoStatus,
+    cabecalho: coletarCabecalho(),
+    despacho: { ...dadosDespacho },
+    fluxo: JSON.parse(JSON.stringify(fluxo))
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nomeBase + '_' + novoStatus + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  if (novoStatus === 'rascunho') {
+    toast('Rascunho salvo.');
+  } else if (novoStatus === 'concluido') {
+    statusPlano = 'concluido';
+    atualizarStatusIndicador();
+    toast('Plano salvo como concluído. Encaminhe para aprovação do supervisor.');
+  }
+}
+
+// ════════════════════════════
+//   CARREGAR JSON
+// ════════════════════════════
+function carregarJson(input) {
+  const file = input.files[0];
+  if (!file) return;
+  input.value = '';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    let dados;
+    try {
+      dados = JSON.parse(e.target.result);
+    } catch(err) {
+      mostrarErrroLanding('Arquivo inválido. O arquivo não é um JSON válido.');
+      return;
+    }
+
+    if (dados.sistema !== 'PAD-PAR-Planejamento') {
+      mostrarErrroLanding('Arquivo inválido. Selecione um arquivo gerado por este sistema.');
+      return;
+    }
+
+    if (!dados.tipo || !FLUXOS[dados.tipo]) {
+      mostrarErrroLanding('Arquivo corrompido. Tipo de processo não reconhecido.');
+      return;
+    }
+
+    // Reconstituir estado
+    tipo = dados.tipo;
+    statusPlano = dados.status || 'rascunho';
+    aprovadoEm = dados.aprovadoEm || null;
+    modoSomenteLeitura = (statusPlano === 'aprovado');
+    dadosDespacho = dados.despacho
+      ? { ...{ cb1:false, cb2:false, observacoes:'', autoridade:'', dataDespacho:'' }, ...dados.despacho }
+      : { cb1:false, cb2:false, observacoes:'', autoridade:'', dataDespacho:'' };
+
+    // Reconstituir fluxo
+    fluxo = dados.fluxo;
+
+    // Mostrar tela de início para repopular campos do cabeçalho
+    document.getElementById('tela-landing').style.display = 'none';
+
+    // Repopular campos do formulário de cabeçalho
+    if (tipo === 'PAD') {
+      selecionarTipo('PAD');
+    } else {
+      selecionarTipo('PAR');
+    }
+
+    if (dados.cabecalho) {
+      repopularCabecalho(dados.cabecalho);
+    }
+
+    // Entrar diretamente no app
+    abrirApp();
+
+    // Toast com status
+    const dataExport = dados.exportadoEm ? new Date(dados.exportadoEm).toLocaleDateString('pt-BR') : '—';
+    if (statusPlano === 'aprovado') {
+      const dataApr = aprovadoEm ? new Date(aprovadoEm).toLocaleDateString('pt-BR') : '—';
+      toast('Plano carregado — Aprovado em ' + dataApr + ' (somente leitura)');
+    } else if (statusPlano === 'concluido') {
+      toast('Plano carregado — Aguardando aprovação (exportado em ' + dataExport + ')');
+    } else {
+      toast('Plano carregado — Rascunho de ' + dataExport);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function mostrarErrroLanding(msg) {
+  const el = document.getElementById('landing-erro');
+  el.textContent = msg;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+// ════════════════════════════
+//   APROVAR E ARQUIVAR
+// ════════════════════════════
+function aprovarEArquivar() {
+  syncDespacho();
+
+  if (!dadosDespacho.autoridade || dadosDespacho.autoridade.trim() === '') {
+    toast('Preencha o nome da autoridade antes de aprovar.');
+    return;
+  }
+  if (!dadosDespacho.cb1 && !dadosDespacho.cb2) {
+    toast('Marque ao menos uma opção no despacho antes de aprovar.');
+    return;
+  }
+
+  aprovadoEm = new Date().toISOString();
+  statusPlano = 'aprovado';
+  modoSomenteLeitura = true;
+
+  const num = document.getElementById('f-num')?.value || 'processo';
+  const numSanitizado = num.replace(/[^a-zA-Z0-9]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  const nomeBase = tipo + '_' + (numSanitizado || 'processo');
+
+  // Salvar JSON aprovado
+  const payload = {
+    sistema: 'PAD-PAR-Planejamento',
+    versao: '1.0',
+    status: 'aprovado',
+    tipo: tipo,
+    exportadoEm: new Date().toISOString(),
+    aprovadoEm: aprovadoEm,
+    nomeArquivo: nomeBase + '_aprovado',
+    cabecalho: coletarCabecalho(),
+    despacho: { ...dadosDespacho },
+    fluxo: JSON.parse(JSON.stringify(fluxo))
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = nomeBase + '_aprovado.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  // Atualizar interface para somente leitura
+  atualizarStatusIndicador();
+  document.getElementById('btn-sid-salvar').style.display = 'none';
+
+  // Gerar PDF após breve delay para o download JSON
+  setTimeout(() => {
+    exportarPDF();
+    toast('Plano aprovado e arquivado.');
+    // Re-renderizar fase para atualizar botões
+    renderFase(faseAtual);
+  }, 500);
+}
+
+// ════════════════════════════
+//   EXPORT PDF
+// ════════════════════════════
+function exportarPDF() {
+  toast('Gerando PDF… aguarde.');
+  const num = document.getElementById('f-num')?.value || 'processo';
+
+  const container = document.createElement('div');
+  container.style.cssText = 'font-family:Georgia,serif;font-size:11px;color:#2C2C2A;padding:1cm';
+
+  const isPar = tipo === 'PAR';
+  const corHex = isPar ? '#3C3489' : '#0D2B4E';
+
+  const num_v = document.getElementById('f-num')?.value || '';
+  const local_v = document.getElementById('f-local')?.value || '';
+  const data_v = document.getElementById('f-data')?.value || '';
+
+  let cabHtml = `<div style="text-align:center;margin-bottom:2cm;padding-bottom:1cm;border-bottom:2px solid ${corHex}">
+    <div style="font-size:20px;margin-bottom:8px">⚖️</div>
+    <div style="font-size:10px;font-family:'Courier New',monospace;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:4px">Ministério da Fazenda · Receita Federal do Brasil</div>
+    <div style="font-size:16px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Plano de Trabalho e Cronograma de Execução</div>
+    <div style="font-size:12px;color:#5F5E5A;margin-top:4px">${fluxo.subtitulo}</div>
+    ${statusPlano === 'aprovado' && aprovadoEm ? `<div style="margin-top:8px;font-size:10px;font-family:'Courier New',monospace;color:#3B6D11;background:#EAF3DE;display:inline-block;padding:3px 10px;border-radius:3px">✅ APROVADO EM ${new Date(aprovadoEm).toLocaleDateString('pt-BR')}</div>` : ''}
+    <table style="margin:1cm auto 0;border-collapse:collapse;width:100%;max-width:480px">
+      <tr>
+        <td style="padding:6px 10px;background:#F5F4F0;border-left:3px solid ${corHex};font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Processo N.º</td>
+        <td style="padding:6px 10px;background:#F5F4F0;font-size:12px;font-weight:bold;color:${corHex}">${num_v||'—'}</td>
+        <td style="padding:6px 10px;background:#F5F4F0;border-left:1px solid #D3D1C7;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Data de Instalação</td>
+        <td style="padding:6px 10px;background:#F5F4F0;font-size:12px;font-weight:bold;color:${corHex}">${data_v ? new Date(data_v+'T12:00').toLocaleDateString('pt-BR') : '—'}</td>
+      </tr>
+      <tr>
+        <td style="padding:6px 10px;background:#F5F4F0;border-left:3px solid ${corHex};border-top:1px solid #D3D1C7;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Localidade / Unidade</td>
+        <td colspan="3" style="padding:6px 10px;background:#F5F4F0;border-top:1px solid #D3D1C7;font-size:12px;font-weight:bold;color:${corHex}">${local_v||'—'}</td>
+      </tr>
+    </table>
+  </div>`;
+
+  let fasesHtml = '';
+  fluxo.fases.forEach((f, fi) => {
+    if (f.atos.length === 0) return;
+    const rows = f.atos.map(a => `
+      <tr style="${a.data ? 'background:#F6FAF0' : ''}">
+        <td style="padding:7px 8px;font-family:'Courier New',monospace;font-size:10px;color:#888;white-space:nowrap">${a.cod}</td>
+        <td style="padding:7px 8px">
+          <strong style="color:${corHex}">${a.nome}</strong>
+          ${a.desc ? `<br><span style="font-size:10px;color:#888">${a.desc}</span>` : ''}
+          ${a.obs ? `<br><em style="font-size:10px;color:#854F0B">${a.obs}</em>` : ''}
+        </td>
+        <td style="padding:7px 8px;font-family:'Courier New',monospace;font-size:10px;color:${a.data?'#3B6D11':'#888'};white-space:nowrap">
+          ${a.data ? new Date(a.data+'T12:00').toLocaleDateString('pt-BR') : '—'}
+        </td>
+        <td style="padding:7px 8px;font-size:10px;font-family:'Courier New',monospace;color:#888;white-space:nowrap">${a.resp}</td>
+      </tr>`).join('');
+
+    fasesHtml += `
+      <div style="margin-bottom:1cm;page-break-before:always">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #D3D1C7">
+          <div style="width:28px;height:28px;border-radius:50%;background:${corHex};color:white;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;flex-shrink:0">${romanos[fi]}</div>
+          <div>
+            <div style="font-size:12px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Fase ${romanos[fi]} — ${f.titulo}</div>
+            ${f.subtitulo ? `<div style="font-size:10px;font-family:'Courier New',monospace;color:#888;margin-top:2px">${f.subtitulo}</div>` : ''}
+          </div>
+        </div>
+        <table style="width:100%;border-collapse:collapse;font-size:11px;border:1px solid #D3D1C7">
+          <thead>
+            <tr style="background:${corHex};color:white">
+              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:7%">Cód.</th>
+              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:52%">Ato Processual / Deliberação</th>
+              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:20%">Data Prevista</th>
+              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:21%">Responsável</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>`;
+  });
+
+  // Assinaturas PDF
+  const membros = FLUXOS[tipo].membros;
+  const assinCols = membros.map(m => {
+    const nome = document.getElementById(m.id+'-nome')?.value || '';
+    const mat = document.getElementById(m.id+'-mat')?.value || '';
+    const cargo_v = document.getElementById(m.id+'-cargo')?.value || '';
+    return `<td style="padding:0 1cm;text-align:center;vertical-align:bottom">
+      <div style="font-size:12px;font-weight:bold;color:${corHex};min-height:18px">${nome}</div>
+      <div style="font-size:9px;font-family:'Courier New',monospace;color:#888;margin-bottom:4px">${mat?'SIAPE '+mat:''}${cargo_v?' · '+cargo_v:''}</div>
+      <div style="font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.06em;color:#5F5E5A;padding-top:6px;border-top:1px solid #2C2C2A">${m.cargo}</div>
+    </td>`;
+  }).join('');
+
+  // Despacho no PDF
+  const cb1txt = dadosDespacho.cb1 ? '(✓)' : '( &nbsp;&nbsp; )';
+  const cb2txt = dadosDespacho.cb2 ? '(✓)' : '( &nbsp;&nbsp; )';
+  const autTxt = dadosDespacho.autoridade || '_________________________________';
+  const dataTxt = dadosDespacho.dataDespacho ? new Date(dadosDespacho.dataDespacho+'T12:00').toLocaleDateString('pt-BR') : '___/___/______';
+  const obsTxt = dadosDespacho.observacoes || '_____________________________________________';
+
+  const assinHtml = `
+    <div style="page-break-before:always;margin-top:1cm">
+      <div style="font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:#888;margin-bottom:1cm;text-align:center">
+        Local e Data: ___________________________, _____ de _______________ de 2026.
+      </div>
+      <table style="width:100%;margin-bottom:1.5cm"><tr>${assinCols}</tr></table>
+      <div style="background:#F5F4F0;border:1px solid #D3D1C7;border-radius:4px;padding:1cm">
+        <div style="font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${corHex};margin-bottom:12px">
+          Despacho de Aprovação e Acompanhamento da Autoridade Competente
+        </div>
+        <div style="font-size:11px;margin-bottom:8px">${cb1txt} Aprovo o planejamento cronológico proposto pela comissão.</div>
+        <div style="font-size:11px;margin-bottom:8px">${cb2txt} Determino as seguintes adequações: ${obsTxt}</div>
+        <div style="margin-top:1cm;padding-top:1cm;border-top:1px solid #D3D1C7;font-size:11px">
+          Autoridade: ${autTxt} &nbsp;&nbsp;&nbsp; Data: ${dataTxt}
+        </div>
+      </div>
+    </div>`;
+
+  container.innerHTML = cabHtml + fasesHtml + assinHtml;
+
+  const num_sanitizado = (num_v||'processo').replace(/[^a-zA-Z0-9]/g,'_');
+  const opt = {
+    margin:[1,1,1.2,1],
+    filename:'Plano-Trabalho-'+tipo+'-'+num_sanitizado+'.pdf',
+    image:{type:'jpeg',quality:0.95},
+    html2canvas:{scale:2,useCORS:true},
+    jsPDF:{unit:'cm',format:'a4',orientation:'portrait'}
+  };
+
+  html2pdf().set(opt).from(container).save().then(() => toast('PDF exportado!'));
+}
+
+// ════════════════════════════
+//   UTILS
+// ════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('on');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('on'),3500);
+}
+</script>
+</body>
+</html>
