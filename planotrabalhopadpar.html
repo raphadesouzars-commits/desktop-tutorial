@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sistema de Planejamento — PAD / PAR</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -262,17 +261,26 @@ td input[type="date"].ok{border-color:var(--verde-b);background:var(--verde-bg);
 .readonly-overlay{pointer-events:none;opacity:0.7}
 input[disabled],textarea[disabled],select[disabled]{background:#F5F4F0!important;color:var(--cinza-lt)!important;cursor:not-allowed}
 
-/* ── PDF (oculta UI) ── */
+/* ── MODAL DE VISUALIZAÇÃO PDF ── */
+.pdf-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:1000;flex-direction:column;align-items:center}
+.pdf-modal-overlay.aberto{display:flex}
+.pdf-modal-toolbar{width:100%;background:#2C2C2A;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px}
+.pdf-modal-toolbar span{color:#D3D1C7;font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.06em}
+.pdf-modal-toolbar-btns{display:flex;gap:8px}
+.btn-modal-imprimir{padding:8px 20px;background:#3B6D11;color:white;border:none;border-radius:4px;font-size:11px;font-family:'Courier New',monospace;letter-spacing:0.06em;cursor:pointer;transition:background 0.2s}
+.btn-modal-imprimir:hover{background:#27500A}
+.btn-modal-fechar{padding:8px 14px;background:rgba(255,255,255,0.1);color:#D3D1C7;border:1px solid rgba(255,255,255,0.2);border-radius:4px;font-size:11px;font-family:'Courier New',monospace;cursor:pointer;transition:all 0.2s}
+.btn-modal-fechar:hover{background:rgba(255,255,255,0.2);color:white}
+.pdf-modal-body{flex:1;overflow-y:auto;width:100%;display:flex;justify-content:center;padding:24px 16px;background:#525659}
+.pdf-modal-page{background:white;width:21cm;min-height:29.7cm;padding:2cm;box-shadow:0 4px 24px rgba(0,0,0,0.4);font-family:Georgia,'Times New Roman',serif;font-size:11px;color:#2C2C2A;line-height:1.5}
+
+/* ── IMPRESSÃO — imprime apenas o conteúdo do modal ── */
 @media print{
-  #tela-inicio,#tela-landing,.sidebar,.construtor-panel,.btn-nav,.btn-rm,.nav-fases,.fase-header-bar .nav-fases,.steps-bar,.banner-status{display:none!important}
-  body{background:white;font-size:11px}
-  .app-layout{grid-template-columns:1fr}
-  .main-content{padding:0;max-width:100%}
-  #tela-app{display:block!important}
-  table{page-break-inside:auto}
-  tr{page-break-inside:avoid}
-  .fase-card{box-shadow:none;border:1px solid #ccc;margin-bottom:1cm}
-  .assinaturas-bloco{box-shadow:none}
+  body > *:not(.pdf-modal-overlay){display:none!important}
+  .pdf-modal-overlay{display:block!important;position:static!important;background:none!important}
+  .pdf-modal-toolbar{display:none!important}
+  .pdf-modal-body{display:block!important;padding:0!important;background:none!important;overflow:visible!important}
+  .pdf-modal-page{box-shadow:none!important;padding:0!important;width:100%!important}
 }
 </style>
 </head>
@@ -466,6 +474,20 @@ input[disabled],textarea[disabled],select[disabled]{background:#F5F4F0!important
     <main class="main-content" id="main-content">
       <!-- renderizado por JS -->
     </main>
+  </div>
+</div>
+
+<!-- MODAL DE VISUALIZAÇÃO PDF -->
+<div class="pdf-modal-overlay" id="pdf-modal">
+  <div class="pdf-modal-toolbar">
+    <span id="pdf-modal-titulo">Pré-visualização do documento</span>
+    <div class="pdf-modal-toolbar-btns">
+      <button class="btn-modal-imprimir" onclick="imprimirModal()">🖨 Imprimir / Salvar PDF</button>
+      <button class="btn-modal-fechar" onclick="fecharModal()">✕ Fechar</button>
+    </div>
+  </div>
+  <div class="pdf-modal-body">
+    <div class="pdf-modal-page" id="pdf-modal-conteudo"></div>
   </div>
 </div>
 
@@ -1349,75 +1371,75 @@ function aprovarEArquivar() {
 }
 
 // ════════════════════════════
-//   EXPORT PDF
+//   VISUALIZAÇÃO E IMPRESSÃO
 // ════════════════════════════
 function exportarPDF() {
-  toast('Gerando PDF… aguarde.');
-  const num = document.getElementById('f-num')?.value || 'processo';
-
-  const container = document.createElement('div');
-  container.style.cssText = 'font-family:Georgia,serif;font-size:11px;color:#2C2C2A;padding:1cm';
+  syncDespacho();
 
   const isPar = tipo === 'PAR';
   const corHex = isPar ? '#3C3489' : '#0D2B4E';
-
   const num_v = document.getElementById('f-num')?.value || '';
   const local_v = document.getElementById('f-local')?.value || '';
   const data_v = document.getElementById('f-data')?.value || '';
 
-  let cabHtml = `<div style="text-align:center;margin-bottom:2cm;padding-bottom:1cm;border-bottom:2px solid ${corHex}">
-    <div style="font-size:20px;margin-bottom:8px">⚖️</div>
-    <div style="font-size:10px;font-family:'Courier New',monospace;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:4px">Ministério da Fazenda · Receita Federal do Brasil</div>
-    <div style="font-size:16px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Plano de Trabalho e Cronograma de Execução</div>
-    <div style="font-size:12px;color:#5F5E5A;margin-top:4px">${fluxo.subtitulo}</div>
-    ${statusPlano === 'aprovado' && aprovadoEm ? `<div style="margin-top:8px;font-size:10px;font-family:'Courier New',monospace;color:#3B6D11;background:#EAF3DE;display:inline-block;padding:3px 10px;border-radius:3px">✅ APROVADO EM ${new Date(aprovadoEm).toLocaleDateString('pt-BR')}</div>` : ''}
-    <table style="margin:1cm auto 0;border-collapse:collapse;width:100%;max-width:480px">
-      <tr>
-        <td style="padding:6px 10px;background:#F5F4F0;border-left:3px solid ${corHex};font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Processo N.º</td>
-        <td style="padding:6px 10px;background:#F5F4F0;font-size:12px;font-weight:bold;color:${corHex}">${num_v||'—'}</td>
-        <td style="padding:6px 10px;background:#F5F4F0;border-left:1px solid #D3D1C7;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Data de Instalação</td>
-        <td style="padding:6px 10px;background:#F5F4F0;font-size:12px;font-weight:bold;color:${corHex}">${data_v ? new Date(data_v+'T12:00').toLocaleDateString('pt-BR') : '—'}</td>
-      </tr>
-      <tr>
-        <td style="padding:6px 10px;background:#F5F4F0;border-left:3px solid ${corHex};border-top:1px solid #D3D1C7;font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Localidade / Unidade</td>
-        <td colspan="3" style="padding:6px 10px;background:#F5F4F0;border-top:1px solid #D3D1C7;font-size:12px;font-weight:bold;color:${corHex}">${local_v||'—'}</td>
-      </tr>
-    </table>
-  </div>`;
+  // Cabeçalho
+  const cabHtml = `
+    <div style="text-align:center;margin-bottom:1.5cm;padding-bottom:0.8cm;border-bottom:2px solid ${corHex}">
+      <div style="font-size:18px;margin-bottom:6px">⚖️</div>
+      <div style="font-size:9px;font-family:'Courier New',monospace;letter-spacing:0.1em;text-transform:uppercase;color:#888;margin-bottom:4px">Ministério da Fazenda · Receita Federal do Brasil</div>
+      <div style="font-size:15px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Plano de Trabalho e Cronograma de Execução</div>
+      <div style="font-size:11px;color:#5F5E5A;margin-top:3px">${fluxo.subtitulo}</div>
+      ${statusPlano === 'aprovado' && aprovadoEm
+        ? `<div style="margin-top:7px;font-size:9px;font-family:'Courier New',monospace;color:#3B6D11;background:#EAF3DE;display:inline-block;padding:3px 10px;border-radius:3px">✅ APROVADO EM ${new Date(aprovadoEm).toLocaleDateString('pt-BR')}</div>`
+        : ''}
+      <table style="margin:0.8cm auto 0;border-collapse:collapse;width:100%;max-width:480px">
+        <tr>
+          <td style="padding:5px 9px;background:#F5F4F0;border-left:3px solid ${corHex};font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Processo N.º</td>
+          <td style="padding:5px 9px;background:#F5F4F0;font-size:11px;font-weight:bold;color:${corHex}">${num_v||'—'}</td>
+          <td style="padding:5px 9px;background:#F5F4F0;border-left:1px solid #D3D1C7;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Data de Instalação</td>
+          <td style="padding:5px 9px;background:#F5F4F0;font-size:11px;font-weight:bold;color:${corHex}">${data_v ? new Date(data_v+'T12:00').toLocaleDateString('pt-BR') : '—'}</td>
+        </tr>
+        <tr>
+          <td style="padding:5px 9px;background:#F5F4F0;border-left:3px solid ${corHex};border-top:1px solid #D3D1C7;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;color:#888">Localidade / Unidade</td>
+          <td colspan="3" style="padding:5px 9px;background:#F5F4F0;border-top:1px solid #D3D1C7;font-size:11px;font-weight:bold;color:${corHex}">${local_v||'—'}</td>
+        </tr>
+      </table>
+    </div>`;
 
+  // Fases — sem page-break, documento contínuo
   let fasesHtml = '';
   fluxo.fases.forEach((f, fi) => {
     if (f.atos.length === 0) return;
     const rows = f.atos.map(a => `
       <tr style="${a.data ? 'background:#F6FAF0' : ''}">
-        <td style="padding:7px 8px;font-family:'Courier New',monospace;font-size:10px;color:#888;white-space:nowrap">${a.cod}</td>
-        <td style="padding:7px 8px">
-          <strong style="color:${corHex}">${a.nome}</strong>
-          ${a.desc ? `<br><span style="font-size:10px;color:#888">${a.desc}</span>` : ''}
-          ${a.obs ? `<br><em style="font-size:10px;color:#854F0B">${a.obs}</em>` : ''}
+        <td style="padding:6px 7px;font-family:'Courier New',monospace;font-size:9px;color:#888;white-space:nowrap;border-bottom:1px solid #EEECEA">${a.cod}</td>
+        <td style="padding:6px 7px;border-bottom:1px solid #EEECEA">
+          <strong style="color:${corHex};font-size:10px">${a.nome}</strong>
+          ${a.desc ? `<br><span style="font-size:9px;color:#888">${a.desc}</span>` : ''}
+          ${a.obs ? `<br><em style="font-size:9px;color:#854F0B">${a.obs}</em>` : ''}
         </td>
-        <td style="padding:7px 8px;font-family:'Courier New',monospace;font-size:10px;color:${a.data?'#3B6D11':'#888'};white-space:nowrap">
+        <td style="padding:6px 7px;font-family:'Courier New',monospace;font-size:9px;color:${a.data?'#3B6D11':'#888'};white-space:nowrap;border-bottom:1px solid #EEECEA">
           ${a.data ? new Date(a.data+'T12:00').toLocaleDateString('pt-BR') : '—'}
         </td>
-        <td style="padding:7px 8px;font-size:10px;font-family:'Courier New',monospace;color:#888;white-space:nowrap">${a.resp}</td>
+        <td style="padding:6px 7px;font-size:9px;font-family:'Courier New',monospace;color:#888;white-space:nowrap;border-bottom:1px solid #EEECEA">${a.resp}</td>
       </tr>`).join('');
 
     fasesHtml += `
-      <div style="margin-bottom:1cm;page-break-before:always">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid #D3D1C7">
-          <div style="width:28px;height:28px;border-radius:50%;background:${corHex};color:white;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:11px;font-weight:bold;flex-shrink:0">${romanos[fi]}</div>
+      <div style="margin-bottom:0.8cm">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #D3D1C7">
+          <div style="width:24px;height:24px;border-radius:50%;background:${corHex};color:white;display:flex;align-items:center;justify-content:center;font-family:'Courier New',monospace;font-size:10px;font-weight:bold;flex-shrink:0">${romanos[fi]}</div>
           <div>
-            <div style="font-size:12px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Fase ${romanos[fi]} — ${f.titulo}</div>
-            ${f.subtitulo ? `<div style="font-size:10px;font-family:'Courier New',monospace;color:#888;margin-top:2px">${f.subtitulo}</div>` : ''}
+            <div style="font-size:11px;font-weight:bold;color:${corHex};letter-spacing:0.04em;text-transform:uppercase">Fase ${romanos[fi]} — ${f.titulo}</div>
+            ${f.subtitulo ? `<div style="font-size:9px;font-family:'Courier New',monospace;color:#888;margin-top:1px">${f.subtitulo}</div>` : ''}
           </div>
         </div>
-        <table style="width:100%;border-collapse:collapse;font-size:11px;border:1px solid #D3D1C7">
+        <table style="width:100%;border-collapse:collapse;font-size:10px;border:1px solid #D3D1C7">
           <thead>
             <tr style="background:${corHex};color:white">
-              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:7%">Cód.</th>
-              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:52%">Ato Processual / Deliberação</th>
-              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:20%">Data Prevista</th>
-              <th style="padding:7px 8px;text-align:left;font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;font-weight:normal;width:21%">Responsável</th>
+              <th style="padding:6px 7px;text-align:left;font-size:8px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.07em;font-weight:normal;width:7%">Cód.</th>
+              <th style="padding:6px 7px;text-align:left;font-size:8px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.07em;font-weight:normal;width:53%">Ato Processual / Deliberação</th>
+              <th style="padding:6px 7px;text-align:left;font-size:8px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.07em;font-weight:normal;width:19%">Data Prevista</th>
+              <th style="padding:6px 7px;text-align:left;font-size:8px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.07em;font-weight:normal;width:21%">Responsável</th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -1425,56 +1447,56 @@ function exportarPDF() {
       </div>`;
   });
 
-  // Assinaturas PDF
+  // Assinaturas
   const membros = FLUXOS[tipo].membros;
   const assinCols = membros.map(m => {
     const nome = document.getElementById(m.id+'-nome')?.value || '';
-    const mat = document.getElementById(m.id+'-mat')?.value || '';
+    const mat  = document.getElementById(m.id+'-mat')?.value  || '';
     const cargo_v = document.getElementById(m.id+'-cargo')?.value || '';
-    return `<td style="padding:0 1cm;text-align:center;vertical-align:bottom">
-      <div style="font-size:12px;font-weight:bold;color:${corHex};min-height:18px">${nome}</div>
-      <div style="font-size:9px;font-family:'Courier New',monospace;color:#888;margin-bottom:4px">${mat?'SIAPE '+mat:''}${cargo_v?' · '+cargo_v:''}</div>
-      <div style="font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.06em;color:#5F5E5A;padding-top:6px;border-top:1px solid #2C2C2A">${m.cargo}</div>
+    return `<td style="padding:0 0.8cm;text-align:center;vertical-align:bottom">
+      <div style="font-size:11px;font-weight:bold;color:${corHex};min-height:16px">${nome}</div>
+      <div style="font-size:8px;font-family:'Courier New',monospace;color:#888;margin-bottom:4px">${mat?'SIAPE '+mat:''}${cargo_v?' · '+cargo_v:''}</div>
+      <div style="font-size:8px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.06em;color:#5F5E5A;padding-top:5px;border-top:1px solid #2C2C2A">${m.cargo}</div>
     </td>`;
   }).join('');
 
-  // Despacho no PDF
-  const cb1txt = dadosDespacho.cb1 ? '(✓)' : '( &nbsp;&nbsp; )';
-  const cb2txt = dadosDespacho.cb2 ? '(✓)' : '( &nbsp;&nbsp; )';
+  const cb1txt = dadosDespacho.cb1 ? '(✓)' : '(  )';
+  const cb2txt = dadosDespacho.cb2 ? '(✓)' : '(  )';
   const autTxt = dadosDespacho.autoridade || '_________________________________';
   const dataTxt = dadosDespacho.dataDespacho ? new Date(dadosDespacho.dataDespacho+'T12:00').toLocaleDateString('pt-BR') : '___/___/______';
-  const obsTxt = dadosDespacho.observacoes || '_____________________________________________';
+  const obsTxt = dadosDespacho.observacoes || '___________________________________________';
 
   const assinHtml = `
-    <div style="page-break-before:always;margin-top:1cm">
-      <div style="font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:#888;margin-bottom:1cm;text-align:center">
+    <div style="margin-top:0.8cm;padding-top:0.8cm;border-top:1px solid #D3D1C7">
+      <div style="font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;color:#888;margin-bottom:0.8cm;text-align:center">
         Local e Data: ___________________________, _____ de _______________ de 2026.
       </div>
-      <table style="width:100%;margin-bottom:1.5cm"><tr>${assinCols}</tr></table>
-      <div style="background:#F5F4F0;border:1px solid #D3D1C7;border-radius:4px;padding:1cm">
-        <div style="font-size:10px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.1em;color:${corHex};margin-bottom:12px">
+      <table style="width:100%;margin-bottom:1cm"><tr>${assinCols}</tr></table>
+      <div style="background:#F5F4F0;border:1px solid #D3D1C7;border-radius:4px;padding:0.7cm">
+        <div style="font-size:9px;font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:0.08em;color:${corHex};margin-bottom:10px">
           Despacho de Aprovação e Acompanhamento da Autoridade Competente
         </div>
-        <div style="font-size:11px;margin-bottom:8px">${cb1txt} Aprovo o planejamento cronológico proposto pela comissão.</div>
-        <div style="font-size:11px;margin-bottom:8px">${cb2txt} Determino as seguintes adequações: ${obsTxt}</div>
-        <div style="margin-top:1cm;padding-top:1cm;border-top:1px solid #D3D1C7;font-size:11px">
+        <div style="font-size:10px;margin-bottom:7px">${cb1txt} Aprovo o planejamento cronológico proposto pela comissão.</div>
+        <div style="font-size:10px;margin-bottom:7px">${cb2txt} Determino as seguintes adequações: ${obsTxt}</div>
+        <div style="margin-top:0.7cm;padding-top:0.7cm;border-top:1px solid #D3D1C7;font-size:10px">
           Autoridade: ${autTxt} &nbsp;&nbsp;&nbsp; Data: ${dataTxt}
         </div>
       </div>
     </div>`;
 
-  container.innerHTML = cabHtml + fasesHtml + assinHtml;
+  // Montar e exibir modal
+  document.getElementById('pdf-modal-conteudo').innerHTML = cabHtml + fasesHtml + assinHtml;
+  const numLabel = num_v ? ` — ${num_v}` : '';
+  document.getElementById('pdf-modal-titulo').textContent = `Pré-visualização${numLabel}`;
+  document.getElementById('pdf-modal').classList.add('aberto');
+}
 
-  const num_sanitizado = (num_v||'processo').replace(/[^a-zA-Z0-9]/g,'_');
-  const opt = {
-    margin:[1,1,1.2,1],
-    filename:'Plano-Trabalho-'+tipo+'-'+num_sanitizado+'.pdf',
-    image:{type:'jpeg',quality:0.95},
-    html2canvas:{scale:2,useCORS:true},
-    jsPDF:{unit:'cm',format:'a4',orientation:'portrait'}
-  };
+function imprimirModal() {
+  window.print();
+}
 
-  html2pdf().set(opt).from(container).save().then(() => toast('PDF exportado!'));
+function fecharModal() {
+  document.getElementById('pdf-modal').classList.remove('aberto');
 }
 
 // ════════════════════════════
