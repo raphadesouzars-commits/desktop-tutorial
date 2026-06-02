@@ -1,0 +1,2486 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SisTriag-Coger — Corregedoria RFB</title>
+
+<!-- Dependências externas (cacheadas após primeira carga) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+
+<style>
+/* ============================================================
+   VARIÁVEIS E RESET
+   ============================================================ */
+:root {
+  --azul-rfb:       #1a3a5c;
+  --azul-medio:     #1e4976;
+  --azul-claro:     #2d6ea8;
+  --azul-acento:    #3b8fd4;
+  --cinza-escuro:   #1c1f24;
+  --cinza-medio:    #2e3340;
+  --cinza-painel:   #252931;
+  --cinza-borda:    #3a3f4a;
+  --cinza-texto:    #8a92a3;
+  --branco:         #edf0f5;
+  --branco-suave:   #c8cdd8;
+  --verde:          #2e8b57;
+  --verde-claro:    #3aae70;
+  --amarelo:        #c8961a;
+  --vermelho:       #b84040;
+  --vermelho-claro: #d45f5f;
+  --fonte-ui:       'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --raio:           4px;
+  --raio-grande:    8px;
+  --sombra:         0 2px 8px rgba(0,0,0,0.4);
+  --trans:          all 0.18s ease;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--fonte-ui);
+  background: var(--cinza-escuro);
+  color: var(--branco);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   LAYOUT PRINCIPAL
+   ============================================================ */
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* CABEÇALHO */
+#cabecalho {
+  background: var(--azul-rfb);
+  border-bottom: 2px solid var(--azul-claro);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+
+#cabecalho .marca {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#cabecalho .sigla {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--branco);
+}
+
+#cabecalho .subtitulo {
+  font-size: 11px;
+  color: var(--branco-suave);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+#cabecalho .separador {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.2);
+}
+
+#cabecalho nav {
+  display: flex;
+  gap: 4px;
+}
+
+#cabecalho nav button {
+  background: transparent;
+  border: none;
+  color: var(--branco-suave);
+  padding: 6px 14px;
+  border-radius: var(--raio);
+  cursor: pointer;
+  font-size: 13px;
+  font-family: var(--fonte-ui);
+  transition: var(--trans);
+  letter-spacing: 0.02em;
+}
+
+#cabecalho nav button:hover,
+#cabecalho nav button.ativo {
+  background: rgba(255,255,255,0.12);
+  color: var(--branco);
+}
+
+#cabecalho .versao {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.05em;
+}
+
+/* CONTEÚDO PRINCIPAL */
+#conteudo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px;
+  background: var(--cinza-escuro);
+}
+
+/* RODAPÉ DE STATUS */
+#rodape {
+  background: var(--cinza-medio);
+  border-top: 1px solid var(--cinza-borda);
+  padding: 0 24px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--cinza-texto);
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.verde  { background: var(--verde-claro); box-shadow: 0 0 6px var(--verde-claro); }
+.status-dot.amarelo{ background: var(--amarelo);     box-shadow: 0 0 6px var(--amarelo); }
+.status-dot.vermelho{ background: var(--vermelho-claro); box-shadow: 0 0 6px var(--vermelho-claro); }
+.status-dot.cinza  { background: var(--cinza-borda); }
+
+.status-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--cinza-borda);
+  margin: 0 12px;
+}
+
+/* ============================================================
+   TELAS (controle de visibilidade SPA)
+   ============================================================ */
+.tela { display: none; }
+.tela.ativa { display: block; }
+
+/* ============================================================
+   COMPONENTES COMUNS
+   ============================================================ */
+
+/* Títulos de seção */
+.titulo-tela {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--branco);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.subtitulo-tela {
+  font-size: 13px;
+  color: var(--cinza-texto);
+  margin-bottom: 28px;
+}
+
+/* Painéis */
+.painel {
+  background: var(--cinza-painel);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.painel-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--azul-acento);
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+/* Botões */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 18px;
+  border-radius: var(--raio);
+  border: none;
+  font-family: var(--fonte-ui);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--trans);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-primario {
+  background: var(--azul-claro);
+  color: var(--branco);
+}
+.btn-primario:hover:not(:disabled) { background: var(--azul-acento); }
+
+.btn-secundario {
+  background: transparent;
+  color: var(--branco-suave);
+  border: 1px solid var(--cinza-borda);
+}
+.btn-secundario:hover:not(:disabled) {
+  background: var(--cinza-medio);
+  border-color: var(--azul-acento);
+  color: var(--branco);
+}
+
+.btn-perigo {
+  background: transparent;
+  color: var(--vermelho-claro);
+  border: 1px solid var(--vermelho);
+}
+.btn-perigo:hover:not(:disabled) {
+  background: rgba(184,64,64,0.15);
+}
+
+.btn-sucesso {
+  background: var(--verde);
+  color: var(--branco);
+}
+.btn-sucesso:hover:not(:disabled) { background: var(--verde-claro); }
+
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-verde   { background: rgba(46,139,87,0.2);  color: var(--verde-claro); border: 1px solid rgba(46,139,87,0.4); }
+.badge-amarelo { background: rgba(200,150,26,0.2); color: var(--amarelo);     border: 1px solid rgba(200,150,26,0.4); }
+.badge-vermelho{ background: rgba(184,64,64,0.2);  color: var(--vermelho-claro); border: 1px solid rgba(184,64,64,0.4); }
+.badge-azul    { background: rgba(59,143,212,0.15); color: var(--azul-acento); border: 1px solid rgba(59,143,212,0.3); }
+.badge-cinza   { background: rgba(58,63,74,0.4);   color: var(--cinza-texto);  border: 1px solid var(--cinza-borda); }
+
+/* Campos de formulário */
+.campo-grupo {
+  margin-bottom: 16px;
+}
+
+.campo-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--branco-suave);
+  margin-bottom: 5px;
+  letter-spacing: 0.03em;
+}
+
+.campo-label .obrigatorio { color: var(--vermelho-claro); margin-left: 2px; }
+
+.campo-input,
+.campo-select,
+.campo-textarea {
+  width: 100%;
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  color: var(--branco);
+  font-family: var(--fonte-ui);
+  font-size: 13px;
+  padding: 8px 12px;
+  transition: var(--trans);
+  outline: none;
+}
+
+.campo-input:focus,
+.campo-select:focus,
+.campo-textarea:focus {
+  border-color: var(--azul-acento);
+  box-shadow: 0 0 0 2px rgba(59,143,212,0.15);
+}
+
+.campo-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.6;
+}
+
+.campo-select option {
+  background: var(--cinza-medio);
+  color: var(--branco);
+}
+
+.campo-hint {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  margin-top: 4px;
+}
+
+/* Grid de formulário */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* Alertas */
+.alerta {
+  padding: 12px 16px;
+  border-radius: var(--raio);
+  font-size: 13px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.alerta-info    { background: rgba(59,143,212,0.1); border: 1px solid rgba(59,143,212,0.3); color: var(--branco-suave); }
+.alerta-aviso   { background: rgba(200,150,26,0.1); border: 1px solid rgba(200,150,26,0.3); color: var(--branco-suave); }
+.alerta-erro    { background: rgba(184,64,64,0.1);  border: 1px solid rgba(184,64,64,0.3);  color: var(--branco-suave); }
+.alerta-sucesso { background: rgba(46,139,87,0.1);  border: 1px solid rgba(46,139,87,0.3);  color: var(--branco-suave); }
+
+/* Barra de progresso */
+.barra-progresso-container {
+  background: var(--cinza-escuro);
+  border-radius: 4px;
+  overflow: hidden;
+  height: 6px;
+  margin: 8px 0;
+}
+
+.barra-progresso-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--azul-claro), var(--azul-acento));
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* Tabela */
+.tabela {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.tabela th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cinza-texto);
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--cinza-borda);
+}
+
+.tabela td {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(58,63,74,0.4);
+  color: var(--branco-suave);
+  vertical-align: middle;
+}
+
+.tabela tr:last-child td { border-bottom: none; }
+.tabela tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ============================================================
+   TELA INICIAL
+   ============================================================ */
+#tela-inicio {
+  max-width: 640px;
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.inicio-cabecalho {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.inicio-cabecalho h1 {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--branco);
+  letter-spacing: -0.02em;
+  margin-bottom: 6px;
+}
+
+.inicio-cabecalho p {
+  color: var(--cinza-texto);
+  font-size: 14px;
+}
+
+.selecao-tipo {
+  margin-bottom: 24px;
+}
+
+.selecao-titulo {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--cinza-texto);
+  margin-bottom: 12px;
+}
+
+.opcoes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.opcao-card {
+  background: var(--cinza-painel);
+  border: 2px solid var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--trans);
+  text-align: left;
+}
+
+.opcao-card:hover {
+  border-color: var(--azul-claro);
+  background: rgba(30,73,118,0.15);
+}
+
+.opcao-card.selecionado {
+  border-color: var(--azul-acento);
+  background: rgba(59,143,212,0.1);
+}
+
+.opcao-card .opcao-sigla {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--azul-acento);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.opcao-card .opcao-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--branco);
+  margin-bottom: 4px;
+}
+
+.opcao-card .opcao-desc {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  line-height: 1.4;
+}
+
+.opcoes-ocasiao {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.opcao-ocasiao {
+  background: var(--cinza-painel);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: var(--trans);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.opcao-ocasiao:hover {
+  border-color: var(--azul-claro);
+  background: rgba(30,73,118,0.15);
+}
+
+.opcao-ocasiao.selecionado {
+  border-color: var(--azul-acento);
+  background: rgba(59,143,212,0.1);
+}
+
+.opcao-ocasiao .etapa-num {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cinza-texto);
+  width: 24px;
+}
+
+.opcao-ocasiao .etapa-info { flex: 1; padding-left: 8px; }
+
+.opcao-ocasiao .etapa-nome {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--branco);
+}
+
+.opcao-ocasiao .etapa-desc {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  margin-top: 2px;
+}
+
+.inicio-acoes {
+  margin-top: 28px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.base-aviso {
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: rgba(200,150,26,0.1);
+  border: 1px solid rgba(200,150,26,0.25);
+  border-radius: var(--raio);
+  font-size: 12px;
+  color: var(--amarelo);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--trans);
+}
+
+.base-aviso:hover { background: rgba(200,150,26,0.18); }
+
+/* ============================================================
+   TELA DE CONFIGURAÇÃO DA BASE
+   ============================================================ */
+#tela-base {
+  max-width: 900px;
+}
+
+.base-categorias {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.categoria-card {
+  background: var(--cinza-painel);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 16px;
+  text-align: center;
+}
+
+.categoria-card .cat-icone {
+  font-size: 22px;
+  margin-bottom: 8px;
+}
+
+.categoria-card .cat-nome {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--branco-suave);
+  margin-bottom: 4px;
+}
+
+.categoria-card .cat-count {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--azul-acento);
+}
+
+.categoria-card .cat-chunks {
+  font-size: 10px;
+  color: var(--cinza-texto);
+  margin-top: 2px;
+}
+
+/* Zona de upload */
+.zona-upload {
+  border: 2px dashed var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 40px;
+  text-align: center;
+  transition: var(--trans);
+  cursor: pointer;
+  background: rgba(255,255,255,0.01);
+}
+
+.zona-upload:hover,
+.zona-upload.arrastando {
+  border-color: var(--azul-acento);
+  background: rgba(59,143,212,0.05);
+}
+
+.zona-upload .zona-icone {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+
+.zona-upload .zona-texto {
+  font-size: 14px;
+  color: var(--branco-suave);
+  margin-bottom: 4px;
+}
+
+.zona-upload .zona-sub {
+  font-size: 12px;
+  color: var(--cinza-texto);
+}
+
+/* Lista de documentos na base */
+.doc-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  margin-bottom: 6px;
+  background: var(--cinza-escuro);
+  transition: var(--trans);
+}
+
+.doc-item:hover { border-color: rgba(59,143,212,0.3); }
+
+.doc-item .doc-icone {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.doc-item .doc-info { flex: 1; min-width: 0; }
+
+.doc-item .doc-nome {
+  font-size: 13px;
+  color: var(--branco);
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.doc-item .doc-meta {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  margin-top: 2px;
+}
+
+.doc-item .doc-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Preview de extração */
+.preview-extracao {
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  padding: 14px;
+  font-size: 12px;
+  color: var(--cinza-texto);
+  font-family: 'Consolas', 'Courier New', monospace;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.6;
+  margin-top: 8px;
+  display: none;
+}
+
+.preview-extracao.visivel { display: block; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.oculto { display: none; }
+
+.modal {
+  background: var(--cinza-painel);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 28px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-titulo {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--branco);
+  margin-bottom: 4px;
+}
+
+.modal-sub {
+  font-size: 12px;
+  color: var(--cinza-texto);
+  margin-bottom: 20px;
+}
+
+.modal-acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ============================================================
+   TELA DE CONFIGURAÇÕES
+   ============================================================ */
+#tela-config {
+  max-width: 700px;
+}
+
+.config-secao {
+  margin-bottom: 28px;
+}
+
+.config-secao-titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--branco-suave);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.config-linha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  margin-bottom: 6px;
+}
+
+.config-linha-info .config-nome {
+  font-size: 13px;
+  color: var(--branco);
+  font-weight: 500;
+}
+
+.config-linha-info .config-desc {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  margin-top: 2px;
+}
+
+/* ============================================================
+   ESTADO VAZIO E LOADING
+   ============================================================ */
+.estado-vazio {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--cinza-texto);
+}
+
+.estado-vazio .vazio-icone { font-size: 40px; margin-bottom: 12px; opacity: 0.5; }
+.estado-vazio .vazio-titulo { font-size: 15px; color: var(--branco-suave); margin-bottom: 6px; }
+.estado-vazio .vazio-desc { font-size: 13px; }
+
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.15);
+  border-top-color: var(--azul-acento);
+  border-radius: 50%;
+  animation: girar 0.7s linear infinite;
+}
+
+@keyframes girar { to { transform: rotate(360deg); } }
+
+/* ============================================================
+   TELA DE BUSCA/TESTE RAG
+   ============================================================ */
+#tela-rag {
+  max-width: 800px;
+}
+
+.resultado-rag {
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+}
+
+.rag-rank {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--azul-acento);
+  margin-bottom: 4px;
+}
+
+.rag-fonte {
+  font-size: 12px;
+  color: var(--cinza-texto);
+  margin-bottom: 8px;
+}
+
+.rag-texto {
+  font-size: 12px;
+  color: var(--branco-suave);
+  line-height: 1.6;
+  border-left: 2px solid var(--azul-claro);
+  padding-left: 10px;
+}
+
+.rag-score {
+  font-size: 11px;
+  color: var(--cinza-texto);
+  margin-top: 6px;
+}
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--cinza-borda); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ============================================================
+   IMPORTAR PASTA LOCAL
+   ============================================================ */
+.pasta-guia {
+  background: rgba(59,143,212,0.06);
+  border: 1px solid rgba(59,143,212,0.2);
+  border-radius: var(--raio-grande);
+  padding: 18px 20px;
+  margin-bottom: 20px;
+}
+
+.pasta-guia-titulo {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--azul-acento);
+  margin-bottom: 12px;
+}
+
+.arvore-pasta {
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 12px;
+  color: var(--branco-suave);
+  line-height: 1.8;
+  background: var(--cinza-escuro);
+  border-radius: var(--raio);
+  padding: 12px 16px;
+  margin-bottom: 12px;
+}
+
+.arvore-pasta .pasta-linha { color: var(--azul-acento); }
+.arvore-pasta .arquivo-linha { color: var(--cinza-texto); }
+
+.pasta-ativa-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(46,139,87,0.1);
+  border: 1px solid rgba(46,139,87,0.3);
+  border-radius: var(--raio);
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--branco-suave);
+}
+
+.btn-pasta-importar {
+  background: linear-gradient(135deg, var(--azul-medio), var(--azul-claro));
+  color: var(--branco);
+  border: none;
+  padding: 11px 22px;
+  border-radius: var(--raio);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--trans);
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--fonte-ui);
+}
+
+.btn-pasta-importar:hover {
+  background: linear-gradient(135deg, var(--azul-claro), var(--azul-acento));
+  box-shadow: 0 4px 16px rgba(59,143,212,0.3);
+}
+
+.resumo-importacao {
+  margin-top: 16px;
+}
+
+.resumo-linha {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: var(--raio);
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.resumo-linha:nth-child(odd) { background: rgba(255,255,255,0.02); }
+
+.resumo-cat { color: var(--branco-suave); font-weight: 500; }
+.resumo-nums { color: var(--cinza-texto); display: flex; gap: 16px; }
+.resumo-nums span { white-space: nowrap; }
+</style>
+</head>
+
+<body>
+<div id="app">
+
+  <!-- ===================== CABEÇALHO ===================== -->
+  <header id="cabecalho">
+    <div class="marca">
+      <div>
+        <div class="sigla">SisTriag-Coger</div>
+        <div class="subtitulo">Corregedoria · Receita Federal do Brasil</div>
+      </div>
+      <div class="separador"></div>
+      <nav>
+        <button onclick="navegarPara('inicio')" id="nav-inicio" class="ativo">Início</button>
+        <button onclick="navegarPara('base')" id="nav-base">Base de Conhecimento</button>
+        <button onclick="navegarPara('rag')" id="nav-rag">Teste RAG</button>
+        <button onclick="navegarPara('config')" id="nav-config">Configurações</button>
+      </nav>
+    </div>
+    <span class="versao">v1.1.0 — Fase 1</span>
+  </header>
+
+  <!-- ===================== CONTEÚDO ===================== -->
+  <main id="conteudo">
+
+    <!-- ===== TELA INICIAL ===== -->
+    <div id="tela-inicio" class="tela ativa">
+      <div class="inicio-cabecalho">
+        <h1>Análise Correcional</h1>
+        <p>Selecione o tipo de processo e a etapa do ciclo disciplinar</p>
+      </div>
+
+      <div class="selecao-tipo">
+        <div class="selecao-titulo">1. Tipo de processo</div>
+        <div class="opcoes-grid">
+          <div class="opcao-card" onclick="selecionarTipo('PAD')" id="card-PAD">
+            <div class="opcao-sigla">PAD</div>
+            <div class="opcao-nome">Processo Administrativo Disciplinar</div>
+            <div class="opcao-desc">Polo passivo: servidor público federal — Lei 8.112/1990</div>
+          </div>
+          <div class="opcao-card" onclick="selecionarTipo('PAR')" id="card-PAR">
+            <div class="opcao-sigla">PAR</div>
+            <div class="opcao-nome">Processo Administrativo de Responsabilização</div>
+            <div class="opcao-desc">Polo passivo: pessoa jurídica — Lei 12.846/2013</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="selecao-tipo" id="selecao-ocasiao" style="display:none">
+        <div class="selecao-titulo">2. Etapa do ciclo disciplinar</div>
+        <div class="opcoes-ocasiao">
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('triagem')" id="card-triagem">
+            <div class="etapa-num">01</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Triagem da Ocorrência</div>
+              <div class="etapa-desc">Análise inicial do expediente — decidir se merece apuração formal</div>
+            </div>
+            <span class="badge badge-cinza">Entrada manual</span>
+          </div>
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('admissibilidade')" id="card-admissibilidade">
+            <div class="etapa-num">02</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Juízo de Admissibilidade</div>
+              <div class="etapa-desc">Análise dos elementos apurados — decidir pela instauração</div>
+            </div>
+            <span class="badge badge-azul">Upload + campos</span>
+          </div>
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('julgamento')" id="card-julgamento">
+            <div class="etapa-num">03</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Julgamento do Processo</div>
+              <div class="etapa-desc">Análise de mérito — decisão final de absolvição ou penalidade</div>
+            </div>
+            <span class="badge badge-azul">Upload predominante</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inicio-acoes" id="inicio-acoes" style="display:none">
+        <button class="btn btn-secundario" onclick="resetarSelecao()">Cancelar</button>
+        <button class="btn btn-primario" onclick="iniciarFluxo()" id="btn-iniciar">
+          Iniciar análise →
+        </button>
+      </div>
+
+      <div id="aviso-base" class="base-aviso" style="display:none" onclick="navegarPara('base')">
+        <span>⚠</span>
+        <span id="aviso-base-texto">Base de conhecimento não indexada. Clique aqui para configurar.</span>
+      </div>
+    </div>
+
+    <!-- ===== TELA BASE DE CONHECIMENTO ===== -->
+    <div id="tela-base" class="tela">
+      <div class="titulo-tela">Base de Conhecimento</div>
+      <div class="subtitulo-tela">Gerencie os documentos que fundamentam as análises do sistema</div>
+
+      <!-- Guia de estrutura de pasta + botão importar -->
+      <div class="pasta-guia">
+        <div class="pasta-guia-titulo">📁 Importar Pasta Local</div>
+        <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <div style="font-size:12px;color:var(--cinza-texto);margin-bottom:10px">
+              Organize seus documentos na estrutura abaixo e importe a pasta raiz de uma vez. As subpastas determinam a categoria automaticamente.
+            </div>
+            <div class="arvore-pasta">
+<span class="pasta-linha">📂 Base_SisTriag/</span>
+<span class="pasta-linha">  ├── 📂 normas/</span>
+<span class="arquivo-linha">  │     └── Lei_8112.pdf</span>
+<span class="pasta-linha">  ├── 📂 pareceres/</span>
+<span class="pasta-linha">  ├── 📂 decisoes/</span>
+<span class="pasta-linha">  ├── 📂 notas-tecnicas/</span>
+<span class="pasta-linha">  └── 📂 orientacoes/</span>
+            </div>
+            <div style="font-size:11px;color:var(--cinza-texto)">
+              Variações aceitas: <code style="color:var(--azul-acento)">norma/leis/legislacao</code> · <code style="color:var(--azul-acento)">decisao/julgados</code> · <code style="color:var(--azul-acento)">notas_tecnicas/notas</code> · <code style="color:var(--azul-acento)">orientacao/treinamentos/manuais</code>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <div id="pasta-ativa-container" style="display:none" class="pasta-ativa-info">
+              <span>✓</span>
+              <div>
+                <div style="font-weight:600;color:var(--verde-claro)" id="pasta-ativa-nome">—</div>
+                <div style="color:var(--cinza-texto)" id="pasta-ativa-stats"></div>
+              </div>
+            </div>
+            <button class="btn-pasta-importar" onclick="importarPastaLocal()" id="btn-importar-pasta">
+              📂 Importar Pasta Local
+            </button>
+            <button class="btn btn-secundario btn-sm" onclick="resincronizarPasta()" id="btn-resync" style="display:none">
+              🔄 Re-sincronizar pasta
+            </button>
+            <div id="pasta-compat" style="font-size:11px;color:var(--cinza-texto)"></div>
+          </div>
+        </div>
+        <div id="resumo-importacao-container" class="resumo-importacao" style="display:none"></div>
+      </div>
+
+      <!-- Cards de categoria -->
+      <div class="base-categorias" id="base-categorias">
+        <div class="categoria-card">
+          <div class="cat-icone">📜</div>
+          <div class="cat-nome">Normas</div>
+          <div class="cat-count" id="cnt-normas">0</div>
+          <div class="cat-chunks" id="chk-normas">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">⚖</div>
+          <div class="cat-nome">Pareceres</div>
+          <div class="cat-count" id="cnt-pareceres">0</div>
+          <div class="cat-chunks" id="chk-pareceres">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">📋</div>
+          <div class="cat-nome">Decisões</div>
+          <div class="cat-count" id="cnt-decisoes">0</div>
+          <div class="cat-chunks" id="chk-decisoes">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">📝</div>
+          <div class="cat-nome">Notas Técnicas</div>
+          <div class="cat-count" id="cnt-notas">0</div>
+          <div class="cat-chunks" id="chk-notas">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">🎓</div>
+          <div class="cat-nome">Orientações</div>
+          <div class="cat-count" id="cnt-orientacoes">0</div>
+          <div class="cat-chunks" id="chk-orientacoes">0 chunks</div>
+        </div>
+      </div>
+
+      <!-- Ações principais -->
+      <div class="painel">
+        <div class="painel-titulo">Adicionar Documentos</div>
+
+        <div style="margin-bottom:16px">
+          <label class="campo-label">Categoria</label>
+          <select id="sel-categoria" class="campo-select" style="max-width:300px">
+            <option value="normas">Normas</option>
+            <option value="pareceres">Pareceres</option>
+            <option value="decisoes">Decisões</option>
+            <option value="notas-tecnicas">Notas Técnicas</option>
+            <option value="orientacoes">Orientações e Treinamentos</option>
+          </select>
+          <div class="campo-hint">Selecione a categoria antes de adicionar documentos</div>
+        </div>
+
+        <div class="zona-upload" id="zona-upload"
+             ondragover="event.preventDefault(); this.classList.add('arrastando')"
+             ondragleave="this.classList.remove('arrastando')"
+             ondrop="handleDrop(event)"
+             onclick="document.getElementById('input-arquivo').click()">
+          <div class="zona-icone">📁</div>
+          <div class="zona-texto">Clique ou arraste arquivos PDF / DOCX</div>
+          <div class="zona-sub">Múltiplos arquivos permitidos · PDFs devem ser digitais (não escaneados)</div>
+        </div>
+        <input type="file" id="input-arquivo" multiple accept=".pdf,.docx" style="display:none"
+               onchange="handleArquivos(this.files)">
+      </div>
+
+      <!-- Lista de documentos indexados -->
+      <div class="painel">
+        <div class="painel-titulo" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Documentos Indexados</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secundario btn-sm" onclick="exportarIndice()">Exportar lista</button>
+            <button class="btn btn-perigo btn-sm" onclick="confirmarLimparBase()">Limpar base</button>
+          </div>
+        </div>
+
+        <div id="lista-docs">
+          <div class="estado-vazio">
+            <div class="vazio-icone">📂</div>
+            <div class="vazio-titulo">Nenhum documento indexado</div>
+            <div class="vazio-desc">Adicione documentos usando a área acima</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TELA TESTE RAG ===== -->
+    <div id="tela-rag" class="tela">
+      <div class="titulo-tela">Teste de Recuperação RAG</div>
+      <div class="subtitulo-tela">Verifique a qualidade da busca na base de conhecimento antes de iniciar análises</div>
+
+      <div class="painel">
+        <div class="painel-titulo">Query de teste</div>
+        <div class="campo-grupo">
+          <label class="campo-label">Texto da consulta</label>
+          <textarea id="rag-query" class="campo-textarea" rows="4"
+            placeholder="Ex: prescrição da pretensão punitiva em caso de abandono de cargo&#10;&#10;Ex: responsabilidade de pessoa jurídica por ato de seus agentes&#10;&#10;Ex: dosimetria da multa em PAR considerando porte da empresa"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="campo-grupo">
+            <label class="campo-label">Número de resultados</label>
+            <select id="rag-n" class="campo-select">
+              <option value="3">3 resultados</option>
+              <option value="5" selected>5 resultados</option>
+              <option value="8">8 resultados</option>
+              <option value="10">10 resultados</option>
+            </select>
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Filtrar por categoria</label>
+            <select id="rag-categoria" class="campo-select">
+              <option value="">Todas as categorias</option>
+              <option value="normas">Normas</option>
+              <option value="pareceres">Pareceres</option>
+              <option value="decisoes">Decisões</option>
+              <option value="notas-tecnicas">Notas Técnicas</option>
+              <option value="orientacoes">Orientações</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primario" onclick="executarBuscaRAG()" id="btn-buscar-rag">
+          Buscar na base
+        </button>
+      </div>
+
+      <div id="resultados-rag"></div>
+    </div>
+
+    <!-- ===== TELA CONFIGURAÇÕES ===== -->
+    <div id="tela-config" class="tela">
+      <div class="titulo-tela">Configurações</div>
+      <div class="subtitulo-tela">Parâmetros do sistema e gestão de dados</div>
+
+      <div class="painel">
+        <div class="painel-titulo">Base de Conhecimento</div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Status da base</div>
+            <div class="config-desc" id="cfg-status-base">Carregando...</div>
+          </div>
+          <span id="cfg-badge-base" class="badge badge-cinza">—</span>
+        </div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Última indexação</div>
+            <div class="config-desc" id="cfg-ultima-index">—</div>
+          </div>
+        </div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Total de chunks no índice</div>
+            <div class="config-desc" id="cfg-total-chunks">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn btn-secundario" onclick="navegarPara('base')">Gerenciar documentos</button>
+          <button class="btn btn-perigo" onclick="confirmarLimparBase()">Limpar toda a base</button>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Numeração de Documentos</div>
+        <div class="grid-3">
+          <div class="campo-grupo">
+            <label class="campo-label">Prefixo do órgão</label>
+            <input type="text" id="cfg-prefixo" class="campo-input" placeholder="COGER-RFB"
+                   oninput="salvarConfiguracao('prefixo', this.value)">
+            <div class="campo-hint">Opcional — inserido antes do tipo no número</div>
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Despacho Triagem</label>
+            <input type="number" id="cfg-seq-triagem" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_triagem', parseInt(this.value)||1)">
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Desp. Admissibilidade</label>
+            <input type="number" id="cfg-seq-admiss" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_admissibilidade', parseInt(this.value)||1)">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Decisão PAD</label>
+            <input type="number" id="cfg-seq-decisao-pad" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_decisao_pad', parseInt(this.value)||1)">
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Decisão PAR</label>
+            <input type="number" id="cfg-seq-decisao-par" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_decisao_par', parseInt(this.value)||1)">
+          </div>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Modelo de IA (WebLLM)</div>
+        <div class="alerta alerta-info">
+          <span>ℹ</span>
+          <span>A integração do WebLLM será implementada na Fase 2 do desenvolvimento. Esta seção exibirá o modelo carregado e permitirá a troca entre modelos disponíveis.</span>
+        </div>
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Modelo configurado</div>
+            <div class="config-desc">Llama-3.1-8B-Instruct-q4f32_1-MLC (padrão)</div>
+          </div>
+          <span class="badge badge-cinza">Fase 2</span>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Dados e Privacidade</div>
+        <div class="alerta alerta-info" style="margin-bottom:16px">
+          <span>🔒</span>
+          <span>Todos os dados permanecem exclusivamente nesta máquina. Nenhuma informação é transmitida para servidores externos em nenhuma circunstância.</span>
+        </div>
+        <button class="btn btn-perigo" onclick="confirmarLimparTudo()">Apagar todos os dados do sistema</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===================== RODAPÉ DE STATUS ===================== -->
+  <footer id="rodape">
+    <div style="display:flex; align-items:center">
+      <div class="status-item">
+        <div class="status-dot" id="dot-modelo" style="background:var(--cinza-borda)"></div>
+        <span id="txt-modelo">Modelo não carregado — Fase 2</span>
+      </div>
+      <div class="status-sep"></div>
+      <div class="status-item">
+        <div class="status-dot" id="dot-base"></div>
+        <span id="txt-base">Verificando base...</span>
+      </div>
+    </div>
+    <div class="status-item">
+      <span id="txt-hora" style="font-size:11px; color:var(--cinza-texto)"></span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ===================== MODAL CONFIRMAÇÃO ===================== -->
+<div id="modal-overlay" class="modal-overlay oculto">
+  <div class="modal">
+    <div class="modal-titulo" id="modal-titulo">Confirmar ação</div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div id="modal-corpo"></div>
+    <div class="modal-acoes">
+      <button class="btn btn-secundario" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-perigo" id="modal-btn-confirmar" onclick="executarAcaoModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL PROCESSAMENTO ===================== -->
+<div id="modal-processamento" class="modal-overlay oculto">
+  <div class="modal" style="text-align:center; padding:40px">
+    <div class="spinner" style="width:32px;height:32px;margin:0 auto 16px"></div>
+    <div class="modal-titulo" id="proc-titulo">Processando documentos...</div>
+    <div style="margin:16px 0">
+      <div class="barra-progresso-container">
+        <div class="barra-progresso-fill" id="proc-barra" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="proc-status" style="font-size:12px;color:var(--cinza-texto)"></div>
+  </div>
+</div>
+
+
+<script>
+/* ================================================================
+   SISTRIAG-Coger — Fase 1: Fundação
+   Módulos:
+   1. IndexedDB
+   2. Leitor PDF (PDF.js)
+   3. Leitor DOCX (mammoth.js)
+   4. Chunking diferenciado por categoria
+   5. TF-IDF / busca por relevância
+   6. Gestão da base de conhecimento
+   7. Interface e navegação
+   ================================================================ */
+
+/* ================================================================
+   1. INDEXEDDB — INICIALIZAÇÃO E OPERAÇÕES
+   ================================================================ */
+
+const DB_NOME    = 'SisTriagCoger';
+const DB_VERSAO  = 1;
+let db = null;
+
+function abrirDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NOME, DB_VERSAO);
+
+    req.onupgradeneeded = (e) => {
+      const d = e.target.result;
+
+      if (!d.objectStoreNames.contains('documentos')) {
+        const store = d.createObjectStore('documentos', { keyPath: 'id' });
+        store.createIndex('categoria', 'categoria', { unique: false });
+        store.createIndex('nome',      'nome',      { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains('chunks')) {
+        const store = d.createObjectStore('chunks', { keyPath: 'id' });
+        store.createIndex('docId',     'docId',     { unique: false });
+        store.createIndex('categoria', 'categoria', { unique: false });
+      }
+
+      if (!d.objectStoreNames.contains('configuracoes')) {
+        d.createObjectStore('configuracoes', { keyPath: 'chave' });
+      }
+
+      if (!d.objectStoreNames.contains('historico')) {
+        const store = d.createObjectStore('historico', { keyPath: 'id' });
+        store.createIndex('data',          'data',          { unique: false });
+        store.createIndex('tipo_processo', 'tipo_processo', { unique: false });
+      }
+    };
+
+    req.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    req.onerror   = (e) => reject(e.target.error);
+  });
+}
+
+function txGet(store, key) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function txGetAll(store, index, valor) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readonly');
+    const os  = tx.objectStore(store);
+    const req = index ? os.index(index).getAll(valor) : os.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function txPut(store, obj) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).put(obj);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function txDelete(store, key) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).delete(key);
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function txClear(store) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(store, 'readwrite');
+    const req = tx.objectStore(store).clear();
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+async function getConfig(chave, padrao = null) {
+  const r = await txGet('configuracoes', chave);
+  return r ? r.valor : padrao;
+}
+
+async function setConfig(chave, valor) {
+  await txPut('configuracoes', { chave, valor });
+}
+
+/* ================================================================
+   2. LEITURA DE ARQUIVOS
+   ================================================================ */
+
+/* Configura workerSrc do PDF.js */
+function inicializarPDFJS() {
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
+  }
+}
+
+async function lerPDF(arrayBuffer) {
+  if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js não carregado');
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  let texto = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page    = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const linhaTexto = content.items.map(item => item.str).join(' ');
+    texto += linhaTexto + '\n';
+  }
+  return { texto: texto.trim(), paginas: pdf.numPages };
+}
+
+async function lerDOCX(arrayBuffer) {
+  if (typeof mammoth === 'undefined') throw new Error('mammoth.js não carregado');
+  const result = await mammoth.extractRawText({ arrayBuffer });
+  return { texto: result.value.trim() };
+}
+
+async function lerArquivo(arquivo) {
+  const ext = arquivo.name.split('.').pop().toLowerCase();
+  const buf = await arquivo.arrayBuffer();
+
+  if (ext === 'pdf') {
+    const r = await lerPDF(buf);
+    // Detectar PDF escaneado: texto muito curto em relação ao número de páginas
+    const palavrasPorPag = r.texto.split(/\s+/).length / Math.max(r.paginas, 1);
+    if (palavrasPorPag < 20 && r.paginas > 0) {
+      return { ...r, possivelmenteEscaneado: true, tipo: 'pdf' };
+    }
+    return { ...r, possivelmenteEscaneado: false, tipo: 'pdf' };
+  } else if (ext === 'docx') {
+    const r = await lerDOCX(buf);
+    return { ...r, tipo: 'docx' };
+  } else {
+    throw new Error(`Formato não suportado: .${ext}`);
+  }
+}
+
+/* ================================================================
+   3. CHUNKING DIFERENCIADO POR CATEGORIA
+   ================================================================ */
+
+const CONFIG_CHUNKING = {
+  'normas':          { tokens: 500, sobreposicao: 50 },
+  'pareceres':       { tokens: 400, sobreposicao: 80 },
+  'decisoes':        { tokens: 400, sobreposicao: 80 },
+  'notas-tecnicas':  { tokens: 400, sobreposicao: 50 },
+  'orientacoes':     { tokens: 300, sobreposicao: 100 },
+};
+
+// Aproximação: 1 token ≈ 0.75 palavras
+function tokensParaPalavras(tokens) { return Math.floor(tokens * 0.75); }
+
+function dividirEmChunks(texto, categoria) {
+  const cfg     = CONFIG_CHUNKING[categoria] || CONFIG_CHUNKING['normas'];
+  const tamPal  = tokensParaPalavras(cfg.tokens);
+  const sobPal  = tokensParaPalavras(cfg.sobreposicao);
+  const palavras = texto.split(/\s+/).filter(p => p.length > 0);
+  const chunks  = [];
+  let inicio    = 0;
+
+  while (inicio < palavras.length) {
+    const fim    = Math.min(inicio + tamPal, palavras.length);
+    const chunk  = palavras.slice(inicio, fim).join(' ');
+    if (chunk.trim().length > 0) chunks.push(chunk.trim());
+    if (fim >= palavras.length) break;
+    inicio += tamPal - sobPal;
+  }
+
+  return chunks;
+}
+
+/* ================================================================
+   4. TF-IDF — INDEXAÇÃO E BUSCA
+   ================================================================ */
+
+function tokenizar(texto) {
+  // Remove acentos, lowercase, split por não-alfanuméricos, remove stopwords PT
+  const stopwords = new Set([
+    'a','ao','aos','as','com','da','das','de','do','dos','e','em','na','nas',
+    'no','nos','o','os','ou','para','pela','pelas','pelo','pelos','por','que',
+    'se','um','uma','uns','umas','é','à','às','isso','este','esta','esse','essa',
+    'seu','sua','seus','suas','nos','nas','ter','ser','foi','são','está','entre',
+    'mais','sobre','mas','também','como','quando','onde','qual','quais','não'
+  ]);
+
+  return texto
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(t => t.length > 2 && !stopwords.has(t));
+}
+
+function calcularTF(tokens) {
+  const tf = {};
+  tokens.forEach(t => { tf[t] = (tf[t] || 0) + 1; });
+  const total = tokens.length;
+  Object.keys(tf).forEach(t => { tf[t] = tf[t] / total; });
+  return tf;
+}
+
+// Computa TF-IDF no momento da busca (corpus em memória)
+// Para Fase 1, carregamos todos os chunks na memória para busca
+let indiceMemoria = []; // Array de { id, docId, categoria, docNome, texto, tokens, tf }
+
+async function carregarIndiceMemoria() {
+  const chunks = await txGetAll('chunks');
+  indiceMemoria = chunks.map(c => {
+    const tokens = tokenizar(c.texto);
+    return { ...c, tokens, tf: calcularTF(tokens) };
+  });
+}
+
+function calcularIDF(termo, corpus) {
+  const docsComTermo = corpus.filter(d => d.tokens.includes(termo)).length;
+  if (docsComTermo === 0) return 0;
+  return Math.log(corpus.length / docsComTermo);
+}
+
+function buscarRAG(query, n = 5, categoriaFiltro = '') {
+  if (indiceMemoria.length === 0) return [];
+
+  const corpus = categoriaFiltro
+    ? indiceMemoria.filter(c => c.categoria === categoriaFiltro)
+    : indiceMemoria;
+
+  if (corpus.length === 0) return [];
+
+  const queryTokens = tokenizar(query);
+  if (queryTokens.length === 0) return [];
+
+  // Calcula IDF para os termos da query no corpus atual
+  const idfCache = {};
+  queryTokens.forEach(t => {
+    if (!(t in idfCache)) idfCache[t] = calcularIDF(t, corpus);
+  });
+
+  // Calcula score TF-IDF de cada chunk para a query
+  const scores = corpus.map(chunk => {
+    let score = 0;
+    queryTokens.forEach(termo => {
+      const tf  = chunk.tf[termo] || 0;
+      const idf = idfCache[termo] || 0;
+      score += tf * idf;
+    });
+    return { chunk, score };
+  });
+
+  // Ordena e retorna os N melhores
+  scores.sort((a, b) => b.score - a.score);
+  return scores
+    .filter(s => s.score > 0)
+    .slice(0, n)
+    .map(s => ({ ...s.chunk, score: s.score }));
+}
+
+/* ================================================================
+   5. GESTÃO DA BASE DE CONHECIMENTO
+   ================================================================ */
+
+function gerarId(nome, tamanho) {
+  // Hash simples baseado no nome e tamanho
+  let hash = 0;
+  const str = nome + tamanho;
+  for (let i = 0; i < str.length; i++) {
+    hash = ((hash << 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36) + '_' + Date.now().toString(36);
+}
+
+async function indexarArquivos(arquivos, categoria) {
+  const modal = document.getElementById('modal-processamento');
+  const titulo = document.getElementById('proc-titulo');
+  const status = document.getElementById('proc-status');
+  const barra  = document.getElementById('proc-barra');
+
+  modal.classList.remove('oculto');
+  const resultados = [];
+  const cfg = CONFIG_CHUNKING[categoria] || CONFIG_CHUNKING['normas'];
+
+  for (let i = 0; i < arquivos.length; i++) {
+    const arq = arquivos[i];
+    const pct = Math.round(((i) / arquivos.length) * 100);
+    barra.style.width  = pct + '%';
+    titulo.textContent = `Indexando ${i + 1} de ${arquivos.length}`;
+    status.textContent = arq.name;
+
+    try {
+      const extracao = await lerArquivo(arq);
+
+      if (!extracao.texto || extracao.texto.trim().length < 50) {
+        resultados.push({
+          nome: arq.name, ok: false,
+          motivo: extracao.possivelmenteEscaneado
+            ? 'PDF parece ser imagem/escaneado — texto não extraível'
+            : 'Texto extraído está vazio ou muito curto'
+        });
+        continue;
+      }
+
+      const docId  = gerarId(arq.name, arq.size);
+      const chunks = dividirEmChunks(extracao.texto, categoria);
+
+      // Salvar documento
+      const docObj = {
+        id:          docId,
+        nome:        arq.name,
+        categoria,
+        tipo_arquivo: extracao.tipo,
+        texto:       extracao.texto,
+        num_chunks:  chunks.length,
+        num_paginas: extracao.paginas || null,
+        tamanho:     arq.size || 0,
+        indexado_em: new Date().toISOString(),
+        possivelmenteEscaneado: extracao.possivelmenteEscaneado || false,
+      };
+      await txPut('documentos', docObj);
+
+      // Salvar chunks
+      for (let j = 0; j < chunks.length; j++) {
+        await txPut('chunks', {
+          id:       `${docId}_c${j}`,
+          docId,
+          docNome:  arq.name,
+          categoria,
+          posicao:  j,
+          total:    chunks.length,
+          texto:    chunks[j],
+        });
+      }
+
+      resultados.push({
+        nome: arq.name, ok: true,
+        chunks: chunks.length,
+        palavras: extracao.texto.split(/\s+/).length,
+        escaneado: extracao.possivelmenteEscaneado || false,
+      });
+
+    } catch (err) {
+      resultados.push({ nome: arq.name, ok: false, motivo: err.message });
+    }
+  }
+
+  barra.style.width = '100%';
+  await setConfig('ultima_indexacao', new Date().toISOString());
+
+  // Recarrega índice em memória
+  await carregarIndiceMemoria();
+
+  modal.classList.add('oculto');
+  return resultados;
+}
+
+async function removerDocumento(docId) {
+  // Remove documento e todos seus chunks
+  await txDelete('documentos', docId);
+  const chunks = await txGetAll('chunks', 'docId', docId);
+  for (const c of chunks) await txDelete('chunks', c.id);
+  await carregarIndiceMemoria();
+}
+
+async function limparBase() {
+  await txClear('documentos');
+  await txClear('chunks');
+  indiceMemoria = [];
+}
+
+/* ================================================================
+   6. INTERFACE — RENDERIZAÇÃO DA BASE
+   ================================================================ */
+
+async function renderizarBase() {
+  const docs = await txGetAll('documentos');
+
+  // Atualiza cards de categoria
+  const categorias = ['normas','pareceres','decisoes','notas-tecnicas','orientacoes'];
+  const mapeamento  = {
+    'normas':         { cnt: 'cnt-normas',      chk: 'chk-normas' },
+    'pareceres':      { cnt: 'cnt-pareceres',   chk: 'chk-pareceres' },
+    'decisoes':       { cnt: 'cnt-decisoes',    chk: 'chk-decisoes' },
+    'notas-tecnicas': { cnt: 'cnt-notas',       chk: 'chk-notas' },
+    'orientacoes':    { cnt: 'cnt-orientacoes', chk: 'chk-orientacoes' },
+  };
+
+  categorias.forEach(cat => {
+    const docscat   = docs.filter(d => d.categoria === cat);
+    const totalChunks = docscat.reduce((s,d) => s + (d.num_chunks||0), 0);
+    const ids = mapeamento[cat];
+    document.getElementById(ids.cnt).textContent = docscat.length;
+    document.getElementById(ids.chk).textContent = totalChunks + ' chunks';
+  });
+
+  // Renderiza lista de documentos
+  const lista = document.getElementById('lista-docs');
+
+  if (docs.length === 0) {
+    lista.innerHTML = `
+      <div class="estado-vazio">
+        <div class="vazio-icone">📂</div>
+        <div class="vazio-titulo">Nenhum documento indexado</div>
+        <div class="vazio-desc">Adicione documentos usando a área acima</div>
+      </div>`;
+    return;
+  }
+
+  const icones = {
+    'normas':         '📜',
+    'pareceres':      '⚖',
+    'decisoes':       '📋',
+    'notas-tecnicas': '📝',
+    'orientacoes':    '🎓',
+  };
+
+  const nomesCat = {
+    'normas':         'Norma',
+    'pareceres':      'Parecer',
+    'decisoes':       'Decisão',
+    'notas-tecnicas': 'Nota Técnica',
+    'orientacoes':    'Orientação',
+  };
+
+  // Ordena por categoria depois nome
+  docs.sort((a,b) => a.categoria.localeCompare(b.categoria) || a.nome.localeCompare(b.nome));
+
+  lista.innerHTML = docs.map(doc => `
+    <div class="doc-item" id="doc-${doc.id}">
+      <div class="doc-icone">${icones[doc.categoria]||'📄'}</div>
+      <div class="doc-info">
+        <div class="doc-nome">${escapeHtml(doc.nome)}</div>
+        <div class="doc-meta">
+          <span class="badge badge-cinza" style="font-size:10px">${nomesCat[doc.categoria]||doc.categoria}</span>
+          &nbsp;${doc.num_chunks} chunks · ${doc.tipo_arquivo.toUpperCase()}
+          ${doc.num_paginas ? ` · ${doc.num_paginas} págs` : ''}
+          · indexado ${formatarData(doc.indexado_em)}
+          ${doc.possivelmenteEscaneado ? ' <span class="badge badge-amarelo" style="font-size:10px">Pode ser escaneado</span>' : ''}
+        </div>
+      </div>
+      <div class="doc-acoes">
+        <button class="btn btn-secundario btn-sm" onclick="togglePreview('${doc.id}')">Ver trecho</button>
+        <button class="btn btn-perigo btn-sm" onclick="confirmarRemoverDoc('${doc.id}', '${escapeHtml(doc.nome)}')">Remover</button>
+      </div>
+    </div>
+    <div class="preview-extracao" id="preview-${doc.id}">${escapeHtml((doc.texto||'').substring(0, 600))}${doc.texto && doc.texto.length > 600 ? '...' : ''}</div>
+  `).join('');
+
+  atualizarStatusBase(docs.length);
+}
+
+function togglePreview(docId) {
+  const el = document.getElementById('preview-' + docId);
+  if (el) el.classList.toggle('visivel');
+}
+
+/* ================================================================
+   7. HANDLERS DE UPLOAD
+   ================================================================ */
+
+async function handleArquivos(arquivos) {
+  if (!arquivos || arquivos.length === 0) return;
+  const categoria = document.getElementById('sel-categoria').value;
+  const lista = Array.from(arquivos);
+
+  const resultados = await indexarArquivos(lista, categoria);
+  await renderizarBase();
+  mostrarResultadosIndexacao(resultados);
+}
+
+function handleDrop(event) {
+  event.preventDefault();
+  document.getElementById('zona-upload').classList.remove('arrastando');
+  const arquivos = event.dataTransfer.files;
+  handleArquivos(arquivos);
+}
+
+function mostrarResultadosIndexacao(resultados) {
+  const ok    = resultados.filter(r => r.ok);
+  const erros = resultados.filter(r => !r.ok);
+  const avisos = ok.filter(r => r.escaneado);
+
+  let html = '';
+
+  if (ok.length > 0) {
+    html += `<div class="alerta alerta-sucesso">
+      <span>✓</span>
+      <div>
+        <strong>${ok.length} documento(s) indexado(s) com sucesso.</strong><br>
+        ${ok.map(r => `${escapeHtml(r.nome)}: ${r.chunks} chunks, ~${r.palavras} palavras`).join('<br>')}
+      </div>
+    </div>`;
+  }
+
+  if (avisos.length > 0) {
+    html += `<div class="alerta alerta-aviso">
+      <span>⚠</span>
+      <div>
+        <strong>Atenção:</strong> Os seguintes arquivos podem ser PDFs escaneados (imagens). A extração de texto foi parcial:<br>
+        ${avisos.map(r => escapeHtml(r.nome)).join('<br>')}
+      </div>
+    </div>`;
+  }
+
+  if (erros.length > 0) {
+    html += `<div class="alerta alerta-erro">
+      <span>✗</span>
+      <div>
+        <strong>${erros.length} arquivo(s) com erro:</strong><br>
+        ${erros.map(r => `${escapeHtml(r.nome)}: ${r.motivo}`).join('<br>')}
+      </div>
+    </div>`;
+  }
+
+  // Insere no topo da tela de base
+  const painel = document.querySelector('#tela-base .painel');
+  const aviso  = document.createElement('div');
+  aviso.innerHTML = html;
+  painel.parentNode.insertBefore(aviso, painel);
+
+  setTimeout(() => { if (aviso.parentNode) aviso.parentNode.removeChild(aviso); }, 8000);
+}
+
+/* ================================================================
+   8. BUSCA RAG — INTERFACE
+   ================================================================ */
+
+async function executarBuscaRAG() {
+  const query = document.getElementById('rag-query').value.trim();
+  if (!query) return;
+
+  const n        = parseInt(document.getElementById('rag-n').value);
+  const cat      = document.getElementById('rag-categoria').value;
+  const container = document.getElementById('resultados-rag');
+
+  if (indiceMemoria.length === 0) {
+    container.innerHTML = `<div class="alerta alerta-aviso"><span>⚠</span><span>A base de conhecimento está vazia. Adicione documentos primeiro.</span></div>`;
+    return;
+  }
+
+  const btn = document.getElementById('btn-buscar-rag');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Buscando...';
+
+  const resultados = buscarRAG(query, n, cat);
+
+  btn.disabled = false;
+  btn.textContent = 'Buscar na base';
+
+  if (resultados.length === 0) {
+    container.innerHTML = `<div class="alerta alerta-info"><span>ℹ</span><span>Nenhum resultado encontrado para esta query. Tente termos mais específicos ou verifique se a base contém documentos relevantes.</span></div>`;
+    return;
+  }
+
+  const nomesCat = {
+    'normas':         'Norma',
+    'pareceres':      'Parecer',
+    'decisoes':       'Decisão',
+    'notas-tecnicas': 'Nota Técnica',
+    'orientacoes':    'Orientação',
+  };
+
+  container.innerHTML = `
+    <div class="painel-titulo" style="margin-bottom:12px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--azul-acento)">
+      ${resultados.length} resultado(s) para: "${escapeHtml(query)}"
+    </div>
+    ${resultados.map((r, i) => `
+      <div class="resultado-rag">
+        <div class="rag-rank">#${i+1} — ${nomesCat[r.categoria]||r.categoria}</div>
+        <div class="rag-fonte">📄 ${escapeHtml(r.docNome)} · Chunk ${r.posicao+1}/${r.total}</div>
+        <div class="rag-texto">${escapeHtml(r.texto)}</div>
+        <div class="rag-score">Score TF-IDF: ${r.score.toFixed(4)}</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+/* ================================================================
+   9. NAVEGAÇÃO SPA
+   ================================================================ */
+
+const TELAS = ['inicio', 'base', 'rag', 'config'];
+
+function navegarPara(tela) {
+  TELAS.forEach(t => {
+    document.getElementById('tela-' + t).classList.remove('ativa');
+    const nav = document.getElementById('nav-' + t);
+    if (nav) nav.classList.remove('ativo');
+  });
+  document.getElementById('tela-' + tela).classList.add('ativa');
+  const nav = document.getElementById('nav-' + tela);
+  if (nav) nav.classList.add('ativo');
+
+  if (tela === 'base') { renderizarBase(); verificarCompatibilidadePasta(); }
+  if (tela === 'config') carregarConfiguracoes();
+}
+
+/* ================================================================
+   10. SELEÇÃO DE TIPO E OCASIÃO (TELA INICIAL)
+   ================================================================ */
+
+let selecaoTipo    = null;
+let selecaoOcasiao = null;
+
+function selecionarTipo(tipo) {
+  selecaoTipo    = tipo;
+  selecaoOcasiao = null;
+
+  ['PAD','PAR'].forEach(t => {
+    document.getElementById('card-' + t).classList.toggle('selecionado', t === tipo);
+  });
+
+  document.getElementById('selecao-ocasiao').style.display = 'block';
+  document.getElementById('inicio-acoes').style.display    = 'none';
+  ['triagem','admissibilidade','julgamento'].forEach(o => {
+    document.getElementById('card-' + o).classList.remove('selecionado');
+  });
+}
+
+function selecionarOcasiao(ocasiao) {
+  selecaoOcasiao = ocasiao;
+  ['triagem','admissibilidade','julgamento'].forEach(o => {
+    document.getElementById('card-' + o).classList.toggle('selecionado', o === ocasiao);
+  });
+  document.getElementById('inicio-acoes').style.display = 'flex';
+}
+
+function resetarSelecao() {
+  selecaoTipo    = null;
+  selecaoOcasiao = null;
+  ['PAD','PAR'].forEach(t => document.getElementById('card-' + t).classList.remove('selecionado'));
+  ['triagem','admissibilidade','julgamento'].forEach(o => {
+    document.getElementById('card-' + o).classList.remove('selecionado');
+  });
+  document.getElementById('selecao-ocasiao').style.display = 'none';
+  document.getElementById('inicio-acoes').style.display    = 'none';
+}
+
+function iniciarFluxo() {
+  if (!selecaoTipo || !selecaoOcasiao) return;
+  // Fase 2: aqui navegará para o formulário correspondente
+  alert(`Fluxo: ${selecaoTipo} — ${selecaoOcasiao}\n\nOs formulários de análise serão implementados na Fase 2 (Motor de análise).`);
+}
+
+/* ================================================================
+   11. CONFIGURAÇÕES
+   ================================================================ */
+
+async function carregarConfiguracoes() {
+  const docs   = await txGetAll('documentos');
+  const chunks = await txGetAll('chunks');
+  const ultima = await getConfig('ultima_indexacao');
+
+  const statusEl = document.getElementById('cfg-status-base');
+  const badgeEl  = document.getElementById('cfg-badge-base');
+  const chunksEl = document.getElementById('cfg-total-chunks');
+  const ultimaEl = document.getElementById('cfg-ultima-index');
+
+  if (docs.length === 0) {
+    statusEl.textContent = 'Base não indexada — sem documentos';
+    badgeEl.className = 'badge badge-vermelho';
+    badgeEl.textContent = 'Vazia';
+  } else {
+    statusEl.textContent = `${docs.length} documento(s) indexado(s)`;
+    badgeEl.className = 'badge badge-verde';
+    badgeEl.textContent = 'Ativa';
+  }
+
+  chunksEl.textContent = chunks.length + ' chunks';
+  ultimaEl.textContent = ultima ? formatarData(ultima, true) : 'Nunca';
+
+  // Carrega campos de numeração
+  const campos = {
+    'cfg-prefixo':        ['prefixo', ''],
+    'cfg-seq-triagem':    ['seq_triagem', 1],
+    'cfg-seq-admiss':     ['seq_admissibilidade', 1],
+    'cfg-seq-decisao-pad':['seq_decisao_pad', 1],
+    'cfg-seq-decisao-par':['seq_decisao_par', 1],
+  };
+
+  for (const [id, [chave, padrao]] of Object.entries(campos)) {
+    const el = document.getElementById(id);
+    if (el) el.value = await getConfig(chave, padrao);
+  }
+}
+
+async function salvarConfiguracao(chave, valor) {
+  await setConfig(chave, valor);
+}
+
+/* ================================================================
+   12. EXPORTAR ÍNDICE
+   ================================================================ */
+
+async function exportarIndice() {
+  const docs = await txGetAll('documentos');
+  if (docs.length === 0) { alert('Nenhum documento indexado.'); return; }
+
+  const linhas = [
+    'Categoria\tNome\tChunks\tTipo\tPáginas\tIndexado em',
+    ...docs.map(d =>
+      `${d.categoria}\t${d.nome}\t${d.num_chunks}\t${d.tipo_arquivo}\t${d.num_paginas||'-'}\t${d.indexado_em}`
+    )
+  ];
+
+  const blob = new Blob([linhas.join('\n')], { type: 'text/plain;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `SisTriag_Indice_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ================================================================
+   13. MODAIS
+   ================================================================ */
+
+let acaoModal = null;
+
+function abrirModal(titulo, sub, corpo, acaoConfirmar) {
+  document.getElementById('modal-titulo').textContent = titulo;
+  document.getElementById('modal-sub').textContent    = sub;
+  document.getElementById('modal-corpo').innerHTML    = corpo;
+  acaoModal = acaoConfirmar;
+  document.getElementById('modal-overlay').classList.remove('oculto');
+}
+
+function fecharModal() {
+  document.getElementById('modal-overlay').classList.add('oculto');
+  acaoModal = null;
+}
+
+async function executarAcaoModal() {
+  if (acaoModal) await acaoModal();
+  fecharModal();
+}
+
+function confirmarRemoverDoc(docId, nome) {
+  abrirModal(
+    'Remover documento',
+    `Confirma a remoção de "${nome}" da base de conhecimento? Os chunks indexados serão apagados permanentemente.`,
+    '',
+    async () => {
+      await removerDocumento(docId);
+      await renderizarBase();
+      atualizarStatusRodape();
+    }
+  );
+}
+
+function confirmarLimparBase() {
+  abrirModal(
+    'Limpar base de conhecimento',
+    'Esta ação apagará TODOS os documentos e chunks indexados. O histórico de análises não será afetado. Deseja continuar?',
+    '',
+    async () => {
+      await limparBase();
+      await renderizarBase();
+      atualizarStatusRodape();
+    }
+  );
+}
+
+function confirmarLimparTudo() {
+  abrirModal(
+    'Apagar todos os dados',
+    'Esta ação apagará TODOS os dados do sistema: base de conhecimento, histórico de análises e configurações. Esta ação é irreversível. Tem certeza?',
+    '<div class="alerta alerta-erro" style="margin-top:12px"><span>⚠</span><span>Esta ação não pode ser desfeita.</span></div>',
+    async () => {
+      await txClear('documentos');
+      await txClear('chunks');
+      await txClear('configuracoes');
+      await txClear('historico');
+      indiceMemoria = [];
+      await renderizarBase();
+      await atualizarStatusRodape();
+      location.reload();
+    }
+  );
+}
+
+/* ================================================================
+   14. STATUS RODAPÉ
+   ================================================================ */
+
+async function atualizarStatusRodape() {
+  const docs = await txGetAll('documentos');
+  const dot  = document.getElementById('dot-base');
+  const txt  = document.getElementById('txt-base');
+  const aviso = document.getElementById('aviso-base');
+
+  if (docs.length === 0) {
+    dot.className  = 'status-dot vermelho';
+    txt.textContent = 'Base não indexada';
+    if (aviso) {
+      aviso.style.display = 'flex';
+      document.getElementById('aviso-base-texto').textContent = 'Base de conhecimento não indexada. Clique aqui para configurar.';
+    }
+  } else {
+    dot.className  = 'status-dot verde';
+    txt.textContent = `${docs.length} documento(s) indexado(s) · ${indiceMemoria.length} chunks`;
+    if (aviso) aviso.style.display = 'none';
+  }
+}
+
+function atualizarStatusBase(numDocs) {
+  const dot = document.getElementById('dot-base');
+  const txt = document.getElementById('txt-base');
+  if (numDocs === 0) {
+    dot.className  = 'status-dot vermelho';
+    txt.textContent = 'Base não indexada';
+  } else {
+    dot.className  = 'status-dot verde';
+    txt.textContent = `${numDocs} documento(s) indexado(s) · ${indiceMemoria.length} chunks`;
+  }
+}
+
+function atualizarHora() {
+  const el = document.getElementById('txt-hora');
+  if (el) {
+    const agora = new Date();
+    el.textContent = agora.toLocaleDateString('pt-BR') + ' ' +
+      agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  }
+}
+
+/* ================================================================
+   15. UTILITÁRIOS
+   ================================================================ */
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function formatarData(iso, completo = false) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  if (isNaN(d)) return iso;
+  if (completo) {
+    return d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+  }
+  return d.toLocaleDateString('pt-BR');
+}
+
+/* ================================================================
+   16. IMPORTAR PASTA LOCAL (File System Access API)
+   ================================================================ */
+
+let pastaHandleAtual = null; // FileSystemDirectoryHandle em memória
+
+const MAPA_CATEGORIAS_PASTA = {
+  'normas':        'normas', 'norma':'normas', 'legislacao':'normas', 'leis':'normas', 'lei':'normas',
+  'pareceres':     'pareceres', 'parecer':'pareceres',
+  'decisoes':      'decisoes', 'decisao':'decisoes', 'julgados':'decisoes', 'jurisprudencia':'decisoes', 'acordaos':'decisoes',
+  'notas-tecnicas':'notas-tecnicas', 'notas_tecnicas':'notas-tecnicas', 'notas tecnicas':'notas-tecnicas',
+  'notas':         'notas-tecnicas', 'nota-tecnica':'notas-tecnicas', 'nota_tecnica':'notas-tecnicas',
+  'orientacoes':   'orientacoes', 'orientacao':'orientacoes', 'treinamentos':'orientacoes',
+  'treinamento':   'orientacoes', 'manual':'orientacoes', 'manuais':'orientacoes', 'guias':'orientacoes',
+};
+
+function detectarCategoriaPasta(nomePasta) {
+  const chave = nomePasta.toLowerCase().trim()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return MAPA_CATEGORIAS_PASTA[chave] || null;
+}
+
+async function varrerDiretorio(dirHandle, categoriaForçada = null) {
+  const arquivos = []; // { file, categoria }
+  for await (const [nome, handle] of dirHandle) {
+    if (handle.kind === 'directory') {
+      const cat = detectarCategoriaPasta(nome);
+      if (cat) {
+        // Varre subpasta reconhecida
+        for await (const [nomeArq, hArq] of handle) {
+          if (hArq.kind === 'file') {
+            const ext = nomeArq.split('.').pop().toLowerCase();
+            if (ext === 'pdf' || ext === 'docx') {
+              const file = await hArq.getFile();
+              arquivos.push({ file, categoria: cat });
+            }
+          }
+        }
+      }
+      // Subpastas não reconhecidas são ignoradas (poderiam ser adicionadas como 'normas' por padrão)
+    } else if (handle.kind === 'file' && categoriaForçada) {
+      const ext = nome.split('.').pop().toLowerCase();
+      if (ext === 'pdf' || ext === 'docx') {
+        const file = await handle.getFile();
+        arquivos.push({ file, categoria: categoriaForçada });
+      }
+    }
+  }
+  return arquivos;
+}
+
+async function importarPastaLocal() {
+  if (!('showDirectoryPicker' in window)) {
+    document.getElementById('pasta-compat').textContent =
+      '⚠ Recurso disponível apenas no Chrome/Edge 86+. No Firefox, use o upload individual.';
+    document.getElementById('pasta-compat').style.color = 'var(--amarelo)';
+    return;
+  }
+
+  let dirHandle;
+  try {
+    dirHandle = await window.showDirectoryPicker({ mode: 'read' });
+  } catch (e) {
+    if (e.name !== 'AbortError') console.error(e);
+    return;
+  }
+
+  pastaHandleAtual = dirHandle;
+
+  // Varre a pasta
+  const modal = document.getElementById('modal-processamento');
+  const titulo = document.getElementById('proc-titulo');
+  const status = document.getElementById('proc-status');
+  const barra  = document.getElementById('proc-barra');
+  modal.classList.remove('oculto');
+  titulo.textContent = 'Escaneando pasta...';
+  status.textContent = dirHandle.name;
+  barra.style.width = '5%';
+
+  const itens = await varrerDiretorio(dirHandle);
+
+  if (itens.length === 0) {
+    modal.classList.add('oculto');
+    alert('Nenhum arquivo PDF ou DOCX encontrado em subpastas reconhecidas.\n\nVerifique se a estrutura de pastas segue o padrão indicado.');
+    return;
+  }
+
+  // Verifica quais já existem (pelo nome+tamanho)
+  const docsExistentes = await txGetAll('documentos');
+  const idsExistentes = new Set(docsExistentes.map(d => d.nome + '_' + (d.tamanho || 0)));
+
+  const novos    = itens.filter(i => !idsExistentes.has(i.file.name + '_' + i.file.size));
+  const jaExistem = itens.length - novos.length;
+
+  barra.style.width = '10%';
+
+  // Agrupa por categoria para indexação em lotes
+  const porCategoria = {};
+  novos.forEach(({ file, categoria }) => {
+    if (!porCategoria[categoria]) porCategoria[categoria] = [];
+    porCategoria[categoria].push(file);
+  });
+
+  const resumo = []; // { categoria, novos, chunks, erros }
+
+  let catIndex = 0;
+  const totalCats = Object.keys(porCategoria).length;
+
+  for (const [cat, arquivos] of Object.entries(porCategoria)) {
+    titulo.textContent = `Indexando: ${cat} (${catIndex + 1}/${totalCats})`;
+    const resultados = await indexarArquivos(arquivos, cat);
+    const ok     = resultados.filter(r => r.ok);
+    const erros  = resultados.filter(r => !r.ok);
+    const chunks = ok.reduce((s, r) => s + (r.chunks || 0), 0);
+    resumo.push({ categoria: cat, novos: ok.length, chunks, erros: erros.length });
+    catIndex++;
+    barra.style.width = (10 + Math.round(catIndex / totalCats * 85)) + '%';
+  }
+
+  barra.style.width = '100%';
+  modal.classList.add('oculto');
+
+  // Atualiza info pasta ativa
+  const totalNovos  = resumo.reduce((s, r) => s + r.novos, 0);
+  const totalChunks = resumo.reduce((s, r) => s + r.chunks, 0);
+  const totalErros  = resumo.reduce((s, r) => s + r.erros, 0);
+
+  document.getElementById('pasta-ativa-container').style.display = 'flex';
+  document.getElementById('pasta-ativa-nome').textContent = '📂 ' + dirHandle.name;
+  document.getElementById('pasta-ativa-stats').textContent =
+    `${totalNovos} novos · ${jaExistem} já existiam · ${totalChunks} chunks · ${totalErros} erros`;
+  document.getElementById('btn-resync').style.display = 'inline-flex';
+
+  // Exibe resumo por categoria
+  if (resumo.length > 0) {
+    const nomesCat = {
+      'normas':'Normas','pareceres':'Pareceres','decisoes':'Decisões',
+      'notas-tecnicas':'Notas Técnicas','orientacoes':'Orientações'
+    };
+    const container = document.getElementById('resumo-importacao-container');
+    container.style.display = 'block';
+    container.innerHTML = `
+      <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--azul-acento);margin-bottom:8px;margin-top:8px">
+        Resumo da importação
+      </div>
+      ${resumo.map(r => `
+        <div class="resumo-linha">
+          <span class="resumo-cat">${nomesCat[r.categoria]||r.categoria}</span>
+          <span class="resumo-nums">
+            <span>${r.novos} doc${r.novos!==1?'s':''}</span>
+            <span>${r.chunks} chunks</span>
+            ${r.erros ? `<span style="color:var(--vermelho-claro)">${r.erros} erro${r.erros!==1?'s':''}</span>` : ''}
+          </span>
+        </div>
+      `).join('')}
+      ${jaExistem > 0 ? `<div style="font-size:11px;color:var(--cinza-texto);margin-top:6px">ℹ ${jaExistem} arquivo(s) já estavam indexados e foram ignorados.</div>` : ''}
+    `;
+  }
+
+  await renderizarBase();
+  await atualizarStatusRodape();
+}
+
+async function resincronizarPasta() {
+  if (!pastaHandleAtual) {
+    alert('Nenhuma pasta ativa nesta sessão. Use "Importar Pasta Local" para selecionar.');
+    return;
+  }
+  // Re-usa o handle já obtido
+  await importarPastaLocalComHandle(pastaHandleAtual);
+}
+
+async function importarPastaLocalComHandle(dirHandle) {
+  pastaHandleAtual = dirHandle;
+  await importarPastaLocal._comHandle(dirHandle); // alias; na prática basta chamar de novo
+}
+
+// Verifica compatibilidade ao carregar a tela base
+function verificarCompatibilidadePasta() {
+  const el = document.getElementById('pasta-compat');
+  if (!el) return;
+  if (!('showDirectoryPicker' in window)) {
+    el.textContent = '⚠ Importação de pasta disponível apenas no Chrome/Edge 86+';
+    el.style.color = 'var(--amarelo)';
+    document.getElementById('btn-importar-pasta').disabled = true;
+    document.getElementById('btn-importar-pasta').style.opacity = '0.5';
+  } else {
+    el.textContent = '✓ Chrome/Edge detectado — recurso disponível';
+    el.style.color = 'var(--verde-claro)';
+  }
+}
+
+/* ================================================================
+   17. INICIALIZAÇÃO
+   ================================================================ */
+
+async function inicializar() {
+  try {
+    await abrirDB();
+    inicializarPDFJS();
+    await carregarIndiceMemoria();
+    await atualizarStatusRodape();
+    setInterval(atualizarHora, 1000);
+    atualizarHora();
+    verificarCompatibilidadePasta();
+
+    // Verifica se base está vazia para mostrar orientação
+    const docs = await txGetAll('documentos');
+    if (docs.length === 0) {
+      document.getElementById('aviso-base').style.display = 'flex';
+    }
+
+    console.log(`[SisTriag-Coger] Inicializado — ${docs.length} documentos, ${indiceMemoria.length} chunks em memória`);
+  } catch (err) {
+    console.error('[SisTriag-Coger] Erro na inicialização:', err);
+    document.body.insertAdjacentHTML('afterbegin', `
+      <div style="background:#b84040;color:#fff;padding:12px 24px;font-size:13px;text-align:center">
+        Erro ao inicializar o sistema: ${err.message} — Verifique se o navegador suporta IndexedDB.
+      </div>
+    `);
+  }
+}
+
+inicializar();
+</script>
+</body>
+</html>
