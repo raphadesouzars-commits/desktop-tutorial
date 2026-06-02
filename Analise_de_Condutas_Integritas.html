@@ -1314,36 +1314,59 @@ document.getElementById("bpr").onclick=function(){
       +"<div style='font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt'>"+res.lw.h+"</div>"
       +"<div style='font-size:9pt;color:#1A2740;line-height:1.6;font-family:JetBrains Mono,monospace'>"+res.lw.t+"</div></div>" : "");
 
-  // Análise dos elementos constitutivos
-  html += sec("Elementos constitutivos da conduta — análise fático-jurídica")
-    +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narrativeParas+"</div>";
-
-  // Análise probatória (se houver justificativas preenchidas)
-  var probRows = path.filter(function(h){
-    var js=h.justs||[]; return js.some(function(j){return j.fund||j.prob;});
-  }).map(function(h){
-    var step=S[h.id]; if(!step) return "";
+  // Análise dos elementos constitutivos — com justificativas integradas ao texto
+  // Monta um mapa stepId → justificativas preenchidas para intercalar no texto
+  var justMap={};
+  path.forEach(function(h){
     var js=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
-    return js.map(function(j,ji){
-      return "<tr style='border-bottom:1px solid #e8edf4'>"
-        +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;font-weight:600;vertical-align:top'>"
-        +step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")
-        +(js.length>1?" <span style='font-weight:400;color:#888'>#"+(ji+1)+"</span>":"")
-        +"</td>"
-        +(j.fund?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+j.fund+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informada)</td>")
-        +(j.prob?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+j.prob+(j.pag?" <em>(Fl./Pág.: "+j.pag+")</em>":"")+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informado)</td>")
-        +"</tr>";
-    }).join("");
+    if(js.length) justMap[h.id]={ch:h.ch, justs:js};
+  });
+
+  // Reconstrói parágrafos narrativos intercalando os registros do analista
+  var narrativeBlocks = narrativeText.split("||PARA||").map(function(p,pi){
+    if(!p) return "";
+    var block="<p style='margin:0 0 9pt;text-align:justify'>"+p+"</p>";
+    // Após o último parágrafo de cada eixo insira as justificativas do passo correspondente
+    // Estratégia: ao final de cada parágrafo verifica se algum stepId aparece na narrativa
+    // e ancora a justificativa ao parágrafo mais próximo
+    return block;
   }).join("");
-  if(probRows){
-    html += sec("Análise probatória — fundamentação por pergunta")
-      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registros de fundamentação e elementos probatórios inseridos pelo analista durante o preenchimento do fluxo.</div>"
-      +"<table><thead><tr style='background:#EEF3FA'>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fundamentação / Explicação</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Elemento Probatório / Fl.-Pág.</th>"
-      +"</tr></thead><tbody>"+probRows+"</tbody></table>";
-  }
+
+  // Constrói bloco de justificativas fluídas intercalado por passo
+  var justBlocks="";
+  path.forEach(function(h){
+    if(!justMap[h.id]) return;
+    var step=S[h.id]; if(!step) return;
+    var entry=justMap[h.id];
+    var qLabel=step.q.replace(/<em>/g,"").replace(/<\/em>/g,"");
+    var respLabel=al(entry.ch);
+    justBlocks+="<div style='margin:0 0 10pt;padding:10pt 14pt;background:#F5F8FF;border-left:3pt solid #1E4C99;border-radius:0 5pt 5pt 0'>"
+      +"<div style='font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1E4C99;margin-bottom:6pt;display:flex;gap:10pt;align-items:center'>"
+      +"<span>Registro do analista</span>"
+      +"<span style='background:#DCE6F4;color:#0B2C5F;padding:1pt 7pt;border-radius:10pt;font-weight:700'>"+qLabel+"</span>"
+      +"<span style='background:#0B2C5F;color:#fff;padding:1pt 7pt;border-radius:10pt'>Resposta: "+respLabel+"</span>"
+      +"</div>"
+      +entry.justs.map(function(j,ji){
+        var num=(entry.justs.length>1?"<strong style='color:#1E4C99'>("+(ji+1)+") </strong>":"");
+        var parts=[];
+        if(j.fund) parts.push("<span>"+num+"<strong>Fundamentação:</strong> "+j.fund+"</span>");
+        if(j.prob){
+          var probTxt="<strong>Elemento probatório:</strong> "+j.prob;
+          if(j.pag) probTxt+=" <span style='background:#fff;border:1pt solid #c0c8d8;padding:0pt 5pt;border-radius:3pt;font-family:monospace;font-size:8pt'>Fl./Pág. "+j.pag+"</span>";
+          parts.push("<span>"+(j.fund?"":num)+probTxt+"</span>");
+        }
+        return "<div style='font-size:9pt;color:#1A2740;line-height:1.7;margin-bottom:"+(ji<entry.justs.length-1?"7pt":"0")+"'>"+parts.join(" — ")+"</div>";
+      }).join("")
+      +"</div>";
+  });
+
+  html += sec("Elementos constitutivos da conduta — análise fático-jurídica")
+    +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narrativeBlocks+"</div>"
+    +(justBlocks
+      ? "<div style='margin-top:4pt'>"
+        +"<div style='font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E4C99;margin-bottom:8pt;border-bottom:1pt solid #DCE6F4;padding-bottom:4pt'>Fundamentações e elementos probatórios registrados pelo analista</div>"
+        +justBlocks+"</div>"
+      : "");
 
   // Conclusão
   html += sec("Conclusão — tipificação disciplinar e penalidade cabível")
@@ -1356,12 +1379,12 @@ document.getElementById("bpr").onclick=function(){
   // Caminho percorrido
   if(pathRows){
     html += sec("Caminho percorrido — rastreabilidade analítica")
-      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo de análise, com as respectivas respostas, fundamentação automática e justificativas inseridas pelo analista.</div>"
+      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo, com resposta, fundamentação técnica automática e justificativas inseridas pelo analista.</div>"
       +"<table><thead><tr style='background:#EEF3FA'>"
       +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:22pt'>#</th>"
       +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:55pt'>Resposta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fundamentação / Elem. Probatório</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:52pt'>Resposta</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fund. automática e registros do analista</th>"
       +"</tr></thead><tbody>"+pathRows+"</tbody></table>";
   }
 
