@@ -190,91 +190,6 @@ body{font-family:var(--rfb-font-body);font-size:14px;color:var(--rfb-text);backg
   font-size: 12px !important; color: var(--rfb-warning) !important;
   margin-bottom: 12px !important;
 }
-
-/* ── JUSTIFICATIVA DA RESPOSTA ─────────────────────────────────────────────── */
-.just-box {
-  background: linear-gradient(135deg, #F0F4FB 0%, #EAF0FA 100%);
-  border: 1.5px solid var(--rfb-navy-100);
-  border-left: 4px solid var(--rfb-navy-600);
-  border-radius: 0 var(--rfb-r-md) var(--rfb-r-md) 0;
-  padding: 16px 18px 14px;
-  margin: 18px 0 4px;
-}
-.just-box-title {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: .8px;
-  text-transform: uppercase;
-  color: var(--rfb-navy-700);
-  margin-bottom: 12px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.just-box-title::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--rfb-gold-500);
-  flex-shrink: 0;
-}
-.just-field {
-  margin-bottom: 10px;
-}
-.just-field:last-child { margin-bottom: 0; }
-.just-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--rfb-navy-800);
-  margin-bottom: 4px;
-  display: block;
-}
-.just-textarea {
-  width: 100%;
-  padding: 8px 10px;
-  font-family: var(--rfb-font-body);
-  font-size: 12.5px;
-  color: var(--rfb-text);
-  border: 1.5px solid var(--rfb-border-strong);
-  border-radius: var(--rfb-r-md);
-  resize: vertical;
-  line-height: 1.55;
-  background: rgba(255,255,255,.9);
-  transition: border-color .15s, box-shadow .15s;
-}
-.just-textarea:focus {
-  outline: none;
-  border-color: var(--rfb-navy-600);
-  box-shadow: 0 0 0 3px rgba(30,76,153,.1);
-  background: #fff;
-}
-.just-textarea::placeholder { color: var(--rfb-text-faint); }
-.just-row {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.just-row .just-field:first-child { flex: 1; }
-.just-pag-input {
-  width: 88px;
-  padding: 8px 10px;
-  font-family: var(--rfb-font-mono);
-  font-size: 12px;
-  color: var(--rfb-text);
-  border: 1.5px solid var(--rfb-border-strong);
-  border-radius: var(--rfb-r-md);
-  background: rgba(255,255,255,.9);
-  transition: border-color .15s;
-  flex-shrink: 0;
-}
-.just-pag-input:focus {
-  outline: none;
-  border-color: var(--rfb-navy-600);
-  box-shadow: 0 0 0 3px rgba(30,76,153,.1);
-}
-.just-pag-input::placeholder { color: var(--rfb-text-faint); }
 </style>
 </head>
 <body>
@@ -663,10 +578,7 @@ function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",gra
 function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A"}[v]||"?";}
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-// justifications keyed by step id — stores {fund, prob, pag}
-var justState = {};
-
-var hist = [{id:"start",ch:null}];
+var hist = [{id:"start",ch:null,fund:"",prob:"",pag:""}];
 var elFlow   = document.getElementById("flow");
 var elCrumbs = document.getElementById("crumbs");
 var elSN     = document.getElementById("sn");
@@ -712,6 +624,10 @@ function renderStep(id){
       +(o.s?'<span class="opt-sub">'+o.s+'</span>':'')
       +'</span><span class="opt-arrow" aria-hidden="true">'+ICO_ARROW+'</span></button>';
   }).join("");
+  var cur=hist[hist.length-1];
+  var savedFund=cur.fund||"";
+  var savedProb=cur.prob||"";
+  var savedPag=cur.pag||"";
   elFlow.innerHTML=
     '<div class="q-card">'
     +'<div class="q-meta"><span class="axis-tag '+axc+'"><span class="ax-dot"></span>'+step.ax+'</span>'
@@ -719,22 +635,48 @@ function renderStep(id){
     +'<h2 class="q-text">'+step.q+'</h2>'
     +'<p class="q-help">'+step.h+'</p>'
     +'<div class="opts'+(step.tc?" opts-3":"")+'">'+opts+'</div>'
+    +'<div class="just-box" style="margin-top:18px;background:rgba(11,44,95,0.04);border:1px solid rgba(11,44,95,0.14);border-radius:8px;padding:14px 16px">'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--rfb-navy-700);margin-bottom:12px;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Justificativa da resposta <span style="font-weight:400;opacity:.6">(opcional)</span></div>'
+    +'<div style="margin-bottom:10px">'
+    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Fundamentação / Explicação</label>'
+    +'<textarea id="jFund" rows="3" placeholder="Descreva os elementos fáticos e jurídicos que embasam esta resposta..." style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text);resize:vertical;line-height:1.5">'+savedFund.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+    +'</div>'
+    +'<div style="display:flex;gap:10px;align-items:flex-start">'
+    +'<div style="flex:1">'
+    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Elemento probatório correspondente</label>'
+    +'<textarea id="jProb" rows="2" placeholder="Identifique o documento, depoimento, perícia ou outro elemento de prova que sustenta esta resposta..." style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text);resize:vertical;line-height:1.5">'+savedProb.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
+    +'</div>'
+    +'<div style="min-width:110px">'
+    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Fl./Pág. no processo</label>'
+    +'<input id="jPag" type="text" value="'+savedPag.replace(/"/g,'&quot;')+'" placeholder="ex: fl. 45" style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text)">'
+    +'</div>'
+    +'</div>'
+    +'</div>'
     +'<div class="q-foot">'
     +'<button class="back-btn" id="bk"'+(hist.length===1?' disabled="disabled"':'')+'>'
     +ICO_BACK+' Voltar à pergunta anterior</button>'
     +'<span style="font-family:var(--rfb-font-mono);font-size:11px">Fluxo COGER · Lei nº 8.112/90</span>'
     +'</div></div>';
+  function saveJust(){
+    var fEl=document.getElementById("jFund");
+    var pEl=document.getElementById("jProb");
+    var pgEl=document.getElementById("jPag");
+    if(fEl)hist[hist.length-1].fund=fEl.value;
+    if(pEl)hist[hist.length-1].prob=pEl.value;
+    if(pgEl)hist[hist.length-1].pag=pgEl.value;
+  }
   elFlow.querySelectorAll(".opt-btn").forEach(function(btn){
     btn.onclick=function(){
+      saveJust();
       var o=step.opts[parseInt(btn.dataset.i,10)];
       hist[hist.length-1].ch=o.v;
-      hist.push({id:o.nx,ch:null});
+      hist.push({id:o.nx,ch:null,fund:"",prob:"",pag:""});
       render();
       document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
     };
   });
   var bk=document.getElementById("bk");
-  if(bk)bk.onclick=goBack;
+  if(bk)bk.onclick=function(){saveJust();goBack();};
 }
 
 function renderResult(id){
@@ -789,7 +731,7 @@ function goBackTo(i){
   document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function restart(){
-  hist=[{id:"start",ch:null}];window.scrollTo({top:0,behavior:"smooth"});render();
+  hist=[{id:"start",ch:null,fund:"",prob:"",pag:""}];window.scrollTo({top:0,behavior:"smooth"});render();
 }
 
 // ── REPORT ────────────────────────────────────────────────────────────────────
@@ -859,17 +801,22 @@ function buildNarrative(path, result, descricao) {
 }
 
 function buildIntro(path) {
-  // First step always about agressão física
   var s1 = path[0];
   if(!s1) return "";
   if(s1.id==="start" && s1.ch==="sim") {
     var s2 = path[1];
     if(s2 && s2.id==="ag-legitima") {
-      if(s2.ch==="sim") return "A conduta sob exame envolveu contato físico direto com a pessoa da vítima. Todavia, verificou-se a presença dos requisitos legais da legítima defesa, nos termos do art. 23, II, do Código Penal, aplicável ao Direito Disciplinar por analogia: a reação foi proporcional a injusta agressão atual ou iminente, em defesa de direito próprio ou alheio. Presente a excludente de ilicitude, afasta-se a responsabilidade disciplinar no presente fluxo.";
-      return "A conduta sob exame envolveu contato físico direto com a pessoa da vítima — socos, tapas, empurrões, chutes ou outra forma de contato físico violento —, sem que se verifique qualquer excludente de ilicitude. A ausência de legítima defesa ou outra causa justificante torna a conduta plenamente antijurídica no âmbito disciplinar.";
+      if(s2.ch==="sim") return "A conduta sob exame envolveu contato físico direto com a pessoa da vítima. Todavia, verificou-se, no curso da análise, a presença dos requisitos legais da legítima defesa, excludente de ilicitude prevista no art. 23, II, do Código Penal e aplicável ao Direito Disciplinar por analogia (art. 116, caput, c/c art. 124 da Lei nº 8.112/90). Para a configuração da excludente, devem estar presentes: (i) injusta agressão atual ou iminente; (ii) defesa de direito próprio ou alheio; e (iii) uso moderado dos meios necessários. Verificados esses pressupostos no caso concreto, afasta-se a responsabilidade disciplinar no âmbito do presente fluxo analítico, sem prejuízo da análise de outros fatos conexos que porventura possam configurar infrações autônomas.";
+      return "A análise tem por objeto conduta que envolveu contato físico direto — agressão física — praticada por servidor público federal contra vítima identificada, no âmbito do serviço ou em razão do exercício das funções públicas. A agressão física em serviço constitui, em tese, infração disciplinar tipificada no art. 132, VII, da Lei nº 8.112/90, que a sujeita à penalidade de demissão. Verificado que não há excludente de ilicitude aplicável ao caso — legítima defesa, estado de necessidade ou exercício regular de direito —, a conduta remanesce plenamente antijurídica no plano disciplinar. Anote-se que a apuração disciplinar é obrigatória quando há conhecimento de fatos que possam configurar infração, nos termos do art. 143 da Lei nº 8.112/90, sendo vedado o arquivamento sumário sem investigação prévia.";
     }
   }
-  return "A conduta sob exame não envolveu agressão física, afastando-se, de plano, a configuração da infração prevista no art. 132, VII, da Lei nº 8.112/90.";
+  var ids = path.map(function(h){return h.id;});
+  var intro = "A presente análise tem por objeto conduta funcional praticada por servidor público federal, submetida ao fluxo analítico da ferramenta Condutas Funcionais — Integritas, desenvolvida pela Corregedoria da Receita Federal do Brasil (COGER/RFB), com base nas orientações da Controladoria-Geral da União (CGU/DICOR/CRG) e nos dispositivos da Lei nº 8.112/90. ";
+  if(ids.indexOf("ameaca")>=0) intro+="A análise iniciou-se pela verificação da existência de conduta de ameaça, após afastada a agressão física direta, eixo disciplinar regido pela NT nº 544/2024/CGUNE/DICOR/CRG e pelo art. 116, XI, c/c art. 132, V, da Lei nº 8.112/90.";
+  else if(ids.indexOf("sex-conotacao")>=0) intro+="Afastada a agressão física direta, a análise prosseguiu pelo eixo do assédio sexual e das condutas de conotação sexual, regido pela NT nº 3285/2023/CGUNE/DICOR/CRG, com fundamento nos arts. 116, IX e XI, e 117, IX, c/c art. 132, V e XIII, da Lei nº 8.112/90.";
+  else if(ids.indexOf("disc-fator")>=0) intro+="Afastados os eixos anteriores, a análise prosseguiu pela verificação de eventual conduta discriminatória por fator protegido, regida pela NT nº 93/2024/CGUNE/DICOR/CRG e pelo art. 116, IX e XI, c/c art. 132, V, da Lei nº 8.112/90.";
+  else if(ids.indexOf("moral-isolado")>=0) intro+="A análise alcançou o eixo do assédio moral, conduta reiterada de natureza abusiva que ultrapassa os limites do poder diretivo legítimo, regido pela NT nº 93/2024/CGUNE/DICOR/CRG e pelo art. 116, IX e XI, c/c art. 117, IX, e art. 132, V, da Lei nº 8.112/90.";
+  return intro;
 }
 
 function buildAnalysis(path) {
@@ -1068,48 +1015,48 @@ function buildAnalysis(path) {
 
 // ── CONCLUSION BUILDER ─────────────────────────────────────────────────────────
 var CONCLUSIONS = {
-  "res-sem-ilicito": "Diante dos elementos analisados, a conduta sob exame não configura infração disciplinar passível de apuração pela Corregedoria no presente fluxo analítico. Recomenda-se o arquivamento da representação ou o encaminhamento para tratamento administrativo não disciplinar, conforme avaliação técnica do caso concreto.",
+  "res-sem-ilicito": "Diante do exposto, verifica-se que a conduta sob exame não reúne os elementos constitutivos mínimos necessários à configuração de infração disciplinar passível de apuração no âmbito da Corregedoria, à luz da Lei nº 8.112/90 e das orientações normativas vigentes. Nos termos do art. 143 da Lei nº 8.112/90, a instauração de processo administrativo disciplinar pressupõe a existência de indícios suficientes de autoria e materialidade de transgressão funcional — requisito não configurado no presente fluxo analítico. Recomenda-se o arquivamento fundamentado da representação ou, sendo o caso, o encaminhamento para tratamento administrativo não disciplinar (mediação, orientação ou capacitação gerencial), conforme avaliação técnica da autoridade competente. A decisão de arquivamento deverá ser motivada, nos termos do art. 50, III, da Lei nº 9.784/99, com registro dos fundamentos que afastam a configuração do ilícito disciplinar.",
 
-  "res-ag-132": "Diante dos elementos analisados, a conduta sob exame caracteriza ofensa física em serviço a servidor ou a particular, nos termos do art. 132, VII, da Lei nº 8.112/90, hipótese de demissão. A responsabilidade disciplinar é independente da responsabilidade penal e civil.",
+  "res-ag-132": "Diante do exposto, verifica-se que a conduta sob exame configura, em tese, ofensa física em serviço a servidor ou a particular, tipificada no art. 132, VII, da Lei nº 8.112/90, hipótese de penalidade de demissão. O bem jurídico tutelado pelo dispositivo é a integridade física e a dignidade das pessoas em ambiente funcional, cuja proteção decorre também do dever geral de conduta compatível com a moralidade administrativa (art. 116, IX) e de manutenção de urbanidade no trato com servidores e particulares (art. 116, XI). A responsabilidade disciplinar é autônoma e independente das responsabilidades penal e civil decorrentes do mesmo fato (art. 121 da Lei nº 8.112/90), podendo tramitar simultaneamente. Na dosimetria da penalidade, a autoridade competente deverá observar os critérios de proporcionalidade e razoabilidade insculpidos no art. 128 da Lei nº 8.112/90, sopesando a natureza e a gravidade da infração, os danos que dela provierem para o serviço público, as circunstâncias agravantes e atenuantes e os antecedentes funcionais do servidor.",
 
-  "res-ameaca-132": "Diante dos elementos analisados, a conduta sob exame caracteriza incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de demissão. O enquadramento nesse dispositivo decorre de interpretação sistêmica autorizada pela NT nº 544/2024/CGUNE/DICOR/CRG, aprovada pelo Corregedor-Geral da União, ante a ausência de tipificação autônoma e expressa da ameaça na Lei nº 8.112/90. Ressalva-se que a conduta de ameaça pode concomitantemente caracterizar assédio moral, caso praticada de forma reiterada, devendo ser realizada análise complementar pelo eixo correspondente.",
+  "res-ameaca-132": "Diante do exposto, verifica-se que a conduta sob exame — ameaça grave com ou sem valimento do cargo — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. O enquadramento nesse dispositivo decorre de interpretação sistêmica da Lei nº 8.112/90 autorizada pela NT nº 544/2024/CGUNE/DICOR/CRG, aprovada pelo Corregedor-Geral da União, ante a ausência de tipificação autônoma e expressa da conduta de ameaça no estatuto funcional. Para o enquadramento no art. 132, V, exige-se que a conduta atinja o limiar de escândalo ou perturbação institucional relevante, verificado in casu em razão da gravidade e do contexto da ameaça. Ressalva-se que a conduta de ameaça pode concomitantemente caracterizar assédio moral, caso praticada de forma reiterada e sistemática, devendo a autoridade instauradora, nessa hipótese, promover análise complementar no eixo de assédio moral. Na dosimetria da penalidade, aplica-se o art. 128 da Lei nº 8.112/90, com observância dos princípios da proporcionalidade, razoabilidade e individualização da pena.",
 
-  "res-ameaca-117": "Diante dos elementos analisados, a conduta sob exame caracteriza valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de demissão, conforme o art. 132, XIII, do mesmo diploma legal. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 544/2024/CGUNE/DICOR/CRG.",
+  "res-ameaca-117": "Diante do exposto, verifica-se que a conduta sob exame configura, em tese, valimento do cargo para lograr proveito pessoal ou causar dano à Administração ou a terceiros, nos termos do art. 117, IX, da Lei nº 8.112/90, hipótese que sujeita o servidor à penalidade de demissão por força do art. 132, XIII, do mesmo diploma legal. O valimento do cargo, no contexto da conduta de ameaça, manifesta-se pelo aproveitamento consciente da posição funcional, da ascendência hierárquica ou do poder de influência para intimidar ou coagir servidor subordinado ou colega, configurando desvio funcional grave. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 544/2024/CGUNE/DICOR/CRG. Na dosimetria, a autoridade deverá observar os critérios do art. 128 da Lei nº 8.112/90, notadamente a natureza e a gravidade da infração, as circunstâncias e os antecedentes funcionais do servidor.",
 
-  "res-ameaca-116": "Diante dos elementos analisados, a conduta sob exame configura falta de urbanidade no trato com pessoas, descumprindo o dever funcional previsto no art. 116, XI, da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão, conforme a dosimetria do caso concreto.",
+  "res-ameaca-116": "Diante do exposto, verifica-se que a conduta sob exame — ameaça de baixa ou média gravidade, sem uso do cargo — configura, em tese, descumprimento do dever funcional de manutenção de urbanidade e cordialidade no trato com os demais servidores e com o público, nos termos do art. 116, XI, da Lei nº 8.112/90. A conduta viola, ainda, o dever geral de manter conduta compatível com a moralidade administrativa (art. 116, IX) e de desempenhar as atribuições com dedicação e eficiência (art. 116, I). A penalidade cabível é de advertência ou suspensão, conforme a dosimetria do caso concreto à luz dos critérios do art. 128 da Lei nº 8.112/90, avaliando-se a proporcionalidade entre a gravidade da conduta e a sanção aplicada.",
 
-  "res-sex-132": "Diante dos elementos analisados, a conduta sob exame — assédio sexual com finalidade de favorecimento, não consentido e com grave impacto à vítima — caracteriza incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de demissão. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-sex-132": "Diante do exposto, verifica-se que a conduta sob exame — assédio sexual com finalidade de favorecimento sexual, ausência de consentimento e grave impacto sobre a dignidade ou liberdade sexual da vítima — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. O assédio sexual, como elucida a NT nº 3285/2023/CGUNE/DICOR/CRG (item 2), caracteriza-se pela conduta de natureza sexual não desejada que, pelo emprego de coação, ameaça, abuso de poder ou de autoridade, objetiva obter vantagem ou favorecimento sexual. A ausência de consentimento e o impacto grave documentado sobre a vítima qualificam a conduta ao patamar do art. 132, V, nos termos do item 3.4 da referida Nota Técnica. O bem jurídico primariamente tutelado é a dignidade e a liberdade sexual do servidor, bem como a higidez moral do serviço público. A responsabilidade disciplinar independe de condenação criminal (art. 121 da Lei nº 8.112/90) e a dosimetria da penalidade observará os critérios do art. 128, com especial atenção ao dano causado à vítima e ao ambiente de trabalho.",
 
-  "res-sex-117": "Diante dos elementos analisados, a conduta sob exame — assédio sexual com finalidade de favorecimento, não consentido, sem impacto grave documentado, praticado com valimento do cargo — caracteriza uso da função pública em detrimento da dignidade funcional, nos termos do art. 117, IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de demissão, conforme o art. 132, XIII. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-sex-117": "Diante do exposto, verifica-se que a conduta sob exame — assédio sexual com finalidade de favorecimento, não consentido, praticado com valimento do cargo ou posição hierárquica, sem impacto grave documentado — configura, em tese, valimento do cargo para fins contrários ao interesse público, nos termos do art. 117, IX, da Lei nº 8.112/90, hipótese de penalidade de demissão por força do art. 132, XIII. Conforme a NT nº 3285/2023/CGUNE/DICOR/CRG (item 3.1), o uso da posição funcional, da chefia direta ou indireta, do controle de benefícios ou de qualquer forma de influência hierárquica para obter favorecimento sexual constitui elemento qualificador da conduta e agravante do enquadramento disciplinar. A constatação do valimento do cargo é suficiente para o enquadramento no art. 117, IX, independentemente do resultado concreto sobre a vítima. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
 
-  "res-sex-116": "Diante dos elementos analisados, a conduta sob exame — assédio sexual com finalidade de favorecimento, não consentido, sem impacto grave e sem uso do cargo — configura descumprimento dos deveres de lealdade institucional e de manutenção de conduta compatível com a moralidade administrativa, nos termos do art. 116, II e IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão. Orientação da NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-sex-116": "Diante do exposto, verifica-se que a conduta sob exame — assédio sexual com finalidade de favorecimento, não consentido, sem impacto grave à vítima e sem valimento do cargo — configura, em tese, descumprimento dos deveres funcionais de lealdade institucional (art. 116, II), de manutenção de conduta compatível com a moralidade administrativa (art. 116, IX) e de urbanidade no trato com os demais servidores (art. 116, XI), todos da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão. Embora ausentes os qualificadores que elevariam o enquadramento ao patamar do art. 132, V, ou do art. 117, IX, a conduta permanece como ilícito disciplinar passível de sanção, nos termos da NT nº 3285/2023/CGUNE/DICOR/CRG. A dosimetria deverá ser proporcional e fundamentada, nos termos do art. 128 da Lei nº 8.112/90.",
 
-  "res-sex-cons-132": "Diante dos elementos analisados, a conduta sob exame — assédio sexual consentido, porém praticado de forma ostensiva em repartição pública ou com geração de escândalo institucional — viola a moralidade administrativa tutelada pelo art. 37 da Constituição Federal e pelo art. 116, IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão, podendo chegar a demissão conforme a gravidade apurada. Orientação da NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-sex-cons-132": "Diante do exposto, verifica-se que a conduta sob exame — ainda que consentida no âmbito das relações interpessoais — foi praticada de forma ostensiva em repartição pública, gerando escândalo institucional perceptível a terceiros e ofendendo o ambiente de trabalho e a moralidade administrativa tutelada pelo art. 37 da Constituição Federal. Nos termos do item 3.3 da NT nº 3285/2023/CGUNE/DICOR/CRG, o consentimento não afasta a responsabilidade disciplinar quando a conduta se exterioriza de forma pública e institucional, violando os deveres previstos no art. 116, IX, da Lei nº 8.112/90 (manutenção de conduta compatível com a moralidade administrativa). A penalidade cabível varia de advertência a demissão, conforme a gravidade do escândalo e os critérios de dosimetria do art. 128 da Lei nº 8.112/90.",
 
-  "res-outras-sex-132": "Diante dos elementos analisados, a conduta sob exame — ato de conotação sexual sem finalidade de favorecimento, qualificado por escândalo institucional ou grave impacto à vítima — viola a moralidade administrativa e pode caracterizar conduta escandalosa nos termos do art. 132, V, ou descumprimento de dever funcional nos termos do art. 116, IX, da Lei nº 8.112/90, conforme a dosimetria do caso concreto. Orientação da NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-outras-sex-132": "Diante do exposto, verifica-se que a conduta sob exame — ato de conotação sexual sem finalidade expressa de favorecimento, qualificado por escândalo institucional ostensivo ou por grave impacto sobre a dignidade ou integridade psicológica da vítima — configura, em tese, incontinência pública e conduta escandalosa, nos termos do art. 132, V, da Lei nº 8.112/90, e/ou descumprimento do dever de manter conduta compatível com a moralidade administrativa (art. 116, IX), conforme a dosimetria apurada. A NT nº 3285/2023/CGUNE/DICOR/CRG (item 4) esclarece que atos de conotação sexual, ainda que sem intento explícito de favorecimento, podem alcançar o patamar do art. 132, V, quando presentes esses qualificadores, em razão da ofensa ao bem jurídico da dignidade humana e da higidez do ambiente funcional. A dosimetria entre art. 132, V, e art. 116, IX, observará os critérios de proporcionalidade e razoabilidade do art. 128 da Lei nº 8.112/90.",
 
-  "res-outras-sex-117": "Diante dos elementos analisados, a conduta sob exame — ato de conotação sexual sem favorecimento, sem escândalo e sem dano grave à vítima, mas com valimento do cargo — caracteriza uso da função pública em detrimento da dignidade funcional, nos termos do art. 117, IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de demissão, conforme o art. 132, XIII. Orientação da NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-outras-sex-117": "Diante do exposto, verifica-se que a conduta sob exame — ato de conotação sexual sem favorecimento, sem escândalo institucional e sem dano grave documentado à vítima, porém praticado mediante valimento do cargo ou posição hierárquica — configura, em tese, valimento do cargo para fins contrários ao interesse público, nos termos do art. 117, IX, da Lei nº 8.112/90, hipótese de penalidade de demissão por força do art. 132, XIII. Conforme a NT nº 3285/2023/CGUNE/DICOR/CRG, o aproveitamento consciente da posição funcional para a prática de ato de conotação sexual, ainda que ausente o propósito de favorecimento, constitui desvio de finalidade do poder hierárquico e viola o princípio da moralidade administrativa. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
 
-  "res-outras-sex-116": "Diante dos elementos analisados, a conduta sob exame — ato de conotação sexual sem favorecimento, sem escândalo institucional, sem dano grave à vítima e sem uso do cargo — configura descumprimento de deveres funcionais de lealdade e urbanidade, nos termos do art. 116, II e XI, da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão. Orientação da NT nº 3285/2023/CGUNE/DICOR/CRG.",
+  "res-outras-sex-116": "Diante do exposto, verifica-se que a conduta sob exame — ato de conotação sexual sem favorecimento, sem escândalo institucional, sem dano grave à vítima e sem valimento do cargo — configura, em tese, descumprimento dos deveres funcionais de lealdade institucional (art. 116, II) e de urbanidade no trato com os demais servidores (art. 116, XI), da Lei nº 8.112/90. Ausentes os qualificadores que elevariam o enquadramento a hipóteses mais graves, a conduta permanece no patamar de infração de menor potencial ofensivo, sujeita à penalidade de advertência ou suspensão com dosimetria proporcional e razoável nos termos do art. 128 da Lei nº 8.112/90, considerando os antecedentes funcionais do servidor e as demais circunstâncias do caso concreto.",
 
-  "res-disc-132": "Diante dos elementos analisados, a conduta sob exame — assédio discriminatório grave, reiterado, dirigido a alvo específico — caracteriza incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de demissão. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 93/2024/CGUNE/DICOR/CRG.",
+  "res-disc-132": "Diante do exposto, verifica-se que a conduta sob exame — assédio ou discriminação reiterada, com alta gravidade, dirigida a alvo específico em razão de fator protegido (origem, raça, cor, gênero, orientação sexual, religião, deficiência ou outro elemento identitário tutelado pelo ordenamento) — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. O bem jurídico tutelado é a igualdade de tratamento, a dignidade da pessoa humana e a higidez do ambiente de trabalho, que o Estado tem dever constitucional de promover (art. 5º, caput e XLI, CF/88). A NT nº 93/2024/CGUNE/DICOR/CRG (item 5) estabelece os critérios de aferição da gravidade e da reiteração que qualificam a conduta ao patamar do art. 132, V. A responsabilidade disciplinar é autônoma e independe de eventual responsabilidade penal por crime de preconceito (Lei nº 7.716/89). A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
 
-  "res-cond-imp": "Diante dos elementos analisados, a conduta sob exame configura descumprimento de deveres funcionais — lealdade institucional, manutenção de conduta compatível com a moralidade administrativa e urbanidade no trato —, nos termos do art. 116, II, IX e XI, da Lei nº 8.112/90, sujeitando o servidor à penalidade de advertência ou suspensão, com dosimetria proporcional às circunstâncias apuradas.",
+  "res-cond-imp": "Diante do exposto, verifica-se que a conduta sob exame configura, em tese, descumprimento de deveres funcionais — notadamente os deveres de manutenção de conduta compatível com a moralidade administrativa (art. 116, IX), de urbanidade no trato com servidores e particulares (art. 116, XI) e de exercício das atribuições com lealdade às instituições (art. 116, II), todos da Lei nº 8.112/90. A ausência dos qualificadores necessários ao enquadramento nas hipóteses mais graves (art. 132, V, ou art. 117, IX) não afasta a ilicitude disciplinar da conduta, que permanece passível de sanção no patamar de advertência ou suspensão (art. 127, I e II), com dosimetria proporcional e fundamentada nos termos do art. 128 da Lei nº 8.112/90, considerando a natureza e gravidade da infração, os danos causados e os antecedentes funcionais do servidor.",
 
-  "res-moral-132": "Diante dos elementos analisados, a conduta sob exame — assédio moral com grave ofensa à moralidade administrativa — caracteriza incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de demissão. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 93/2024/CGUNE/DICOR/CRG, que reconhece a ausência de tipificação autônoma do assédio moral na Lei nº 8.112/90.",
+  "res-moral-132": "Diante do exposto, verifica-se que a conduta sob exame — assédio moral com grave ofensa à moralidade administrativa, caracterizado por condutas reiteradas de humilhação, vexação, intimidação ou marginalização do servidor — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. Nos termos da NT nº 93/2024/CGUNE/DICOR/CRG, o assédio moral no serviço público caracteriza-se pela reiteração de condutas abusivas que ultrapassam o exercício regular do poder diretivo, com potencial de causar dano psicológico, social ou profissional à vítima. O enquadramento no art. 132, V, exige a constatação de que a conduta, pelo conjunto de seus elementos — reiteração, gravidade, impacto institucional e individual —, atinge o patamar de escândalo ou degradação moral da repartição. A ausência de tipificação autônoma do assédio moral na Lei nº 8.112/90 é suprida por interpretação sistêmica, conforme orientação da NT nº 93/2024. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90, com atenção ao dano psicológico e profissional imposto à vítima.",
 
-  "res-moral-117": "Diante dos elementos analisados, a conduta sob exame — assédio moral com valimento do cargo — caracteriza uso da função pública para fins de perseguição ou humilhação do servidor, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/90, sujeitando o servidor à penalidade de demissão, conforme o art. 132, XIII. O enquadramento decorre de interpretação sistêmica autorizada pela NT nº 93/2024/CGUNE/DICOR/CRG.",
+  "res-moral-117": "Diante do exposto, verifica-se que a conduta sob exame — assédio moral praticado mediante valimento do cargo ou da posição hierárquica, caracterizado pela utilização do poder diretivo para fins de perseguição, humilhação ou marginalização do servidor subordinado — configura, em tese, valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/90, hipótese de penalidade de demissão por força do art. 132, XIII. A NT nº 93/2024/CGUNE/DICOR/CRG (item 8.1) indica que o valimento do cargo é elemento qualificador que, no contexto do assédio moral, agrava substancialmente o enquadramento disciplinar, pois o agente instrumentaliza a autoridade funcional para causar dano ao subordinado em vez de exercê-la em benefício do serviço. O desvio de finalidade do poder hierárquico é a ratio do enquadramento no art. 117, IX. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
 
-  "res-cond-imp-org": "Diante dos elementos analisados, a conduta sob exame configura falha culposa no exercício da gestão — sem vontade dirigida ao resultado lesivo —, caracterizando descumprimento de deveres funcionais nos termos do art. 116, II, IX e XI, da Lei nº 8.112/90, sujeito à penalidade de advertência ou suspensão. A ausência de dolo afasta o enquadramento nas hipóteses mais graves."
+  "res-cond-imp-org": "Diante do exposto, verifica-se que a conduta sob exame — falha no exercício da atividade gerencial sem dolo dirigido ao resultado lesivo — configura, em tese, descumprimento culposo de deveres funcionais, nos termos do art. 116, I (dedicação ao desempenho das atribuições), art. 116, II (lealdade às instituições) e art. 116, IX (manutenção de conduta compatível com a moralidade administrativa), da Lei nº 8.112/90. A distinção entre gestão legítima e assédio moral é critério determinante, conforme a NT nº 93/2024/CGUNE/DICOR/CRG (item 9): a culpa sem vontade dirigida ao dano afasta os enquadramentos mais graves, mas não exclui a responsabilidade disciplinar. A penalidade cabível é de advertência ou suspensão (art. 127, I e II), aplicada com observância dos princípios da proporcionalidade e razoabilidade (art. 128), podendo a autoridade competente, em função das circunstâncias do caso concreto, optar por medidas corretivas não disciplinares de caráter educativo e preventivo."
 };
 
 function buildConclusion(resultId) {
-  return CONCLUSIONS[resultId] || "O enquadramento disciplinar resultante da análise encontra-se identificado acima.";
+  return CONCLUSIONS[resultId] || "Diante do exposto, o enquadramento disciplinar resultante da análise encontra-se identificado acima. A autoridade competente deverá instaurar o competente Processo Administrativo Disciplinar (art. 148 e seguintes da Lei nº 8.112/90) ou a Sindicância, conforme a gravidade dos indícios, para apuração dos fatos e aplicação da penalidade cabível, observados o contraditório e a ampla defesa (art. 5º, LV, CF/88).";
 }
 
-var ANALOGY_NOTE = "Ressalva-se que o enquadramento disciplinar acima indicado tem caráter orientativo, nos termos das Notas Técnicas da Controladoria-Geral da União citadas, que reconhecem a ausência de tipificação autônoma e expressa dessas condutas na Lei nº 8.112/90. O enquadramento decorre de interpretação sistêmica autorizada pelas orientações normativas vigentes, devendo a autoridade competente sopesar as circunstâncias do caso concreto na dosimetria da penalidade.";
+var ANALOGY_NOTE = "Ressalva-se que o enquadramento disciplinar acima indicado tem caráter orientativo, nos termos das Notas Técnicas da Controladoria-Geral da União citadas, que reconhecem a ausência de tipificação autônoma e expressa dessas condutas na Lei nº 8.112/90. O enquadramento decorre de interpretação sistêmica autorizada pelas orientações normativas vigentes (NT nº 3285/2023, NT nº 299/2023 e NT nº 93/2024, da CGUNE/DICOR/CRG), devendo a autoridade competente sopesar as circunstâncias do caso concreto na dosimetria da penalidade, em observância aos princípios da proporcionalidade e razoabilidade (art. 128 da Lei nº 8.112/90) e ao dever de motivação dos atos administrativos (art. 50 da Lei nº 9.784/99).";
 
-var DISCLAIMER = "O presente relatório constitui instrumento de apoio à análise disciplinar, elaborado com o auxílio da ferramenta Condutas Funcionais — Integritas (Ferramentas COGER/RFB), e não substitui despacho, parecer jurídico ou decisão administrativa fundamentada. As Notas Técnicas da CGU/DICOR/CRG citadas são orientativas e devem ser consultadas na íntegra.";
+var DISCLAIMER = "O presente relatório constitui instrumento de apoio à análise disciplinar preliminar, elaborado com o auxílio da ferramenta Condutas Funcionais — Integritas (Ferramentas COGER/RFB), e não substitui despacho, nota técnica, parecer jurídico ou decisão administrativa fundamentada. As Notas Técnicas da CGU/DICOR/CRG citadas (NT nº 3285/2023, NT nº 299/2023, NT nº 93/2024 e NT nº 544/2024) são orientativas e devem ser consultadas na íntegra para a tomada de decisão disciplinar. O enquadramento indicado baseia-se nos fatos declarados pelo usuário e pode ser alterado por circunstâncias não captadas pelo fluxo. A instauração de PAD ou Sindicância pressupõe juízo de admissibilidade pela autoridade competente (art. 143 da Lei nº 8.112/90).";
 
 function showReport(){
   var cur=hist[hist.length-1];
@@ -1128,11 +1075,22 @@ function showReport(){
   // Path table for reference
   var ph=path.map(function(h,i){
     var step=S[h.id]; if(!step)return"";
-    var just=(JUST[h.id]&&JUST[h.id][h.ch])||"Escolha registrada para rastreabilidade.";
+    var autoJust=(JUST[h.id]&&JUST[h.id][h.ch])||"Escolha registrada para rastreabilidade.";
+    var userFund=h.fund||"";
+    var userProb=h.prob||"";
+    var userPag=h.pag||"";
+    var justExtra="";
+    if(userFund||userProb){
+      justExtra='<div style="margin-top:8px;padding:8px 10px;background:rgba(11,44,95,0.05);border-left:3px solid var(--rfb-gold-500);border-radius:0 4px 4px 0;font-size:12.5px">'
+        +(userFund?'<div style="margin-bottom:4px"><strong style="color:var(--rfb-navy-700)">Fundamentação:</strong> '+userFund+'</div>':'')
+        +(userProb?'<div><strong style="color:var(--rfb-navy-700)">Elemento probatório:</strong> '+userProb+(userPag?' — <strong>Fl./Pág.:</strong> '+userPag:'')+'</div>':'')
+        +'</div>';
+    }
     return'<div class="pi"><div class="pn">'+(i+1)+'</div><div class="pc">'
       +'<div class="pq">'+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+'</div>'
       +'<span class="pa pa-'+ak(h.ch)+'">'+al(h.ch)+'</span>'
-      +'<div class="pj"><strong>Fundamentação:</strong> '+just+'</div>'
+      +'<div class="pj"><strong>Análise:</strong> '+autoJust+'</div>'
+      +justExtra
       +'</div></div>';
   }).join("");
 
@@ -1206,12 +1164,22 @@ document.getElementById("bpr").onclick=function(){
 
   var pathRows = path.map(function(h,i){
     var step = S[h.id]; if(!step) return "";
-    var just = (JUST[h.id] && JUST[h.id][h.ch]) || "";
+    var autoJust = (JUST[h.id] && JUST[h.id][h.ch]) || "";
+    var userFund = h.fund||"";
+    var userProb = h.prob||"";
+    var userPag  = h.pag||"";
+    var justCell = autoJust;
+    if(userFund||userProb){
+      justCell += "<div style='margin-top:5pt;padding:5pt 7pt;background:#f0f4fa;border-left:3px solid #C9A35C;font-size:8pt'>"
+        +(userFund?"<div style='margin-bottom:3pt'><strong>Fundamentação:</strong> "+userFund+"</div>":"")
+        +(userProb?"<div><strong>Elem. probatório:</strong> "+userProb+(userPag?" — <strong>Fl./Pág.:</strong> "+userPag:"")+"</div>":"")
+        +"</div>";
+    }
     return "<tr style='border-bottom:1px solid #e8edf4'>"
       +"<td style='padding:5pt 8pt;font-family:JetBrains Mono,monospace;font-size:8pt;color:#5B6781;white-space:nowrap;vertical-align:top'>"+(i+1)+"</td>"
       +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740;vertical-align:top'>"+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
       +"<td style='padding:5pt 8pt;vertical-align:top;white-space:nowrap'><span style='font-size:8pt;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#DCE6F4;color:#0B2C5F'>"+al(h.ch)+"</span></td>"
-      +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#5B6781;vertical-align:top'>"+just+"</td>"
+      +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#5B6781;vertical-align:top'>"+justCell+"</td>"
       +"</tr>";
   }).join("");
 
@@ -1243,24 +1211,40 @@ document.getElementById("bpr").onclick=function(){
     +"<span><strong style='color:#1A2740'>Hora:</strong> "+ts+"</span>"
     +"</div></div>";
 
-  // I — Descrição
+  // I — Identificação do objeto
+  html += sec("Identificação do objeto de análise")
+    +"<div style='font-size:9.5pt;color:#1A2740;line-height:1.75'>"
+    +"<p style='margin:0 0 6pt'>O presente relatório tem por objeto a análise preliminar de conduta funcional atribuída a servidor público federal, submetida ao fluxo analítico da ferramenta Condutas Funcionais — Integritas (COGER/RFB). A análise é orientada pelas disposições da <strong>Lei nº 8.112, de 11 de dezembro de 1990</strong> (Regime Jurídico dos Servidores Públicos Civis da União), e pelas orientações técnicas da Controladoria-Geral da União, que complementam o estatuto funcional na interpretação sistemática das condutas não tipificadas expressamente.</p>"
+    +"<p style='margin:0'>Nos termos do art. 143 da Lei nº 8.112/90, a autoridade competente que tiver ciência de irregularidade praticada por servidor público é obrigada a promover a sua apuração imediata, mediante sindicância ou processo administrativo disciplinar, assegurada ao acusado ampla defesa (art. 5º, LV, CF/88). O presente relatório subsidia o juízo de admissibilidade dessa providência.</p>"
+    +"</div>";
+
   if(descricao){
     html += sec("Descrição sumária da conduta")
       +"<div style='font-size:10pt;color:#1A2740;line-height:1.75;padding:9pt 12pt;background:#F5F7FA;border-radius:4pt;border:1pt solid #DCE6F4'>"+descricao.replace(/\n/g,"<br/>")+"</div>";
   }
 
-  // Base normativa
-  html += sec("Base normativa")
+  // Enquadramento normativo
+  html += sec("Enquadramento normativo — base legal e técnica")
     +"<div style='font-size:9.5pt;color:#1A2740;line-height:1.7'>"
-    +"<p style='margin:0 0 5pt'>A presente análise foi conduzida com fundamento na <strong>Lei nº 8.112, de 11 de dezembro de 1990</strong>, e nas seguintes orientações técnicas da Controladoria-Geral da União, todas aprovadas pelo Corregedor-Geral da União:</p>"
+    +"<p style='margin:0 0 5pt'>A análise foi conduzida com fundamento nos seguintes dispositivos da <strong>Lei nº 8.112/90</strong> e orientações técnicas da CGU:</p>"
+    +"<ul style='margin:4pt 0 8pt;padding-left:16pt'>"
+    +"<li style='margin-bottom:3pt'><strong>Art. 116</strong> — Deveres do servidor: exercício das atribuições (inciso I), lealdade institucional (inciso II), conduta compatível com a moralidade administrativa (inciso IX), urbanidade (inciso XI);</li>"
+    +"<li style='margin-bottom:3pt'><strong>Art. 117, IX</strong> — Proibição de valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública;</li>"
+    +"<li style='margin-bottom:3pt'><strong>Art. 127 e 128</strong> — Penalidades e critérios de dosimetria (proporcionalidade, razoabilidade, natureza e gravidade da infração, antecedentes funcionais);</li>"
+    +"<li style='margin-bottom:3pt'><strong>Art. 132</strong> — Hipóteses de demissão: inciso V (incontinência pública e conduta escandalosa), inciso VII (ofensa física), inciso XIII (valimento do cargo);</li>"
+    +"<li style='margin-bottom:3pt'><strong>Art. 143</strong> — Obrigatoriedade de instauração de PAD ou sindicância ante indícios de irregularidade;</li>"
+    +"<li style='margin-bottom:3pt'><strong>Arts. 148 e 149</strong> — Conceito e espécies de processo administrativo disciplinar;</li>"
+    +"</ul>"
+    +"<p style='margin:0 0 4pt'><strong>Orientações técnicas da CGU/DICOR/CRG aplicáveis ao caso:</strong></p>"
     +"<ul style='margin:4pt 0;padding-left:16pt'>"
     +"<li style='margin-bottom:3pt'><strong>NT nº 3285/2023/CGUNE/DICOR/CRG</strong> — Atos de conotação sexual e assédio sexual no serviço público federal;</li>"
-    +"<li style='margin-bottom:3pt'><strong>NT nº 93/2024/CGUNE/DICOR/CRG</strong> — Enquadramento disciplinar do assédio moral e da discriminação em ambiente laboral;</li>"
+    +"<li style='margin-bottom:3pt'><strong>NT nº 299/2023/CGUNE/DICOR/CRG</strong> — Condutas funcionais e enquadramento no regime disciplinar da Lei nº 8.112/90;</li>"
+    +"<li style='margin-bottom:3pt'><strong>NT nº 93/2024/CGUNE/DICOR/CRG</strong> — Assédio moral e discriminação no ambiente laboral do serviço público federal;</li>"
     +"<li><strong>NT nº 544/2024/CGUNE/DICOR/CRG</strong> — Possibilidades de enquadramento da conduta de ameaça praticada por servidor público federal.</li>"
     +"</ul></div>";
 
   // Enquadramento
-  html += sec("Enquadramento disciplinar")
+  html += sec("Resultado do enquadramento disciplinar")
     +"<div style='background:"+toneColor+";color:#fff;border-radius:4pt;padding:10pt 14pt;margin-bottom:10pt'>"
     +"<div style='font-size:8pt;opacity:.75;margin-bottom:3pt'>"+res.lb+"</div>"
     +"<div style='font-family:Barlow Condensed,sans-serif;font-size:16pt;font-weight:700;text-transform:uppercase'>"+res.ti+"</div>"
@@ -1270,25 +1254,46 @@ document.getElementById("bpr").onclick=function(){
       +"<div style='font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt'>"+res.lw.h+"</div>"
       +"<div style='font-size:9pt;color:#1A2740;line-height:1.6;font-family:JetBrains Mono,monospace'>"+res.lw.t+"</div></div>" : "");
 
-  // Análise
-  html += sec("Análise da conduta")
+  // Análise dos elementos constitutivos
+  html += sec("Elementos constitutivos da conduta — análise fático-jurídica")
     +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narrativeParas+"</div>";
 
+  // Análise probatória (se houver justificativas preenchidas)
+  var probRows = path.filter(function(h){return h.fund||h.prob;}).map(function(h,i){
+    var step=S[h.id]; if(!step) return "";
+    return "<tr style='border-bottom:1px solid #e8edf4'>"
+      +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;font-weight:600;vertical-align:top'>"+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
+      +(h.fund?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+h.fund+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informada)</td>")
+      +(h.prob?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+h.prob+(h.pag?" <em>(Fl./Pág.: "+h.pag+")</em>":"")+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informado)</td>")
+      +"</tr>";
+  }).join("");
+  if(probRows){
+    html += sec("Análise probatória — fundamentação por pergunta")
+      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registros de fundamentação e elementos probatórios inseridos pelo analista durante o preenchimento do fluxo.</div>"
+      +"<table><thead><tr style='background:#EEF3FA'>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fundamentação / Explicação</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Elemento Probatório / Fl.-Pág.</th>"
+      +"</tr></thead><tbody>"+probRows+"</tbody></table>";
+  }
+
   // Conclusão
-  html += sec("Conclusão e enquadramento")
+  html += sec("Conclusão — tipificação disciplinar e penalidade cabível")
     +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"
     +(res.an ? "<div style='margin-bottom:10pt;padding:9pt 11pt;background:#FBF2DF;border-left:3pt solid #B7791F;border-radius:0 3pt 3pt 0;font-size:9pt;color:#7a4e0e'>"+ANALOGY_NOTE+"</div>" : "")
-    +"<p style='text-align:justify'>"+conclusionText+"</p>"
+    +"<p style='text-align:justify;margin-bottom:8pt'>"+conclusionText+"</p>"
+    +"<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta.</p>"
     +"</div>";
 
   // Caminho percorrido
   if(pathRows){
-    html += sec("Caminho percorrido — referência analítica")
+    html += sec("Caminho percorrido — rastreabilidade analítica")
+      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo de análise, com as respectivas respostas, fundamentação automática e justificativas inseridas pelo analista.</div>"
       +"<table><thead><tr style='background:#EEF3FA'>"
       +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:22pt'>#</th>"
       +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
       +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:55pt'>Resposta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fundamentação</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fundamentação / Elem. Probatório</th>"
       +"</tr></thead><tbody>"+pathRows+"</tbody></table>";
   }
 
