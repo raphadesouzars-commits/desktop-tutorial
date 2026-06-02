@@ -578,7 +578,7 @@ function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",gra
 function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A"}[v]||"?";}
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
-var hist = [{id:"start",ch:null,fund:"",prob:"",pag:""}];
+var hist = [{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
 var elFlow   = document.getElementById("flow");
 var elCrumbs = document.getElementById("crumbs");
 var elSN     = document.getElementById("sn");
@@ -625,9 +625,41 @@ function renderStep(id){
       +'</span><span class="opt-arrow" aria-hidden="true">'+ICO_ARROW+'</span></button>';
   }).join("");
   var cur=hist[hist.length-1];
-  var savedFund=cur.fund||"";
-  var savedProb=cur.prob||"";
-  var savedPag=cur.pag||"";
+  if(!cur.justs||!cur.justs.length) cur.justs=[{fund:"",prob:"",pag:""}];
+
+  // ── helpers ──
+  var JUST_ITEM_STYLE="background:#fff;border:1px solid rgba(11,44,95,0.18);border-radius:6px;padding:12px 13px;margin-bottom:10px;position:relative";
+  var INPUT_STYLE="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text);resize:vertical;line-height:1.5";
+  var LBL_STYLE="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px";
+
+  function escH(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+  function buildJustItems(justs){
+    return justs.map(function(j,i){
+      var isOnly=(justs.length===1);
+      return '<div class="just-item" data-ji="'+i+'" style="'+JUST_ITEM_STYLE+'">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+        +'<span style="font-size:11px;font-weight:700;color:var(--rfb-navy-600);text-transform:uppercase;letter-spacing:.05em">Justificativa '+(i+1)+'</span>'
+        +(!isOnly?'<button class="ji-rem" data-ji="'+i+'" title="Remover" style="background:none;border:none;cursor:pointer;color:var(--rfb-danger);padding:2px 4px;font-size:16px;line-height:1" aria-label="Remover justificativa">×</button>':'')
+        +'</div>'
+        +'<div style="margin-bottom:9px">'
+        +'<label style="'+LBL_STYLE+'">Fundamentação / Explicação</label>'
+        +'<textarea class="ji-fund" rows="3" placeholder="Descreva os elementos fáticos e jurídicos que embasam esta resposta..." style="'+INPUT_STYLE+'">'+escH(j.fund)+'</textarea>'
+        +'</div>'
+        +'<div style="display:flex;gap:10px;align-items:flex-start">'
+        +'<div style="flex:1">'
+        +'<label style="'+LBL_STYLE+'">Elemento probatório correspondente</label>'
+        +'<textarea class="ji-prob" rows="2" placeholder="Identifique o documento, depoimento, perícia ou outro elemento de prova..." style="'+INPUT_STYLE+'">'+escH(j.prob)+'</textarea>'
+        +'</div>'
+        +'<div style="min-width:110px">'
+        +'<label style="'+LBL_STYLE+'">Fl./Pág. no processo</label>'
+        +'<input class="ji-pag" type="text" value="'+escH(j.pag)+'" placeholder="ex: fl. 45" style="'+INPUT_STYLE.replace('resize:vertical;','')+'"/>'
+        +'</div>'
+        +'</div>'
+        +'</div>';
+    }).join("");
+  }
+
   elFlow.innerHTML=
     '<div class="q-card">'
     +'<div class="q-meta"><span class="axis-tag '+axc+'"><span class="ax-dot"></span>'+step.ax+'</span>'
@@ -636,41 +668,65 @@ function renderStep(id){
     +'<p class="q-help">'+step.h+'</p>'
     +'<div class="opts'+(step.tc?" opts-3":"")+'">'+opts+'</div>'
     +'<div class="just-box" style="margin-top:18px;background:rgba(11,44,95,0.04);border:1px solid rgba(11,44,95,0.14);border-radius:8px;padding:14px 16px">'
-    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--rfb-navy-700);margin-bottom:12px;display:flex;align-items:center;gap:6px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>Justificativa da resposta <span style="font-weight:400;opacity:.6">(opcional)</span></div>'
-    +'<div style="margin-bottom:10px">'
-    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Fundamentação / Explicação</label>'
-    +'<textarea id="jFund" rows="3" placeholder="Descreva os elementos fáticos e jurídicos que embasam esta resposta..." style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text);resize:vertical;line-height:1.5">'+savedFund.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
-    +'</div>'
-    +'<div style="display:flex;gap:10px;align-items:flex-start">'
-    +'<div style="flex:1">'
-    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Elemento probatório correspondente</label>'
-    +'<textarea id="jProb" rows="2" placeholder="Identifique o documento, depoimento, perícia ou outro elemento de prova que sustenta esta resposta..." style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text);resize:vertical;line-height:1.5">'+savedProb.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</textarea>'
-    +'</div>'
-    +'<div style="min-width:110px">'
-    +'<label style="font-size:12px;font-weight:600;color:var(--rfb-text);display:block;margin-bottom:4px">Fl./Pág. no processo</label>'
-    +'<input id="jPag" type="text" value="'+savedPag.replace(/"/g,'&quot;')+'" placeholder="ex: fl. 45" style="width:100%;font-size:13px;font-family:var(--rfb-font-body);padding:8px 10px;border:1px solid var(--rfb-border-strong);border-radius:6px;background:#fff;color:var(--rfb-text)">'
-    +'</div>'
-    +'</div>'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--rfb-navy-700);margin-bottom:12px;display:flex;align-items:center;gap:6px">'
+    +'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>'
+    +'Justificativas da resposta <span style="font-weight:400;opacity:.6">(opcional)</span></div>'
+    +'<div id="just-list">'+buildJustItems(cur.justs)+'</div>'
+    +'<button id="ji-add" style="margin-top:4px;display:inline-flex;align-items:center;gap:6px;background:var(--rfb-navy-700);color:#fff;border:none;border-radius:6px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--rfb-font-body)">'
+    +'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'
+    +'Adicionar justificativa</button>'
     +'</div>'
     +'<div class="q-foot">'
     +'<button class="back-btn" id="bk"'+(hist.length===1?' disabled="disabled"':'')+'>'
     +ICO_BACK+' Voltar à pergunta anterior</button>'
     +'<span style="font-family:var(--rfb-font-mono);font-size:11px">Fluxo COGER · Lei nº 8.112/90</span>'
     +'</div></div>';
-  function saveJust(){
-    var fEl=document.getElementById("jFund");
-    var pEl=document.getElementById("jProb");
-    var pgEl=document.getElementById("jPag");
-    if(fEl)hist[hist.length-1].fund=fEl.value;
-    if(pEl)hist[hist.length-1].prob=pEl.value;
-    if(pgEl)hist[hist.length-1].pag=pgEl.value;
+
+  function readJusts(){
+    var items=elFlow.querySelectorAll(".just-item");
+    var arr=[];
+    items.forEach(function(item){
+      arr.push({
+        fund:(item.querySelector(".ji-fund")||{}).value||"",
+        prob:(item.querySelector(".ji-prob")||{}).value||"",
+        pag:(item.querySelector(".ji-pag")||{}).value||""
+      });
+    });
+    return arr;
   }
+  function saveJust(){
+    hist[hist.length-1].justs=readJusts();
+  }
+  function refreshJustList(){
+    document.getElementById("just-list").innerHTML=buildJustItems(hist[hist.length-1].justs);
+    bindJustEvents();
+  }
+  function bindJustEvents(){
+    elFlow.querySelectorAll(".ji-rem").forEach(function(btn){
+      btn.onclick=function(){
+        saveJust();
+        var idx=parseInt(btn.dataset.ji,10);
+        hist[hist.length-1].justs.splice(idx,1);
+        refreshJustList();
+      };
+    });
+  }
+  bindJustEvents();
+
+  document.getElementById("ji-add").onclick=function(){
+    saveJust();
+    hist[hist.length-1].justs.push({fund:"",prob:"",pag:""});
+    refreshJustList();
+    var list=document.getElementById("just-list");
+    if(list) list.lastElementChild.scrollIntoView({behavior:"smooth",block:"nearest"});
+  };
+
   elFlow.querySelectorAll(".opt-btn").forEach(function(btn){
     btn.onclick=function(){
       saveJust();
       var o=step.opts[parseInt(btn.dataset.i,10)];
       hist[hist.length-1].ch=o.v;
-      hist.push({id:o.nx,ch:null,fund:"",prob:"",pag:""});
+      hist.push({id:o.nx,ch:null,justs:[{fund:"",prob:"",pag:""}]});
       render();
       document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
     };
@@ -731,7 +787,7 @@ function goBackTo(i){
   document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function restart(){
-  hist=[{id:"start",ch:null,fund:"",prob:"",pag:""}];window.scrollTo({top:0,behavior:"smooth"});render();
+  hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];window.scrollTo({top:0,behavior:"smooth"});render();
 }
 
 // ── REPORT ────────────────────────────────────────────────────────────────────
@@ -1076,14 +1132,16 @@ function showReport(){
   var ph=path.map(function(h,i){
     var step=S[h.id]; if(!step)return"";
     var autoJust=(JUST[h.id]&&JUST[h.id][h.ch])||"Escolha registrada para rastreabilidade.";
-    var userFund=h.fund||"";
-    var userProb=h.prob||"";
-    var userPag=h.pag||"";
+    var justs=h.justs||[];
     var justExtra="";
-    if(userFund||userProb){
+    var filledJusts=justs.filter(function(j){return j.fund||j.prob;});
+    if(filledJusts.length){
       justExtra='<div style="margin-top:8px;padding:8px 10px;background:rgba(11,44,95,0.05);border-left:3px solid var(--rfb-gold-500);border-radius:0 4px 4px 0;font-size:12.5px">'
-        +(userFund?'<div style="margin-bottom:4px"><strong style="color:var(--rfb-navy-700)">Fundamentação:</strong> '+userFund+'</div>':'')
-        +(userProb?'<div><strong style="color:var(--rfb-navy-700)">Elemento probatório:</strong> '+userProb+(userPag?' — <strong>Fl./Pág.:</strong> '+userPag:'')+'</div>':'')
+        +filledJusts.map(function(j,ji){
+          return (filledJusts.length>1?'<div style="font-size:11px;font-weight:700;color:var(--rfb-navy-600);margin-bottom:3px;margin-top:'+(ji>0?'8px':'0')+'">Justificativa '+(ji+1)+'</div>':'')
+            +(j.fund?'<div style="margin-bottom:3px"><strong style="color:var(--rfb-navy-700)">Fundamentação:</strong> '+j.fund+'</div>':'')
+            +(j.prob?'<div><strong style="color:var(--rfb-navy-700)">Elemento probatório:</strong> '+j.prob+(j.pag?' — <strong>Fl./Pág.:</strong> '+j.pag:'')+'</div>':'');
+        }).join("")
         +'</div>';
     }
     return'<div class="pi"><div class="pn">'+(i+1)+'</div><div class="pc">'
@@ -1165,14 +1223,16 @@ document.getElementById("bpr").onclick=function(){
   var pathRows = path.map(function(h,i){
     var step = S[h.id]; if(!step) return "";
     var autoJust = (JUST[h.id] && JUST[h.id][h.ch]) || "";
-    var userFund = h.fund||"";
-    var userProb = h.prob||"";
-    var userPag  = h.pag||"";
+    var justs2 = h.justs||[];
+    var filled2 = justs2.filter(function(j){return j.fund||j.prob;});
     var justCell = autoJust;
-    if(userFund||userProb){
+    if(filled2.length){
       justCell += "<div style='margin-top:5pt;padding:5pt 7pt;background:#f0f4fa;border-left:3px solid #C9A35C;font-size:8pt'>"
-        +(userFund?"<div style='margin-bottom:3pt'><strong>Fundamentação:</strong> "+userFund+"</div>":"")
-        +(userProb?"<div><strong>Elem. probatório:</strong> "+userProb+(userPag?" — <strong>Fl./Pág.:</strong> "+userPag:"")+"</div>":"")
+        +filled2.map(function(j,ji){
+          return (filled2.length>1?"<div style='font-weight:700;margin-bottom:2pt;margin-top:"+(ji>0?"6pt":"0")+"'>Justificativa "+(ji+1)+"</div>":"")
+            +(j.fund?"<div style='margin-bottom:2pt'><strong>Fundamentação:</strong> "+j.fund+"</div>":"")
+            +(j.prob?"<div><strong>Elem. probatório:</strong> "+j.prob+(j.pag?" — <strong>Fl./Pág.:</strong> "+j.pag:"")+"</div>":"");
+        }).join("")
         +"</div>";
     }
     return "<tr style='border-bottom:1px solid #e8edf4'>"
@@ -1259,13 +1319,21 @@ document.getElementById("bpr").onclick=function(){
     +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narrativeParas+"</div>";
 
   // Análise probatória (se houver justificativas preenchidas)
-  var probRows = path.filter(function(h){return h.fund||h.prob;}).map(function(h,i){
+  var probRows = path.filter(function(h){
+    var js=h.justs||[]; return js.some(function(j){return j.fund||j.prob;});
+  }).map(function(h){
     var step=S[h.id]; if(!step) return "";
-    return "<tr style='border-bottom:1px solid #e8edf4'>"
-      +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;font-weight:600;vertical-align:top'>"+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
-      +(h.fund?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+h.fund+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informada)</td>")
-      +(h.prob?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+h.prob+(h.pag?" <em>(Fl./Pág.: "+h.pag+")</em>":"")+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informado)</td>")
-      +"</tr>";
+    var js=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
+    return js.map(function(j,ji){
+      return "<tr style='border-bottom:1px solid #e8edf4'>"
+        +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;font-weight:600;vertical-align:top'>"
+        +step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")
+        +(js.length>1?" <span style='font-weight:400;color:#888'>#"+(ji+1)+"</span>":"")
+        +"</td>"
+        +(j.fund?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+j.fund+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informada)</td>")
+        +(j.prob?"<td style='padding:5pt 8pt;font-size:8.5pt;color:#1A2740;vertical-align:top'>"+j.prob+(j.pag?" <em>(Fl./Pág.: "+j.pag+")</em>":"")+"</td>":"<td style='padding:5pt 8pt;color:#aaa;font-size:8.5pt'>(não informado)</td>")
+        +"</tr>";
+    }).join("");
   }).join("");
   if(probRows){
     html += sec("Análise probatória — fundamentação por pergunta")
