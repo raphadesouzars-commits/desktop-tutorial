@@ -2279,24 +2279,32 @@ function detectarCategoriaPasta(nomePasta) {
   return MAPA_CATEGORIAS_PASTA[chave] || null;
 }
 
+// Varre recursivamente um diretório já dentro de uma categoria reconhecida
+async function varrerArquivosRecursivo(dirHandle, categoria, arquivos) {
+  for await (const [nome, handle] of dirHandle) {
+    if (handle.kind === 'file') {
+      const ext = nome.split('.').pop().toLowerCase();
+      if (ext === 'pdf' || ext === 'docx') {
+        const file = await handle.getFile();
+        arquivos.push({ file, categoria });
+      }
+    } else if (handle.kind === 'directory') {
+      // Desce em qualquer subpasta dentro da categoria, sem limite de profundidade
+      await varrerArquivosRecursivo(handle, categoria, arquivos);
+    }
+  }
+}
+
 async function varrerDiretorio(dirHandle, categoriaForçada = null) {
   const arquivos = []; // { file, categoria }
   for await (const [nome, handle] of dirHandle) {
     if (handle.kind === 'directory') {
       const cat = detectarCategoriaPasta(nome);
       if (cat) {
-        // Varre subpasta reconhecida
-        for await (const [nomeArq, hArq] of handle) {
-          if (hArq.kind === 'file') {
-            const ext = nomeArq.split('.').pop().toLowerCase();
-            if (ext === 'pdf' || ext === 'docx') {
-              const file = await hArq.getFile();
-              arquivos.push({ file, categoria: cat });
-            }
-          }
-        }
+        // Pasta de categoria reconhecida: varre recursivamente todo o conteúdo
+        await varrerArquivosRecursivo(handle, cat, arquivos);
       }
-      // Subpastas não reconhecidas são ignoradas (poderiam ser adicionadas como 'normas' por padrão)
+      // Subpastas com nome não reconhecido na raiz são ignoradas
     } else if (handle.kind === 'file' && categoriaForçada) {
       const ext = nome.split('.').pop().toLowerCase();
       if (ext === 'pdf' || ext === 'docx') {
