@@ -121,31 +121,64 @@ function inicializarPDFJS() {
 }
 
 async function lerPDF(arrayBuffer) {
-  if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js não carregado');
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  if (typeof pdfjsLib === 'undefined') throw new Error('PDF.js não carregado. Verifique sua conexão e recarregue a página.');
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+
+  // Timeout de 30s para evitar hang em PDFs problemáticos
+  const pdf = await Promise.race([
+    loadingTask.promise,
+    new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout ao processar PDF (>30s). Tente converter para DOCX ou TXT.')), 30000)),
+  ]);
+
   let texto = '';
   for (let i = 1; i <= pdf.numPages; i++) {
     const page    = await pdf.getPage(i);
     const content = await page.getTextContent();
-    const linhaTexto = content.items.map(item => item.str).join(' ');
-    texto += linhaTexto + '\n';
+    // Preserva quebras de linha reais agrupando por blocos verticais
+    const linhas = {};
+    content.items.forEach(item => {
+      const y = Math.round(item.transform[5]);
+      if (!linhas[y]) linhas[y] = [];
+      linhas[y].push(item.str);
+    });
+    const linhaOrdenada = Object.keys(linhas)
+      .sort((a, b) => b - a)
+      .map(y => linhas[y].join(' '))
+      .join('\n');
+    texto += linhaOrdenada + '\n\n';
   }
   return { texto: texto.trim(), paginas: pdf.numPages };
 }
 
 async function lerDOCX(arrayBuffer) {
-  if (typeof mammoth === 'undefined') throw new Error('mammoth.js não carregado');
+  if (typeof mammoth === 'undefined') throw new Error('mammoth.js não carregado. Verifique sua conexão e recarregue a página.');
   const result = await mammoth.extractRawText({ arrayBuffer });
   return { texto: result.value.trim() };
 }
 
+async function lerTextoPlano(arquivo) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve({ texto: e.target.result.trim(), tipo: 'txt' });
+    reader.onerror = () => reject(new Error('Erro ao ler arquivo de texto'));
+    reader.readAsText(arquivo, 'UTF-8');
+  });
+}
+
+const EXTENSOES_SUPORTADAS = new Set(['pdf', 'docx', 'txt', 'md']);
+
 async function lerArquivo(arquivo) {
   const ext = arquivo.name.split('.').pop().toLowerCase();
+
+  if (ext === 'txt' || ext === 'md') {
+    const r = await lerTextoPlano(arquivo);
+    return { ...r, tipo: ext, possivelmenteEscaneado: false };
+  }
+
   const buf = await arquivo.arrayBuffer();
 
   if (ext === 'pdf') {
     const r = await lerPDF(buf);
-    // Detectar PDF escaneado: texto muito curto em relação ao número de páginas
     const palavrasPorPag = r.texto.split(/\s+/).length / Math.max(r.paginas, 1);
     if (palavrasPorPag < 20 && r.paginas > 0) {
       return { ...r, possivelmenteEscaneado: true, tipo: 'pdf' };
@@ -155,7 +188,7 @@ async function lerArquivo(arquivo) {
     const r = await lerDOCX(buf);
     return { ...r, tipo: 'docx' };
   } else {
-    throw new Error(`Formato não suportado: .${ext}`);
+    throw new Error(`Formato não suportado: .${ext} — use PDF, DOCX, TXT ou MD`);
   }
 }
 
@@ -1049,8 +1082,8 @@ async function processarDocumentoAnalise(arquivo) {
   if (!arquivo) return;
 
   const ext = arquivo.name.split('.').pop().toLowerCase();
-  if (ext !== 'pdf' && ext !== 'docx') {
-    alert('Formato não suportado. Envie um arquivo PDF ou DOCX.');
+  if (!EXTENSOES_SUPORTADAS.has(ext)) {
+    alert('Formato não suportado. Envie um arquivo PDF, DOCX, TXT ou MD.');
     return;
   }
 
@@ -1642,7 +1675,7 @@ async function varrerArquivosRecursivo(dirHandle, categoria, arquivos) {
   for await (const [nome, handle] of dirHandle) {
     if (handle.kind === 'file') {
       const ext = nome.split('.').pop().toLowerCase();
-      if (ext === 'pdf' || ext === 'docx') {
+      if (EXTENSOES_SUPORTADAS.has(ext)) {
         const file = await handle.getFile();
         arquivos.push({ file, categoria });
       }
@@ -1706,7 +1739,7 @@ async function importarPastaLocal() {
 
   if (itens.length === 0) {
     modal.classList.add('oculto');
-    alert('Nenhum arquivo PDF ou DOCX encontrado em subpastas reconhecidas.\n\nVerifique se a estrutura de pastas segue o padrão indicado.');
+    alert('Nenhum arquivo suportado (PDF, DOCX, TXT, MD) encontrado em subpastas reconhecidas.\n\nVerifique se a estrutura de pastas segue o padrão indicado.');
     return;
   }
 

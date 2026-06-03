@@ -203,10 +203,10 @@
              ondrop="handleDrop(event)"
              onclick="document.getElementById('input-arquivo').click()">
           <div class="zona-icone">📁</div>
-          <div class="zona-texto">Clique ou arraste arquivos PDF / DOCX</div>
+          <div class="zona-texto">Clique ou arraste arquivos PDF, DOCX, TXT ou MD</div>
           <div class="zona-sub">Múltiplos arquivos permitidos · PDFs devem ser digitais (não escaneados)</div>
         </div>
-        <input type="file" id="input-arquivo" multiple accept=".pdf,.docx" style="display:none"
+        <input type="file" id="input-arquivo" multiple accept=".pdf,.docx,.txt,.md" style="display:none"
                onchange="handleArquivos(this.files)">
       </div>
 
@@ -422,9 +422,9 @@
            onclick="document.getElementById('input-analise').click()">
         <div class="zu-icone">📄</div>
         <div class="zu-texto">Clique ou arraste o documento aqui</div>
-        <div class="zu-sub">PDF ou DOCX · Um arquivo por vez</div>
+        <div class="zu-sub">PDF, DOCX, TXT ou MD · Um arquivo por vez</div>
       </div>
-      <input type="file" id="input-analise" accept=".pdf,.docx" style="display:none"
+      <input type="file" id="input-analise" accept=".pdf,.docx,.txt,.md" style="display:none"
              onchange="processarDocumentoAnalise(this.files[0])">
 
       <div class="alerta alerta-info" style="font-size:12px">
