@@ -160,36 +160,73 @@ async function lerArquivo(arquivo) {
 }
 
 /* ================================================================
-   3. CHUNKING DIFERENCIADO POR CATEGORIA
+   3. CHUNKING POR PARÁGRAFO (semântico)
    ================================================================ */
 
-const CONFIG_CHUNKING = {
-  'normas':          { tokens: 500, sobreposicao: 50 },
-  'pareceres':       { tokens: 400, sobreposicao: 80 },
-  'decisoes':        { tokens: 400, sobreposicao: 80 },
-  'notas-tecnicas':  { tokens: 400, sobreposicao: 50 },
-  'orientacoes':     { tokens: 300, sobreposicao: 100 },
-};
-
-// Aproximação: 1 token ≈ 0.75 palavras
-function tokensParaPalavras(tokens) { return Math.floor(tokens * 0.75); }
-
+// Divide preservando fronteiras naturais: parágrafos > sentenças > palavras
 function dividirEmChunks(texto, categoria) {
-  const cfg     = CONFIG_CHUNKING[categoria] || CONFIG_CHUNKING['normas'];
-  const tamPal  = tokensParaPalavras(cfg.tokens);
-  const sobPal  = tokensParaPalavras(cfg.sobreposicao);
-  const palavras = texto.split(/\s+/).filter(p => p.length > 0);
-  const chunks  = [];
-  let inicio    = 0;
+  // Tamanhos máximos em palavras por categoria
+  const MAX_PAL = {
+    'normas': 200, 'pareceres': 180, 'decisoes': 180,
+    'notas-tecnicas': 160, 'orientacoes': 140,
+  };
+  const max = MAX_PAL[categoria] || 180;
+  const overlap = Math.floor(max * 0.2); // 20% de sobreposição
 
-  while (inicio < palavras.length) {
-    const fim    = Math.min(inicio + tamPal, palavras.length);
-    const chunk  = palavras.slice(inicio, fim).join(' ');
-    if (chunk.trim().length > 0) chunks.push(chunk.trim());
-    if (fim >= palavras.length) break;
-    inicio += tamPal - sobPal;
+  // 1. Separa em parágrafos (linhas duplas ou recuo de artigo)
+  const paragrafos = texto
+    .split(/\n{2,}|\r\n{2,}/)
+    .map(p => p.replace(/\s+/g, ' ').trim())
+    .filter(p => p.length > 30);
+
+  if (paragrafos.length === 0) {
+    // fallback: texto sem quebras — divide por sentenças
+    return dividirPorPalavras(texto, max, overlap);
   }
 
+  const chunks = [];
+  let buffer = [];
+  let bufPal = 0;
+
+  function flushBuffer() {
+    if (buffer.length === 0) return;
+    chunks.push(buffer.join(' '));
+    // sobreposição: mantém último parágrafo no buffer
+    const ultimo = buffer[buffer.length - 1];
+    buffer = ultimo.split(/\s+/).length <= overlap ? [ultimo] : [];
+    bufPal = buffer.reduce((s, p) => s + p.split(/\s+/).length, 0);
+  }
+
+  for (const par of paragrafos) {
+    const pal = par.split(/\s+/).length;
+    // Se o parágrafo sozinho excede o limite, subdivide
+    if (pal > max) {
+      flushBuffer();
+      const subs = dividirPorPalavras(par, max, overlap);
+      subs.forEach(s => chunks.push(s));
+      continue;
+    }
+    if (bufPal + pal > max && buffer.length > 0) {
+      flushBuffer();
+    }
+    buffer.push(par);
+    bufPal += pal;
+  }
+  flushBuffer();
+
+  return chunks.filter(c => c.trim().length > 30);
+}
+
+function dividirPorPalavras(texto, max, overlap) {
+  const palavras = texto.split(/\s+/).filter(p => p.length > 0);
+  const chunks = [];
+  let inicio = 0;
+  while (inicio < palavras.length) {
+    const fim = Math.min(inicio + max, palavras.length);
+    chunks.push(palavras.slice(inicio, fim).join(' '));
+    if (fim >= palavras.length) break;
+    inicio += max - overlap;
+  }
   return chunks;
 }
 
