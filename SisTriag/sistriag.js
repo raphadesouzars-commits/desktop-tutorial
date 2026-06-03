@@ -231,19 +231,42 @@ function dividirPorPalavras(texto, max, overlap) {
 }
 
 /* ================================================================
-   4. TF-IDF — INDEXAÇÃO E BUSCA
+   4. BM25 + QUERY EXPANSION — INDEXAÇÃO E BUSCA
    ================================================================ */
 
+// Dicionário de expansão jurídica PT-BR
+const EXPANSAO_JURIDICA = {
+  'demissao':        ['demissao','desligamento','exoneracao','dispensa','rescisao'],
+  'suspensao':       ['suspensao','afastamento','impedimento'],
+  'advertencia':     ['advertencia','repreensao','censura'],
+  'corrupcao':       ['corrupcao','suborno','propina','vantagem indevida'],
+  'improbidade':     ['improbidade','desonestidade','ilicito'],
+  'dano':            ['dano','prejuizo','lesao','perda'],
+  'servidor':        ['servidor','funcionario','agente publico'],
+  'processo':        ['processo','procedimento','apuracao','sindicancia'],
+  'comissao':        ['comissao','colegiado','tribunal'],
+  'pena':            ['pena','sancao','penalidade','punicao'],
+  'culpa':           ['culpa','negligencia','imprudencia','imperícia'],
+  'dolo':            ['dolo','intencao','ma-fe','fraude'],
+  'prescricao':      ['prescricao','decadencia','prazo'],
+  'defesa':          ['defesa','contraditorio','ampla defesa'],
+  'recurso':         ['recurso','impugnacao','revisao','apelacao'],
+  'irregularidade':  ['irregularidade','infração','ilegalidade','violacao'],
+  'lei':             ['lei','decreto','portaria','instrucao normativa','resolucao'],
+  'responsabilidade':['responsabilidade','imputacao','atribuicao'],
+  'absolvi':         ['absolvicao','arquivamento','improcedente'],
+  'condena':         ['condenacao','procedente','acolhido'],
+};
+
 function tokenizar(texto) {
-  // Remove acentos, lowercase, split por não-alfanuméricos, remove stopwords PT
   const stopwords = new Set([
     'a','ao','aos','as','com','da','das','de','do','dos','e','em','na','nas',
     'no','nos','o','os','ou','para','pela','pelas','pelo','pelos','por','que',
     'se','um','uma','uns','umas','é','à','às','isso','este','esta','esse','essa',
-    'seu','sua','seus','suas','nos','nas','ter','ser','foi','são','está','entre',
-    'mais','sobre','mas','também','como','quando','onde','qual','quais','não'
+    'seu','sua','seus','suas','ter','ser','foi','são','está','entre',
+    'mais','sobre','mas','também','como','quando','onde','qual','quais','não',
+    'the','and','for','are','but','not','you','all','can','had','her','was',
   ]);
-
   return texto
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
@@ -252,67 +275,101 @@ function tokenizar(texto) {
     .filter(t => t.length > 2 && !stopwords.has(t));
 }
 
-function calcularTF(tokens) {
-  const tf = {};
-  tokens.forEach(t => { tf[t] = (tf[t] || 0) + 1; });
-  const total = tokens.length;
-  Object.keys(tf).forEach(t => { tf[t] = tf[t] / total; });
-  return tf;
+function expandirQuery(tokens) {
+  const expandidos = new Set(tokens);
+  tokens.forEach(t => {
+    if (EXPANSAO_JURIDICA[t]) {
+      EXPANSAO_JURIDICA[t].forEach(s => {
+        tokenizar(s).forEach(st => expandidos.add(st));
+      });
+    }
+  });
+  return [...expandidos];
 }
 
-// Computa TF-IDF no momento da busca (corpus em memória)
-// Para Fase 1, carregamos todos os chunks na memória para busca
-let indiceMemoria = []; // Array de { id, docId, categoria, docNome, texto, tokens, tf }
+// BM25 parameters
+const BM25_K1 = 1.5;  // term frequency saturation
+const BM25_B  = 0.75; // length normalization
+
+let indiceMemoria = [];
+let bm25_avgdl = 0; // average document length (in tokens)
 
 async function carregarIndiceMemoria() {
   const chunks = await txGetAll('chunks');
   indiceMemoria = chunks.map(c => {
     const tokens = tokenizar(c.texto);
-    return { ...c, tokens, tf: calcularTF(tokens) };
+    const tf = {};
+    tokens.forEach(t => { tf[t] = (tf[t] || 0) + 1; });
+    return { ...c, tokens, tf, dl: tokens.length };
   });
+  bm25_avgdl = indiceMemoria.length > 0
+    ? indiceMemoria.reduce((s, c) => s + c.dl, 0) / indiceMemoria.length
+    : 1;
 }
 
-function calcularIDF(termo, corpus) {
-  const docsComTermo = corpus.filter(d => d.tokens.includes(termo)).length;
-  if (docsComTermo === 0) return 0;
-  return Math.log(corpus.length / docsComTermo);
+function bm25Score(chunk, queryTokens, idfMap) {
+  let score = 0;
+  const dl = chunk.dl;
+  queryTokens.forEach(t => {
+    const idf = idfMap[t] || 0;
+    if (idf === 0) return;
+    const freq = chunk.tf[t] || 0;
+    const num = freq * (BM25_K1 + 1);
+    const den = freq + BM25_K1 * (1 - BM25_B + BM25_B * (dl / bm25_avgdl));
+    score += idf * (num / den);
+  });
+  return score;
 }
 
-function buscarRAG(query, n = 5, categoriaFiltro = '') {
+function buscarRAG(query, n = 8, categoriaFiltro = '') {
   if (indiceMemoria.length === 0) return [];
 
   const corpus = categoriaFiltro
     ? indiceMemoria.filter(c => c.categoria === categoriaFiltro)
     : indiceMemoria;
-
   if (corpus.length === 0) return [];
 
-  const queryTokens = tokenizar(query);
+  // Expande termos da query com sinônimos jurídicos
+  const queryTokensRaw = tokenizar(query);
+  const queryTokens    = expandirQuery(queryTokensRaw);
   if (queryTokens.length === 0) return [];
 
-  // Calcula IDF para os termos da query no corpus atual
-  const idfCache = {};
+  // IDF suavizado: log((N - n_t + 0.5) / (n_t + 0.5) + 1)
+  const N = corpus.length;
+  const idfMap = {};
   queryTokens.forEach(t => {
-    if (!(t in idfCache)) idfCache[t] = calcularIDF(t, corpus);
+    const nt = corpus.filter(c => c.tf[t] > 0).length;
+    idfMap[t] = Math.log((N - nt + 0.5) / (nt + 0.5) + 1);
   });
 
-  // Calcula score TF-IDF de cada chunk para a query
-  const scores = corpus.map(chunk => {
-    let score = 0;
-    queryTokens.forEach(termo => {
-      const tf  = chunk.tf[termo] || 0;
-      const idf = idfCache[termo] || 0;
-      score += tf * idf;
-    });
-    return { chunk, score };
-  });
+  // Score BM25
+  const scores = corpus.map(chunk => ({
+    chunk,
+    score: bm25Score(chunk, queryTokens, idfMap),
+  }));
 
-  // Ordena e retorna os N melhores
   scores.sort((a, b) => b.score - a.score);
-  return scores
-    .filter(s => s.score > 0)
-    .slice(0, n)
-    .map(s => ({ ...s.chunk, score: s.score }));
+
+  const top = scores.filter(s => s.score > 0).slice(0, n);
+
+  // Adiciona contexto de vizinhança: inclui chunk adjacente se score relevante
+  const resultado = [];
+  const vistosIds = new Set();
+  top.forEach(({ chunk, score }) => {
+    if (!vistosIds.has(chunk.id)) {
+      vistosIds.add(chunk.id);
+      resultado.push({ ...chunk, score });
+    }
+    // vizinho posterior se existir e não já incluído
+    const vizId = `${chunk.docId}_c${chunk.posicao + 1}`;
+    const viz = indiceMemoria.find(c => c.id === vizId);
+    if (viz && !vistosIds.has(viz.id) && score > 1.0) {
+      vistosIds.add(viz.id);
+      resultado.push({ ...viz, score: score * 0.6, vizinho: true });
+    }
+  });
+
+  return resultado.slice(0, n);
 }
 
 /* ================================================================
@@ -628,7 +685,7 @@ async function executarBuscaRAG() {
         <div class="rag-rank">#${i+1} — ${nomesCat[r.categoria]||r.categoria}</div>
         <div class="rag-fonte">📄 ${escapeHtml(r.docNome)} · Chunk ${r.posicao+1}/${r.total}</div>
         <div class="rag-texto">${escapeHtml(r.texto)}</div>
-        <div class="rag-score">Score TF-IDF: ${r.score.toFixed(4)}</div>
+        <div class="rag-score">Score BM25: ${r.score.toFixed(3)}${r.vizinho ? ' · contexto adjacente' : ''}</div>
       </div>
     `).join('')}
   `;
@@ -1074,7 +1131,7 @@ function buscarFundamentos(textoDoc) {
 
   queries.forEach(q => {
     if (!q.trim()) return;
-    const res = buscarRAG(q, 4);
+    const res = buscarRAG(q, 6);
     res.forEach(r => {
       if (!vistos.has(r.id)) {
         vistos.add(r.id);
@@ -1084,7 +1141,7 @@ function buscarFundamentos(textoDoc) {
   });
 
   /* Retorna os 7 mais relevantes (já vêm ordenados por score) */
-  return resultado.slice(0, 7);
+  return resultado.slice(0, 12);
 }
 
 /* ----------------------------------------------------------------
