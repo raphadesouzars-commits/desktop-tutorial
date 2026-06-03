@@ -889,21 +889,21 @@ html, body {
 ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* ============================================================
-   FASE 2 — FORMULÁRIOS DE ANÁLISE
+   FASE 2 — TELA DE UPLOAD E RESULTADO
    ============================================================ */
 
-#tela-formulario, #tela-resultado { max-width: 860px; }
+#tela-upload, #tela-resultado { max-width: 700px; }
 
-.form-cabecalho {
+.upload-cabecalho {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--cinza-borda);
 }
 
-.form-tipo-badge {
+.upload-tipo-badge {
   font-size: 22px;
   font-weight: 800;
   color: var(--azul-acento);
@@ -911,75 +911,44 @@ html, body {
   border: 1px solid rgba(59,143,212,0.25);
   border-radius: var(--raio);
   padding: 6px 14px;
-  letter-spacing: 0.02em;
 }
 
-.form-cabecalho-info .form-titulo {
+.upload-cabecalho-info .upload-titulo {
   font-size: 18px;
   font-weight: 600;
   color: var(--branco);
 }
 
-.form-cabecalho-info .form-subtitulo {
+.upload-cabecalho-info .upload-subtitulo {
   font-size: 12px;
   color: var(--cinza-texto);
   margin-top: 3px;
 }
 
-.secao-form {
-  margin-bottom: 24px;
+.zona-upload-principal {
+  border: 2px dashed var(--cinza-borda);
+  border-radius: var(--raio-grande);
+  padding: 72px 40px;
+  text-align: center;
+  transition: var(--trans);
+  cursor: pointer;
+  background: rgba(255,255,255,0.01);
+  margin-bottom: 20px;
 }
 
-.secao-form-titulo {
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--azul-acento);
-  margin-bottom: 14px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--cinza-borda);
-  display: flex;
-  align-items: center;
-  gap: 7px;
+.zona-upload-principal:hover,
+.zona-upload-principal.arrastando {
+  border-color: var(--azul-acento);
+  background: rgba(59,143,212,0.05);
 }
 
-.prescricao-box {
-  background: var(--cinza-escuro);
-  border: 1px solid var(--cinza-borda);
-  border-radius: var(--raio);
-  padding: 12px 16px;
-  margin-top: 8px;
-  font-size: 12px;
-}
-
-.prescricao-box .presc-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--cinza-texto);
-  margin-bottom: 6px;
-}
-
-.prescricao-box .presc-valor {
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.presc-ok     { color: var(--verde-claro); }
-.presc-alerta { color: var(--amarelo); }
-.presc-extinta { color: var(--vermelho-claro); }
-
-.form-acoes {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 28px;
-  padding-top: 20px;
-  border-top: 1px solid var(--cinza-borda);
-}
+.zona-upload-principal .zu-icone { font-size: 48px; margin-bottom: 16px; opacity: 0.5; }
+.zona-upload-principal .zu-texto { font-size: 16px; color: var(--branco-suave); margin-bottom: 6px; font-weight: 500; }
+.zona-upload-principal .zu-sub   { font-size: 13px; color: var(--cinza-texto); }
 
 /* Resultado / Documento Gerado */
+#tela-resultado { max-width: 860px; }
+
 .doc-gerado {
   background: #fff;
   color: #1a1a1a;
@@ -991,97 +960,20 @@ html, body {
   box-shadow: 0 4px 24px rgba(0,0,0,0.4);
 }
 
-.doc-gerado h1 {
-  font-size: 14px;
-  font-weight: 700;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 4px;
-}
+.doc-gerado h1 { font-size:14px; font-weight:700; text-align:center; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+.doc-gerado h2 { font-size:13px; font-weight:700; text-transform:uppercase; margin:20px 0 8px; border-bottom:1px solid #ccc; padding-bottom:4px; }
+.doc-gerado p  { margin-bottom:10px; text-align:justify; }
+.doc-gerado .doc-numero    { text-align:center; font-weight:700; letter-spacing:.05em; margin-bottom:24px; }
+.doc-gerado .doc-referencia{ text-align:center; font-size:12px; color:#555; margin-bottom:24px; }
+.doc-gerado .fundamentacao-item { background:#f8f9fa; border-left:3px solid #2d6ea8; padding:10px 14px; margin-bottom:10px; font-size:12px; }
+.doc-gerado .fundamentacao-fonte{ font-size:11px; color:#666; font-style:italic; margin-bottom:4px; }
+.doc-gerado .doc-assinatura { margin-top:40px; text-align:center; }
+.doc-gerado .doc-local-data { text-align:right; margin-bottom:32px; font-size:12px; }
 
-.doc-gerado h2 {
-  font-size: 13px;
-  font-weight: 700;
-  text-transform: uppercase;
-  margin: 20px 0 8px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 4px;
-}
-
-.doc-gerado p { margin-bottom: 10px; text-align: justify; }
-
-.doc-gerado .doc-numero {
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  margin-bottom: 24px;
-}
-
-.doc-gerado .doc-referencia {
-  text-align: center;
-  font-size: 12px;
-  color: #555;
-  margin-bottom: 24px;
-}
-
-.doc-gerado .fundamentacao-item {
-  background: #f8f9fa;
-  border-left: 3px solid #2d6ea8;
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  font-size: 12px;
-}
-
-.doc-gerado .fundamentacao-fonte {
-  font-size: 11px;
-  color: #666;
-  margin-bottom: 4px;
-  font-style: italic;
-}
-
-.doc-gerado .doc-assinatura {
-  margin-top: 40px;
-  text-align: center;
-}
-
-.doc-gerado .doc-local-data {
-  text-align: right;
-  margin-bottom: 32px;
-  font-size: 12px;
-}
-
-.resultado-acoes {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.rag-contexto-lista {
-  margin-top: 8px;
-}
-
-.rag-contexto-item {
-  border-left: 2px solid var(--azul-claro);
-  padding: 8px 12px;
-  margin-bottom: 8px;
-  background: rgba(255,255,255,0.02);
-  border-radius: 0 var(--raio) var(--raio) 0;
-}
-
-.rag-contexto-fonte {
-  font-size: 11px;
-  color: var(--azul-acento);
-  margin-bottom: 4px;
-}
-
-.rag-contexto-texto {
-  font-size: 12px;
-  color: var(--branco-suave);
-  line-height: 1.5;
-}
+.rag-contexto-lista  { margin-top:8px; }
+.rag-contexto-item   { border-left:2px solid var(--azul-claro); padding:8px 12px; margin-bottom:8px; background:rgba(255,255,255,0.02); border-radius:0 var(--raio) var(--raio) 0; }
+.rag-contexto-fonte  { font-size:11px; color:var(--azul-acento); margin-bottom:4px; }
+.rag-contexto-texto  { font-size:12px; color:var(--branco-suave); line-height:1.5; }
 
 /* ============================================================
    IMPORTAR PASTA LOCAL
@@ -1191,7 +1083,7 @@ html, body {
         <button onclick="navegarPara('config')" id="nav-config">Configurações</button>
       </nav>
     </div>
-    <span class="versao">v2.0.0 — Fase 2</span>
+    <span class="versao">v2.1.0 — Fase 2</span>
   </header>
 
   <!-- ===================== CONTEÚDO ===================== -->
@@ -1531,28 +1423,44 @@ html, body {
 
   </main>
 
-    <!-- ===== TELA FORMULÁRIO DE ANÁLISE ===== -->
-    <div id="tela-formulario" class="tela">
-      <div class="form-cabecalho">
-        <div class="form-tipo-badge" id="form-tipo-badge">PAD</div>
-        <div class="form-cabecalho-info">
-          <div class="form-titulo" id="form-titulo-principal">Triagem da Ocorrência</div>
-          <div class="form-subtitulo" id="form-subtitulo-principal">Preencha os dados do expediente para gerar o despacho de triagem</div>
+    <!-- ===== TELA UPLOAD DO DOCUMENTO ===== -->
+    <div id="tela-upload" class="tela">
+      <div class="upload-cabecalho">
+        <div class="upload-tipo-badge" id="upload-tipo-badge">PAD</div>
+        <div class="upload-cabecalho-info">
+          <div class="upload-titulo" id="upload-titulo-principal">Triagem da Ocorrência</div>
+          <div class="upload-subtitulo" id="upload-subtitulo-principal">Envie o relatório ou expediente — a análise será gerada automaticamente</div>
         </div>
         <button class="btn btn-secundario btn-sm" style="margin-left:auto" onclick="navegarPara('inicio')">← Voltar</button>
       </div>
-      <div id="form-corpo"></div>
+
+      <div class="zona-upload-principal" id="zona-upload-analise"
+           ondragover="event.preventDefault(); this.classList.add('arrastando')"
+           ondragleave="this.classList.remove('arrastando')"
+           ondrop="handleDropAnalise(event)"
+           onclick="document.getElementById('input-analise').click()">
+        <div class="zu-icone">📄</div>
+        <div class="zu-texto">Clique ou arraste o documento aqui</div>
+        <div class="zu-sub">PDF ou DOCX · Um arquivo por vez</div>
+      </div>
+      <input type="file" id="input-analise" accept=".pdf,.docx" style="display:none"
+             onchange="processarDocumentoAnalise(this.files[0])">
+
+      <div class="alerta alerta-info" style="font-size:12px">
+        <span>ℹ</span>
+        <span>A ferramenta extrai o texto do documento, busca os fundamentos jurídicos mais relevantes na base de conhecimento e monta o despacho/decisão automaticamente. PDFs devem ser digitais (não escaneados).</span>
+      </div>
     </div>
 
     <!-- ===== TELA RESULTADO / DOCUMENTO GERADO ===== -->
     <div id="tela-resultado" class="tela">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
         <div>
           <div class="titulo-tela">Documento Gerado</div>
-          <div class="subtitulo-tela" id="resultado-subtitulo">Despacho de Triagem</div>
+          <div class="subtitulo-tela" id="resultado-subtitulo">Despacho</div>
         </div>
         <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
-          <button class="btn btn-secundario btn-sm" onclick="voltarParaFormulario()">← Editar</button>
+          <button class="btn btn-secundario btn-sm" onclick="navegarPara('upload')">← Novo documento</button>
           <button class="btn btn-secundario btn-sm" onclick="copiarTextoDocumento()">📋 Copiar texto</button>
           <button class="btn btn-primario btn-sm" onclick="imprimirDocumento()">🖨 Imprimir / PDF</button>
         </div>
@@ -2218,7 +2126,7 @@ async function executarBuscaRAG() {
    9. NAVEGAÇÃO SPA
    ================================================================ */
 
-const TELAS = ['inicio', 'base', 'rag', 'config', 'formulario', 'resultado'];
+const TELAS = ['inicio', 'base', 'rag', 'config', 'upload', 'resultado'];
 
 function navegarPara(tela) {
   TELAS.forEach(t => {
@@ -2232,7 +2140,7 @@ function navegarPara(tela) {
 
   if (tela === 'base') { renderizarBase(); verificarCompatibilidadePasta(); }
   if (tela === 'config') carregarConfiguracoes();
-  if (tela === 'formulario' || tela === 'resultado') {
+  if (tela === 'upload' || tela === 'resultado') {
     // Oculta nav ativo para essas telas internas
     document.getElementById('nav-inicio').classList.remove('ativo');
   }
@@ -2492,843 +2400,371 @@ function formatarData(iso, completo = false) {
 }
 
 /* ================================================================
-   FASE 2 — DEFINIÇÕES DOS FORMULÁRIOS
+   FASE 2 — ANÁLISE AUTOMÁTICA POR UPLOAD
    ================================================================ */
 
-const DEFINICOES_FORMULARIO = {
+let contextoFluxo = { tipo: null, ocasiao: null };
+window._configSisTriag = {};
 
+/* Títulos exibidos por fluxo */
+const TITULOS_FLUXO = {
   PAD: {
-    triagem: {
-      titulo:    'Triagem da Ocorrência — PAD',
-      subtitulo: 'Preencha os dados do expediente para gerar o despacho de triagem',
-      secoes: [
-        {
-          titulo: '📄 Identificação do Expediente',
-          campos: [
-            { id:'num_expediente',  label:'Número do expediente / processo',  tipo:'text',   placeholder:'Ex: 10711.000001/2024-01', obrigatorio:true },
-            { id:'data_fato',       label:'Data do fato (ou início)',          tipo:'date',   obrigatorio:true },
-            { id:'data_conhecimento',label:'Data do conhecimento pela autoridade', tipo:'date', obrigatorio:true },
-            { id:'origem',          label:'Origem da informação',              tipo:'select',
-              opcoes:['Denúncia anônima','Representação de servidor','Representação de terceiro',
-                      'Relatório de auditoria interna','Relatório CGU/TCU','Processo judicial',
-                      'Mídia / imprensa','Monitoramento interno','Outro'] },
-          ]
-        },
-        {
-          titulo: '👤 Servidor Envolvido',
-          campos: [
-            { id:'servidor_nome',     label:'Nome completo',         tipo:'text',   placeholder:'Nome do servidor', obrigatorio:true },
-            { id:'servidor_matricula',label:'Matrícula SIAPE',       tipo:'text',   placeholder:'Ex: 1234567' },
-            { id:'servidor_cargo',    label:'Cargo / função',        tipo:'text',   placeholder:'Ex: Auditor-Fiscal da Receita Federal' },
-            { id:'servidor_lotacao',  label:'Lotação (unidade)',     tipo:'text',   placeholder:'Ex: DRF/São Paulo' },
-          ]
-        },
-        {
-          titulo: '⚖ Irregularidade Apurada',
-          campos: [
-            { id:'natureza',   label:'Natureza da irregularidade', tipo:'select',
-              opcoes:['Abandono de cargo','Inassiduidade habitual','Acumulação ilícita de cargos',
-                      'Improbidade administrativa','Corrupção / concussão','Prevaricação',
-                      'Assédio moral','Assédio sexual','Descumprimento de dever funcional',
-                      'Vazamento de informação sigilosa','Irregularidade em processo fiscal',
-                      'Infração ética / conflito de interesses','Outro'] },
-            { id:'descricao',  label:'Descrição da conduta irregular', tipo:'textarea', obrigatorio:true,
-              placeholder:'Descreva os fatos de forma objetiva: o que ocorreu, quando, onde e como foi apurado.' },
-            { id:'provas',     label:'Indícios / provas existentes', tipo:'textarea',
-              placeholder:'Documentos, depoimentos, registros eletrônicos, relatórios etc.' },
-          ]
-        },
-        {
-          titulo: '📅 Análise de Prescrição',
-          campos: [
-            { id:'prescricao_pena',  label:'Pena mais provável (para calcular prazo)',  tipo:'select',
-              opcoes:['Advertência (180 dias)','Suspensão (2 anos)','Demissão / Cassação (5 anos)',
-                      'Ainda não definida'] },
-          ],
-          extra: 'prescricao'
-        },
-        {
-          titulo: '📝 Conclusão',
-          campos: [
-            { id:'conclusao', label:'Proposta de encaminhamento', tipo:'select',
-              opcoes:['Instaurar Sindicância Investigativa','Instaurar Sindicância Punitiva',
-                      'Instaurar PAD diretamente','Arquivar por ausência de indícios',
-                      'Arquivar por prescrição','Diligências preliminares','Remeter a outro órgão'] },
-            { id:'fundamento_conclusao', label:'Fundamentação da conclusão', tipo:'textarea',
-              placeholder:'Justifique a proposta acima com base nos elementos apurados.' },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `prescrição pretensão punitiva ${dados.natureza || ''} servidor público Lei 8112`,
-        `${dados.natureza || 'infração disciplinar'} PAD processo administrativo disciplinar`,
-        `${dados.conclusao || 'triagem'} instauração sindicância`,
-      ]
-    },
-
-    admissibilidade: {
-      titulo:    'Juízo de Admissibilidade — PAD',
-      subtitulo: 'Avalie os elementos apurados e decida pela instauração ou arquivamento',
-      secoes: [
-        {
-          titulo: '📄 Identificação',
-          campos: [
-            { id:'num_expediente',   label:'Número do processo/sindicância', tipo:'text', obrigatorio:true },
-            { id:'data_instauracao', label:'Data de instauração da sindicância', tipo:'date' },
-            { id:'servidor_nome',    label:'Servidor investigado', tipo:'text', obrigatorio:true },
-            { id:'servidor_cargo',   label:'Cargo / lotação', tipo:'text' },
-          ]
-        },
-        {
-          titulo: '🔍 Elementos Apurados',
-          campos: [
-            { id:'natureza',      label:'Infração apurada', tipo:'select',
-              opcoes:['Abandono de cargo','Inassiduidade habitual','Acumulação ilícita de cargos',
-                      'Improbidade administrativa','Corrupção / concussão','Prevaricação',
-                      'Assédio moral','Assédio sexual','Descumprimento de dever funcional',
-                      'Vazamento de informação sigilosa','Irregularidade em processo fiscal',
-                      'Infração ética / conflito de interesses','Outro'] },
-            { id:'materialidade',  label:'Materialidade', tipo:'select',
-              opcoes:['Comprovada','Indícios suficientes','Indícios insuficientes','Ausente'] },
-            { id:'autoria',        label:'Autoria', tipo:'select',
-              opcoes:['Comprovada','Indícios suficientes','Indícios insuficientes','Ausente'] },
-            { id:'resumo_apuracao', label:'Resumo dos elementos apurados', tipo:'textarea', obrigatorio:true,
-              placeholder:'Descreva os principais elementos: documentos, depoimentos, conclusões da sindicância.' },
-          ]
-        },
-        {
-          titulo: '📅 Prescrição',
-          campos: [
-            { id:'data_fato',       label:'Data do fato', tipo:'date', obrigatorio:true },
-            { id:'prescricao_pena', label:'Pena estimada pela infração', tipo:'select',
-              opcoes:['Advertência (180 dias)','Suspensão (2 anos)','Demissão / Cassação (5 anos)'] },
-          ],
-          extra: 'prescricao'
-        },
-        {
-          titulo: '📝 Decisão',
-          campos: [
-            { id:'decisao', label:'Decisão de admissibilidade', tipo:'select', obrigatorio:true,
-              opcoes:['Instaurar PAD','Arquivar — ausência de materialidade',
-                      'Arquivar — ausência de autoria','Arquivar — prescrição',
-                      'Arquivar — fato atípico','Converter em sindicância patrimonial',
-                      'Remeter a outro órgão'] },
-            { id:'fundamento_decisao', label:'Fundamentação', tipo:'textarea', obrigatorio:true,
-              placeholder:'Fundamente juridicamente a decisão, com referência às normas aplicáveis.' },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `juízo admissibilidade PAD instauração ${dados.natureza || ''}`,
-        `materialidade autoria ${dados.natureza || 'infração disciplinar'} sindicância`,
-        `prescrição ${dados.natureza || ''} Lei 8112 processo disciplinar`,
-      ]
-    },
-
-    julgamento: {
-      titulo:    'Julgamento do Processo — PAD',
-      subtitulo: 'Análise de mérito e decisão final sobre penalidade ou absolvição',
-      secoes: [
-        {
-          titulo: '📄 Identificação do Processo',
-          campos: [
-            { id:'num_processo',    label:'Número do PAD', tipo:'text', obrigatorio:true },
-            { id:'data_instauracao',label:'Data de instauração do PAD', tipo:'date' },
-            { id:'servidor_nome',   label:'Servidor acusado', tipo:'text', obrigatorio:true },
-            { id:'servidor_cargo',  label:'Cargo / lotação', tipo:'text' },
-          ]
-        },
-        {
-          titulo: '⚖ Acusação e Mérito',
-          campos: [
-            { id:'infracao_imputada', label:'Infração imputada', tipo:'select',
-              opcoes:['Abandono de cargo','Inassiduidade habitual','Acumulação ilícita de cargos',
-                      'Improbidade administrativa','Corrupção / concussão','Prevaricação',
-                      'Assédio moral','Assédio sexual','Descumprimento de dever funcional',
-                      'Vazamento de informação sigilosa','Irregularidade em processo fiscal',
-                      'Infração ética / conflito de interesses','Outro'] },
-            { id:'tipificacao_legal', label:'Tipificação legal (artigos)', tipo:'text',
-              placeholder:'Ex: Art. 116, III c/c art. 129 da Lei 8.112/1990' },
-            { id:'resumo_instrucao', label:'Síntese da instrução processual', tipo:'textarea', obrigatorio:true,
-              placeholder:'Resuma os principais elementos de prova, defesa apresentada e conclusão da comissão.' },
-            { id:'pena_comissao',   label:'Pena proposta pela comissão', tipo:'select',
-              opcoes:['Absolvição','Advertência','Suspensão até 30 dias','Suspensão de 31 a 90 dias',
-                      'Demissão','Cassação de aposentadoria / disponibilidade','Destituição de cargo em comissão'] },
-          ]
-        },
-        {
-          titulo: '📊 Dosimetria',
-          campos: [
-            { id:'antecedentes',  label:'Antecedentes disciplinares', tipo:'select',
-              opcoes:['Inexistentes','Uma advertência anterior','Mais de uma ocorrência anterior','Suspensão anterior'] },
-            { id:'dano_erario',   label:'Dano ao erário', tipo:'select',
-              opcoes:['Não houve dano','Dano de pequena monta','Dano relevante','Dano de grande monta'] },
-            { id:'atenuantes',    label:'Circunstâncias atenuantes / agravantes', tipo:'textarea',
-              placeholder:'Descreva se há atenuantes (confissão, ressarcimento) ou agravantes (reincidência, má-fé).' },
-          ]
-        },
-        {
-          titulo: '📝 Decisão Final',
-          campos: [
-            { id:'decisao_final',  label:'Decisão', tipo:'select', obrigatorio:true,
-              opcoes:['Aplicar a pena proposta pela comissão','Aplicar pena diversa da proposta',
-                      'Absolver o servidor','Converter para penalidade mais branda',
-                      'Converter para penalidade mais grave','Remeter ao Ministério da Economia'] },
-            { id:'pena_aplicada',  label:'Penalidade aplicada', tipo:'select',
-              opcoes:['Nenhuma — absolvição','Advertência','Suspensão até 30 dias','Suspensão de 31 a 90 dias',
-                      'Demissão','Cassação de aposentadoria / disponibilidade','Destituição de cargo em comissão'] },
-            { id:'fundamento_julgamento', label:'Fundamentação da decisão', tipo:'textarea', obrigatorio:true,
-              placeholder:'Fundamente a decisão com base nas provas, tipificação, dosimetria e jurisprudência.' },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `${dados.infracao_imputada || 'infração disciplinar'} penalidade dosimetria PAD`,
-        `${dados.pena_aplicada || dados.pena_comissao || 'demissão'} julgamento proporcionalidade`,
-        `${dados.tipificacao_legal || 'Lei 8112'} ${dados.infracao_imputada || ''} jurisprudência`,
-      ]
-    }
+    triagem:        { titulo:'Triagem da Ocorrência — PAD',      tipoDoc:'DESPACHO DE TRIAGEM',         seqKey:'seq_triagem' },
+    admissibilidade:{ titulo:'Juízo de Admissibilidade — PAD',   tipoDoc:'DESPACHO DE ADMISSIBILIDADE', seqKey:'seq_admissibilidade' },
+    julgamento:     { titulo:'Julgamento do Processo — PAD',     tipoDoc:'DECISÃO',                     seqKey:'seq_decisao_pad' },
   },
-
   PAR: {
-    triagem: {
-      titulo:    'Triagem da Ocorrência — PAR',
-      subtitulo: 'Análise inicial do expediente envolvendo pessoa jurídica (Lei 12.846/2013)',
-      secoes: [
-        {
-          titulo: '📄 Identificação do Expediente',
-          campos: [
-            { id:'num_expediente',   label:'Número do expediente', tipo:'text', obrigatorio:true },
-            { id:'data_fato',        label:'Data do fato / ato lesivo', tipo:'date', obrigatorio:true },
-            { id:'data_conhecimento',label:'Data do conhecimento pela autoridade', tipo:'date', obrigatorio:true },
-            { id:'origem',           label:'Origem da informação', tipo:'select',
-              opcoes:['Denúncia anônima','Representação','Relatório de auditoria',
-                      'Relatório CGU/TCU','Processo judicial','Colaboração premiada',
-                      'Monitoramento interno','Mídia / imprensa','Outro'] },
-          ]
-        },
-        {
-          titulo: '🏢 Pessoa Jurídica Envolvida',
-          campos: [
-            { id:'pj_razao',   label:'Razão social', tipo:'text', obrigatorio:true },
-            { id:'pj_cnpj',    label:'CNPJ', tipo:'text', placeholder:'XX.XXX.XXX/XXXX-XX' },
-            { id:'pj_porte',   label:'Porte da empresa', tipo:'select',
-              opcoes:['Microempresa (ME)','Empresa de Pequeno Porte (EPP)','Empresa de Médio Porte',
-                      'Grande Empresa','Multinacional','Não identificado'] },
-            { id:'pj_setor',   label:'Setor de atividade', tipo:'text', placeholder:'Ex: Tecnologia, Construção civil' },
-          ]
-        },
-        {
-          titulo: '⚖ Ato Lesivo',
-          campos: [
-            { id:'ato_lesivo', label:'Tipo de ato lesivo (art. 5º Lei 12.846)', tipo:'select',
-              opcoes:['Prometer/oferecer/dar vantagem indevida a agente público (inc. I)',
-                      'Financiar atos lesivos (inc. II)',
-                      'Utilizar interposta pessoa (inc. III)',
-                      'Fraudar licitação/contrato (inc. IV)',
-                      'Dificultar investigação/fiscalização (inc. V)',
-                      'Outro'] },
-            { id:'descricao',  label:'Descrição dos fatos', tipo:'textarea', obrigatorio:true,
-              placeholder:'Descreva o ato lesivo, o envolvimento da pessoa jurídica e os agentes públicos atingidos.' },
-            { id:'lesao_erario', label:'Lesão ao erário estimada (R$)', tipo:'text',
-              placeholder:'Ex: R$ 1.500.000,00 ou "não estimada"' },
-          ]
-        },
-        {
-          titulo: '📝 Conclusão',
-          campos: [
-            { id:'conclusao', label:'Proposta de encaminhamento', tipo:'select',
-              opcoes:['Instaurar PAR','Arquivar — ausência de indícios',
-                      'Arquivar — fato atípico','Diligências preliminares',
-                      'Remeter ao MPF / CGU / AGU','Outro'] },
-            { id:'fundamento_conclusao', label:'Fundamentação', tipo:'textarea',
-              placeholder:'Justifique a proposta com base nos elementos apurados.' },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `Lei 12846 ato lesivo ${dados.ato_lesivo || 'pessoa jurídica'} PAR`,
-        `responsabilidade objetiva pessoa jurídica Lei anticorrupção`,
-        `${dados.conclusao || 'instauração'} PAR critérios admissibilidade`,
-      ]
-    },
-
-    admissibilidade: {
-      titulo:    'Juízo de Admissibilidade — PAR',
-      subtitulo: 'Avalie os elementos e decida pela instauração ou arquivamento do PAR',
-      secoes: [
-        {
-          titulo: '📄 Identificação',
-          campos: [
-            { id:'num_expediente', label:'Número do expediente', tipo:'text', obrigatorio:true },
-            { id:'pj_razao',       label:'Razão social da empresa', tipo:'text', obrigatorio:true },
-            { id:'pj_cnpj',        label:'CNPJ', tipo:'text' },
-            { id:'ato_lesivo',     label:'Ato lesivo investigado', tipo:'select',
-              opcoes:['Prometer/oferecer/dar vantagem indevida (inc. I)','Financiar atos lesivos (inc. II)',
-                      'Utilizar interposta pessoa (inc. III)','Fraudar licitação/contrato (inc. IV)',
-                      'Dificultar investigação/fiscalização (inc. V)','Outro'] },
-          ]
-        },
-        {
-          titulo: '🔍 Elementos Apurados',
-          campos: [
-            { id:'materialidade', label:'Materialidade do ato lesivo', tipo:'select',
-              opcoes:['Comprovada','Indícios suficientes','Indícios insuficientes','Ausente'] },
-            { id:'nexo',          label:'Nexo com a pessoa jurídica', tipo:'select',
-              opcoes:['Comprovado','Indícios suficientes','Indícios insuficientes','Ausente'] },
-            { id:'resumo_apuracao', label:'Síntese dos elementos apurados', tipo:'textarea', obrigatorio:true },
-          ]
-        },
-        {
-          titulo: '📅 Prescrição',
-          campos: [
-            { id:'data_fato', label:'Data do ato lesivo', tipo:'date', obrigatorio:true },
-          ],
-          extra: 'prescricao_par'
-        },
-        {
-          titulo: '📝 Decisão',
-          campos: [
-            { id:'decisao', label:'Decisão', tipo:'select', obrigatorio:true,
-              opcoes:['Instaurar PAR','Arquivar — ausência de materialidade',
-                      'Arquivar — ausência de nexo','Arquivar — prescrição',
-                      'Arquivar — fato atípico','Remeter à CGU / MPF'] },
-            { id:'fundamento_decisao', label:'Fundamentação', tipo:'textarea', obrigatorio:true },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `admissibilidade PAR instauração ${dados.ato_lesivo || 'ato lesivo'}`,
-        `nexo imputação pessoa jurídica Lei 12846 responsabilidade`,
-        `prescrição PAR Lei anticorrupção prazo`,
-      ]
-    },
-
-    julgamento: {
-      titulo:    'Julgamento do PAR',
-      subtitulo: 'Decisão final sobre a responsabilização da pessoa jurídica',
-      secoes: [
-        {
-          titulo: '📄 Identificação',
-          campos: [
-            { id:'num_processo', label:'Número do PAR', tipo:'text', obrigatorio:true },
-            { id:'pj_razao',     label:'Razão social', tipo:'text', obrigatorio:true },
-            { id:'pj_cnpj',      label:'CNPJ', tipo:'text' },
-            { id:'pj_porte',     label:'Porte da empresa', tipo:'select',
-              opcoes:['Microempresa','Empresa de Pequeno Porte','Empresa de Médio Porte',
-                      'Grande Empresa','Multinacional'] },
-          ]
-        },
-        {
-          titulo: '⚖ Instrução e Mérito',
-          campos: [
-            { id:'ato_lesivo',       label:'Ato lesivo comprovado', tipo:'select',
-              opcoes:['Prometer/oferecer/dar vantagem indevida (inc. I)','Financiar atos lesivos (inc. II)',
-                      'Utilizar interposta pessoa (inc. III)','Fraudar licitação/contrato (inc. IV)',
-                      'Dificultar investigação/fiscalização (inc. V)','Outro'] },
-            { id:'lesao_erario',     label:'Lesão ao erário apurada (R$)', tipo:'text' },
-            { id:'resumo_instrucao', label:'Síntese da instrução', tipo:'textarea', obrigatorio:true },
-          ]
-        },
-        {
-          titulo: '📊 Dosimetria da Multa',
-          campos: [
-            { id:'programa_integridade', label:'Programa de integridade', tipo:'select',
-              opcoes:['Não possui','Possui — incipiente','Possui — parcialmente adequado','Possui — adequado e efetivo'] },
-            { id:'cooperacao',    label:'Cooperação com a investigação', tipo:'select',
-              opcoes:['Não cooperou','Cooperação parcial','Cooperação plena','Celebrou acordo de leniência'] },
-            { id:'reincidencia',  label:'Reincidência', tipo:'select',
-              opcoes:['Não há','Primeiro reincidente','Reincidente múltiplo'] },
-            { id:'atenuantes',    label:'Outras circunstâncias', tipo:'textarea',
-              placeholder:'Descreva atenuantes ou agravantes relevantes para a dosimetria.' },
-          ]
-        },
-        {
-          titulo: '📝 Decisão Final',
-          campos: [
-            { id:'decisao_final',      label:'Decisão', tipo:'select', obrigatorio:true,
-              opcoes:['Responsabilizar — aplicar multa e publicação extraordinária',
-                      'Responsabilizar — aplicar multa',
-                      'Absolver — ausência de prova','Absolver — excludente legal',
-                      'Homologar acordo de leniência'] },
-            { id:'multa_percentual',   label:'Multa calculada (% faturamento ou valor fixo)', tipo:'text',
-              placeholder:'Ex: 0,1% do faturamento bruto = R$ 500.000,00' },
-            { id:'fundamento_julgamento', label:'Fundamentação', tipo:'textarea', obrigatorio:true },
-          ]
-        },
-      ],
-      queries_rag: (dados) => [
-        `dosimetria multa PAR Lei 12846 ${dados.pj_porte || 'empresa'} faturamento`,
-        `programa integridade atenuante responsabilização pessoa jurídica`,
-        `${dados.ato_lesivo || 'ato lesivo'} penalidade publicação extraordinária`,
-      ]
-    }
-  }
+    triagem:        { titulo:'Triagem da Ocorrência — PAR',      tipoDoc:'DESPACHO DE TRIAGEM',         seqKey:'seq_triagem' },
+    admissibilidade:{ titulo:'Juízo de Admissibilidade — PAR',   tipoDoc:'DESPACHO DE ADMISSIBILIDADE', seqKey:'seq_admissibilidade' },
+    julgamento:     { titulo:'Julgamento do PAR',                tipoDoc:'DECISÃO',                     seqKey:'seq_decisao_par' },
+  },
 };
 
-/* ================================================================
-   FASE 2 — RENDERIZAÇÃO DOS FORMULÁRIOS
-   ================================================================ */
+/* Queries RAG por etapa (serão combinadas com termos extraídos do documento) */
+const QUERIES_BASE = {
+  PAD: {
+    triagem:        ['prescrição pretensão punitiva servidor público Lei 8112 prazo',
+                     'triagem ocorrência disciplinar instauração sindicância PAD',
+                     'indícios materialidade autoria infração funcional'],
+    admissibilidade:['juízo admissibilidade instauração PAD sindicância disciplinar',
+                     'materialidade autoria infração funcional servidor público',
+                     'prescrição punitiva prazo Lei 8112 processo disciplinar'],
+    julgamento:     ['dosimetria penalidade proporcionalidade PAD julgamento',
+                     'demissão suspensão advertência infração disciplinar servidor',
+                     'defesa prévia contraditório ampla defesa PAD julgamento'],
+  },
+  PAR: {
+    triagem:        ['Lei 12846 ato lesivo pessoa jurídica PAR anticorrupção',
+                     'responsabilidade objetiva empresa agente público corrupção',
+                     'triagem ocorrência PAR instauração admissibilidade'],
+    admissibilidade:['admissibilidade PAR Lei anticorrupção instauração',
+                     'nexo causal pessoa jurídica ato lesivo materialidade',
+                     'prescrição PAR Lei 12846 prazo cinco anos'],
+    julgamento:     ['dosimetria multa PAR faturamento bruto pessoa jurídica',
+                     'programa integridade atenuante responsabilização empresa',
+                     'publicação extraordinária penalidade Lei anticorrupção'],
+  },
+};
 
-let dadosFormulario  = {};
-let contextoFluxo    = { tipo: null, ocasiao: null };
-let ultimoFluxoDef   = null;
+/* ----------------------------------------------------------------
+   INÍCIO DO FLUXO — navegação da tela inicial para upload
+   ---------------------------------------------------------------- */
 
 function iniciarFluxo() {
   if (!selecaoTipo || !selecaoOcasiao) return;
   contextoFluxo = { tipo: selecaoTipo, ocasiao: selecaoOcasiao };
-  renderizarFormulario(selecaoTipo, selecaoOcasiao);
-  navegarPara('formulario');
+
+  const meta = TITULOS_FLUXO[selecaoTipo]?.[selecaoOcasiao];
+  if (!meta) return;
+
+  document.getElementById('upload-tipo-badge').textContent          = selecaoTipo;
+  document.getElementById('upload-titulo-principal').textContent     = meta.titulo;
+  document.getElementById('upload-subtitulo-principal').textContent  =
+    'Envie o relatório ou expediente — a análise será gerada automaticamente';
+
+  navegarPara('upload');
 }
 
-function renderizarFormulario(tipo, ocasiao) {
-  const def = DEFINICOES_FORMULARIO[tipo]?.[ocasiao];
-  if (!def) return;
-  ultimoFluxoDef = def;
-  dadosFormulario = {};
+/* ----------------------------------------------------------------
+   HANDLERS DE ARQUIVO
+   ---------------------------------------------------------------- */
 
-  document.getElementById('form-tipo-badge').textContent = tipo;
-  document.getElementById('form-titulo-principal').textContent = def.titulo;
-  document.getElementById('form-subtitulo-principal').textContent = def.subtitulo;
-
-  let html = '';
-  def.secoes.forEach(sec => {
-    html += `<div class="painel secao-form">
-      <div class="secao-form-titulo">${sec.titulo}</div>`;
-
-    sec.campos.forEach(campo => {
-      html += renderizarCampo(campo);
-    });
-
-    if (sec.extra === 'prescricao') {
-      html += `
-        <div class="prescricao-box" id="box-prescricao">
-          <div class="presc-label">Situação da Prescrição (calculada automaticamente)</div>
-          <div class="presc-valor" id="presc-resultado">— Preencha a data do fato e a pena estimada</div>
-        </div>`;
-    }
-    if (sec.extra === 'prescricao_par') {
-      html += `
-        <div class="prescricao-box" id="box-prescricao">
-          <div class="presc-label">Prescrição — PAR (Lei 12.846 art. 25: 5 anos)</div>
-          <div class="presc-valor" id="presc-resultado">— Preencha a data do ato lesivo</div>
-        </div>`;
-    }
-
-    html += `</div>`;
-  });
-
-  html += `
-    <div class="form-acoes">
-      <button class="btn btn-secundario" onclick="navegarPara('inicio')">Cancelar</button>
-      <button class="btn btn-primario" onclick="submeterFormulario()">
-        Gerar documento →
-      </button>
-    </div>`;
-
-  document.getElementById('form-corpo').innerHTML = html;
-
-  // Listeners para cálculo de prescrição
-  ['data_fato','data_conhecimento','prescricao_pena'].forEach(id => {
-    const el = document.getElementById('campo_' + id);
-    if (el) el.addEventListener('change', calcularPrescricao);
-  });
+function handleDropAnalise(event) {
+  event.preventDefault();
+  document.getElementById('zona-upload-analise').classList.remove('arrastando');
+  const arquivo = event.dataTransfer.files[0];
+  if (arquivo) processarDocumentoAnalise(arquivo);
 }
 
-function renderizarCampo(campo) {
-  const obrig = campo.obrigatorio ? '<span class="obrigatorio">*</span>' : '';
-  let input = '';
+async function processarDocumentoAnalise(arquivo) {
+  if (!arquivo) return;
 
-  if (campo.tipo === 'text' || campo.tipo === 'date' || campo.tipo === 'number') {
-    input = `<input type="${campo.tipo}" id="campo_${campo.id}" class="campo-input"
-      placeholder="${campo.placeholder || ''}"
-      oninput="dadosFormulario['${campo.id}']=this.value"
-      onchange="dadosFormulario['${campo.id}']=this.value">`;
-  } else if (campo.tipo === 'textarea') {
-    input = `<textarea id="campo_${campo.id}" class="campo-textarea"
-      placeholder="${campo.placeholder || ''}"
-      oninput="dadosFormulario['${campo.id}']=this.value"
-      rows="4"></textarea>`;
-  } else if (campo.tipo === 'select') {
-    input = `<select id="campo_${campo.id}" class="campo-select"
-      onchange="dadosFormulario['${campo.id}']=this.value">
-      <option value="">— Selecione —</option>
-      ${campo.opcoes.map(o => `<option value="${escapeHtml(o)}">${escapeHtml(o)}</option>`).join('')}
-    </select>`;
-  }
-
-  return `
-    <div class="campo-grupo">
-      <label class="campo-label" for="campo_${campo.id}">${campo.label}${obrig}</label>
-      ${input}
-    </div>`;
-}
-
-/* ================================================================
-   FASE 2 — CÁLCULO DE PRESCRIÇÃO
-   ================================================================ */
-
-const PRAZOS_PRESCRICAO_PAD = {
-  'Advertência (180 dias)':          180,
-  'Suspensão (2 anos)':              730,
-  'Demissão / Cassação (5 anos)':    1825,
-  'Ainda não definida':              null,
-};
-
-function calcularPrescricao() {
-  const el = document.getElementById('presc-resultado');
-  if (!el) return;
-
-  const dataFato  = dadosFormulario['data_fato'] || dadosFormulario['data_conhecimento'];
-  const pena      = dadosFormulario['prescricao_pena'];
-  const isPAR     = !pena; // PAR tem prazo fixo de 5 anos
-
-  if (!dataFato) { el.textContent = '— Preencha a data do fato'; el.className = 'presc-valor'; return; }
-
-  const dias  = isPAR ? 1825 : PRAZOS_PRESCRICAO_PAD[pena];
-  if (!dias)  { el.textContent = '— Selecione a pena estimada'; el.className = 'presc-valor'; return; }
-
-  const inicio    = new Date(dataFato);
-  const limite    = new Date(inicio.getTime() + dias * 86400000);
-  const hoje      = new Date();
-  const diasRestantes = Math.round((limite - hoje) / 86400000);
-  const opcao     = isPAR ? 'Lei 12.846 art. 25 (5 anos)' : pena;
-
-  if (diasRestantes < 0) {
-    el.textContent  = `⚠ PRESCRIÇÃO EXTINTA — prazo (${opcao}) encerrado em ${limite.toLocaleDateString('pt-BR')}`;
-    el.className    = 'presc-valor presc-extinta';
-  } else if (diasRestantes < 180) {
-    el.textContent  = `⚠ ATENÇÃO — faltam ${diasRestantes} dias · limite: ${limite.toLocaleDateString('pt-BR')} (${opcao})`;
-    el.className    = 'presc-valor presc-alerta';
-  } else {
-    el.textContent  = `✓ Dentro do prazo — faltam ${diasRestantes} dias · limite: ${limite.toLocaleDateString('pt-BR')} (${opcao})`;
-    el.className    = 'presc-valor presc-ok';
-  }
-}
-
-/* ================================================================
-   FASE 2 — SUBMISSÃO E GERAÇÃO DO DOCUMENTO
-   ================================================================ */
-
-async function submeterFormulario() {
-  // Coleta todos os campos que ainda não foram capturados pelo oninput
-  if (ultimoFluxoDef) {
-    ultimoFluxoDef.secoes.forEach(sec => {
-      sec.campos.forEach(c => {
-        const el = document.getElementById('campo_' + c.id);
-        if (el && !dadosFormulario[c.id]) dadosFormulario[c.id] = el.value;
-      });
-    });
-  }
-
-  // Valida obrigatórios
-  const ausentes = [];
-  if (ultimoFluxoDef) {
-    ultimoFluxoDef.secoes.forEach(sec => {
-      sec.campos.filter(c => c.obrigatorio).forEach(c => {
-        if (!dadosFormulario[c.id] || !dadosFormulario[c.id].trim()) ausentes.push(c.label);
-      });
-    });
-  }
-
-  if (ausentes.length > 0) {
-    alert('Preencha os campos obrigatórios:\n\n• ' + ausentes.join('\n• '));
+  const ext = arquivo.name.split('.').pop().toLowerCase();
+  if (ext !== 'pdf' && ext !== 'docx') {
+    alert('Formato não suportado. Envie um arquivo PDF ou DOCX.');
     return;
   }
 
-  // Busca RAG
-  const queries = ultimoFluxoDef.queries_rag(dadosFormulario);
-  const fundamentosRaw = [];
-  queries.forEach(q => {
-    const res = buscarRAG(q, 3);
-    res.forEach(r => {
-      // Evita duplicatas
-      if (!fundamentosRaw.find(f => f.id === r.id)) fundamentosRaw.push(r);
-    });
-  });
-  const fundamentos = fundamentosRaw.slice(0, 6);
+  if (indiceMemoria.length === 0) {
+    alert('A base de conhecimento está vazia.\nAdicione documentos na aba "Base de Conhecimento" antes de gerar análises.');
+    return;
+  }
 
-  gerarDocumento(dadosFormulario, fundamentos);
+  /* Modal de progresso */
+  const modal  = document.getElementById('modal-processamento');
+  const titulo = document.getElementById('proc-titulo');
+  const status = document.getElementById('proc-status');
+  const barra  = document.getElementById('proc-barra');
+
+  modal.classList.remove('oculto');
+  titulo.textContent = 'Extraindo texto do documento...';
+  status.textContent = arquivo.name;
+  barra.style.width  = '20%';
+
+  let extracao;
+  try {
+    extracao = await lerArquivo(arquivo);
+  } catch (err) {
+    modal.classList.add('oculto');
+    alert('Erro ao ler o arquivo: ' + err.message);
+    return;
+  }
+
+  if (!extracao.texto || extracao.texto.trim().length < 80) {
+    modal.classList.add('oculto');
+    alert('Não foi possível extrair texto suficiente do documento.\nVerifique se o PDF é digital (não escaneado) ou tente um DOCX.');
+    return;
+  }
+
+  barra.style.width  = '50%';
+  titulo.textContent = 'Buscando fundamentos jurídicos...';
+
+  const fundamentos = buscarFundamentos(extracao.texto);
+
+  barra.style.width  = '80%';
+  titulo.textContent = 'Montando documento...';
+
+  await gerarDocumento(arquivo.name, extracao, fundamentos);
+
+  barra.style.width = '100%';
+  modal.classList.add('oculto');
   navegarPara('resultado');
 }
 
-function voltarParaFormulario() {
-  navegarPara('formulario');
+/* ----------------------------------------------------------------
+   BUSCA DE FUNDAMENTOS (RAG sobre o conteúdo do documento)
+   ---------------------------------------------------------------- */
+
+function buscarFundamentos(textoDoc) {
+  const { tipo, ocasiao } = contextoFluxo;
+  const queriesBase = QUERIES_BASE[tipo]?.[ocasiao] || [];
+
+  /* Extrai top-20 termos do documento para enriquecer as queries */
+  const tokensDoc = tokenizar(textoDoc);
+  const freq = {};
+  tokensDoc.forEach(t => { freq[t] = (freq[t] || 0) + 1; });
+  const topTermos = Object.entries(freq)
+    .filter(([t]) => t.length > 3)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 20)
+    .map(([t]) => t);
+
+  /* Monta queries combinando base + termos do documento */
+  const queries = [
+    ...queriesBase,
+    topTermos.slice(0, 8).join(' '),
+    topTermos.slice(8, 16).join(' '),
+  ];
+
+  const vistos = new Set();
+  const resultado = [];
+
+  queries.forEach(q => {
+    if (!q.trim()) return;
+    const res = buscarRAG(q, 4);
+    res.forEach(r => {
+      if (!vistos.has(r.id)) {
+        vistos.add(r.id);
+        resultado.push(r);
+      }
+    });
+  });
+
+  /* Retorna os 7 mais relevantes (já vêm ordenados por score) */
+  return resultado.slice(0, 7);
 }
 
-/* ================================================================
-   FASE 2 — GERAÇÃO DO DOCUMENTO
-   ================================================================ */
+/* ----------------------------------------------------------------
+   GERAÇÃO DO DOCUMENTO
+   ---------------------------------------------------------------- */
 
-function gerarDocumento(dados, fundamentos) {
+async function gerarDocumento(nomeArquivo, extracao, fundamentos) {
   const { tipo, ocasiao } = contextoFluxo;
-  const config  = window._configSisTriag || {};
+  const meta    = TITULOS_FLUXO[tipo][ocasiao];
+  const config  = window._configSisTriag;
   const prefixo = config.prefixo || 'COGER-RFB';
   const ano     = new Date().getFullYear();
   const dataHoje = new Date().toLocaleDateString('pt-BR', { day:'2-digit', month:'long', year:'numeric' });
 
-  // Número do documento
-  const seqKey = {
-    triagem:        'seq_triagem',
-    admissibilidade:'seq_admissibilidade',
-    julgamento:     tipo === 'PAD' ? 'seq_decisao_pad' : 'seq_decisao_par',
-  }[ocasiao] || 'seq_triagem';
+  /* Número do documento */
+  const seq    = parseInt(config[meta.seqKey] || 1);
+  const sufixo = meta.tipoDoc.split(' ').pop();
+  const numDoc = `${prefixo ? prefixo + '-' : ''}${sufixo}-${tipo}-${String(seq).padStart(3,'0')}/${ano}`;
+  await incrementarSequencia(meta.seqKey);
 
-  const seq = config[seqKey] || 1;
-  const tipoDoc = {
-    triagem:        'DESPACHO DE TRIAGEM',
-    admissibilidade:'DESPACHO DE ADMISSIBILIDADE',
-    julgamento:     'DECISÃO',
-  }[ocasiao] || 'DESPACHO';
+  /* Subtítulo da tela resultado */
+  document.getElementById('resultado-subtitulo').textContent = `${meta.tipoDoc} ${tipo} — ${numDoc}`;
 
-  const numDoc = `${prefixo ? prefixo + '-' : ''}${tipoDoc.split(' ').pop()}-${tipo}-${String(seq).padStart(3,'0')}/${ano}`;
-
-  // Incrementa sequência para próximo documento
-  incrementarSequencia(seqKey);
-
-  // Subtítulo da tela de resultado
-  document.getElementById('resultado-subtitulo').textContent = `${tipoDoc} ${tipo} — ${numDoc}`;
-
-  // Painel RAG
+  /* Painel RAG */
   const painelRag = document.getElementById('painel-fundamentacao-rag');
   const listaRag  = document.getElementById('lista-fundamentacao-rag');
+  const nomesCat  = { normas:'Norma', pareceres:'Parecer', decisoes:'Decisão',
+                      'notas-tecnicas':'Nota Técnica', orientacoes:'Orientação' };
 
   if (fundamentos.length === 0) {
     painelRag.style.display = 'none';
   } else {
     painelRag.style.display = 'block';
-    const nomesCat = { 'normas':'Norma','pareceres':'Parecer','decisoes':'Decisão',
-                       'notas-tecnicas':'Nota Técnica','orientacoes':'Orientação' };
     listaRag.innerHTML = fundamentos.map(f => `
       <div class="rag-contexto-item">
         <div class="rag-contexto-fonte">${nomesCat[f.categoria]||f.categoria} · ${escapeHtml(f.docNome)} · Chunk ${f.posicao+1}</div>
-        <div class="rag-contexto-texto">${escapeHtml(f.texto.substring(0,300))}${f.texto.length>300?'…':''}</div>
+        <div class="rag-contexto-texto">${escapeHtml(f.texto.substring(0, 320))}${f.texto.length>320?'…':''}</div>
       </div>`).join('');
   }
 
-  // Corpo do documento
-  const corpoDoc = gerarCorpoDocumento(tipo, ocasiao, dados, fundamentos, numDoc, dataHoje, prefixo);
-  document.getElementById('doc-gerado-container').innerHTML = `<div class="doc-gerado" id="doc-imprimivel">${corpoDoc}</div>`;
-}
+  /* Extrai trechos estruturados do documento */
+  const texto    = extracao.texto;
+  const paragrafos = texto.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 40);
+  const resumo   = paragrafos.slice(0, 4).join('\n\n');
+  const meio     = paragrafos.slice(4, 10).join('\n\n');
+  const final    = paragrafos.slice(-3).join('\n\n');
 
-function gerarCorpoDocumento(tipo, ocasiao, d, fundamentos, numDoc, dataHoje, prefixo) {
-  const nomesCat = { 'normas':'Norma','pareceres':'Parecer','decisoes':'Decisão',
-                     'notas-tecnicas':'Nota Técnica','orientacoes':'Orientação' };
-
-  const secFundamentos = fundamentos.length === 0 ? '' : `
+  /* Seção de fundamentos normativos */
+  const secFund = fundamentos.length === 0 ? '' : `
     <h2>DOS FUNDAMENTOS NORMATIVOS</h2>
+    <p>A análise que se segue tem por base os seguintes excertos da base de conhecimento correcional:</p>
     ${fundamentos.map(f => `
       <div class="fundamentacao-item">
         <div class="fundamentacao-fonte">${nomesCat[f.categoria]||f.categoria} — ${escapeHtml(f.docNome)}</div>
-        <p>${escapeHtml(f.texto.substring(0, 400))}${f.texto.length > 400 ? '…' : ''}</p>
+        <p>${escapeHtml(f.texto.substring(0, 500))}${f.texto.length > 500 ? '…' : ''}</p>
       </div>`).join('')}`;
 
+  /* Corpo por fluxo */
+  const corpo = montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas: extracao.paginas });
+
+  document.getElementById('doc-gerado-container').innerHTML =
+    `<div class="doc-gerado" id="doc-imprimivel">${corpo}</div>`;
+}
+
+function montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas }) {
+  const cabecalho = `
+    <h1>Receita Federal do Brasil — Corregedoria</h1>
+    <div class="doc-numero">${numDoc}</div>
+    <div class="doc-referencia">Ref.: ${escapeHtml(nomeArquivo)}${paginas ? ' (' + paginas + ' págs.)' : ''}</div>`;
+
+  const rodape = `
+    <div class="doc-local-data">Brasília, ${dataHoje}</div>
+    <div class="doc-assinatura">
+      <p>____________________________________</p>
+      <p>${escapeHtml(prefixo || 'Corregedoria RFB')}</p>
+    </div>`;
+
+  const textoRelatorio = resumo
+    .split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('');
+
+  const textoMeio = meio
+    ? meio.split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('') : '';
+
+  const textoFinal = final
+    ? final.split('\n\n').map(p => `<p>${escapeHtml(p)}</p>`).join('') : '';
+
+  /* ---- PAD ---- */
   if (tipo === 'PAD' && ocasiao === 'triagem') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">Ref.: Expediente nº ${escapeHtml(d.num_expediente||'—')}</div>
-
-      <h2>DOS FATOS</h2>
-      <p>Trata-se de expediente de origem <strong>${escapeHtml(d.origem||'—')}</strong>,
-      recebido em ${escapeHtml(d.data_conhecimento||'—')}, que narra a seguinte ocorrência:</p>
-      <p>${escapeHtml(d.descricao||'—')}</p>
-      ${d.provas ? `<p><strong>Indícios/provas existentes:</strong> ${escapeHtml(d.provas)}</p>` : ''}
-
-      <h2>DO SERVIDOR ENVOLVIDO</h2>
-      <p><strong>Nome:</strong> ${escapeHtml(d.servidor_nome||'—')}<br>
-      <strong>Matrícula:</strong> ${escapeHtml(d.servidor_matricula||'—')}<br>
-      <strong>Cargo:</strong> ${escapeHtml(d.servidor_cargo||'—')}<br>
-      <strong>Lotação:</strong> ${escapeHtml(d.servidor_lotacao||'—')}</p>
-
+    return `${cabecalho}
+      <h2>DO RELATÓRIO</h2>
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
       <h2>DA ANÁLISE PRELIMINAR</h2>
-      <p><strong>Natureza da irregularidade:</strong> ${escapeHtml(d.natureza||'—')}</p>
-      <p><strong>Data do fato:</strong> ${escapeHtml(d.data_fato||'—')}</p>
-      ${document.getElementById('presc-resultado') ?
-        `<p><strong>Situação da prescrição:</strong> ${document.getElementById('presc-resultado').textContent}</p>` : ''}
-
-      ${secFundamentos}
-
+      <p>Da leitura do expediente em referência, extraem-se os elementos iniciais necessários ao juízo de triagem,
+      tendo em vista os requisitos de autoria, materialidade e ausência de prescrição.</p>
+      ${textoFinal}
       <h2>DA CONCLUSÃO</h2>
-      <p>${escapeHtml(d.fundamento_conclusao||'—')}</p>
-      <p>Ante o exposto, propõe-se: <strong>${escapeHtml(d.conclusao||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Ante os elementos colhidos e os fundamentos normativos aplicáveis, submete-se o presente expediente
+      à autoridade competente para deliberação quanto ao encaminhamento cabível.</p>
+      ${rodape}`;
   }
 
   if (tipo === 'PAD' && ocasiao === 'admissibilidade') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">Ref.: ${escapeHtml(d.num_expediente||'—')}</div>
-
+    return `${cabecalho}
       <h2>DO RELATÓRIO</h2>
-      <p>Cuida-se de expediente relativo ao servidor <strong>${escapeHtml(d.servidor_nome||'—')}</strong>,
-      ${escapeHtml(d.servidor_cargo||'')}, submetido à sindicância instaurada em ${escapeHtml(d.data_instauracao||'—')}.</p>
-      <p><strong>Infração apurada:</strong> ${escapeHtml(d.natureza||'—')}</p>
-      <p><strong>Síntese da apuração:</strong> ${escapeHtml(d.resumo_apuracao||'—')}</p>
-
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
       <h2>DOS ELEMENTOS DE ADMISSIBILIDADE</h2>
-      <p><strong>Materialidade:</strong> ${escapeHtml(d.materialidade||'—')}</p>
-      <p><strong>Autoria:</strong> ${escapeHtml(d.autoria||'—')}</p>
-      ${document.getElementById('presc-resultado') ?
-        `<p><strong>Situação da prescrição:</strong> ${document.getElementById('presc-resultado').textContent}</p>` : ''}
-
-      ${secFundamentos}
-
+      <p>Da análise dos autos, verificam-se os pressupostos de admissibilidade relativos à
+      materialidade da infração e aos indícios de autoria, conforme elementos a seguir expostos.</p>
+      ${textoFinal}
       <h2>DA DECISÃO</h2>
-      <p>${escapeHtml(d.fundamento_decisao||'—')}</p>
-      <p>Diante do exposto, decide-se por: <strong>${escapeHtml(d.decisao||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Diante dos elementos apurados e dos fundamentos normativos aplicáveis, submete-se a presente
+      decisão de admissibilidade à consideração da autoridade instauradora.</p>
+      ${rodape}`;
   }
 
   if (tipo === 'PAD' && ocasiao === 'julgamento') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">PAD nº ${escapeHtml(d.num_processo||'—')}</div>
-
+    return `${cabecalho}
       <h2>DO RELATÓRIO</h2>
-      <p>Trata-se de PAD instaurado em ${escapeHtml(d.data_instauracao||'—')} em face do servidor
-      <strong>${escapeHtml(d.servidor_nome||'—')}</strong>, ${escapeHtml(d.servidor_cargo||'')},
-      pela prática de <strong>${escapeHtml(d.infracao_imputada||'—')}</strong>,
-      tipificada em ${escapeHtml(d.tipificacao_legal||'—')}.</p>
-      <p><strong>Síntese da instrução:</strong> ${escapeHtml(d.resumo_instrucao||'—')}</p>
-      <p><strong>Pena proposta pela comissão:</strong> ${escapeHtml(d.pena_comissao||'—')}</p>
-
-      <h2>DA DOSIMETRIA</h2>
-      <p><strong>Antecedentes disciplinares:</strong> ${escapeHtml(d.antecedentes||'—')}</p>
-      <p><strong>Dano ao erário:</strong> ${escapeHtml(d.dano_erario||'—')}</p>
-      ${d.atenuantes ? `<p><strong>Circunstâncias:</strong> ${escapeHtml(d.atenuantes)}</p>` : ''}
-
-      ${secFundamentos}
-
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
+      <h2>DO MÉRITO E DA DOSIMETRIA</h2>
+      <p>Analisados os autos do processo disciplinar, passa-se ao exame do mérito das imputações,
+      com observância dos princípios da proporcionalidade e da razoabilidade na dosimetria da penalidade.</p>
+      ${textoFinal}
       <h2>DA DECISÃO</h2>
-      <p>${escapeHtml(d.fundamento_julgamento||'—')}</p>
-      <p>Ante o exposto, decide-se por <strong>${escapeHtml(d.decisao_final||'—')}</strong>,
-      com aplicação da penalidade de <strong>${escapeHtml(d.pena_aplicada||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Pelo exposto, à luz das provas produzidas nos autos e dos fundamentos normativos e jurisprudenciais
+      aplicáveis, decide-se conforme deliberação da autoridade julgadora.</p>
+      ${rodape}`;
   }
 
+  /* ---- PAR ---- */
   if (tipo === 'PAR' && ocasiao === 'triagem') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">Ref.: Expediente nº ${escapeHtml(d.num_expediente||'—')}</div>
-
-      <h2>DOS FATOS</h2>
-      <p>Trata-se de expediente de origem <strong>${escapeHtml(d.origem||'—')}</strong>,
-      datado de ${escapeHtml(d.data_conhecimento||'—')}, que aponta a prática de ato lesivo
-      previsto na Lei nº 12.846/2013 pela pessoa jurídica a seguir identificada.</p>
-      <p>${escapeHtml(d.descricao||'—')}</p>
-
-      <h2>DA PESSOA JURÍDICA ENVOLVIDA</h2>
-      <p><strong>Razão social:</strong> ${escapeHtml(d.pj_razao||'—')}<br>
-      <strong>CNPJ:</strong> ${escapeHtml(d.pj_cnpj||'—')}<br>
-      <strong>Porte:</strong> ${escapeHtml(d.pj_porte||'—')}<br>
-      <strong>Setor:</strong> ${escapeHtml(d.pj_setor||'—')}</p>
-
-      <h2>DO ATO LESIVO</h2>
-      <p><strong>Tipo:</strong> ${escapeHtml(d.ato_lesivo||'—')}</p>
-      <p><strong>Data do fato:</strong> ${escapeHtml(d.data_fato||'—')}</p>
-      ${d.lesao_erario ? `<p><strong>Lesão ao erário:</strong> ${escapeHtml(d.lesao_erario)}</p>` : ''}
-
-      ${secFundamentos}
-
+    return `${cabecalho}
+      <h2>DO RELATÓRIO</h2>
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
+      <h2>DA ANÁLISE PRELIMINAR — LEI Nº 12.846/2013</h2>
+      <p>Do exame do expediente, verificam-se os elementos iniciais para o juízo de triagem acerca
+      da prática de ato lesivo à Administração Pública, nos termos do art. 5º da Lei nº 12.846/2013.</p>
+      ${textoFinal}
       <h2>DA CONCLUSÃO</h2>
-      <p>${escapeHtml(d.fundamento_conclusao||'—')}</p>
-      <p>Propõe-se: <strong>${escapeHtml(d.conclusao||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Ante os elementos colhidos, submete-se o expediente à autoridade competente para deliberação
+      quanto à instauração ou arquivamento do processo de responsabilização.</p>
+      ${rodape}`;
   }
 
   if (tipo === 'PAR' && ocasiao === 'admissibilidade') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">Ref.: ${escapeHtml(d.num_expediente||'—')}</div>
-
+    return `${cabecalho}
       <h2>DO RELATÓRIO</h2>
-      <p>Cuida-se de expediente referente à pessoa jurídica <strong>${escapeHtml(d.pj_razao||'—')}</strong>
-      (CNPJ ${escapeHtml(d.pj_cnpj||'—')}), investigada pela prática de
-      <strong>${escapeHtml(d.ato_lesivo||'—')}</strong>.</p>
-      <p><strong>Síntese da apuração:</strong> ${escapeHtml(d.resumo_apuracao||'—')}</p>
-      <p><strong>Materialidade:</strong> ${escapeHtml(d.materialidade||'—')}</p>
-      <p><strong>Nexo com a PJ:</strong> ${escapeHtml(d.nexo||'—')}</p>
-      ${document.getElementById('presc-resultado') ?
-        `<p><strong>Prescrição:</strong> ${document.getElementById('presc-resultado').textContent}</p>` : ''}
-
-      ${secFundamentos}
-
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
+      <h2>DOS ELEMENTOS DE ADMISSIBILIDADE — PAR</h2>
+      <p>Da análise dos elementos apurados, examina-se o preenchimento dos requisitos de admissibilidade
+      para a instauração do Processo Administrativo de Responsabilização, nos termos da Lei nº 12.846/2013
+      e do Decreto nº 8.420/2015.</p>
+      ${textoFinal}
       <h2>DA DECISÃO</h2>
-      <p>${escapeHtml(d.fundamento_decisao||'—')}</p>
-      <p>Decide-se por: <strong>${escapeHtml(d.decisao||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Com base nos elementos analisados e nos fundamentos normativos aplicáveis, delibera-se quanto
+      à instauração ou arquivamento do PAR.</p>
+      ${rodape}`;
   }
 
   if (tipo === 'PAR' && ocasiao === 'julgamento') {
-    return `
-      <h1>Receita Federal do Brasil — Corregedoria</h1>
-      <div class="doc-numero">${numDoc}</div>
-      <div class="doc-referencia">PAR nº ${escapeHtml(d.num_processo||'—')}</div>
-
+    return `${cabecalho}
       <h2>DO RELATÓRIO</h2>
-      <p>Trata-se de PAR instaurado em face da pessoa jurídica
-      <strong>${escapeHtml(d.pj_razao||'—')}</strong> (CNPJ ${escapeHtml(d.pj_cnpj||'—')},
-      porte: ${escapeHtml(d.pj_porte||'—')}), pela prática de
-      <strong>${escapeHtml(d.ato_lesivo||'—')}</strong>.</p>
-      <p><strong>Síntese da instrução:</strong> ${escapeHtml(d.resumo_instrucao||'—')}</p>
-      ${d.lesao_erario ? `<p><strong>Lesão ao erário apurada:</strong> ${escapeHtml(d.lesao_erario)}</p>` : ''}
-
-      <h2>DA DOSIMETRIA</h2>
-      <p><strong>Programa de integridade:</strong> ${escapeHtml(d.programa_integridade||'—')}</p>
-      <p><strong>Cooperação com a investigação:</strong> ${escapeHtml(d.cooperacao||'—')}</p>
-      <p><strong>Reincidência:</strong> ${escapeHtml(d.reincidencia||'—')}</p>
-      ${d.atenuantes ? `<p><strong>Outras circunstâncias:</strong> ${escapeHtml(d.atenuantes)}</p>` : ''}
-      ${d.multa_percentual ? `<p><strong>Multa calculada:</strong> ${escapeHtml(d.multa_percentual)}</p>` : ''}
-
-      ${secFundamentos}
-
+      ${textoRelatorio}
+      ${textoMeio}
+      ${secFund}
+      <h2>DO MÉRITO E DA DOSIMETRIA DA MULTA</h2>
+      <p>Comprovada a prática do ato lesivo, procede-se à dosimetria da penalidade de multa,
+      com observância dos critérios previstos no art. 7º da Lei nº 12.846/2013 e nos arts. 17 a 21
+      do Decreto nº 8.420/2015, considerando o porte da pessoa jurídica, o programa de integridade
+      e as demais circunstâncias relevantes.</p>
+      ${textoFinal}
       <h2>DA DECISÃO</h2>
-      <p>${escapeHtml(d.fundamento_julgamento||'—')}</p>
-      <p>Decide-se por: <strong>${escapeHtml(d.decisao_final||'—')}</strong>.</p>
-
-      <div class="doc-local-data">Brasília, ${dataHoje}</div>
-      <div class="doc-assinatura">
-        <p>____________________________________</p>
-        <p>${prefixo || 'Corregedoria RFB'}</p>
-      </div>`;
+      <p>Pelo exposto, delibera-se sobre a responsabilização da pessoa jurídica e a aplicação das
+      sanções cabíveis, nos termos da legislação aplicável.</p>
+      ${rodape}`;
   }
 
-  return '<p>Modelo de documento não encontrado para este fluxo.</p>';
+  return '<p>Fluxo não reconhecido.</p>';
 }
 
-/* ================================================================
-   FASE 2 — EXPORTAÇÃO
-   ================================================================ */
+/* ----------------------------------------------------------------
+   EXPORTAÇÃO
+   ---------------------------------------------------------------- */
 
 function imprimirDocumento() {
   const conteudo = document.getElementById('doc-imprimivel');
@@ -3339,15 +2775,13 @@ function imprimirDocumento() {
     <style>
       body { font-family:'Times New Roman',serif; font-size:13px; line-height:1.7;
              color:#1a1a1a; padding:48px 56px; max-width:800px; margin:0 auto; }
-      h1 { font-size:14px; text-align:center; text-transform:uppercase; letter-spacing:.08em; }
-      h2 { font-size:13px; text-transform:uppercase; border-bottom:1px solid #ccc;
-           padding-bottom:4px; margin:20px 0 8px; }
+      h1 { font-size:14px; text-align:center; text-transform:uppercase; letter-spacing:.08em; margin-bottom:4px; }
+      h2 { font-size:13px; text-transform:uppercase; border-bottom:1px solid #ccc; padding-bottom:4px; margin:20px 0 8px; }
       p  { text-align:justify; margin-bottom:10px; }
-      .doc-numero { text-align:center; font-weight:700; margin-bottom:24px; }
+      .doc-numero     { text-align:center; font-weight:700; margin-bottom:24px; }
       .doc-referencia { text-align:center; color:#555; font-size:12px; margin-bottom:24px; }
-      .fundamentacao-item { background:#f8f9fa; border-left:3px solid #2d6ea8;
-                            padding:10px 14px; margin-bottom:10px; font-size:12px; }
-      .fundamentacao-fonte { font-size:11px; color:#666; font-style:italic; margin-bottom:4px; }
+      .fundamentacao-item { background:#f8f9fa; border-left:3px solid #2d6ea8; padding:10px 14px; margin-bottom:10px; font-size:12px; }
+      .fundamentacao-fonte{ font-size:11px; color:#666; font-style:italic; margin-bottom:4px; }
       .doc-local-data { text-align:right; margin-bottom:32px; font-size:12px; }
       .doc-assinatura { text-align:center; margin-top:40px; }
       @media print { body { padding:20px; } }
@@ -3375,11 +2809,9 @@ function copiarTextoDocumento() {
   });
 }
 
-/* ================================================================
-   FASE 2 — GESTÃO DE SEQUÊNCIA DE NUMERAÇÃO
-   ================================================================ */
-
-window._configSisTriag = {};
+/* ----------------------------------------------------------------
+   SEQUÊNCIA DE NUMERAÇÃO
+   ---------------------------------------------------------------- */
 
 async function carregarConfigEmMemoria() {
   const chaves = ['prefixo','seq_triagem','seq_admissibilidade','seq_decisao_pad','seq_decisao_par'];
@@ -3389,19 +2821,16 @@ async function carregarConfigEmMemoria() {
 }
 
 async function incrementarSequencia(chave) {
-  const atual = window._configSisTriag[chave] || 1;
-  const prox  = parseInt(atual) + 1;
+  const atual = parseInt(window._configSisTriag[chave] || 1);
+  const prox  = atual + 1;
   window._configSisTriag[chave] = prox;
   await setConfig(chave, prox);
-  // Atualiza o campo na tela de config se estiver visível
   const mapa = {
-    'seq_triagem':        'cfg-seq-triagem',
-    'seq_admissibilidade':'cfg-seq-admiss',
-    'seq_decisao_pad':    'cfg-seq-decisao-pad',
-    'seq_decisao_par':    'cfg-seq-decisao-par',
+    seq_triagem:'cfg-seq-triagem', seq_admissibilidade:'cfg-seq-admiss',
+    seq_decisao_pad:'cfg-seq-decisao-pad', seq_decisao_par:'cfg-seq-decisao-par',
   };
-  const elId = mapa[chave];
-  if (elId) { const el = document.getElementById(elId); if (el) el.value = prox; }
+  const el = document.getElementById(mapa[chave]);
+  if (el) el.value = prox;
 }
 
 /* ================================================================
