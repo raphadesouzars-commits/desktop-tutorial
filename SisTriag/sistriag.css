@@ -1050,3 +1050,85 @@ html, body {
 .resumo-cat { color: var(--branco-suave); font-weight: 500; }
 .resumo-nums { color: var(--cinza-texto); display: flex; gap: 16px; }
 .resumo-nums span { white-space: nowrap; }
+
+/* ============================================================
+   FASE 3 — WEBLLM / MODELO LOCAL
+   ============================================================ */
+
+.modelo-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+
+.modelo-status-bar .msb-nome {
+  color: var(--branco-suave);
+  font-weight: 500;
+  flex: 1;
+}
+
+.modelo-status-bar .msb-info {
+  color: var(--cinza-texto);
+  font-size: 11px;
+}
+
+.modelo-download-barra {
+  margin-top: 6px;
+}
+
+.modelo-card {
+  background: var(--cinza-escuro);
+  border: 1px solid var(--cinza-borda);
+  border-radius: var(--raio);
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: var(--trans);
+}
+
+.modelo-card:hover       { border-color: var(--azul-claro); }
+.modelo-card.selecionado { border-color: var(--azul-acento); background: rgba(59,143,212,0.07); }
+.modelo-card.carregado   { border-color: var(--verde-claro); }
+
+.modelo-card .mc-nome  { font-size: 13px; font-weight: 600; color: var(--branco); }
+.modelo-card .mc-desc  { font-size: 11px; color: var(--cinza-texto); margin-top: 3px; }
+.modelo-card .mc-size  { font-size: 11px; color: var(--cinza-texto); white-space: nowrap; }
+
+/* Área de texto gerado pelo LLM — exibida no resultado antes do template */
+.llm-gerando {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: rgba(59,143,212,0.06);
+  border: 1px solid rgba(59,143,212,0.2);
+  border-radius: var(--raio);
+  font-size: 13px;
+  color: var(--branco-suave);
+  margin-bottom: 16px;
+}
+
+/* Indicador de modo no rodapé */
+.modo-badge {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-left: 6px;
+}
+
+.modo-badge.rag    { background: rgba(59,143,212,0.2);  color: var(--azul-acento); }
+.modo-badge.llm    { background: rgba(46,139,87,0.2);   color: var(--verde-claro); }
+.modo-badge.fase3  { background: rgba(200,150,26,0.15); color: var(--amarelo); }

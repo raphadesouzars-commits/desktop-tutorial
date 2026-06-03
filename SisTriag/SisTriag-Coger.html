@@ -342,17 +342,52 @@
       </div>
 
       <div class="painel">
-        <div class="painel-titulo">Modelo de IA (WebLLM)</div>
-        <div class="alerta alerta-info">
-          <span>ℹ</span>
-          <span>A integração do WebLLM será implementada na Fase 2 do desenvolvimento. Esta seção exibirá o modelo carregado e permitirá a troca entre modelos disponíveis.</span>
+        <div class="painel-titulo">Modelo de IA Local (Fase 3)</div>
+
+        <div class="modelo-status-bar" id="modelo-status-bar">
+          <div class="status-dot cinza" id="dot-llm"></div>
+          <div class="msb-nome" id="llm-status-texto">Nenhum modelo carregado — modo RAG ativo</div>
+          <span class="modo-badge rag">RAG</span>
         </div>
-        <div class="config-linha">
-          <div class="config-linha-info">
-            <div class="config-nome">Modelo configurado</div>
-            <div class="config-desc">Llama-3.1-8B-Instruct-q4f32_1-MLC (padrão)</div>
+
+        <div class="alerta alerta-aviso" style="margin-bottom:16px">
+          <span>⚠</span>
+          <span>O modelo roda 100% localmente. O download (feito uma única vez pelo navegador) pode levar vários minutos dependendo da conexão.</span>
+        </div>
+
+        <div id="lista-modelos-llm">
+          <!-- Preenchido dinamicamente por renderizarCatalogoModelos() na Fase 3 -->
+          <div class="modelo-card" id="mc-llama">
+            <div style="flex:1">
+              <div class="mc-nome">Llama 3.1 8B Instruct (padrão recomendado)</div>
+              <div class="mc-desc">Melhor qualidade · Contexto 8k tokens</div>
+            </div>
+            <div class="mc-size">~4,7 GB</div>
+            <span class="badge badge-cinza">Fase 3</span>
           </div>
-          <span class="badge badge-cinza">Fase 2</span>
+          <div class="modelo-card" id="mc-phi">
+            <div style="flex:1">
+              <div class="mc-nome">Phi-3.5 Mini Instruct</div>
+              <div class="mc-desc">Leve · Contexto 128k tokens</div>
+            </div>
+            <div class="mc-size">~2,2 GB</div>
+            <span class="badge badge-cinza">Fase 3</span>
+          </div>
+          <div class="modelo-card" id="mc-gemma">
+            <div style="flex:1">
+              <div class="mc-nome">Gemma 2 2B</div>
+              <div class="mc-desc">Mais rápido · Contexto 8k tokens</div>
+            </div>
+            <div class="mc-size">~1,5 GB</div>
+            <span class="badge badge-cinza">Fase 3</span>
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <button class="btn btn-primario" disabled id="btn-carregar-modelo"
+                  onclick="inicializarWebLLM()">
+            Carregar modelo selecionado — disponível na Fase 3
+          </button>
         </div>
       </div>
 

@@ -997,9 +997,10 @@ async function processarDocumentoAnalise(arquivo) {
   const fundamentos = buscarFundamentos(extracao.texto);
 
   barra.style.width  = '80%';
-  titulo.textContent = 'Montando documento...';
+  titulo.textContent = LLM.disponivel() ? 'Gerando com modelo LLM...' : 'Montando documento...';
 
-  await gerarDocumento(arquivo.name, extracao, fundamentos);
+  const textoLLM = await gerarTextoLLM(extracao.texto, fundamentos, contextoFluxo.tipo, contextoFluxo.ocasiao);
+  await gerarDocumento(arquivo.name, extracao, fundamentos, textoLLM);
 
   barra.style.width = '100%';
   modal.classList.add('oculto');
@@ -1053,7 +1054,7 @@ function buscarFundamentos(textoDoc) {
    GERAÇÃO DO DOCUMENTO
    ---------------------------------------------------------------- */
 
-async function gerarDocumento(nomeArquivo, extracao, fundamentos) {
+async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = null) {
   const { tipo, ocasiao } = contextoFluxo;
   const meta    = TITULOS_FLUXO[tipo][ocasiao];
   const config  = window._configSisTriag;
@@ -1107,8 +1108,13 @@ async function gerarDocumento(nomeArquivo, extracao, fundamentos) {
   /* Corpo por fluxo */
   const corpo = montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas: extracao.paginas });
 
+  /* Fase 3: se o LLM gerou texto, usa-o como corpo principal */
+  const corpoFinal = textoLLM
+    ? montarCorpoLLM(textoLLM, numDoc, dataHoje, prefixo, nomeArquivo, extracao.paginas, secFund)
+    : corpo;
+
   document.getElementById('doc-gerado-container').innerHTML =
-    `<div class="doc-gerado" id="doc-imprimivel">${corpo}</div>`;
+    `<div class="doc-gerado" id="doc-imprimivel">${corpoFinal}</div>`;
 }
 
 function montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas }) {
@@ -1235,6 +1241,22 @@ function montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, 
   }
 
   return '<p>Fluxo não reconhecido.</p>';
+}
+
+
+/* Monta o documento quando o LLM gerou o corpo — Fase 3 */
+function montarCorpoLLM(textoGerado, numDoc, dataHoje, prefixo, nomeArquivo, paginas, secFund) {
+  return `
+    <h1>Receita Federal do Brasil — Corregedoria</h1>
+    <div class="doc-numero">${numDoc}</div>
+    <div class="doc-referencia">Ref.: ${escapeHtml(nomeArquivo)}${paginas ? ' (' + paginas + ' págs.)' : ''}</div>
+    ${textoGerado.split('\n').map(p => p.trim() ? `<p>${escapeHtml(p)}</p>` : '').join('')}
+    ${secFund}
+    <div class="doc-local-data">Brasília, ${dataHoje}</div>
+    <div class="doc-assinatura">
+      <p>____________________________________</p>
+      <p>${escapeHtml(prefixo || 'Corregedoria RFB')}</p>
+    </div>`;
 }
 
 /* ----------------------------------------------------------------
@@ -1523,8 +1545,7 @@ async function inicializar() {
     atualizarHora();
     verificarCompatibilidadePasta();
     // Atualiza status do motor de análise no rodapé
-    const dotModelo = document.getElementById('dot-modelo');
-    if (dotModelo) { dotModelo.className = 'status-dot verde'; }
+    atualizarModoRodape();
 
     // Verifica se base está vazia para mostrar orientação
     const docs = await txGetAll('documentos');
@@ -1544,3 +1565,116 @@ async function inicializar() {
 }
 
 inicializar();
+
+/* ================================================================
+   18. FASE 3 — STUB WEBLLM
+   ================================================================
+   Este módulo será preenchido na Fase 3.
+   A interface abaixo já está integrada ao fluxo de análise:
+   processarDocumentoAnalise() chama gerarTextoLLM() antes de
+   montar o documento. Enquanto o modelo não estiver carregado,
+   a função retorna null e o sistema usa o template da Fase 2.
+   ================================================================ */
+
+const LLM = {
+  modelo:    null,   // instância WebLLM quando carregada
+  nomeAtivo: null,   // string com o nome do modelo ativo
+  carregando: false,
+
+  /* Modelos disponíveis — preencher na Fase 3 */
+  catalogo: [
+    { id: 'Llama-3.1-8B-Instruct-q4f32_1-MLC', nome: 'Llama 3.1 8B (padrão)',    tamanho: '~4,7 GB', contexto: '8k tokens' },
+    { id: 'Phi-3.5-mini-instruct-q4f16_1-MLC', nome: 'Phi-3.5 Mini (mais leve)', tamanho: '~2,2 GB', contexto: '128k tokens' },
+    { id: 'gemma-2-2b-it-q4f16_1-MLC',         nome: 'Gemma 2 2B (mais rápido)', tamanho: '~1,5 GB', contexto: '8k tokens' },
+  ],
+
+  /* Retorna true se há um modelo carregado e pronto */
+  disponivel() { return this.modelo !== null; },
+
+  /* Fase 3: inicializar WebLLM e carregar modelo
+  async carregar(modelId, onProgresso) {
+    this.carregando = true;
+    const { CreateMLCEngine } = await import('https://esm.run/@mlc-ai/web-llm');
+    this.modelo = await CreateMLCEngine(modelId, {
+      initProgressCallback: (p) => onProgresso && onProgresso(p)
+    });
+    this.nomeAtivo = modelId;
+    this.carregando = false;
+  },
+  */
+
+  /* Fase 3: gerar texto dado um prompt
+  async gerar(systemPrompt, userPrompt) {
+    if (!this.modelo) return null;
+    const resp = await this.modelo.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userPrompt  },
+      ],
+      temperature: 0.3,
+      max_tokens:  2048,
+    });
+    return resp.choices[0].message.content;
+  },
+  */
+};
+
+/* Ponto de integração — chamado por processarDocumentoAnalise()
+   Fase 2: retorna null → usa montarCorpo() (template fixo)
+   Fase 3: retorna string com o texto gerado pelo LLM            */
+async function gerarTextoLLM(textoDoc, fundamentos, tipo, ocasiao) {
+  if (!LLM.disponivel()) return null;
+
+  /* Fase 3 — descomentar:
+  const sistemaPrompt = construirSystemPrompt(tipo, ocasiao);
+  const userPrompt    = construirUserPrompt(textoDoc, fundamentos);
+  return await LLM.gerar(sistemaPrompt, userPrompt);
+  */
+
+  return null;
+}
+
+/* Prompts — prontos para preencher na Fase 3 */
+function construirSystemPrompt(tipo, ocasiao) {
+  const base = `Você é um assistente jurídico especializado em direito disciplinar e anticorrupção
+da Corregedoria da Receita Federal do Brasil. Redige documentos formais em português jurídico,
+de forma objetiva, clara e fundamentada. Nunca inventa fatos — usa apenas o que está no
+expediente fornecido e nos excertos da base de conhecimento.`;
+
+  const contextos = {
+    'PAD-triagem':         'Você vai redigir um Despacho de Triagem de PAD.',
+    'PAD-admissibilidade': 'Você vai redigir um Despacho de Juízo de Admissibilidade de PAD.',
+    'PAD-julgamento':      'Você vai redigir uma Decisão de Julgamento de PAD.',
+    'PAR-triagem':         'Você vai redigir um Despacho de Triagem de PAR (Lei 12.846/2013).',
+    'PAR-admissibilidade': 'Você vai redigir um Despacho de Admissibilidade de PAR.',
+    'PAR-julgamento':      'Você vai redigir uma Decisão de Julgamento de PAR.',
+  };
+
+  return `${base}\n\n${contextos[`${tipo}-${ocasiao}`] || ''}`;
+}
+
+function construirUserPrompt(textoDoc, fundamentos) {
+  const nomesCat = { normas:'Norma', pareceres:'Parecer', decisoes:'Decisão',
+                     'notas-tecnicas':'Nota Técnica', orientacoes:'Orientação/Modelo' };
+  const fundStr = fundamentos.map(f =>
+    `[${nomesCat[f.categoria]||f.categoria} — ${f.docNome}]\n${f.texto.substring(0, 600)}`
+  ).join('\n\n---\n\n');
+
+  return `## EXPEDIENTE / RELATÓRIO DE INVESTIGAÇÃO\n\n${textoDoc.substring(0, 6000)}\n\n` +
+         `## BASE DE CONHECIMENTO — EXCERTOS RELEVANTES\n\n${fundStr}\n\n` +
+         `## INSTRUÇÃO\nRedija o documento formal completo, com todas as seções pertinentes, ` +
+         `usando linguagem jurídica adequada e referenciando os fundamentos normativos acima quando aplicável.`;
+}
+
+/* Atualiza o indicador de modo no rodapé */
+function atualizarModoRodape() {
+  const el = document.getElementById('txt-modelo');
+  if (!el) return;
+  if (LLM.disponivel()) {
+    el.innerHTML = `Modelo ativo <span class="modo-badge llm">LLM</span> — ${LLM.nomeAtivo}`;
+    const dot = document.getElementById('dot-modelo');
+    if (dot) dot.className = 'status-dot verde';
+  } else {
+    el.innerHTML = `Modo RAG + template <span class="modo-badge rag">RAG</span>`;
+  }
+}
