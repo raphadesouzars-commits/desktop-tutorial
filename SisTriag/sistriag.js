@@ -1089,16 +1089,137 @@ async function processarDocumentoAnalise(arquivo) {
   titulo.textContent = 'Buscando fundamentos jurídicos...';
 
   const fundamentos = buscarFundamentos(extracao.texto);
+  const secoes = fundamentos._secoes || {};
 
   barra.style.width  = '80%';
   titulo.textContent = LLM.disponivel() ? 'Gerando com modelo LLM...' : 'Montando documento...';
 
   const textoLLM = await gerarTextoLLM(extracao.texto, fundamentos, contextoFluxo.tipo, contextoFluxo.ocasiao);
-  await gerarDocumento(arquivo.name, extracao, fundamentos, textoLLM);
+  await gerarDocumento(arquivo.name, extracao, fundamentos, textoLLM, secoes);
 
   barra.style.width = '100%';
   modal.classList.add('oculto');
   navegarPara('resultado');
+}
+
+/* ================================================================
+   EXTRAÇÃO ESTRUTURADA DO RELATÓRIO
+   ================================================================ */
+
+/* Padrões de seção — ordem de prioridade decrescente */
+const PADROES_SECAO = {
+  conclusao: [
+    /(?:^|\n)\s*(?:v+i*\.?\s*)?(?:da\s+)?conclus[aã]o[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:v+i*\.?\s*)?(?:do\s+)?enquadramento[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:v+i*\.?\s*)?(?:do\s+)?julgamento[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:v+i*\.?\s*)?(?:da\s+)?decis[aã]o[\s:.\-–]/im,
+    /(?:^|\n)\s*diante do exposto/im,
+    /(?:^|\n)\s*(?:ex positis|ante o exposto)/im,
+  ],
+  conduta: [
+    /(?:^|\n)\s*(?:i+\.?\s*)?(?:dos?\s+)?(?:fatos?|ocorr[eê]ncia)[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+\.?\s*)?(?:da\s+)?conduta[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+\.?\s*)?(?:do\s+)?relato[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+\.?\s*)?(?:da\s+)?irregularidade[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+\.?\s*)?(?:da\s+)?infra[cç][aã]o[\s:.\-–]/im,
+  ],
+  provas: [
+    /(?:^|\n)\s*(?:i+i+\.?\s*)?(?:das?\s+)?(?:provas?|evid[eê]ncias?)[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+i+\.?\s*)?(?:dos?\s+)?ind[ií]cios?[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+i+\.?\s*)?(?:da\s+)?instru[cç][aã]o[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+i+\.?\s*)?(?:da\s+)?an[aá]lise[\s:.\-–]/im,
+    /(?:^|\n)\s*(?:i+i+\.?\s*)?(?:do\s+)?m[eé]rito[\s:.\-–]/im,
+  ],
+};
+
+/* Padrões de linguagem jurídica indicando conclusão/achado */
+const PADROES_ACHADO = [
+  /restou?\s+(?:comprovad[ao]|demonstrad[ao]|apurad[ao]|evidenciad[ao])/gi,
+  /ficou?\s+(?:comprovad[ao]|demonstrad[ao]|apurad[ao]|evidenciad[ao])/gi,
+  /(?:há|existem?)\s+ind[ií]cios?\s+(?:de\s+)?/gi,
+  /(?:constat(?:a|ou)-?se|verifica-?se|observa-?se)\s+(?:que\s+)?/gi,
+  /(?:imputad[ao]|atribu[ií]d[ao])\s+ao\s+(?:servidor|acusad[ao]|requerido)/gi,
+  /a\s+conduta\s+(?:do|da|adotada)/gi,
+  /(?:transgrediu|infringiu|violou|desrespeitou)\s+/gi,
+  /conforme\s+(?:documentos?|autos?|provas?|registros?)/gi,
+  /consoante\s+(?:documentos?|depoimentos?|provas?)/gi,
+  /nos\s+termos?\s+(?:dos?\s+)?(?:autos?|processo)/gi,
+];
+
+/* Padrões para dispositivos invocados como fundamento (não mera citação) */
+const PADROES_FUNDAMENTO_LEGAL = [
+  /(?:nos?\s+termos?\s+do|com\s+fundamento\s+(?:no|na|nos|nas)|(?:em\s+)?face\s+do)\s+(?:art(?:igo)?\.?\s*\d+)/gi,
+  /(?:incorre(?:u|ndo)|enquadra(?:ndo)?-?se)\s+(?:na?\s+)?(?:infra[cç][aã]o|conduta|hip[oó]tese)\s+(?:prevista|tipificada)/gi,
+  /(?:tipifica(?:da)?|prevista)\s+(?:no|na|nos|nas)\s+art(?:igo)?\.?\s*\d+/gi,
+  /(?:penalidade|san[cç][aã]o)\s+(?:de\s+)?(?:demiss[aã]o|suspens[aã]o|advertência|multa)/gi,
+];
+
+function extrairSecoesRelatorio(texto) {
+  const secoes = { conduta: '', provas: '', conclusao: '', dispositivos: [] };
+
+  // Detecta posições das seções
+  const posicoes = {};
+  for (const [nome, padroes] of Object.entries(PADROES_SECAO)) {
+    for (const pad of padroes) {
+      const m = pad.exec(texto);
+      if (m) { posicoes[nome] = m.index; break; }
+    }
+  }
+
+  // Extrai texto de cada seção (até a próxima seção ou fim)
+  const posList = Object.entries(posicoes).sort((a, b) => a[1] - b[1]);
+  for (let i = 0; i < posList.length; i++) {
+    const [nome, inicio] = posList[i];
+    const fim = i + 1 < posList.length ? posList[i + 1][1] : texto.length;
+    secoes[nome] = texto.slice(inicio, Math.min(fim, inicio + 3000)).trim();
+  }
+
+  // Se não detectou seções, usa heurística posicional
+  if (!posicoes.conclusao) {
+    const pars = texto.split(/\n{2,}/).filter(p => p.trim().length > 40);
+    secoes.conclusao = pars.slice(-4).join('\n\n');
+  }
+  if (!posicoes.conduta) {
+    const pars = texto.split(/\n{2,}/).filter(p => p.trim().length > 40);
+    secoes.conduta = pars.slice(0, 5).join('\n\n');
+  }
+  if (!posicoes.provas) {
+    const pars = texto.split(/\n{2,}/).filter(p => p.trim().length > 40);
+    const meio = Math.floor(pars.length / 2);
+    secoes.provas = pars.slice(Math.max(0, meio - 3), meio + 3).join('\n\n');
+  }
+
+  // Extrai frases com achados de prova e conduta
+  const frasesMarcantes = [];
+  for (const pad of PADROES_ACHADO) {
+    let m;
+    pad.lastIndex = 0;
+    while ((m = pad.exec(texto)) !== null) {
+      // Captura a frase completa ao redor do match
+      const ini = texto.lastIndexOf('\n', m.index) + 1;
+      const fim = texto.indexOf('\n', m.index + m[0].length);
+      const frase = texto.slice(ini, fim === -1 ? texto.length : fim).trim();
+      if (frase.length > 30 && frase.length < 600) frasesMarcantes.push(frase);
+      if (frasesMarcantes.length >= 12) break;
+    }
+  }
+  secoes.frasesMarcantes = [...new Set(frasesMarcantes)].slice(0, 10);
+
+  // Extrai dispositivos invocados como fundamento
+  for (const pad of PADROES_FUNDAMENTO_LEGAL) {
+    let m;
+    pad.lastIndex = 0;
+    while ((m = pad.exec(texto)) !== null) {
+      const ini = texto.lastIndexOf('\n', m.index) + 1;
+      const fim = texto.indexOf('\n', m.index + m[0].length);
+      const frase = texto.slice(ini, fim === -1 ? texto.length : fim).trim();
+      if (frase.length > 20 && !secoes.dispositivos.includes(frase))
+        secoes.dispositivos.push(frase);
+      if (secoes.dispositivos.length >= 8) break;
+    }
+  }
+
+  return secoes;
 }
 
 /* ----------------------------------------------------------------
@@ -1109,22 +1230,35 @@ function buscarFundamentos(textoDoc) {
   const { tipo, ocasiao } = contextoFluxo;
   const queriesBase = QUERIES_BASE[tipo]?.[ocasiao] || [];
 
-  /* Extrai top-20 termos do documento para enriquecer as queries */
-  const tokensDoc = tokenizar(textoDoc);
-  const freq = {};
-  tokensDoc.forEach(t => { freq[t] = (freq[t] || 0) + 1; });
-  const topTermos = Object.entries(freq)
-    .filter(([t]) => t.length > 3)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 20)
-    .map(([t]) => t);
+  /* Extração estruturada: seções, achados e dispositivos */
+  const secoes = extrairSecoesRelatorio(textoDoc);
 
-  /* Monta queries combinando base + termos do documento */
-  const queries = [
-    ...queriesBase,
-    topTermos.slice(0, 8).join(' '),
-    topTermos.slice(8, 16).join(' '),
-  ];
+  /* Queries direcionadas a partir do que foi extraído */
+  const queriesDirecionadas = [];
+
+  // 1. Conclusão do relatório — maior peso, vai direto ao RAG
+  if (secoes.conclusao)
+    queriesDirecionadas.push(secoes.conclusao.slice(0, 600));
+
+  // 2. Frases marcantes de conduta/prova
+  if (secoes.frasesMarcantes.length > 0) {
+    queriesDirecionadas.push(secoes.frasesMarcantes.slice(0, 5).join(' '));
+    queriesDirecionadas.push(secoes.frasesMarcantes.slice(5).join(' '));
+  }
+
+  // 3. Seção de conduta identificada
+  if (secoes.conduta)
+    queriesDirecionadas.push(secoes.conduta.slice(0, 400));
+
+  // 4. Seção de provas/instrução
+  if (secoes.provas)
+    queriesDirecionadas.push(secoes.provas.slice(0, 400));
+
+  // 5. Dispositivos legais invocados como fundamento
+  if (secoes.dispositivos.length > 0)
+    queriesDirecionadas.push(secoes.dispositivos.join(' '));
+
+  const queries = [...queriesBase, ...queriesDirecionadas];
 
   const vistos = new Set();
   const resultado = [];
@@ -1140,15 +1274,20 @@ function buscarFundamentos(textoDoc) {
     });
   });
 
-  /* Retorna os 7 mais relevantes (já vêm ordenados por score) */
-  return resultado.slice(0, 12);
+  // Ordena pelo score BM25 acumulado e retorna os melhores
+  resultado.sort((a, b) => b.score - a.score);
+
+  // Anexa as seções extraídas para uso no gerarDocumento
+  resultado._secoes = secoes;
+
+  return resultado.slice(0, 14);
 }
 
 /* ----------------------------------------------------------------
    GERAÇÃO DO DOCUMENTO
    ---------------------------------------------------------------- */
 
-async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = null) {
+async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = null, secoes = {}) {
   const { tipo, ocasiao } = contextoFluxo;
   const meta    = TITULOS_FLUXO[tipo][ocasiao];
   const config  = window._configSisTriag;
@@ -1165,11 +1304,15 @@ async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = nul
   /* Subtítulo da tela resultado */
   document.getElementById('resultado-subtitulo').textContent = `${meta.tipoDoc} ${tipo} — ${numDoc}`;
 
+  const nomesCat = { normas:'Norma', pareceres:'Parecer', decisoes:'Decisão',
+                     'notas-tecnicas':'Nota Técnica', orientacoes:'Orientação' };
+
+  /* Painel de extração estruturada */
+  renderizarPainelExtracao(secoes);
+
   /* Painel RAG */
   const painelRag = document.getElementById('painel-fundamentacao-rag');
   const listaRag  = document.getElementById('lista-fundamentacao-rag');
-  const nomesCat  = { normas:'Norma', pareceres:'Parecer', decisoes:'Decisão',
-                      'notas-tecnicas':'Nota Técnica', orientacoes:'Orientação' };
 
   if (fundamentos.length === 0) {
     painelRag.style.display = 'none';
@@ -1182,12 +1325,11 @@ async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = nul
       </div>`).join('');
   }
 
-  /* Extrai trechos estruturados do documento */
-  const texto    = extracao.texto;
-  const paragrafos = texto.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 40);
-  const resumo   = paragrafos.slice(0, 4).join('\n\n');
-  const meio     = paragrafos.slice(4, 10).join('\n\n');
-  const final    = paragrafos.slice(-3).join('\n\n');
+  /* Trechos do documento (agora usando seções detectadas) */
+  const paragrafos = extracao.texto.split(/\n{2,}/).map(p => p.trim()).filter(p => p.length > 40);
+  const resumo = secoes.conduta  || paragrafos.slice(0, 4).join('\n\n');
+  const meio   = secoes.provas   || paragrafos.slice(4, 10).join('\n\n');
+  const final  = secoes.conclusao|| paragrafos.slice(-3).join('\n\n');
 
   /* Seção de fundamentos normativos */
   const secFund = fundamentos.length === 0 ? '' : `
@@ -1200,7 +1342,7 @@ async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = nul
       </div>`).join('')}`;
 
   /* Corpo por fluxo */
-  const corpo = montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas: extracao.paginas });
+  const corpo = montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas: extracao.paginas, secoes });
 
   /* Fase 3: se o LLM gerou texto, usa-o como corpo principal */
   const corpoFinal = textoLLM
@@ -1211,7 +1353,56 @@ async function gerarDocumento(nomeArquivo, extracao, fundamentos, textoLLM = nul
     `<div class="doc-gerado" id="doc-imprimivel">${corpoFinal}</div>`;
 }
 
-function montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas }) {
+function renderizarPainelExtracao(secoes) {
+  // Painel pode não existir em versões antigas do HTML — cria dinamicamente
+  let painel = document.getElementById('painel-extracao-estruturada');
+  if (!painel) {
+    const container = document.getElementById('painel-fundamentacao-rag')?.parentElement;
+    if (!container) return;
+    painel = document.createElement('div');
+    painel.id = 'painel-extracao-estruturada';
+    painel.className = 'painel-lateral';
+    container.insertBefore(painel, container.firstChild);
+  }
+
+  const temFrases = secoes.frasesMarcantes?.length > 0;
+  const temDisp   = secoes.dispositivos?.length > 0;
+
+  if (!temFrases && !temDisp && !secoes.conclusao) {
+    painel.style.display = 'none';
+    return;
+  }
+
+  painel.style.display = 'block';
+  painel.innerHTML = `
+    <div class="painel-lateral-titulo">🔍 Extração do Relatório</div>
+    ${secoes.frasesMarcantes?.length > 0 ? `
+      <div class="extracao-grupo">
+        <div class="extracao-label">Elementos de prova / indícios identificados</div>
+        <ul class="extracao-lista">
+          ${secoes.frasesMarcantes.map(f =>
+            `<li>${escapeHtml(f.length > 220 ? f.slice(0, 220) + '…' : f)}</li>`
+          ).join('')}
+        </ul>
+      </div>` : ''}
+    ${secoes.dispositivos?.length > 0 ? `
+      <div class="extracao-grupo">
+        <div class="extracao-label">Dispositivos invocados como fundamento</div>
+        <ul class="extracao-lista extracao-lista--disp">
+          ${secoes.dispositivos.map(d =>
+            `<li>${escapeHtml(d.length > 220 ? d.slice(0, 220) + '…' : d)}</li>`
+          ).join('')}
+        </ul>
+      </div>` : ''}
+    ${secoes.conclusao ? `
+      <div class="extracao-grupo">
+        <div class="extracao-label">Conclusão detectada</div>
+        <div class="extracao-conclusao">${escapeHtml(secoes.conclusao.slice(0, 500))}${secoes.conclusao.length > 500 ? '…' : ''}</div>
+      </div>` : ''}
+  `;
+}
+
+function montarCorpo({ tipo, ocasiao, numDoc, nomeArquivo, resumo, meio, final, secFund, dataHoje, prefixo, paginas, secoes = {} }) {
   const cabecalho = `
     <h1>Receita Federal do Brasil — Corregedoria</h1>
     <div class="doc-numero">${numDoc}</div>
