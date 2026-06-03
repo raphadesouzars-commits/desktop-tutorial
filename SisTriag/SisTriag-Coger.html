@@ -16,18 +16,19 @@
   <!-- ===================== CABEÇALHO ===================== -->
   <header id="cabecalho">
     <div class="marca">
-      <div>
+      <img src="logo-rfb.png" alt="Receita Federal do Brasil" class="logo-rfb">
+      <div class="marca-divider"></div>
+      <div class="marca-texto">
         <div class="sigla">SisTriag-Coger</div>
         <div class="subtitulo">Corregedoria · Receita Federal do Brasil</div>
       </div>
-      <div class="separador"></div>
-      <nav>
-        <button onclick="navegarPara('inicio')" id="nav-inicio" class="ativo">Início</button>
-        <button onclick="navegarPara('base')" id="nav-base">Base de Conhecimento</button>
-        <button onclick="navegarPara('rag')" id="nav-rag">Teste RAG</button>
-        <button onclick="navegarPara('config')" id="nav-config">Configurações</button>
-      </nav>
     </div>
+    <nav class="nav-principal">
+      <button onclick="navegarPara('inicio')" id="nav-inicio" class="ativo">Início</button>
+      <button onclick="navegarPara('base')" id="nav-base">Base de Conhecimento</button>
+      <button onclick="navegarPara('rag')" id="nav-rag">Teste RAG</button>
+      <button onclick="navegarPara('config')" id="nav-config">Configurações</button>
+    </nav>
     <span class="versao">v2.1.0 — Fase 2</span>
   </header>
 
