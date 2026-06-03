@@ -115,8 +115,7 @@ async function setConfig(chave, valor) {
 /* Configura workerSrc do PDF.js */
 function inicializarPDFJS() {
   if (typeof pdfjsLib !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
   }
 }
 
