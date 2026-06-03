@@ -428,7 +428,6 @@ async function indexarArquivos(arquivos, categoria) {
 
   modal.classList.remove('oculto');
   const resultados = [];
-  const cfg = CONFIG_CHUNKING[categoria] || CONFIG_CHUNKING['normas'];
 
   for (let i = 0; i < arquivos.length; i++) {
     const arq = arquivos[i];
