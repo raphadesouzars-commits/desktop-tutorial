@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SisTriag-Coger — Corregedoria RFB</title>
+
+<!-- Dependências externas (cacheadas após primeira carga) -->
+
+<link rel="stylesheet" href="sistriag.css">
+</head>
+
+<body>
+<div id="app">
+
+  <!-- ===================== CABEÇALHO ===================== -->
+  <header id="cabecalho">
+    <div class="marca">
+      <div>
+        <div class="sigla">SisTriag-Coger</div>
+        <div class="subtitulo">Corregedoria · Receita Federal do Brasil</div>
+      </div>
+      <div class="separador"></div>
+      <nav>
+        <button onclick="navegarPara('inicio')" id="nav-inicio" class="ativo">Início</button>
+        <button onclick="navegarPara('base')" id="nav-base">Base de Conhecimento</button>
+        <button onclick="navegarPara('rag')" id="nav-rag">Teste RAG</button>
+        <button onclick="navegarPara('config')" id="nav-config">Configurações</button>
+      </nav>
+    </div>
+    <span class="versao">v2.1.0 — Fase 2</span>
+  </header>
+
+  <!-- ===================== CONTEÚDO ===================== -->
+  <main id="conteudo">
+
+    <!-- ===== TELA INICIAL ===== -->
+    <div id="tela-inicio" class="tela ativa">
+      <div class="inicio-cabecalho">
+        <h1>Análise Correcional</h1>
+        <p>Selecione o tipo de processo e a etapa do ciclo disciplinar</p>
+      </div>
+
+      <div class="selecao-tipo">
+        <div class="selecao-titulo">1. Tipo de processo</div>
+        <div class="opcoes-grid">
+          <div class="opcao-card" onclick="selecionarTipo('PAD')" id="card-PAD">
+            <div class="opcao-sigla">PAD</div>
+            <div class="opcao-nome">Processo Administrativo Disciplinar</div>
+            <div class="opcao-desc">Polo passivo: servidor público federal — Lei 8.112/1990</div>
+          </div>
+          <div class="opcao-card" onclick="selecionarTipo('PAR')" id="card-PAR">
+            <div class="opcao-sigla">PAR</div>
+            <div class="opcao-nome">Processo Administrativo de Responsabilização</div>
+            <div class="opcao-desc">Polo passivo: pessoa jurídica — Lei 12.846/2013</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="selecao-tipo" id="selecao-ocasiao" style="display:none">
+        <div class="selecao-titulo">2. Etapa do ciclo disciplinar</div>
+        <div class="opcoes-ocasiao">
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('triagem')" id="card-triagem">
+            <div class="etapa-num">01</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Triagem da Ocorrência</div>
+              <div class="etapa-desc">Análise inicial do expediente — decidir se merece apuração formal</div>
+            </div>
+            <span class="badge badge-cinza">Entrada manual</span>
+          </div>
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('admissibilidade')" id="card-admissibilidade">
+            <div class="etapa-num">02</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Juízo de Admissibilidade</div>
+              <div class="etapa-desc">Análise dos elementos apurados — decidir pela instauração</div>
+            </div>
+            <span class="badge badge-azul">Upload + campos</span>
+          </div>
+          <div class="opcao-ocasiao" onclick="selecionarOcasiao('julgamento')" id="card-julgamento">
+            <div class="etapa-num">03</div>
+            <div class="etapa-info">
+              <div class="etapa-nome">Julgamento do Processo</div>
+              <div class="etapa-desc">Análise de mérito — decisão final de absolvição ou penalidade</div>
+            </div>
+            <span class="badge badge-azul">Upload predominante</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inicio-acoes" id="inicio-acoes" style="display:none">
+        <button class="btn btn-secundario" onclick="resetarSelecao()">Cancelar</button>
+        <button class="btn btn-primario" onclick="iniciarFluxo()" id="btn-iniciar">
+          Iniciar análise →
+        </button>
+      </div>
+
+      <div id="aviso-base" class="base-aviso" style="display:none" onclick="navegarPara('base')">
+        <span>⚠</span>
+        <span id="aviso-base-texto">Base de conhecimento não indexada. Clique aqui para configurar.</span>
+      </div>
+    </div>
+
+    <!-- ===== TELA BASE DE CONHECIMENTO ===== -->
+    <div id="tela-base" class="tela">
+      <div class="titulo-tela">Base de Conhecimento</div>
+      <div class="subtitulo-tela">Gerencie os documentos que fundamentam as análises do sistema</div>
+
+      <!-- Guia de estrutura de pasta + botão importar -->
+      <div class="pasta-guia">
+        <div class="pasta-guia-titulo">📁 Importar Pasta Local</div>
+        <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+          <div style="flex:1;min-width:240px">
+            <div style="font-size:12px;color:var(--cinza-texto);margin-bottom:10px">
+              Organize seus documentos na estrutura abaixo e importe a pasta raiz de uma vez. As subpastas determinam a categoria automaticamente.
+            </div>
+            <div class="arvore-pasta">
+<span class="pasta-linha">📂 Base_SisTriag/</span>
+<span class="pasta-linha">  ├── 📂 normas/</span>
+<span class="arquivo-linha">  │     └── Lei_8112.pdf</span>
+<span class="pasta-linha">  ├── 📂 pareceres/</span>
+<span class="pasta-linha">  ├── 📂 decisoes/</span>
+<span class="pasta-linha">  ├── 📂 notas-tecnicas/</span>
+<span class="pasta-linha">  └── 📂 orientacoes/</span>
+            </div>
+            <div style="font-size:11px;color:var(--cinza-texto)">
+              Variações aceitas: <code style="color:var(--azul-acento)">norma/leis/legislacao</code> · <code style="color:var(--azul-acento)">decisao/julgados</code> · <code style="color:var(--azul-acento)">notas_tecnicas/notas</code> · <code style="color:var(--azul-acento)">orientacao/treinamentos/manuais</code>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+            <div id="pasta-ativa-container" style="display:none" class="pasta-ativa-info">
+              <span>✓</span>
+              <div>
+                <div style="font-weight:600;color:var(--verde-claro)" id="pasta-ativa-nome">—</div>
+                <div style="color:var(--cinza-texto)" id="pasta-ativa-stats"></div>
+              </div>
+            </div>
+            <button class="btn-pasta-importar" onclick="importarPastaLocal()" id="btn-importar-pasta">
+              📂 Importar Pasta Local
+            </button>
+            <button class="btn btn-secundario btn-sm" onclick="resincronizarPasta()" id="btn-resync" style="display:none">
+              🔄 Re-sincronizar pasta
+            </button>
+            <div id="pasta-compat" style="font-size:11px;color:var(--cinza-texto)"></div>
+          </div>
+        </div>
+        <div id="resumo-importacao-container" class="resumo-importacao" style="display:none"></div>
+      </div>
+
+      <!-- Cards de categoria -->
+      <div class="base-categorias" id="base-categorias">
+        <div class="categoria-card">
+          <div class="cat-icone">📜</div>
+          <div class="cat-nome">Normas</div>
+          <div class="cat-count" id="cnt-normas">0</div>
+          <div class="cat-chunks" id="chk-normas">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">⚖</div>
+          <div class="cat-nome">Pareceres</div>
+          <div class="cat-count" id="cnt-pareceres">0</div>
+          <div class="cat-chunks" id="chk-pareceres">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">📋</div>
+          <div class="cat-nome">Decisões</div>
+          <div class="cat-count" id="cnt-decisoes">0</div>
+          <div class="cat-chunks" id="chk-decisoes">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">📝</div>
+          <div class="cat-nome">Notas Técnicas</div>
+          <div class="cat-count" id="cnt-notas">0</div>
+          <div class="cat-chunks" id="chk-notas">0 chunks</div>
+        </div>
+        <div class="categoria-card">
+          <div class="cat-icone">🎓</div>
+          <div class="cat-nome">Orientações</div>
+          <div class="cat-count" id="cnt-orientacoes">0</div>
+          <div class="cat-chunks" id="chk-orientacoes">0 chunks</div>
+        </div>
+      </div>
+
+      <!-- Ações principais -->
+      <div class="painel">
+        <div class="painel-titulo">Adicionar Documentos</div>
+
+        <div style="margin-bottom:16px">
+          <label class="campo-label">Categoria</label>
+          <select id="sel-categoria" class="campo-select" style="max-width:300px">
+            <option value="normas">Normas</option>
+            <option value="pareceres">Pareceres</option>
+            <option value="decisoes">Decisões</option>
+            <option value="notas-tecnicas">Notas Técnicas</option>
+            <option value="orientacoes">Orientações e Treinamentos</option>
+          </select>
+          <div class="campo-hint">Selecione a categoria antes de adicionar documentos</div>
+        </div>
+
+        <div class="zona-upload" id="zona-upload"
+             ondragover="event.preventDefault(); this.classList.add('arrastando')"
+             ondragleave="this.classList.remove('arrastando')"
+             ondrop="handleDrop(event)"
+             onclick="document.getElementById('input-arquivo').click()">
+          <div class="zona-icone">📁</div>
+          <div class="zona-texto">Clique ou arraste arquivos PDF / DOCX</div>
+          <div class="zona-sub">Múltiplos arquivos permitidos · PDFs devem ser digitais (não escaneados)</div>
+        </div>
+        <input type="file" id="input-arquivo" multiple accept=".pdf,.docx" style="display:none"
+               onchange="handleArquivos(this.files)">
+      </div>
+
+      <!-- Lista de documentos indexados -->
+      <div class="painel">
+        <div class="painel-titulo" style="display:flex;align-items:center;justify-content:space-between">
+          <span>Documentos Indexados</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secundario btn-sm" onclick="exportarIndice()">Exportar lista</button>
+            <button class="btn btn-perigo btn-sm" onclick="confirmarLimparBase()">Limpar base</button>
+          </div>
+        </div>
+
+        <div id="lista-docs">
+          <div class="estado-vazio">
+            <div class="vazio-icone">📂</div>
+            <div class="vazio-titulo">Nenhum documento indexado</div>
+            <div class="vazio-desc">Adicione documentos usando a área acima</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== TELA TESTE RAG ===== -->
+    <div id="tela-rag" class="tela">
+      <div class="titulo-tela">Teste de Recuperação RAG</div>
+      <div class="subtitulo-tela">Verifique a qualidade da busca na base de conhecimento antes de iniciar análises</div>
+
+      <div class="painel">
+        <div class="painel-titulo">Query de teste</div>
+        <div class="campo-grupo">
+          <label class="campo-label">Texto da consulta</label>
+          <textarea id="rag-query" class="campo-textarea" rows="4"
+            placeholder="Ex: prescrição da pretensão punitiva em caso de abandono de cargo&#10;&#10;Ex: responsabilidade de pessoa jurídica por ato de seus agentes&#10;&#10;Ex: dosimetria da multa em PAR considerando porte da empresa"></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="campo-grupo">
+            <label class="campo-label">Número de resultados</label>
+            <select id="rag-n" class="campo-select">
+              <option value="3">3 resultados</option>
+              <option value="5" selected>5 resultados</option>
+              <option value="8">8 resultados</option>
+              <option value="10">10 resultados</option>
+            </select>
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Filtrar por categoria</label>
+            <select id="rag-categoria" class="campo-select">
+              <option value="">Todas as categorias</option>
+              <option value="normas">Normas</option>
+              <option value="pareceres">Pareceres</option>
+              <option value="decisoes">Decisões</option>
+              <option value="notas-tecnicas">Notas Técnicas</option>
+              <option value="orientacoes">Orientações</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-primario" onclick="executarBuscaRAG()" id="btn-buscar-rag">
+          Buscar na base
+        </button>
+      </div>
+
+      <div id="resultados-rag"></div>
+    </div>
+
+    <!-- ===== TELA CONFIGURAÇÕES ===== -->
+    <div id="tela-config" class="tela">
+      <div class="titulo-tela">Configurações</div>
+      <div class="subtitulo-tela">Parâmetros do sistema e gestão de dados</div>
+
+      <div class="painel">
+        <div class="painel-titulo">Base de Conhecimento</div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Status da base</div>
+            <div class="config-desc" id="cfg-status-base">Carregando...</div>
+          </div>
+          <span id="cfg-badge-base" class="badge badge-cinza">—</span>
+        </div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Última indexação</div>
+            <div class="config-desc" id="cfg-ultima-index">—</div>
+          </div>
+        </div>
+
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Total de chunks no índice</div>
+            <div class="config-desc" id="cfg-total-chunks">—</div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap">
+          <button class="btn btn-secundario" onclick="navegarPara('base')">Gerenciar documentos</button>
+          <button class="btn btn-perigo" onclick="confirmarLimparBase()">Limpar toda a base</button>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Numeração de Documentos</div>
+        <div class="grid-3">
+          <div class="campo-grupo">
+            <label class="campo-label">Prefixo do órgão</label>
+            <input type="text" id="cfg-prefixo" class="campo-input" placeholder="COGER-RFB"
+                   oninput="salvarConfiguracao('prefixo', this.value)">
+            <div class="campo-hint">Opcional — inserido antes do tipo no número</div>
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Despacho Triagem</label>
+            <input type="number" id="cfg-seq-triagem" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_triagem', parseInt(this.value)||1)">
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Desp. Admissibilidade</label>
+            <input type="number" id="cfg-seq-admiss" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_admissibilidade', parseInt(this.value)||1)">
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Decisão PAD</label>
+            <input type="number" id="cfg-seq-decisao-pad" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_decisao_pad', parseInt(this.value)||1)">
+          </div>
+          <div class="campo-grupo">
+            <label class="campo-label">Próx. Decisão PAR</label>
+            <input type="number" id="cfg-seq-decisao-par" class="campo-input" min="1"
+                   oninput="salvarConfiguracao('seq_decisao_par', parseInt(this.value)||1)">
+          </div>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Modelo de IA (WebLLM)</div>
+        <div class="alerta alerta-info">
+          <span>ℹ</span>
+          <span>A integração do WebLLM será implementada na Fase 2 do desenvolvimento. Esta seção exibirá o modelo carregado e permitirá a troca entre modelos disponíveis.</span>
+        </div>
+        <div class="config-linha">
+          <div class="config-linha-info">
+            <div class="config-nome">Modelo configurado</div>
+            <div class="config-desc">Llama-3.1-8B-Instruct-q4f32_1-MLC (padrão)</div>
+          </div>
+          <span class="badge badge-cinza">Fase 2</span>
+        </div>
+      </div>
+
+      <div class="painel">
+        <div class="painel-titulo">Dados e Privacidade</div>
+        <div class="alerta alerta-info" style="margin-bottom:16px">
+          <span>🔒</span>
+          <span>Todos os dados permanecem exclusivamente nesta máquina. Nenhuma informação é transmitida para servidores externos em nenhuma circunstância.</span>
+        </div>
+        <button class="btn btn-perigo" onclick="confirmarLimparTudo()">Apagar todos os dados do sistema</button>
+      </div>
+    </div>
+
+  </main>
+
+    <!-- ===== TELA UPLOAD DO DOCUMENTO ===== -->
+    <div id="tela-upload" class="tela">
+      <div class="upload-cabecalho">
+        <div class="upload-tipo-badge" id="upload-tipo-badge">PAD</div>
+        <div class="upload-cabecalho-info">
+          <div class="upload-titulo" id="upload-titulo-principal">Triagem da Ocorrência</div>
+          <div class="upload-subtitulo" id="upload-subtitulo-principal">Envie o relatório ou expediente — a análise será gerada automaticamente</div>
+        </div>
+        <button class="btn btn-secundario btn-sm" style="margin-left:auto" onclick="navegarPara('inicio')">← Voltar</button>
+      </div>
+
+      <div class="zona-upload-principal" id="zona-upload-analise"
+           ondragover="event.preventDefault(); this.classList.add('arrastando')"
+           ondragleave="this.classList.remove('arrastando')"
+           ondrop="handleDropAnalise(event)"
+           onclick="document.getElementById('input-analise').click()">
+        <div class="zu-icone">📄</div>
+        <div class="zu-texto">Clique ou arraste o documento aqui</div>
+        <div class="zu-sub">PDF ou DOCX · Um arquivo por vez</div>
+      </div>
+      <input type="file" id="input-analise" accept=".pdf,.docx" style="display:none"
+             onchange="processarDocumentoAnalise(this.files[0])">
+
+      <div class="alerta alerta-info" style="font-size:12px">
+        <span>ℹ</span>
+        <span>A ferramenta extrai o texto do documento, busca os fundamentos jurídicos mais relevantes na base de conhecimento e monta o despacho/decisão automaticamente. PDFs devem ser digitais (não escaneados).</span>
+      </div>
+    </div>
+
+    <!-- ===== TELA RESULTADO / DOCUMENTO GERADO ===== -->
+    <div id="tela-resultado" class="tela">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap">
+        <div>
+          <div class="titulo-tela">Documento Gerado</div>
+          <div class="subtitulo-tela" id="resultado-subtitulo">Despacho</div>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-secundario btn-sm" onclick="navegarPara('upload')">← Novo documento</button>
+          <button class="btn btn-secundario btn-sm" onclick="copiarTextoDocumento()">📋 Copiar texto</button>
+          <button class="btn btn-primario btn-sm" onclick="imprimirDocumento()">🖨 Imprimir / PDF</button>
+        </div>
+      </div>
+
+      <div class="painel" style="margin-bottom:16px" id="painel-fundamentacao-rag">
+        <div class="painel-titulo">Fundamentos recuperados da Base de Conhecimento</div>
+        <div id="lista-fundamentacao-rag" class="rag-contexto-lista"></div>
+      </div>
+
+      <div id="doc-gerado-container"></div>
+    </div>
+
+  <!-- ===================== RODAPÉ DE STATUS ===================== -->
+  <footer id="rodape">
+    <div style="display:flex; align-items:center">
+      <div class="status-item">
+        <div class="status-dot" id="dot-modelo" style="background:var(--cinza-borda)"></div>
+        <span id="txt-modelo">Motor de análise ativo — Fase 2</span>
+      </div>
+      <div class="status-sep"></div>
+      <div class="status-item">
+        <div class="status-dot" id="dot-base"></div>
+        <span id="txt-base">Verificando base...</span>
+      </div>
+    </div>
+    <div class="status-item">
+      <span id="txt-hora" style="font-size:11px; color:var(--cinza-texto)"></span>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ===================== MODAL CONFIRMAÇÃO ===================== -->
+<div id="modal-overlay" class="modal-overlay oculto">
+  <div class="modal">
+    <div class="modal-titulo" id="modal-titulo">Confirmar ação</div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div id="modal-corpo"></div>
+    <div class="modal-acoes">
+      <button class="btn btn-secundario" onclick="fecharModal()">Cancelar</button>
+      <button class="btn btn-perigo" id="modal-btn-confirmar" onclick="executarAcaoModal()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MODAL PROCESSAMENTO ===================== -->
+<div id="modal-processamento" class="modal-overlay oculto">
+  <div class="modal" style="text-align:center; padding:40px">
+    <div class="spinner" style="width:32px;height:32px;margin:0 auto 16px"></div>
+    <div class="modal-titulo" id="proc-titulo">Processando documentos...</div>
+    <div style="margin:16px 0">
+      <div class="barra-progresso-container">
+        <div class="barra-progresso-fill" id="proc-barra" style="width:0%"></div>
+      </div>
+    </div>
+    <div id="proc-status" style="font-size:12px;color:var(--cinza-texto)"></div>
+  </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="sistriag.js"></script>
+</body>
+</html>
