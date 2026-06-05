@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080302"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080302">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.03-02 - Analisar Processos Correcionais e Emitir Pareceres"
+      processRef="Process_07080302" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080302" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080302">
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Task_OficioInstr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaEpad</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Inform</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Jul</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DiacoSeaco" name="Diaco / Seaco">
+        <bpmn:flowNodeRef>Start_P1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_TipoDemanda</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerAdm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerJul</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerRec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerRH</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerRev</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerCorr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InfJudicial</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InfGeral</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Join_Tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SupTecDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SupTec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReuniaoDiaco</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Subcorregedoria" name="Subcorregedoria">
+        <bpmn:flowNodeRef>Task_AprovaInform</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AprovaParJul</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Lane Secac -->
+    <bpmn:task id="Task_OficioInstr" name="Oficio - Instrucao">
+      <bpmn:incoming>F_OficioOut</bpmn:incoming>
+      <bpmn:outgoing>F_OficioBack</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtualizaEpad" name="ATUALIZA-EPAD-JAD/JUL/RECURSO">
+      <bpmn:incoming>F_Atualiza1</bpmn:incoming>
+      <bpmn:incoming>F_Atualiza2</bpmn:incoming>
+      <bpmn:outgoing>F_AtualizaEnd1</bpmn:outgoing>
+      <bpmn:outgoing>F_AtualizaEnd2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Inform" name="Processo Encerrado (Inform/Parecer)">
+      <bpmn:incoming>F_AtualizaEnd1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Jul" name="Processo Encerrado (PAR-JUL/REC)">
+      <bpmn:incoming>F_AtualizaEnd2</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Lane DiacoSeaco -->
+    <bpmn:startEvent id="Start_P1" name="Processo Correcional para Analise / Demanda Juridica">
+      <bpmn:outgoing>F_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_CoordDiaco" name="Coordenacao DIACO/DEMJUR (P1)">
+      <bpmn:incoming>F_01</bpmn:incoming>
+      <bpmn:incoming>F_OficioBack</bpmn:incoming>
+      <bpmn:incoming>F_ReuniaBack</bpmn:incoming>
+      <bpmn:outgoing>F_02</bpmn:outgoing>
+      <bpmn:outgoing>F_OficioOut</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_TipoDemanda" name="Tipo de Manifestacao">
+      <bpmn:incoming>F_02</bpmn:incoming>
+      <bpmn:outgoing>F_TipoAdm</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoJul</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoRec</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoRH</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoRev</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoCorr</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoInfJud</bpmn:outgoing>
+      <bpmn:outgoing>F_TipoInfGeral</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_ParecerAdm" name="Parecer de Admissibilidade">
+      <bpmn:incoming>F_TipoAdm</bpmn:incoming>
+      <bpmn:outgoing>F_JoinAdm</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerJul" name="Parecer de Julgamento">
+      <bpmn:incoming>F_TipoJul</bpmn:incoming>
+      <bpmn:outgoing>F_JoinJul</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerRec" name="Parecer de Reconsideracao">
+      <bpmn:incoming>F_TipoRec</bpmn:incoming>
+      <bpmn:outgoing>F_JoinRec</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerRH" name="Parecer de Recurso Hierarquico">
+      <bpmn:incoming>F_TipoRH</bpmn:incoming>
+      <bpmn:outgoing>F_JoinRH</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerRev" name="Parecer de Revisao">
+      <bpmn:incoming>F_TipoRev</bpmn:incoming>
+      <bpmn:outgoing>F_JoinRev</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerCorr" name="Parecer Correcional">
+      <bpmn:incoming>F_TipoCorr</bpmn:incoming>
+      <bpmn:outgoing>F_JoinCorr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_InfJudicial" name="INFORMACAO-JUDICIAL">
+      <bpmn:incoming>F_TipoInfJud</bpmn:incoming>
+      <bpmn:outgoing>F_JoinInfJud</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_InfGeral" name="INFORMACAO (nao judicial)">
+      <bpmn:incoming>F_TipoInfGeral</bpmn:incoming>
+      <bpmn:outgoing>F_JoinInfGeral</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Join_Tipo" name="Convergencia Tipo">
+      <bpmn:incoming>F_JoinAdm</bpmn:incoming>
+      <bpmn:incoming>F_JoinJul</bpmn:incoming>
+      <bpmn:incoming>F_JoinRec</bpmn:incoming>
+      <bpmn:incoming>F_JoinRH</bpmn:incoming>
+      <bpmn:incoming>F_JoinRev</bpmn:incoming>
+      <bpmn:incoming>F_JoinCorr</bpmn:incoming>
+      <bpmn:incoming>F_JoinInfJud</bpmn:incoming>
+      <bpmn:incoming>F_JoinInfGeral</bpmn:incoming>
+      <bpmn:outgoing>F_SupTec</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_SupTecDiaco" name="Supervisao Tecnica DIACO (P2)">
+      <bpmn:incoming>F_SupTec</bpmn:incoming>
+      <bpmn:outgoing>F_GwSupTec</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_SupTec" name="Qualidade OK?">
+      <bpmn:incoming>F_GwSupTec</bpmn:incoming>
+      <bpmn:outgoing>F_SimInform</bpmn:outgoing>
+      <bpmn:outgoing>F_SimParJul</bpmn:outgoing>
+      <bpmn:outgoing>F_NaoReuniao</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_ReuniaoDiaco" name="REUNIAO-DIACO (P3)">
+      <bpmn:incoming>F_NaoReuniao</bpmn:incoming>
+      <bpmn:outgoing>F_ReuniaBack</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Subcorregedoria -->
+    <bpmn:task id="Task_AprovaInform" name="Aprova Inform/Parecer">
+      <bpmn:incoming>F_SimInform</bpmn:incoming>
+      <bpmn:outgoing>F_Atualiza1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AprovaParJul" name="Aprova-PAR-JUL/REC">
+      <bpmn:incoming>F_SimParJul</bpmn:incoming>
+      <bpmn:outgoing>F_Atualiza2</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="F_01"          sourceRef="Start_P1"           targetRef="Task_CoordDiaco" />
+    <bpmn:sequenceFlow id="F_02"          sourceRef="Task_CoordDiaco"    targetRef="Gateway_TipoDemanda" />
+    <bpmn:sequenceFlow id="F_OficioOut"   sourceRef="Task_CoordDiaco"    targetRef="Task_OficioInstr" />
+    <bpmn:sequenceFlow id="F_OficioBack"  sourceRef="Task_OficioInstr"   targetRef="Task_CoordDiaco" />
+    <bpmn:sequenceFlow id="F_TipoAdm"     sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerAdm" />
+    <bpmn:sequenceFlow id="F_TipoJul"     sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerJul" />
+    <bpmn:sequenceFlow id="F_TipoRec"     sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerRec" />
+    <bpmn:sequenceFlow id="F_TipoRH"      sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerRH" />
+    <bpmn:sequenceFlow id="F_TipoRev"     sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerRev" />
+    <bpmn:sequenceFlow id="F_TipoCorr"    sourceRef="Gateway_TipoDemanda" targetRef="Task_ParecerCorr" />
+    <bpmn:sequenceFlow id="F_TipoInfJud"  sourceRef="Gateway_TipoDemanda" targetRef="Task_InfJudicial" />
+    <bpmn:sequenceFlow id="F_TipoInfGeral" sourceRef="Gateway_TipoDemanda" targetRef="Task_InfGeral" />
+    <bpmn:sequenceFlow id="F_JoinAdm"     sourceRef="Task_ParecerAdm"    targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinJul"     sourceRef="Task_ParecerJul"    targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinRec"     sourceRef="Task_ParecerRec"    targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinRH"      sourceRef="Task_ParecerRH"     targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinRev"     sourceRef="Task_ParecerRev"    targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinCorr"    sourceRef="Task_ParecerCorr"   targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinInfJud"  sourceRef="Task_InfJudicial"   targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_JoinInfGeral" sourceRef="Task_InfGeral"     targetRef="Gateway_Join_Tipo" />
+    <bpmn:sequenceFlow id="F_SupTec"      sourceRef="Gateway_Join_Tipo"  targetRef="Task_SupTecDiaco" />
+    <bpmn:sequenceFlow id="F_GwSupTec"    sourceRef="Task_SupTecDiaco"   targetRef="Gateway_SupTec" />
+    <bpmn:sequenceFlow id="F_SimInform"   sourceRef="Gateway_SupTec"     targetRef="Task_AprovaInform" />
+    <bpmn:sequenceFlow id="F_SimParJul"   sourceRef="Gateway_SupTec"     targetRef="Task_AprovaParJul" />
+    <bpmn:sequenceFlow id="F_NaoReuniao"  sourceRef="Gateway_SupTec"     targetRef="Task_ReuniaoDiaco" />
+    <bpmn:sequenceFlow id="F_ReuniaBack"  sourceRef="Task_ReuniaoDiaco"  targetRef="Task_CoordDiaco" />
+    <bpmn:sequenceFlow id="F_Atualiza1"   sourceRef="Task_AprovaInform"  targetRef="Task_AtualizaEpad" />
+    <bpmn:sequenceFlow id="F_Atualiza2"   sourceRef="Task_AprovaParJul"  targetRef="Task_AtualizaEpad" />
+    <bpmn:sequenceFlow id="F_AtualizaEnd1" sourceRef="Task_AtualizaEpad" targetRef="End_Inform" />
+    <bpmn:sequenceFlow id="F_AtualizaEnd2" sourceRef="Task_AtualizaEpad" targetRef="End_Jul" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080302">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080302" bpmnElement="Collaboration_07080302">
+
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="2000" height="760" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes -->
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1970" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DiacoSeaco_di" bpmnElement="Lane_DiacoSeaco" isHorizontal="true">
+        <dc:Bounds x="130" y="180" width="1970" height="380" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Subcorregedoria_di" bpmnElement="Lane_Subcorregedoria" isHorizontal="true">
+        <dc:Bounds x="130" y="560" width="1970" height="250" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac elements -->
+      <!-- Task_OficioInstr: x=370, y=80 -->
+      <bpmndi:BPMNShape id="Task_OficioInstr_di" bpmnElement="Task_OficioInstr">
+        <dc:Bounds x="350" y="80" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Task_AtualizaEpad: x=1650, y=80 -->
+      <bpmndi:BPMNShape id="Task_AtualizaEpad_di" bpmnElement="Task_AtualizaEpad">
+        <dc:Bounds x="1640" y="80" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- End_Inform: x=1840, y=80 -->
+      <bpmndi:BPMNShape id="End_Inform_di" bpmnElement="End_Inform">
+        <dc:Bounds x="1830" y="88" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_Jul: x=1840, y=130 -->
+      <bpmndi:BPMNShape id="End_Jul_di" bpmnElement="End_Jul">
+        <dc:Bounds x="1905" y="88" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane DiacoSeaco elements -->
+      <!-- Start_P1: x=160, y=350 (center of lane 180+380/2=370) -->
+      <bpmndi:BPMNShape id="Start_P1_di" bpmnElement="Start_P1">
+        <dc:Bounds x="165" y="352" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- Task_CoordDiaco: x=240, y=340 -->
+      <bpmndi:BPMNShape id="Task_CoordDiaco_di" bpmnElement="Task_CoordDiaco">
+        <dc:Bounds x="240" y="340" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Gateway_TipoDemanda: x=430, y=350 -->
+      <bpmndi:BPMNShape id="Gateway_TipoDemanda_di" bpmnElement="Gateway_TipoDemanda" isMarkerVisible="true">
+        <dc:Bounds x="430" y="350" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- 8 task branches vertically distributed between x=530 and x=780 -->
+      <!-- Tasks at x=530, y varies: 195,240,285,330,375,420,465,510 -->
+      <bpmndi:BPMNShape id="Task_ParecerAdm_di" bpmnElement="Task_ParecerAdm">
+        <dc:Bounds x="530" y="192" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerJul_di" bpmnElement="Task_ParecerJul">
+        <dc:Bounds x="530" y="247" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerRec_di" bpmnElement="Task_ParecerRec">
+        <dc:Bounds x="530" y="302" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerRH_di" bpmnElement="Task_ParecerRH">
+        <dc:Bounds x="530" y="357" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerRev_di" bpmnElement="Task_ParecerRev">
+        <dc:Bounds x="530" y="412" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerCorr_di" bpmnElement="Task_ParecerCorr">
+        <dc:Bounds x="530" y="467" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InfJudicial_di" bpmnElement="Task_InfJudicial">
+        <dc:Bounds x="530" y="472" width="140" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InfGeral_di" bpmnElement="Task_InfGeral">
+        <dc:Bounds x="530" y="512" width="140" height="50" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_Join_Tipo: x=730, y=350 -->
+      <bpmndi:BPMNShape id="Gateway_Join_Tipo_di" bpmnElement="Gateway_Join_Tipo" isMarkerVisible="true">
+        <dc:Bounds x="730" y="350" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_SupTecDiaco: x=820, y=340 -->
+      <bpmndi:BPMNShape id="Task_SupTecDiaco_di" bpmnElement="Task_SupTecDiaco">
+        <dc:Bounds x="820" y="340" width="140" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_SupTec: x=1020, y=350 -->
+      <bpmndi:BPMNShape id="Gateway_SupTec_di" bpmnElement="Gateway_SupTec" isMarkerVisible="true">
+        <dc:Bounds x="1020" y="350" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_ReuniaoDiaco: x=1100, y=440 -->
+      <bpmndi:BPMNShape id="Task_ReuniaoDiaco_di" bpmnElement="Task_ReuniaoDiaco">
+        <dc:Bounds x="1100" y="440" width="140" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Subcorregedoria elements -->
+      <!-- Task_AprovaInform: x=1200, y=600 -->
+      <bpmndi:BPMNShape id="Task_AprovaInform_di" bpmnElement="Task_AprovaInform">
+        <dc:Bounds x="1380" y="590" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Task_AprovaParJul: x=1400, y=680 -->
+      <bpmndi:BPMNShape id="Task_AprovaParJul_di" bpmnElement="Task_AprovaParJul">
+        <dc:Bounds x="1380" y="680" width="140" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+
+      <!-- F_01: Start_P1 → CoordDiaco -->
+      <bpmndi:BPMNEdge id="F_01_di" bpmnElement="F_01">
+        <di:waypoint x="201" y="370" />
+        <di:waypoint x="240" y="370" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_02: CoordDiaco → Gateway_TipoDemanda -->
+      <bpmndi:BPMNEdge id="F_02_di" bpmnElement="F_02">
+        <di:waypoint x="380" y="370" />
+        <di:waypoint x="430" y="370" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_OficioOut: CoordDiaco → OficioInstr (up to Secac lane) -->
+      <bpmndi:BPMNEdge id="F_OficioOut_di" bpmnElement="F_OficioOut">
+        <di:waypoint x="310" y="340" />
+        <di:waypoint x="310" y="180" />
+        <di:waypoint x="420" y="180" />
+        <di:waypoint x="420" y="140" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_OficioBack: OficioInstr → CoordDiaco -->
+      <bpmndi:BPMNEdge id="F_OficioBack_di" bpmnElement="F_OficioBack">
+        <di:waypoint x="350" y="110" />
+        <di:waypoint x="270" y="110" />
+        <di:waypoint x="270" y="180" />
+        <di:waypoint x="270" y="340" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_TipoDemanda → 8 tasks -->
+      <bpmndi:BPMNEdge id="F_TipoAdm_di" bpmnElement="F_TipoAdm">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="217" />
+        <di:waypoint x="530" y="217" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoJul_di" bpmnElement="F_TipoJul">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="272" />
+        <di:waypoint x="530" y="272" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoRec_di" bpmnElement="F_TipoRec">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="327" />
+        <di:waypoint x="530" y="327" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoRH_di" bpmnElement="F_TipoRH">
+        <di:waypoint x="470" y="370" />
+        <di:waypoint x="530" y="382" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoRev_di" bpmnElement="F_TipoRev">
+        <di:waypoint x="450" y="390" />
+        <di:waypoint x="450" y="437" />
+        <di:waypoint x="530" y="437" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoCorr_di" bpmnElement="F_TipoCorr">
+        <di:waypoint x="450" y="390" />
+        <di:waypoint x="450" y="492" />
+        <di:waypoint x="530" y="492" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoInfJud_di" bpmnElement="F_TipoInfJud">
+        <di:waypoint x="450" y="390" />
+        <di:waypoint x="450" y="497" />
+        <di:waypoint x="530" y="497" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_TipoInfGeral_di" bpmnElement="F_TipoInfGeral">
+        <di:waypoint x="450" y="390" />
+        <di:waypoint x="450" y="537" />
+        <di:waypoint x="530" y="537" />
+      </bpmndi:BPMNEdge>
+
+      <!-- 8 tasks → Gateway_Join_Tipo -->
+      <bpmndi:BPMNEdge id="F_JoinAdm_di" bpmnElement="F_JoinAdm">
+        <di:waypoint x="670" y="217" />
+        <di:waypoint x="750" y="217" />
+        <di:waypoint x="750" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinJul_di" bpmnElement="F_JoinJul">
+        <di:waypoint x="670" y="272" />
+        <di:waypoint x="750" y="272" />
+        <di:waypoint x="750" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinRec_di" bpmnElement="F_JoinRec">
+        <di:waypoint x="670" y="327" />
+        <di:waypoint x="750" y="327" />
+        <di:waypoint x="750" y="350" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinRH_di" bpmnElement="F_JoinRH">
+        <di:waypoint x="670" y="382" />
+        <di:waypoint x="730" y="370" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinRev_di" bpmnElement="F_JoinRev">
+        <di:waypoint x="670" y="437" />
+        <di:waypoint x="750" y="437" />
+        <di:waypoint x="750" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinCorr_di" bpmnElement="F_JoinCorr">
+        <di:waypoint x="670" y="492" />
+        <di:waypoint x="750" y="492" />
+        <di:waypoint x="750" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinInfJud_di" bpmnElement="F_JoinInfJud">
+        <di:waypoint x="670" y="497" />
+        <di:waypoint x="750" y="497" />
+        <di:waypoint x="750" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinInfGeral_di" bpmnElement="F_JoinInfGeral">
+        <di:waypoint x="670" y="537" />
+        <di:waypoint x="750" y="537" />
+        <di:waypoint x="750" y="390" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_Join_Tipo → SupTecDiaco -->
+      <bpmndi:BPMNEdge id="F_SupTec_di" bpmnElement="F_SupTec">
+        <di:waypoint x="770" y="370" />
+        <di:waypoint x="820" y="370" />
+      </bpmndi:BPMNEdge>
+
+      <!-- SupTecDiaco → Gateway_SupTec -->
+      <bpmndi:BPMNEdge id="F_GwSupTec_di" bpmnElement="F_GwSupTec">
+        <di:waypoint x="960" y="370" />
+        <di:waypoint x="1020" y="370" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → AprovaInform (Subcorr) -->
+      <bpmndi:BPMNEdge id="F_SimInform_di" bpmnElement="F_SimInform">
+        <di:waypoint x="1040" y="390" />
+        <di:waypoint x="1040" y="620" />
+        <di:waypoint x="1380" y="620" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → AprovaParJul (Subcorr) -->
+      <bpmndi:BPMNEdge id="F_SimParJul_di" bpmnElement="F_SimParJul">
+        <di:waypoint x="1060" y="370" />
+        <di:waypoint x="1200" y="370" />
+        <di:waypoint x="1200" y="710" />
+        <di:waypoint x="1380" y="710" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → ReuniaoDiaco -->
+      <bpmndi:BPMNEdge id="F_NaoReuniao_di" bpmnElement="F_NaoReuniao">
+        <di:waypoint x="1040" y="390" />
+        <di:waypoint x="1040" y="470" />
+        <di:waypoint x="1100" y="470" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ReuniaoDiaco → CoordDiaco (loop back) -->
+      <bpmndi:BPMNEdge id="F_ReuniaBack_di" bpmnElement="F_ReuniaBack">
+        <di:waypoint x="1100" y="500" />
+        <di:waypoint x="310" y="500" />
+        <di:waypoint x="310" y="400" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AprovaInform → AtualizaEpad -->
+      <bpmndi:BPMNEdge id="F_Atualiza1_di" bpmnElement="F_Atualiza1">
+        <di:waypoint x="1520" y="620" />
+        <di:waypoint x="1710" y="620" />
+        <di:waypoint x="1710" y="140" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AprovaParJul → AtualizaEpad -->
+      <bpmndi:BPMNEdge id="F_Atualiza2_di" bpmnElement="F_Atualiza2">
+        <di:waypoint x="1520" y="710" />
+        <di:waypoint x="1730" y="710" />
+        <di:waypoint x="1730" y="140" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AtualizaEpad → End_Inform -->
+      <bpmndi:BPMNEdge id="F_AtualizaEnd1_di" bpmnElement="F_AtualizaEnd1">
+        <di:waypoint x="1780" y="110" />
+        <di:waypoint x="1830" y="106" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AtualizaEpad → End_Jul -->
+      <bpmndi:BPMNEdge id="F_AtualizaEnd2_di" bpmnElement="F_AtualizaEnd2">
+        <di:waypoint x="1780" y="110" />
+        <di:waypoint x="1905" y="106" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080304"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080304">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.03-04 - Prestar Apoio Juridico e Atender Consultas Internas"
+      processRef="Process_07080304" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080304" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080304">
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Start_Main</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TriagemSecac</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_TipoTriagem</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DemandaSIC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DemandaJur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaOCRep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaOCOuv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_OcorrInstrucao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Oficio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaFinal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaRec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdDemSecac</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Inform</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Par</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_Gas</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DemandaGasiscor</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DemJur" name="Diaco / DemJur">
+        <bpmn:flowNodeRef>Task_InfLAI</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordDemJur</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_TipoProd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InfJudicial</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Inf</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PareRecHier</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PareRevisao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PareRecons</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PareCorr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PareConsultaSECI</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InfDisciplinar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Join_Prod</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SupTecDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_SupTec</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ReuniaoDiaco</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Seaco" name="Seaco">
+        <bpmn:flowNodeRef>Task_AprovaInform</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AprovaParJul</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordSeaco</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Gasiscor" name="Gasiscor">
+        <bpmn:flowNodeRef>Task_GerenGasiscor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdGasiscor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Gas</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Lane Secac (Main flow) -->
+    <bpmn:startEvent id="Start_Main" name="Demanda Recebida (LAI/SIC / Consulta / Recurso / Judicial)">
+      <bpmn:outgoing>F_M01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_TriagemSecac" name="Triagem SECAC">
+      <bpmn:incoming>F_M01</bpmn:incoming>
+      <bpmn:outgoing>F_M02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_TipoTriagem" name="Tipo de Demanda">
+      <bpmn:incoming>F_M02</bpmn:incoming>
+      <bpmn:outgoing>F_PathSIC</bpmn:outgoing>
+      <bpmn:outgoing>F_PathJur</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_DemandaSIC" name="Demanda Apoio - SIC">
+      <bpmn:incoming>F_PathSIC</bpmn:incoming>
+      <bpmn:outgoing>F_SIC_toLAI</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_DemandaJur" name="Demanda Apoio - Juridica">
+      <bpmn:incoming>F_PathJur</bpmn:incoming>
+      <bpmn:outgoing>F_Jur_toCoord</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AberturaOCRep" name="Abertura OC - Representacao">
+      <bpmn:incoming>F_ProdAberturaRep</bpmn:incoming>
+      <bpmn:outgoing>F_JoinAberturaRep</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AberturaOCOuv" name="Abertura OC - Ouvidoria">
+      <bpmn:incoming>F_ProdAberturaOuv</bpmn:incoming>
+      <bpmn:outgoing>F_JoinAberturaOuv</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_OcorrInstrucao" name="Ocorrencia - Instrucao">
+      <bpmn:incoming>F_ProdOcorr</bpmn:incoming>
+      <bpmn:outgoing>F_JoinOcorr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Oficio" name="Oficio - Atividade">
+      <bpmn:incoming>F_ProdOficio</bpmn:incoming>
+      <bpmn:outgoing>F_JoinOficio</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtualizaFinal" name="ATUALIZA-EPAD-FINAL">
+      <bpmn:incoming>F_SimInform</bpmn:incoming>
+      <bpmn:incoming>F_AtdToAtualiza</bpmn:incoming>
+      <bpmn:outgoing>F_EndInform</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtualizaRec" name="ATUALIZA-EPAD-JAD/JUL/RECURSO">
+      <bpmn:incoming>F_SimParJul</bpmn:incoming>
+      <bpmn:outgoing>F_EndPar</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtdDemSecac" name="ATD-DEM-SECAC">
+      <bpmn:incoming>F_CoordSeacoToAtd</bpmn:incoming>
+      <bpmn:outgoing>F_AtdToAtualiza</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Inform" name="Processo Encerrado (Inform/Parecer)">
+      <bpmn:incoming>F_EndInform</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Par" name="Processo Encerrado (PAR-JUL/REC)">
+      <bpmn:incoming>F_EndPar</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Lane Secac (GASISCOR flow) -->
+    <bpmn:startEvent id="Start_Gas" name="Demanda GASISCOR">
+      <bpmn:outgoing>F_G01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_DemandaGasiscor" name="Demanda Apoio - GASISCOR">
+      <bpmn:incoming>F_G01</bpmn:incoming>
+      <bpmn:outgoing>F_G02</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane DemJur -->
+    <bpmn:task id="Task_InfLAI" name="INFORMACAO-LAI/SIC">
+      <bpmn:incoming>F_SIC_toLAI</bpmn:incoming>
+      <bpmn:outgoing>F_LAI_toJoin</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CoordDemJur" name="Coordenacao DIACO/DemJur">
+      <bpmn:incoming>F_Jur_toCoord</bpmn:incoming>
+      <bpmn:incoming>F_ReuniaBack</bpmn:incoming>
+      <bpmn:outgoing>F_toTipoProd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_TipoProd" name="Tipo de Produto">
+      <bpmn:incoming>F_toTipoProd</bpmn:incoming>
+      <bpmn:outgoing>F_ProdInfJud</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdInf</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdPareRecHier</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdPareRevisao</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdPareRecons</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdPareCorr</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdConsultaSECI</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdInfDisc</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdAberturaRep</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdAberturaOuv</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdOcorr</bpmn:outgoing>
+      <bpmn:outgoing>F_ProdOficio</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_InfJudicial" name="INFORMACAO-JUDICIAL">
+      <bpmn:incoming>F_ProdInfJud</bpmn:incoming>
+      <bpmn:outgoing>F_JoinInfJud</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_Inf" name="INFORMACAO">
+      <bpmn:incoming>F_ProdInf</bpmn:incoming>
+      <bpmn:outgoing>F_JoinInf</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PareRecHier" name="Parecer Rec. Hierarquico">
+      <bpmn:incoming>F_ProdPareRecHier</bpmn:incoming>
+      <bpmn:outgoing>F_JoinPareRecHier</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PareRevisao" name="Parecer de Revisao">
+      <bpmn:incoming>F_ProdPareRevisao</bpmn:incoming>
+      <bpmn:outgoing>F_JoinPareRevisao</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PareRecons" name="Parecer Reconsideracao">
+      <bpmn:incoming>F_ProdPareRecons</bpmn:incoming>
+      <bpmn:outgoing>F_JoinPareRecons</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PareCorr" name="Parecer Correcional">
+      <bpmn:incoming>F_ProdPareCorr</bpmn:incoming>
+      <bpmn:outgoing>F_JoinPareCorr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PareConsultaSECI" name="Parecer Consulta SECI">
+      <bpmn:incoming>F_ProdConsultaSECI</bpmn:incoming>
+      <bpmn:outgoing>F_JoinConsultaSECI</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_InfDisciplinar" name="Informacao Disciplinar">
+      <bpmn:incoming>F_ProdInfDisc</bpmn:incoming>
+      <bpmn:outgoing>F_JoinInfDisc</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Join_Prod" name="Convergencia Produtos">
+      <bpmn:incoming>F_JoinInfJud</bpmn:incoming>
+      <bpmn:incoming>F_JoinInf</bpmn:incoming>
+      <bpmn:incoming>F_JoinPareRecHier</bpmn:incoming>
+      <bpmn:incoming>F_JoinPareRevisao</bpmn:incoming>
+      <bpmn:incoming>F_JoinPareRecons</bpmn:incoming>
+      <bpmn:incoming>F_JoinPareCorr</bpmn:incoming>
+      <bpmn:incoming>F_JoinConsultaSECI</bpmn:incoming>
+      <bpmn:incoming>F_JoinInfDisc</bpmn:incoming>
+      <bpmn:incoming>F_JoinAberturaRep</bpmn:incoming>
+      <bpmn:incoming>F_JoinAberturaOuv</bpmn:incoming>
+      <bpmn:incoming>F_JoinOcorr</bpmn:incoming>
+      <bpmn:incoming>F_JoinOficio</bpmn:incoming>
+      <bpmn:incoming>F_LAI_toJoin</bpmn:incoming>
+      <bpmn:outgoing>F_toSupTec</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_SupTecDiaco" name="Supervisao Tecnica DIACO">
+      <bpmn:incoming>F_toSupTec</bpmn:incoming>
+      <bpmn:outgoing>F_toGwSupTec</bpmn:outgoing>
+      <bpmn:outgoing>F_toCoordSeaco</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_SupTec" name="Qualidade OK?">
+      <bpmn:incoming>F_toGwSupTec</bpmn:incoming>
+      <bpmn:outgoing>F_SimInform</bpmn:outgoing>
+      <bpmn:outgoing>F_SimParJul</bpmn:outgoing>
+      <bpmn:outgoing>F_NaoReuniao</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_ReuniaoDiaco" name="REUNIAO-DIACO">
+      <bpmn:incoming>F_NaoReuniao</bpmn:incoming>
+      <bpmn:outgoing>F_ReuniaBack</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Seaco -->
+    <bpmn:task id="Task_AprovaInform" name="Aprova Inform/Parecer">
+      <bpmn:incoming>F_SimInform</bpmn:incoming>
+      <bpmn:outgoing>F_AprovaToAtualiza</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AprovaParJul" name="Aprova-PAR-JUL/REC">
+      <bpmn:incoming>F_SimParJul</bpmn:incoming>
+      <bpmn:outgoing>F_AprovaParToAtualiza</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CoordSeaco" name="Coordenacao SEACO">
+      <bpmn:incoming>F_toCoordSeaco</bpmn:incoming>
+      <bpmn:outgoing>F_CoordSeacoToAtd</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Gasiscor -->
+    <bpmn:task id="Task_GerenGasiscor" name="Gerenciamento-GASISCOR">
+      <bpmn:incoming>F_G02</bpmn:incoming>
+      <bpmn:outgoing>F_G03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtdGasiscor" name="Atendimento Demanda - GASISCOR">
+      <bpmn:incoming>F_G03</bpmn:incoming>
+      <bpmn:outgoing>F_G04</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Gas" name="Demanda GASISCOR Encerrada">
+      <bpmn:incoming>F_G04</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows - fix duplicate references -->
+    <bpmn:sequenceFlow id="F_SimInform"          sourceRef="Gateway_SupTec"      targetRef="Task_AprovaInform" />
+    <bpmn:sequenceFlow id="F_SimParJul"          sourceRef="Gateway_SupTec"      targetRef="Task_AprovaParJul" />
+    <bpmn:sequenceFlow id="F_AprovaToAtualiza"   sourceRef="Task_AprovaInform"   targetRef="Task_AtualizaFinal" />
+    <bpmn:sequenceFlow id="F_AprovaParToAtualiza" sourceRef="Task_AprovaParJul"  targetRef="Task_AtualizaRec" />
+
+    <bpmn:sequenceFlow id="F_M01" sourceRef="Start_Main"         targetRef="Task_TriagemSecac" />
+    <bpmn:sequenceFlow id="F_M02" sourceRef="Task_TriagemSecac"  targetRef="Gateway_TipoTriagem" />
+    <bpmn:sequenceFlow id="F_PathSIC" sourceRef="Gateway_TipoTriagem" targetRef="Task_DemandaSIC" />
+    <bpmn:sequenceFlow id="F_PathJur" sourceRef="Gateway_TipoTriagem" targetRef="Task_DemandaJur" />
+    <bpmn:sequenceFlow id="F_SIC_toLAI"  sourceRef="Task_DemandaSIC"  targetRef="Task_InfLAI" />
+    <bpmn:sequenceFlow id="F_Jur_toCoord" sourceRef="Task_DemandaJur" targetRef="Task_CoordDemJur" />
+    <bpmn:sequenceFlow id="F_toTipoProd" sourceRef="Task_CoordDemJur" targetRef="Gateway_TipoProd" />
+    <bpmn:sequenceFlow id="F_ProdInfJud"      sourceRef="Gateway_TipoProd" targetRef="Task_InfJudicial" />
+    <bpmn:sequenceFlow id="F_ProdInf"         sourceRef="Gateway_TipoProd" targetRef="Task_Inf" />
+    <bpmn:sequenceFlow id="F_ProdPareRecHier" sourceRef="Gateway_TipoProd" targetRef="Task_PareRecHier" />
+    <bpmn:sequenceFlow id="F_ProdPareRevisao" sourceRef="Gateway_TipoProd" targetRef="Task_PareRevisao" />
+    <bpmn:sequenceFlow id="F_ProdPareRecons"  sourceRef="Gateway_TipoProd" targetRef="Task_PareRecons" />
+    <bpmn:sequenceFlow id="F_ProdPareCorr"    sourceRef="Gateway_TipoProd" targetRef="Task_PareCorr" />
+    <bpmn:sequenceFlow id="F_ProdConsultaSECI" sourceRef="Gateway_TipoProd" targetRef="Task_PareConsultaSECI" />
+    <bpmn:sequenceFlow id="F_ProdInfDisc"     sourceRef="Gateway_TipoProd" targetRef="Task_InfDisciplinar" />
+    <bpmn:sequenceFlow id="F_ProdAberturaRep" sourceRef="Gateway_TipoProd" targetRef="Task_AberturaOCRep" />
+    <bpmn:sequenceFlow id="F_ProdAberturaOuv" sourceRef="Gateway_TipoProd" targetRef="Task_AberturaOCOuv" />
+    <bpmn:sequenceFlow id="F_ProdOcorr"       sourceRef="Gateway_TipoProd" targetRef="Task_OcorrInstrucao" />
+    <bpmn:sequenceFlow id="F_ProdOficio"      sourceRef="Gateway_TipoProd" targetRef="Task_Oficio" />
+    <bpmn:sequenceFlow id="F_JoinInfJud"      sourceRef="Task_InfJudicial"    targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinInf"         sourceRef="Task_Inf"            targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinPareRecHier" sourceRef="Task_PareRecHier"    targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinPareRevisao" sourceRef="Task_PareRevisao"    targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinPareRecons"  sourceRef="Task_PareRecons"     targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinPareCorr"    sourceRef="Task_PareCorr"       targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinConsultaSECI" sourceRef="Task_PareConsultaSECI" targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinInfDisc"     sourceRef="Task_InfDisciplinar" targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinAberturaRep" sourceRef="Task_AberturaOCRep"  targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinAberturaOuv" sourceRef="Task_AberturaOCOuv"  targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinOcorr"       sourceRef="Task_OcorrInstrucao" targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_JoinOficio"       sourceRef="Task_Oficio"        targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_LAI_toJoin"      sourceRef="Task_InfLAI"         targetRef="Gateway_Join_Prod" />
+    <bpmn:sequenceFlow id="F_toSupTec"        sourceRef="Gateway_Join_Prod"   targetRef="Task_SupTecDiaco" />
+    <bpmn:sequenceFlow id="F_toGwSupTec"      sourceRef="Task_SupTecDiaco"    targetRef="Gateway_SupTec" />
+    <bpmn:sequenceFlow id="F_toCoordSeaco"    sourceRef="Task_SupTecDiaco"    targetRef="Task_CoordSeaco" />
+    <bpmn:sequenceFlow id="F_NaoReuniao"      sourceRef="Gateway_SupTec"      targetRef="Task_ReuniaoDiaco" />
+    <bpmn:sequenceFlow id="F_ReuniaBack"      sourceRef="Task_ReuniaoDiaco"   targetRef="Task_CoordDemJur" />
+    <bpmn:sequenceFlow id="F_CoordSeacoToAtd" sourceRef="Task_CoordSeaco"     targetRef="Task_AtdDemSecac" />
+    <bpmn:sequenceFlow id="F_AtdToAtualiza"   sourceRef="Task_AtdDemSecac"    targetRef="Task_AtualizaFinal" />
+    <bpmn:sequenceFlow id="F_EndInform"       sourceRef="Task_AtualizaFinal"  targetRef="End_Inform" />
+    <bpmn:sequenceFlow id="F_EndPar"          sourceRef="Task_AtualizaRec"    targetRef="End_Par" />
+
+    <bpmn:sequenceFlow id="F_G01" sourceRef="Start_Gas"           targetRef="Task_DemandaGasiscor" />
+    <bpmn:sequenceFlow id="F_G02" sourceRef="Task_DemandaGasiscor" targetRef="Task_GerenGasiscor" />
+    <bpmn:sequenceFlow id="F_G03" sourceRef="Task_GerenGasiscor"  targetRef="Task_AtdGasiscor" />
+    <bpmn:sequenceFlow id="F_G04" sourceRef="Task_AtdGasiscor"    targetRef="End_Gas" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080304">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080304" bpmnElement="Collaboration_07080304">
+
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="2100" height="950" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes -->
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="2070" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DemJur_di" bpmnElement="Lane_DemJur" isHorizontal="true">
+        <dc:Bounds x="130" y="200" width="2070" height="380" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Seaco_di" bpmnElement="Lane_Seaco" isHorizontal="true">
+        <dc:Bounds x="130" y="580" width="2070" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Gasiscor_di" bpmnElement="Lane_Gasiscor" isHorizontal="true">
+        <dc:Bounds x="130" y="730" width="2070" height="270" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac elements (Main flow) -->
+      <bpmndi:BPMNShape id="Start_Main_di" bpmnElement="Start_Main">
+        <dc:Bounds x="165" y="107" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_TriagemSecac_di" bpmnElement="Task_TriagemSecac">
+        <dc:Bounds x="240" y="95" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_TipoTriagem_di" bpmnElement="Gateway_TipoTriagem" isMarkerVisible="true">
+        <dc:Bounds x="430" y="105" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DemandaSIC_di" bpmnElement="Task_DemandaSIC">
+        <dc:Bounds x="510" y="65" width="130" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DemandaJur_di" bpmnElement="Task_DemandaJur">
+        <dc:Bounds x="510" y="120" width="130" height="50" />
+      </bpmndi:BPMNShape>
+
+      <!-- Secac tasks that are outputs of TipoProd -->
+      <bpmndi:BPMNShape id="Task_AberturaOCRep_di" bpmnElement="Task_AberturaOCRep">
+        <dc:Bounds x="900" y="55" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AberturaOCOuv_di" bpmnElement="Task_AberturaOCOuv">
+        <dc:Bounds x="900" y="110" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_OcorrInstrucao_di" bpmnElement="Task_OcorrInstrucao">
+        <dc:Bounds x="1040" y="55" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Oficio_di" bpmnElement="Task_Oficio">
+        <dc:Bounds x="1040" y="110" width="120" height="50" />
+      </bpmndi:BPMNShape>
+
+      <!-- Secac end tasks and events -->
+      <bpmndi:BPMNShape id="Task_AtualizaFinal_di" bpmnElement="Task_AtualizaFinal">
+        <dc:Bounds x="1760" y="60" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtualizaRec_di" bpmnElement="Task_AtualizaRec">
+        <dc:Bounds x="1760" y="125" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdDemSecac_di" bpmnElement="Task_AtdDemSecac">
+        <dc:Bounds x="1600" y="60" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Inform_di" bpmnElement="End_Inform">
+        <dc:Bounds x="1960" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Par_di" bpmnElement="End_Par">
+        <dc:Bounds x="1960" y="137" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac GASISCOR flow -->
+      <bpmndi:BPMNShape id="Start_Gas_di" bpmnElement="Start_Gas">
+        <dc:Bounds x="165" y="795" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DemandaGasiscor_di" bpmnElement="Task_DemandaGasiscor">
+        <dc:Bounds x="240" y="783" width="140" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane DemJur elements -->
+      <!-- Task_InfLAI -->
+      <bpmndi:BPMNShape id="Task_InfLAI_di" bpmnElement="Task_InfLAI">
+        <dc:Bounds x="700" y="210" width="130" height="50" />
+      </bpmndi:BPMNShape>
+      <!-- Task_CoordDemJur -->
+      <bpmndi:BPMNShape id="Task_CoordDemJur_di" bpmnElement="Task_CoordDemJur">
+        <dc:Bounds x="700" y="330" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Gateway_TipoProd -->
+      <bpmndi:BPMNShape id="Gateway_TipoProd_di" bpmnElement="Gateway_TipoProd" isMarkerVisible="true">
+        <dc:Bounds x="880" y="340" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- 8 DemJur tasks in columns -->
+      <bpmndi:BPMNShape id="Task_InfJudicial_di" bpmnElement="Task_InfJudicial">
+        <dc:Bounds x="970" y="205" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_Inf_di" bpmnElement="Task_Inf">
+        <dc:Bounds x="970" y="260" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PareRecHier_di" bpmnElement="Task_PareRecHier">
+        <dc:Bounds x="970" y="315" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PareRevisao_di" bpmnElement="Task_PareRevisao">
+        <dc:Bounds x="970" y="370" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PareRecons_di" bpmnElement="Task_PareRecons">
+        <dc:Bounds x="970" y="425" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PareCorr_di" bpmnElement="Task_PareCorr">
+        <dc:Bounds x="970" y="480" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PareConsultaSECI_di" bpmnElement="Task_PareConsultaSECI">
+        <dc:Bounds x="1120" y="205" width="120" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InfDisciplinar_di" bpmnElement="Task_InfDisciplinar">
+        <dc:Bounds x="1120" y="260" width="120" height="50" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_Join_Prod -->
+      <bpmndi:BPMNShape id="Gateway_Join_Prod_di" bpmnElement="Gateway_Join_Prod" isMarkerVisible="true">
+        <dc:Bounds x="1300" y="340" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_SupTecDiaco -->
+      <bpmndi:BPMNShape id="Task_SupTecDiaco_di" bpmnElement="Task_SupTecDiaco">
+        <dc:Bounds x="1400" y="330" width="130" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_SupTec -->
+      <bpmndi:BPMNShape id="Gateway_SupTec_di" bpmnElement="Gateway_SupTec" isMarkerVisible="true">
+        <dc:Bounds x="1590" y="340" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_ReuniaoDiaco -->
+      <bpmndi:BPMNShape id="Task_ReuniaoDiaco_di" bpmnElement="Task_ReuniaoDiaco">
+        <dc:Bounds x="1700" y="430" width="130" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Seaco elements -->
+      <bpmndi:BPMNShape id="Task_AprovaInform_di" bpmnElement="Task_AprovaInform">
+        <dc:Bounds x="1700" y="595" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AprovaParJul_di" bpmnElement="Task_AprovaParJul">
+        <dc:Bounds x="1700" y="665" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CoordSeaco_di" bpmnElement="Task_CoordSeaco">
+        <dc:Bounds x="1540" y="595" width="120" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Gasiscor elements -->
+      <bpmndi:BPMNShape id="Task_GerenGasiscor_di" bpmnElement="Task_GerenGasiscor">
+        <dc:Bounds x="430" y="790" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdGasiscor_di" bpmnElement="Task_AtdGasiscor">
+        <dc:Bounds x="610" y="790" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Gas_di" bpmnElement="End_Gas">
+        <dc:Bounds x="800" y="802" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges Main Flow -->
+      <bpmndi:BPMNEdge id="F_M01_di" bpmnElement="F_M01">
+        <di:waypoint x="201" y="125" />
+        <di:waypoint x="240" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_M02_di" bpmnElement="F_M02">
+        <di:waypoint x="380" y="125" />
+        <di:waypoint x="430" y="125" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_PathSIC_di" bpmnElement="F_PathSIC">
+        <di:waypoint x="450" y="105" />
+        <di:waypoint x="450" y="90" />
+        <di:waypoint x="510" y="90" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_PathJur_di" bpmnElement="F_PathJur">
+        <di:waypoint x="450" y="145" />
+        <di:waypoint x="450" y="145" />
+        <di:waypoint x="510" y="145" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_SIC_toLAI_di" bpmnElement="F_SIC_toLAI">
+        <di:waypoint x="640" y="90" />
+        <di:waypoint x="670" y="90" />
+        <di:waypoint x="670" y="235" />
+        <di:waypoint x="700" y="235" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_Jur_toCoord_di" bpmnElement="F_Jur_toCoord">
+        <di:waypoint x="640" y="145" />
+        <di:waypoint x="670" y="145" />
+        <di:waypoint x="670" y="360" />
+        <di:waypoint x="700" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_toTipoProd_di" bpmnElement="F_toTipoProd">
+        <di:waypoint x="830" y="360" />
+        <di:waypoint x="880" y="360" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_TipoProd → DemJur tasks -->
+      <bpmndi:BPMNEdge id="F_ProdInfJud_di" bpmnElement="F_ProdInfJud">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="230" />
+        <di:waypoint x="970" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdInf_di" bpmnElement="F_ProdInf">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="285" />
+        <di:waypoint x="970" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdPareRecHier_di" bpmnElement="F_ProdPareRecHier">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="970" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdPareRevisao_di" bpmnElement="F_ProdPareRevisao">
+        <di:waypoint x="920" y="360" />
+        <di:waypoint x="970" y="395" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdPareRecons_di" bpmnElement="F_ProdPareRecons">
+        <di:waypoint x="900" y="380" />
+        <di:waypoint x="900" y="450" />
+        <di:waypoint x="970" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdPareCorr_di" bpmnElement="F_ProdPareCorr">
+        <di:waypoint x="900" y="380" />
+        <di:waypoint x="900" y="505" />
+        <di:waypoint x="970" y="505" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdConsultaSECI_di" bpmnElement="F_ProdConsultaSECI">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="1050" y="340" />
+        <di:waypoint x="1050" y="230" />
+        <di:waypoint x="1120" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdInfDisc_di" bpmnElement="F_ProdInfDisc">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="1050" y="340" />
+        <di:waypoint x="1050" y="285" />
+        <di:waypoint x="1120" y="285" />
+      </bpmndi:BPMNEdge>
+      <!-- TipoProd → Secac tasks -->
+      <bpmndi:BPMNEdge id="F_ProdAberturaRep_di" bpmnElement="F_ProdAberturaRep">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="200" />
+        <di:waypoint x="960" y="200" />
+        <di:waypoint x="960" y="80" />
+        <di:waypoint x="900" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdAberturaOuv_di" bpmnElement="F_ProdAberturaOuv">
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="200" />
+        <di:waypoint x="955" y="200" />
+        <di:waypoint x="955" y="135" />
+        <di:waypoint x="900" y="135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdOcorr_di" bpmnElement="F_ProdOcorr">
+        <di:waypoint x="920" y="340" />
+        <di:waypoint x="1100" y="340" />
+        <di:waypoint x="1100" y="200" />
+        <di:waypoint x="1100" y="80" />
+        <di:waypoint x="1040" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_ProdOficio_di" bpmnElement="F_ProdOficio">
+        <di:waypoint x="920" y="340" />
+        <di:waypoint x="1100" y="340" />
+        <di:waypoint x="1100" y="200" />
+        <di:waypoint x="1100" y="135" />
+        <di:waypoint x="1040" y="135" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Tasks → Gateway_Join_Prod -->
+      <bpmndi:BPMNEdge id="F_JoinInfJud_di" bpmnElement="F_JoinInfJud">
+        <di:waypoint x="1090" y="230" />
+        <di:waypoint x="1320" y="230" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinInf_di" bpmnElement="F_JoinInf">
+        <di:waypoint x="1090" y="285" />
+        <di:waypoint x="1320" y="285" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinPareRecHier_di" bpmnElement="F_JoinPareRecHier">
+        <di:waypoint x="1090" y="340" />
+        <di:waypoint x="1300" y="360" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinPareRevisao_di" bpmnElement="F_JoinPareRevisao">
+        <di:waypoint x="1090" y="395" />
+        <di:waypoint x="1320" y="395" />
+        <di:waypoint x="1320" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinPareRecons_di" bpmnElement="F_JoinPareRecons">
+        <di:waypoint x="1090" y="450" />
+        <di:waypoint x="1320" y="450" />
+        <di:waypoint x="1320" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinPareCorr_di" bpmnElement="F_JoinPareCorr">
+        <di:waypoint x="1090" y="505" />
+        <di:waypoint x="1320" y="505" />
+        <di:waypoint x="1320" y="380" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinConsultaSECI_di" bpmnElement="F_JoinConsultaSECI">
+        <di:waypoint x="1240" y="230" />
+        <di:waypoint x="1320" y="230" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinInfDisc_di" bpmnElement="F_JoinInfDisc">
+        <di:waypoint x="1240" y="285" />
+        <di:waypoint x="1320" y="285" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <!-- Secac tasks → Gateway_Join_Prod -->
+      <bpmndi:BPMNEdge id="F_JoinAberturaRep_di" bpmnElement="F_JoinAberturaRep">
+        <di:waypoint x="1020" y="80" />
+        <di:waypoint x="1200" y="80" />
+        <di:waypoint x="1200" y="200" />
+        <di:waypoint x="1320" y="200" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinAberturaOuv_di" bpmnElement="F_JoinAberturaOuv">
+        <di:waypoint x="1020" y="135" />
+        <di:waypoint x="1210" y="135" />
+        <di:waypoint x="1210" y="200" />
+        <di:waypoint x="1320" y="200" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinOcorr_di" bpmnElement="F_JoinOcorr">
+        <di:waypoint x="1160" y="80" />
+        <di:waypoint x="1320" y="80" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_JoinOficio_di" bpmnElement="F_JoinOficio">
+        <di:waypoint x="1160" y="135" />
+        <di:waypoint x="1320" y="135" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+      <!-- InfLAI → Gateway_Join_Prod -->
+      <bpmndi:BPMNEdge id="F_LAI_toJoin_di" bpmnElement="F_LAI_toJoin">
+        <di:waypoint x="830" y="235" />
+        <di:waypoint x="1320" y="235" />
+        <di:waypoint x="1320" y="340" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_Join_Prod → SupTecDiaco -->
+      <bpmndi:BPMNEdge id="F_toSupTec_di" bpmnElement="F_toSupTec">
+        <di:waypoint x="1340" y="360" />
+        <di:waypoint x="1400" y="360" />
+      </bpmndi:BPMNEdge>
+
+      <!-- SupTecDiaco → Gateway_SupTec -->
+      <bpmndi:BPMNEdge id="F_toGwSupTec_di" bpmnElement="F_toGwSupTec">
+        <di:waypoint x="1530" y="360" />
+        <di:waypoint x="1590" y="360" />
+      </bpmndi:BPMNEdge>
+
+      <!-- SupTecDiaco → CoordSeaco -->
+      <bpmndi:BPMNEdge id="F_toCoordSeaco_di" bpmnElement="F_toCoordSeaco">
+        <di:waypoint x="1465" y="390" />
+        <di:waypoint x="1465" y="625" />
+        <di:waypoint x="1540" y="625" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → AprovaInform -->
+      <bpmndi:BPMNEdge id="F_SimInform_di" bpmnElement="F_SimInform">
+        <di:waypoint x="1610" y="380" />
+        <di:waypoint x="1610" y="625" />
+        <di:waypoint x="1700" y="625" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → AprovaParJul -->
+      <bpmndi:BPMNEdge id="F_SimParJul_di" bpmnElement="F_SimParJul">
+        <di:waypoint x="1630" y="360" />
+        <di:waypoint x="1660" y="360" />
+        <di:waypoint x="1660" y="695" />
+        <di:waypoint x="1700" y="695" />
+      </bpmndi:BPMNEdge>
+
+      <!-- Gateway_SupTec → ReuniaoDiaco -->
+      <bpmndi:BPMNEdge id="F_NaoReuniao_di" bpmnElement="F_NaoReuniao">
+        <di:waypoint x="1610" y="380" />
+        <di:waypoint x="1610" y="460" />
+        <di:waypoint x="1700" y="460" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ReuniaoDiaco → CoordDemJur -->
+      <bpmndi:BPMNEdge id="F_ReuniaBack_di" bpmnElement="F_ReuniaBack">
+        <di:waypoint x="1700" y="490" />
+        <di:waypoint x="765" y="490" />
+        <di:waypoint x="765" y="390" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AprovaInform → AtualizaFinal -->
+      <bpmndi:BPMNEdge id="F_AprovaToAtualiza_di" bpmnElement="F_AprovaToAtualiza">
+        <di:waypoint x="1830" y="625" />
+        <di:waypoint x="1880" y="625" />
+        <di:waypoint x="1880" y="90" />
+        <di:waypoint x="1900" y="90" />
+        <di:waypoint x="1900" y="90" />
+        <di:waypoint x="1760" y="90" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AprovaParJul → AtualizaRec -->
+      <bpmndi:BPMNEdge id="F_AprovaParToAtualiza_di" bpmnElement="F_AprovaParToAtualiza">
+        <di:waypoint x="1830" y="695" />
+        <di:waypoint x="1900" y="695" />
+        <di:waypoint x="1900" y="155" />
+        <di:waypoint x="1760" y="155" />
+      </bpmndi:BPMNEdge>
+
+      <!-- CoordSeaco → AtdDemSecac -->
+      <bpmndi:BPMNEdge id="F_CoordSeacoToAtd_di" bpmnElement="F_CoordSeacoToAtd">
+        <di:waypoint x="1660" y="625" />
+        <di:waypoint x="1660" y="85" />
+        <di:waypoint x="1600" y="85" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AtdDemSecac → AtualizaFinal -->
+      <bpmndi:BPMNEdge id="F_AtdToAtualiza_di" bpmnElement="F_AtdToAtualiza">
+        <di:waypoint x="1720" y="85" />
+        <di:waypoint x="1760" y="90" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AtualizaFinal → End_Inform -->
+      <bpmndi:BPMNEdge id="F_EndInform_di" bpmnElement="F_EndInform">
+        <di:waypoint x="1900" y="90" />
+        <di:waypoint x="1960" y="90" />
+      </bpmndi:BPMNEdge>
+
+      <!-- AtualizaRec → End_Par -->
+      <bpmndi:BPMNEdge id="F_EndPar_di" bpmnElement="F_EndPar">
+        <di:waypoint x="1900" y="155" />
+        <di:waypoint x="1960" y="155" />
+      </bpmndi:BPMNEdge>
+
+      <!-- GASISCOR Edges -->
+      <bpmndi:BPMNEdge id="F_G01_di" bpmnElement="F_G01">
+        <di:waypoint x="201" y="813" />
+        <di:waypoint x="240" y="813" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_G02_di" bpmnElement="F_G02">
+        <di:waypoint x="380" y="813" />
+        <di:waypoint x="430" y="820" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_G03_di" bpmnElement="F_G03">
+        <di:waypoint x="560" y="820" />
+        <di:waypoint x="610" y="820" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_G04_di" bpmnElement="F_G04">
+        <di:waypoint x="740" y="820" />
+        <di:waypoint x="800" y="820" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
