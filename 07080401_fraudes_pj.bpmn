@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080401_Fixed"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080401">
+    <bpmn:participant id="Participant_Pool" name="07.08.04-01 - Investigar Fraudes e Atos Lesivos Corporativos PJ" processRef="Process_07080401" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080401" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080401">
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Start_Ouvidoria</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_Representacao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaOuv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaRep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Merge_OC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_InstrucaoOC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaEpadOC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_To_Diaco</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Diaco" name="Diaco / Seaco">
+        <bpmn:flowNodeRef>Task_Triagem</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ParecerAdm</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DeliberacaoDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Decision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Arquivado</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Subcorregedoria" name="Subcorregedoria (Controle Independente)">
+        <bpmn:flowNodeRef>Task_AprovaINV</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AprovaPAR</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Divid" name="Divid (Divisao de Investigacao)">
+        <bpmn:flowNodeRef>Task_CoordDivid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Split_Inv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_IPS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_INPRE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DINVE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Join_Inv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_GenDivid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_GerenDivid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdDemDivid</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_GenDivid</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DProc" name="DProc">
+        <bpmn:flowNodeRef>Task_InstauracaoPAR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PAR</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <bpmn:startEvent id="Start_Ouvidoria" name="Denuncia Ouvidoria">
+      <bpmn:outgoing>Flow_S1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:startEvent id="Start_Representacao" name="Representacao Oficial">
+      <bpmn:outgoing>Flow_S2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_AberturaOuv" name="Abertura OC - Ouvidoria">
+      <bpmn:incoming>Flow_S1</bpmn:incoming>
+      <bpmn:outgoing>Flow_S3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AberturaRep" name="Abertura OC - Representacao">
+      <bpmn:incoming>Flow_S2</bpmn:incoming>
+      <bpmn:outgoing>Flow_S4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Merge_OC">
+      <bpmn:incoming>Flow_S3</bpmn:incoming>
+      <bpmn:incoming>Flow_S4</bpmn:incoming>
+      <bpmn:outgoing>Flow_S5</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_InstrucaoOC" name="Ocorrencia - Instrucao">
+      <bpmn:incoming>Flow_S5</bpmn:incoming>
+      <bpmn:outgoing>Flow_S6</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtualizaEpadOC" name="ATUALIZA-EPAD-OC">
+      <bpmn:incoming>Flow_S6</bpmn:incoming>
+      <bpmn:outgoing>Flow_S7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_To_Diaco">
+      <bpmn:incoming>Flow_S7</bpmn:incoming>
+      <bpmn:outgoing>Flow_S8</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_Triagem" name="Triagem SECAC / Ouvidoria">
+      <bpmn:incoming>Flow_S8</bpmn:incoming>
+      <bpmn:outgoing>Flow_S9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CoordDiaco" name="Coordenacao DIACO/DEMJUR">
+      <bpmn:incoming>Flow_S9</bpmn:incoming>
+      <bpmn:outgoing>Flow_S10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ParecerAdm" name="Parecer Admissibilidade">
+      <bpmn:incoming>Flow_To_Parecer</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_AprovaPAR</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_DeliberacaoDiaco" name="Analyse / Deliberacao DIACO">
+      <bpmn:incoming>Flow_To_Deliberacao</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_Decision</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Qual a Admissibilidade?">
+      <bpmn:incoming>Flow_To_Decision</bpmn:incoming>
+      <bpmn:outgoing>Flow_Decision_PAR</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Decision_Arq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_Arquivado" name="Processo Arquivado / Outro Orgao">
+      <bpmn:incoming>Flow_Decision_Arq</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:task id="Task_CoordDivid" name="Coordenacao DIVID">
+      <bpmn:incoming>Flow_S10</bpmn:incoming>
+      <bpmn:outgoing>Flow_S11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Split_Inv" name="Definicao do Rito">
+      <bpmn:incoming>Flow_S11</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_IPS</bpmn:outgoing>
+      <bpmn:outgoing>Flow_To_INPRE</bpmn:outgoing>
+      <bpmn:outgoing>Flow_To_DINVE</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:subProcess id="SubProcess_IPS" name="IPS - Inquerito Preliminar Sindicante" isExpanded="true">
+      <bpmn:incoming>Flow_To_IPS</bpmn:incoming>
+      <bpmn:outgoing>Flow_From_IPS</bpmn:outgoing>
+      <bpmn:startEvent id="IPS_Start" name="IPS Autuado">
+        <bpmn:outgoing>Sub_I1</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Task_IPS_Dist" name="IPS - Despacho Distribuicao">
+        <bpmn:incoming>Sub_I1</bpmn:incoming>
+        <bpmn:outgoing>Sub_I2</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:task id="Task_IPS_Port" name="PORTARIAS/DESPACHO IPS">
+        <bpmn:incoming>Sub_I2</bpmn:incoming>
+        <bpmn:outgoing>Sub_I3</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:endEvent id="IPS_End" name="Conclusao IPS">
+        <bpmn:incoming>Sub_I3</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Sub_I1" sourceRef="IPS_Start" targetRef="Task_IPS_Dist" />
+      <bpmn:sequenceFlow id="Sub_I2" sourceRef="Task_IPS_Dist" targetRef="Task_IPS_Port" />
+      <bpmn:sequenceFlow id="Sub_I3" sourceRef="Task_IPS_Port" targetRef="IPS_End" />
+    </bpmn:subProcess>
+
+    <bpmn:subProcess id="SubProcess_INPRE" name="INPRE-PJ - Inquerito Preliminar de Pessoa Juridica" isExpanded="true">
+      <bpmn:incoming>Flow_To_INPRE</bpmn:incoming>
+      <bpmn:outgoing>Flow_From_INPRE</bpmn:outgoing>
+      <bpmn:startEvent id="INPRE_Start" name="INPRE Portaria">
+        <bpmn:outgoing>Sub_IN1</bpmn:outgoing>
+      </bpmn:startEvent>
+      <bpmn:task id="Task_INPRE_Exec" name="Executar Instrucao INPRE-PJ">
+        <bpmn:incoming>Sub_IN1</bpmn:incoming>
+        <bpmn:outgoing>Sub_IN2</bpmn:outgoing>
+      </bpmn:task>
+      <bpmn:endEvent id="INPRE_End" name="Relatorio INPRE">
+        <bpmn:incoming>Sub_IN2</bpmn:incoming>
+      </bpmn:endEvent>
+      <bpmn:sequenceFlow id="Sub_IN1" sourceRef="INPRE_Start" targetRef="Task_INPRE_Exec" />
+      <bpmn:sequenceFlow id="Sub_IN2" sourceRef="Task_INPRE_Exec" targetRef="INPRE_End" />
+    </bpmn:subProcess>
+
+    <bpmn:task id="Task_DINVE" name="DINVE - Diligencia Investigativa Especial">
+      <bpmn:incoming>Flow_To_DINVE</bpmn:incoming>
+      <bpmn:outgoing>Flow_From_DINVE</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="Gateway_Join_Inv">
+      <bpmn:incoming>Flow_From_IPS</bpmn:incoming>
+      <bpmn:incoming>Flow_From_INPRE</bpmn:incoming>
+      <bpmn:incoming>Flow_From_DINVE</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_AprovaINV</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_AprovaINV" name="Acompanha/Aprova-INV">
+      <bpmn:incoming>Flow_To_AprovaINV</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_Parecer</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AprovaPAR" name="Acompanha/Aprova-PAR.JAD">
+      <bpmn:incoming>Flow_To_AprovaPAR</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_Deliberacao</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_InstauracaoPAR" name="Portaria de Instauracao PAR">
+      <bpmn:incoming>Flow_Decision_PAR</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_CoordDProc</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_CoordDProc" name="Coordenacao DPROC">
+      <bpmn:incoming>Flow_To_CoordDProc</bpmn:incoming>
+      <bpmn:outgoing>Flow_To_EndPAR</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_PAR" name="PAR Instaurado em Instrucao">
+      <bpmn:incoming>Flow_To_EndPAR</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <bpmn:startEvent id="Start_GenDivid" name="Demanda Interna Divid / DILEX">
+      <bpmn:outgoing>Flow_GD1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_GerenDivid" name="GEREN-DIVID - Gerenciamento das Atividades da Divid">
+      <bpmn:incoming>Flow_GD1</bpmn:incoming>
+      <bpmn:outgoing>Flow_GD2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtdDemDivid" name="ATD-DEM-DIVID - Atendimento de Demandas da Divid">
+      <bpmn:incoming>Flow_GD2</bpmn:incoming>
+      <bpmn:outgoing>Flow_GD3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_GenDivid" name="Demanda Interna Encerrada">
+      <bpmn:incoming>Flow_GD3</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_S1" sourceRef="Start_Ouvidoria" targetRef="Task_AberturaOuv" />
+    <bpmn:sequenceFlow id="Flow_S2" sourceRef="Start_Representacao" targetRef="Task_AberturaRep" />
+    <bpmn:sequenceFlow id="Flow_S3" sourceRef="Task_AberturaOuv" targetRef="Gateway_Merge_OC" />
+    <bpmn:sequenceFlow id="Flow_S4" sourceRef="Task_AberturaRep" targetRef="Gateway_Merge_OC" />
+    <bpmn:sequenceFlow id="Flow_S5" sourceRef="Gateway_Merge_OC" targetRef="Task_InstrucaoOC" />
+    <bpmn:sequenceFlow id="Flow_S6" sourceRef="Task_InstrucaoOC" targetRef="Task_AtualizaEpadOC" />
+    <bpmn:sequenceFlow id="Flow_S7" sourceRef="Task_AtualizaEpadOC" targetRef="Gateway_To_Diaco" />
+    <bpmn:sequenceFlow id="Flow_S8" sourceRef="Gateway_To_Diaco" targetRef="Task_Triagem" />
+    <bpmn:sequenceFlow id="Flow_S9" sourceRef="Task_Triagem" targetRef="Task_CoordDiaco" />
+    <bpmn:sequenceFlow id="Flow_S10" sourceRef="Task_CoordDiaco" targetRef="Task_CoordDivid" />
+    <bpmn:sequenceFlow id="Flow_S11" sourceRef="Task_CoordDivid" targetRef="Gateway_Split_Inv" />
+    <bpmn:sequenceFlow id="Flow_To_IPS" sourceRef="Gateway_Split_Inv" targetRef="SubProcess_IPS" />
+    <bpmn:sequenceFlow id="Flow_To_INPRE" sourceRef="Gateway_Split_Inv" targetRef="SubProcess_INPRE" />
+    <bpmn:sequenceFlow id="Flow_To_DINVE" sourceRef="Gateway_Split_Inv" targetRef="Task_DINVE" />
+    <bpmn:sequenceFlow id="Flow_From_IPS" sourceRef="SubProcess_IPS" targetRef="Gateway_Join_Inv" />
+    <bpmn:sequenceFlow id="Flow_From_INPRE" sourceRef="SubProcess_INPRE" targetRef="Gateway_Join_Inv" />
+    <bpmn:sequenceFlow id="Flow_From_DINVE" sourceRef="Task_DINVE" targetRef="Gateway_Join_Inv" />
+    <bpmn:sequenceFlow id="Flow_To_AprovaINV" sourceRef="Gateway_Join_Inv" targetRef="Task_AprovaINV" />
+    <bpmn:sequenceFlow id="Flow_To_Parecer" sourceRef="Task_AprovaINV" targetRef="Task_ParecerAdm" />
+    <bpmn:sequenceFlow id="Flow_To_AprovaPAR" sourceRef="Task_ParecerAdm" targetRef="Task_AprovaPAR" />
+    <bpmn:sequenceFlow id="Flow_To_Deliberacao" sourceRef="Task_AprovaPAR" targetRef="Task_DeliberacaoDiaco" />
+    <bpmn:sequenceFlow id="Flow_To_Decision" sourceRef="Task_DeliberacaoDiaco" targetRef="Gateway_Decision" />
+    <bpmn:sequenceFlow id="Flow_Decision_PAR" sourceRef="Gateway_Decision" targetRef="Task_InstauracaoPAR" />
+    <bpmn:sequenceFlow id="Flow_Decision_Arq" sourceRef="Gateway_Decision" targetRef="End_Arquivado" />
+    <bpmn:sequenceFlow id="Flow_To_CoordDProc" sourceRef="Task_InstauracaoPAR" targetRef="Task_CoordDProc" />
+    <bpmn:sequenceFlow id="Flow_To_EndPAR" sourceRef="Task_CoordDProc" targetRef="End_PAR" />
+    <bpmn:sequenceFlow id="Flow_GD1" sourceRef="Start_GenDivid" targetRef="Task_GerenDivid" />
+    <bpmn:sequenceFlow id="Flow_GD2" sourceRef="Task_GerenDivid" targetRef="Task_AtdDemDivid" />
+    <bpmn:sequenceFlow id="Flow_GD3" sourceRef="Task_AtdDemDivid" targetRef="End_GenDivid" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080401">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080401" bpmnElement="Collaboration_07080401">
+
+      <!-- Pool -->
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="60" width="1900" height="1000" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes -->
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="60" width="1870" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Diaco_di" bpmnElement="Lane_Diaco" isHorizontal="true">
+        <dc:Bounds x="130" y="220" width="1870" height="180" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Subcorregedoria_di" bpmnElement="Lane_Subcorregedoria" isHorizontal="true">
+        <dc:Bounds x="130" y="400" width="1870" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Divid_di" bpmnElement="Lane_Divid" isHorizontal="true">
+        <dc:Bounds x="130" y="560" width="1870" height="340" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DProc_di" bpmnElement="Lane_DProc" isHorizontal="true">
+        <dc:Bounds x="130" y="900" width="1870" height="160" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac shapes -->
+      <bpmndi:BPMNShape id="Start_Ouvidoria_di" bpmnElement="Start_Ouvidoria">
+        <dc:Bounds x="162" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Start_Representacao_di" bpmnElement="Start_Representacao">
+        <dc:Bounds x="162" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AberturaOuv_di" bpmnElement="Task_AberturaOuv">
+        <dc:Bounds x="240" y="90" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AberturaRep_di" bpmnElement="Task_AberturaRep">
+        <dc:Bounds x="240" y="150" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Merge_OC_di" bpmnElement="Gateway_Merge_OC" isMarkerVisible="true">
+        <dc:Bounds x="410" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_InstrucaoOC_di" bpmnElement="Task_InstrucaoOC">
+        <dc:Bounds x="480" y="110" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtualizaEpadOC_di" bpmnElement="Task_AtualizaEpadOC">
+        <dc:Bounds x="640" y="110" width="130" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_To_Diaco_di" bpmnElement="Gateway_To_Diaco" isMarkerVisible="true">
+        <dc:Bounds x="800" y="120" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Diaco shapes -->
+      <bpmndi:BPMNShape id="Task_Triagem_di" bpmnElement="Task_Triagem">
+        <dc:Bounds x="780" y="265" width="130" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CoordDiaco_di" bpmnElement="Task_CoordDiaco">
+        <dc:Bounds x="940" y="265" width="150" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ParecerAdm_di" bpmnElement="Task_ParecerAdm">
+        <dc:Bounds x="1120" y="265" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DeliberacaoDiaco_di" bpmnElement="Task_DeliberacaoDiaco">
+        <dc:Bounds x="1390" y="265" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Decision_di" bpmnElement="Gateway_Decision" isMarkerVisible="true">
+        <dc:Bounds x="1560" y="280" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Arquivado_di" bpmnElement="End_Arquivado">
+        <dc:Bounds x="1640" y="282" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Subcorregedoria shapes -->
+      <bpmndi:BPMNShape id="Task_AprovaINV_di" bpmnElement="Task_AprovaINV">
+        <dc:Bounds x="860" y="435" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AprovaPAR_di" bpmnElement="Task_AprovaPAR">
+        <dc:Bounds x="1240" y="435" width="140" height="70" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Divid shapes -->
+      <bpmndi:BPMNShape id="Task_CoordDivid_di" bpmnElement="Task_CoordDivid">
+        <dc:Bounds x="200" y="600" width="130" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Split_Inv_di" bpmnElement="Gateway_Split_Inv" isMarkerVisible="true">
+        <dc:Bounds x="360" y="615" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="SubProcess_IPS_di" bpmnElement="SubProcess_IPS" isExpanded="true">
+        <dc:Bounds x="430" y="570" width="320" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IPS_Start_di" bpmnElement="IPS_Start">
+        <dc:Bounds x="445" y="605" width="30" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IPS_Dist_di" bpmnElement="Task_IPS_Dist">
+        <dc:Bounds x="495" y="590" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IPS_Port_di" bpmnElement="Task_IPS_Port">
+        <dc:Bounds x="615" y="590" width="100" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IPS_End_di" bpmnElement="IPS_End">
+        <dc:Bounds x="725" y="605" width="30" height="30" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="SubProcess_INPRE_di" bpmnElement="SubProcess_INPRE" isExpanded="true">
+        <dc:Bounds x="430" y="690" width="320" height="110" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="INPRE_Start_di" bpmnElement="INPRE_Start">
+        <dc:Bounds x="445" y="730" width="30" height="30" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_INPRE_Exec_di" bpmnElement="Task_INPRE_Exec">
+        <dc:Bounds x="495" y="715" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="INPRE_End_di" bpmnElement="INPRE_End">
+        <dc:Bounds x="700" y="730" width="30" height="30" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Task_DINVE_di" bpmnElement="Task_DINVE">
+        <dc:Bounds x="430" y="820" width="140" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Join_Inv_di" bpmnElement="Gateway_Join_Inv" isMarkerVisible="true">
+        <dc:Bounds x="790" y="615" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Start_GenDivid_di" bpmnElement="Start_GenDivid">
+        <dc:Bounds x="870" y="832" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GerenDivid_di" bpmnElement="Task_GerenDivid">
+        <dc:Bounds x="940" y="815" width="150" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdDemDivid_di" bpmnElement="Task_AtdDemDivid">
+        <dc:Bounds x="1120" y="815" width="150" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_GenDivid_di" bpmnElement="End_GenDivid">
+        <dc:Bounds x="1310" y="832" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane DProc shapes -->
+      <bpmndi:BPMNShape id="Task_InstauracaoPAR_di" bpmnElement="Task_InstauracaoPAR">
+        <dc:Bounds x="1540" y="935" width="140" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_CoordDProc_di" bpmnElement="Task_CoordDProc">
+        <dc:Bounds x="1710" y="935" width="130" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_PAR_di" bpmnElement="End_PAR">
+        <dc:Bounds x="1872" y="952" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Flow_S1_di" bpmnElement="Flow_S1">
+        <di:waypoint x="198" y="120" />
+        <di:waypoint x="240" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S2_di" bpmnElement="Flow_S2">
+        <di:waypoint x="198" y="180" />
+        <di:waypoint x="240" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S3_di" bpmnElement="Flow_S3">
+        <di:waypoint x="380" y="120" />
+        <di:waypoint x="410" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S4_di" bpmnElement="Flow_S4">
+        <di:waypoint x="380" y="180" />
+        <di:waypoint x="410" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S5_di" bpmnElement="Flow_S5">
+        <di:waypoint x="450" y="140" />
+        <di:waypoint x="480" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S6_di" bpmnElement="Flow_S6">
+        <di:waypoint x="610" y="140" />
+        <di:waypoint x="640" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S7_di" bpmnElement="Flow_S7">
+        <di:waypoint x="770" y="140" />
+        <di:waypoint x="800" y="140" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S8_di" bpmnElement="Flow_S8">
+        <di:waypoint x="820" y="160" />
+        <di:waypoint x="820" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S9_di" bpmnElement="Flow_S9">
+        <di:waypoint x="910" y="300" />
+        <di:waypoint x="940" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S10_di" bpmnElement="Flow_S10">
+        <di:waypoint x="1015" y="335" />
+        <di:waypoint x="1015" y="530" />
+        <di:waypoint x="265" y="530" />
+        <di:waypoint x="265" y="600" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_S11_di" bpmnElement="Flow_S11">
+        <di:waypoint x="330" y="635" />
+        <di:waypoint x="360" y="635" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_IPS_di" bpmnElement="Flow_To_IPS">
+        <di:waypoint x="400" y="635" />
+        <di:waypoint x="430" y="625" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_INPRE_di" bpmnElement="Flow_To_INPRE">
+        <di:waypoint x="380" y="655" />
+        <di:waypoint x="380" y="745" />
+        <di:waypoint x="430" y="745" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_DINVE_di" bpmnElement="Flow_To_DINVE">
+        <di:waypoint x="380" y="655" />
+        <di:waypoint x="380" y="850" />
+        <di:waypoint x="430" y="850" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Sub_I1_di" bpmnElement="Sub_I1">
+        <di:waypoint x="475" y="620" />
+        <di:waypoint x="495" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sub_I2_di" bpmnElement="Sub_I2">
+        <di:waypoint x="595" y="620" />
+        <di:waypoint x="615" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sub_I3_di" bpmnElement="Sub_I3">
+        <di:waypoint x="715" y="620" />
+        <di:waypoint x="725" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sub_IN1_di" bpmnElement="Sub_IN1">
+        <di:waypoint x="475" y="745" />
+        <di:waypoint x="495" y="745" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Sub_IN2_di" bpmnElement="Sub_IN2">
+        <di:waypoint x="635" y="745" />
+        <di:waypoint x="700" y="745" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_From_IPS_di" bpmnElement="Flow_From_IPS">
+        <di:waypoint x="755" y="620" />
+        <di:waypoint x="790" y="635" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_From_INPRE_di" bpmnElement="Flow_From_INPRE">
+        <di:waypoint x="730" y="745" />
+        <di:waypoint x="810" y="745" />
+        <di:waypoint x="810" y="655" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_From_DINVE_di" bpmnElement="Flow_From_DINVE">
+        <di:waypoint x="570" y="850" />
+        <di:waypoint x="810" y="850" />
+        <di:waypoint x="810" y="655" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_To_AprovaINV_di" bpmnElement="Flow_To_AprovaINV">
+        <di:waypoint x="830" y="635" />
+        <di:waypoint x="880" y="635" />
+        <di:waypoint x="880" y="505" />
+        <di:waypoint x="880" y="435" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_Parecer_di" bpmnElement="Flow_To_Parecer">
+        <di:waypoint x="1000" y="470" />
+        <di:waypoint x="1060" y="470" />
+        <di:waypoint x="1060" y="300" />
+        <di:waypoint x="1120" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_AprovaPAR_di" bpmnElement="Flow_To_AprovaPAR">
+        <di:waypoint x="1260" y="300" />
+        <di:waypoint x="1310" y="300" />
+        <di:waypoint x="1310" y="470" />
+        <di:waypoint x="1240" y="470" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_Deliberacao_di" bpmnElement="Flow_To_Deliberacao">
+        <di:waypoint x="1380" y="470" />
+        <di:waypoint x="1415" y="470" />
+        <di:waypoint x="1415" y="335" />
+        <di:waypoint x="1390" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_Decision_di" bpmnElement="Flow_To_Decision">
+        <di:waypoint x="1530" y="300" />
+        <di:waypoint x="1560" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Decision_Arq_di" bpmnElement="Flow_Decision_Arq">
+        <di:waypoint x="1600" y="300" />
+        <di:waypoint x="1640" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_Decision_PAR_di" bpmnElement="Flow_Decision_PAR">
+        <di:waypoint x="1580" y="320" />
+        <di:waypoint x="1580" y="935" />
+        <di:waypoint x="1540" y="970" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_CoordDProc_di" bpmnElement="Flow_To_CoordDProc">
+        <di:waypoint x="1680" y="970" />
+        <di:waypoint x="1710" y="970" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_To_EndPAR_di" bpmnElement="Flow_To_EndPAR">
+        <di:waypoint x="1840" y="970" />
+        <di:waypoint x="1872" y="970" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Flow_GD1_di" bpmnElement="Flow_GD1">
+        <di:waypoint x="906" y="850" />
+        <di:waypoint x="940" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_GD2_di" bpmnElement="Flow_GD2">
+        <di:waypoint x="1090" y="850" />
+        <di:waypoint x="1120" y="850" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_GD3_di" bpmnElement="Flow_GD3">
+        <di:waypoint x="1270" y="850" />
+        <di:waypoint x="1310" y="850" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
