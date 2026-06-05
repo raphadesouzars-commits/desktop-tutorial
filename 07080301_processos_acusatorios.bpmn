@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080301"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080301">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.03-01 - Conduzir Processos Acusatorios de Servidores PF"
+      processRef="Process_07080301" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080301" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080301">
+      <bpmn:lane id="Lane_SubcorrDProc" name="Subcorregedoria / DProc">
+        <bpmn:flowNodeRef>Start_Admissibilidade</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DespachoInstauracao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AprovaParJul</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DProc" name="DProc">
+        <bpmn:flowNodeRef>Task_CoordDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SupTecDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Split_Tipo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_PAD</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_PADS</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_PADREV</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DefesaDativa</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Join_PAD</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Seaco" name="Seaco">
+        <bpmn:flowNodeRef>Task_ParecerJulgamento</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Task_AtualizaEpad</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Processo</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Lane SubcorrDProc -->
+    <bpmn:startEvent id="Start_Admissibilidade" name="Juizo de Admissibilidade Favoravel / PAD Autorizado">
+      <bpmn:outgoing>F_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_DespachoInstauracao" name="PAD - Despacho de Instauracao (P1)">
+      <bpmn:incoming>F_01</bpmn:incoming>
+      <bpmn:outgoing>F_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AprovaParJul" name="Aprova-PAR-JUL/REC (Subcorregedoria)">
+      <bpmn:incoming>F_10</bpmn:incoming>
+      <bpmn:outgoing>F_11</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane DProc -->
+    <bpmn:task id="Task_CoordDProc" name="Coordenacao DProc">
+      <bpmn:incoming>F_02</bpmn:incoming>
+      <bpmn:outgoing>F_03</bpmn:outgoing>
+      <bpmn:outgoing>F_03b</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_SupTecDProc" name="Supervisao Tecnica DProc">
+      <bpmn:incoming>F_03b</bpmn:incoming>
+      <bpmn:outgoing>F_03c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Split_Tipo" name="Tipo de PAD">
+      <bpmn:incoming>F_03</bpmn:incoming>
+      <bpmn:outgoing>F_04a</bpmn:outgoing>
+      <bpmn:outgoing>F_04b</bpmn:outgoing>
+      <bpmn:outgoing>F_04c</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:subProcess id="SubProcess_PAD" name="PAD - Processo Administrativo Disciplinar (P2)">
+      <bpmn:incoming>F_04a</bpmn:incoming>
+      <bpmn:outgoing>F_05a</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="SubProcess_PADS" name="PAD-SUM - PAD Sumario (P3)">
+      <bpmn:incoming>F_04b</bpmn:incoming>
+      <bpmn:outgoing>F_05b</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="SubProcess_PADREV" name="PAD-REV - PAD Revisao (P4)">
+      <bpmn:incoming>F_04c</bpmn:incoming>
+      <bpmn:outgoing>F_05c</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:task id="Task_DefesaDativa" name="DEFESA-DATIVA">
+      <bpmn:incoming>F_06b</bpmn:incoming>
+      <bpmn:outgoing>F_06c</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Join_PAD" name="Convergencia PAD">
+      <bpmn:incoming>F_05a</bpmn:incoming>
+      <bpmn:incoming>F_05b</bpmn:incoming>
+      <bpmn:incoming>F_05c</bpmn:incoming>
+      <bpmn:incoming>F_03c</bpmn:incoming>
+      <bpmn:incoming>F_06c</bpmn:incoming>
+      <bpmn:outgoing>F_06a</bpmn:outgoing>
+      <bpmn:outgoing>F_06b</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Lane Seaco -->
+    <bpmn:task id="Task_ParecerJulgamento" name="Parecer de Julgamento">
+      <bpmn:incoming>F_06a</bpmn:incoming>
+      <bpmn:outgoing>F_10</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Secac -->
+    <bpmn:task id="Task_AtualizaEpad" name="ATUALIZA-EPAD-JAD/JUL/RECURSO">
+      <bpmn:incoming>F_11</bpmn:incoming>
+      <bpmn:outgoing>F_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Processo" name="Processo Encerrado / Penalidade Aplicada">
+      <bpmn:incoming>F_12</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="F_01"  sourceRef="Start_Admissibilidade"  targetRef="Task_DespachoInstauracao" />
+    <bpmn:sequenceFlow id="F_02"  sourceRef="Task_DespachoInstauracao" targetRef="Task_CoordDProc" />
+    <bpmn:sequenceFlow id="F_03"  sourceRef="Task_CoordDProc"        targetRef="Gateway_Split_Tipo" />
+    <bpmn:sequenceFlow id="F_03b" sourceRef="Task_CoordDProc"        targetRef="Task_SupTecDProc" />
+    <bpmn:sequenceFlow id="F_03c" sourceRef="Task_SupTecDProc"       targetRef="Gateway_Join_PAD" />
+    <bpmn:sequenceFlow id="F_04a" sourceRef="Gateway_Split_Tipo"     targetRef="SubProcess_PAD" />
+    <bpmn:sequenceFlow id="F_04b" sourceRef="Gateway_Split_Tipo"     targetRef="SubProcess_PADS" />
+    <bpmn:sequenceFlow id="F_04c" sourceRef="Gateway_Split_Tipo"     targetRef="SubProcess_PADREV" />
+    <bpmn:sequenceFlow id="F_05a" sourceRef="SubProcess_PAD"         targetRef="Gateway_Join_PAD" />
+    <bpmn:sequenceFlow id="F_05b" sourceRef="SubProcess_PADS"        targetRef="Gateway_Join_PAD" />
+    <bpmn:sequenceFlow id="F_05c" sourceRef="SubProcess_PADREV"      targetRef="Gateway_Join_PAD" />
+    <bpmn:sequenceFlow id="F_06a" sourceRef="Gateway_Join_PAD"       targetRef="Task_ParecerJulgamento" />
+    <bpmn:sequenceFlow id="F_06b" sourceRef="Gateway_Join_PAD"       targetRef="Task_DefesaDativa" />
+    <bpmn:sequenceFlow id="F_06c" sourceRef="Task_DefesaDativa"      targetRef="Gateway_Join_PAD" />
+    <bpmn:sequenceFlow id="F_10"  sourceRef="Task_ParecerJulgamento" targetRef="Task_AprovaParJul" />
+    <bpmn:sequenceFlow id="F_11"  sourceRef="Task_AprovaParJul"      targetRef="Task_AtualizaEpad" />
+    <bpmn:sequenceFlow id="F_12"  sourceRef="Task_AtualizaEpad"      targetRef="End_Processo" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080301">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080301" bpmnElement="Collaboration_07080301">
+
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="1800" height="720" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Lane_SubcorrDProc_di" bpmnElement="Lane_SubcorrDProc" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1770" height="150" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DProc_di" bpmnElement="Lane_DProc" isHorizontal="true">
+        <dc:Bounds x="130" y="200" width="1770" height="290" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Seaco_di" bpmnElement="Lane_Seaco" isHorizontal="true">
+        <dc:Bounds x="130" y="490" width="1770" height="130" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="620" width="1770" height="150" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane SubcorrDProc elements -->
+      <bpmndi:BPMNShape id="Start_Admissibilidade_di" bpmnElement="Start_Admissibilidade">
+        <dc:Bounds x="180" y="107" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DespachoInstauracao_di" bpmnElement="Task_DespachoInstauracao">
+        <dc:Bounds x="260" y="95" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AprovaParJul_di" bpmnElement="Task_AprovaParJul">
+        <dc:Bounds x="1380" y="95" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane DProc elements -->
+      <bpmndi:BPMNShape id="Task_CoordDProc_di" bpmnElement="Task_CoordDProc">
+        <dc:Bounds x="470" y="305" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_SupTecDProc_di" bpmnElement="Task_SupTecDProc">
+        <dc:Bounds x="470" y="215" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Split_Tipo_di" bpmnElement="Gateway_Split_Tipo" isMarkerVisible="true">
+        <dc:Bounds x="680" y="315" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_PAD_di" bpmnElement="SubProcess_PAD" isExpanded="false">
+        <dc:Bounds x="760" y="210" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_PADS_di" bpmnElement="SubProcess_PADS" isExpanded="false">
+        <dc:Bounds x="760" y="305" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="SubProcess_PADREV_di" bpmnElement="SubProcess_PADREV" isExpanded="false">
+        <dc:Bounds x="760" y="400" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_Join_PAD_di" bpmnElement="Gateway_Join_PAD" isMarkerVisible="true">
+        <dc:Bounds x="970" y="315" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DefesaDativa_di" bpmnElement="Task_DefesaDativa">
+        <dc:Bounds x="1060" y="215" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Seaco elements -->
+      <bpmndi:BPMNShape id="Task_ParecerJulgamento_di" bpmnElement="Task_ParecerJulgamento">
+        <dc:Bounds x="1200" y="520" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac elements -->
+      <bpmndi:BPMNShape id="Task_AtualizaEpad_di" bpmnElement="Task_AtualizaEpad">
+        <dc:Bounds x="1580" y="655" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Processo_di" bpmnElement="End_Processo">
+        <dc:Bounds x="1790" y="663" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="F_01_di" bpmnElement="F_01">
+        <di:waypoint x="216" y="125" />
+        <di:waypoint x="260" y="125" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_02_di" bpmnElement="F_02">
+        <di:waypoint x="420" y="125" />
+        <di:waypoint x="550" y="125" />
+        <di:waypoint x="550" y="305" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_03_di" bpmnElement="F_03">
+        <di:waypoint x="630" y="335" />
+        <di:waypoint x="680" y="335" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_03b_di" bpmnElement="F_03b">
+        <di:waypoint x="550" y="305" />
+        <di:waypoint x="550" y="275" />
+        <di:waypoint x="470" y="245" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_03c_di" bpmnElement="F_03c">
+        <di:waypoint x="630" y="245" />
+        <di:waypoint x="990" y="245" />
+        <di:waypoint x="990" y="315" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_04a_di" bpmnElement="F_04a">
+        <di:waypoint x="700" y="315" />
+        <di:waypoint x="700" y="240" />
+        <di:waypoint x="760" y="240" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_04b_di" bpmnElement="F_04b">
+        <di:waypoint x="720" y="335" />
+        <di:waypoint x="760" y="335" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_04c_di" bpmnElement="F_04c">
+        <di:waypoint x="700" y="355" />
+        <di:waypoint x="700" y="430" />
+        <di:waypoint x="760" y="430" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_05a_di" bpmnElement="F_05a">
+        <di:waypoint x="920" y="240" />
+        <di:waypoint x="990" y="240" />
+        <di:waypoint x="990" y="315" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_05b_di" bpmnElement="F_05b">
+        <di:waypoint x="920" y="335" />
+        <di:waypoint x="970" y="335" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_05c_di" bpmnElement="F_05c">
+        <di:waypoint x="920" y="430" />
+        <di:waypoint x="990" y="430" />
+        <di:waypoint x="990" y="355" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_06a_di" bpmnElement="F_06a">
+        <di:waypoint x="1010" y="335" />
+        <di:waypoint x="1280" y="335" />
+        <di:waypoint x="1280" y="550" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_06b_di" bpmnElement="F_06b">
+        <di:waypoint x="990" y="315" />
+        <di:waypoint x="990" y="245" />
+        <di:waypoint x="1060" y="245" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_06c_di" bpmnElement="F_06c">
+        <di:waypoint x="1140" y="275" />
+        <di:waypoint x="1140" y="295" />
+        <di:waypoint x="1010" y="335" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_10_di" bpmnElement="F_10">
+        <di:waypoint x="1360" y="550" />
+        <di:waypoint x="1460" y="550" />
+        <di:waypoint x="1460" y="125" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_11_di" bpmnElement="F_11">
+        <di:waypoint x="1540" y="125" />
+        <di:waypoint x="1660" y="125" />
+        <di:waypoint x="1660" y="655" />
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="F_12_di" bpmnElement="F_12">
+        <di:waypoint x="1740" y="685" />
+        <di:waypoint x="1790" y="681" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
