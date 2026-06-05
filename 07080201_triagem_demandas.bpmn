@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080201"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080201">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.02-01 - Receber e Realizar a Triagem de Demandas Correcionais"
+      processRef="Process_07080201" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080201" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080201">
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Start_Rep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Start_Ouv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaRep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AberturaOuv</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_Instrucao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConclusaoOC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaEpad</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Merge</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Decision</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Investigacao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Parecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PAD</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Arquivado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_OutroOrgao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Desmembramento</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Subcorregedoria" name="Subcorregedoria (Colegiado)">
+        <bpmn:flowNodeRef>Task_TriagemRep</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_TriagemOuv</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Lane Secac -->
+    <bpmn:startEvent id="Start_Rep" name="Representacao Formal / Encaminhamento Interno">
+      <bpmn:outgoing>F_S1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:startEvent id="Start_Ouv" name="Mensagem de Ouvidoria (SisOuvidor)">
+      <bpmn:outgoing>F_S2</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_AberturaRep" name="Abertura OC - Representacao (P1)">
+      <bpmn:incoming>F_S1</bpmn:incoming>
+      <bpmn:outgoing>F_S3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AberturaOuv" name="Abertura OC - Ouvidoria (P2)">
+      <bpmn:incoming>F_S2</bpmn:incoming>
+      <bpmn:outgoing>F_S4</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Subcorregedoria -->
+    <bpmn:task id="Task_TriagemRep" name="Ocorrencia - Triagem via Representacao (Colegiado)">
+      <bpmn:incoming>F_S3</bpmn:incoming>
+      <bpmn:outgoing>F_S5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_TriagemOuv" name="Ocorrencia - Triagem via Ouvidoria (Colegiado)">
+      <bpmn:incoming>F_S4</bpmn:incoming>
+      <bpmn:outgoing>F_S6</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Secac (continuacao) -->
+    <bpmn:exclusiveGateway id="Gateway_Merge" name="Merge Triagem">
+      <bpmn:incoming>F_S5</bpmn:incoming>
+      <bpmn:incoming>F_S6</bpmn:incoming>
+      <bpmn:outgoing>F_S7</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_Instrucao" name="Ocorrencia - Instrucao (P3)">
+      <bpmn:incoming>F_S7</bpmn:incoming>
+      <bpmn:outgoing>F_S8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ConclusaoOC" name="Conclusao de Ocorrencia (P4)">
+      <bpmn:incoming>F_S8</bpmn:incoming>
+      <bpmn:outgoing>F_S9</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtualizaEpad" name="ATUALIZA-EPAD-OC">
+      <bpmn:incoming>F_S9</bpmn:incoming>
+      <bpmn:outgoing>F_S10</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="Gateway_Decision" name="Encaminhamento">
+      <bpmn:incoming>F_S10</bpmn:incoming>
+      <bpmn:outgoing>F_D1</bpmn:outgoing>
+      <bpmn:outgoing>F_D2</bpmn:outgoing>
+      <bpmn:outgoing>F_D3</bpmn:outgoing>
+      <bpmn:outgoing>F_D4</bpmn:outgoing>
+      <bpmn:outgoing>F_D5</bpmn:outgoing>
+      <bpmn:outgoing>F_D6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:endEvent id="End_Investigacao" name="Encaminhar para Investigacao (IPS / SINVE / SINPA / DINVE)">
+      <bpmn:incoming>F_D1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Parecer" name="Encaminhar para Parecer de Admissibilidade (Seaco)">
+      <bpmn:incoming>F_D2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_PAD" name="Instauracao de PAD / PAD-Sum / PAD-Rev / PAR">
+      <bpmn:incoming>F_D3</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Arquivado" name="Arquivamento Sumario">
+      <bpmn:incoming>F_D4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_OutroOrgao" name="Envio para Apuracao em Outro Orgao">
+      <bpmn:incoming>F_D5</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Desmembramento" name="Desmembramento - Nova Ocorrencia">
+      <bpmn:incoming>F_D6</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="F_S1"  sourceRef="Start_Rep"       targetRef="Task_AberturaRep" />
+    <bpmn:sequenceFlow id="F_S2"  sourceRef="Start_Ouv"       targetRef="Task_AberturaOuv" />
+    <bpmn:sequenceFlow id="F_S3"  sourceRef="Task_AberturaRep" targetRef="Task_TriagemRep" />
+    <bpmn:sequenceFlow id="F_S4"  sourceRef="Task_AberturaOuv" targetRef="Task_TriagemOuv" />
+    <bpmn:sequenceFlow id="F_S5"  sourceRef="Task_TriagemRep" targetRef="Gateway_Merge" />
+    <bpmn:sequenceFlow id="F_S6"  sourceRef="Task_TriagemOuv" targetRef="Gateway_Merge" />
+    <bpmn:sequenceFlow id="F_S7"  sourceRef="Gateway_Merge"   targetRef="Task_Instrucao" />
+    <bpmn:sequenceFlow id="F_S8"  sourceRef="Task_Instrucao"  targetRef="Task_ConclusaoOC" />
+    <bpmn:sequenceFlow id="F_S9"  sourceRef="Task_ConclusaoOC" targetRef="Task_AtualizaEpad" />
+    <bpmn:sequenceFlow id="F_S10" sourceRef="Task_AtualizaEpad" targetRef="Gateway_Decision" />
+    <bpmn:sequenceFlow id="F_D1"  sourceRef="Gateway_Decision" targetRef="End_Investigacao" />
+    <bpmn:sequenceFlow id="F_D2"  sourceRef="Gateway_Decision" targetRef="End_Parecer" />
+    <bpmn:sequenceFlow id="F_D3"  sourceRef="Gateway_Decision" targetRef="End_PAD" />
+    <bpmn:sequenceFlow id="F_D4"  sourceRef="Gateway_Decision" targetRef="End_Arquivado" />
+    <bpmn:sequenceFlow id="F_D5"  sourceRef="Gateway_Decision" targetRef="End_OutroOrgao" />
+    <bpmn:sequenceFlow id="F_D6"  sourceRef="Gateway_Decision" targetRef="End_Desmembramento" />
+  </bpmn:process>
+
+  <!--
+    LAYOUT
+    Pool              : x=100 y=50  w=1800 h=630
+    Lane_Secac        : y=50  h=450 (y  50–500)
+    Lane_Subcorregedoria: y=500 h=180 (y 500–680)
+  -->
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080201">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080201" bpmnElement="Collaboration_07080201">
+
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="1800" height="630" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1770" height="450" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Subcorregedoria_di" bpmnElement="Lane_Subcorregedoria" isHorizontal="true">
+        <dc:Bounds x="130" y="500" width="1770" height="180" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane Secac ── -->
+      <!-- Linha superior: Representacao (y center=120) -->
+      <bpmndi:BPMNShape id="Start_Rep_di" bpmnElement="Start_Rep">
+        <dc:Bounds x="180" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AberturaRep_di" bpmnElement="Task_AberturaRep">
+        <dc:Bounds x="250" y="90" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Linha inferior: Ouvidoria (y center=220) -->
+      <bpmndi:BPMNShape id="Start_Ouv_di" bpmnElement="Start_Ouv">
+        <dc:Bounds x="180" y="202" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AberturaOuv_di" bpmnElement="Task_AberturaOuv">
+        <dc:Bounds x="250" y="190" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_Merge center (580,300) — entre as duas linhas -->
+      <bpmndi:BPMNShape id="Gateway_Merge_di" bpmnElement="Gateway_Merge" isMarkerVisible="true">
+        <dc:Bounds x="560" y="280" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_Instrucao center y=300 -->
+      <bpmndi:BPMNShape id="Task_Instrucao_di" bpmnElement="Task_Instrucao">
+        <dc:Bounds x="630" y="270" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_ConclusaoOC center y=300 -->
+      <bpmndi:BPMNShape id="Task_ConclusaoOC_di" bpmnElement="Task_ConclusaoOC">
+        <dc:Bounds x="820" y="270" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Task_AtualizaEpad center y=300 -->
+      <bpmndi:BPMNShape id="Task_AtualizaEpad_di" bpmnElement="Task_AtualizaEpad">
+        <dc:Bounds x="1010" y="270" width="140" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_Decision center (1200,300) -->
+      <bpmndi:BPMNShape id="Gateway_Decision_di" bpmnElement="Gateway_Decision" isMarkerVisible="true">
+        <dc:Bounds x="1180" y="280" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- End events — distribuidos verticalmente à direita -->
+      <!-- End_Investigacao y=90 -->
+      <bpmndi:BPMNShape id="End_Investigacao_di" bpmnElement="End_Investigacao">
+        <dc:Bounds x="1310" y="72" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_Parecer y=165 -->
+      <bpmndi:BPMNShape id="End_Parecer_di" bpmnElement="End_Parecer">
+        <dc:Bounds x="1310" y="147" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_PAD y=240 -->
+      <bpmndi:BPMNShape id="End_PAD_di" bpmnElement="End_PAD">
+        <dc:Bounds x="1310" y="222" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_Arquivado y=297 -->
+      <bpmndi:BPMNShape id="End_Arquivado_di" bpmnElement="End_Arquivado">
+        <dc:Bounds x="1310" y="297" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_OutroOrgao y=372 -->
+      <bpmndi:BPMNShape id="End_OutroOrgao_di" bpmnElement="End_OutroOrgao">
+        <dc:Bounds x="1310" y="372" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <!-- End_Desmembramento y=447 -->
+      <bpmndi:BPMNShape id="End_Desmembramento_di" bpmnElement="End_Desmembramento">
+        <dc:Bounds x="1310" y="447" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane Subcorregedoria ── -->
+      <!-- Task_TriagemRep center (330, 575) -->
+      <bpmndi:BPMNShape id="Task_TriagemRep_di" bpmnElement="Task_TriagemRep">
+        <dc:Bounds x="250" y="545" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Task_TriagemOuv center (540, 575) -->
+      <bpmndi:BPMNShape id="Task_TriagemOuv_di" bpmnElement="Task_TriagemOuv">
+        <dc:Bounds x="460" y="545" width="160" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- ══ Edges ══ -->
+
+      <!-- F_S1: Start_Rep(216,120) → AberturaRep(250,120) -->
+      <bpmndi:BPMNEdge id="F_S1_di" bpmnElement="F_S1">
+        <di:waypoint x="216" y="120" />
+        <di:waypoint x="250" y="120" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S2: Start_Ouv(216,220) → AberturaOuv(250,220) -->
+      <bpmndi:BPMNEdge id="F_S2_di" bpmnElement="F_S2">
+        <di:waypoint x="216" y="220" />
+        <di:waypoint x="250" y="220" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S3: AberturaRep right(410,120) → desce até y=500 → TriagemRep(250,575) via baixo -->
+      <bpmndi:BPMNEdge id="F_S3_di" bpmnElement="F_S3">
+        <di:waypoint x="330" y="150" />
+        <di:waypoint x="330" y="545" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S4: AberturaOuv right(410,220) → TriagemOuv(460,575) -->
+      <bpmndi:BPMNEdge id="F_S4_di" bpmnElement="F_S4">
+        <di:waypoint x="540" y="250" />
+        <di:waypoint x="540" y="545" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S5: TriagemRep top(330,545) → sobe → Gateway_Merge left(560,300) -->
+      <bpmndi:BPMNEdge id="F_S5_di" bpmnElement="F_S5">
+        <di:waypoint x="330" y="545" />
+        <di:waypoint x="330" y="300" />
+        <di:waypoint x="560" y="300" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S6: TriagemOuv top(540,545) → sobe → Gateway_Merge bottom(580,320) -->
+      <bpmndi:BPMNEdge id="F_S6_di" bpmnElement="F_S6">
+        <di:waypoint x="540" y="545" />
+        <di:waypoint x="540" y="490" />
+        <di:waypoint x="580" y="490" />
+        <di:waypoint x="580" y="320" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S7: Gateway_Merge right(600,300) → Task_Instrucao(630,300) -->
+      <bpmndi:BPMNEdge id="F_S7_di" bpmnElement="F_S7">
+        <di:waypoint x="600" y="300" />
+        <di:waypoint x="630" y="300" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S8: Task_Instrucao right(790,300) → Task_ConclusaoOC(820,300) -->
+      <bpmndi:BPMNEdge id="F_S8_di" bpmnElement="F_S8">
+        <di:waypoint x="790" y="300" />
+        <di:waypoint x="820" y="300" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S9: ConclusaoOC right(980,300) → AtualizaEpad(1010,300) -->
+      <bpmndi:BPMNEdge id="F_S9_di" bpmnElement="F_S9">
+        <di:waypoint x="980" y="300" />
+        <di:waypoint x="1010" y="300" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_S10: AtualizaEpad right(1150,300) → Gateway_Decision(1180,300) -->
+      <bpmndi:BPMNEdge id="F_S10_di" bpmnElement="F_S10">
+        <di:waypoint x="1150" y="300" />
+        <di:waypoint x="1180" y="300" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D1 → End_Investigacao(y=90) -->
+      <bpmndi:BPMNEdge id="F_D1_di" bpmnElement="F_D1">
+        <di:waypoint x="1200" y="280" />
+        <di:waypoint x="1200" y="90" />
+        <di:waypoint x="1310" y="90" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D2 → End_Parecer(y=165) -->
+      <bpmndi:BPMNEdge id="F_D2_di" bpmnElement="F_D2">
+        <di:waypoint x="1200" y="280" />
+        <di:waypoint x="1200" y="165" />
+        <di:waypoint x="1310" y="165" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D3 → End_PAD(y=240) -->
+      <bpmndi:BPMNEdge id="F_D3_di" bpmnElement="F_D3">
+        <di:waypoint x="1200" y="280" />
+        <di:waypoint x="1200" y="240" />
+        <di:waypoint x="1310" y="240" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D4 → End_Arquivado(y=315) -->
+      <bpmndi:BPMNEdge id="F_D4_di" bpmnElement="F_D4">
+        <di:waypoint x="1220" y="300" />
+        <di:waypoint x="1310" y="315" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D5 → End_OutroOrgao(y=390) -->
+      <bpmndi:BPMNEdge id="F_D5_di" bpmnElement="F_D5">
+        <di:waypoint x="1200" y="320" />
+        <di:waypoint x="1200" y="390" />
+        <di:waypoint x="1310" y="390" />
+      </bpmndi:BPMNEdge>
+
+      <!-- F_D6 → End_Desmembramento(y=465) -->
+      <bpmndi:BPMNEdge id="F_D6_di" bpmnElement="F_D6">
+        <di:waypoint x="1200" y="320" />
+        <di:waypoint x="1200" y="465" />
+        <di:waypoint x="1310" y="465" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
