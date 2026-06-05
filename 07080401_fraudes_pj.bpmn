@@ -3,7 +3,7 @@
                   xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
                   xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
                   xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-                  id="Definitions_07080401_Fixed"
+                  id="Definitions_07080401"
                   targetNamespace="http://bpmn.io/schema/bpmn"
                   exporter="Bizagi Modeler"
                   exporterVersion="1.0.0">
@@ -16,6 +16,7 @@
 
   <bpmn:process id="Process_07080401" isExecutable="true">
     <bpmn:laneSet id="LaneSet_07080401">
+
       <bpmn:lane id="Lane_Secac" name="Secac">
         <bpmn:flowNodeRef>Start_Ouvidoria</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Start_Representacao</bpmn:flowNodeRef>
@@ -26,6 +27,7 @@
         <bpmn:flowNodeRef>Task_AtualizaEpadOC</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_To_Diaco</bpmn:flowNodeRef>
       </bpmn:lane>
+
       <bpmn:lane id="Lane_Diaco" name="Diaco / Seaco">
         <bpmn:flowNodeRef>Task_Triagem</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_CoordDiaco</bpmn:flowNodeRef>
@@ -34,10 +36,12 @@
         <bpmn:flowNodeRef>Gateway_Decision</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_Arquivado</bpmn:flowNodeRef>
       </bpmn:lane>
+
       <bpmn:lane id="Lane_Subcorregedoria" name="Subcorregedoria (Controle Independente)">
         <bpmn:flowNodeRef>Task_AprovaINV</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_AprovaPAR</bpmn:flowNodeRef>
       </bpmn:lane>
+
       <bpmn:lane id="Lane_Divid" name="Divid (Divisao de Investigacao)">
         <bpmn:flowNodeRef>Task_CoordDivid</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Gateway_Split_Inv</bpmn:flowNodeRef>
@@ -50,14 +54,16 @@
         <bpmn:flowNodeRef>Task_AtdDemDivid</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_GenDivid</bpmn:flowNodeRef>
       </bpmn:lane>
+
       <bpmn:lane id="Lane_DProc" name="DProc">
         <bpmn:flowNodeRef>Task_InstauracaoPAR</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>Task_CoordDProc</bpmn:flowNodeRef>
         <bpmn:flowNodeRef>End_PAR</bpmn:flowNodeRef>
       </bpmn:lane>
+
     </bpmn:laneSet>
 
-    <!-- ===== Lane Secac ===== -->
+    <!-- Lane Secac -->
     <bpmn:startEvent id="Start_Ouvidoria" name="Denuncia Ouvidoria">
       <bpmn:outgoing>Flow_S1</bpmn:outgoing>
     </bpmn:startEvent>
@@ -90,7 +96,7 @@
       <bpmn:outgoing>Flow_S8</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <!-- ===== Lane Diaco ===== -->
+    <!-- Lane Diaco -->
     <bpmn:task id="Task_Triagem" name="Triagem SECAC / Ouvidoria">
       <bpmn:incoming>Flow_S8</bpmn:incoming>
       <bpmn:outgoing>Flow_S9</bpmn:outgoing>
@@ -116,7 +122,7 @@
       <bpmn:incoming>Flow_Decision_Arq</bpmn:incoming>
     </bpmn:endEvent>
 
-    <!-- ===== Lane Subcorregedoria ===== -->
+    <!-- Lane Subcorregedoria -->
     <bpmn:task id="Task_AprovaINV" name="Acompanha/Aprova-INV">
       <bpmn:incoming>Flow_To_AprovaINV</bpmn:incoming>
       <bpmn:outgoing>Flow_To_Parecer</bpmn:outgoing>
@@ -126,11 +132,13 @@
       <bpmn:outgoing>Flow_To_Deliberacao</bpmn:outgoing>
     </bpmn:task>
 
-    <!-- ===== Lane Divid ===== -->
+    <!-- Lane Divid — 3 fluxos investigativos em caixas simples -->
     <bpmn:task id="Task_CoordDivid" name="Coordenacao DIVID">
       <bpmn:incoming>Flow_S10</bpmn:incoming>
       <bpmn:outgoing>Flow_S11</bpmn:outgoing>
     </bpmn:task>
+
+    <!-- Gateway de divisão: define o rito investigativo -->
     <bpmn:exclusiveGateway id="Gateway_Split_Inv" name="Definicao do Rito">
       <bpmn:incoming>Flow_S11</bpmn:incoming>
       <bpmn:outgoing>Flow_To_IPS</bpmn:outgoing>
@@ -138,43 +146,15 @@
       <bpmn:outgoing>Flow_To_DINVE</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <bpmn:subProcess id="SubProcess_IPS" name="IPS - Inquerito Preliminar Sindicante" isExpanded="true">
+    <!-- Os 3 fluxos investigativos como subprocessos colapsados -->
+    <bpmn:subProcess id="SubProcess_IPS" name="IPS - Inquerito Preliminar Sindicante">
       <bpmn:incoming>Flow_To_IPS</bpmn:incoming>
       <bpmn:outgoing>Flow_From_IPS</bpmn:outgoing>
-      <bpmn:startEvent id="IPS_Start" name="IPS Autuado">
-        <bpmn:outgoing>Sub_I1</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Task_IPS_Dist" name="IPS - Despacho Distribuicao">
-        <bpmn:incoming>Sub_I1</bpmn:incoming>
-        <bpmn:outgoing>Sub_I2</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:task id="Task_IPS_Port" name="PORTARIAS/DESPACHO IPS">
-        <bpmn:incoming>Sub_I2</bpmn:incoming>
-        <bpmn:outgoing>Sub_I3</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:endEvent id="IPS_End" name="Conclusao IPS">
-        <bpmn:incoming>Sub_I3</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Sub_I1" sourceRef="IPS_Start" targetRef="Task_IPS_Dist" />
-      <bpmn:sequenceFlow id="Sub_I2" sourceRef="Task_IPS_Dist" targetRef="Task_IPS_Port" />
-      <bpmn:sequenceFlow id="Sub_I3" sourceRef="Task_IPS_Port" targetRef="IPS_End" />
     </bpmn:subProcess>
 
-    <bpmn:subProcess id="SubProcess_INPRE" name="INPRE-PJ - Inquerito Preliminar de Pessoa Juridica" isExpanded="true">
+    <bpmn:subProcess id="SubProcess_INPRE" name="INPRE-PJ - Inquerito Preliminar PJ">
       <bpmn:incoming>Flow_To_INPRE</bpmn:incoming>
       <bpmn:outgoing>Flow_From_INPRE</bpmn:outgoing>
-      <bpmn:startEvent id="INPRE_Start" name="INPRE Portaria">
-        <bpmn:outgoing>Sub_IN1</bpmn:outgoing>
-      </bpmn:startEvent>
-      <bpmn:task id="Task_INPRE_Exec" name="Executar Instrucao INPRE-PJ">
-        <bpmn:incoming>Sub_IN1</bpmn:incoming>
-        <bpmn:outgoing>Sub_IN2</bpmn:outgoing>
-      </bpmn:task>
-      <bpmn:endEvent id="INPRE_End" name="Relatorio INPRE">
-        <bpmn:incoming>Sub_IN2</bpmn:incoming>
-      </bpmn:endEvent>
-      <bpmn:sequenceFlow id="Sub_IN1" sourceRef="INPRE_Start" targetRef="Task_INPRE_Exec" />
-      <bpmn:sequenceFlow id="Sub_IN2" sourceRef="Task_INPRE_Exec" targetRef="INPRE_End" />
     </bpmn:subProcess>
 
     <bpmn:task id="Task_DINVE" name="DINVE - Diligencia Investigativa Especial">
@@ -182,6 +162,7 @@
       <bpmn:outgoing>Flow_From_DINVE</bpmn:outgoing>
     </bpmn:task>
 
+    <!-- Gateway de convergência: os 3 fluxos apontam para cá -->
     <bpmn:exclusiveGateway id="Gateway_Join_Inv">
       <bpmn:incoming>Flow_From_IPS</bpmn:incoming>
       <bpmn:incoming>Flow_From_INPRE</bpmn:incoming>
@@ -189,7 +170,7 @@
       <bpmn:outgoing>Flow_To_AprovaINV</bpmn:outgoing>
     </bpmn:exclusiveGateway>
 
-    <!-- Demanda Interna Divid - fluxo paralelo independente -->
+    <!-- Fluxo paralelo independente: Demanda Interna Divid -->
     <bpmn:startEvent id="Start_GenDivid" name="Demanda Interna Divid / DILEX">
       <bpmn:outgoing>Flow_GD1</bpmn:outgoing>
     </bpmn:startEvent>
@@ -205,7 +186,7 @@
       <bpmn:incoming>Flow_GD3</bpmn:incoming>
     </bpmn:endEvent>
 
-    <!-- ===== Lane DProc ===== -->
+    <!-- Lane DProc -->
     <bpmn:task id="Task_InstauracaoPAR" name="Portaria de Instauracao PAR">
       <bpmn:incoming>Flow_Decision_PAR</bpmn:incoming>
       <bpmn:outgoing>Flow_To_CoordDProc</bpmn:outgoing>
@@ -218,80 +199,81 @@
       <bpmn:incoming>Flow_To_EndPAR</bpmn:incoming>
     </bpmn:endEvent>
 
-    <!-- ===== Sequence Flows ===== -->
-    <bpmn:sequenceFlow id="Flow_S1"  sourceRef="Start_Ouvidoria"    targetRef="Task_AberturaOuv" />
-    <bpmn:sequenceFlow id="Flow_S2"  sourceRef="Start_Representacao" targetRef="Task_AberturaRep" />
-    <bpmn:sequenceFlow id="Flow_S3"  sourceRef="Task_AberturaOuv"   targetRef="Gateway_Merge_OC" />
-    <bpmn:sequenceFlow id="Flow_S4"  sourceRef="Task_AberturaRep"   targetRef="Gateway_Merge_OC" />
-    <bpmn:sequenceFlow id="Flow_S5"  sourceRef="Gateway_Merge_OC"   targetRef="Task_InstrucaoOC" />
-    <bpmn:sequenceFlow id="Flow_S6"  sourceRef="Task_InstrucaoOC"   targetRef="Task_AtualizaEpadOC" />
-    <bpmn:sequenceFlow id="Flow_S7"  sourceRef="Task_AtualizaEpadOC" targetRef="Gateway_To_Diaco" />
-    <bpmn:sequenceFlow id="Flow_S8"  sourceRef="Gateway_To_Diaco"   targetRef="Task_Triagem" />
-    <bpmn:sequenceFlow id="Flow_S9"  sourceRef="Task_Triagem"       targetRef="Task_CoordDiaco" />
-    <bpmn:sequenceFlow id="Flow_S10" sourceRef="Task_CoordDiaco"    targetRef="Task_CoordDivid" />
-    <bpmn:sequenceFlow id="Flow_S11" sourceRef="Task_CoordDivid"    targetRef="Gateway_Split_Inv" />
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_S1"  sourceRef="Start_Ouvidoria"      targetRef="Task_AberturaOuv" />
+    <bpmn:sequenceFlow id="Flow_S2"  sourceRef="Start_Representacao"  targetRef="Task_AberturaRep" />
+    <bpmn:sequenceFlow id="Flow_S3"  sourceRef="Task_AberturaOuv"     targetRef="Gateway_Merge_OC" />
+    <bpmn:sequenceFlow id="Flow_S4"  sourceRef="Task_AberturaRep"     targetRef="Gateway_Merge_OC" />
+    <bpmn:sequenceFlow id="Flow_S5"  sourceRef="Gateway_Merge_OC"     targetRef="Task_InstrucaoOC" />
+    <bpmn:sequenceFlow id="Flow_S6"  sourceRef="Task_InstrucaoOC"     targetRef="Task_AtualizaEpadOC" />
+    <bpmn:sequenceFlow id="Flow_S7"  sourceRef="Task_AtualizaEpadOC"  targetRef="Gateway_To_Diaco" />
+    <bpmn:sequenceFlow id="Flow_S8"  sourceRef="Gateway_To_Diaco"     targetRef="Task_Triagem" />
+    <bpmn:sequenceFlow id="Flow_S9"  sourceRef="Task_Triagem"         targetRef="Task_CoordDiaco" />
+    <bpmn:sequenceFlow id="Flow_S10" sourceRef="Task_CoordDiaco"      targetRef="Task_CoordDivid" />
+    <bpmn:sequenceFlow id="Flow_S11" sourceRef="Task_CoordDivid"      targetRef="Gateway_Split_Inv" />
     <bpmn:sequenceFlow id="Flow_To_IPS"   sourceRef="Gateway_Split_Inv" targetRef="SubProcess_IPS" />
     <bpmn:sequenceFlow id="Flow_To_INPRE" sourceRef="Gateway_Split_Inv" targetRef="SubProcess_INPRE" />
     <bpmn:sequenceFlow id="Flow_To_DINVE" sourceRef="Gateway_Split_Inv" targetRef="Task_DINVE" />
     <bpmn:sequenceFlow id="Flow_From_IPS"   sourceRef="SubProcess_IPS"   targetRef="Gateway_Join_Inv" />
     <bpmn:sequenceFlow id="Flow_From_INPRE" sourceRef="SubProcess_INPRE" targetRef="Gateway_Join_Inv" />
     <bpmn:sequenceFlow id="Flow_From_DINVE" sourceRef="Task_DINVE"       targetRef="Gateway_Join_Inv" />
-    <bpmn:sequenceFlow id="Flow_To_AprovaINV"   sourceRef="Gateway_Join_Inv"     targetRef="Task_AprovaINV" />
-    <bpmn:sequenceFlow id="Flow_To_Parecer"     sourceRef="Task_AprovaINV"       targetRef="Task_ParecerAdm" />
-    <bpmn:sequenceFlow id="Flow_To_AprovaPAR"   sourceRef="Task_ParecerAdm"      targetRef="Task_AprovaPAR" />
-    <bpmn:sequenceFlow id="Flow_To_Deliberacao" sourceRef="Task_AprovaPAR"       targetRef="Task_DeliberacaoDiaco" />
+    <bpmn:sequenceFlow id="Flow_To_AprovaINV"   sourceRef="Gateway_Join_Inv"      targetRef="Task_AprovaINV" />
+    <bpmn:sequenceFlow id="Flow_To_Parecer"     sourceRef="Task_AprovaINV"        targetRef="Task_ParecerAdm" />
+    <bpmn:sequenceFlow id="Flow_To_AprovaPAR"   sourceRef="Task_ParecerAdm"       targetRef="Task_AprovaPAR" />
+    <bpmn:sequenceFlow id="Flow_To_Deliberacao" sourceRef="Task_AprovaPAR"        targetRef="Task_DeliberacaoDiaco" />
     <bpmn:sequenceFlow id="Flow_To_Decision"    sourceRef="Task_DeliberacaoDiaco" targetRef="Gateway_Decision" />
-    <bpmn:sequenceFlow id="Flow_Decision_PAR"   sourceRef="Gateway_Decision"     targetRef="Task_InstauracaoPAR" />
-    <bpmn:sequenceFlow id="Flow_Decision_Arq"   sourceRef="Gateway_Decision"     targetRef="End_Arquivado" />
-    <bpmn:sequenceFlow id="Flow_To_CoordDProc"  sourceRef="Task_InstauracaoPAR"  targetRef="Task_CoordDProc" />
-    <bpmn:sequenceFlow id="Flow_To_EndPAR"      sourceRef="Task_CoordDProc"      targetRef="End_PAR" />
-    <bpmn:sequenceFlow id="Flow_GD1" sourceRef="Start_GenDivid"  targetRef="Task_GerenDivid" />
-    <bpmn:sequenceFlow id="Flow_GD2" sourceRef="Task_GerenDivid" targetRef="Task_AtdDemDivid" />
+    <bpmn:sequenceFlow id="Flow_Decision_PAR"   sourceRef="Gateway_Decision"      targetRef="Task_InstauracaoPAR" />
+    <bpmn:sequenceFlow id="Flow_Decision_Arq"   sourceRef="Gateway_Decision"      targetRef="End_Arquivado" />
+    <bpmn:sequenceFlow id="Flow_To_CoordDProc"  sourceRef="Task_InstauracaoPAR"   targetRef="Task_CoordDProc" />
+    <bpmn:sequenceFlow id="Flow_To_EndPAR"      sourceRef="Task_CoordDProc"       targetRef="End_PAR" />
+    <bpmn:sequenceFlow id="Flow_GD1" sourceRef="Start_GenDivid"   targetRef="Task_GerenDivid" />
+    <bpmn:sequenceFlow id="Flow_GD2" sourceRef="Task_GerenDivid"  targetRef="Task_AtdDemDivid" />
     <bpmn:sequenceFlow id="Flow_GD3" sourceRef="Task_AtdDemDivid" targetRef="End_GenDivid" />
   </bpmn:process>
 
   <!--
-    LAYOUT SUMMARY (all coordinates verified, no overlaps):
-    Pool        : x=100  y=50   w=2100 h=1200
-    Lane_Secac  : y=50   h=180  (y 50–230)
-    Lane_Diaco  : y=230  h=170  (y 230–400)
-    Lane_Subcorr: y=400  h=160  (y 400–560)
-    Lane_Divid  : y=560  h=530  (y 560–1090)
-      SubProcess_IPS   : y=570–700   (row 1)
-      SubProcess_INPRE : y=710–840   (row 2)
-      Task_DINVE       : y=850–920   (row 3)
-      Gateway_Split/Join at y=635
-      GenDivid flow    : y=945–1045  (row 4, far right)
-    Lane_DProc  : y=1090 h=160  (y 1090–1250)
+    LAYOUT — coordenadas verificadas, sem sobreposições
+    ─────────────────────────────────────────────────────
+    Pool                : x=100  y=50   w=2000 h=1090
+    Lane_Secac          : y=50   h=180  (y   50 –  230)
+    Lane_Diaco          : y=230  h=170  (y  230 –  400)
+    Lane_Subcorregedoria: y=400  h=160  (y  400 –  560)
+    Lane_Divid          : y=560  h=370  (y  560 –  930)
+      CoordDivid / Gateways  : y=630–700 (centro y=665)
+      SubProcess_IPS    : y=575–655  (linha 1)
+      SubProcess_INPRE  : y=665–745  (linha 2)  ← centro alinhado ao gateway
+      Task_DINVE         : y=755–825  (linha 3)
+      GenDivid flow      : y=855–925  (linha 4, separado à direita)
+    Lane_DProc          : y=930  h=160  (y  930 – 1090)
   -->
 
   <bpmndi:BPMNDiagram id="BPMNDiagram_07080401">
     <bpmndi:BPMNPlane id="BPMNPlane_07080401" bpmnElement="Collaboration_07080401">
 
-      <!-- ===== Pool ===== -->
+      <!-- Pool -->
       <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
-        <dc:Bounds x="100" y="50" width="2100" height="1200" />
+        <dc:Bounds x="100" y="50" width="2000" height="1090" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lanes ===== -->
+      <!-- Lanes -->
       <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
-        <dc:Bounds x="130" y="50" width="2070" height="180" />
+        <dc:Bounds x="130" y="50" width="1970" height="180" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Diaco_di" bpmnElement="Lane_Diaco" isHorizontal="true">
-        <dc:Bounds x="130" y="230" width="2070" height="170" />
+        <dc:Bounds x="130" y="230" width="1970" height="170" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Subcorregedoria_di" bpmnElement="Lane_Subcorregedoria" isHorizontal="true">
-        <dc:Bounds x="130" y="400" width="2070" height="160" />
+        <dc:Bounds x="130" y="400" width="1970" height="160" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_Divid_di" bpmnElement="Lane_Divid" isHorizontal="true">
-        <dc:Bounds x="130" y="560" width="2070" height="530" />
+        <dc:Bounds x="130" y="560" width="1970" height="370" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Lane_DProc_di" bpmnElement="Lane_DProc" isHorizontal="true">
-        <dc:Bounds x="130" y="1090" width="2070" height="160" />
+        <dc:Bounds x="130" y="930" width="1970" height="160" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lane Secac (y 50–230, center y=140) ===== -->
-      <!-- Start_Ouvidoria    center (198, 114)  -->
+      <!-- ── Lane Secac (y 50–230) ── -->
+      <!-- Start_Ouvidoria    center (198, 114) -->
       <bpmndi:BPMNShape id="Start_Ouvidoria_di" bpmnElement="Start_Ouvidoria">
         <dc:Bounds x="180" y="96" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -299,11 +281,11 @@
       <bpmndi:BPMNShape id="Start_Representacao_di" bpmnElement="Start_Representacao">
         <dc:Bounds x="180" y="166" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <!-- Task_AberturaOuv   center y=114 -->
+      <!-- Task_AberturaOuv   x=250  y=84   w=130 h=60 → center y=114 -->
       <bpmndi:BPMNShape id="Task_AberturaOuv_di" bpmnElement="Task_AberturaOuv">
         <dc:Bounds x="250" y="84" width="130" height="60" />
       </bpmndi:BPMNShape>
-      <!-- Task_AberturaRep   center y=184 -->
+      <!-- Task_AberturaRep   x=250  y=154  w=130 h=60 → center y=184 -->
       <bpmndi:BPMNShape id="Task_AberturaRep_di" bpmnElement="Task_AberturaRep">
         <dc:Bounds x="250" y="154" width="130" height="60" />
       </bpmndi:BPMNShape>
@@ -311,11 +293,11 @@
       <bpmndi:BPMNShape id="Gateway_Merge_OC_di" bpmnElement="Gateway_Merge_OC" isMarkerVisible="true">
         <dc:Bounds x="410" y="129" width="40" height="40" />
       </bpmndi:BPMNShape>
-      <!-- Task_InstrucaoOC   center y=149 -->
+      <!-- Task_InstrucaoOC   x=480  y=119  w=130 h=60 → center y=149 -->
       <bpmndi:BPMNShape id="Task_InstrucaoOC_di" bpmnElement="Task_InstrucaoOC">
         <dc:Bounds x="480" y="119" width="130" height="60" />
       </bpmndi:BPMNShape>
-      <!-- Task_AtualizaEpadOC center y=149 -->
+      <!-- Task_AtualizaEpadOC x=640 y=119  w=130 h=60 → center y=149 -->
       <bpmndi:BPMNShape id="Task_AtualizaEpadOC_di" bpmnElement="Task_AtualizaEpadOC">
         <dc:Bounds x="640" y="119" width="130" height="60" />
       </bpmndi:BPMNShape>
@@ -324,356 +306,292 @@
         <dc:Bounds x="800" y="129" width="40" height="40" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lane Diaco (y 230–400, center y=315) ===== -->
-      <!-- Task_Triagem           x=780  y=280  w=130 h=70  → center (845, 315) -->
+      <!-- ── Lane Diaco (y 230–400, center y=315) ── -->
+      <!-- Task_Triagem           x=780  y=280  w=130 h=70 → center (845, 315) -->
       <bpmndi:BPMNShape id="Task_Triagem_di" bpmnElement="Task_Triagem">
         <dc:Bounds x="780" y="280" width="130" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_CoordDiaco        x=940  y=280  w=150 h=70  → center (1015, 315) -->
+      <!-- Task_CoordDiaco        x=940  y=280  w=150 h=70 → center (1015, 315) -->
       <bpmndi:BPMNShape id="Task_CoordDiaco_di" bpmnElement="Task_CoordDiaco">
         <dc:Bounds x="940" y="280" width="150" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_ParecerAdm        x=1120 y=280  w=140 h=70  → center (1190, 315) -->
+      <!-- Task_ParecerAdm        x=1130 y=280  w=140 h=70 → center (1200, 315) -->
       <bpmndi:BPMNShape id="Task_ParecerAdm_di" bpmnElement="Task_ParecerAdm">
-        <dc:Bounds x="1120" y="280" width="140" height="70" />
+        <dc:Bounds x="1130" y="280" width="140" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_DeliberacaoDiaco  x=1390 y=280  w=150 h=70  → center (1465, 315) -->
+      <!-- Task_DeliberacaoDiaco  x=1410 y=280  w=150 h=70 → center (1485, 315) -->
       <bpmndi:BPMNShape id="Task_DeliberacaoDiaco_di" bpmnElement="Task_DeliberacaoDiaco">
-        <dc:Bounds x="1390" y="280" width="150" height="70" />
+        <dc:Bounds x="1410" y="280" width="150" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Gateway_Decision       center (1580, 315) -->
+      <!-- Gateway_Decision       center (1600, 315) -->
       <bpmndi:BPMNShape id="Gateway_Decision_di" bpmnElement="Gateway_Decision" isMarkerVisible="true">
-        <dc:Bounds x="1560" y="295" width="40" height="40" />
+        <dc:Bounds x="1580" y="295" width="40" height="40" />
       </bpmndi:BPMNShape>
-      <!-- End_Arquivado          center (1658, 315) -->
+      <!-- End_Arquivado          center (1668, 315) -->
       <bpmndi:BPMNShape id="End_Arquivado_di" bpmnElement="End_Arquivado">
-        <dc:Bounds x="1640" y="297" width="36" height="36" />
+        <dc:Bounds x="1650" y="297" width="36" height="36" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lane Subcorregedoria (y 400–560, center y=480) ===== -->
-      <!-- Task_AprovaINV   x=880  y=445  w=140 h=70  → center (950, 480) -->
+      <!-- ── Lane Subcorregedoria (y 400–560, center y=480) ── -->
+      <!-- Task_AprovaINV   x=890  y=445  w=140 h=70 → center (960, 480) -->
       <bpmndi:BPMNShape id="Task_AprovaINV_di" bpmnElement="Task_AprovaINV">
-        <dc:Bounds x="880" y="445" width="140" height="70" />
+        <dc:Bounds x="890" y="445" width="140" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_AprovaPAR   x=1230 y=445  w=140 h=70  → center (1300, 480) -->
+      <!-- Task_AprovaPAR   x=1250 y=445  w=140 h=70 → center (1320, 480) -->
       <bpmndi:BPMNShape id="Task_AprovaPAR_di" bpmnElement="Task_AprovaPAR">
-        <dc:Bounds x="1230" y="445" width="140" height="70" />
+        <dc:Bounds x="1250" y="445" width="140" height="70" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lane Divid (y 560–1090) ===== -->
+      <!-- ── Lane Divid (y 560–930) ── -->
 
-      <!-- Task_CoordDivid   x=200  y=600  w=130 h=70  → center (265, 635) -->
+      <!-- Task_CoordDivid   x=200  y=630  w=130 h=70 → center (265, 665) -->
       <bpmndi:BPMNShape id="Task_CoordDivid_di" bpmnElement="Task_CoordDivid">
-        <dc:Bounds x="200" y="600" width="130" height="70" />
+        <dc:Bounds x="200" y="630" width="130" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Gateway_Split_Inv center (380, 635) -->
+      <!-- Gateway_Split_Inv center (380, 665) -->
       <bpmndi:BPMNShape id="Gateway_Split_Inv_di" bpmnElement="Gateway_Split_Inv" isMarkerVisible="true">
-        <dc:Bounds x="360" y="615" width="40" height="40" />
+        <dc:Bounds x="360" y="645" width="40" height="40" />
       </bpmndi:BPMNShape>
 
-      <!-- SubProcess_IPS   x=430  y=570  w=410 h=130 → row 1 in Divid -->
-      <bpmndi:BPMNShape id="SubProcess_IPS_di" bpmnElement="SubProcess_IPS" isExpanded="true">
-        <dc:Bounds x="430" y="570" width="410" height="130" />
-      </bpmndi:BPMNShape>
-      <!-- IPS_Start        center (455, 622) -->
-      <bpmndi:BPMNShape id="IPS_Start_di" bpmnElement="IPS_Start">
-        <dc:Bounds x="440" y="607" width="30" height="30" />
-      </bpmndi:BPMNShape>
-      <!-- Task_IPS_Dist    center (550, 622) -->
-      <bpmndi:BPMNShape id="Task_IPS_Dist_di" bpmnElement="Task_IPS_Dist">
-        <dc:Bounds x="490" y="592" width="120" height="60" />
-      </bpmndi:BPMNShape>
-      <!-- Task_IPS_Port    center (675, 622) -->
-      <bpmndi:BPMNShape id="Task_IPS_Port_di" bpmnElement="Task_IPS_Port">
-        <dc:Bounds x="630" y="592" width="120" height="60" />
-      </bpmndi:BPMNShape>
-      <!-- IPS_End          center (790, 622) -->
-      <bpmndi:BPMNShape id="IPS_End_di" bpmnElement="IPS_End">
-        <dc:Bounds x="775" y="607" width="30" height="30" />
+      <!-- SubProcess_IPS  (colapsado) x=440 y=575 w=200 h=80 → linha 1, center (540, 615) -->
+      <bpmndi:BPMNShape id="SubProcess_IPS_di" bpmnElement="SubProcess_IPS" isExpanded="false">
+        <dc:Bounds x="440" y="575" width="200" height="80" />
       </bpmndi:BPMNShape>
 
-      <!-- SubProcess_INPRE x=430  y=710  w=410 h=130 → row 2 in Divid (gap=10 from IPS) -->
-      <bpmndi:BPMNShape id="SubProcess_INPRE_di" bpmnElement="SubProcess_INPRE" isExpanded="true">
-        <dc:Bounds x="430" y="710" width="410" height="130" />
-      </bpmndi:BPMNShape>
-      <!-- INPRE_Start      center (455, 762) -->
-      <bpmndi:BPMNShape id="INPRE_Start_di" bpmnElement="INPRE_Start">
-        <dc:Bounds x="440" y="747" width="30" height="30" />
-      </bpmndi:BPMNShape>
-      <!-- Task_INPRE_Exec  center (560, 762) -->
-      <bpmndi:BPMNShape id="Task_INPRE_Exec_di" bpmnElement="Task_INPRE_Exec">
-        <dc:Bounds x="490" y="732" width="140" height="60" />
-      </bpmndi:BPMNShape>
-      <!-- INPRE_End        center (775, 762) -->
-      <bpmndi:BPMNShape id="INPRE_End_di" bpmnElement="INPRE_End">
-        <dc:Bounds x="760" y="747" width="30" height="30" />
+      <!-- SubProcess_INPRE (colapsado) x=440 y=625 w=200 h=80 → linha 2, center (540, 665)
+           Alinhado verticalmente com os gateways -->
+      <bpmndi:BPMNShape id="SubProcess_INPRE_di" bpmnElement="SubProcess_INPRE" isExpanded="false">
+        <dc:Bounds x="440" y="625" width="200" height="80" />
       </bpmndi:BPMNShape>
 
-      <!-- Task_DINVE       x=430  y=850  w=160 h=60  → row 3 in Divid (gap=10 from INPRE) -->
+      <!-- Task_DINVE       x=440  y=715  w=200 h=70 → linha 3, center (540, 750) -->
       <bpmndi:BPMNShape id="Task_DINVE_di" bpmnElement="Task_DINVE">
-        <dc:Bounds x="430" y="850" width="160" height="60" />
+        <dc:Bounds x="440" y="715" width="200" height="70" />
       </bpmndi:BPMNShape>
 
-      <!-- Gateway_Join_Inv center (870, 635) — right of subprocesses, same y as Split -->
+      <!-- Gateway_Join_Inv center (720, 665) — alinhado verticalmente com Split e INPRE -->
       <bpmndi:BPMNShape id="Gateway_Join_Inv_di" bpmnElement="Gateway_Join_Inv" isMarkerVisible="true">
-        <dc:Bounds x="850" y="615" width="40" height="40" />
+        <dc:Bounds x="700" y="645" width="40" height="40" />
       </bpmndi:BPMNShape>
 
-      <!-- GenDivid flow: row 4 in Divid (y 955–1045), offset right to not overlap subprocesses -->
-      <!-- Start_GenDivid   center (938, 973) -->
+      <!-- Fluxo GenDivid (independente) — linha 4, y 855–925 -->
+      <!-- Start_GenDivid   center (238, 873) -->
       <bpmndi:BPMNShape id="Start_GenDivid_di" bpmnElement="Start_GenDivid">
-        <dc:Bounds x="920" y="955" width="36" height="36" />
+        <dc:Bounds x="220" y="855" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <!-- Task_GerenDivid  center (1055, 975) -->
+      <!-- Task_GerenDivid  x=280  y=840  w=180 h=70 → center (370, 875) -->
       <bpmndi:BPMNShape id="Task_GerenDivid_di" bpmnElement="Task_GerenDivid">
-        <dc:Bounds x="980" y="940" width="150" height="70" />
+        <dc:Bounds x="280" y="840" width="180" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_AtdDemDivid center (1230, 975) -->
+      <!-- Task_AtdDemDivid x=490  y=840  w=180 h=70 → center (580, 875) -->
       <bpmndi:BPMNShape id="Task_AtdDemDivid_di" bpmnElement="Task_AtdDemDivid">
-        <dc:Bounds x="1155" y="940" width="150" height="70" />
+        <dc:Bounds x="490" y="840" width="180" height="70" />
       </bpmndi:BPMNShape>
-      <!-- End_GenDivid     center (1343, 973) -->
+      <!-- End_GenDivid     center (708, 873) -->
       <bpmndi:BPMNShape id="End_GenDivid_di" bpmnElement="End_GenDivid">
-        <dc:Bounds x="1325" y="955" width="36" height="36" />
+        <dc:Bounds x="690" y="855" width="36" height="36" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Lane DProc (y 1090–1250, center y=1170) ===== -->
-      <!-- Task_InstauracaoPAR x=1560 y=1100 w=140 h=70  → center (1630, 1135) -->
+      <!-- ── Lane DProc (y 930–1090, center y=1010) ── -->
+      <!-- Task_InstauracaoPAR x=1580 y=975  w=140 h=70 → center (1650, 1010) -->
       <bpmndi:BPMNShape id="Task_InstauracaoPAR_di" bpmnElement="Task_InstauracaoPAR">
-        <dc:Bounds x="1560" y="1100" width="140" height="70" />
+        <dc:Bounds x="1580" y="975" width="140" height="70" />
       </bpmndi:BPMNShape>
-      <!-- Task_CoordDProc     x=1730 y=1100 w=130 h=70  → center (1795, 1135) -->
+      <!-- Task_CoordDProc     x=1750 y=975  w=130 h=70 → center (1815, 1010) -->
       <bpmndi:BPMNShape id="Task_CoordDProc_di" bpmnElement="Task_CoordDProc">
-        <dc:Bounds x="1730" y="1100" width="130" height="70" />
+        <dc:Bounds x="1750" y="975" width="130" height="70" />
       </bpmndi:BPMNShape>
-      <!-- End_PAR             center (1913, 1135) -->
+      <!-- End_PAR             center (1933, 1010) -->
       <bpmndi:BPMNShape id="End_PAR_di" bpmnElement="End_PAR">
-        <dc:Bounds x="1895" y="1117" width="36" height="36" />
+        <dc:Bounds x="1915" y="992" width="36" height="36" />
       </bpmndi:BPMNShape>
 
-      <!-- ===== Edges ===== -->
+      <!-- ══ Edges ══ -->
 
-      <!-- Flow_S1: Start_Ouvidoria(198,114) → Task_AberturaOuv left(250,114) -->
+      <!-- Flow_S1: (216,114) → (250,114) -->
       <bpmndi:BPMNEdge id="Flow_S1_di" bpmnElement="Flow_S1">
         <di:waypoint x="216" y="114" />
         <di:waypoint x="250" y="114" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S2: Start_Representacao(198,184) → Task_AberturaRep left(250,184) -->
+      <!-- Flow_S2: (216,184) → (250,184) -->
       <bpmndi:BPMNEdge id="Flow_S2_di" bpmnElement="Flow_S2">
         <di:waypoint x="216" y="184" />
         <di:waypoint x="250" y="184" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S3: Task_AberturaOuv right(380,114) → Gateway_Merge_OC top(430,129) -->
+      <!-- Flow_S3: Task_AberturaOuv right (380,114) → Gateway top (430,129) -->
       <bpmndi:BPMNEdge id="Flow_S3_di" bpmnElement="Flow_S3">
         <di:waypoint x="380" y="114" />
         <di:waypoint x="430" y="129" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S4: Task_AberturaRep right(380,184) → Gateway_Merge_OC bottom(430,169) -->
+      <!-- Flow_S4: Task_AberturaRep right (380,184) → Gateway bottom (430,169) -->
       <bpmndi:BPMNEdge id="Flow_S4_di" bpmnElement="Flow_S4">
         <di:waypoint x="380" y="184" />
         <di:waypoint x="430" y="169" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S5: Gateway_Merge_OC right(450,149) → Task_InstrucaoOC left(480,149) -->
+      <!-- Flow_S5: (450,149) → (480,149) -->
       <bpmndi:BPMNEdge id="Flow_S5_di" bpmnElement="Flow_S5">
         <di:waypoint x="450" y="149" />
         <di:waypoint x="480" y="149" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S6: Task_InstrucaoOC right(610,149) → Task_AtualizaEpadOC left(640,149) -->
+      <!-- Flow_S6: (610,149) → (640,149) -->
       <bpmndi:BPMNEdge id="Flow_S6_di" bpmnElement="Flow_S6">
         <di:waypoint x="610" y="149" />
         <di:waypoint x="640" y="149" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S7: Task_AtualizaEpadOC right(770,149) → Gateway_To_Diaco left(800,149) -->
+      <!-- Flow_S7: (770,149) → (800,149) -->
       <bpmndi:BPMNEdge id="Flow_S7_di" bpmnElement="Flow_S7">
         <di:waypoint x="770" y="149" />
         <di:waypoint x="800" y="149" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S8: Gateway_To_Diaco bottom(820,169) → Task_Triagem top(845,280) -->
+      <!-- Flow_S8: Gateway_To_Diaco bottom (820,169) → Task_Triagem top (820,280) -->
       <bpmndi:BPMNEdge id="Flow_S8_di" bpmnElement="Flow_S8">
         <di:waypoint x="820" y="169" />
         <di:waypoint x="820" y="280" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S9: Task_Triagem right(910,315) → Task_CoordDiaco left(940,315) -->
+      <!-- Flow_S9: (910,315) → (940,315) -->
       <bpmndi:BPMNEdge id="Flow_S9_di" bpmnElement="Flow_S9">
         <di:waypoint x="910" y="315" />
         <di:waypoint x="940" y="315" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S10: Task_CoordDiaco bottom(1015,350) → Task_CoordDivid top(265,600)
-           Route: go down to y=545 (between Subcorr bottom 560 and Secac — actually
-           routed through y=545 in the space above Divid), then left, then down -->
+      <!-- Flow_S10: CoordDiaco bottom (1015,350) → CoordDivid top (265,630)
+           desce até y=545, vai para esquerda, entra pela parte superior -->
       <bpmndi:BPMNEdge id="Flow_S10_di" bpmnElement="Flow_S10">
         <di:waypoint x="1015" y="350" />
         <di:waypoint x="1015" y="545" />
         <di:waypoint x="265"  y="545" />
-        <di:waypoint x="265"  y="600" />
+        <di:waypoint x="265"  y="630" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_S11: Task_CoordDivid right(330,635) → Gateway_Split_Inv left(360,635) -->
+      <!-- Flow_S11: CoordDivid right (330,665) → Gateway_Split left (360,665) -->
       <bpmndi:BPMNEdge id="Flow_S11_di" bpmnElement="Flow_S11">
-        <di:waypoint x="330" y="635" />
-        <di:waypoint x="360" y="635" />
+        <di:waypoint x="330" y="665" />
+        <di:waypoint x="360" y="665" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_IPS: Gateway_Split right(400,635) → SubProcess_IPS left(430,635) -->
+      <!-- Flow_To_IPS: Split top (380,645) → SubProcess_IPS left (440,615) -->
       <bpmndi:BPMNEdge id="Flow_To_IPS_di" bpmnElement="Flow_To_IPS">
-        <di:waypoint x="400" y="635" />
-        <di:waypoint x="430" y="635" />
+        <di:waypoint x="380" y="645" />
+        <di:waypoint x="410" y="615" />
+        <di:waypoint x="440" y="615" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_INPRE: Gateway_Split bottom(380,655) → SubProcess_INPRE left entry
-           Route: down to y=775, then right to x=430 -->
+      <!-- Flow_To_INPRE: Split right (400,665) → SubProcess_INPRE left (440,665) -->
       <bpmndi:BPMNEdge id="Flow_To_INPRE_di" bpmnElement="Flow_To_INPRE">
-        <di:waypoint x="380" y="655" />
-        <di:waypoint x="380" y="775" />
-        <di:waypoint x="430" y="775" />
+        <di:waypoint x="400" y="665" />
+        <di:waypoint x="440" y="665" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_DINVE: Gateway_Split bottom → Task_DINVE left entry
-           Route: down to y=880, right to x=430 -->
+      <!-- Flow_To_DINVE: Split bottom (380,685) → Task_DINVE left (440,750) -->
       <bpmndi:BPMNEdge id="Flow_To_DINVE_di" bpmnElement="Flow_To_DINVE">
-        <di:waypoint x="380" y="655" />
-        <di:waypoint x="380" y="880" />
-        <di:waypoint x="430" y="880" />
+        <di:waypoint x="380" y="685" />
+        <di:waypoint x="410" y="750" />
+        <di:waypoint x="440" y="750" />
       </bpmndi:BPMNEdge>
 
-      <!-- Internal IPS flows -->
-      <bpmndi:BPMNEdge id="Sub_I1_di" bpmnElement="Sub_I1">
-        <di:waypoint x="470" y="622" />
-        <di:waypoint x="490" y="622" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Sub_I2_di" bpmnElement="Sub_I2">
-        <di:waypoint x="610" y="622" />
-        <di:waypoint x="630" y="622" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Sub_I3_di" bpmnElement="Sub_I3">
-        <di:waypoint x="750" y="622" />
-        <di:waypoint x="775" y="622" />
-      </bpmndi:BPMNEdge>
-
-      <!-- Internal INPRE flows -->
-      <bpmndi:BPMNEdge id="Sub_IN1_di" bpmnElement="Sub_IN1">
-        <di:waypoint x="470" y="762" />
-        <di:waypoint x="490" y="762" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Sub_IN2_di" bpmnElement="Sub_IN2">
-        <di:waypoint x="630" y="762" />
-        <di:waypoint x="760" y="762" />
-      </bpmndi:BPMNEdge>
-
-      <!-- Flow_From_IPS: IPS_End right(805,622) → Gateway_Join_Inv left(850,635)
-           Route: right then down slightly -->
+      <!-- Flow_From_IPS: SubProcess_IPS right (640,615) → Join top (720,645) -->
       <bpmndi:BPMNEdge id="Flow_From_IPS_di" bpmnElement="Flow_From_IPS">
-        <di:waypoint x="805" y="622" />
-        <di:waypoint x="827" y="622" />
-        <di:waypoint x="850" y="635" />
+        <di:waypoint x="640" y="615" />
+        <di:waypoint x="680" y="615" />
+        <di:waypoint x="720" y="645" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_From_INPRE: INPRE_End right(790,762) → Gateway_Join_Inv bottom(870,655)
-           Route: right to x=870, up to y=655 -->
+      <!-- Flow_From_INPRE: SubProcess_INPRE right (640,665) → Join left (700,665) -->
       <bpmndi:BPMNEdge id="Flow_From_INPRE_di" bpmnElement="Flow_From_INPRE">
-        <di:waypoint x="790" y="762" />
-        <di:waypoint x="870" y="762" />
-        <di:waypoint x="870" y="655" />
+        <di:waypoint x="640" y="665" />
+        <di:waypoint x="700" y="665" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_From_DINVE: Task_DINVE right(590,880) → Gateway_Join_Inv bottom(870,655)
-           Route: right to x=870, up to y=655 -->
+      <!-- Flow_From_DINVE: Task_DINVE right (640,750) → Join bottom (720,685) -->
       <bpmndi:BPMNEdge id="Flow_From_DINVE_di" bpmnElement="Flow_From_DINVE">
-        <di:waypoint x="590" y="880" />
-        <di:waypoint x="870" y="880" />
-        <di:waypoint x="870" y="655" />
+        <di:waypoint x="640" y="750" />
+        <di:waypoint x="680" y="750" />
+        <di:waypoint x="720" y="685" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_AprovaINV: Gateway_Join_Inv top(870,615) → Task_AprovaINV bottom(950,515)
-           Route: up to y=480 center of Subcorr, right to x=950 -->
+      <!-- Flow_To_AprovaINV: Join top (720,645) → AprovaINV bottom (960,515)
+           sobe pelo centro, entra pela base da task -->
       <bpmndi:BPMNEdge id="Flow_To_AprovaINV_di" bpmnElement="Flow_To_AprovaINV">
-        <di:waypoint x="870" y="615" />
-        <di:waypoint x="870" y="480" />
-        <di:waypoint x="880" y="480" />
+        <di:waypoint x="720" y="645" />
+        <di:waypoint x="720" y="480" />
+        <di:waypoint x="890" y="480" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_Parecer: Task_AprovaINV right(1020,480) → Task_ParecerAdm left(1120,315)
-           Route: right to x=1070, up to y=315 -->
+      <!-- Flow_To_Parecer: AprovaINV right (1030,480) → ParecerAdm left (1130,315)
+           vai para direita, sobe, entra pela esquerda -->
       <bpmndi:BPMNEdge id="Flow_To_Parecer_di" bpmnElement="Flow_To_Parecer">
-        <di:waypoint x="1020" y="480" />
-        <di:waypoint x="1070" y="480" />
-        <di:waypoint x="1070" y="315" />
-        <di:waypoint x="1120" y="315" />
+        <di:waypoint x="1030" y="480" />
+        <di:waypoint x="1080" y="480" />
+        <di:waypoint x="1080" y="315" />
+        <di:waypoint x="1130" y="315" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_AprovaPAR: Task_ParecerAdm right(1260,315) → Task_AprovaPAR top(1300,445)
-           Route: right to x=1300, down to y=445 -->
+      <!-- Flow_To_AprovaPAR: ParecerAdm right (1270,315) → AprovaPAR top (1320,445) -->
       <bpmndi:BPMNEdge id="Flow_To_AprovaPAR_di" bpmnElement="Flow_To_AprovaPAR">
-        <di:waypoint x="1260" y="315" />
-        <di:waypoint x="1300" y="315" />
-        <di:waypoint x="1300" y="445" />
+        <di:waypoint x="1270" y="315" />
+        <di:waypoint x="1320" y="315" />
+        <di:waypoint x="1320" y="445" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_Deliberacao: Task_AprovaPAR right(1370,480) → Task_DeliberacaoDiaco left(1390,315)
-           Route: right to x=1380, up to y=315 -->
+      <!-- Flow_To_Deliberacao: AprovaPAR right (1390,480) → DeliberacaoDiaco left (1410,315) -->
       <bpmndi:BPMNEdge id="Flow_To_Deliberacao_di" bpmnElement="Flow_To_Deliberacao">
-        <di:waypoint x="1370" y="480" />
-        <di:waypoint x="1380" y="480" />
-        <di:waypoint x="1380" y="315" />
-        <di:waypoint x="1390" y="315" />
+        <di:waypoint x="1390" y="480" />
+        <di:waypoint x="1400" y="480" />
+        <di:waypoint x="1400" y="315" />
+        <di:waypoint x="1410" y="315" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_Decision: Task_DeliberacaoDiaco right(1540,315) → Gateway_Decision left(1560,315) -->
+      <!-- Flow_To_Decision: (1560,315) → (1580,315) -->
       <bpmndi:BPMNEdge id="Flow_To_Decision_di" bpmnElement="Flow_To_Decision">
-        <di:waypoint x="1540" y="315" />
         <di:waypoint x="1560" y="315" />
+        <di:waypoint x="1580" y="315" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_Decision_Arq: Gateway_Decision right(1600,315) → End_Arquivado left(1640,315) -->
+      <!-- Flow_Decision_Arq: (1620,315) → (1650,315) -->
       <bpmndi:BPMNEdge id="Flow_Decision_Arq_di" bpmnElement="Flow_Decision_Arq">
-        <di:waypoint x="1600" y="315" />
-        <di:waypoint x="1640" y="315" />
+        <di:waypoint x="1620" y="315" />
+        <di:waypoint x="1650" y="315" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_Decision_PAR: Gateway_Decision bottom(1580,335) → Task_InstauracaoPAR top(1630,1100)
-           Route: down to y=1135, left to x=1630 -->
+      <!-- Flow_Decision_PAR: Gateway_Decision bottom (1600,335) → InstauracaoPAR top (1650,975) -->
       <bpmndi:BPMNEdge id="Flow_Decision_PAR_di" bpmnElement="Flow_Decision_PAR">
-        <di:waypoint x="1580" y="335" />
-        <di:waypoint x="1580" y="1135" />
-        <di:waypoint x="1560" y="1135" />
+        <di:waypoint x="1600" y="335" />
+        <di:waypoint x="1600" y="1010" />
+        <di:waypoint x="1580" y="1010" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_CoordDProc: Task_InstauracaoPAR right(1700,1135) → Task_CoordDProc left(1730,1135) -->
+      <!-- Flow_To_CoordDProc: (1720,1010) → (1750,1010) -->
       <bpmndi:BPMNEdge id="Flow_To_CoordDProc_di" bpmnElement="Flow_To_CoordDProc">
-        <di:waypoint x="1700" y="1135" />
-        <di:waypoint x="1730" y="1135" />
+        <di:waypoint x="1720" y="1010" />
+        <di:waypoint x="1750" y="1010" />
       </bpmndi:BPMNEdge>
 
-      <!-- Flow_To_EndPAR: Task_CoordDProc right(1860,1135) → End_PAR left(1895,1135) -->
+      <!-- Flow_To_EndPAR: (1880,1010) → (1915,1010) -->
       <bpmndi:BPMNEdge id="Flow_To_EndPAR_di" bpmnElement="Flow_To_EndPAR">
-        <di:waypoint x="1860" y="1135" />
-        <di:waypoint x="1895" y="1135" />
+        <di:waypoint x="1880" y="1010" />
+        <di:waypoint x="1915" y="1010" />
       </bpmndi:BPMNEdge>
 
-      <!-- GenDivid edges -->
-      <!-- Flow_GD1: Start_GenDivid right(956,973) → Task_GerenDivid left(980,975) -->
+      <!-- GenDivid -->
       <bpmndi:BPMNEdge id="Flow_GD1_di" bpmnElement="Flow_GD1">
-        <di:waypoint x="956" y="973" />
-        <di:waypoint x="980" y="975" />
+        <di:waypoint x="256" y="873" />
+        <di:waypoint x="280" y="875" />
       </bpmndi:BPMNEdge>
-      <!-- Flow_GD2: Task_GerenDivid right(1130,975) → Task_AtdDemDivid left(1155,975) -->
       <bpmndi:BPMNEdge id="Flow_GD2_di" bpmnElement="Flow_GD2">
-        <di:waypoint x="1130" y="975" />
-        <di:waypoint x="1155" y="975" />
+        <di:waypoint x="460" y="875" />
+        <di:waypoint x="490" y="875" />
       </bpmndi:BPMNEdge>
-      <!-- Flow_GD3: Task_AtdDemDivid right(1305,975) → End_GenDivid left(1325,973) -->
       <bpmndi:BPMNEdge id="Flow_GD3_di" bpmnElement="Flow_GD3">
-        <di:waypoint x="1305" y="975" />
-        <di:waypoint x="1325" y="973" />
+        <di:waypoint x="670" y="875" />
+        <di:waypoint x="690" y="873" />
       </bpmndi:BPMNEdge>
 
     </bpmndi:BPMNPlane>
