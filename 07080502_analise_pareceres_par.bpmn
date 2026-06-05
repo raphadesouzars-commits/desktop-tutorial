@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/omg/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/omg/spec/DD/20100524/DI"
+             id="Definitions_07080502"
+             targetNamespace="http://bpmn.io/schema/bpmn">
+
+  <bpmn:collaboration id="Collaboration_07080502">
+    <bpmn:participant id="Pool_PAR2" name="07.08.05-02 Analisar Processos PAR e Emitir Pareceres Tecnicos" processRef="Process_07080502"/>
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080502" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_07080502">
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Start_PAR2</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConclusaoOC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtualizaEpad</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_PAR2</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_DiacoSeaco" name="Diaco/Seaco">
+        <bpmn:flowNodeRef>Task_CoordDiaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_CoordSeaco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_TipoParecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_ParJulgamento</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_ParReconsideracao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_ParRevisao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_ParCorrecional</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_JoinParecer</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SupTecDiaco</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_Subcorr" name="Subcorregedoria">
+        <bpmn:flowNodeRef>Task_AprovaParJul</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+
+    <!-- Lane Secac -->
+    <bpmn:startEvent id="Start_PAR2" name="PAR recebido para analise">
+      <bpmn:outgoing>Flow_Start_Conclusao</bpmn:outgoing>
+    </bpmn:startEvent>
+
+    <bpmn:task id="Task_ConclusaoOC" name="Conclusao de OC e encaminhamento">
+      <bpmn:incoming>Flow_Start_Conclusao</bpmn:incoming>
+      <bpmn:outgoing>Flow_Conclusao_CoordDiaco</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_AtualizaEpad" name="ATUALIZA-EPAD">
+      <bpmn:incoming>Flow_Aprova_Atualiza</bpmn:incoming>
+      <bpmn:outgoing>Flow_Atualiza_End</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:endEvent id="End_PAR2" name="Processo encerrado">
+      <bpmn:incoming>Flow_Atualiza_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Lane Diaco/Seaco -->
+    <bpmn:task id="Task_CoordDiaco" name="Coord. Diaco/DemJur - Distribuicao e analise inicial PAR">
+      <bpmn:incoming>Flow_Conclusao_CoordDiaco</bpmn:incoming>
+      <bpmn:outgoing>Flow_CoordDiaco_CoordSeaco</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:task id="Task_CoordSeaco" name="Coord. Seaco - Analise e elaboracao de minuta">
+      <bpmn:incoming>Flow_CoordDiaco_CoordSeaco</bpmn:incoming>
+      <bpmn:outgoing>Flow_CoordSeaco_Gateway</bpmn:outgoing>
+    </bpmn:task>
+
+    <bpmn:exclusiveGateway id="Gateway_TipoParecer" name="Tipo de Parecer PAR" isMarkerVisible="true">
+      <bpmn:incoming>Flow_CoordSeaco_Gateway</bpmn:incoming>
+      <bpmn:outgoing>Flow_Gw_ParJulgamento</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Gw_ParReconsideracao</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Gw_ParRevisao</bpmn:outgoing>
+      <bpmn:outgoing>Flow_Gw_ParCorrecional</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:subProcess id="SubProcess_ParJulgamento" name="Parecer de Julgamento PAR" triggeredByEvent="false">
+      <bpmn:incoming>Flow_Gw_ParJulgamento</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParJulgamento_Join</bpmn:outgoing>
+    </bpmn:subProcess>
+
+    <bpmn:subProcess id="SubProcess_ParReconsideracao" name="Parecer de Reconsideracao PAR" triggeredByEvent="false">
+      <bpmn:incoming>Flow_Gw_ParReconsideracao</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParReconsideracao_Join</bpmn:outgoing>
+    </bpmn:subProcess>
+
+    <bpmn:subProcess id="SubProcess_ParRevisao" name="Parecer de Revisao PAR" triggeredByEvent="false">
+      <bpmn:incoming>Flow_Gw_ParRevisao</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParRevisao_Join</bpmn:outgoing>
+    </bpmn:subProcess>
+
+    <bpmn:subProcess id="SubProcess_ParCorrecional" name="Parecer Correcional PAR" triggeredByEvent="false">
+      <bpmn:incoming>Flow_Gw_ParCorrecional</bpmn:incoming>
+      <bpmn:outgoing>Flow_ParCorrecional_Join</bpmn:outgoing>
+    </bpmn:subProcess>
+
+    <bpmn:exclusiveGateway id="Gateway_JoinParecer" name="Parecer elaborado" isMarkerVisible="true">
+      <bpmn:incoming>Flow_ParJulgamento_Join</bpmn:incoming>
+      <bpmn:incoming>Flow_ParReconsideracao_Join</bpmn:incoming>
+      <bpmn:incoming>Flow_ParRevisao_Join</bpmn:incoming>
+      <bpmn:incoming>Flow_ParCorrecional_Join</bpmn:incoming>
+      <bpmn:outgoing>Flow_Join_SupTec</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <bpmn:task id="Task_SupTecDiaco" name="Sup. Tec. Diaco - Revisao tecnica e encaminhamento">
+      <bpmn:incoming>Flow_Join_SupTec</bpmn:incoming>
+      <bpmn:outgoing>Flow_SupTec_Aprova</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane Subcorregedoria -->
+    <bpmn:task id="Task_AprovaParJul" name="Subcorregedoria - Aprovacao e assinatura do parecer">
+      <bpmn:incoming>Flow_SupTec_Aprova</bpmn:incoming>
+      <bpmn:outgoing>Flow_Aprova_Atualiza</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="Flow_Start_Conclusao" sourceRef="Start_PAR2" targetRef="Task_ConclusaoOC"/>
+    <bpmn:sequenceFlow id="Flow_Conclusao_CoordDiaco" sourceRef="Task_ConclusaoOC" targetRef="Task_CoordDiaco"/>
+    <bpmn:sequenceFlow id="Flow_CoordDiaco_CoordSeaco" sourceRef="Task_CoordDiaco" targetRef="Task_CoordSeaco"/>
+    <bpmn:sequenceFlow id="Flow_CoordSeaco_Gateway" sourceRef="Task_CoordSeaco" targetRef="Gateway_TipoParecer"/>
+    <bpmn:sequenceFlow id="Flow_Gw_ParJulgamento" name="Julgamento" sourceRef="Gateway_TipoParecer" targetRef="SubProcess_ParJulgamento"/>
+    <bpmn:sequenceFlow id="Flow_Gw_ParReconsideracao" name="Reconsideracao" sourceRef="Gateway_TipoParecer" targetRef="SubProcess_ParReconsideracao"/>
+    <bpmn:sequenceFlow id="Flow_Gw_ParRevisao" name="Revisao" sourceRef="Gateway_TipoParecer" targetRef="SubProcess_ParRevisao"/>
+    <bpmn:sequenceFlow id="Flow_Gw_ParCorrecional" name="Correcional" sourceRef="Gateway_TipoParecer" targetRef="SubProcess_ParCorrecional"/>
+    <bpmn:sequenceFlow id="Flow_ParJulgamento_Join" sourceRef="SubProcess_ParJulgamento" targetRef="Gateway_JoinParecer"/>
+    <bpmn:sequenceFlow id="Flow_ParReconsideracao_Join" sourceRef="SubProcess_ParReconsideracao" targetRef="Gateway_JoinParecer"/>
+    <bpmn:sequenceFlow id="Flow_ParRevisao_Join" sourceRef="SubProcess_ParRevisao" targetRef="Gateway_JoinParecer"/>
+    <bpmn:sequenceFlow id="Flow_ParCorrecional_Join" sourceRef="SubProcess_ParCorrecional" targetRef="Gateway_JoinParecer"/>
+    <bpmn:sequenceFlow id="Flow_Join_SupTec" sourceRef="Gateway_JoinParecer" targetRef="Task_SupTecDiaco"/>
+    <bpmn:sequenceFlow id="Flow_SupTec_Aprova" sourceRef="Task_SupTecDiaco" targetRef="Task_AprovaParJul"/>
+    <bpmn:sequenceFlow id="Flow_Aprova_Atualiza" sourceRef="Task_AprovaParJul" targetRef="Task_AtualizaEpad"/>
+    <bpmn:sequenceFlow id="Flow_Atualiza_End" sourceRef="Task_AtualizaEpad" targetRef="End_PAR2"/>
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080502">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080502" bpmnElement="Collaboration_07080502">
+
+      <!-- Pool -->
+      <bpmndi:BPMNShape id="Shape_Pool_PAR2" bpmnElement="Pool_PAR2" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="1900" height="760"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac: y=50, h=160 -->
+      <bpmndi:BPMNShape id="Shape_Lane_Secac" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1870" height="160"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Diaco/Seaco: y=210, h=450 -->
+      <bpmndi:BPMNShape id="Shape_Lane_DiacoSeaco" bpmnElement="Lane_DiacoSeaco" isHorizontal="true">
+        <dc:Bounds x="130" y="210" width="1870" height="450"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Subcorregedoria: y=660, h=150 -->
+      <bpmndi:BPMNShape id="Shape_Lane_Subcorr" bpmnElement="Lane_Subcorr" isHorizontal="true">
+        <dc:Bounds x="130" y="660" width="1870" height="150"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Secac elements: y center = 130 -->
+      <bpmndi:BPMNShape id="Shape_Start_PAR2" bpmnElement="Start_PAR2">
+        <dc:Bounds x="212" y="112" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_ConclusaoOC" bpmnElement="Task_ConclusaoOC">
+        <dc:Bounds x="300" y="90" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_Task_AtualizaEpad" bpmnElement="Task_AtualizaEpad">
+        <dc:Bounds x="1620" y="90" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_End_PAR2" bpmnElement="End_PAR2">
+        <dc:Bounds x="1840" y="112" width="36" height="36"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane DiacoSeaco elements -->
+      <!-- Task_CoordDiaco: x=300, y=270 -->
+      <bpmndi:BPMNShape id="Shape_Task_CoordDiaco" bpmnElement="Task_CoordDiaco">
+        <dc:Bounds x="300" y="380" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task_CoordSeaco: x=520, y=380 -->
+      <bpmndi:BPMNShape id="Shape_Task_CoordSeaco" bpmnElement="Task_CoordSeaco">
+        <dc:Bounds x="520" y="380" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_TipoParecer: x=740, y=405 -->
+      <bpmndi:BPMNShape id="Shape_Gateway_TipoParecer" bpmnElement="Gateway_TipoParecer" isMarkerVisible="true">
+        <dc:Bounds x="740" y="405" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Subprocesses stacked vertically: x=860, heights=80 -->
+      <bpmndi:BPMNShape id="Shape_SubProcess_ParJulgamento" bpmnElement="SubProcess_ParJulgamento" isExpanded="false">
+        <dc:Bounds x="860" y="250" width="200" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_SubProcess_ParReconsideracao" bpmnElement="SubProcess_ParReconsideracao" isExpanded="false">
+        <dc:Bounds x="860" y="360" width="200" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_SubProcess_ParRevisao" bpmnElement="SubProcess_ParRevisao" isExpanded="false">
+        <dc:Bounds x="860" y="470" width="200" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNShape id="Shape_SubProcess_ParCorrecional" bpmnElement="SubProcess_ParCorrecional" isExpanded="false">
+        <dc:Bounds x="860" y="560" width="200" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Gateway_JoinParecer: x=1120, y=405 (center of subprocesses) -->
+      <bpmndi:BPMNShape id="Shape_Gateway_JoinParecer" bpmnElement="Gateway_JoinParecer" isMarkerVisible="true">
+        <dc:Bounds x="1120" y="405" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Task_SupTecDiaco: x=1230, y=380 -->
+      <bpmndi:BPMNShape id="Shape_Task_SupTecDiaco" bpmnElement="Task_SupTecDiaco">
+        <dc:Bounds x="1230" y="380" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Lane Subcorr: y=660, h=150 center=735 -->
+      <bpmndi:BPMNShape id="Shape_Task_AprovaParJul" bpmnElement="Task_AprovaParJul">
+        <dc:Bounds x="1460" y="695" width="160" height="80"/>
+      </bpmndi:BPMNShape>
+
+      <!-- Edges -->
+      <bpmndi:BPMNEdge id="Edge_Start_Conclusao" bpmnElement="Flow_Start_Conclusao">
+        <di:waypoint x="248" y="130"/>
+        <di:waypoint x="300" y="130"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Conclusao_CoordDiaco" bpmnElement="Flow_Conclusao_CoordDiaco">
+        <di:waypoint x="380" y="170"/>
+        <di:waypoint x="380" y="380"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_CoordDiaco_CoordSeaco" bpmnElement="Flow_CoordDiaco_CoordSeaco">
+        <di:waypoint x="460" y="420"/>
+        <di:waypoint x="520" y="420"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_CoordSeaco_Gateway" bpmnElement="Flow_CoordSeaco_Gateway">
+        <di:waypoint x="680" y="420"/>
+        <di:waypoint x="740" y="430"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Gw_ParJulgamento" bpmnElement="Flow_Gw_ParJulgamento">
+        <di:waypoint x="765" y="405"/>
+        <di:waypoint x="765" y="290"/>
+        <di:waypoint x="860" y="290"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Gw_ParReconsideracao" bpmnElement="Flow_Gw_ParReconsideracao">
+        <di:waypoint x="765" y="430"/>
+        <di:waypoint x="860" y="400"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Gw_ParRevisao" bpmnElement="Flow_Gw_ParRevisao">
+        <di:waypoint x="765" y="455"/>
+        <di:waypoint x="765" y="510"/>
+        <di:waypoint x="860" y="510"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Gw_ParCorrecional" bpmnElement="Flow_Gw_ParCorrecional">
+        <di:waypoint x="765" y="455"/>
+        <di:waypoint x="765" y="600"/>
+        <di:waypoint x="860" y="600"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_ParJulgamento_Join" bpmnElement="Flow_ParJulgamento_Join">
+        <di:waypoint x="1060" y="290"/>
+        <di:waypoint x="1145" y="290"/>
+        <di:waypoint x="1145" y="405"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_ParReconsideracao_Join" bpmnElement="Flow_ParReconsideracao_Join">
+        <di:waypoint x="1060" y="400"/>
+        <di:waypoint x="1120" y="430"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_ParRevisao_Join" bpmnElement="Flow_ParRevisao_Join">
+        <di:waypoint x="1060" y="510"/>
+        <di:waypoint x="1145" y="510"/>
+        <di:waypoint x="1145" y="455"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_ParCorrecional_Join" bpmnElement="Flow_ParCorrecional_Join">
+        <di:waypoint x="1060" y="600"/>
+        <di:waypoint x="1145" y="600"/>
+        <di:waypoint x="1145" y="455"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Join_SupTec" bpmnElement="Flow_Join_SupTec">
+        <di:waypoint x="1170" y="430"/>
+        <di:waypoint x="1230" y="420"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_SupTec_Aprova" bpmnElement="Flow_SupTec_Aprova">
+        <di:waypoint x="1390" y="420"/>
+        <di:waypoint x="1540" y="420"/>
+        <di:waypoint x="1540" y="695"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Aprova_Atualiza" bpmnElement="Flow_Aprova_Atualiza">
+        <di:waypoint x="1540" y="695"/>
+        <di:waypoint x="1540" y="130"/>
+        <di:waypoint x="1620" y="130"/>
+      </bpmndi:BPMNEdge>
+
+      <bpmndi:BPMNEdge id="Edge_Atualiza_End" bpmnElement="Flow_Atualiza_End">
+        <di:waypoint x="1780" y="130"/>
+        <di:waypoint x="1840" y="130"/>
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080501"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080501">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.05-01 - Conduzir Processos Administrativos de Responsabilizacao PAR"
+      processRef="Process_07080501" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080501" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080501">
+
+      <bpmn:lane id="Lane_SubcorrDProc" name="Subcorregedoria / DProc">
+        <bpmn:flowNodeRef>Start_PAR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_DespachoInstauracao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_PortariaDOU</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AprovaParJul</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_DProc" name="DProc">
+        <bpmn:flowNodeRef>Task_CoordDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_SupTecDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>SubProcess_PAR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_PosPAR</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Task_IntimacaoFinal</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_OficioInstrucao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ConclusaoOC</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_Conclusao</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AcompanhaPendentes</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Encerrado</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Pendente</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Seaco" name="Seaco">
+        <bpmn:flowNodeRef>Task_ParecerJulgamento</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+    </bpmn:laneSet>
+
+    <!-- Lane Subcorregedoria/DProc -->
+    <bpmn:startEvent id="Start_PAR" name="Parecer de Admissibilidade Aprovado / PAR Autorizado">
+      <bpmn:outgoing>F1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_DespachoInstauracao" name="PAR - Despacho de Instauracao">
+      <bpmn:incoming>F1</bpmn:incoming>
+      <bpmn:outgoing>F2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_PortariaDOU" name="PORTARIA - DOU (Instauracao PAR)">
+      <bpmn:incoming>F2</bpmn:incoming>
+      <bpmn:outgoing>F3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AprovaParJul" name="Aprova-PAR-JUL/REC (Subcorregedoria)">
+      <bpmn:incoming>F_ToAprova</bpmn:incoming>
+      <bpmn:outgoing>F_AprovaOut</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Lane DProc -->
+    <bpmn:task id="Task_CoordDProc" name="Coordenacao DProc">
+      <bpmn:incoming>F3</bpmn:incoming>
+      <bpmn:incoming>F_OficioRetorno</bpmn:incoming>
+      <bpmn:outgoing>F4</bpmn:outgoing>
+      <bpmn:outgoing>F_ToSupTec</bpmn:outgoing>
+      <bpmn:outgoing>F_ToOficio</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_SupTecDProc" name="Supervisao Tecnica DProc">
+      <bpmn:incoming>F_ToSupTec</bpmn:incoming>
+      <bpmn:outgoing>F_SupTecOut</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:subProcess id="SubProcess_PAR" name="PAR - Processo Administrativo de Responsabilizacao (instrucao)" isExpanded="false">
+      <bpmn:incoming>F4</bpmn:incoming>
+      <bpmn:outgoing>F5</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:exclusiveGateway id="Gateway_PosPAR" name="Encaminhamento">
+      <bpmn:incoming>F5</bpmn:incoming>
+      <bpmn:incoming>F_SupTecOut</bpmn:incoming>
+      <bpmn:outgoing>F_ToIntimacao</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+
+    <!-- Lane Secac -->
+    <bpmn:task id="Task_IntimacaoFinal" name="PAR - Intimacao Final (pessoa juridica)">
+      <bpmn:incoming>F_ToIntimacao</bpmn:incoming>
+      <bpmn:outgoing>F_ToParecerJul</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_OficioInstrucao" name="Oficio - Instrucao">
+      <bpmn:incoming>F_ToOficio</bpmn:incoming>
+      <bpmn:outgoing>F_OficioRetorno</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_ConclusaoOC" name="Conclusao de Ocorrencia">
+      <bpmn:incoming>F_AprovaOut</bpmn:incoming>
+      <bpmn:outgoing>F_ToConclusao</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_Conclusao" name="Resultado">
+      <bpmn:incoming>F_ToConclusao</bpmn:incoming>
+      <bpmn:outgoing>F_ToEncerrado</bpmn:outgoing>
+      <bpmn:outgoing>F_ToPendente</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="Task_AcompanhaPendentes" name="Acompanha Processos Pendentes (TAC / Suspensao / Avocacao CGU)">
+      <bpmn:incoming>F_ToPendente</bpmn:incoming>
+      <bpmn:outgoing>F_PendenteEnd</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Encerrado" name="PAR Encerrado / Penalidade Aplicada (DOU)">
+      <bpmn:incoming>F_ToEncerrado</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:endEvent id="End_Pendente" name="Pendencia Monitorada / Retomada Futura">
+      <bpmn:incoming>F_PendenteEnd</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- Lane Seaco -->
+    <bpmn:task id="Task_ParecerJulgamento" name="Parecer de Julgamento PAR (Seaco)">
+      <bpmn:incoming>F_ToParecerJul</bpmn:incoming>
+      <bpmn:outgoing>F_ToAprova</bpmn:outgoing>
+    </bpmn:task>
+
+    <!-- Sequence Flows -->
+    <bpmn:sequenceFlow id="F1"              sourceRef="Start_PAR"              targetRef="Task_DespachoInstauracao" />
+    <bpmn:sequenceFlow id="F2"              sourceRef="Task_DespachoInstauracao" targetRef="Task_PortariaDOU" />
+    <bpmn:sequenceFlow id="F3"              sourceRef="Task_PortariaDOU"        targetRef="Task_CoordDProc" />
+    <bpmn:sequenceFlow id="F4"              sourceRef="Task_CoordDProc"         targetRef="SubProcess_PAR" />
+    <bpmn:sequenceFlow id="F_ToSupTec"      sourceRef="Task_CoordDProc"         targetRef="Task_SupTecDProc" />
+    <bpmn:sequenceFlow id="F_ToOficio"      sourceRef="Task_CoordDProc"         targetRef="Task_OficioInstrucao" />
+    <bpmn:sequenceFlow id="F_OficioRetorno" sourceRef="Task_OficioInstrucao"    targetRef="Task_CoordDProc" />
+    <bpmn:sequenceFlow id="F_SupTecOut"     sourceRef="Task_SupTecDProc"        targetRef="Gateway_PosPAR" />
+    <bpmn:sequenceFlow id="F5"              sourceRef="SubProcess_PAR"          targetRef="Gateway_PosPAR" />
+    <bpmn:sequenceFlow id="F_ToIntimacao"   sourceRef="Gateway_PosPAR"          targetRef="Task_IntimacaoFinal" />
+    <bpmn:sequenceFlow id="F_ToParecerJul"  sourceRef="Task_IntimacaoFinal"     targetRef="Task_ParecerJulgamento" />
+    <bpmn:sequenceFlow id="F_ToAprova"      sourceRef="Task_ParecerJulgamento"  targetRef="Task_AprovaParJul" />
+    <bpmn:sequenceFlow id="F_AprovaOut"     sourceRef="Task_AprovaParJul"       targetRef="Task_ConclusaoOC" />
+    <bpmn:sequenceFlow id="F_ToConclusao"   sourceRef="Task_ConclusaoOC"        targetRef="Gateway_Conclusao" />
+    <bpmn:sequenceFlow id="F_ToEncerrado"   sourceRef="Gateway_Conclusao"       targetRef="End_Encerrado" />
+    <bpmn:sequenceFlow id="F_ToPendente"    sourceRef="Gateway_Conclusao"       targetRef="Task_AcompanhaPendentes" />
+    <bpmn:sequenceFlow id="F_PendenteEnd"   sourceRef="Task_AcompanhaPendentes" targetRef="End_Pendente" />
+  </bpmn:process>
+
+  <!--
+    LAYOUT
+    Pool                  : x=100 y=50  w=1800 h=760
+    Lane_SubcorrDProc     : y=50  h=160  (y  50–210)
+    Lane_DProc            : y=210 h=250  (y 210–460)
+    Lane_Secac            : y=460 h=170  (y 460–630)
+    Lane_Seaco            : y=630 h=180  (y 630–810)
+  -->
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080501">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080501" bpmnElement="Collaboration_07080501">
+
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="1800" height="760" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_SubcorrDProc_di" bpmnElement="Lane_SubcorrDProc" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1770" height="160" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_DProc_di" bpmnElement="Lane_DProc" isHorizontal="true">
+        <dc:Bounds x="130" y="210" width="1770" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="460" width="1770" height="170" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_Seaco_di" bpmnElement="Lane_Seaco" isHorizontal="true">
+        <dc:Bounds x="130" y="630" width="1770" height="180" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane SubcorrDProc (y 50–210, center y=130) ── -->
+      <bpmndi:BPMNShape id="Start_PAR_di" bpmnElement="Start_PAR">
+        <dc:Bounds x="180" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_DespachoInstauracao_di" bpmnElement="Task_DespachoInstauracao">
+        <dc:Bounds x="250" y="100" width="170" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_PortariaDOU_di" bpmnElement="Task_PortariaDOU">
+        <dc:Bounds x="450" y="100" width="160" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- AprovaParJul na mesma raia, à direita -->
+      <bpmndi:BPMNShape id="Task_AprovaParJul_di" bpmnElement="Task_AprovaParJul">
+        <dc:Bounds x="1300" y="100" width="180" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane DProc (y 210–460, center y=335) ── -->
+      <bpmndi:BPMNShape id="Task_CoordDProc_di" bpmnElement="Task_CoordDProc">
+        <dc:Bounds x="650" y="305" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- SupTecDProc abaixo do CoordDProc -->
+      <bpmndi:BPMNShape id="Task_SupTecDProc_di" bpmnElement="Task_SupTecDProc">
+        <dc:Bounds x="650" y="390" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- SubProcess_PAR colapsado -->
+      <bpmndi:BPMNShape id="SubProcess_PAR_di" bpmnElement="SubProcess_PAR" isExpanded="false">
+        <dc:Bounds x="840" y="305" width="210" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Gateway_PosPAR -->
+      <bpmndi:BPMNShape id="Gateway_PosPAR_di" bpmnElement="Gateway_PosPAR" isMarkerVisible="true">
+        <dc:Bounds x="1080" y="315" width="40" height="40" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane Secac (y 460–630, center y=545) ── -->
+      <!-- Task_OficioInstrucao (branch lateral) -->
+      <bpmndi:BPMNShape id="Task_OficioInstrucao_di" bpmnElement="Task_OficioInstrucao">
+        <dc:Bounds x="650" y="515" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Task_IntimacaoFinal -->
+      <bpmndi:BPMNShape id="Task_IntimacaoFinal_di" bpmnElement="Task_IntimacaoFinal">
+        <dc:Bounds x="840" y="515" width="180" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Task_ConclusaoOC -->
+      <bpmndi:BPMNShape id="Task_ConclusaoOC_di" bpmnElement="Task_ConclusaoOC">
+        <dc:Bounds x="1500" y="515" width="150" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- Gateway_Conclusao -->
+      <bpmndi:BPMNShape id="Gateway_Conclusao_di" bpmnElement="Gateway_Conclusao" isMarkerVisible="true">
+        <dc:Bounds x="1680" y="525" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <!-- Task_AcompanhaPendentes -->
+      <bpmndi:BPMNShape id="Task_AcompanhaPendentes_di" bpmnElement="Task_AcompanhaPendentes">
+        <dc:Bounds x="1500" y="590" width="200" height="60" />
+      </bpmndi:BPMNShape>
+      <!-- End events -->
+      <bpmndi:BPMNShape id="End_Encerrado_di" bpmnElement="End_Encerrado">
+        <dc:Bounds x="1752" y="527" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Pendente_di" bpmnElement="End_Pendente">
+        <dc:Bounds x="1735" y="607" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Lane Seaco (y 630–810, center y=720) ── -->
+      <bpmndi:BPMNShape id="Task_ParecerJulgamento_di" bpmnElement="Task_ParecerJulgamento">
+        <dc:Bounds x="1120" y="690" width="180" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- ══ Edges ══ -->
+
+      <bpmndi:BPMNEdge id="F1_di" bpmnElement="F1">
+        <di:waypoint x="216" y="130" />
+        <di:waypoint x="250" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F2_di" bpmnElement="F2">
+        <di:waypoint x="420" y="130" />
+        <di:waypoint x="450" y="130" />
+      </bpmndi:BPMNEdge>
+      <!-- F3: PortariaDOU → CoordDProc (desce) -->
+      <bpmndi:BPMNEdge id="F3_di" bpmnElement="F3">
+        <di:waypoint x="610" y="130" />
+        <di:waypoint x="725" y="130" />
+        <di:waypoint x="725" y="305" />
+      </bpmndi:BPMNEdge>
+      <!-- F4: CoordDProc → SubProcess_PAR -->
+      <bpmndi:BPMNEdge id="F4_di" bpmnElement="F4">
+        <di:waypoint x="800" y="335" />
+        <di:waypoint x="840" y="335" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToSupTec: CoordDProc → SupTecDProc (desce) -->
+      <bpmndi:BPMNEdge id="F_ToSupTec_di" bpmnElement="F_ToSupTec">
+        <di:waypoint x="725" y="365" />
+        <di:waypoint x="725" y="390" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToOficio: CoordDProc → OficioInstrucao (desce para Secac) -->
+      <bpmndi:BPMNEdge id="F_ToOficio_di" bpmnElement="F_ToOficio">
+        <di:waypoint x="725" y="365" />
+        <di:waypoint x="725" y="515" />
+      </bpmndi:BPMNEdge>
+      <!-- F_OficioRetorno: OficioInstrucao → CoordDProc (sobe) -->
+      <bpmndi:BPMNEdge id="F_OficioRetorno_di" bpmnElement="F_OficioRetorno">
+        <di:waypoint x="650" y="545" />
+        <di:waypoint x="630" y="545" />
+        <di:waypoint x="630" y="335" />
+        <di:waypoint x="650" y="335" />
+      </bpmndi:BPMNEdge>
+      <!-- F_SupTecOut: SupTecDProc → Gateway_PosPAR -->
+      <bpmndi:BPMNEdge id="F_SupTecOut_di" bpmnElement="F_SupTecOut">
+        <di:waypoint x="800" y="420" />
+        <di:waypoint x="1100" y="420" />
+        <di:waypoint x="1100" y="355" />
+      </bpmndi:BPMNEdge>
+      <!-- F5: SubProcess_PAR → Gateway_PosPAR -->
+      <bpmndi:BPMNEdge id="F5_di" bpmnElement="F5">
+        <di:waypoint x="1050" y="335" />
+        <di:waypoint x="1080" y="335" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToIntimacao: Gateway_PosPAR → IntimacaoFinal (desce) -->
+      <bpmndi:BPMNEdge id="F_ToIntimacao_di" bpmnElement="F_ToIntimacao">
+        <di:waypoint x="1100" y="355" />
+        <di:waypoint x="1100" y="545" />
+        <di:waypoint x="1020" y="545" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToParecerJul: IntimacaoFinal → ParecerJulgamento (desce para Seaco) -->
+      <bpmndi:BPMNEdge id="F_ToParecerJul_di" bpmnElement="F_ToParecerJul">
+        <di:waypoint x="1020" y="575" />
+        <di:waypoint x="1020" y="720" />
+        <di:waypoint x="1120" y="720" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToAprova: ParecerJulgamento → AprovaParJul (sobe para Subcorr) -->
+      <bpmndi:BPMNEdge id="F_ToAprova_di" bpmnElement="F_ToAprova">
+        <di:waypoint x="1300" y="720" />
+        <di:waypoint x="1390" y="720" />
+        <di:waypoint x="1390" y="130" />
+        <di:waypoint x="1300" y="130" />
+      </bpmndi:BPMNEdge>
+      <!-- F_AprovaOut: AprovaParJul → ConclusaoOC (desce para Secac) -->
+      <bpmndi:BPMNEdge id="F_AprovaOut_di" bpmnElement="F_AprovaOut">
+        <di:waypoint x="1480" y="130" />
+        <di:waypoint x="1575" y="130" />
+        <di:waypoint x="1575" y="515" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToConclusao: ConclusaoOC → Gateway_Conclusao -->
+      <bpmndi:BPMNEdge id="F_ToConclusao_di" bpmnElement="F_ToConclusao">
+        <di:waypoint x="1650" y="545" />
+        <di:waypoint x="1680" y="545" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToEncerrado: Gateway → End_Encerrado -->
+      <bpmndi:BPMNEdge id="F_ToEncerrado_di" bpmnElement="F_ToEncerrado">
+        <di:waypoint x="1720" y="545" />
+        <di:waypoint x="1752" y="545" />
+      </bpmndi:BPMNEdge>
+      <!-- F_ToPendente: Gateway → AcompanhaPendentes (desce) -->
+      <bpmndi:BPMNEdge id="F_ToPendente_di" bpmnElement="F_ToPendente">
+        <di:waypoint x="1700" y="565" />
+        <di:waypoint x="1700" y="620" />
+        <di:waypoint x="1700" y="620" />
+      </bpmndi:BPMNEdge>
+      <!-- F_PendenteEnd: AcompanhaPendentes → End_Pendente -->
+      <bpmndi:BPMNEdge id="F_PendenteEnd_di" bpmnElement="F_PendenteEnd">
+        <di:waypoint x="1700" y="620" />
+        <di:waypoint x="1735" y="625" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
