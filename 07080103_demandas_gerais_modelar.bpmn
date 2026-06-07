@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+                  id="Definitions_07080103"
+                  targetNamespace="http://bpmn.io/schema/bpmn"
+                  exporter="Bizagi Modeler"
+                  exporterVersion="1.0.0">
+
+  <bpmn:collaboration id="Collaboration_07080103">
+    <bpmn:participant id="Participant_Pool"
+      name="07.08.01-03 - Atender Demandas Gerais e Modelar Fluxos"
+      processRef="Process_07080103" />
+  </bpmn:collaboration>
+
+  <bpmn:process id="Process_07080103" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_07080103">
+
+      <bpmn:lane id="Lane_Secac" name="Secac">
+        <bpmn:flowNodeRef>Start_DemGeral</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdDemGeral</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_RegistraEncam</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NovaDemanda</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_DemGeral</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_DProc" name="DProc">
+        <bpmn:flowNodeRef>Start_GerenDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_GerenDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdDemDProc</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Gateway_NovoGeren</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_GerenDProc</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Diaco" name="Diaco / Secac">
+        <bpmn:flowNodeRef>Start_GASISCOR</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_GerenGasiscor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_AtdGasiscor</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_GASISCOR</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Subcorr" name="Subcorregedoria / DProc">
+        <bpmn:flowNodeRef>Start_Incidente</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_IncidenteSanidade</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Incidente</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+      <bpmn:lane id="Lane_Seest" name="Equipe de Processos / Seest">
+        <bpmn:flowNodeRef>Start_Modelar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_ModelarFluxos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>End_Modelar</bpmn:flowNodeRef>
+      </bpmn:lane>
+
+    </bpmn:laneSet>
+
+    <!-- ============================================================ -->
+    <!-- P1 - ATD-DEM-geral (Lane_Secac)                             -->
+    <!-- ============================================================ -->
+    <bpmn:startEvent id="Start_DemGeral" name="Demanda geral recebida (nao enquadrada em fluxo especifico)">
+      <bpmn:outgoing>F_P1_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_AtdDemGeral" name="ATD-DEM-geral: Verificar demanda e adotar providencias cabiveis">
+      <bpmn:incoming>F_P1_01</bpmn:incoming>
+      <bpmn:incoming>F_P1_Loop</bpmn:incoming>
+      <bpmn:outgoing>F_P1_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_RegistraEncam" name="Registrar encaminhamento no e-Processo / Ariel">
+      <bpmn:incoming>F_P1_02</bpmn:incoming>
+      <bpmn:outgoing>F_P1_03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_NovaDemanda" name="Nova demanda subsequente?" isMarkerVisible="true">
+      <bpmn:incoming>F_P1_03</bpmn:incoming>
+      <bpmn:outgoing>F_P1_Loop</bpmn:outgoing>
+      <bpmn:outgoing>F_P1_End</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_DemGeral" name="Demanda atendida e encaminhamento registrado">
+      <bpmn:incoming>F_P1_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- ============================================================ -->
+    <!-- P2 - GEREN-DPROC iterativo (Lane_DProc)                     -->
+    <!-- ============================================================ -->
+    <bpmn:startEvent id="Start_GerenDProc" name="Ciclo gerencial DProc iniciado">
+      <bpmn:outgoing>F_P2_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_GerenDProc" name="GEREN-DPROC: Gerenciar atividades processuais e atribuir demandas">
+      <bpmn:incoming>F_P2_01</bpmn:incoming>
+      <bpmn:incoming>F_P2_LoopGeren</bpmn:incoming>
+      <bpmn:outgoing>F_P2_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtdDemDProc" name="ATD-DEM-geral (DProc): Atender demanda atribuida pelo GEREN-DPROC">
+      <bpmn:incoming>F_P2_02</bpmn:incoming>
+      <bpmn:outgoing>F_P2_03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="Gateway_NovoGeren" name="Novo ciclo gerencial?" isMarkerVisible="true">
+      <bpmn:incoming>F_P2_03</bpmn:incoming>
+      <bpmn:outgoing>F_P2_LoopGeren</bpmn:outgoing>
+      <bpmn:outgoing>F_P2_End</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:endEvent id="End_GerenDProc" name="Ciclo gerencial DProc concluido">
+      <bpmn:incoming>F_P2_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- ============================================================ -->
+    <!-- P4 - GASISCOR (Lane_Diaco)                                  -->
+    <!-- ============================================================ -->
+    <bpmn:startEvent id="Start_GASISCOR" name="Demanda GASISCOR recebida">
+      <bpmn:outgoing>F_P4_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_GerenGasiscor" name="Gerenciamento-GASISCOR: Distribuir atividade de atendimento">
+      <bpmn:incoming>F_P4_01</bpmn:incoming>
+      <bpmn:outgoing>F_P4_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_AtdGasiscor" name="Atendimento Demanda GASISCOR: Verificar antecedentes e fornecer informacoes">
+      <bpmn:incoming>F_P4_02</bpmn:incoming>
+      <bpmn:outgoing>F_P4_End</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_GASISCOR" name="Demanda GASISCOR atendida; processo arquivado ou movimentado">
+      <bpmn:incoming>F_P4_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- ============================================================ -->
+    <!-- P3 - Incidente de Sanidade MODELAR (Lane_Subcorr)           -->
+    <!-- ============================================================ -->
+    <bpmn:startEvent id="Start_Incidente" name="Incidente de sanidade identificado em processo correcional">
+      <bpmn:outgoing>F_P3_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_IncidenteSanidade" name="Incidente de Sanidade (MODELAR): Tratar incidente, juntar laudo e submeter a julgamento">
+      <bpmn:incoming>F_P3_01</bpmn:incoming>
+      <bpmn:outgoing>F_P3_End</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Incidente" name="Incidente solucionado; processo retomado ao fluxo regular">
+      <bpmn:incoming>F_P3_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- ============================================================ -->
+    <!-- P5 - Modelar Fluxos Correcionais (Lane_Seest)               -->
+    <!-- ============================================================ -->
+    <bpmn:startEvent id="Start_Modelar" name="Demanda de modelagem de fluxo correcional recebida">
+      <bpmn:outgoing>F_P5_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Task_ModelarFluxos" name="MODELAR-FLUXOS-CORRECIONAIS: Levantar, desenhar e especificar fluxo em BPMN 2.0">
+      <bpmn:incoming>F_P5_01</bpmn:incoming>
+      <bpmn:outgoing>F_P5_End</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="End_Modelar" name="Arquivo BPMN gerado e ficha tecnica configurada">
+      <bpmn:incoming>F_P5_End</bpmn:incoming>
+    </bpmn:endEvent>
+
+    <!-- ============================================================ -->
+    <!-- Sequence Flows                                               -->
+    <!-- ============================================================ -->
+    <!-- P1 -->
+    <bpmn:sequenceFlow id="F_P1_01"   sourceRef="Start_DemGeral"      targetRef="Task_AtdDemGeral" />
+    <bpmn:sequenceFlow id="F_P1_02"   sourceRef="Task_AtdDemGeral"    targetRef="Task_RegistraEncam" />
+    <bpmn:sequenceFlow id="F_P1_03"   sourceRef="Task_RegistraEncam"  targetRef="Gateway_NovaDemanda" />
+    <bpmn:sequenceFlow id="F_P1_Loop" name="Sim" sourceRef="Gateway_NovaDemanda" targetRef="Task_AtdDemGeral" />
+    <bpmn:sequenceFlow id="F_P1_End"  name="Nao" sourceRef="Gateway_NovaDemanda" targetRef="End_DemGeral" />
+    <!-- P2 -->
+    <bpmn:sequenceFlow id="F_P2_01"       sourceRef="Start_GerenDProc"  targetRef="Task_GerenDProc" />
+    <bpmn:sequenceFlow id="F_P2_02"       sourceRef="Task_GerenDProc"   targetRef="Task_AtdDemDProc" />
+    <bpmn:sequenceFlow id="F_P2_03"       sourceRef="Task_AtdDemDProc"  targetRef="Gateway_NovoGeren" />
+    <bpmn:sequenceFlow id="F_P2_LoopGeren" name="Sim" sourceRef="Gateway_NovoGeren" targetRef="Task_GerenDProc" />
+    <bpmn:sequenceFlow id="F_P2_End"      name="Nao" sourceRef="Gateway_NovoGeren" targetRef="End_GerenDProc" />
+    <!-- P4 -->
+    <bpmn:sequenceFlow id="F_P4_01"  sourceRef="Start_GASISCOR"     targetRef="Task_GerenGasiscor" />
+    <bpmn:sequenceFlow id="F_P4_02"  sourceRef="Task_GerenGasiscor" targetRef="Task_AtdGasiscor" />
+    <bpmn:sequenceFlow id="F_P4_End" sourceRef="Task_AtdGasiscor"   targetRef="End_GASISCOR" />
+    <!-- P3 -->
+    <bpmn:sequenceFlow id="F_P3_01"  sourceRef="Start_Incidente"        targetRef="Task_IncidenteSanidade" />
+    <bpmn:sequenceFlow id="F_P3_End" sourceRef="Task_IncidenteSanidade"  targetRef="End_Incidente" />
+    <!-- P5 -->
+    <bpmn:sequenceFlow id="F_P5_01"  sourceRef="Start_Modelar"      targetRef="Task_ModelarFluxos" />
+    <bpmn:sequenceFlow id="F_P5_End" sourceRef="Task_ModelarFluxos"  targetRef="End_Modelar" />
+  </bpmn:process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_07080103">
+    <bpmndi:BPMNPlane id="BPMNPlane_07080103" bpmnElement="Collaboration_07080103">
+
+      <!-- Pool: x=100, y=50, w=1600, h=870 -->
+      <bpmndi:BPMNShape id="Participant_Pool_di" bpmnElement="Participant_Pool" isHorizontal="true">
+        <dc:Bounds x="100" y="50" width="1600" height="870" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane_Secac: y=50, h=160 -->
+      <bpmndi:BPMNShape id="Lane_Secac_di" bpmnElement="Lane_Secac" isHorizontal="true">
+        <dc:Bounds x="130" y="50" width="1570" height="160" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane_DProc: y=210, h=170 -->
+      <bpmndi:BPMNShape id="Lane_DProc_di" bpmnElement="Lane_DProc" isHorizontal="true">
+        <dc:Bounds x="130" y="210" width="1570" height="170" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane_Diaco: y=380, h=160 -->
+      <bpmndi:BPMNShape id="Lane_Diaco_di" bpmnElement="Lane_Diaco" isHorizontal="true">
+        <dc:Bounds x="130" y="380" width="1570" height="160" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane_Subcorr: y=540, h=160 -->
+      <bpmndi:BPMNShape id="Lane_Subcorr_di" bpmnElement="Lane_Subcorr" isHorizontal="true">
+        <dc:Bounds x="130" y="540" width="1570" height="160" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lane_Seest: y=700, h=220 -->
+      <bpmndi:BPMNShape id="Lane_Seest_di" bpmnElement="Lane_Seest" isHorizontal="true">
+        <dc:Bounds x="130" y="700" width="1570" height="220" />
+      </bpmndi:BPMNShape>
+
+      <!-- ======================================================= -->
+      <!-- P1 elements (Lane_Secac, center y=130)                  -->
+      <!-- ======================================================= -->
+      <bpmndi:BPMNShape id="Start_DemGeral_di" bpmnElement="Start_DemGeral">
+        <dc:Bounds x="182" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdDemGeral_di" bpmnElement="Task_AtdDemGeral">
+        <dc:Bounds x="260" y="100" width="180" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_RegistraEncam_di" bpmnElement="Task_RegistraEncam">
+        <dc:Bounds x="490" y="100" width="180" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_NovaDemanda_di" bpmnElement="Gateway_NovaDemanda" isMarkerVisible="true">
+        <dc:Bounds x="720" y="110" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_DemGeral_di" bpmnElement="End_DemGeral">
+        <dc:Bounds x="812" y="112" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- P1 Edges -->
+      <bpmndi:BPMNEdge id="F_P1_01_di" bpmnElement="F_P1_01">
+        <di:waypoint x="218" y="130" />
+        <di:waypoint x="260" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P1_02_di" bpmnElement="F_P1_02">
+        <di:waypoint x="440" y="130" />
+        <di:waypoint x="490" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P1_03_di" bpmnElement="F_P1_03">
+        <di:waypoint x="670" y="130" />
+        <di:waypoint x="720" y="130" />
+      </bpmndi:BPMNEdge>
+      <!-- Loop Sim: Gateway → back above Task_AtdDemGeral -->
+      <bpmndi:BPMNEdge id="F_P1_Loop_di" bpmnElement="F_P1_Loop">
+        <di:waypoint x="740" y="110" />
+        <di:waypoint x="740" y="75" />
+        <di:waypoint x="350" y="75" />
+        <di:waypoint x="350" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P1_End_di" bpmnElement="F_P1_End">
+        <di:waypoint x="760" y="130" />
+        <di:waypoint x="812" y="130" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ======================================================= -->
+      <!-- P2 elements (Lane_DProc, center y=295)                  -->
+      <!-- ======================================================= -->
+      <bpmndi:BPMNShape id="Start_GerenDProc_di" bpmnElement="Start_GerenDProc">
+        <dc:Bounds x="182" y="277" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GerenDProc_di" bpmnElement="Task_GerenDProc">
+        <dc:Bounds x="260" y="265" width="200" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdDemDProc_di" bpmnElement="Task_AtdDemDProc">
+        <dc:Bounds x="510" y="265" width="200" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_NovoGeren_di" bpmnElement="Gateway_NovoGeren" isMarkerVisible="true">
+        <dc:Bounds x="760" y="275" width="40" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_GerenDProc_di" bpmnElement="End_GerenDProc">
+        <dc:Bounds x="852" y="277" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- P2 Edges -->
+      <bpmndi:BPMNEdge id="F_P2_01_di" bpmnElement="F_P2_01">
+        <di:waypoint x="218" y="295" />
+        <di:waypoint x="260" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P2_02_di" bpmnElement="F_P2_02">
+        <di:waypoint x="460" y="295" />
+        <di:waypoint x="510" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P2_03_di" bpmnElement="F_P2_03">
+        <di:waypoint x="710" y="295" />
+        <di:waypoint x="760" y="295" />
+      </bpmndi:BPMNEdge>
+      <!-- Loop Sim: Gateway → back above Task_GerenDProc -->
+      <bpmndi:BPMNEdge id="F_P2_LoopGeren_di" bpmnElement="F_P2_LoopGeren">
+        <di:waypoint x="780" y="275" />
+        <di:waypoint x="780" y="237" />
+        <di:waypoint x="360" y="237" />
+        <di:waypoint x="360" y="265" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P2_End_di" bpmnElement="F_P2_End">
+        <di:waypoint x="800" y="295" />
+        <di:waypoint x="852" y="295" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ======================================================= -->
+      <!-- P4 elements (Lane_Diaco, center y=460)                  -->
+      <!-- ======================================================= -->
+      <bpmndi:BPMNShape id="Start_GASISCOR_di" bpmnElement="Start_GASISCOR">
+        <dc:Bounds x="182" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_GerenGasiscor_di" bpmnElement="Task_GerenGasiscor">
+        <dc:Bounds x="260" y="430" width="200" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_AtdGasiscor_di" bpmnElement="Task_AtdGasiscor">
+        <dc:Bounds x="510" y="430" width="200" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_GASISCOR_di" bpmnElement="End_GASISCOR">
+        <dc:Bounds x="762" y="442" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- P4 Edges -->
+      <bpmndi:BPMNEdge id="F_P4_01_di" bpmnElement="F_P4_01">
+        <di:waypoint x="218" y="460" />
+        <di:waypoint x="260" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P4_02_di" bpmnElement="F_P4_02">
+        <di:waypoint x="460" y="460" />
+        <di:waypoint x="510" y="460" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P4_End_di" bpmnElement="F_P4_End">
+        <di:waypoint x="710" y="460" />
+        <di:waypoint x="762" y="460" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ======================================================= -->
+      <!-- P3 elements (Lane_Subcorr, center y=620)                -->
+      <!-- ======================================================= -->
+      <bpmndi:BPMNShape id="Start_Incidente_di" bpmnElement="Start_Incidente">
+        <dc:Bounds x="182" y="602" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_IncidenteSanidade_di" bpmnElement="Task_IncidenteSanidade">
+        <dc:Bounds x="260" y="590" width="250" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Incidente_di" bpmnElement="End_Incidente">
+        <dc:Bounds x="562" y="602" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- P3 Edges -->
+      <bpmndi:BPMNEdge id="F_P3_01_di" bpmnElement="F_P3_01">
+        <di:waypoint x="218" y="620" />
+        <di:waypoint x="260" y="620" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P3_End_di" bpmnElement="F_P3_End">
+        <di:waypoint x="510" y="620" />
+        <di:waypoint x="562" y="620" />
+      </bpmndi:BPMNEdge>
+
+      <!-- ======================================================= -->
+      <!-- P5 elements (Lane_Seest, center y=810)                  -->
+      <!-- ======================================================= -->
+      <bpmndi:BPMNShape id="Start_Modelar_di" bpmnElement="Start_Modelar">
+        <dc:Bounds x="182" y="792" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_ModelarFluxos_di" bpmnElement="Task_ModelarFluxos">
+        <dc:Bounds x="260" y="780" width="250" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="End_Modelar_di" bpmnElement="End_Modelar">
+        <dc:Bounds x="562" y="792" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <!-- P5 Edges -->
+      <bpmndi:BPMNEdge id="F_P5_01_di" bpmnElement="F_P5_01">
+        <di:waypoint x="218" y="810" />
+        <di:waypoint x="260" y="810" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="F_P5_End_di" bpmnElement="F_P5_End">
+        <di:waypoint x="510" y="810" />
+        <di:waypoint x="562" y="810" />
+      </bpmndi:BPMNEdge>
+
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
