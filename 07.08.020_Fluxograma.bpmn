@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             targetNamespace="http://coger.rfb.gov.br/bpmn"
+             id="def_070802">
+
+  <collaboration id="collab_87a9480b9d88">
+    <participant id="pool_9ee1da6692d5" name="07.08.02 – Apurar Irregularidades Funcionais" processRef="proc_b42d0dec9390" />
+  </collaboration>
+
+  <process id="proc_b42d0dec9390" name="07.08.02 – Apurar Irregularidades Funcionais de Pessoas Físicas" isExecutable="false">
+
+    <laneSet id="ls_proc_b42d0dec9390">
+      <lane id="lane_15eb3fe92fb8" name="Secac">
+        <flowNodeRef>ev_ddd14bab209f</flowNodeRef>
+        <flowNodeRef>gw_111d09f8653c</flowNodeRef>
+        <flowNodeRef>tk_ea71d1541fe2</flowNodeRef>
+        <flowNodeRef>tk_435448a9ab5f</flowNodeRef>
+        <flowNodeRef>tk_898055c01c19</flowNodeRef>
+        <flowNodeRef>tk_fe55bca420cd</flowNodeRef>
+        <flowNodeRef>tk_30bbbb4c384c</flowNodeRef>
+      </lane>
+      <lane id="lane_ae6f77799554" name="Diaco / Seaco">
+        <flowNodeRef>tk_ad39c7670efc</flowNodeRef>
+        <flowNodeRef>tk_2773b6264b52</flowNodeRef>
+        <flowNodeRef>tk_58716c5467b4</flowNodeRef>
+        <flowNodeRef>tk_cd2efb2740cf</flowNodeRef>
+      </lane>
+      <lane id="lane_758abff7fc72" name="Subcorregedoria">
+        <flowNodeRef>tk_bb0537ce64b2</flowNodeRef>
+        <flowNodeRef>tk_7540ef421bc8</flowNodeRef>
+        <flowNodeRef>gw_5ad013e48f41</flowNodeRef>
+        <flowNodeRef>tk_4db68f3af1f3</flowNodeRef>
+        <flowNodeRef>gw_2153d91c5987</flowNodeRef>
+        <flowNodeRef>ev_29c7365814c9</flowNodeRef>
+        <flowNodeRef>ev_349f2f4875ea</flowNodeRef>
+        <flowNodeRef>ev_fdd6ba063623</flowNodeRef>
+      </lane>
+      <lane id="lane_0e9ccf07e92d" name="Divid / Seinv">
+        <flowNodeRef>sp_31abfb0ef73e</flowNodeRef>
+        <flowNodeRef>tk_b5d33188ab12</flowNodeRef>
+        <flowNodeRef>sp_54f547fba02d</flowNodeRef>
+        <flowNodeRef>sp_f274d0faabe5</flowNodeRef>
+        <flowNodeRef>tk_56a3286112e4</flowNodeRef>
+        <flowNodeRef>ev_05fa11803840</flowNodeRef>
+      </lane>
+      <lane id="lane_a8fad4e9fa06" name="Divid / Seesp">
+        <flowNodeRef>tk_1feeafa1edee</flowNodeRef>
+        <flowNodeRef>tk_f028e2a32905</flowNodeRef>
+        <flowNodeRef>gw_b998093225a2</flowNodeRef>
+        <flowNodeRef>tk_2559f271bfe1</flowNodeRef>
+        <flowNodeRef>tk_df6cfe6427ed</flowNodeRef>
+      </lane>
+      <lane id="lane_ea9cba947e7a" name="Seaco – Parecer de Admissibilidade">
+        <flowNodeRef>tk_9165e1bf1856</flowNodeRef>
+        <flowNodeRef>gw_cfcc0d7b29a1</flowNodeRef>
+      </lane>
+    </laneSet>
+
+    <startEvent id="ev_ddd14bab209f" name="Início" />
+    <exclusiveGateway id="gw_111d09f8653c" name="Origem da OC" gatewayDirection="Diverging" />
+    <task id="tk_ea71d1541fe2" name="Abertura OC –
+Representação" />
+    <task id="tk_435448a9ab5f" name="Abertura OC –
+Ouvidoria" />
+    <task id="tk_898055c01c19" name="OC – Instrução" />
+    <task id="tk_bb0537ce64b2" name="OC – Triagem
+(Representação)" />
+    <task id="tk_7540ef421bc8" name="OC – Triagem
+(Ouvidoria)" />
+    <task id="tk_fe55bca420cd" name="Conclusão de
+Ocorrência" />
+    <exclusiveGateway id="gw_5ad013e48f41" name="Encaminhamento" gatewayDirection="Diverging" />
+    <task id="tk_ad39c7670efc" name="Coordenação
+SEACO" />
+    <task id="tk_30bbbb4c384c" name="Ofício – PI /
+Instrução" />
+    <task id="tk_58716c5467b4" name="Demanda Apoio –
+SIC/LAI" />
+    <task id="tk_9165e1bf1856" name="Parecer de
+Admissibilidade" />
+    <task id="tk_2773b6264b52" name="Supervisão
+Técnica DIACO" />
+    <exclusiveGateway id="gw_cfcc0d7b29a1" name="Revisão?" gatewayDirection="Diverging" />
+    <task id="tk_4db68f3af1f3" name="Aprova Inform./
+Parecer Admiss." />
+    <exclusiveGateway id="gw_2153d91c5987" name="Decisão" gatewayDirection="Diverging" />
+    <task id="tk_cd2efb2740cf" name="Acompanha
+Processos
+Pendentes" />
+    <task id="tk_f028e2a32905" name="Coordenação
+DIVID" />
+    <exclusiveGateway id="gw_b998093225a2" name="Tipo Investigação" gatewayDirection="Diverging" />
+    <subProcess id="sp_31abfb0ef73e" name="IPS – Inquérito
+Preliminar
+Sindicante" />
+    <task id="tk_b5d33188ab12" name="IPS – Despacho
+Distribuição" />
+    <subProcess id="sp_54f547fba02d" name="SINVE – Sindicância
+Investigativa" />
+    <subProcess id="sp_f274d0faabe5" name="SINPA – Sindicância
+Patrimonial" />
+    <task id="tk_1feeafa1edee" name="DINVE – Diligência
+Investigativa Esp." />
+    <task id="tk_2559f271bfe1" name="Supervisão
+Técnica DIVID" />
+    <task id="tk_56a3286112e4" name="Acompanha/
+Aprova-INV" />
+    <task id="tk_df6cfe6427ed" name="GEREN-DIVID" />
+    <endEvent id="ev_29c7365814c9" name="Arquivamento" />
+    <endEvent id="ev_349f2f4875ea" name="PAD/PAR" />
+    <endEvent id="ev_05fa11803840" name="Fim Investigação" />
+    <endEvent id="ev_fdd6ba063623" name="Pendente" />
+
+    <sequenceFlow id="sf_a9f6ed75d3a0" sourceRef="ev_ddd14bab209f" targetRef="gw_111d09f8653c">
+    </sequenceFlow>
+    <sequenceFlow id="sf_9dc69341b702" sourceRef="gw_111d09f8653c" targetRef="tk_ea71d1541fe2" name="Representação">
+    </sequenceFlow>
+    <sequenceFlow id="sf_d1318c1d067f" sourceRef="gw_111d09f8653c" targetRef="tk_435448a9ab5f" name="Ouvidoria">
+    </sequenceFlow>
+    <sequenceFlow id="sf_585583e0048b" sourceRef="gw_111d09f8653c" targetRef="tk_898055c01c19" name="Instrução">
+    </sequenceFlow>
+    <sequenceFlow id="sf_1c2cb03f6387" sourceRef="tk_898055c01c19" targetRef="tk_bb0537ce64b2">
+    </sequenceFlow>
+    <sequenceFlow id="sf_2e7a2ef5d2c8" sourceRef="tk_ea71d1541fe2" targetRef="tk_bb0537ce64b2">
+    </sequenceFlow>
+    <sequenceFlow id="sf_325519bf7a1a" sourceRef="tk_435448a9ab5f" targetRef="tk_7540ef421bc8">
+    </sequenceFlow>
+    <sequenceFlow id="sf_caca5cf52f4f" sourceRef="tk_bb0537ce64b2" targetRef="tk_fe55bca420cd">
+    </sequenceFlow>
+    <sequenceFlow id="sf_0490be29de78" sourceRef="tk_7540ef421bc8" targetRef="tk_fe55bca420cd">
+    </sequenceFlow>
+    <sequenceFlow id="sf_d38b4cfc6578" sourceRef="tk_fe55bca420cd" targetRef="gw_5ad013e48f41">
+    </sequenceFlow>
+    <sequenceFlow id="sf_c45a5f790158" sourceRef="gw_5ad013e48f41" targetRef="ev_29c7365814c9" name="Arquivamento">
+    </sequenceFlow>
+    <sequenceFlow id="sf_a4e92d62c482" sourceRef="gw_5ad013e48f41" targetRef="tk_ad39c7670efc" name="Análise Preliminar">
+    </sequenceFlow>
+    <sequenceFlow id="sf_b97ef0fa4547" sourceRef="gw_5ad013e48f41" targetRef="tk_f028e2a32905" name="Investigação">
+    </sequenceFlow>
+    <sequenceFlow id="sf_d65f6d4f272b" sourceRef="gw_5ad013e48f41" targetRef="ev_349f2f4875ea" name="PAD/PAR Direto">
+    </sequenceFlow>
+    <sequenceFlow id="sf_d456735e4d18" sourceRef="tk_ad39c7670efc" targetRef="tk_30bbbb4c384c" name="Ofício PI">
+    </sequenceFlow>
+    <sequenceFlow id="sf_f3789c169d6c" sourceRef="tk_ad39c7670efc" targetRef="tk_58716c5467b4" name="SIC/LAI">
+    </sequenceFlow>
+    <sequenceFlow id="sf_7e2df15d8138" sourceRef="tk_ad39c7670efc" targetRef="tk_9165e1bf1856">
+    </sequenceFlow>
+    <sequenceFlow id="sf_52051a95ee5b" sourceRef="tk_30bbbb4c384c" targetRef="tk_9165e1bf1856">
+    </sequenceFlow>
+    <sequenceFlow id="sf_08390d1aaa4e" sourceRef="tk_9165e1bf1856" targetRef="tk_2773b6264b52">
+    </sequenceFlow>
+    <sequenceFlow id="sf_376dca8e3e9b" sourceRef="tk_2773b6264b52" targetRef="gw_cfcc0d7b29a1">
+    </sequenceFlow>
+    <sequenceFlow id="sf_e640f598b90b" sourceRef="gw_cfcc0d7b29a1" targetRef="tk_9165e1bf1856" name="Revisão">
+    </sequenceFlow>
+    <sequenceFlow id="sf_3cd51e4d1a17" sourceRef="gw_cfcc0d7b29a1" targetRef="tk_4db68f3af1f3" name="OK">
+    </sequenceFlow>
+    <sequenceFlow id="sf_045bb0e7d21b" sourceRef="tk_4db68f3af1f3" targetRef="gw_2153d91c5987">
+    </sequenceFlow>
+    <sequenceFlow id="sf_e5a8b08a8c96" sourceRef="gw_2153d91c5987" targetRef="ev_349f2f4875ea" name="Instauração PAD/PAR">
+    </sequenceFlow>
+    <sequenceFlow id="sf_5a861175abb2" sourceRef="gw_2153d91c5987" targetRef="ev_29c7365814c9" name="Arquivamento">
+    </sequenceFlow>
+    <sequenceFlow id="sf_7c0265df9a02" sourceRef="gw_2153d91c5987" targetRef="tk_cd2efb2740cf" name="TAC/Suspensão">
+    </sequenceFlow>
+    <sequenceFlow id="sf_f702478bddbe" sourceRef="tk_cd2efb2740cf" targetRef="ev_fdd6ba063623">
+    </sequenceFlow>
+    <sequenceFlow id="sf_f3e744938da8" sourceRef="tk_58716c5467b4" targetRef="tk_4db68f3af1f3">
+    </sequenceFlow>
+    <sequenceFlow id="sf_20e302c45545" sourceRef="tk_f028e2a32905" targetRef="gw_b998093225a2">
+    </sequenceFlow>
+    <sequenceFlow id="sf_e17b913ad657" sourceRef="gw_b998093225a2" targetRef="sp_31abfb0ef73e" name="IPS">
+    </sequenceFlow>
+    <sequenceFlow id="sf_eb5830ace051" sourceRef="gw_b998093225a2" targetRef="sp_54f547fba02d" name="SINVE">
+    </sequenceFlow>
+    <sequenceFlow id="sf_c25a3810c632" sourceRef="gw_b998093225a2" targetRef="sp_f274d0faabe5" name="SINPA">
+    </sequenceFlow>
+    <sequenceFlow id="sf_24f8e4c3e5c3" sourceRef="gw_b998093225a2" targetRef="tk_1feeafa1edee" name="DINVE">
+    </sequenceFlow>
+    <sequenceFlow id="sf_4b5683c02d5b" sourceRef="sp_31abfb0ef73e" targetRef="tk_b5d33188ab12">
+    </sequenceFlow>
+    <sequenceFlow id="sf_73c9b49978fc" sourceRef="tk_b5d33188ab12" targetRef="tk_2559f271bfe1">
+    </sequenceFlow>
+    <sequenceFlow id="sf_48d2dc3e3059" sourceRef="sp_54f547fba02d" targetRef="tk_2559f271bfe1">
+    </sequenceFlow>
+    <sequenceFlow id="sf_9e48483e4ea5" sourceRef="sp_f274d0faabe5" targetRef="tk_2559f271bfe1">
+    </sequenceFlow>
+    <sequenceFlow id="sf_77f09200cff8" sourceRef="tk_1feeafa1edee" targetRef="tk_fe55bca420cd">
+    </sequenceFlow>
+    <sequenceFlow id="sf_32f7b85c916e" sourceRef="tk_2559f271bfe1" targetRef="tk_56a3286112e4">
+    </sequenceFlow>
+    <sequenceFlow id="sf_339ec079679b" sourceRef="tk_56a3286112e4" targetRef="tk_ad39c7670efc">
+    </sequenceFlow>
+    <sequenceFlow id="sf_2ef20393ccd2" sourceRef="tk_f028e2a32905" targetRef="tk_df6cfe6427ed">
+    </sequenceFlow>
+    <sequenceFlow id="sf_2b012d5f1272" sourceRef="tk_df6cfe6427ed" targetRef="tk_df6cfe6427ed" name="Iteração">
+    </sequenceFlow>
+
+  </process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="collab_87a9480b9d88">
+
+      <!-- Pool -->
+      <bpmndi:BPMNShape id="shape_pool_9ee1da6692d5" bpmnElement="pool_9ee1da6692d5" isHorizontal="true">
+        <dc:Bounds x="30" y="30" width="1800" height="1050" />
+      </bpmndi:BPMNShape>
+
+      <!-- Lanes -->
+      <bpmndi:BPMNShape id="shape_lane_15eb3fe92fb8" bpmnElement="lane_15eb3fe92fb8" isHorizontal="true">
+        <dc:Bounds x="60" y="30" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane_ae6f77799554" bpmnElement="lane_ae6f77799554" isHorizontal="true">
+        <dc:Bounds x="60" y="205" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane_758abff7fc72" bpmnElement="lane_758abff7fc72" isHorizontal="true">
+        <dc:Bounds x="60" y="380" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane_0e9ccf07e92d" bpmnElement="lane_0e9ccf07e92d" isHorizontal="true">
+        <dc:Bounds x="60" y="555" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane_a8fad4e9fa06" bpmnElement="lane_a8fad4e9fa06" isHorizontal="true">
+        <dc:Bounds x="60" y="730" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_lane_ea9cba947e7a" bpmnElement="lane_ea9cba947e7a" isHorizontal="true">
+        <dc:Bounds x="60" y="905" width="1770" height="175" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Shapes – Sub-processo 02-01 ── -->
+      <bpmndi:BPMNShape id="shape_ev_ddd14bab209f" bpmnElement="ev_ddd14bab209f">
+        <dc:Bounds x="112" y="97" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="99" y="140" width="62" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gw_111d09f8653c" bpmnElement="gw_111d09f8653c" isMarkerVisible="true">
+        <dc:Bounds x="195" y="90" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="178" y="147" width="84" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_ea71d1541fe2" bpmnElement="tk_ea71d1541fe2">
+        <dc:Bounds x="295" y="75" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_435448a9ab5f" bpmnElement="tk_435448a9ab5f">
+        <dc:Bounds x="295" y="30" width="120" height="60" /> <!-- dentro da faixa Secac -->
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_898055c01c19" bpmnElement="tk_898055c01c19">
+        <dc:Bounds x="295" y="140" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_bb0537ce64b2" bpmnElement="tk_bb0537ce64b2">
+        <dc:Bounds x="470" y="390" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_7540ef421bc8" bpmnElement="tk_7540ef421bc8">
+        <dc:Bounds x="470" y="460" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_fe55bca420cd" bpmnElement="tk_fe55bca420cd">
+        <dc:Bounds x="640" y="75" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gw_5ad013e48f41" bpmnElement="gw_5ad013e48f41" isMarkerVisible="true">
+        <dc:Bounds x="810" y="393" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="796" y="450" width="78" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── Shapes – Sub-processo 02-02 ── -->
+      <bpmndi:BPMNShape id="shape_tk_ad39c7670efc" bpmnElement="tk_ad39c7670efc">
+        <dc:Bounds x="920" y="215" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_30bbbb4c384c" bpmnElement="tk_30bbbb4c384c">
+        <dc:Bounds x="1060" y="75" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_58716c5467b4" bpmnElement="tk_58716c5467b4">
+        <dc:Bounds x="1060" y="215" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_9165e1bf1856" bpmnElement="tk_9165e1bf1856">
+        <dc:Bounds x="1060" y="920" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_2773b6264b52" bpmnElement="tk_2773b6264b52">
+        <dc:Bounds x="1220" y="215" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gw_cfcc0d7b29a1" bpmnElement="gw_cfcc0d7b29a1" isMarkerVisible="true">
+        <dc:Bounds x="1380" y="930" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1366" y="987" width="78" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_4db68f3af1f3" bpmnElement="tk_4db68f3af1f3">
+        <dc:Bounds x="1480" y="390" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gw_2153d91c5987" bpmnElement="gw_2153d91c5987" isMarkerVisible="true">
+        <dc:Bounds x="1640" y="393" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1626" y="450" width="78" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_cd2efb2740cf" bpmnElement="tk_cd2efb2740cf">
+        <dc:Bounds x="1480" y="215" width="120" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- ── Shapes – Sub-processo 02-03 ── -->
+      <bpmndi:BPMNShape id="shape_tk_f028e2a32905" bpmnElement="tk_f028e2a32905">
+        <dc:Bounds x="920" y="740" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_gw_b998093225a2" bpmnElement="gw_b998093225a2" isMarkerVisible="true">
+        <dc:Bounds x="1060" y="743" width="50" height="50" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1046" y="800" width="78" height="27" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_sp_31abfb0ef73e" bpmnElement="sp_31abfb0ef73e" isExpanded="false">
+        <dc:Bounds x="1160" y="565" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_b5d33188ab12" bpmnElement="tk_b5d33188ab12">
+        <dc:Bounds x="1320" y="565" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_sp_54f547fba02d" bpmnElement="sp_54f547fba02d" isExpanded="false">
+        <dc:Bounds x="1160" y="645" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_sp_f274d0faabe5" bpmnElement="sp_f274d0faabe5" isExpanded="false">
+        <dc:Bounds x="1160" y="725" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_1feeafa1edee" bpmnElement="tk_1feeafa1edee">
+        <dc:Bounds x="1160" y="740" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_2559f271bfe1" bpmnElement="tk_2559f271bfe1">
+        <dc:Bounds x="1320" y="740" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_56a3286112e4" bpmnElement="tk_56a3286112e4">
+        <dc:Bounds x="1480" y="565" width="120" height="60" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_tk_df6cfe6427ed" bpmnElement="tk_df6cfe6427ed">
+        <dc:Bounds x="1160" y="810" width="120" height="60" />
+      </bpmndi:BPMNShape>
+
+      <!-- End events -->
+      <bpmndi:BPMNShape id="shape_ev_29c7365814c9" bpmnElement="ev_29c7365814c9">
+        <dc:Bounds x="1752" y="393" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1733" y="436" width="74" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ev_349f2f4875ea" bpmnElement="ev_349f2f4875ea">
+        <dc:Bounds x="1752" y="450" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1735" y="493" width="70" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ev_05fa11803840" bpmnElement="ev_05fa11803840">
+        <dc:Bounds x="1752" y="580" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1730" y="623" width="80" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_ev_fdd6ba063623" bpmnElement="ev_fdd6ba063623">
+        <dc:Bounds x="1752" y="232" width="36" height="36" />
+        <bpmndi:BPMNLabel><dc:Bounds x="1735" y="275" width="70" height="14" /></bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+
+      <!-- ── Sequence flow edges (simplified, no waypoints needed for most tools) ── -->
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
