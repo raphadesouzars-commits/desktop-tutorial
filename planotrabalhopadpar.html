@@ -274,14 +274,7 @@ input[disabled],textarea[disabled],select[disabled]{background:#F5F4F0!important
 .pdf-modal-body{flex:1;overflow-y:auto;width:100%;display:flex;justify-content:center;padding:24px 16px;background:#525659}
 .pdf-modal-page{background:white;width:21cm;min-height:29.7cm;padding:2cm;box-shadow:0 4px 24px rgba(0,0,0,0.4);font-family:Georgia,'Times New Roman',serif;font-size:11px;color:#2C2C2A;line-height:1.5}
 
-/* ── IMPRESSÃO — imprime apenas o conteúdo do modal ── */
-@media print{
-  body > *:not(.pdf-modal-overlay){display:none!important}
-  .pdf-modal-overlay{display:block!important;position:static!important;background:none!important}
-  .pdf-modal-toolbar{display:none!important}
-  .pdf-modal-body{display:block!important;padding:0!important;background:none!important;overflow:visible!important}
-  .pdf-modal-page{box-shadow:none!important;padding:0!important;width:100%!important}
-}
+/* sem @media print necessário — impressão usa janela separada */
 </style>
 </head>
 <body>
@@ -1492,7 +1485,53 @@ function exportarPDF() {
 }
 
 function imprimirModal() {
-  window.print();
+  const conteudo = document.getElementById('pdf-modal-conteudo').innerHTML;
+  const win = window.open('', '_blank', 'width=900,height=700');
+  win.document.write(`<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Plano de Trabalho — ${tipo}</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:10.5pt;
+    color:#2C2C2A;
+    background:white;
+    line-height:1.5;
+  }
+  .pagina{
+    width:21cm;
+    margin:0 auto;
+    padding:2cm 2.2cm;
+  }
+  table{width:100%;border-collapse:collapse}
+  th,td{vertical-align:top}
+  img{max-width:100%}
+  @page{
+    size:A4 portrait;
+    margin:1.8cm 1.5cm;
+  }
+  @media print{
+    body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .pagina{width:100%;padding:0;margin:0}
+    table{page-break-inside:auto}
+    tr{page-break-inside:avoid}
+    div{page-break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="pagina">${conteudo}</div>
+<script>
+  window.onload = function(){
+    setTimeout(function(){ window.print(); }, 400);
+  };
+<\/script>
+</body>
+</html>`);
+  win.document.close();
 }
 
 function fecharModal() {
