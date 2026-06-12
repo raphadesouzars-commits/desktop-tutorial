@@ -251,7 +251,7 @@ def badge(text, cor=AZUL_MEDIO):
     # Usar shading via XML
     rPr = run._r.get_or_add_rPr()
     shd = OxmlElement('w:shd')
-    hex_color = '{:02X}{:02X}{:02X}'.format(cor.red, cor.green, cor.blue)
+    hex_color = '{:02X}{:02X}{:02X}'.format(cor[0], cor[1], cor[2])
     shd.set(qn('w:val'), 'clear')
     shd.set(qn('w:color'), 'auto')
     shd.set(qn('w:fill'), hex_color)
@@ -827,6 +827,190 @@ body('Sim, mas com percentual reduzido. O bloco APJ-Posterior avalia medidas cor
 
 heading2('Quantos dias tem a publicação extraordinária nos casos mais graves?')
 body('O prazo máximo é de 135 dias corridos, aplicável quando a Alíquota de Referência superar 17,5%. Para alíquotas até 2,5%, o prazo mínimo é de 30 dias.')
+
+heading2('O Art. 22, IV se aplica quando a Liquidez Geral é 0,98 mas os demais indicadores são favoráveis?')
+body('Não. O agravante de situação econômica exige os três indicadores cumulativamente: Solvência Geral > 1, Liquidez Geral > 1 e Lucro Líquido positivo. Qualquer indicador abaixo do limiar — ainda que por margem ínfima — zera o agravante.')
+
+heading2('Responder a outro PAR em andamento configura reincidência?')
+body('Não. A reincidência (Art. 22, V) exige decisão definitiva anterior. Estar respondendo a outro PAR sem julgamento concluído não configura reincidência, pois o marco legal é a publicação do julgamento anterior, não a instauração de novo processo.')
+
+heading2('Como é calculada a publicação quando a multa é ajustada pelo piso legal?')
+body('Quando a multa final é elevada ao valor da vantagem auferida (piso), aplica-se o Cenário B: Alíquota de Referência = (Multa Final ÷ Faturamento Bruto) × 100. Isso garante que o prazo de publicação reflita a gravidade proporcional real da sanção.')
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  13. CASOS ESPECIAIS
+# ══════════════════════════════════════════════════════════════════════════════
+page_break()
+heading1('13. CASOS ESPECIAIS E SITUAÇÕES ATÍPICAS')
+
+heading2('13.1 Empresa sem Defesa Escrita ou sem Balanço Apresentado')
+body('Quando a PJ não apresenta defesa escrita nem documentação contábil, o operador deve buscar dados em sistemas internos antes de qualquer outra medida:')
+tabela(['Sistema / Fonte', 'Informação disponível'],
+    [
+        ['ECF (Escrituração Contábil Fiscal)', 'Principal fonte para Lucro Real/Presumido — DRE e Balanço'],
+        ['DIRF / DCTF',                        'Cruzamento de rendimentos e declarações'],
+        ['SPED',                               'Escrituração contábil e fiscal digital'],
+        ['DAS / PGDAS',                        'Faturamento para optantes do Simples Nacional'],
+        ['NF-e / NFS-e',                       'Notas fiscais emitidas — úteis para estimativa'],
+    ],
+    col_widths=[6, 11])
+nota('A ausência de defesa não impede a dosimetria nem desobriga o operador de buscar exaustivamente os dados antes de recorrer à estimativa.')
+
+heading2('13.2 Piso Absoluto de R$ 6.000,00 (Empresa Fantasma ou Noteira)')
+body('Quando a PJ é uma empresa-fantasma sem faturamento rastreável e a alíquota resultante é zero ou ínfima, aplica-se o piso absoluto de R$ 6.000,00 (Art. 20, §4º da Lei nº 12.846/2013). A multa final não pode ser inferior a esse valor.')
+tabela(['Situação', 'Multa Final'],
+    [
+        ['Alíquota zero por excesso de atenuantes', 'R$ 6.000,00 (piso absoluto)'],
+        ['Faturamento ínfimo + alíquota baixa → resultado < R$ 6k', 'R$ 6.000,00 (piso absoluto)'],
+    ],
+    col_widths=[10, 7])
+
+heading2('13.3 Estimativa Fundamentada (Art. 20, §1º, III)')
+body('Quando não há faturamento histórico em nenhum sistema, a autoridade realiza estimativa técnica com base em elementos objetivos. O procedimento é:')
+bullet('1. Levantar o capital social ou outros indicadores objetivos (GFIP, compras, valor de repasses ilícitos);')
+bullet('2. Identificar o CNAE e a carga tributária estimada do regime vigente;')
+bullet('3. Base histórica líquida = indicador bruto − tributos estimados;')
+bullet('4. Atualizar pelo IPCA até 31/12 do exercício anterior ao PAR.')
+nota('Estimativa técnica não é valor arbitrário. Deve ser formalmente fundamentada com os elementos usados. A autoridade documenta cada premissa no processo.')
+
+heading2('13.4 Retroação Anual — Art. 21 (Sem Faturamento no Exercício Anterior)')
+body('Quando a PJ não teve faturamento no exercício imediatamente anterior ao PAR, recua-se ano a ano até encontrar um período com faturamento válido, e atualiza-se pelo IPCA:')
+tabela(['Exercício', 'Faturamento Bruto', 'Situação'],
+    [
+        ['Exercício PAR − 1',  'R$ 0,00',         'Sem faturamento — retroage'],
+        ['Exercício PAR − 2',  'R$ 0,00',         'Sem faturamento — retroage'],
+        ['Exercício PAR − N',  'Valor encontrado', 'Base histórica → aplicar IPCA'],
+    ],
+    col_widths=[5, 5, 7])
+body('O valor corrigido pelo IPCA passa a ser a base de cálculo oficial para toda a dosimetria.')
+
+heading2('13.5 Sucessão Empresarial (Art. 4º, Lei nº 12.846/2013)')
+tabela(['Evento Societário', 'Responsabilidade da Sucessora', 'Base de Cálculo'],
+    [
+        ['Alteração contratual ou transformação', 'Mesma PJ — responsabilidade inalterada', 'Faturamento da própria PJ'],
+        ['Incorporação ou fusão', 'Sucessora responde, limitada ao patrimônio transferido', 'Faturamento da empresa SUCESSORA'],
+    ],
+    col_widths=[5.5, 6, 5.5])
+nota('Se o evento sucessório ocorrer durante o andamento do PAR, o polo passivo é redirecionado na Nota de Indiciação para a empresa sucessora.')
+
+heading2('13.6 Grupo Econômico (Art. 20, §2º, Decreto nº 11.129/2022)')
+body('Quando há prova de que diferentes empresas agiram em conluio ou fraude estruturada como se fossem uma única entidade, configura-se o grupo econômico para fins de dosimetria. Consequências:')
+bullet('Consolidação dos faturamentos brutos de todas as PJs participantes para compor a base de cálculo;')
+bullet('Avaliação conjunta de agravantes e atenuantes;')
+bullet('Consideração da vantagem auferida por todo o esquema ilícito;')
+bullet('Solidariedade: todas as PJs integrantes respondem integralmente pelo valor total da multa aplicada.')
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  14. ESTUDOS DE CASO
+# ══════════════════════════════════════════════════════════════════════════════
+page_break()
+heading1('14. ESTUDOS DE CASO COMENTADOS')
+body('Os casos a seguir ilustram a aplicação concreta da dosimetria, com dados numéricos reais e as decisões metodológicas tomadas em cada etapa.')
+
+heading2('14.1 Caso I — Empresa Alimentos Sabor SA: Fraude em Fiscalização Tributária')
+heading3('Cenário')
+body('PAR instaurado em 2025. CNPJ 12.345.678/0001-90. Ato lesivo: fraude em fiscalização tributária. Provas: Operação Policial com quebra de sigilos telemático, telefônico e bancário. Benefício econômico estimado: R$ 90.000.000,00.')
+
+heading3('Passo 1 — Base de Cálculo (ECF/DRE da Matriz, exercício 2024)')
+tabela(['Item', 'Valor'],
+    [
+        ['Faturamento Bruto', 'R$ 1.248.765.432,00'],
+        ['(−) Tributos Incidentes', '(R$ 188.653.322,00)'],
+        ['Base de Cálculo Final', 'R$ 1.060.112.110,00'],
+    ],
+    col_widths=[9, 8])
+
+heading3('Passo 2 — Agravantes e Atenuantes')
+tabela(['Circunstância', 'Fundamentação', '%'],
+    [
+        ['Art. 22, I — Concurso de atos', 'Múltiplos pagamentos dissimulados (R$ 450k via empresa B, R$ 250k via empresa C, R$ 180k em móveis para o auditor)', '3,5%'],
+        ['Art. 22, II — Ciência do corpo diretivo', 'WhatsApp do gerente citando o Administrador; e-mails copiados ao contador e auditor → ciência do Administrador (teto)', '3,0%'],
+        ['Art. 22, III — Interrupção', 'Não aplicável ao caso', '0%'],
+        ['Art. 22, IV — Situação econômica', 'SG = 1,67 ✓ / LG = 0,98 ✗ / Lucro ✓ — LG < 1, não se aplica', '0%'],
+        ['Art. 22, V — Reincidência', 'PAR anterior em andamento sem julgamento definitivo — NÃO configura reincidência', '0%'],
+        ['Art. 22, VI — Contratos', 'Não pontuado no caso', '0%'],
+        ['TOTAL AGRAVANTES', '', '6,5%'],
+        ['Art. 23, II — Ressarcimento', 'Comprovação parcial de devolução espontânea', '−0,5%'],
+        ['TOTAL ATENUANTES', '', '−0,5%'],
+        ['ALÍQUOTA FINAL', '6,5% − 0,5%', '6,0%'],
+    ],
+    col_widths=[5, 9.5, 2.5])
+
+heading3('Passo 3 — Multa Preliminar')
+cite('R$ 1.060.112.110,00 × 6,0%  =  R$ 63.606.726,60')
+
+heading3('Passo 4 — Limites Legais')
+tabela(['Limite', 'Fórmula', 'Valor'],
+    [
+        ['Mínimo (maior entre os dois)', 'Vantagem Auferida (após refiscalização)', 'R$ 60.000.000,00'],
+        ['', '0,1% do Faturamento', 'R$ 1.060.112,11'],
+        ['Máximo (menor entre os dois)', '20% do Faturamento', 'R$ 212.022.422,00'],
+        ['', '3 × Vantagem Pretendida (R$ 90M)', 'R$ 270.000.000,00'],
+    ],
+    col_widths=[5.5, 7, 5])
+
+heading3('Passo 5 — Multa Final (Caso I)')
+body('A Multa Preliminar de R$ 63.606.726,60 está entre o piso (R$ 60M) e o teto (R$ 212M) — não sofre ajuste.')
+cite('MULTA FINAL (Caso I)  =  R$ 63.606.726,60')
+
+heading3('Passo 6 — Publicação Extraordinária')
+body('Multa não foi limitada (Cenário A). Alíquota de referência = 6,0% → faixa "maior que 5,0% até 7,5%" → PRAZO: 60 DIAS.')
+
+heading2('14.2 Caso II — Mesmo Cenário, Vantagem Auferida Integral (Piso Forçado)')
+heading3('Variante')
+body('A vantagem auferida permanece em R$ 90.000.000,00 (sem redução pela refiscalização).')
+
+tabela(['Limite', 'Valor'],
+    [
+        ['Piso (vantagem auferida integral)', 'R$ 90.000.000,00'],
+        ['Teto (20% do Faturamento)', 'R$ 212.022.422,00'],
+    ],
+    col_widths=[9, 8])
+
+body('Multa Preliminar de R$ 63.606.726,60 ficou abaixo do piso legal (R$ 90M). A multa é elevada obrigatoriamente ao piso:')
+cite('MULTA FINAL (Caso II)  =  R$ 90.000.000,00')
+
+heading3('Publicação com Proporção Recalculada (Cenário B)')
+cite('Alíquota de Proporção  =  R$ 90.000.000,00 ÷ R$ 1.060.112.110,00  ≈  8,5%  →  PRAZO: 75 DIAS')
+nota('O prazo de publicação aumentou de 60 para 75 dias porque a gravidade proporcional da sanção cresceu quando a multa foi elevada ao piso.')
+
+heading2('14.3 Caso III — Empresa Cítrica: Sem Defesa, Empresa Fantasma')
+heading3('Cenário')
+body('Empresa-noteira que não apresentou defesa nem balanço. Faturamento: 2024 e 2025 = R$ 0. Faturamento histórico: 2018 (jan–mar) = R$ 53.500,00; 2017 = R$ 560.000,00.')
+
+heading3('Retroação e Atualização (Art. 21)')
+cite('Base de Cálculo apurada e atualizada pelo IPCA até 31/12/2024  =  R$ 74.588,17')
+
+heading3('Dosimetria')
+tabela(['Circunstância', '%'],
+    [
+        ['Agravantes', '0%'],
+        ['Art. 23, II — Inexistência de vantagem/dano comprovado', '−1,0%'],
+        ['Alíquota Final (atenuantes > agravantes)', '0%'],
+    ],
+    col_widths=[13, 4])
+
+cite('Multa Preliminar  =  R$ 74.588,17 × 0%  =  R$ 0,00')
+body('Piso absoluto (Art. 20, §4º, Lei nº 12.846/2013):')
+cite('MULTA FINAL (Caso III)  =  R$ 6.000,00')
+cite('Alíquota de Proporção  =  R$ 6.000,00 ÷ R$ 74.588,17  ≈  8,0%  →  PRAZO: 75 DIAS')
+
+heading2('14.4 Caso IV — Empresa Gasparzinho: Estimativa Fundamentada')
+heading3('Cenário')
+body('Empresa sem qualquer dado de faturamento histórico. Capital social (2017): R$ 50.000,00. CNAE: 6204-0/00 (Consultoria em TI). Sede: Não-Me-Toque/RS. Regime: Lucro Presumido.')
+
+tabela(['Item', 'Valor'],
+    [
+        ['Capital Social 2017 (proxy de faturamento)', 'R$ 50.000,00'],
+        ['(−) Tributos estimados: PIS 0,65% + COFINS 3% + ISS 3% = 6,65%', '(R$ 3.325,00)'],
+        ['Base de Cálculo Histórica (2017)', 'R$ 46.675,00'],
+        ['Atualização IPCA até dez/2024', '≈ R$ 67.417,43'],
+    ],
+    col_widths=[11, 6])
+
+cite('BASE DE CÁLCULO OFICIAL  =  R$ 67.417,43')
+body('A partir desse valor, a dosimetria (agravantes, atenuantes, limites legais) segue o fluxo padrão.')
+nota('Estimativa técnica não é arbitrária. Cada premissa (CNAE, carga tributária, capital social) deve ser formalmente documentada no processo.')
 
 # ── Rodapé ────────────────────────────────────────────────────────────────────
 doc.add_paragraph()
