@@ -1,54 +1,286 @@
 # Manual Teórico-Prático da Calculadora de Multa PAR
 ## Corregedoria da Receita Federal do Brasil
+### Processo Administrativo de Responsabilização — Lei nº 12.846/2013
+
+---
+
+## Apresentação
+
+Este manual tem dupla finalidade. Na **Parte I**, apresenta os **fundamentos teóricos** do Processo Administrativo de Responsabilização (PAR): o fenômeno da corrupção e suas distorções, a origem e a lógica da Lei Anticorrupção, os sujeitos alcançados, os atos lesivos, o rito processual, o julgamento, os recursos, o acordo de leniência e os cadastros de sanções. Na **Parte II**, ensina a **dosimetria da multa** e o **uso prático da Calculadora de Multa PAR**, etapa por etapa, com fórmulas, tabelas legais, casos especiais e estudos de caso comentados.
+
+O operador que domina apenas a mecânica da calculadora, sem compreender a teoria que a sustenta, corre o risco de aplicar percentuais sem o necessário juízo crítico. Por isso, recomenda-se a leitura integral da Parte I antes de manusear a ferramenta descrita na Parte II.
 
 ---
 
 ## Sumário
 
-1. [Introdução e Finalidade](#1-introdução-e-finalidade)
-2. [Fundamento Legal](#2-fundamento-legal)
-3. [Estrutura Geral da Calculadora](#3-estrutura-geral-da-calculadora)
-4. [Etapa 0 — Base de Cálculo: Faturamento Bruto](#4-etapa-0--base-de-cálculo-faturamento-bruto)
-5. [Etapa 1 — Vantagens Auferida e Pretendida](#5-etapa-1--vantagens-auferida-e-pretendida)
-6. [Etapa 2 — Agravante: Concurso de Atos Lesivos (Art. 22, I)](#6-etapa-2--agravante-concurso-de-atos-lesivos-art-22-i)
-7. [Etapa 3 — Agravante: Ciência/Tolerância Hierárquica (Art. 22, II)](#7-etapa-3--agravante-ciênciatolerância-hierárquica-art-22-ii)
-8. [Etapa 4 — Agravante: Interrupção e Descumprimento (Art. 22, III)](#8-etapa-4--agravante-interrupção-e-descumprimento-art-22-iii)
-9. [Etapa 5 — Agravante: Situação Econômica do Infrator (Art. 22, IV)](#9-etapa-5--agravante-situação-econômica-do-infrator-art-22-iv)
-10. [Etapa 6 — Agravante: Reincidência (Art. 22, V)](#10-etapa-6--agravante-reincidência-art-22-v)
-11. [Etapa 7 — Agravante: Valor dos Contratos com o Ente Lesado (Art. 22, VI)](#11-etapa-7--agravante-valor-dos-contratos-com-o-ente-lesado-art-22-vi)
-12. [Etapa 8 — Atenuante: Não Consumação (Art. 23, I)](#12-etapa-8--atenuante-não-consumação-art-23-i)
-13. [Etapa 9 — Atenuante: Ressarcimento e Devolução (Art. 23, II)](#13-etapa-9--atenuante-ressarcimento-e-devolução-art-23-ii)
-14. [Etapa 10 — Atenuante: Colaboração (Art. 23, III)](#14-etapa-10--atenuante-colaboração-art-23-iii)
-15. [Etapa 11 — Atenuante: Admissão Voluntária (Art. 23, IV)](#15-etapa-11--atenuante-admissão-voluntária-art-23-iv)
-16. [Etapa 12 — Atenuante: Programa de Integridade (Art. 23, V)](#16-etapa-12--atenuante-programa-de-integridade-art-23-v)
-17. [Etapa 13 — Publicação Extraordinária (Art. 6º, II, Lei nº 12.846/2013)](#17-etapa-13--publicação-extraordinária-art-6º-ii-lei-nº-128462013)
-18. [Cálculo Final e Verificação dos Limites Legais (Art. 25)](#18-cálculo-final-e-verificação-dos-limites-legais-art-25)
-19. [Relatório Final e Impressão](#19-relatório-final-e-impressão)
-20. [Fluxo Resumido do Cálculo](#20-fluxo-resumido-do-cálculo)
-21. [Casos Especiais e Situações Atípicas](#21-casos-especiais-e-situações-atípicas)
-22. [Estudos de Caso Comentados](#22-estudos-de-caso-comentados)
-23. [Perguntas Frequentes e Pontos de Atenção](#23-perguntas-frequentes-e-pontos-de-atenção)
+**PARTE I — FUNDAMENTOS TEÓRICOS DO PAR**
+
+1. [A Corrupção e Suas Distorções](#1-a-corrupção-e-suas-distorções)
+2. [A Lei Anticorrupção: Origem e Características](#2-a-lei-anticorrupção-origem-e-características)
+3. [Sujeitos Passivos e Alcance da Lei](#3-sujeitos-passivos-e-alcance-da-lei)
+4. [Os Atos Lesivos à Administração Pública (Art. 5º)](#4-os-atos-lesivos-à-administração-pública-art-5º)
+5. [O Processo Administrativo de Responsabilização — Rito](#5-o-processo-administrativo-de-responsabilização--rito)
+6. [Julgamento, Sanções e Fase Recursal](#6-julgamento-sanções-e-fase-recursal)
+7. [Acordo de Leniência e Cadastros de Sanções](#7-acordo-de-leniência-e-cadastros-de-sanções)
+
+**PARTE II — DOSIMETRIA E USO DA CALCULADORA**
+
+8. [Introdução à Dosimetria e à Calculadora](#8-introdução-à-dosimetria-e-à-calculadora)
+9. [Fundamento Legal da Dosimetria](#9-fundamento-legal-da-dosimetria)
+10. [Estrutura Geral da Calculadora](#10-estrutura-geral-da-calculadora)
+11. [Etapa 0 — Base de Cálculo: Faturamento Bruto](#11-etapa-0--base-de-cálculo-faturamento-bruto)
+12. [Etapa 1 — Vantagens Auferida e Pretendida](#12-etapa-1--vantagens-auferida-e-pretendida)
+13. [Etapa 2 — Agravante: Concurso de Atos Lesivos (Art. 22, I)](#13-etapa-2--agravante-concurso-de-atos-lesivos-art-22-i)
+14. [Etapa 3 — Agravante: Ciência/Tolerância Hierárquica (Art. 22, II)](#14-etapa-3--agravante-ciênciatolerância-hierárquica-art-22-ii)
+15. [Etapa 4 — Agravante: Interrupção e Descumprimento (Art. 22, III)](#15-etapa-4--agravante-interrupção-e-descumprimento-art-22-iii)
+16. [Etapa 5 — Agravante: Situação Econômica do Infrator (Art. 22, IV)](#16-etapa-5--agravante-situação-econômica-do-infrator-art-22-iv)
+17. [Etapa 6 — Agravante: Reincidência (Art. 22, V)](#17-etapa-6--agravante-reincidência-art-22-v)
+18. [Etapa 7 — Agravante: Valor dos Contratos com o Ente Lesado (Art. 22, VI)](#18-etapa-7--agravante-valor-dos-contratos-com-o-ente-lesado-art-22-vi)
+19. [Etapa 8 — Atenuante: Não Consumação (Art. 23, I)](#19-etapa-8--atenuante-não-consumação-art-23-i)
+20. [Etapa 9 — Atenuante: Ressarcimento e Devolução (Art. 23, II)](#20-etapa-9--atenuante-ressarcimento-e-devolução-art-23-ii)
+21. [Etapa 10 — Atenuante: Colaboração (Art. 23, III)](#21-etapa-10--atenuante-colaboração-art-23-iii)
+22. [Etapa 11 — Atenuante: Admissão Voluntária (Art. 23, IV)](#22-etapa-11--atenuante-admissão-voluntária-art-23-iv)
+23. [Etapa 12 — Atenuante: Programa de Integridade (Art. 23, V)](#23-etapa-12--atenuante-programa-de-integridade-art-23-v)
+24. [Etapa 13 — Publicação Extraordinária](#24-etapa-13--publicação-extraordinária)
+25. [Cálculo Final e Verificação dos Limites Legais (Art. 25)](#25-cálculo-final-e-verificação-dos-limites-legais-art-25)
+26. [Relatório Final e Impressão](#26-relatório-final-e-impressão)
+27. [Fluxo Resumido do Cálculo](#27-fluxo-resumido-do-cálculo)
+28. [Casos Especiais e Situações Atípicas](#28-casos-especiais-e-situações-atípicas)
+29. [Estudos de Caso Comentados](#29-estudos-de-caso-comentados)
+30. [Perguntas Frequentes e Pontos de Atenção](#30-perguntas-frequentes-e-pontos-de-atenção)
 
 ---
 
-## 1. Introdução e Finalidade
-
-A **Calculadora de Multa PAR** é uma ferramenta de apoio à decisão desenvolvida pela Corregedoria da Receita Federal do Brasil para uso nos Processos Administrativos de Responsabilização (PAR) instaurados com base na Lei Anticorrupção (Lei nº 12.846/2013) e seu decreto regulamentador (Decreto nº 11.129/2022).
-
-A ferramenta tem como objetivos:
-
-- **Padronizar** a dosimetria das sanções pecuniárias aplicadas às pessoas jurídicas;
-- **Transparência** — cada percentual aplicado está vinculado a um dispositivo legal específico;
-- **Rastreabilidade** — o relatório final gerado documenta todos os parâmetros utilizados, servindo como instrumento de instrução processual;
-- **Reduzir erros** de cálculo, especialmente nas interações entre os limites mínimo, máximo, vantagem auferida e alíquota preliminar.
-
-A calculadora funciona integralmente **offline** (não depende de servidores externos), sendo adequada para uso em ambientes com restrições de conectividade.
-
-> **Importante:** O objetivo central da dosimetria não é discutir a existência ou autoria da infração, mas validar a **coerência técnica do cálculo**. Esta ferramenta pressupõe que a instância de mérito do PAR já concluiu pelo enquadramento do ato lesivo; cabe ao operador agora quantificar tecnicamente a sanção.
+# PARTE I — FUNDAMENTOS TEÓRICOS DO PAR
 
 ---
 
-## 2. Fundamento Legal
+## 1. A Corrupção e Suas Distorções
+
+Compreender a finalidade da Lei Anticorrupção exige, antes, compreender o mal que ela combate. A metáfora tradicional de que *"a corrupção seria o lubrificante da burocracia"* — sugerindo que a propina apenas agilizaria processos emperrados — é falsa e perigosa. A corrupção não lubrifica; ela corrói.
+
+### 1.1 Tipos de corrupção
+
+| Tipo | Descrição | Consequência |
+|---|---|---|
+| **"Speedy money"** (dinheiro de velocidade) | Propina paga para acelerar processos burocráticos. O agente público usa seu poder para remover entraves que ele mesmo, muitas vezes, cria | Gera tolerância generalizada, fomenta a exigência de novas propinas e acentua as distorções que prejudicam a economia |
+| **"Rent seeking"** (busca de renda) | Atuação em licenças, autorizações ou mercados escassos. A ideia de que "só os empresários mais eficientes conseguem pagar a propina" é falsa | Confere vantagem competitiva exclusiva a quem detém a melhor relação espúria com agentes públicos corruptos |
+
+### 1.2 Distorções econômicas e sociais
+
+- **Seleção adversa:** nem sempre vencem as concorrências públicas as empresas mais eficientes, mas aquelas dispostas a corromper;
+- **Alocação ineficiente de recursos:** desperdício crônico de recursos públicos em obras e serviços superfaturados, desnecessários e de qualidade inferior;
+- **Redução da competição:** empresas honestas e eficientes afastam-se dos "pseudoleilões" públicos, gerando desvio de funções e má alocação de talentos.
+
+> **Por que isso importa para o operador?** A dosimetria da multa não é um exercício meramente aritmético. Cada agravante e atenuante traduz, em percentual, o grau de reprovabilidade da conduta à luz desses danos sociais. Entender o que a corrupção destrói dá sentido à severidade ou à brandura de cada percentual aplicado.
+
+---
+
+## 2. A Lei Anticorrupção: Origem e Características
+
+### 2.1 Contexto histórico e pressão internacional
+
+A Lei nº 12.846/2013 nasceu de compromissos internacionais assumidos pelo Brasil:
+
+- **Convenção da OCDE** sobre o Combate da Corrupção de Funcionários Públicos Estrangeiros em Transações Comerciais Internacionais;
+- **Convenção da ONU** contra a Corrupção (Convenção de Mérida);
+- **Convenção da OEA** contra a Corrupção.
+
+Historicamente, o foco criminal punia apenas a **pessoa física** do corruptor e do corrompido. A Lei Anticorrupção muda o paradigma para responsabilizar diretamente a **pessoa jurídica** — ou seja, atinge o **lado da oferta** da corrupção. As manifestações populares de junho de 2013 aceleraram a votação e a sanção da lei.
+
+### 2.2 Características centrais
+
+1. **Responsabilidade objetiva da pessoa jurídica:** dispensa-se a comprovação de dolo ou culpa da empresa. Basta o **nexo causal** entre o ato lesivo e o benefício (direto ou indireto) auferido pela empresa. Este é o pilar central — e a razão pela qual a dosimetria foca a conduta e o benefício, não a intenção;
+2. **Esfera administrativa e cível:** a responsabilização ocorre de forma independente e simultânea em ambas as esferas;
+3. **Independência das instâncias:** a punição da pessoa jurídica não exclui a responsabilidade individual de seus dirigentes, administradores ou de qualquer pessoa física autora, coautora ou partícipe.
+
+> **Implicação prática:** Como a responsabilidade é objetiva, o PAR não discute a "intenção" da empresa. A Parte II deste manual pressupõe que o mérito (existência do ato lesivo e nexo causal com a PJ) já foi reconhecido; a dosimetria apenas **quantifica** a sanção.
+
+---
+
+## 3. Sujeitos Passivos e Alcance da Lei
+
+### 3.1 A quem se aplica (Art. 1º, parágrafo único, da LAC)
+
+A lei alcança as seguintes entidades, **personificadas ou não, de direito ou de fato**:
+
+- Sociedades empresárias e sociedades simples;
+- Fundações e associações;
+- Sociedades estrangeiras que tenham sede, filial ou representação no território brasileiro.
+
+### 3.2 Sucessão empresarial (Art. 4º)
+
+A responsabilidade subsiste em caso de alteração contratual, transformação, incorporação, fusão ou cisão.
+
+| Evento | Efeito na responsabilidade |
+|---|---|
+| **Alteração contratual / transformação** | A pessoa jurídica é a mesma — responsabilidade inalterada |
+| **Incorporação / fusão** | A responsabilidade da sucessora é **restrita ao limite do patrimônio transferido**, salvo simulação ou fraude evidente. Multas e sanções pecuniárias aplicam-se até esse limite |
+
+> Este ponto tem reflexo direto na dosimetria: nos casos de incorporação ou fusão, utiliza-se o **faturamento da empresa sucessora** como base de cálculo (vide §28.5).
+
+### 3.3 Desconsideração da personalidade jurídica (Art. 14)
+
+A personalidade jurídica poderá ser desconsiderada sempre que utilizada com **abuso de direito** para facilitar, encobrir ou dissimular a prática dos atos lesivos, ou quando houver **confusão patrimonial**. Nesse caso, os efeitos das sanções estendem-se aos sócios e administradores com poderes de gerência.
+
+---
+
+## 4. Os Atos Lesivos à Administração Pública (Art. 5º)
+
+Os atos lesivos atentam contra a administração pública nacional ou estrangeira e dividem-se em núcleos temáticos. A correta identificação da **espécie** e do **número de condutas** é essencial para o agravante de concurso de atos lesivos (Etapa 2 / Art. 22, I).
+
+### 4.1 Vantagens indevidas e fraudes gerais
+
+- **Art. 5º, I** — Prometer, oferecer ou dar, direta ou indiretamente, vantagem indevida a agente público ou a terceira pessoa a ele relacionada;
+- **Art. 5º, II** — Financiar, custear, patrocinar ou de qualquer modo subvencionar a prática dos atos ilícitos;
+- **Art. 5º, III** — Utilizar-se de interposta pessoa física ou jurídica para ocultar ou dissimular reais interesses ou a identidade dos beneficiários.
+
+### 4.2 Licitações e contratos (Art. 5º, IV)
+
+- Fraudar ou frustrar o caráter competitivo de procedimento licitatório;
+- Impedir, perturbar ou fraudar a realização de qualquer ato licitatório;
+- Afastar ou tentar afastar licitante por fraude ou oferecimento de vantagem;
+- Fraudar licitação pública ou contrato dela decorrente;
+- Criar, de modo fraudulento ou irregular, pessoa jurídica para participar de licitação ou celebrar contrato;
+- Obter vantagem indevida, de modo fraudulento, de modificações ou prorrogações de contratos;
+- Manipular ou fraudar o equilíbrio econômico-financeiro dos contratos.
+
+### 4.3 Obstrução à fiscalização (Art. 5º, V)
+
+- Dificultar atividade de investigação ou fiscalização de órgãos, entidades ou agentes públicos, ou intervir em sua atuação — inclusive no âmbito das agências reguladoras e dos órgãos de fiscalização do sistema financeiro nacional.
+
+> **Atenção à dosimetria:** No Art. 22, I (concurso de atos lesivos), as **colunas** representam o número de **espécies distintas** de atos lesivos do Art. 5º, e as **linhas**, o número de **condutas**. Um esquema que envolva, por exemplo, oferta de vantagem (inc. I) *e* obstrução de fiscalização (inc. V) configura **duas espécies** distintas.
+
+---
+
+## 5. O Processo Administrativo de Responsabilização — Rito
+
+O PAR divide-se em duas macrofases: a **Fase Interna** (admissibilidade e investigação) e a **Fase Externa** (contraditório e julgamento).
+
+```
+[Notícia do Ato Lesivo] → [Investigação Preliminar] → [Juízo de Admissibilidade]
+                                                              │
+                                                       (Se admissível)
+                                                              ▼
+[Relatório Final] ⇦ [Defesa Escrita] ⇦ [Indiciação/Citação] ⇦ [Portaria de Instauração]
+        │
+        ▼
+[Parecer Jurídico] → [Julgamento pela Autoridade] → [Publicação e Execução da Sanção]
+```
+
+### 5.1 Macrofase I — Admissibilidade e investigação preliminar
+
+- **Notícia do fato:** originada de denúncias, auditorias, representações fiscais ou operações policiais;
+- **Investigação Preliminar (IP):** caráter inquisitorial e sigiloso; busca indícios de autoria e materialidade;
+- **Juízo de admissibilidade:** conduzido pela autoridade competente. Conclui por: (1) arquivamento fundamentado; (2) diligências/IP complementar; ou (3) instauração imediata do PAR.
+
+### 5.2 Macrofase II — Fase externa e condução pela comissão
+
+- **Instauração:** por Portaria publicada no DOU. A comissão deve ter **2 ou mais servidores estáveis**;
+- **Prazo:** padrão de **180 dias** para conclusão. Pelo Enunciado CGU nº 24/2019, o prazo pode ser **prorrogado mais de uma vez**, mediante ato fundamentado da autoridade instauradora;
+- **Atos de instrução:** provas documentais, testemunhais, perícias e requisição de informações a outros órgãos.
+
+### 5.3 Indiciação, citação e defesa
+
+- **Nota de Indiciação:** peça técnica da comissão que **individualiza e descreve** as condutas ilícitas, capitulando os atos lesivos com base nas provas;
+- **Citação:** intimação formal para defesa. O prazo de **Defesa Escrita é de 30 dias**, contados da citação;
+- **Revelia:** se a empresa citada não se defende no prazo, decreta-se a revelia, prosseguindo o processo — assegurado o direito de intervir posteriormente em qualquer fase.
+
+> **Conexão com a dosimetria:** a tempestividade da admissão de responsabilidade (Etapa 11 / Art. 23, IV) é medida exatamente em relação a esses marcos: antes da instauração, no prazo de defesa (30 dias), no prazo das alegações finais, ou após. Quanto mais cedo, maior o desconto.
+
+---
+
+## 6. Julgamento, Sanções e Fase Recursal
+
+### 6.1 Relatório Final da comissão
+
+Concluída a instrução e analisada a defesa, a comissão elabora **Relatório Final** minucioso, opinando conclusivamente sobre: a ocorrência do ato lesivo, a responsabilidade da PJ e a **proposta detalhada de dosimetria da multa** — é aqui que a Calculadora de Multa PAR é instrumental.
+
+### 6.2 Fase de julgamento
+
+- **Parecer jurídico:** o processo é remetido à assessoria jurídica (ex.: Procuradoria), que emite parecer obrigatório de controle de legalidade;
+- **Autoridade competente:** no âmbito federal, a competência máxima é do Ministro de Estado. **Na Receita Federal, é delegada ao Corregedor da RFB.**
+
+### 6.3 Sanções aplicáveis (cumulativas)
+
+1. **Multa pecuniária** — conforme a dosimetria (Parte II);
+2. **Publicação extraordinária da decisão condenatória** — a expensas da própria PJ, em:
+   - Diário Oficial da União (DOU);
+   - Sítio eletrônico oficial do órgão lesado (Receita Federal/Ministério);
+   - Meio de comunicação de grande circulação local ou nacional (mínimo de 1 dia);
+   - Painel visível ao público no próprio estabelecimento (prazo entre **30 e 120 dias**, proporcional à gravidade).
+
+### 6.4 Fase recursal
+
+- **Pedido de Reconsideração:** prazo de **10 dias** da publicação no DOU;
+- **Efeito suspensivo:** o pedido suspende os efeitos da decisão;
+- **Cumprimento:** confirmada a condenação, a PJ tem **30 dias** para pagar a multa e comprovar o cumprimento da publicação extraordinária.
+
+---
+
+## 7. Acordo de Leniência e Cadastros de Sanções
+
+### 7.1 Acordo de Leniência (Art. 16)
+
+A autoridade máxima do órgão pode celebrar acordo com a PJ que colabore efetivamente com as investigações.
+
+**Requisitos cumulativos:**
+
+1. Ser a **primeira** a se manifestar sobre o interesse em cooperar (quando aplicável o critério de precedência);
+2. **Cessação completa** do envolvimento na infração a partir da propositura;
+3. **Admissão integral** da responsabilidade objetiva;
+4. **Cooperação plena, contínua e de boa-fé**.
+
+**Benefícios:**
+
+- Redução de **até 2/3** do valor da multa aplicável;
+- **Isenção** da publicação extraordinária;
+- Isenção da proibição de receber incentivos, subsídios, subvenções, doações ou empréstimos públicos.
+
+> **Conexão com a reincidência (Art. 22, V):** no caso de leniência, o prazo de cinco anos da reincidência é contado da **celebração do acordo** até cinco anos após a **declaração de seu cumprimento**.
+
+### 7.2 Cadastros nacionais de sanções
+
+As sanções e os acordos devem ser registrados e atualizados nos sistemas coordenados pela CGU:
+
+| Cadastro | Finalidade |
+|---|---|
+| **CGU-PJ / Siasg** | Controle interno dos processos de responsabilização de entes privados |
+| **CEIS** — Cadastro Nacional de Empresas Inidôneas e Suspensas | Consolida sanções de restrição ao direito de licitar e contratar de todos os entes federativos |
+| **CNEP** — Cadastro Nacional de Empresas Punidas | Dá publicidade às sanções aplicadas com base na Lei nº 12.846/2013 |
+
+---
+
+# PARTE II — DOSIMETRIA E USO DA CALCULADORA
+
+---
+
+## 8. Introdução à Dosimetria e à Calculadora
+
+A **Calculadora de Multa PAR** é ferramenta de apoio à decisão desenvolvida pela Corregedoria da Receita Federal do Brasil para a dosimetria das sanções pecuniárias do PAR. Seus objetivos:
+
+- **Padronizar** a dosimetria das sanções pecuniárias;
+- **Transparência** — cada percentual vinculado a um dispositivo legal específico;
+- **Rastreabilidade** — o relatório final documenta todos os parâmetros, servindo como instrumento de instrução processual;
+- **Reduzir erros** de cálculo, sobretudo nas interações entre limites mínimo, máximo, vantagem auferida e alíquota preliminar.
+
+A ferramenta funciona integralmente **offline**, sendo adequada a ambientes com restrições de conectividade.
+
+> **O objetivo da dosimetria** não é discutir a existência ou autoria da infração (já reconhecidas no mérito), mas validar a **coerência técnica do cálculo** da sanção.
+
+### O fluxo padrão da dosimetria em seis passos
+
+1. **Base de Cálculo** (faturamento bruto ajustado pelos tributos);
+2. **Alíquota** (agravantes menos atenuantes);
+3. **Multa Preliminar** (base × alíquota);
+4. **Limites Legais** (piso e teto do Art. 25);
+5. **Multa Final** (resultado após limites);
+6. **Publicação Extraordinária** (prazo proporcional ao porte da sanção).
+
+---
+
+## 9. Fundamento Legal da Dosimetria
 
 ### Lei nº 12.846/2013 — Lei Anticorrupção (LAC)
 
@@ -57,6 +289,7 @@ A calculadora funciona integralmente **offline** (não depende de servidores ext
 | Art. 5º | Tipificação dos atos lesivos à administração pública |
 | Art. 6º, I | Multa de 0,1% a 20% do faturamento bruto |
 | Art. 6º, II | Publicação extraordinária da decisão condenatória |
+| Art. 6º, §1º | Limite mínimo: a multa não pode ser inferior à vantagem auferida |
 
 ### Decreto nº 11.129/2022
 
@@ -73,15 +306,15 @@ A calculadora funciona integralmente **offline** (não depende de servidores ext
 ### Orientações complementares
 
 - **IN CGU nº 1/2015** — metodologia de avaliação do programa de integridade;
-- **Manual Prático de Cálculo de Multa da CGU** — procedimentos e tabelas de referência;
-- **Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU** — parâmetros interpretativos para cada inciso;
+- **Manual Prático de Cálculo de Multa da CGU** — procedimentos e tabelas;
+- **Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU** — parâmetros interpretativos por inciso;
 - **Tabela 5 do Guia CGU** — escalonamento dos percentuais de ressarcimento (Art. 23, II).
 
 ---
 
-## 3. Estrutura Geral da Calculadora
+## 10. Estrutura Geral da Calculadora
 
-A calculadora é organizada em **14 etapas sequenciais** (Steps 0 a 13), agrupadas em três blocos funcionais:
+A calculadora é organizada em **14 etapas sequenciais** (Steps 0 a 13), em três blocos:
 
 ```
 ┌──────────────────────────────────────────────────────┐
@@ -99,138 +332,110 @@ A calculadora é organizada em **14 etapas sequenciais** (Steps 0 a 13), agrupad
 └──────────────────────────────────────────────────────┘
 ```
 
-A navegação é feita pelos botões **"Próximo →"** e **"← Anterior"** em cada etapa. O sistema calcula e exibe o resultado automaticamente ao final da Etapa 13.
-
-### O fluxo padrão da dosimetria em seis passos
-
-O cálculo percorre, obrigatoriamente e nessa ordem, as seguintes etapas:
-
-1. **Base de Cálculo** (Faturamento Bruto ajustado pelos tributos)
-2. **Alíquota** (ponderação dos agravantes menos atenuantes)
-3. **Multa Preliminar** (base × alíquota)
-4. **Limites Legais** (piso e teto do Art. 25)
-5. **Multa Final** (resultado após aplicação dos limites)
-6. **Publicação Extraordinária** (prazo proporcional ao porte da sanção)
+A navegação é feita pelos botões **"Próximo →"** e **"← Anterior"**. Cada etapa dispõe de um campo **Justificativa**, no qual o operador registra o fundamento da escolha — texto que é incorporado naturalmente à minuta gerada ao final.
 
 ---
 
-## 4. Etapa 0 — Base de Cálculo: Faturamento Bruto
+## 11. Etapa 0 — Base de Cálculo: Faturamento Bruto
 
-### Fundamento
+### Teoria
 
-> **Art. 20 do Decreto nº 11.129/2022.** A multa prevista no inciso I do *caput* do art. 6º da Lei nº 12.846/2013 terá como base de cálculo o **faturamento bruto da pessoa jurídica no último exercício anterior ao da instauração do PAR**, excluídos os tributos.
+A base de cálculo padrão é o **faturamento bruto da pessoa jurídica** correspondente ao **exercício anterior ao da instauração do PAR**, excluídos os tributos incidentes sobre vendas.
 
-> **Art. 21.** Caso a pessoa jurídica comprovadamente não tenha tido faturamento no último exercício anterior ao da instauração do PAR, deve-se considerar como base de cálculo da multa o valor do **último faturamento bruto apurado** pela pessoa jurídica, excluídos os tributos incidentes sobre vendas, que terá seu valor atualizado pelo IPCA até o último dia do exercício anterior ao da instauração do PAR.
+> **Art. 20 do Decreto nº 11.129/2022.** A multa terá como base de cálculo o faturamento bruto da pessoa jurídica no último exercício anterior ao da instauração do PAR, excluídos os tributos.
 
-### Campos da etapa
+> **Art. 21.** Caso a PJ comprovadamente não tenha tido faturamento no último exercício anterior, considera-se o valor do **último faturamento bruto apurado**, excluídos os tributos sobre vendas, atualizado pelo **IPCA** até o último dia do exercício anterior ao da instauração do PAR.
 
-| Campo | Descrição |
-|---|---|
-| **Ano de Instauração do PAR** | Ano em que o PAR foi formalmente instaurado |
-| **Exercício de Referência do Faturamento** | Calculado automaticamente (Ano PAR − 1). Editável manualmente para casos especiais |
-| **Faturamento Bruto Ajustado (R$)** | Valor final que será utilizado como base de cálculo |
+### Deduções: atenção à DRE
 
-### Fluxo de decisão
-
-```
-A PJ teve faturamento no exercício anterior ao PAR?
-│
-├─ SIM → Informar faturamento do exercício de referência
-│        (via calculadora DRE, Simples Nacional ou valor direto)
-│
-└─ NÃO → Retroagir ano a ano buscando dados válidos,
-          atualizar pelo IPCA até o último dia do
-          exercício anterior ao PAR (Art. 21),
-          informar o valor já corrigido
-```
-
-> **Atenção:** Como a calculadora funciona offline, a **atualização pelo IPCA** deve ser realizada previamente, utilizando a **Calculadora do Cidadão (BCB/IPCA)** disponível no site do Banco Central do Brasil. Informe o valor já corrigido no campo correspondente. A Calculadora de Multa da CGU disponível em `epad.cgu.gov.br/Publico/calculadora/calcPAR.html` também realiza essa correção automaticamente.
-
-### Modos de apuração do faturamento (calculadora integrada)
-
-A calculadora integrada oferece três formas de apurar o faturamento bruto:
-
-1. **DRE (Regime Geral/RFB):** Receita Bruta de Vendas − Tributos sobre Vendas (conforme Art. 20, *caput* c/c Art. 12 do Decreto-Lei nº 1.598/1977);
-2. **Simples Nacional (ME ou EPP):** conforme LC nº 123/2006, Art. 3º, §1º — receita bruta total apurada nas declarações do Simples;
-3. **Estimativa pela autoridade (Art. 20, §1º, III):** hipótese residual, quando não há dados contábeis disponíveis.
-
-### Deduções permitidas
-
-São dedutíveis do faturamento bruto os seguintes tributos incidentes sobre as vendas:
+São dedutíveis **apenas os tributos incidentes sobre as vendas**:
 
 - PIS / COFINS
 - IPI
 - ICMS
 - ISS
 
-> **Nota sobre a Reforma Tributária:** Futuramente, o rol incluirá também CBS, IBS e IS.
+> **Ponto crítico — não confundir com a DRE contábil:** na Demonstração do Resultado do Exercício, as deduções da receita bruta podem incluir **abatimentos, devoluções e vendas canceladas**. Contudo, para fins de PAR, **apenas os tributos têm previsão legal de exclusão**. Vendas canceladas e devoluções **não** são dedutíveis automaticamente na base de cálculo do PAR. Atenção redobrada ao importar números diretamente da DRE.
 
-### Onde buscar os dados de faturamento
+> **Nota sobre a Reforma Tributária:** futuramente, o rol de tributos dedutíveis incluirá CBS, IBS e IS.
 
-Na ausência de balanço entregue pela PJ, o operador deve buscar dados nos sistemas internos disponíveis:
+### Critérios de exceção (faturamento não apurável)
 
-- **ECF** (Escrituração Contábil Fiscal) — principal fonte para o regime de Lucro Real/Presumido;
-- **DIRF, DCTF, SPED** — fontes complementares para cruzamento;
-- **DAS / PGDAS** — para optantes do Simples Nacional;
-- **NF-e / NFS-e** — notas fiscais emitidas, úteis na estimativa.
+Quando não for possível usar o faturamento bruto do ano anterior, aplicam-se, **sucessivamente**:
+
+1. O **faturamento bruto do último ano** em que houve receita, atualizado pelo IPCA (Art. 21);
+2. O **faturamento estimado** com base em dados de mercado, capital social ou informações setoriais fundamentadas (Art. 20, §1º, III);
+3. Em último caso, o valor absoluto fixo legal — multa de **R$ 6.000,00 a R$ 60.000.000,00**.
+
+### Campos da etapa
+
+| Campo | Descrição |
+|---|---|
+| **Ano de Instauração do PAR** | Ano em que o PAR foi formalmente instaurado |
+| **Exercício de Referência** | Calculado automaticamente (Ano PAR − 1). Editável para casos especiais |
+| **Faturamento Bruto Ajustado (R$)** | Valor final usado como base de cálculo |
+
+### Modos de apuração (calculadora integrada)
+
+1. **DRE (Regime Geral/RFB):** Receita Bruta de Vendas − Tributos sobre Vendas (Art. 20, *caput*, c/c Art. 12 do Decreto-Lei nº 1.598/1977);
+2. **Simples Nacional (ME/EPP):** receita bruta total apurada nas declarações do Simples (LC nº 123/2006, Art. 3º, §1º);
+3. **Estimativa pela autoridade (Art. 20, §1º, III):** hipótese residual.
+
+### Onde buscar os dados (PJ sem balanço)
+
+ECF (principal fonte de Lucro Real/Presumido), DIRF, DCTF, SPED, DAS/PGDAS (Simples), NF-e/NFS-e.
 
 ### Estimativa fundamentada (Art. 20, §1º, III)
 
-Quando não existe qualquer dado histórico de faturamento nos sistemas, a autoridade pode lançar mão de uma **estimativa técnica fundamentada**. Essa estimativa **não se confunde com valor arbitrário** — deve ser formalmente justificada com base em elementos objetivos:
+A estimativa **não se confunde com valor arbitrário** — deve ser formalmente fundamentada com elementos objetivos: valor dos repasses no esquema ilícito, notas fiscais de compras, folha salarial (GFIP), capital social, dados setoriais médios do CNAE.
 
-- Valor dos repasses recebidos no esquema ilícito;
-- Notas fiscais de compras;
-- Folha salarial (GFIP);
-- Capital social;
-- Dados setoriais de faturamento médio do ramo de atividade (CNAE).
+> **Exemplo:** Empresa sem dados de faturamento, capital social de R$ 50.000,00 em 2017, CNAE 6204-0/00 (Consultoria em TI), Lucro Presumido. Carga tributária estimada: PIS (0,65%) + COFINS (3%) + ISS (3%) = 6,65%. Base histórica: R$ 50.000,00 − R$ 3.325,00 = **R$ 46.675,00**. Atualizada pelo IPCA até dez/2024: **≈ R$ 67.417,43**.
 
-> **Exemplo prático de estimativa:** Empresa sem dados de faturamento, capital social de R$ 50.000,00 em 2017, CNAE 6204-0/00 (Consultoria em TI), regime Lucro Presumido. Carga tributária estimada: PIS (0,65%) + COFINS (3%) + ISS (3%) = 6,65%. Base histórica: R$ 50.000,00 − R$ 3.325,00 = **R$ 46.675,00**. Atualizado pelo IPCA até dez/2024: **≈ R$ 67.417,43**.
+> **Atenção:** como a calculadora é offline, a atualização pelo IPCA deve ser feita previamente na **Calculadora do Cidadão (BCB)** ou na **Calculadora de Multa da CGU** (`epad.cgu.gov.br`). Informe o valor já corrigido.
 
 ---
 
-## 5. Etapa 1 — Vantagens Auferida e Pretendida
+## 12. Etapa 1 — Vantagens Auferida e Pretendida
 
-### Fundamento
+### Teoria
 
-> **Art. 25 c/c Art. 26 do Decreto nº 11.129/2022.**
+> **Art. 25 c/c Art. 26 do Decreto nº 11.129/2022; Art. 6º, §1º, da Lei.**
 
-A lei distingue duas figuras jurídicas distintas com funções específicas na dosimetria:
+A lei distingue duas figuras com funções específicas:
 
 | Conceito | Definição | Função na multa |
 |---|---|---|
-| **Vantagem Auferida** | Ganho real e efetivamente obtido com o ato lesivo | **Piso mínimo inafastável** — a multa não pode ser inferior à vantagem auferida (Art. 25, I) |
-| **Vantagem Pretendida** | Ganho planejado/visado, ainda que não concretizado | Utilizada para o cálculo do **teto máximo** — o limite superior considera o maior valor entre a vantagem auferida e a pretendida (Art. 25, II) |
+| **Vantagem Auferida** | Ganho real e efetivamente obtido com o ato lesivo | **Piso mínimo inafastável** — a multa não pode ser inferior à vantagem auferida (Art. 25, I; Art. 6º, §1º) |
+| **Vantagem Pretendida** | Ganho planejado/visado, ainda que não concretizado | Referência para o **teto máximo** — considera-se o maior valor entre a auferida e a pretendida (Art. 25, II) |
 
-> **Atenção crítica:** Não confundir as duas figuras. Inflar o piso com a vantagem pretendida é erro metodológico. A calculadora trata cada valor na sua função legal correta.
+> **Atenção crítica:** Inflar o piso com a vantagem **pretendida** é erro metodológico. A calculadora trata cada valor na sua função legal correta.
 
 ### Métodos de apuração da Vantagem Auferida
 
-A calculadora oferece quatro modos de apuração:
-
 #### Modo DIRETO
-Informar o valor já apurado externamente, ou zero (quando a vantagem não é estimável).
+Informar o valor já apurado externamente, ou zero (quando não estimável).
 
 #### Art. 26, I — Diferença entre receita e custos lícitos
-Método aplicável quando há receita auferida indevidamente (ex.: contratos administrativos obtidos por meio ilícito).
+Aplicável quando há receita auferida indevidamente (ex.: contratos obtidos por meio ilícito).
 
 ```
 Vantagem = Receita Auferida − CMV/CSP − Despesas Lícitas − IRPJ/CSLL
 ```
 
-Suporta múltiplos exercícios (multi-anos) com tratamento de prejuízos acumulados.
+Suporta múltiplos exercícios, com tratamento de prejuízos acumulados.
 
 #### Art. 26, II — Custos e despesas não suportados
-Valor correspondente aos custos e despesas que a pessoa jurídica deixou de suportar em razão do ilícito. Exemplos: tributos não recolhidos, multas regulatórias evitadas, encargos não pagos.
+Custos e despesas que a PJ deixou de suportar em razão do ilícito (tributos não recolhidos, multas regulatórias evitadas, encargos não pagos).
 
 #### Art. 26, III — Acréscimo patrimonial por ação/omissão do Poder Público
-Acréscimo patrimonial que não teria ocorrido sem o ato lesivo. Exemplos: diferencial de taxa de juros subsidiada obtida indevidamente, uso de informação privilegiada, exploração indevida de atividade.
+Acréscimo que não teria ocorrido sem o ato lesivo (juros subsidiados indevidos, uso de informação privilegiada, exploração indevida de atividade).
 
 ---
 
-## 6. Etapa 2 — Agravante: Concurso de Atos Lesivos (Art. 22, I)
+## 13. Etapa 2 — Agravante: Concurso de Atos Lesivos (Art. 22, I)
 
-### Fundamento
-Agravante pelo **concurso de atos lesivos**, apurado pelo cruzamento entre:
+### Teoria
+Agravante de **até 4%** pelo **concurso de atos lesivos** (multiplicidade de condutas), apurado pelo cruzamento entre:
 - **Linhas:** quantidade de **condutas ilícitas** praticadas;
 - **Colunas:** número de **espécies distintas** de atos lesivos do Art. 5º da LAC.
 
@@ -246,21 +451,19 @@ Agravante pelo **concurso de atos lesivos**, apurado pelo cruzamento entre:
 | 6 condutas | 2,5% | 3,0% | 3,5% | 4,0% |
 | 7 ou mais condutas | 3,0% | 3,5% | 4,0% | 4,0% |
 
-> **Nota:** A célula "1 conduta / 1 espécie" é tecnicamente inaplicável como agravante (não há concurso), portanto marcada como "—".
+> **Nota:** A célula "1 conduta / 1 espécie" é inaplicável como agravante (não há concurso), marcada com "—".
 
 ### Como preencher
-Selecione na matriz a célula correspondente ao caso concreto. O sistema registra automaticamente o percentual da célula selecionada.
+Selecione na matriz a célula correspondente. Antes, mapeie com precisão as **condutas** e as **espécies** do Art. 5º (vide §4).
 
-### Exemplo prático
-
-Em caso de fraude em fiscalização tributária com múltiplos pagamentos dissimulados — por exemplo, R$ 450 mil via empresa "B", R$ 250 mil via empresa "C" e R$ 180 mil em móveis entregues a servidor público — há várias **condutas** (cada repasse pode ser contabilizado) e possivelmente mais de uma **espécie** de ato lesivo (fraude + oferta de vantagem indevida). O operador deve mapear com precisão as condutas e os tipos do Art. 5º antes de marcar a célula.
+> **Exemplo:** fraude em fiscalização tributária com múltiplos pagamentos dissimulados (R$ 450k via empresa B, R$ 250k via empresa C, R$ 180k em móveis para o auditor) — há várias condutas e possivelmente mais de uma espécie (oferta de vantagem, inc. I + obstrução da fiscalização, inc. V).
 
 ---
 
-## 7. Etapa 3 — Agravante: Ciência/Tolerância Hierárquica (Art. 22, II)
+## 14. Etapa 3 — Agravante: Ciência/Tolerância Hierárquica (Art. 22, II)
 
-### Fundamento
-Agravante pela **tolerância ou ciência do corpo diretivo ou gerencial** em relação ao ato lesivo. O percentual varia conforme a posição hierárquica do agente com conhecimento/tolerância, medida a partir do topo da estrutura.
+### Teoria
+Agravante de **até 3%** pela **tolerância ou ciência do corpo diretivo ou gerencial**. O percentual escala conforme a proximidade do agente ciente em relação ao topo da estrutura: quanto mais alto, maior o agravante — pois reflete falha de governança no comando da empresa.
 
 ### Tabela de percentuais
 
@@ -273,18 +476,15 @@ Agravante pela **tolerância ou ciência do corpo diretivo ou gerencial** em rel
 | Tolerância/ciência do 2º nível hierárquico (imediatamente abaixo) | 2,5% |
 | Tolerância/ciência dos sócios, acionistas ou administradores | 3,0% |
 
-> Quanto mais próximo do topo da estrutura estiver o agente com ciência/tolerância, maior o agravante.
-
 ### Evidências relevantes
-
-Mensagens eletrônicas (WhatsApp, e-mail), participação em reuniões onde o ilícito foi discutido, e-mails com o administrador ou contador em cópia — tudo isso pode demonstrar a ciência hierárquica. Documentos obtidos em operação policial com quebra de sigilo (telemático, telefônico ou bancário) têm especial peso probatório. Se as evidências apontam para o próprio **Administrador**, aplica-se o **teto de 3,0%**.
+Mensagens (WhatsApp, e-mail), participação em reuniões onde o ilícito foi tratado, e-mails com o administrador ou contador em cópia. Documentos de operação policial com quebra de sigilo (telemático, telefônico, bancário) têm peso probatório elevado. Ciência do próprio **Administrador** → teto de **3,0%**.
 
 ---
 
-## 8. Etapa 4 — Agravante: Interrupção e Descumprimento (Art. 22, III)
+## 15. Etapa 4 — Agravante: Interrupção e Descumprimento (Art. 22, III)
 
-### Fundamento
-O Art. 22, III contempla **três hipóteses distintas**. A calculadora avalia cada uma em abas separadas e aplica automaticamente o **maior percentual** entre as três.
+### Teoria
+Agravante de **até 4%**. O inciso contempla **três hipóteses distintas**; a calculadora avalia cada uma em abas e aplica automaticamente o **maior percentual** entre elas.
 
 ### Aba a) Interrupção no Fornecimento de Serviço Público
 
@@ -298,7 +498,7 @@ O Art. 22, III contempla **três hipóteses distintas**. A calculadora avalia ca
 
 ### Aba b) Interrupção na Execução de Obra Contratada
 
-Matriz bidimensional: **período de interrupção** (linhas) × **percentual residual da obra** (colunas):
+Matriz: **período de interrupção** (linhas) × **percentual residual da obra** (colunas):
 
 | Período ↓ / Residual → | < 10% | Até 30% | Até 50% | Até 70% | > 70% |
 |---|---|---|---|---|---|
@@ -321,58 +521,54 @@ Matriz bidimensional: **período de interrupção** (linhas) × **percentual res
 
 ---
 
-## 9. Etapa 5 — Agravante: Situação Econômica do Infrator (Art. 22, IV)
+## 16. Etapa 5 — Agravante: Situação Econômica do Infrator (Art. 22, IV)
 
-### Fundamento
-Aplica-se **1% fixo** quando a pessoa jurídica apresenta, **cumulativamente**, os três indicadores de boa situação econômica:
+### Teoria
+Aplica-se **1% fixo** quando a PJ apresenta, **cumulativamente**, três indicadores de boa saúde econômica — pois quem tem capacidade financeira e ainda assim delinque demonstra maior reprovabilidade.
 
 | Indicador | Fórmula |
 |---|---|
-| **Solvência Geral (SG)** superior a 1 | Ativo Total ÷ (Passivo Circulante + Passivo Não Circulante) |
-| **Liquidez Geral (LG)** superior a 1 | (Ativo Circulante + Ativo Realizável a Longo Prazo) ÷ (Passivo Circulante + Passivo Não Circulante) |
+| **Solvência Geral (SG) > 1** | Ativo Total ÷ (Passivo Circulante + Passivo Não Circulante) |
+| **Liquidez Geral (LG) > 1** | (Ativo Circulante + Ativo Realizável a Longo Prazo) ÷ (Passivo Circulante + Passivo Não Circulante) |
 | **Lucro Líquido positivo** | Último exercício anterior ao PAR |
 
 | Situação | % |
 |---|---|
-| Algum dos indicadores não é atendido | 0% |
-| Todos os três indicadores atendidos cumulativamente | 1,0% |
-
-> A calculadora disponibiliza uma **sub-calculadora integrada** para apurar os índices de solvência e liquidez a partir do Balanço Patrimonial e da DRE, caso esses dados não estejam pré-calculados.
+| Algum dos indicadores não atendido | 0% |
+| Todos os três atendidos cumulativamente | 1,0% |
 
 ### Ponto de atenção crítico: a cumulatividade é rigorosa
 
-O agravante do Art. 22, IV só se aplica se os **três** indicadores forem satisfeitos ao mesmo tempo. Basta **um único indicador abaixo do limiar** para que o percentual seja **zero**.
+Basta **um único indicador abaixo do limiar** para zerar o agravante.
 
-> **Exemplo:** SG = 1,67 (acima de 1 ✓), LG = 0,98 (abaixo de 1 ✗), Resultado = Lucro (✓). Como a **Liquidez Geral ficou abaixo de 1**, **não se aplica** o agravante do inciso IV — o percentual é **0%**, independentemente dos demais indicadores.
+> **Exemplo:** SG = 1,67 (✓) / LG = 0,98 (✗) / Lucro (✓). Como a **LG < 1**, **não se aplica** o agravante — percentual **0%**, independentemente dos demais. Erro frequente: verifique sempre os três índices antes de marcar 1%.
 
-Esse detalhe é frequente fonte de erro. Verifique sempre os três índices antes de marcar 1%.
+> A calculadora dispõe de **sub-calculadora integrada** para apurar SG e LG a partir do Balanço Patrimonial e da DRE.
 
 ---
 
-## 10. Etapa 6 — Agravante: Reincidência (Art. 22, V)
+## 17. Etapa 6 — Agravante: Reincidência (Art. 22, V)
 
-### Fundamento
-**Reincidência** é a ocorrência de nova infração tipificada como ato lesivo pelo Art. 5º da LAC — idêntica ou não à anterior — em **menos de cinco anos**, contados da **publicação do julgamento** da infração anterior.
+### Teoria
+**Reincidência** é a nova infração tipificada como ato lesivo (Art. 5º da LAC), idêntica ou não, em **menos de cinco anos** contados da **publicação do julgamento definitivo** anterior.
 
-> No caso de **acordo de leniência**, o prazo é contado a partir da data de celebração do acordo até cinco anos após a declaração de seu cumprimento.
+> Em caso de **acordo de leniência**, o prazo conta da celebração até cinco anos após a declaração de seu cumprimento.
 
 | Situação | % |
 |---|---|
 | Não — sem reincidência | 0% |
 | Sim — nova infração em menos de 5 anos do julgamento anterior | 3,0% |
 
-### Ponto de atenção: PAR em andamento não configura reincidência
+### Ponto de atenção: PAR em andamento não é reincidência
 
-**Estar respondendo a outro PAR em andamento na CGU ou em outra autoridade não configura reincidência**, pois reincidência pressupõe **julgamento anterior com trânsito em julgado**. Enquanto não houver decisão definitiva no processo anterior, o inciso V não pode ser aplicado.
-
-> Somente após a **publicação do julgamento** — e desde que a nova infração ocorra em menos de 5 anos desse marco — é que o agravante se configura.
+**Estar respondendo a outro PAR em andamento não configura reincidência**, pois esta pressupõe **julgamento anterior com trânsito em julgado**. Sem decisão definitiva no processo anterior, o inciso V não se aplica.
 
 ---
 
-## 11. Etapa 7 — Agravante: Valor dos Contratos com o Ente Lesado (Art. 22, VI)
+## 18. Etapa 7 — Agravante: Valor dos Contratos com o Ente Lesado (Art. 22, VI)
 
-### Fundamento
-Considera o **somatório dos contratos, convênios, acordos e demais instrumentos** mantidos ou pretendidos com o órgão/entidade lesado nos **anos da prática do ato lesivo**.
+### Teoria
+Agravante escalonado (**1% a 5%**) pelo **somatório dos contratos, convênios, acordos e demais instrumentos** mantidos ou pretendidos com o órgão/entidade lesado nos **anos da prática** do ato lesivo.
 
 ### Tabela de faixas
 
@@ -385,14 +581,14 @@ Considera o **somatório dos contratos, convênios, acordos e demais instrumento
 | Superior a R$ 50 milhões até R$ 250 milhões | 4,0% |
 | Superior a R$ 250 milhões | 5,0% |
 
-> **Dica operacional:** Consulte o **Portal da Transparência** (transparencia.gov.br) para levantar o histórico contratual da PJ com o órgão lesado no período da prática ilícita.
+> **Dica operacional:** consulte o **Portal da Transparência** (transparencia.gov.br) para levantar o histórico contratual da PJ com o órgão lesado no período.
 
 ---
 
-## 12. Etapa 8 — Atenuante: Não Consumação (Art. 23, I)
+## 19. Etapa 8 — Atenuante: Não Consumação (Art. 23, I)
 
-### Fundamento
-Aplica-se quando o ato lesivo **não chegou a produzir seus efeitos plenos** (tentativa).
+### Teoria
+Atenuante de **até 0,5%** quando o ato lesivo **não chegou a produzir seus efeitos plenos** (tentativa).
 
 | Situação | % |
 |---|---|
@@ -401,51 +597,53 @@ Aplica-se quando o ato lesivo **não chegou a produzir seus efeitos plenos** (te
 
 ---
 
-## 13. Etapa 9 — Atenuante: Ressarcimento e Devolução (Art. 23, II)
+## 20. Etapa 9 — Atenuante: Ressarcimento e Devolução (Art. 23, II)
 
-### Fundamento
-Atenuante de até **1,0%** pela **devolução espontânea da vantagem auferida** e/ou **ressarcimento dos danos** resultantes do ato lesivo, conforme Tabela 5 do Guia CGU.
+### Teoria
+Atenuante de **até 1,0%** pela **devolução espontânea da vantagem auferida** e/ou **ressarcimento dos danos**, conforme a Tabela 5 do Guia CGU.
 
 ### Tabela de situações
 
 | Situação | % |
 |---|---|
 | Ausência de devolução espontânea da vantagem e do ressarcimento dos danos | 0% |
-| Devolução da vantagem auferida **sem** ressarcimento dos danos; **ou** ressarcimento dos danos **sem** devolução da vantagem | −0,5% |
-| Devolução espontânea da vantagem auferida **e** ressarcimento dos danos | −1,0% |
-| Devolução da vantagem auferida e inexistência/falta de comprovação de danos; **ou** ressarcimento dos danos e inexistência/ausência de estimativa da vantagem | −1,0% |
+| Devolução da vantagem **sem** ressarcimento; **ou** ressarcimento **sem** devolução da vantagem | −0,5% |
+| Devolução espontânea da vantagem **e** ressarcimento dos danos | −1,0% |
+| Devolução da vantagem e inexistência/falta de comprovação de danos; **ou** ressarcimento e ausência de estimativa da vantagem | −1,0% |
 | Inexistência ou falta de comprovação de vantagem auferida e de danos | −1,0% |
 
-> A aplicação do **percentual máximo de 1,0%** exige a confirmação expressa de que houve devolução integral. Se desmarcada a confirmação de integralidade, o percentual aplicado é reduzido para 0,5%.
+> O **percentual máximo de 1,0%** exige confirmação expressa de devolução integral. Devolução parcial reduz o percentual para 0,5%.
 
 ---
 
-## 14. Etapa 10 — Atenuante: Colaboração (Art. 23, III)
+## 21. Etapa 10 — Atenuante: Colaboração (Art. 23, III)
 
-### Fundamento
-Atenuante pelo **grau de colaboração** da pessoa jurídica durante a investigação ou o PAR, reconhecida ainda que não haja admissão de responsabilidade. Cada condição acrescenta **0,5%**, com teto de **1,5%**.
+### Teoria
+Atenuante de **até 1,5%** pelo **grau de colaboração** da PJ, reconhecida ainda que não haja admissão de responsabilidade. Cada condição acrescenta **0,5%** (cumuláveis).
+
+> **Atenção:** a **mera entrega de documentos exigidos por lei não configura colaboração**. O percentual é fracionado conforme a **utilidade das informações adicionais** fornecidas.
 
 ### Condições (cumuláveis)
 
 | Condição | % |
 |---|---|
 | Ausência de colaboração | 0% |
-| Admitiu a prática do ato | +0,5% |
-| Forneceu elementos para a apuração | +0,5% |
-| Renunciou aos prazos processuais | +0,5% |
+| Fornecimento tempestivo de elementos/provas inéditas | +0,5% |
+| Facilitação de depoimentos e identificação de terceiros coautores | +0,5% |
+| Renúncia expressa e voluntária a prazos processuais meramente protelatórios | +0,5% |
 
-> As condições são **cumuláveis** (checkboxes independentes). O sistema soma automaticamente os percentuais marcados, respeitando o teto de 1,5%.
+> As condições são cumuláveis (checkboxes independentes); o sistema soma automaticamente, respeitando o teto de 1,5%.
 
-> **Distinção importante:** Admitir a infração sem assumir a responsabilidade jurídica (ou cooperar parcialmente com a apuração, fornecendo documentos mas sem integral colaboração) enquadra-se neste inciso. O inciso IV (Admissão Voluntária da Responsabilidade) é aplicável somente quando há reconhecimento expresso e formal da responsabilidade objetiva.
+> **Distinção importante:** admitir a infração sem assumir a responsabilidade jurídica, ou cooperar parcialmente, enquadra-se **neste inciso (III)**. O inciso IV (Admissão Voluntária) exige reconhecimento expresso e formal da responsabilidade objetiva.
 
 ---
 
-## 15. Etapa 11 — Atenuante: Admissão Voluntária (Art. 23, IV)
+## 22. Etapa 11 — Atenuante: Admissão Voluntária (Art. 23, IV)
 
-### Fundamento
-Atenuante pela **admissão voluntária da responsabilidade**, avaliada em dois eixos:
+### Teoria
+Atenuante de **até 2%** pela **admissão voluntária da responsabilidade objetiva**, avaliada em dois eixos:
 - **Conteúdo:** parcial ou total;
-- **Tempestividade:** antes da instauração do PAR, no prazo de defesa, no prazo das alegações finais, ou após as alegações finais.
+- **Tempestividade:** antes da instauração do PAR, no prazo de defesa (30 dias), no prazo das alegações finais, ou após.
 
 ### Tabela de percentuais
 
@@ -461,29 +659,26 @@ Atenuante pela **admissão voluntária da responsabilidade**, avaliada em dois e
 | Parcial — antes da instauração do PAR | −1,5% |
 | Total — antes da instauração do PAR | −2,0% |
 
-> Admissões mais abrangentes (total) e mais precoces (antes da instauração) recebem os maiores descontos.
+> Admissões mais abrangentes (total) e mais precoces (antes da instauração) recebem os maiores descontos. Note a relação direta com os marcos processuais descritos em §5.3.
 
 ---
 
-## 16. Etapa 12 — Atenuante: Programa de Integridade (Art. 23, V)
+## 23. Etapa 12 — Atenuante: Programa de Integridade (Art. 23, V)
 
-### Fundamento
-Atenuante de até **5%** pela **comprovada existência e efetiva aplicação** de programa de integridade, avaliado conforme o Capítulo V do Decreto nº 11.129/2022 e a IN CGU nº 1/2015.
+### Teoria
+Atenuante de **até 5%** pela **comprovada existência e efetiva aplicação** de programa de integridade (*compliance*), avaliado conforme o Capítulo V do Decreto nº 11.129/2022 e a IN CGU nº 1/2015.
 
-> **Regra temporal (Art. 23, parágrafo único, III):** o percentual máximo de 5% somente é atribuível quando o programa for **anterior** à prática do ato lesivo. Programas instituídos após o ato lesivo recebem percentual reduzido (bloco APJ-Posterior).
+> **Regra temporal (Art. 23, parágrafo único, III):** o percentual **máximo de 5%** somente é atribuível a programa **anterior** ao ato lesivo. Programas instituídos após o ato recebem percentual reduzido (bloco APJ-Posterior).
 
 ### Fórmula de cálculo
 
 ```
-Atenuante = [COI × MPI] + APJ
+Atenuante = [COI × MPI] + APJ          (teto: 5%)
 ```
 
-Onde:
 - **COI** — Cultura Organizacional e Instâncias de Governança;
 - **MPI** — Mecanismos, Políticas e Procedimentos de Integridade;
 - **APJ** — Atuação da Pessoa Jurídica em relação ao ato lesivo.
-
-O resultado é limitado ao **teto de 5%**.
 
 ### Fluxo
 
@@ -492,274 +687,200 @@ Existe programa de integridade?
 │
 ├─ NÃO (ou não comprovado) → 0%
 │
-└─ SIM → Abrir avaliação completa
-          (planilha estruturada CGU — Anexo IV)
-          → Resultado calculado automaticamente
-          → Atenuante apurada (com teto de 5%)
+└─ SIM → Abrir avaliação completa (planilha CGU — Anexo IV)
+          → Resultado calculado automaticamente (teto de 5%)
 ```
 
-> A avaliação do programa é realizada por meio de questionário estruturado com dezenas de perguntas organizadas nos blocos COI, MPI e APJ, com orientações sobre quais itens se aplicam (MPE, M&A, licitações etc.).
+> A avaliação usa questionário estruturado com dezenas de perguntas nos blocos COI, MPI e APJ, com orientações sobre quais itens se aplicam (MPE, M&A, licitações etc.). Um programa "de papel", sem efetividade comprovada, não gera atenuação.
 
 ---
 
-## 17. Etapa 13 — Publicação Extraordinária (Art. 6º, II, Lei nº 12.846/2013)
+## 24. Etapa 13 — Publicação Extraordinária
 
-### Fundamento
+### Teoria
 
 > **Art. 6º, II, da Lei nº 12.846/2013 c/c Art. 24 do Decreto nº 11.129/2022.**
 
-A **publicação extraordinária da decisão condenatória** é sanção autônoma, aplicada conjuntamente com a multa. A empresa condenada fica obrigada a publicar a decisão em:
-- Meios de comunicação de grande circulação na área onde praticou o ato;
-- No próprio estabelecimento da pessoa jurídica;
-- No sítio eletrônico da pessoa jurídica (quando houver).
+A **publicação extraordinária** é sanção **autônoma**, de caráter pedagógico e dissuasório, aplicada conjuntamente com a multa, **a expensas da própria PJ**. Deve ser realizada em:
+- Diário Oficial da União (DOU);
+- Sítio eletrônico oficial do órgão lesado;
+- Meio de comunicação de grande circulação local ou nacional (mínimo de 1 dia);
+- Painel visível ao público no próprio estabelecimento.
 
-O prazo é dosimetrado a partir da **Alíquota de Referência**, calculada após a apuração da multa final.
+O prazo de afixação é dosimetrado a partir da **Alíquota de Referência**, calculada após a multa final.
 
 ### Apuração da Alíquota de Referência
 
-O sistema aplica automaticamente um de dois cenários:
-
 | Cenário | Regra | Alíquota de Referência |
 |---|---|---|
-| **A — Regra Geral** | Multa final resultou da aplicação direta da alíquota preliminar (Arts. 22 e 23), sem interferência dos limites do Art. 25 | A própria **alíquota preliminar** da dosimetria |
-| **B — Regra de Exceção** | Multa final foi alterada pelos limites mínimo/máximo ou pela vantagem auferida (Art. 25) | Recalculada pela fórmula: **(Valor Final da Multa ÷ Faturamento Bruto) × 100** |
+| **A — Regra Geral** | Multa final resultou da aplicação direta da alíquota preliminar (Arts. 22/23), sem interferência dos limites do Art. 25 | A própria **alíquota preliminar** da dosimetria |
+| **B — Regra de Exceção** | Multa final foi alterada pelos limites mínimo/máximo ou pela vantagem auferida (Art. 25) | **(Valor Final da Multa ÷ Faturamento Bruto) × 100** |
 
-> A identificação do cenário correto e o cálculo da alíquota de referência são feitos **automaticamente** pelo sistema com base nos dados inseridos nas etapas anteriores. O instrumento processual deve registrar qual cenário se aplicou e a alíquota resultante.
+> A identificação do cenário e o cálculo são automáticos. O instrumento processual deve registrar qual cenário se aplicou e a alíquota resultante.
 
-### Proporcionalidade da publicação quando aplicados limites legais
+### Proporcionalidade quando aplicados limites legais
 
-Sempre que a multa for balizada diretamente pelos limites legais (piso ou teto do Art. 25), é obrigatório **recalcular a alíquota de proporção** para fins da publicação extraordinária:
+Sempre que a multa for balizada pelos limites (piso ou teto), **recalcula-se a alíquota de proporção** para a publicação:
 
 ```
 Alíquota de Proporção = (Multa Final ÷ Faturamento Bruto) × 100
 ```
 
-> **Exemplo:** Multa Final fixada no piso de R$ 90.000.000,00 sobre um faturamento de R$ 1.060.112.110,00 → Alíquota de Proporção ≈ **8,5%** → Prazo de publicação: **75 dias** (maior do que os 60 dias que corresponderiam aos 6% da alíquota original).
-
-Essa regra evita que a empresa beneficiada pelo piso legal (i.e., com multa elevada por força da vantagem auferida) receba um prazo de publicação menor do que a gravidade real da conduta merece.
+> **Exemplo:** Multa fixada no piso de R$ 90.000.000,00 sobre faturamento de R$ 1.060.112.110,00 → Alíquota ≈ **8,5%** → **75 dias** (maior do que os 60 dias correspondentes aos 6% originais). Isso evita que a empresa beneficiada pelo piso receba prazo de publicação menor do que a gravidade real merece.
 
 ---
 
-## 18. Cálculo Final e Verificação dos Limites Legais (Art. 25)
+## 25. Cálculo Final e Verificação dos Limites Legais (Art. 25)
 
-### Fórmula da multa bruta
+### Fórmula
 
 ```
-Multa Bruta = Faturamento Bruto × Índice de Dosimetria
-
 Índice de Dosimetria = Σ(Agravantes) − Σ(Atenuantes)
+Multa Bruta          = Faturamento Bruto × Índice de Dosimetria
 ```
 
-### Verificação dos limites legais (Art. 25, Decreto nº 11.129/2022)
-
-Após calculada a multa bruta, o sistema verifica os vínculos legais em ordem:
+### Verificação dos limites (em ordem)
 
 | Limite | Regra | Efeito |
 |---|---|---|
-| **Piso — Vantagem Auferida (Art. 25, I)** | A multa não pode ser inferior à vantagem auferida | Se multa bruta < vantagem auferida → multa = vantagem auferida |
-| **Teto — Vantagem Pretendida (Art. 25, II)** | A multa não pode exceder o maior valor entre a vantagem auferida e a pretendida | Se multa bruta > maior vantagem → multa = maior vantagem |
-| **Piso absoluto (R$ 6.000,00)** | Nas hipóteses do Art. 21 com faturamento ínfimo | Aplica-se quando multa calculada (inclusive por alíquota zero) for inferior a R$ 6 mil |
-| **Teto absoluto (Art. 6º, I)** | Faixa legal de 0,1% a 20% do faturamento | Verificado como parte da apuração de consistência |
+| **Piso — Vantagem Auferida (Art. 25, I)** | A multa não pode ser inferior à vantagem auferida | Se multa bruta < VA → multa = VA |
+| **Teto — Maior Vantagem (Art. 25, II)** | A multa não pode exceder o maior valor entre VA e VP | Se multa bruta > max(VA,VP) → multa = max(VA,VP) |
+| **Teto legal de 20% do faturamento (Art. 6º, I)** | O teto da sanção é 20% do faturamento bruto | Se multa > 20% do faturamento → reduz ao teto |
+| **Piso absoluto R$ 6.000,00** | Empresas sem faturamento rastreável | Aplica-se quando o cálculo resulta inferior a R$ 6 mil |
 
-### Regra de Ouro dos Limites
+### Regra de Ouro
 
-> **A multa jamais pode ser inferior à vantagem auferida.** Se o limite máximo legal (20% do faturamento) for inferior ao valor da vantagem auferida, prevalece o patamar mínimo (vantagem auferida). O máximo cede ao mínimo nesses casos.
+> **A multa jamais pode ser inferior à vantagem auferida.** Se o teto legal (20% do faturamento) for inferior à vantagem auferida, prevalece o patamar mínimo (a vantagem). O máximo cede ao mínimo.
 
-### Casos especiais na dosimetria
+### Casos especiais
 
 **Índice final negativo ou zero:**
-> Quando a soma das agravantes menos a soma das atenuantes resultar em valor negativo ou zero (Art. 25, §2º do Decreto nº 11.129/2022), a multa é fixada no **valor do piso mínimo** (vantagem auferida). O sistema informa automaticamente essa condição.
+> Pelo Art. 25, §2º, a multa é fixada no **piso mínimo** (vantagem auferida). Se a VA for zero ou não estimável, aplica-se o piso legal de R$ 6 mil nas hipóteses cabíveis.
 
 **Índice positivo mas multa menor que o piso:**
 > A multa é elevada ao valor da vantagem auferida.
 
-**Multa menor que R$ 6 mil (Art. 21 c/c Art. 25, §4º):**
-> Aplica-se o piso absoluto de R$ 6.000,00 para empresas-fantasma ou "noteiras" sem faturamento rastreável, mesmo que a alíquota resultante seja zero.
-
-### Estrutura do relatório de resultado
-
-O painel final exibe uma tabela completa com:
-
-```
-BASE DE CÁLCULO
-  Ano de Instauração do PAR
-  Faturamento Bruto
-  Vantagem Auferida (Ganho Real Obtido)
-  Vantagem Pretendida (Ganho Planejado/Visado)
-  ↳ Maior valor (referência para o teto)
-  ↳ Metodologia adotada
-
-AGRAVANTES — ART. 22
-  Art. 22, I  — Concurso de atos lesivos
-  Art. 22, II — Ciência/Tolerância hierárquica
-  Art. 22, III — Interrupção/Descumprimento (maior)
-    ↳ a) Serviço Público
-    ↳ b) Obra Contratada
-    ↳ c) Descumprimento Regulatório
-  Art. 22, IV — Situação econômica do infrator
-  Art. 22, V  — Reincidência
-  Art. 22, VI — Valor dos contratos com ente lesado
-  Soma das Agravantes (+)
-
-ATENUANTES — ART. 23
-  Art. 23, I  — Não Consumação
-  Art. 23, II — Ressarcimento / Devolução
-  Art. 23, III — Colaboração
-  Art. 23, IV — Admissão Voluntária
-  Art. 23, V  — Programa de Integridade
-    ↳ Detalhamento da avaliação
-  Soma das Atenuantes (−)
-
-RESULTADO DO CÁLCULO
-  Índice Final (Dosimetria)
-  Multa Bruta Calculada
-  Piso Legal (Vantagem Auferida)
-  Teto Legal (Maior Vantagem)
-  MULTA FINAL APLICÁVEL
-
-PUBLICAÇÃO EXTRAORDINÁRIA
-  Alíquota de Referência
-  Cenário Aplicado (A ou B)
-  Prazo da Publicação
-```
-
 ---
 
-## 19. Relatório Final e Impressão
+## 26. Relatório Final e Impressão
 
 ### Impressão do Relatório Final (PDF)
 
-O botão **"Imprimir Relatório Final (PDF)"** aciona o modo de impressão do navegador. O relatório impresso tem as seguintes características:
+O botão **"Imprimir Relatório Final (PDF)"** aciona o modo de impressão do navegador. O relatório:
 
-- **Fundo branco** — sem imagens de fundo (adequado para uso processual);
-- **Identidade visual institucional** simplificada (sem o logo decorativo superior);
-- Todos os parâmetros e percentuais utilizados na dosimetria;
+- **Fundo branco** — sem imagens de fundo (uso processual);
+- Identidade visual institucional simplificada (sem o logo decorativo superior);
+- Todos os parâmetros e percentuais da dosimetria;
 - Textos explicativos de cada agravante/atenuante aplicado;
-- Valor final proposto da multa e prazo da publicação extraordinária.
+- Valor final proposto e prazo da publicação extraordinária.
 
-> Para gerar o PDF, utilize a opção "Salvar como PDF" na janela de impressão do navegador (Ctrl+P ou Cmd+P).
+> Para gerar o PDF: Ctrl+P (ou Cmd+P) → "Salvar como PDF".
 
 ### Botões adicionais
 
 | Botão | Função |
 |---|---|
-| **Imprimir Avaliação PI** | Imprime somente a avaliação do programa de integridade (Etapa 12), sem o restante da dosimetria |
-| **Gerar Minuta de Relatório** | Gera um texto dissertativo em forma de minuta para inserção direta na peça processual |
-| **← Recomeçar** | Reinicia o formulário do zero (todos os campos são zerados) |
+| **Imprimir Avaliação PI** | Imprime somente a avaliação do programa de integridade (Etapa 12) |
+| **Gerar Minuta de Relatório** | Gera texto dissertativo técnico-jurídico para a peça processual |
+| **← Recomeçar** | Reinicia o formulário (zera todos os campos) |
 
 ### Minuta de Relatório
 
-A minuta gerada automaticamente produz um texto técnico-jurídico descrevendo:
-- A base de cálculo utilizada e sua fundamentação;
-- Cada agravante e atenuante aplicado, com o percentual e o dispositivo legal;
-- O índice final de dosimetria;
-- A verificação dos limites legais e o valor final proposto;
-- A sanção de publicação extraordinária e seu prazo.
-
-Esse texto pode ser copiado e inserido diretamente na instrução processual, sendo editável conforme as particularidades do caso.
+A minuta produz texto técnico-jurídico fluido descrevendo: a base de cálculo e sua fundamentação; cada agravante e atenuante com percentual e dispositivo legal; o índice final; a verificação dos limites e o valor final; a publicação extraordinária e seu prazo. As **justificativas** preenchidas em cada etapa são incorporadas naturalmente ao texto. Editável conforme as particularidades do caso.
 
 ---
 
-## 20. Fluxo Resumido do Cálculo
+## 27. Fluxo Resumido do Cálculo
 
 ```
 1. Faturamento Bruto (Base de Cálculo)
    └─ Regra geral: exercício anterior ao PAR (Art. 20)
    └─ Regra especial: último faturamento + IPCA (Art. 21)
    └─ Estimativa fundamentada: capital social, CNAE, NF-e (Art. 20, §1º, III)
+   └─ Dedução: SOMENTE tributos (não devoluções/vendas canceladas)
 
 2. Vantagens Auferida e Pretendida (Art. 26)
-   └─ Auferida → piso mínimo da multa
-   └─ Pretendida → referência para o teto máximo
+   └─ Auferida → piso mínimo │ Pretendida → referência do teto
 
 3. Agravantes (Art. 22, I a VI) → soma dos percentuais
    I   Concurso de atos lesivos        (0% a 4,0%)
    II  Ciência/Tolerância hierárquica  (0% a 3,0%)
    III Interrupção/Descumprimento      (0% a 4,0%)
-   IV  Situação econômica              (0% ou 1,0%) ← exige LG > 1 E SG > 1 E lucro
-   V   Reincidência                    (0% ou 3,0%) ← PAR em andamento NÃO configura
+   IV  Situação econômica              (0% ou 1,0%) ← exige SG>1 E LG>1 E lucro
+   V   Reincidência                    (0% ou 3,0%) ← PAR em andamento NÃO conta
    VI  Contratos com o ente lesado     (0% a 5,0%)
 
 4. Atenuantes (Art. 23, I a V) → soma dos percentuais
    I   Não consumação                  (0% ou 0,5%)
    II  Ressarcimento/Devolução         (0% a 1,0%)
-   III Colaboração                     (0% a 1,5%)
+   III Colaboração                     (0% a 1,5%) ← entrega legal obrigatória ≠ colaboração
    IV  Admissão voluntária             (0% a 2,0%)
-   V   Programa de integridade         (0% a 5,0%)
+   V   Programa de integridade         (0% a 5,0%) ← 5% só se anterior ao ato
 
 5. Índice Final = Σ Agravantes − Σ Atenuantes
-
 6. Multa Bruta = Faturamento × Índice Final
-
-7. Verificação dos Limites (Art. 25):
+7. Limites (Art. 25):
    └─ Piso: max(Multa Bruta, Vantagem Auferida)
-   └─ Teto: min(resultado, max(Vant. Auferida, Vant. Pretendida))
-   └─ Se índice ≤ 0: multa = piso mínimo (vantagem auferida)
-   └─ Piso absoluto: R$ 6.000,00 (empresas sem faturamento rastreável)
-
-8. Alíquota de Referência (para Publicação Extraordinária)
-   └─ Cenário A: alíquota preliminar da dosimetria (multa não foi limitada)
-   └─ Cenário B: (Multa Final ÷ Faturamento) × 100 (multa foi limitada pelo Art. 25)
-
-9. Prazo da Publicação Extraordinária
+   └─ Teto: min(resultado, max(VA, VP), 20% do faturamento)
+   └─ Se índice ≤ 0: multa = piso mínimo (VA)
+   └─ Piso absoluto: R$ 6.000,00
+8. Alíquota de Referência (Publicação):
+   └─ Cenário A: alíquota preliminar │ Cenário B: (Multa Final ÷ Faturamento) × 100
+9. Prazo da Publicação Extraordinária (30 a 120/135 dias)
 ```
 
 ---
 
-## 21. Casos Especiais e Situações Atípicas
+## 28. Casos Especiais e Situações Atípicas
 
-### Empresa sem defesa escrita ou sem balanço apresentado
+### 28.1 Empresa sem defesa escrita ou sem balanço
 
-Quando a PJ não apresenta defesa escrita nem documentação contábil, o operador deve **buscar dados em sistemas internos** (ECF, DIRF, DCTF, SPED, DAS, NF-e). Caso nenhum dado seja encontrado no exercício anterior, aplica-se a **retroação anual** prevista no Art. 21: recua-se exercício por exercício até encontrar um período com faturamento registrado, e então atualiza-se o valor pelo IPCA até o último dia do exercício anterior ao PAR.
+Buscar dados em sistemas internos (ECF, DIRF, DCTF, SPED, DAS, NF-e). Sem dados no exercício anterior, aplica-se a **retroação anual** (Art. 21): recua-se exercício por exercício até encontrar faturamento válido, atualizando pelo IPCA.
 
-> **Atenção:** A ausência de defesa não impede o prosseguimento da dosimetria nem desobriga o operador de buscar exaustivamente os dados antes de recorrer à estimativa.
+> A ausência de defesa (revelia) não impede a dosimetria nem desobriga o operador de buscar exaustivamente os dados.
 
-### Empresa com faturamento ínfimo ou zero histórico (piso de R$ 6.000,00)
+### 28.2 Empresa com faturamento ínfimo ou zero (piso de R$ 6.000,00)
 
-Quando a PJ é uma empresa "noteira" ou fantasma sem histórico de faturamento real, a alíquota resultante pode ser zero ou o valor calculado pode ser irrisório. Nesses casos, aplica-se o **piso absoluto de R$ 6.000,00** (Art. 20, §4º da Lei nº 12.846/2013). A multa final não pode ser inferior a esse valor.
+Para empresa "noteira"/fantasma sem histórico, a alíquota pode resultar zero ou valor irrisório. Aplica-se o **piso absoluto de R$ 6.000,00** (Art. 20, §4º, da Lei).
 
-### Estimativa fundamentada para empresa sem dados históricos
+### 28.3 Estimativa fundamentada
 
-Quando não há faturamento histórico real em nenhum sistema, a autoridade realiza uma **estimativa técnica fundamentada** com base nos elementos disponíveis (capital social, CNAE, folha salarial, notas fiscais de compras). O procedimento é:
+Procedimento: (1) levantar capital social/indicadores objetivos; (2) identificar CNAE e carga tributária estimada; (3) base histórica = indicador bruto − tributos estimados; (4) atualizar pelo IPCA.
 
-1. Levantar o capital social ou outros indicadores objetivos;
-2. Identificar o CNAE e a alíquota tributária estimada aplicável ao regime vigente;
-3. Calcular a base histórica líquida: Capital Social − Tributos Estimados;
-4. Atualizar pelo IPCA até dez do exercício anterior ao PAR.
+### 28.4 Retroação anual (Art. 21)
 
-### Sucessão Empresarial (Art. 4º da Lei nº 12.846/2013)
-
-| Evento | Responsabilidade | Base de cálculo da multa |
+| Exercício | Faturamento | Situação |
 |---|---|---|
-| **Alteração Contratual ou Transformação** | Continua na mesma PJ, inalterada | Faturamento da própria PJ |
-| **Incorporação ou Fusão** | A sucessora responde, limitada ao patrimônio transferido | Faturamento da **empresa sucessora** |
+| PAR − 1 | R$ 0,00 | Sem faturamento — retroage |
+| PAR − 2 | R$ 0,00 | Sem faturamento — retroage |
+| PAR − N | Valor encontrado | Base histórica → aplicar IPCA |
 
-> Quando o evento sucessório ocorre durante o andamento do PAR, o polo passivo é redirecionado na Nota de Indiciação para a empresa sucessora.
+### 28.5 Sucessão empresarial (Art. 4º)
 
-### Grupo Econômico (Art. 20, §2º do Decreto nº 11.129/2022)
+| Evento | Responsabilidade | Base de cálculo |
+|---|---|---|
+| Alteração contratual / transformação | Mesma PJ, inalterada | Faturamento da própria PJ |
+| Incorporação / fusão | Sucessora responde, limitada ao patrimônio transferido | Faturamento da **empresa sucessora** |
 
-Quando há prova de que diferentes empresas agiram em conluio ou fraude estruturada como se fossem uma única entidade, configura-se o grupo econômico para fins de dosimetria. As consequências são:
+> Se o evento ocorre durante o PAR, o polo passivo é redirecionado na Nota de Indiciação.
 
-- **Consolidação dos faturamentos brutos** de todas as PJs participantes para compor a base de cálculo;
+### 28.6 Grupo econômico (Art. 20, §2º)
+
+Provada a atuação em conluio/fraude estruturada como entidade única:
+- **Consolidação dos faturamentos brutos** de todas as PJs na base de cálculo;
 - Avaliação conjunta de agravantes e atenuantes;
 - Consideração da vantagem auferida por todo o esquema;
-- **Solidariedade:** todas as PJs integrantes respondem de forma integral pelo valor total da multa aplicada.
+- **Solidariedade:** todas respondem integralmente pelo valor total da multa.
 
 ---
 
-## 22. Estudos de Caso Comentados
-
-Esta seção apresenta casos práticos com a dosimetria completa, de modo a ilustrar a aplicação de cada etapa e os principais pontos de decisão.
-
----
+## 29. Estudos de Caso Comentados
 
 ### Caso I — Empresa Alimentos Sabor SA: Fraude em Fiscalização Tributária
 
-**Cenário:** PAR instaurado em 2025. CNPJ: 12.345.678/0001-90. Ato lesivo: fraude em fiscalização tributária. Provas obtidas via Operação Policial com quebra de sigilos telemático, telefônico e bancário. Benefício econômico estimado: R$ 90.000.000,00.
+**Cenário:** PAR instaurado em 2025. Ato lesivo: fraude em fiscalização tributária. Provas: Operação Policial com quebra de sigilos. Benefício econômico estimado: R$ 90.000.000,00.
 
-#### Passo 1 — Base de Cálculo
-
-Dados extraídos da ECF/DRE da Matriz (exercício 2024):
+#### Passo 1 — Base de Cálculo (ECF/DRE da Matriz, 2024)
 
 | Item | Valor |
 |---|---|
@@ -771,19 +892,18 @@ Dados extraídos da ECF/DRE da Matriz (exercício 2024):
 
 | Circunstância | Fundamentação | % |
 |---|---|---|
-| Art. 22, I — Concurso de atos | Múltiplos pagamentos dissimulados (R$ 450k via empresa B, R$ 250k via empresa C, R$ 180k em móveis para o auditor) | **3,5%** |
-| Art. 22, II — Ciência do corpo diretivo | WhatsApp do gerente financeiro citando o Administrador; e-mails copiados ao contador e auditor — ciência do próprio Administrador → teto | **3,0%** |
+| Art. 22, I — Concurso de atos | Pagamentos dissimulados (R$ 450k + R$ 250k + R$ 180k em móveis) | **3,5%** |
+| Art. 22, II — Ciência diretiva | WhatsApp/e-mails citando o Administrador → teto | **3,0%** |
 | Art. 22, III — Interrupção | Não aplicável | 0% |
-| Art. 22, IV — Situação econômica | SG = 1,67 ✓ / LG = 0,98 ✗ / Lucro ✓ — LG < 1, **não se aplica** | **0%** |
-| Art. 22, V — Reincidência | PAR anterior em andamento sem julgamento definitivo — não configura reincidência | **0%** |
-| Art. 22, VI — Contratos | Não pontuado no caso | 0% |
+| Art. 22, IV — Situação econômica | SG=1,67 ✓ / LG=0,98 ✗ / Lucro ✓ — LG<1, não se aplica | **0%** |
+| Art. 22, V — Reincidência | PAR anterior em andamento sem julgamento — não configura | **0%** |
+| Art. 22, VI — Contratos | Não pontuado | 0% |
 | **Total Agravantes** | | **6,5%** |
-| Art. 23, II — Ressarcimento | Comprovação parcial de devolução espontânea | **−0,5%** |
+| Art. 23, II — Ressarcimento | Comprovação parcial de devolução | **−0,5%** |
 | **Total Atenuantes** | | **−0,5%** |
 | **Alíquota Final** | 6,5% − 0,5% | **6,0%** |
 
 #### Passo 3 — Multa Preliminar
-
 ```
 R$ 1.060.112.110,00 × 6,0% = R$ 63.606.726,60
 ```
@@ -792,152 +912,117 @@ R$ 1.060.112.110,00 × 6,0% = R$ 63.606.726,60
 
 | Limite | Fórmula | Valor |
 |---|---|---|
-| **Mínimo** (maior entre os dois) | Vantagem Auferida (após refiscalização) | **R$ 60.000.000,00** |
+| **Mínimo** (maior) | Vantagem Auferida (após refiscalização) | **R$ 60.000.000,00** |
 | | 0,1% do Faturamento | R$ 1.060.112,11 |
-| **Máximo** (menor entre os dois) | 20% do Faturamento | **R$ 212.022.422,00** |
-| | 3× a Vantagem Pretendida (3 × R$ 90M) | R$ 270.000.000,00 |
+| **Máximo** (menor) | 20% do Faturamento | **R$ 212.022.422,00** |
+| | 3× Vantagem Pretendida (3 × R$ 90M) | R$ 270.000.000,00 |
 
 #### Passo 5 — Multa Final
-
-A Multa Preliminar de R$ 63.606.726,60 está entre o piso (R$ 60M) e o teto (R$ 212M) → **não sofre ajuste por limites**.
-
+A preliminar (R$ 63.606.726,60) está entre piso (R$ 60M) e teto (R$ 212M) → não sofre ajuste.
 > **Multa Final (Caso I): R$ 63.606.726,60**
 
 #### Passo 6 — Publicação Extraordinária
-
-Como a multa não foi limitada pelo Art. 25 (Cenário A), usa-se a alíquota da dosimetria (6,0%) → **60 dias de publicação**.
+Cenário A (multa não limitada) → alíquota 6,0% → **60 dias**.
 
 ---
 
-### Caso II — Mesmo Cenário, Vantagem Auferida Maior (Piso Forçado)
+### Caso II — Mesmo Cenário, Vantagem Auferida Integral (Piso Forçado)
 
-**Variante:** A vantagem auferida, após consolidação definitiva do auto de infração, permanece em **R$ 90.000.000,00** (sem redução pela refiscalização).
-
-#### Recálculo dos Limites
+**Variante:** vantagem auferida permanece em **R$ 90.000.000,00**.
 
 | Limite | Valor |
 |---|---|
-| **Piso** (vantagem auferida integral) | **R$ 90.000.000,00** |
-| **Teto** (20% do Faturamento) | R$ 212.022.422,00 |
+| Piso (vantagem auferida integral) | **R$ 90.000.000,00** |
+| Teto (20% do Faturamento) | R$ 212.022.422,00 |
 
-#### Ajuste da Multa Final
-
-A Multa Preliminar de R$ 63.606.726,60 ficou **abaixo do piso legal** (R$ 90M). A multa é elevada obrigatoriamente ao piso:
-
+A preliminar (R$ 63.606.726,60) ficou **abaixo do piso** → elevada obrigatoriamente:
 > **Multa Final (Caso II): R$ 90.000.000,00**
 
-#### Publicação Extraordinária com Proporção Recalculada (Cenário B)
-
-Como a multa foi alterada pelos limites, aplica-se o **Cenário B**:
-
+**Publicação (Cenário B):**
 ```
-Alíquota de Proporção = R$ 90.000.000,00 ÷ R$ 1.060.112.110,00 ≈ 8,5%
+Alíquota = R$ 90.000.000,00 ÷ R$ 1.060.112.110,00 ≈ 8,5% → 75 dias
 ```
-
-→ **75 dias de publicação** (maior do que os 60 dias do Caso I).
 
 ---
 
-### Caso III — Empresa Cítrica: Ausência de Defesa e Empresa Fantasma
+### Caso III — Empresa Cítrica: Sem Defesa, Empresa Fantasma
 
-**Cenário:** Empresa "noteira" sem faturamento nos exercícios recentes (2024 e 2025: zero). Única atividade rastreável: 2018 (jan–mar): R$ 53.500,00; 2017: R$ 560.000,00.
+**Cenário:** empresa-noteira sem faturamento recente (2024/2025 = zero). Histórico: 2018 (jan–mar) R$ 53.500,00; 2017 R$ 560.000,00.
 
-#### Retroação e Atualização (Art. 21)
-
-Os valores históricos são atualizados pelo IPCA até 31/12/2024 (Calculadora CGU):
-
-> **Base de Cálculo apurada e atualizada: R$ 74.588,17**
-
-#### Dosimetria
+**Retroação + IPCA (Art. 21):**
+> Base atualizada até 31/12/2024: **R$ 74.588,17**
 
 | Circunstância | % |
 |---|---|
 | Agravantes | 0% |
-| Art. 23, II — Inexistência de vantagem/dano comprovado | −1% |
-| **Alíquota Final** | **0%** (atenuantes superam agravantes) |
-
-#### Multa Preliminar
+| Art. 23, II — Inexistência de vantagem/dano | −1% |
+| **Alíquota Final** | **0%** |
 
 ```
-R$ 74.588,17 × 0% = R$ 0,00
+Multa Preliminar = R$ 74.588,17 × 0% = R$ 0,00
 ```
-
-#### Aplicação do Piso Absoluto (R$ 6.000,00)
-
-Por força do Art. 20, §4º da Lei nº 12.846/2013, a multa não pode ser inferior a R$ 6.000,00:
-
+Piso absoluto (Art. 20, §4º):
 > **Multa Final (Caso III): R$ 6.000,00**
-
-#### Publicação Extraordinária — Proporção
-
 ```
-Alíquota de Proporção = R$ 6.000,00 ÷ R$ 74.588,17 ≈ 8,0%
+Alíquota de Proporção = R$ 6.000,00 ÷ R$ 74.588,17 ≈ 8,0% → 75 dias
 ```
-
-→ **75 dias de publicação**.
 
 ---
 
 ### Caso IV — Empresa Gasparzinho: Estimativa Fundamentada
 
-**Cenário:** Empresa sem qualquer dado de faturamento histórico nos sistemas oficiais. Apenas o capital social é conhecido: R$ 50.000,00 (2017). CNAE: 6204-0/00 (Consultoria em TI). Sede: Não-Me-Toque/RS. Regime: Lucro Presumido.
-
-#### Cálculo da Estimativa
+**Cenário:** sem dados de faturamento. Capital social (2017): R$ 50.000,00. CNAE 6204-0/00 (Consultoria em TI). Lucro Presumido.
 
 | Item | Valor |
 |---|---|
-| Capital Social (2017) — proxy de faturamento | R$ 50.000,00 |
-| (−) Tributos Estimados: PIS (0,65%) + COFINS (3%) + ISS (3%) = **6,65%** | (R$ 3.325,00) |
-| **Base de Cálculo Histórica (2017)** | **R$ 46.675,00** |
+| Capital Social 2017 (proxy) | R$ 50.000,00 |
+| (−) Tributos estimados (6,65%) | (R$ 3.325,00) |
+| Base Histórica (2017) | R$ 46.675,00 |
 | Atualização IPCA até dez/2024 | **≈ R$ 67.417,43** |
 
-> **Base de Cálculo oficial: R$ 67.417,43**
-
-A partir desse valor, a dosimetria (agravantes e atenuantes) segue o fluxo padrão.
+> **Base de Cálculo oficial: R$ 67.417,43** — a partir dela, segue a dosimetria padrão.
 
 ---
 
-## 23. Perguntas Frequentes e Pontos de Atenção
+## 30. Perguntas Frequentes e Pontos de Atenção
 
 ### O sistema é validado por órgão oficial?
-A calculadora foi desenvolvida pela Corregedoria da Receita Federal do Brasil como ferramenta de apoio à dosimetria. Os percentuais e critérios implementados refletem o Decreto nº 11.129/2022, a IN CGU nº 1/2015 e o Guia CGU. O resultado gerado é uma **proposta fundamentada**, sujeita à deliberação da autoridade competente.
+Desenvolvido pela Corregedoria da RFB como ferramenta de apoio. Os parâmetros refletem o Decreto nº 11.129/2022, a IN CGU nº 1/2015 e o Guia CGU. O resultado é **proposta fundamentada**, sujeita à deliberação da autoridade competente.
 
 ### Por que a calculadora funciona offline?
-A ferramenta foi projetada para ser utilizada em ambientes com restrições de acesso à internet (sistemas de processo digital, redes corporativas isoladas). Nenhum dado inserido é transmitido a servidores externos.
+Projetada para ambientes com restrição de internet. Nenhum dado é transmitido a servidores externos.
+
+### Posso deduzir devoluções e vendas canceladas da base de cálculo?
+**Não.** Para fins de PAR, **apenas os tributos incidentes sobre vendas** (PIS, COFINS, IPI, ICMS, ISS) têm previsão legal de exclusão. Devoluções, abatimentos e vendas canceladas, embora deduzidos na DRE contábil, **não** reduzem a base de cálculo da multa.
 
 ### Como tratar a atualização pelo IPCA?
-A calculadora não realiza a atualização automática pelo IPCA por ser offline. Quando necessário (Art. 21 — ausência de faturamento no exercício anterior), o valor deve ser corrigido previamente usando a **Calculadora do Cidadão** do Banco Central (bcb.gov.br) ou a **Calculadora de Multa da CGU** (epad.cgu.gov.br). O valor corrigido é então inserido no campo correspondente.
+Por ser offline, a calculadora não atualiza automaticamente. Corrija previamente na Calculadora do Cidadão (BCB) ou na Calculadora de Multa da CGU e informe o valor corrigido.
 
 ### O que acontece se o índice de dosimetria for negativo?
-Quando a soma das atenuantes supera a soma das agravantes, o índice fica negativo. Nos termos do Art. 25, §2º do Decreto nº 11.129/2022, a multa é fixada **no valor mínimo**, que corresponde à **vantagem auferida**. Se a vantagem auferida for zero ou não estimável, aplica-se o piso legal de R$ 6 mil nas hipóteses cabíveis.
+Pelo Art. 25, §2º, a multa é fixada no valor mínimo (vantagem auferida). Se a VA for zero/não estimável, aplica-se o piso legal de R$ 6 mil nas hipóteses cabíveis.
 
-### Como distinguir vantagem auferida de pretendida na prática?
-- **Auferida:** valor efetivamente recebido, economizado ou patrimonializado pela PJ em decorrência do ato ilícito — verificado nos documentos e extratos do caso;
-- **Pretendida:** valor planejado que seria obtido caso o ato ilícito fosse plenamente executado — inferido de proposta, contrato, projeção ou estimativa.
-
-### O Art. 22, IV (situação econômica) se aplica quando apenas a Liquidez Geral está abaixo de 1?
-**Não.** O agravante do Art. 22, IV exige que **todos os três indicadores** sejam satisfeitos cumulativamente: Solvência Geral > 1, Liquidez Geral > 1 e Lucro Líquido positivo. Se a Liquidez Geral for 0,98 (abaixo de 1), o percentual é **zero**, mesmo que SG e lucro sejam favoráveis.
+### O Art. 22, IV se aplica quando apenas a Liquidez Geral está abaixo de 1?
+**Não.** Exige os três indicadores cumulativamente (SG > 1, LG > 1 e lucro). LG = 0,98 zera o agravante.
 
 ### Responder a outro PAR em andamento configura reincidência?
-**Não.** A reincidência (Art. 22, V) exige que haja uma **decisão definitiva anterior** (trânsito em julgado ou acordo de leniência declarado cumprido). Estar respondendo a outro PAR em andamento, sem julgamento concluído, **não configura reincidência** para fins de agravamento.
+**Não.** A reincidência exige decisão definitiva anterior (trânsito em julgado ou leniência cumprida).
+
+### A entrega de documentos exigidos por lei conta como colaboração?
+**Não.** A mera entrega do que a lei já obriga não configura colaboração (Art. 23, III). Conta a utilidade de informações/provas **adicionais e inéditas**.
 
 ### O programa de integridade posterior ao ato lesivo pode atenuar?
-Sim, mas com percentual reduzido. O **bloco APJ-Posterior** da avaliação do programa de integridade avalia as medidas corretivas adotadas pela PJ após a descoberta do ato lesivo. Apenas o **percentual máximo de 5%** é exclusivo de programas preexistentes (Art. 23, parágrafo único, III).
+Sim, mas com percentual reduzido (bloco APJ-Posterior). O máximo de 5% é exclusivo de programas preexistentes.
 
-### Como funciona a publicação extraordinária quando a multa é ajustada pelos limites legais?
-Quando a multa final é alterada para se adequar ao piso ou teto do Art. 25 (Cenário B), a alíquota de referência para calcular o prazo de publicação deve ser **recalculada proporcionalmente**: (Multa Final ÷ Faturamento Bruto) × 100. Isso garante que o prazo de publicação reflita a gravidade proporcional real da sanção, e não a alíquota da dosimetria que foi superada pelo limite legal.
+### Como funciona a publicação quando a multa é ajustada pelos limites?
+Aplica-se o Cenário B: alíquota de referência = (Multa Final ÷ Faturamento) × 100, garantindo que o prazo reflita a gravidade proporcional real.
+
+### Qual o efeito do acordo de leniência na dosimetria?
+Reduz **até 2/3** da multa, **isenta** da publicação extraordinária e da proibição de receber incentivos públicos. Exige admissão integral da responsabilidade e cooperação plena.
 
 ### Como gerar o PDF para o processo?
-1. Preencha todas as etapas até o resultado final;
-2. Clique em **"Imprimir Relatório Final (PDF)"**;
-3. Na janela do navegador, selecione **"Salvar como PDF"** como destino de impressão;
-4. Ajuste a escala se necessário (recomendado: 80–100%);
-5. Salve o arquivo com nome identificador do PAR (ex.: `Multa_PAR_2024_001.pdf`).
-
-### O que é a célula D15 citada na calculadora?
-Refere-se à célula da planilha de referência CGU (Anexo IV do Guia de Responsabilização), usada como parâmetro de equivalência nas fórmulas do bloco de avaliação do programa de integridade. A calculadora replica essa lógica internamente.
+Preencha todas as etapas → "Imprimir Relatório Final (PDF)" → "Salvar como PDF" → escala 80–100% → salve com nome identificador do PAR.
 
 ---
 
-*Manual elaborado com base no conteúdo e na lógica da Calculadora de Multa PAR — Corregedoria da Receita Federal do Brasil.*
+*Manual teórico-prático elaborado com base no conteúdo do Treinamento em PAR da Corregedoria da Receita Federal do Brasil e na lógica da Calculadora de Multa PAR.*
 *Fundamentos: Lei nº 12.846/2013; Decreto nº 11.129/2022; IN CGU nº 1/2015; Guia CGU de Responsabilização de Pessoas Jurídicas; Manual Prático de Cálculo de Multa da CGU; Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU.*

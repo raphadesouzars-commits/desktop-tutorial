@@ -263,6 +263,30 @@ def page_break():
     doc.add_page_break()
 
 
+def part_divider(title, subtitle=''):
+    """Página divisória de parte do manual."""
+    p = doc.add_paragraph()
+    p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    p.paragraph_format.space_before = Pt(120)
+    run = p.add_run(title)
+    run.font.name = 'Arial'; run.font.bold = True; run.font.size = Pt(26)
+    run.font.color.rgb = AZUL_ESCURO
+    tbl_l = doc.add_table(rows=1, cols=1)
+    tbl_l.alignment = WD_TABLE_ALIGNMENT.CENTER
+    cl = tbl_l.rows[0].cells[0]
+    set_cell_bg(cl, VERDE)
+    cl.paragraphs[0].add_run(' ')
+    cl.width = Cm(10)
+    if subtitle:
+        ps = doc.add_paragraph()
+        ps.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        ps.paragraph_format.space_before = Pt(20)
+        rs = ps.add_run(subtitle)
+        rs.font.name = 'Arial'; rs.font.size = Pt(13); rs.italic = True
+        rs.font.color.rgb = AZUL_MEDIO
+    page_break()
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  CAPA
 # ══════════════════════════════════════════════════════════════════════════════
@@ -309,6 +333,149 @@ r_sub2.font.name = 'Arial'; r_sub2.font.size = Pt(11)
 r_sub2.font.color.rgb = CINZA_TEXTO
 
 page_break()
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  APRESENTAÇÃO
+# ══════════════════════════════════════════════════════════════════════════════
+heading1('APRESENTAÇÃO')
+body('Este manual tem dupla finalidade. Na Parte I, apresenta os fundamentos teóricos do Processo Administrativo de Responsabilização (PAR): o fenômeno da corrupção e suas distorções, a origem e a lógica da Lei Anticorrupção, os sujeitos alcançados, os atos lesivos, o rito processual, o julgamento, os recursos, o acordo de leniência e os cadastros de sanções. Na Parte II, ensina a dosimetria da multa e o uso prático da Calculadora de Multa PAR, etapa por etapa, com fórmulas, tabelas legais, casos especiais e estudos de caso comentados.')
+body('O operador que domina apenas a mecânica da calculadora, sem compreender a teoria que a sustenta, corre o risco de aplicar percentuais sem o necessário juízo crítico. Por isso, recomenda-se a leitura integral da Parte I antes de manusear a ferramenta descrita na Parte II.')
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  PARTE I — FUNDAMENTOS TEÓRICOS
+# ══════════════════════════════════════════════════════════════════════════════
+part_divider('PARTE I', 'Fundamentos Teóricos do PAR')
+
+# ── I.1 A CORRUPÇÃO E SUAS DISTORÇÕES ─────────────────────────────────────────
+heading1('1. A CORRUPÇÃO E SUAS DISTORÇÕES')
+body('Compreender a finalidade da Lei Anticorrupção exige, antes, compreender o mal que ela combate. A metáfora tradicional de que "a corrupção seria o lubrificante da burocracia" — sugerindo que a propina apenas agilizaria processos emperrados — é falsa e perigosa. A corrupção não lubrifica; ela corrói.')
+heading2('1.1 Tipos de Corrupção')
+tabela(['Tipo', 'Descrição', 'Consequência'],
+    [
+        ['"Speedy money" (dinheiro de velocidade)', 'Propina paga para acelerar processos burocráticos; o agente público usa seu poder para remover entraves que ele mesmo cria', 'Gera tolerância generalizada, fomenta novas propinas e acentua as distorções econômicas'],
+        ['"Rent seeking" (busca de renda)', 'Atuação em licenças ou mercados escassos; a ideia de que "só o eficiente paga propina" é falsa', 'Confere vantagem competitiva exclusiva a quem detém a melhor relação espúria com agentes corruptos'],
+    ],
+    col_widths=[3.5, 8, 5])
+heading2('1.2 Distorções Econômicas e Sociais')
+bullet('Seleção adversa: nem sempre vencem as empresas mais eficientes, mas as dispostas a corromper;')
+bullet('Alocação ineficiente de recursos: desperdício em obras e serviços superfaturados, desnecessários e de qualidade inferior;')
+bullet('Redução da competição: empresas honestas afastam-se dos "pseudoleilões" públicos, gerando má alocação de talentos.')
+nota('A dosimetria não é mero exercício aritmético. Cada agravante e atenuante traduz, em percentual, o grau de reprovabilidade da conduta à luz desses danos sociais.')
+
+# ── I.2 A LEI ANTICORRUPÇÃO ────────────────────────────────────────────────────
+heading1('2. A LEI ANTICORRUPÇÃO: ORIGEM E CARACTERÍSTICAS')
+heading2('2.1 Contexto Histórico e Pressão Internacional')
+body('A Lei nº 12.846/2013 nasceu de compromissos internacionais: a Convenção da OCDE sobre o Combate da Corrupção de Funcionários Públicos Estrangeiros, a Convenção da ONU contra a Corrupção (Convenção de Mérida) e a Convenção da OEA.')
+body('Historicamente, o foco criminal punia apenas a pessoa física do corruptor e do corrompido. A Lei Anticorrupção muda o paradigma para responsabilizar diretamente a pessoa jurídica — ou seja, atinge o lado da oferta da corrupção. As manifestações de junho de 2013 aceleraram sua sanção.')
+heading2('2.2 Características Centrais')
+tabela(['Característica', 'Conteúdo'],
+    [
+        ['Responsabilidade objetiva da PJ', 'Dispensa dolo ou culpa. Basta o nexo causal entre o ato lesivo e o benefício (direto ou indireto) auferido pela empresa'],
+        ['Esfera administrativa e cível', 'A responsabilização ocorre de forma independente e simultânea em ambas as esferas'],
+        ['Independência das instâncias', 'A punição da PJ não exclui a responsabilidade individual de dirigentes, administradores ou de qualquer pessoa física'],
+    ],
+    col_widths=[4.5, 12])
+nota('Como a responsabilidade é objetiva, o PAR não discute a "intenção" da empresa. A Parte II pressupõe que o mérito (ato lesivo + nexo causal) já foi reconhecido; a dosimetria apenas quantifica a sanção.')
+
+# ── I.3 SUJEITOS PASSIVOS ──────────────────────────────────────────────────────
+heading1('3. SUJEITOS PASSIVOS E ALCANCE DA LEI')
+heading2('3.1 A Quem se Aplica (Art. 1º, parágrafo único, da LAC)')
+body('A lei alcança as seguintes entidades, personificadas ou não, de direito ou de fato:')
+bullet('Sociedades empresárias e sociedades simples;')
+bullet('Fundações e associações;')
+bullet('Sociedades estrangeiras com sede, filial ou representação no território brasileiro.')
+heading2('3.2 Sucessão Empresarial (Art. 4º)')
+body('A responsabilidade subsiste em caso de alteração contratual, transformação, incorporação, fusão ou cisão.')
+tabela(['Evento', 'Efeito na responsabilidade'],
+    [
+        ['Alteração contratual / transformação', 'A PJ é a mesma — responsabilidade inalterada'],
+        ['Incorporação / fusão', 'Responsabilidade da sucessora restrita ao limite do patrimônio transferido, salvo simulação ou fraude evidente'],
+    ],
+    col_widths=[5, 12])
+heading2('3.3 Desconsideração da Personalidade Jurídica (Art. 14)')
+body('A personalidade jurídica pode ser desconsiderada quando usada com abuso de direito para facilitar, encobrir ou dissimular o ato lesivo, ou quando houver confusão patrimonial. Os efeitos das sanções estendem-se aos sócios e administradores com poderes de gerência.')
+
+# ── I.4 ATOS LESIVOS ───────────────────────────────────────────────────────────
+heading1('4. OS ATOS LESIVOS À ADMINISTRAÇÃO PÚBLICA (Art. 5º)')
+body('A correta identificação da espécie e do número de condutas é essencial para o agravante de concurso de atos lesivos (Art. 22, I).')
+heading2('4.1 Vantagens Indevidas e Fraudes Gerais')
+bullet('Art. 5º, I — Prometer, oferecer ou dar vantagem indevida a agente público ou a terceiro a ele relacionado;')
+bullet('Art. 5º, II — Financiar, custear, patrocinar ou subvencionar a prática dos atos ilícitos;')
+bullet('Art. 5º, III — Utilizar interposta pessoa para ocultar interesses ou identidade dos beneficiários.')
+heading2('4.2 Licitações e Contratos (Art. 5º, IV)')
+bullet('Fraudar ou frustrar o caráter competitivo de licitação;')
+bullet('Impedir, perturbar ou fraudar atos do procedimento licitatório;')
+bullet('Afastar licitante por fraude ou vantagem; fraudar licitação ou contrato dela decorrente;')
+bullet('Criar PJ de modo fraudulento para participar de licitação ou contrato;')
+bullet('Obter vantagem indevida de modificações/prorrogações; manipular o equilíbrio econômico-financeiro.')
+heading2('4.3 Obstrução à Fiscalização (Art. 5º, V)')
+body('Dificultar investigação ou fiscalização de órgãos, entidades ou agentes públicos, ou intervir em sua atuação — inclusive agências reguladoras e órgãos de fiscalização do sistema financeiro.')
+nota('No Art. 22, I, as colunas representam o número de espécies distintas de atos do Art. 5º; as linhas, o número de condutas. Oferta de vantagem (inc. I) + obstrução (inc. V) = duas espécies distintas.')
+
+# ── I.5 O RITO DO PAR ──────────────────────────────────────────────────────────
+heading1('5. O PROCESSO ADMINISTRATIVO DE RESPONSABILIZAÇÃO — RITO')
+body('O PAR divide-se em duas macrofases: a Fase Interna (admissibilidade e investigação) e a Fase Externa (contraditório e julgamento).')
+heading2('5.1 Macrofase I — Admissibilidade e Investigação Preliminar')
+bullet('Notícia do fato: denúncias, auditorias, representações fiscais ou operações policiais;')
+bullet('Investigação Preliminar (IP): inquisitorial e sigilosa; busca indícios de autoria e materialidade;')
+bullet('Juízo de admissibilidade: arquivamento fundamentado, diligências/IP complementar, ou instauração do PAR.')
+heading2('5.2 Macrofase II — Fase Externa e Comissão')
+bullet('Instauração por Portaria publicada no DOU; comissão de 2 ou mais servidores estáveis;')
+bullet('Prazo padrão de 180 dias, prorrogável mais de uma vez (Enunciado CGU nº 24/2019);')
+bullet('Instrução: provas documentais, testemunhais, perícias e requisição de informações.')
+heading2('5.3 Indiciação, Citação e Defesa')
+tabela(['Ato', 'Descrição'],
+    [
+        ['Nota de Indiciação', 'Peça técnica que individualiza e descreve as condutas, capitulando os atos lesivos com base nas provas'],
+        ['Citação', 'Intimação formal para defesa; prazo de Defesa Escrita de 30 dias da citação'],
+        ['Revelia', 'Se a PJ citada não se defende, prossegue o processo, assegurado o direito de intervir depois'],
+    ],
+    col_widths=[4, 13])
+nota('A tempestividade da admissão de responsabilidade (Art. 23, IV) é medida em relação a esses marcos: antes da instauração, no prazo de defesa (30 dias), nas alegações finais, ou após.')
+
+# ── I.6 JULGAMENTO ─────────────────────────────────────────────────────────────
+heading1('6. JULGAMENTO, SANÇÕES E FASE RECURSAL')
+heading2('6.1 Relatório Final e Julgamento')
+body('Concluída a instrução, a comissão elabora Relatório Final, opinando sobre a ocorrência do ato lesivo, a responsabilidade da PJ e a proposta de dosimetria — é aqui que a Calculadora é instrumental. O processo segue para parecer jurídico obrigatório (controle de legalidade) e julgamento.')
+nota('No âmbito da Receita Federal, a competência para julgar o PAR é delegada ao Corregedor da RFB (no âmbito federal geral, a competência máxima é do Ministro de Estado).')
+heading2('6.2 Sanções Aplicáveis (cumulativas)')
+bullet('Multa pecuniária — conforme a dosimetria (Parte II);')
+bullet('Publicação extraordinária da decisão condenatória — a expensas da PJ: DOU, sítio do órgão lesado, mídia de grande circulação (mín. 1 dia) e painel no estabelecimento (30 a 120 dias).')
+heading2('6.3 Fase Recursal')
+tabela(['Item', 'Regra'],
+    [
+        ['Pedido de Reconsideração', 'Prazo de 10 dias da publicação no DOU'],
+        ['Efeito', 'Suspensivo — suspende os efeitos da decisão'],
+        ['Cumprimento', 'Confirmada a condenação, 30 dias para pagar a multa e comprovar a publicação'],
+    ],
+    col_widths=[5, 12])
+
+# ── I.7 LENIÊNCIA E CADASTROS ──────────────────────────────────────────────────
+heading1('7. ACORDO DE LENIÊNCIA E CADASTROS DE SANÇÕES')
+heading2('7.1 Acordo de Leniência (Art. 16)')
+body('A autoridade máxima do órgão pode celebrar acordo com a PJ que colabore efetivamente. Requisitos cumulativos:')
+bullet('Ser a primeira a manifestar interesse em cooperar (quando aplicável o critério de precedência);')
+bullet('Cessação completa do envolvimento na infração a partir da propositura;')
+bullet('Admissão integral da responsabilidade objetiva;')
+bullet('Cooperação plena, contínua e de boa-fé.')
+body('Benefícios:')
+bullet('Redução de até 2/3 do valor da multa aplicável;')
+bullet('Isenção da publicação extraordinária;')
+bullet('Isenção da proibição de receber incentivos, subsídios, subvenções, doações ou empréstimos públicos.')
+nota('Na leniência, o prazo de 5 anos da reincidência (Art. 22, V) conta da celebração do acordo até cinco anos após a declaração de seu cumprimento.')
+heading2('7.2 Cadastros Nacionais de Sanções')
+tabela(['Cadastro', 'Finalidade'],
+    [
+        ['CGU-PJ / Siasg', 'Controle interno dos processos de responsabilização de entes privados'],
+        ['CEIS — Empresas Inidôneas e Suspensas', 'Consolida sanções de restrição ao direito de licitar e contratar de todos os entes federativos'],
+        ['CNEP — Empresas Punidas', 'Dá publicidade às sanções aplicadas com base na Lei nº 12.846/2013'],
+    ],
+    col_widths=[5.5, 11])
+
+# ══════════════════════════════════════════════════════════════════════════════
+#  PARTE II — DOSIMETRIA E USO DA CALCULADORA
+# ══════════════════════════════════════════════════════════════════════════════
+part_divider('PARTE II', 'Dosimetria e Uso da Calculadora')
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  1. INTRODUÇÃO E FINALIDADE
@@ -396,7 +563,18 @@ tabela(
     ],
     col_widths=[5, 8, 4]
 )
-nota('Como a calculadora funciona offline, a atualização pelo IPCA (Art. 21) deve ser realizada previamente na Calculadora do Cidadão (BCB/IPCA), disponível no site do Banco Central do Brasil. Informe o valor já corrigido no campo correspondente.')
+heading2('4.4 Deduções: Atenção à DRE')
+body('São dedutíveis apenas os tributos incidentes sobre as vendas: PIS, COFINS, IPI, ICMS e ISS.')
+nota('Ponto crítico: na DRE contábil, a receita bruta é deduzida também de abatimentos, devoluções e vendas canceladas. Para fins de PAR, contudo, APENAS os tributos têm previsão legal de exclusão. Devoluções e vendas canceladas NÃO reduzem a base de cálculo da multa. Atenção redobrada ao importar números diretamente da DRE.')
+heading2('4.5 Critérios de Exceção (faturamento não apurável)')
+tabela(['Ordem', 'Critério', 'Fundamento'],
+    [
+        ['1º', 'Faturamento bruto do último ano com receita, atualizado pelo IPCA', 'Art. 21'],
+        ['2º', 'Faturamento estimado: mercado, capital social, dados setoriais fundamentados', 'Art. 20, §1º, III'],
+        ['3º', 'Valor absoluto fixo legal: multa de R$ 6 mil a R$ 60 milhões', 'Art. 6º, I, da Lei'],
+    ],
+    col_widths=[2, 11, 4])
+nota('Como a calculadora funciona offline, a atualização pelo IPCA (Art. 21) deve ser realizada previamente na Calculadora do Cidadão (BCB/IPCA) ou na Calculadora de Multa da CGU. Informe o valor já corrigido no campo correspondente.')
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  5. ETAPA 1 — VANTAGENS AUFERIDA E PRETENDIDA
@@ -569,6 +747,7 @@ tabela(['Condição (cumulável)', '%'],
         ['Renunciou aos prazos processuais',  '+0,5%'],
     ],
     cor_header=VERDE_ATEN, col_widths=[13, 3])
+nota('A mera entrega de documentos exigidos por lei NÃO configura colaboração. Conta a utilidade de informações e provas adicionais e inéditas. Admitir o ato sem assumir a responsabilidade jurídica enquadra-se neste inciso (III); o inciso IV exige reconhecimento formal da responsabilidade objetiva.')
 
 heading2('7.4 Art. 23, IV — Admissão Voluntária da Responsabilidade', cor=VERDE_ATEN)
 body('Avaliada em dois eixos: conteúdo (parcial/total) × tempestividade (4 momentos processuais).')
