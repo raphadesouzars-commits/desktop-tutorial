@@ -361,10 +361,17 @@ var CONDUTAS = [];
 // Mapeamento de resultId → eixo temático para detecção de cumulatividade
 var EIXO_MAP = {
   "res-ag-proporcional":"ag","res-ag-excesso-culpa":"ag","res-ag-excesso-dolo":"ag",
-  "res-ag-demissao":"ag","res-ag-sem-nexo":"ag",
+  "res-ag-demissao":"ag","res-ag-sem-nexo":"ag","res-ag-132":"ag",
   "res-ameaca-116":"ameaca","res-ameaca-116-mod":"ameaca","res-ameaca-demissao":"ameaca",
+  "res-ameaca-132":"ameaca","res-ameaca-117":"ameaca",
   "res-moral-adv":"moral","res-moral-susp":"moral","res-moral-demissao":"moral",
-  "res-disc-116":"disc","res-disc-117":"disc","res-disc-demissao":"disc"
+  "res-moral-132":"moral","res-moral-117":"moral","res-cond-imp-org":"moral",
+  "res-disc-116":"disc","res-disc-117":"disc","res-disc-demissao":"disc","res-disc-132":"disc",
+  "res-sex-132":"sex","res-sex-117":"sex","res-sex-116":"sex",
+  "res-outras-sex-132":"sex","res-outras-sex-117":"sex","res-outras-sex-116":"sex",
+  "res-ret-117":"ret","res-ret-116":"ret",
+  "res-vverbal-132":"vverbal","res-vverbal-117":"vverbal","res-vverbal-116":"vverbal",
+  "res-stalk-117":"stalk","res-stalk-116":"stalk"
 };
 
 // Regras de cumulatividade: par de eixos → mensagem orientativa
@@ -398,21 +405,37 @@ var PRESC = {
   "res-moral-demissao":   { pen: "Demissão", dias: 1825, art: "art. 142, I" },
   "res-disc-116":         { pen: "Advertência / Suspensão", dias: 730, art: "art. 142, II" },
   "res-disc-117":         { pen: "Suspensão / Demissão", dias: 1825, art: "art. 142, I" },
-  "res-disc-demissao":    { pen: "Demissão", dias: 1825, art: "art. 142, I" }
+  "res-disc-demissao":    { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-ret-117":          { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-ret-116":          { pen: "Advertência / Suspensão", dias: 730, art: "art. 142, II" },
+  "res-vverbal-132":      { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-vverbal-117":      { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-vverbal-116":      { pen: "Advertência", dias: 180, art: "art. 142, III" },
+  "res-stalk-117":        { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-stalk-116":        { pen: "Suspensão", dias: 730, art: "art. 142, II" }
 };
 
 // Resultados que levam a demissão — requerem gate de confirmação
 var DEMISSAO_KEYS = [
-  "res-ag-excesso-dolo", "res-ag-demissao", "res-ameaca-demissao",
-  "res-moral-demissao", "res-disc-demissao", "res-disc-117"
+  "res-ag-132","res-ag-excesso-dolo","res-ag-demissao",
+  "res-ameaca-132","res-ameaca-117","res-ameaca-demissao",
+  "res-sex-132","res-sex-117","res-outras-sex-132","res-outras-sex-117",
+  "res-disc-132","res-disc-117","res-disc-demissao",
+  "res-moral-132","res-moral-117","res-moral-demissao",
+  "res-ret-117","res-vverbal-132","res-vverbal-117","res-stalk-117"
 ];
 
 // ── STEPS ─────────────────────────────────────────────────────────────────────
 var S = {
-  "start":{ax:"Análise Inicial",ak:"ini",
-    q:"Houve <em>agressão física</em>?",
-    h:"Considera-se qualquer ato concreto contra a integridade corporal: socos, tapas, empurrões, chutes ou qualquer contato físico violento.",
-    opts:[{l:"Sim",s:"Houve ofensa física",v:"sim",nx:"ag-servico"},{l:"Não",s:"Outro tipo de conduta",v:"nao",nx:"ameaca"}]},
+  "start":{ax:"Análise Inicial",ak:"ini",tc:true,
+    q:"Qual a <em>natureza principal</em> da conduta sob análise?",
+    h:"Selecione a opção que melhor descreve o fato principal apurado. Se houver múltiplas condutas, analise-as separadamente usando o botão 'Analisar outra conduta' ao final de cada resultado.",
+    opts:[
+      {l:"Agressão física",s:"Contato físico violento",v:"sim",nx:"ag-servico"},
+      {l:"Ameaça / ofensa verbal",s:"Intimidação, insulto ou xingamento",v:"nao",nx:"ameaca"},
+      {l:"Retaliação a denunciante",s:"Represália por ato protegido",v:"ret",nx:"ret-ato-protegido",st:"o-alt"},
+      {l:"Perseguição / stalking",s:"Vigilância ou contato insistente",v:"stalk",nx:"stalk-perseguicao",st:"o-alt"}
+    ]},
 
   "ag-servico":{ax:"Eixo Agressão",ak:"ini",
     q:"A agressão ocorreu <em>durante o exercício das funções</em> ou em contexto diretamente relacionado ao serviço?",
@@ -430,9 +453,9 @@ var S = {
     opts:[{l:"Não",s:"Reação foi proporcional",v:"nao",nx:"res-sem-ilicito"},{l:"Sim — doloso",s:"Continuou a agredir intencionalmente",v:"dolo",nx:"res-ag-excesso-dolo",st:"o-dng"},{l:"Sim — culposo",s:"Excedeu sem intenção (imprudência)",v:"culpa",nx:"res-ag-excesso-culpa",st:"o-alt"}]},
 
   "ameaca":{ax:"Eixo Ameaça",ak:"ameaca",
-    q:"A conduta consistiu em <em>ameaça</em> (verbal, escrita ou gestual)?",
-    h:"Anúncio de mal futuro e injusto ao servidor ou a terceiro — com finalidade de intimidar, coagir ou causar temor.",
-    opts:[{l:"Sim",s:"Há conduta de ameaça",v:"sim",nx:"ameaca-cargo"},{l:"Não",s:"Sem ameaça identificada",v:"nao",nx:"sex-conotacao"}]},
+    q:"A conduta verbal consistiu em <em>ameaça</em> (anúncio de mal futuro)?",
+    h:"Ameaça: anúncio de mal futuro e injusto ao servidor ou a terceiro — com finalidade de intimidar, coagir ou causar temor. Distingue-se da ofensa verbal direta (insulto, xingamento, humilhação), que não inclui anúncio de mal futuro.",
+    opts:[{l:"Sim",s:"Há conduta de ameaça",v:"sim",nx:"ameaca-cargo"},{l:"Ofensa verbal / xingamento",s:"Insulto, humilhação, degradação verbal",v:"vverbal",nx:"vverbal-inicio",st:"o-alt"},{l:"Outro tipo de conduta",s:"Conduta sexual, discriminatória ou moral",v:"nao",nx:"sex-conotacao"}]},
 
   "ameaca-cargo":{ax:"Eixo Ameaça",ak:"ameaca",
     q:"Houve <em>uso do cargo, hierarquia ou poder funcional</em> na ameaça?",
@@ -577,7 +600,70 @@ var S = {
   "q-moral-subjetivo":{ax:"Análise Subjetiva",ak:"subj",tc:true,
     q:"Qual o <em>elemento subjetivo</em> identificado?",
     h:"Dolo: vontade dirigida ao resultado. Culpa: negligência sem vontade. Ausência: gestão regular mesmo que rigorosa.",
-    opts:[{l:"DOLO",s:"Vontade dirigida ao dano",v:"dolo",nx:"res-moral-117",st:"o-dng"},{l:"CULPA",s:"Negligência sem dolo",v:"culpa",nx:"res-cond-imp-org",st:"o-alt"},{l:"NÃO HÁ",s:"Sem elemento subjetivo",v:"nenhum",nx:"res-sem-ilicito"}]}
+    opts:[{l:"DOLO",s:"Vontade dirigida ao dano",v:"dolo",nx:"res-moral-117",st:"o-dng"},{l:"CULPA",s:"Negligência sem dolo",v:"culpa",nx:"res-cond-imp-org",st:"o-alt"},{l:"NÃO HÁ",s:"Sem elemento subjetivo",v:"nenhum",nx:"res-sem-ilicito"}]},
+
+  // ── EIXO 6 — RETALIAÇÃO AO DENUNCIANTE ───────────────────────────────────
+  "ret-ato-protegido":{ax:"Eixo Retaliação",ak:"ret",
+    q:"O servidor afetado praticou <em>ato funcionalmente protegido</em>?",
+    h:"Considera-se ato protegido: denúncia de irregularidades (inclusive a ouvidoria ou CGU), testemunho em PAD ou sindicância, recusa de ordem manifestamente ilegal, exercício de direito funcional legítimo (greve, representação sindical, petição administrativa). A proteção decorre da Lei nº 13.608/2018, art. 5º-A, e dos arts. XXXIV e XXXV da CF/88.",
+    opts:[{l:"Sim",s:"Ato protegido identificado",v:"sim",nx:"ret-conduta-adversa"},{l:"Não",s:"Sem ato protegido",v:"nao",nx:"res-sem-ilicito"}]},
+
+  "ret-conduta-adversa":{ax:"Eixo Retaliação",ak:"ret",
+    q:"Houve <em>conduta adversa subsequente</em> ao ato protegido?",
+    h:"Exemplos de conduta adversa: remoção de ofício injustificada, avaliação de desempenho negativa sem justificativa objetiva, exclusão de projetos, assédio moral, restrição de acesso a recursos ou informações, transferência punitiva ou boicote ao trabalho do servidor.",
+    opts:[{l:"Sim",s:"Conduta adversa identificada",v:"sim",nx:"ret-nexo"},{l:"Não",s:"Sem conduta adversa",v:"nao",nx:"res-sem-ilicito"}]},
+
+  "ret-nexo":{ax:"Eixo Retaliação",ak:"ret",
+    q:"Há <em>nexo de causalidade</em> entre o ato protegido e a conduta adversa?",
+    h:"O nexo pode ser demonstrado por: proximidade temporal (conduta adversa nos 6 meses seguintes ao ato protegido); ausência de justificativa objetiva para o tratamento diferenciado; histórico de tratamento favorável anterior ao ato protegido; ou declarações do agressor que evidenciem a motivação retaliadora.",
+    opts:[{l:"Sim",s:"Nexo de causalidade presente",v:"sim",nx:"ret-cargo"},{l:"Não",s:"Sem nexo identificável",v:"nao",nx:"res-sem-ilicito"}]},
+
+  "ret-cargo":{ax:"Eixo Retaliação",ak:"ret",
+    q:"O agressor utilizou <em>prerrogativas funcionais</em> como instrumento da represália?",
+    h:"Uso do cargo: poder de chefia utilizado para impor a conduta adversa; controle de avaliações ou progressões instrumentalizado; acesso a sistemas ou dados funcionais usado para monitorar ou prejudicar o servidor retaliado.",
+    opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"res-ret-117"},{l:"Não",s:"Sem uso instrumental do cargo",v:"nao",nx:"res-ret-116"}]},
+
+  // ── EIXO 7 — VIOLÊNCIA VERBAL / OFENSA DIRETA ────────────────────────────
+  "vverbal-inicio":{ax:"Eixo Violência Verbal",ak:"vverbal",
+    q:"A conduta consistiu em <em>ofensa verbal direta</em> — insulto, xingamento ou humilhação — sem conteúdo ameaçatório?",
+    h:"Ofensa verbal direta: palavras, expressões ou gestos que visam denigrir, rebaixar, humilhar ou ofender a dignidade da vítima, sem anúncio de mal futuro. Distingue-se da ameaça pela ausência de intimidação prospectiva.",
+    opts:[{l:"Sim",s:"Ofensa verbal identificada",v:"sim",nx:"vverbal-sexual"},{l:"Não",s:"Outro tipo de conduta",v:"nao",nx:"sex-conotacao"}]},
+
+  "vverbal-sexual":{ax:"Eixo Violência Verbal",ak:"vverbal",
+    q:"A ofensa verbal teve <em>conotação sexual</em>?",
+    h:"Ofensa com conotação sexual: comentários sobre corpo ou vida sexual da vítima com intuito de humilhação; piadas ou insinuações de natureza sexual; referências depreciativas à orientação sexual ou identidade de gênero. Se sim, a análise prossegue pelo Eixo Sexual (NT nº 3285/2023).",
+    opts:[{l:"Sim",s:"Conotação sexual identificada",v:"sim",nx:"sex-conotacao"},{l:"Não",s:"Sem conotação sexual",v:"nao",nx:"vverbal-disc"}]},
+
+  "vverbal-disc":{ax:"Eixo Violência Verbal",ak:"vverbal",
+    q:"A ofensa foi motivada por <em>característica pessoal protegida</em> da vítima?",
+    h:"Característica protegida: raça, cor, etnia, gênero, orientação sexual, identidade de gênero, religião, deficiência, origem ou idade. Se sim, a análise prossegue pelo Eixo Discriminatório (NT nº 93/2024), podendo configurar discriminação qualificada.",
+    opts:[{l:"Sim",s:"Motivação discriminatória identificada",v:"sim",nx:"disc-fator"},{l:"Não",s:"Sem motivação discriminatória",v:"nao",nx:"vverbal-publica"}]},
+
+  "vverbal-publica":{ax:"Eixo Violência Verbal",ak:"vverbal",
+    q:"A ofensa foi <em>pública</em> (com testemunhas) e de <em>elevada gravidade</em>?",
+    h:"Pública e grave: proferida diante de colegas, subordinados, superiores ou usuários do serviço, com intensidade suficiente para causar constrangimento ostensivo, dano à honra funcional ou escândalo perceptível no ambiente de trabalho. Considere a gravidade das expressões utilizadas e o impacto concreto sobre a vítima.",
+    opts:[{l:"Sim",s:"Ofensa pública e grave",v:"sim",nx:"vverbal-cargo"},{l:"Não",s:"Ofensa sem publicidade ou gravidade elevada",v:"nao",nx:"res-vverbal-116"}]},
+
+  "vverbal-cargo":{ax:"Eixo Violência Verbal",ak:"vverbal",
+    q:"Houve <em>uso do cargo ou autoridade hierárquica</em> como instrumento da ofensa?",
+    h:"Uso do cargo: chefia que humilha subordinado em reunião oficial; superior que deprecia publicamente servidor usando sua posição de autoridade; uso de espaço gerencial (reuniões, avaliações, comunicações institucionais) para veicular a ofensa.",
+    opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"res-vverbal-117"},{l:"Não",s:"Sem uso do cargo",v:"nao",nx:"res-vverbal-132"}]},
+
+  // ── EIXO 8 — STALKING FUNCIONAL ──────────────────────────────────────────
+  "stalk-perseguicao":{ax:"Eixo Stalking Funcional",ak:"stalk",
+    q:"Houve <em>conduta reiterada de perseguição ou vigilância</em> da vítima no ambiente funcional?",
+    h:"Stalking funcional: padrão reiterado de monitoramento, seguimento, contato insistente indesejado ou vigilância que cause sofrimento, medo ou perturbação à vítima no contexto do trabalho. Base normativa: art. 147-A do CP (Lei nº 14.132/2021) e art. 116, IX, da Lei nº 8.112/90. Exige-se reiteração — ato isolado não configura stalking.",
+    opts:[{l:"Sim",s:"Perseguição reiterada identificada",v:"sim",nx:"stalk-meio"},{l:"Não",s:"Sem conduta persecutória reiterada",v:"nao",nx:"res-sem-ilicito"}]},
+
+  "stalk-meio":{ax:"Eixo Stalking Funcional",ak:"stalk",
+    q:"A perseguição ocorreu <em>por meio do ambiente de trabalho</em> ou com uso de recursos funcionais?",
+    h:"Considera-se uso do ambiente funcional: monitoramento de sistemas de ponto ou acesso; envio insistente de e-mails ou mensagens institucionais; controle da agenda ou deslocamentos do servidor; acesso indevido a dados pessoais ou funcionais da vítima via sistemas corporativos.",
+    opts:[{l:"Sim",s:"Ambiente de trabalho ou recursos funcionais",v:"sim",nx:"stalk-cargo"},{l:"Não",s:"Perseguição em contexto privado com impacto funcional",v:"nao",nx:"res-stalk-116"}]},
+
+  "stalk-cargo":{ax:"Eixo Stalking Funcional",ak:"stalk",
+    q:"O agressor utilizou <em>prerrogativas funcionais</em> como instrumento da perseguição?",
+    h:"Uso do cargo na perseguição: chefia que usa poder hierárquico para monitorar e controlar deslocamentos da vítima; superior que acessa dados funcionais sigilosos para fins de vigilância; uso de atribuições gerenciais para manter contato insistente com o servidor perseguido.",
+    opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"res-stalk-117"},{l:"Não",s:"Sem uso instrumental do cargo",v:"nao",nx:"res-stalk-116"}]}
 };
 
 // ── RESULTS ───────────────────────────────────────────────────────────────────
@@ -664,7 +750,38 @@ var R = {
     lw:{h:"Lei nº 8.112/90 — Art. 117, IX",t:"<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>"},an:true,cp:null},
   "res-cond-imp-org":{t:"warning",lb:"Tipificação",ti:"Conduta imprópria — gestão culposa",ar:"Art. 116, II, IX e XI",
     d:"Falha culposa no exercício da gestão sem vontade dirigida ao dano. Sujeita a advertência ou suspensão.",
-    lw:{h:"Lei nº 8.112/90 — Art. 116",t:"<q>São deveres do servidor: […] II — ser leal às instituições a que servir; IX — manter conduta compatível com a moralidade administrativa; XI — tratar com urbanidade as pessoas.</q>"},an:false,cp:null}
+    lw:{h:"Lei nº 8.112/90 — Art. 116",t:"<q>São deveres do servidor: […] II — ser leal às instituições a que servir; IX — manter conduta compatível com a moralidade administrativa; XI — tratar com urbanidade as pessoas.</q>"},an:false,cp:null},
+
+  // ── EIXO 6 — RETALIAÇÃO AO DENUNCIANTE ───────────────────────────────────
+  "res-ret-117":{t:"danger",lb:"Tipificação",ti:"Retaliação ao denunciante — valimento do cargo",ar:"Art. 117, IX",
+    d:"Diante dos elementos analisados, a conduta sob exame configura represália a ato funcionalmente protegido praticada com instrumentalização das prerrogativas do cargo, caracterizando valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/1990. A retaliação a denunciantes é expressamente vedada pelo art. 5º-A da Lei nº 13.608/2018 e pela garantia constitucional de acesso às instâncias de controle (art. 5º, XXXIV e XXXV, CF/88). O enquadramento pode ensejar pena de demissão conforme o art. 132, XIII, do mesmo diploma. Recomenda-se apuração cumulativa de eventual assédio moral e comunicação à CGU.",
+    lw:{h:"Lei nº 8.112/90 — Art. 117, IX / Art. 132, XIII",t:"<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>"},an:true,cp:null},
+
+  "res-ret-116":{t:"warning",lb:"Tipificação",ti:"Retaliação ao denunciante — conduta imprópria",ar:"Art. 116, IX",
+    d:"A conduta sob exame configura represália a ato funcionalmente protegido, sem uso instrumental de prerrogativas do cargo. A retaliação a denunciantes viola os deveres de lealdade institucional e de manutenção de conduta compatível com a moralidade administrativa (art. 116, IX, da Lei nº 8.112/1990). A Lei nº 13.608/2018, art. 5º-A, veda expressamente atos de retaliação, e a CF/88 garante o direito de petição e acesso às instâncias de controle (art. 5º, XXXIV e XXXV). A penalidade orientativa é advertência ou suspensão, conforme a gravidade e as circunstâncias do caso.",
+    lw:{h:"Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null},
+
+  // ── EIXO 7 — VIOLÊNCIA VERBAL / OFENSA DIRETA ────────────────────────────
+  "res-vverbal-132":{t:"danger",lb:"Tipificação",ti:"Ofensa verbal — conduta escandalosa",ar:"Art. 132, V",
+    d:"A conduta sob exame — ofensa verbal pública e de elevada gravidade, proferida sem uso do cargo — configura incontinência pública e conduta escandalosa na repartição, hipótese de demissão nos termos do art. 132, V, da Lei nº 8.112/1990. A publicidade da ofensa e a gravidade das expressões utilizadas comprometem a imagem institucional e violam a dignidade da vítima de forma ostensiva. A dosimetria deve considerar o alcance da ofensa, o grau de humilhação imposto à vítima e eventual habitualidade da conduta, que pode configurar cumulativamente assédio moral.",
+    lw:{h:"Lei nº 8.112/90 — Art. 132, V",t:"<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>"},an:true,cp:null},
+
+  "res-vverbal-117":{t:"danger",lb:"Tipificação",ti:"Ofensa verbal — valimento do cargo",ar:"Art. 117, IX",
+    d:"A conduta sob exame — ofensa verbal pública e de elevada gravidade praticada com uso das prerrogativas funcionais — configura valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/1990. O uso da autoridade hierárquica ou das prerrogativas do cargo como instrumento de humilhação pública qualifica a conduta, podendo ensejar pena de demissão conforme o art. 132, XIII. A presença de reiteração pode configurar cumulativamente assédio moral — recomenda-se análise complementar no Eixo 5.",
+    lw:{h:"Lei nº 8.112/90 — Art. 117, IX",t:"<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>"},an:true,cp:null},
+
+  "res-vverbal-116":{t:"warning",lb:"Tipificação",ti:"Ofensa verbal — falta de urbanidade",ar:"Art. 116, XI",
+    d:"A conduta sob exame — ofensa verbal sem publicidade ou gravidade elevada — configura descumprimento do dever de tratar com urbanidade as pessoas, nos termos do art. 116, XI, da Lei nº 8.112/1990. A penalidade orientativa é advertência, observada a dosimetria proporcional à intensidade da ofensa e ao impacto sobre a vítima. Atenção: o prazo prescricional de 180 dias (art. 142, III) é o mais curto do regime disciplinar — verificar se não houve prescrição. Caso a conduta seja reiterada, pode configurar assédio moral — recomenda-se análise complementar no Eixo 5.",
+    lw:{h:"Lei nº 8.112/90 — Art. 116, XI",t:"<q>São deveres do servidor: […] XI — tratar com urbanidade as pessoas.</q>"},an:false,cp:null},
+
+  // ── EIXO 8 — STALKING FUNCIONAL ──────────────────────────────────────────
+  "res-stalk-117":{t:"danger",lb:"Tipificação",ti:"Stalking funcional — valimento do cargo",ar:"Art. 117, IX",
+    d:"A conduta sob exame configura perseguição reiterada no ambiente funcional praticada com instrumentalização das prerrogativas do cargo, caracterizando valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/1990. O stalking funcional viola também o art. 147-A do Código Penal (introduzido pela Lei nº 14.132/2021), que criminaliza a perseguição reiterada que cause sofrimento ou medo à vítima, podendo ensejar responsabilização penal simultânea. Recomenda-se apuração cumulativa de eventual assédio moral e comunicação às autoridades competentes.",
+    lw:{h:"CP — Art. 147-A / Lei nº 8.112/90 — Art. 117, IX",t:"<q>Art. 147-A do CP: Perseguir alguém, reiteradamente e por qualquer meio, ameaçando-lhe a integridade física ou psicológica, restringindo-lhe a capacidade de locomoção ou, de qualquer forma, invadindo ou perturbando sua esfera de liberdade ou privacidade.</q>"},an:true,cp:null},
+
+  "res-stalk-116":{t:"warning",lb:"Tipificação",ti:"Stalking funcional — conduta imprópria",ar:"Art. 116, IX",
+    d:"A conduta sob exame configura perseguição reiterada com impacto no ambiente funcional, sem uso instrumental de prerrogativas do cargo. A conduta viola o dever de manter conduta compatível com a moralidade administrativa (art. 116, IX, da Lei nº 8.112/1990) e pode configurar também o crime de perseguição (art. 147-A do CP, Lei nº 14.132/2021), caso produza sofrimento ou perturbação à vítima. A penalidade orientativa é suspensão, conforme a gravidade e a frequência dos atos persecutórios. Recomenda-se análise de eventual assédio moral cumulativo.",
+    lw:{h:"CP — Art. 147-A / Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null}
 };
 
 // ── SIDEBAR CONTEXT ────────────────────────────────────────────────────────────
@@ -674,8 +791,8 @@ var CTX_IMPACTO_SEXUAL = [{ti:"Gravidade do impacto à vítima",b:'<span class="
 
 var C = {
   "start":[
-    {ti:"Como usar este fluxograma",b:'<p>Responda cada pergunta com base nos <strong>fatos apurados</strong>, não na intenção declarada do agente. O fluxo cobre cinco eixos: agressão física, ameaça, conduta sexual, discriminação e assédio moral.</p><div class="ctx-hl">Em caso de dúvida, selecione a opção que melhor descreve o <strong>fato principal</strong> da conduta.</div>'},
-    {ti:"Base normativa principal",b:'<span class="ctx-tag ctx-tag-blue">Lei nº 8.112/90</span><p><strong>NT nº 3285/2023/CGUNE/DICOR/CRG</strong> — Atos de conotação sexual e assédio sexual</p><p><strong>NT nº 93/2024/CGUNE/DICOR/CRG</strong> — Assédio moral e discriminação</p><p><strong>NT nº 544/2024/CGUNE/DICOR/CRG</strong> — Ameaça praticada por servidor federal</p><p class="ctx-source">Aprovadas pelo Corregedor-Geral da União</p>'}],
+    {ti:"Como usar este fluxograma",b:'<p>Responda cada pergunta com base nos <strong>fatos apurados</strong>, não na intenção declarada do agente. O fluxo cobre <strong>oito eixos</strong>: agressão física, ameaça, ofensa verbal, conduta sexual, discriminação, assédio moral, retaliação ao denunciante e stalking funcional.</p><div class="ctx-hl">Selecione a opção que melhor descreve o <strong>fato principal</strong> da conduta. Para múltiplas condutas, use "Analisar outra conduta" ao final de cada resultado.</div>'},
+    {ti:"Base normativa principal",b:'<span class="ctx-tag ctx-tag-blue">Lei nº 8.112/90</span><p><strong>NT nº 3285/2023</strong> — Atos de conotação sexual e assédio sexual</p><p><strong>NT nº 93/2024</strong> — Assédio moral e discriminação</p><p><strong>NT nº 544/2024</strong> — Ameaça praticada por servidor federal</p><p><strong>Lei nº 13.608/2018</strong> — Proteção ao denunciante</p><p><strong>Lei nº 14.132/2021</strong> — Crime de perseguição (art. 147-A CP)</p><p class="ctx-source">Aprovadas pelo Corregedor-Geral da União</p>'}],
   "ag-servico":[{ti:"Nexo funcional — art. 132, VII",b:'<span class="ctx-tag ctx-tag-blue">Art. 132, VII — Lei 8.112/90</span><p>O tipo exige que a ofensa física ocorra <strong>em serviço</strong>. Servidor em férias, licença ou contexto particular não se enquadra neste inciso.</p><div class="ctx-hl">A agressão sem nexo funcional pode ainda configurar violação do art. 116, IX, se produzir repercussão institucional.</div>'}],
   "ag-legitima":[{ti:"Legítima defesa — requisitos",b:'<span class="ctx-tag ctx-tag-blue">Art. 23, II — Código Penal</span><p>Requisitos <strong>cumulativos</strong>:</p><ul><li>Agressão injusta, atual ou iminente</li><li>Defesa de direito próprio ou alheio</li><li>Uso moderado dos meios necessários</li></ul><div class="ctx-hl">Excesso doloso ou culposo não exclui a ilicitude disciplinar.</div>'}],
   "ag-excesso":[{ti:"Excesso na legítima defesa",b:'<span class="ctx-tag ctx-tag-amber">Art. 23, § único — CP</span><p>O excesso ocorre quando o agente continua a reagir após cessar a agressão ou usa violência além do necessário.</p><ul><li><strong>Doloso:</strong> continuou intencionalmente → punível como ato autônomo</li><li><strong>Culposo:</strong> excedeu por imprudência → pode gerar suspensão</li></ul>'}],
@@ -707,21 +824,36 @@ var C = {
   "moral-moralidade-final":[{ti:"Ofensa grave à moralidade administrativa",b:'<span class="ctx-tag ctx-tag-amber">Critério de tipificação</span><p>Ocorre quando a conduta viola flagrantemente princípios éticos do serviço público, causa escândalo ou descrédito institucional, ou compromete o ambiente de trabalho de forma duradoura.</p><p class="ctx-source">NT nº 93/2024, item 8.2</p>'}],
   "moral-trabalho":[{ti:"Gestão legítima x assédio moral",b:'<span class="ctx-tag ctx-tag-green">Distinção fundamental</span><p><strong>Organização do trabalho:</strong> cobranças, redistribuição de tarefas, disciplina funcional — mesmo que causem desconforto.</p><p><strong>Assédio moral:</strong> conduta que visa humilhar, isolar ou prejudicar o servidor, sem finalidade legítima.</p><div class="ctx-hl">O elemento subjetivo (dolo ou culpa) é determinante.</div><p class="ctx-source">NT nº 93/2024, item 9</p>'}],
   "q-moral-subjetivo":[{ti:"Elemento subjetivo",b:'<span class="ctx-tag ctx-tag-blue">Análise da culpabilidade</span><p><strong>Dolo:</strong> o agente quis o resultado — Art. 117, IX.</p><p><strong>Culpa:</strong> negligência sem vontade dirigida ao dano — Art. 116.</p><p><strong>Sem elemento subjetivo:</strong> exercício regular de gestão — sem ilícito disciplinar.</p><p class="ctx-source">NT nº 93/2024, item 9.2</p>'}],
+  // Eixo 6 — Retaliação
+  "ret-ato-protegido":[{ti:"Atos funcionalmente protegidos",b:'<span class="ctx-tag ctx-tag-blue">Lei nº 13.608/2018</span><p>São atos protegidos:</p><ul><li>Denúncia de irregularidades a ouvidorias, CGU ou autoridades competentes</li><li>Testemunho em PAD ou sindicância</li><li>Recusa de ordem manifestamente ilegal</li><li>Exercício de direito funcional legítimo (greve, petição, representação sindical)</li></ul><div class="ctx-hl">A proteção é independente do resultado da denúncia — basta que o servidor tenha exercido direito legítimo.</div><p class="ctx-source">Lei nº 13.608/2018, art. 5º-A; CF/88, art. 5º, XXXIV/XXXV</p>'}],
+  "ret-conduta-adversa":[{ti:"Condutas adversas — exemplos",b:'<span class="ctx-tag ctx-tag-amber">Represália funcional</span><ul><li>Remoção de ofício injustificada</li><li>Avaliação negativa sem justificativa objetiva</li><li>Exclusão de projetos ou reuniões</li><li>Assédio moral subsequente</li><li>Restrição de acesso a recursos ou informações</li><li>Transferência punitiva</li></ul><p class="ctx-source">Lei nº 13.608/2018, art. 5º-A, §1º</p>'}],
+  "ret-nexo":[{ti:"Prova do nexo de causalidade",b:'<span class="ctx-tag ctx-tag-amber">Nexo retaliador</span><p>Elementos que evidenciam o nexo:</p><ul><li>Proximidade temporal (conduta adversa nos 6 meses seguintes)</li><li>Ausência de justificativa objetiva para o tratamento diferenciado</li><li>Histórico favorável anterior ao ato protegido</li><li>Declarações que evidenciem motivação retaliadora</li></ul><div class="ctx-hl">O nexo pode ser demonstrado por qualquer meio de prova.</div>'}],
+  "ret-cargo":[{ti:"Uso do cargo na retaliação",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O cargo é instrumentalizado quando o agressor usa:</p><ul><li>Poder de chefia para impor a conduta adversa</li><li>Controle de avaliações ou progressões</li><li>Acesso a sistemas funcionais para monitorar ou prejudicar</li></ul><div class="ctx-hl">A mera existência de hierarquia não basta — o cargo deve ser ativamente usado como instrumento da represália.</div>'}],
+  // Eixo 7 — Violência Verbal
+  "vverbal-inicio":[{ti:"Violência verbal x ameaça",b:'<span class="ctx-tag ctx-tag-amber">Distinção essencial</span><p><strong>Ameaça:</strong> anúncio de mal futuro — intimidação prospectiva.</p><p><strong>Violência verbal:</strong> ofensa direta — insulto, xingamento, humilhação, rebaixamento.</p><div class="ctx-hl">A distinção determina o fluxo: ameaça → Eixo 2 (NT nº 544/2024); ofensa verbal → Eixo 7 (art. 116, XI / 132, V).</div>'}],
+  "vverbal-sexual":[{ti:"Ofensa verbal de conotação sexual",b:'<span class="ctx-tag ctx-tag-amber">NT nº 3285/2023</span><p>Ofensa verbal de conteúdo sexual é analisada pelo Eixo Sexual, que oferece tipificação mais específica (arts. 116, II/IX e 132, V).</p><p>Exemplos: comentários depreciativos sobre orientação sexual; humilhação baseada em características sexuais.</p>'}],
+  "vverbal-disc":[{ti:"Ofensa verbal discriminatória",b:'<span class="ctx-tag ctx-tag-amber">NT nº 93/2024</span><p>Ofensa verbal motivada por característica protegida é analisada pelo Eixo Discriminatório, que oferece tipificação mais específica.</p><p>Exemplos: xingamento racial; humilhação por deficiência; ofensa por religião ou orientação sexual.</p>'}],
+  "vverbal-publica":[{ti:"Publicidade e gravidade da ofensa",b:'<span class="ctx-tag ctx-tag-amber">Qualificador primário</span><p><strong>Pública e grave:</strong> proferida diante de colegas, superiores ou usuários, com intensidade capaz de causar escândalo ou dano à honra → Art. 132, V.</p><p><strong>Sem publicidade ou sem gravidade elevada:</strong> episódio restrito com impacto limitado → Art. 116, XI (advertência).</p>'}],
+  "vverbal-cargo":[{ti:"Uso do cargo na ofensa verbal",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O cargo qualifica a conduta quando o agressor usa:</p><ul><li>Posição de chefia ou autoridade institucional</li><li>Reuniões ou espaços gerenciais</li><li>Comunicações oficiais como veículo da ofensa</li></ul>'}],
+  // Eixo 8 — Stalking Funcional
+  "stalk-perseguicao":[{ti:"Stalking funcional — art. 147-A do CP",b:'<span class="ctx-tag ctx-tag-red">Lei nº 14.132/2021</span><p>O crime de perseguição (art. 147-A do CP) exige:</p><ul><li>Reiteração da conduta</li><li>Sofrimento, medo ou perturbação à vítima</li><li>Qualquer meio (físico, eletrônico, institucional)</li></ul><div class="ctx-hl">Ato isolado não configura stalking — é necessário padrão reiterado.</div><p class="ctx-source">Lei nº 14.132/2021 (art. 147-A CP)</p>'}],
+  "stalk-meio":[{ti:"Ambiente funcional como meio",b:'<span class="ctx-tag ctx-tag-amber">Stalking via recursos institucionais</span><ul><li>Monitoramento via sistemas de ponto/acesso</li><li>E-mails ou mensagens institucionais insistentes</li><li>Acesso indevido a dados pessoais via sistemas corporativos</li><li>Controle de agenda ou deslocamentos</li></ul>'}],
+  "stalk-cargo":[{ti:"Uso do cargo na perseguição",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O cargo é instrumentalizado quando o agressor usa poder de chefia, acesso privilegiado a sistemas ou prerrogativas gerenciais para manter vigilância ou controle sobre a vítima.</p>'}],
   "_result":[
     {ti:"Resultado da análise",b:'<p>O fluxo chegou a um enquadramento. Utilize o botão <strong>"Gerar Relatório"</strong> para obter a análise completa com fundamentação jurídica de cada escolha.</p>'},
-    {ti:"Base normativa",b:'<p><strong>Lei nº 8.112/90</strong> — Regime Jurídico dos Servidores</p><p><strong>NT nº 3285/2023</strong> — Assédio sexual e atos de conotação sexual</p><p><strong>NT nº 93/2024</strong> — Assédio moral e discriminação</p><p><strong>NT nº 544/2024</strong> — Ameaça</p><p><strong>Lei nº 14.457/2022</strong> — Prevenção de assédio</p>'}]
+    {ti:"Base normativa",b:'<p><strong>Lei nº 8.112/90</strong> — Regime Jurídico dos Servidores</p><p><strong>NT nº 3285/2023</strong> — Assédio sexual e atos de conotação sexual</p><p><strong>NT nº 93/2024</strong> — Assédio moral e discriminação</p><p><strong>NT nº 544/2024</strong> — Ameaça</p><p><strong>Lei nº 13.608/2018</strong> — Proteção ao denunciante</p><p><strong>Lei nº 14.132/2021</strong> — Crime de perseguição (stalking)</p><p><strong>Lei nº 14.457/2022</strong> — Prevenção de assédio</p>'}]
 };
 
 // ── JUST ──────────────────────────────────────────────────────────────────────
 var JUST = {
-  "start":{"sim":"A presença de contato físico direciona a análise para o eixo de agressão física (Art. 132, VII), exigindo verificação do nexo funcional.","nao":"A ausência de agressão física direciona a análise para verificação de ameaça, conduta autônoma tratada pela NT nº 544/2024."},
+  "start":{"sim":"Agressão física identificada — análise prossegue para verificação do nexo funcional (art. 132, VII).","nao":"Conduta de ameaça ou ofensa verbal — análise prossegue pelo Eixo Ameaça/Verbal (NT nº 544/2024).","ret":"Retaliação a ato protegido — análise prossegue pelo Eixo Retaliação ao Denunciante (Lei nº 13.608/2018).","stalk":"Perseguição reiterada — análise prossegue pelo Eixo Stalking Funcional (art. 147-A, CP / Lei nº 14.132/2021)."},
   "ag-servico":{"sim":"Nexo funcional presente — a agressão ocorreu em serviço, satisfazendo o elemento objetivo do art. 132, VII, da Lei 8.112/90.","nao":"Ausência de nexo funcional afasta o art. 132, VII. A conduta pode ainda configurar violação do art. 116, IX, se houver repercussão institucional."},
   "ag-legitima":{"sim":"Legítima defesa reconhecida. Verificação do excesso é necessária (art. 23, § único, do CP).","nao":"Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90."},
   "ag-excesso":{"nao":"Reação proporcional — legítima defesa integral, sem excesso. Afasta a responsabilidade disciplinar.","dolo":"Excesso doloso — ato autônomo ilícito, passível de enquadramento em art. 132, VII ou art. 116, IX.","culpa":"Excesso culposo — pode configurar art. 116, IX, com penalidade de advertência ou suspensão."},
   "disc-cargo":{"sim":"Uso instrumental do cargo na conduta discriminatória — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — análise prossegue pela gravidade da conduta discriminatória."},
   "moral-isolado-cargo":{"sim":"Uso do cargo no ato isolado grave — direciona análise ao elemento subjetivo (dolo/culpa).","nao":"Sem uso instrumental do cargo — análise prossegue pela ofensa à moralidade administrativa."},
   "moral-disc-check":{"sim":"Motivação discriminatória identificada — conduta qualificada como assédio moral discriminatório. Análise complementar no Eixo 4 recomendada.","nao":"Sem motivação discriminatória — assédio moral sem qualificador discriminatório."},
-  "ameaca":{"sim":"A ameaça é conduta autônoma com enquadramento próprio conforme a NT nº 544/2024/CGUNE/DICOR/CRG.","nao":"Sem ameaça identificada, a análise prossegue para verificar eventual conduta de conotação sexual."},
+  "ameaca":{"sim":"A ameaça é conduta autônoma com enquadramento próprio conforme a NT nº 544/2024/CGUNE/DICOR/CRG.","vverbal":"Ofensa verbal direta identificada (sem conteúdo ameaçatório) — análise prossegue pelo Eixo Violência Verbal.","nao":"Sem ameaça nem ofensa verbal — análise prossegue para verificar eventual conduta de conotação sexual."},
   "ameaca-cargo":{"sim":"O valimento do cargo agrava a tipificação da ameaça, podendo configurar Art. 117, IX. NT nº 544/2024, item 4.","nao":"Sem uso do cargo, a tipificação será determinada exclusivamente pela gravidade da ameaça (Art. 116 ou 132, V)."},
   "ameaca-grav-cargo":{"grave":"Ameaça grave com coação intensa e uso do cargo configura conduta escandalosa (Art. 132, V). NT nº 544/2024, item 5.","mod":"Ameaça moderada com uso do cargo configura valimento do cargo (Art. 117, IX). NT nº 544/2024.","leve":"Ameaça leve configura falta de urbanidade (Art. 116, XI). NT nº 544/2024."},
   "ameaca-grav-sem":{"grave":"Ameaça grave sem uso do cargo configura conduta escandalosa (Art. 132, V). NT nº 544/2024, item 5.","mod":"Ameaça moderada sem uso do cargo configura conduta imprópria (Art. 116, XI). NT nº 544/2024.","leve":"Ameaça leve configura falta de urbanidade (Art. 116, XI). NT nº 544/2024."},
@@ -745,7 +877,19 @@ var JUST = {
   "moral-cargo":{"sim":"Uso do cargo no assédio vertical configura valimento do cargo (Art. 117, IX). NT nº 93/2024, item 8.1.","nao":"Sem uso do cargo, análise da ofensa à moralidade é necessária. NT nº 93/2024."},
   "moral-moralidade-final":{"sim":"Grave ofensa à moralidade — conduta escandalosa (Art. 132, V). NT nº 93/2024, item 8.2.","nao":"Sem ofensa grave — conduta imprópria (Art. 116). NT nº 93/2024."},
   "moral-trabalho":{"sim":"Contexto gerencial exige análise do elemento subjetivo para distinguir gestão legítima de assédio. NT nº 93/2024, item 9.","nao":"Conduta reiterada fora do contexto gerencial com uso do cargo — Art. 117, IX. NT nº 93/2024."},
-  "q-moral-subjetivo":{"dolo":"Dolo na gestão reiterada que assedia o subordinado — Art. 117, IX. NT nº 93/2024, item 9.2.","culpa":"Falha culposa sem vontade dirigida ao dano — Art. 116 (advertência/suspensão). NT nº 93/2024.","nenhum":"Ausência de elemento subjetivo afasta responsabilidade disciplinar. NT nº 93/2024."}
+  "q-moral-subjetivo":{"dolo":"Dolo na gestão reiterada que assedia o subordinado — Art. 117, IX. NT nº 93/2024, item 9.2.","culpa":"Falha culposa sem vontade dirigida ao dano — Art. 116 (advertência/suspensão). NT nº 93/2024.","nenhum":"Ausência de elemento subjetivo afasta responsabilidade disciplinar. NT nº 93/2024."},
+  "ret-ato-protegido":{"sim":"Ato protegido confirmado — a Lei nº 13.608/2018 e a CF/88 (art. 5º, XXXIV/XXXV) garantem proteção ao exercício de direitos funcionais legítimos.","nao":"Sem ato protegido identificado — ausente o pressuposto de retaliação."},
+  "ret-conduta-adversa":{"sim":"Conduta adversa subsequente ao ato protegido identificada — elemento material da retaliação presente.","nao":"Sem conduta adversa subsequente — ausente o elemento material da retaliação."},
+  "ret-nexo":{"sim":"Nexo de causalidade presente entre o ato protegido e a conduta adversa — elemento central da retaliação caracterizado.","nao":"Sem nexo de causalidade identificável — a conduta adversa pode ter fundamento legítimo."},
+  "ret-cargo":{"sim":"Uso do cargo como instrumento da represália — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — retaliação configurada como conduta imprópria (art. 116, IX)."},
+  "vverbal-inicio":{"sim":"Ofensa verbal direta confirmada — análise prossegue para verificar qualificadores (conotação sexual, motivação discriminatória, publicidade e gravidade).","nao":"Sem ofensa verbal identificada — análise redirecionada para conduta de conotação sexual."},
+  "vverbal-sexual":{"sim":"Conotação sexual identificada — análise redirecionada para o Eixo Sexual (NT nº 3285/2023).","nao":"Sem conotação sexual — análise prossegue para verificar motivação discriminatória."},
+  "vverbal-disc":{"sim":"Motivação discriminatória identificada — análise redirecionada para o Eixo Discriminatório (NT nº 93/2024).","nao":"Sem motivação discriminatória — análise prossegue para verificar publicidade e gravidade da ofensa."},
+  "vverbal-publica":{"sim":"Ofensa pública e grave — qualificador primário presente; análise prossegue para verificar uso do cargo.","nao":"Sem publicidade ou gravidade elevada — conduta enquadrada como falta de urbanidade (art. 116, XI)."},
+  "vverbal-cargo":{"sim":"Uso do cargo identificado — valimento do cargo configura art. 117, IX, da Lei 8.112/90.","nao":"Sem uso do cargo — conduta escandalosa sem qualificador funcional (art. 132, V)."},
+  "stalk-perseguicao":{"sim":"Padrão persecutório reiterado confirmado — análise prossegue para identificar o meio e o enquadramento (art. 147-A CP / art. 116, IX, Lei 8.112/90).","nao":"Sem reiteração ou padrão persecutório identificado — ausente elemento essencial do stalking funcional."},
+  "stalk-meio":{"sim":"Ambiente funcional como meio de perseguição — análise prossegue para verificar uso de prerrogativas do cargo.","nao":"Perseguição em contexto privado com impacto funcional — enquadramento como conduta imprópria (art. 116, IX)."},
+  "stalk-cargo":{"sim":"Uso do cargo na perseguição — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — stalking enquadrado como conduta imprópria (art. 116, IX)."}
 };
 
 // ── LABELS ────────────────────────────────────────────────────────────────────
@@ -763,15 +907,22 @@ var QL = {
   "disc-gravidade":"Gravidade (reiterada)?","disc-gravidade-pont":"Impacto grave (pontual)?",
   "moral-isolado":"Ato isolado?","moral-dano":"Dano relevante?","moral-direcao":"Direção hierárquica?",
   "moral-cargo":"Uso do cargo (moral)?","moral-moralidade-final":"Ofensa à moralidade?",
-  "moral-trabalho":"Organiz. do trabalho?","q-moral-subjetivo":"Elemento subjetivo?"
+  "moral-trabalho":"Organiz. do trabalho?","q-moral-subjetivo":"Elemento subjetivo?",
+  "ret-ato-protegido":"Ato protegido?","ret-conduta-adversa":"Conduta adversa?",
+  "ret-nexo":"Nexo causal?","ret-cargo":"Uso do cargo (ret.)?",
+  "vverbal-inicio":"Ofensa verbal?","vverbal-sexual":"Conotação sexual?",
+  "vverbal-disc":"Motiv. discriminatória?","vverbal-publica":"Pública e grave?",
+  "vverbal-cargo":"Uso do cargo (verbal)?",
+  "stalk-perseguicao":"Perseguição reiterada?","stalk-meio":"Meio funcional?",
+  "stalk-cargo":"Uso do cargo (stalk.)?"
 };
 
-var AX = {ini:"ax-ini",sex:"ax-sex",disc:"ax-disc",moral:"ax-moral",ameaca:"ax-ameaca",subj:"ax-subj"};
+var AX = {ini:"ax-ini",sex:"ax-sex",disc:"ax-disc",moral:"ax-moral",ameaca:"ax-ameaca",subj:"ax-subj",ret:"ax-disc",vverbal:"ax-ameaca",stalk:"ax-moral"};
 
 function ql(id){return QL[id]||id;}
 function ak(v){return v==="sim"?"sim":v==="nao"?"nao":"alt";}
-function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",grave:"Grave",mod:"Moderada",leve:"Leve",dolo:"Dolo",culpa:"Culpa",nenhum:"Sem elemento",vertical:"Vertical",horizontal:"Horizontal",ascendente:"Ascendente"}[v]||v;}
-function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A"}[v]||"?";}
+function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",grave:"Grave",mod:"Moderada",leve:"Leve",dolo:"Dolo",culpa:"Culpa",nenhum:"Sem elemento",vertical:"Vertical",horizontal:"Horizontal",ascendente:"Ascendente",ret:"Retaliação a denunciante",stalk:"Perseguição / stalking",vverbal:"Ofensa verbal / xingamento"}[v]||v;}
+function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A",ret:"R",stalk:"P",vverbal:"V"}[v]||"?";}
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 var hist = [{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
