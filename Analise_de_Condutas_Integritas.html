@@ -230,6 +230,19 @@ body{font-family:var(--rfb-font-body);font-size:14px;color:var(--rfb-text);backg
 .rep-session-block .rsb-item span:last-child { font-weight: 600; color: var(--rfb-text); }
 .rfb-btn--danger { background: var(--rfb-danger) !important; color: #fff !important; }
 .rfb-btn--danger:hover { background: #8b1210 !important; }
+/* ── RECOVERY BANNER ────────────────────────────────────────────────── */
+.recovery-banner {
+  background: var(--rfb-navy-700); color: #fff;
+  border-radius: var(--rfb-r-md); padding: 18px 20px; margin-bottom: 20px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.recovery-banner .rb-icon { font-size: 22px; line-height: 1; flex-shrink: 0; margin-top: 2px; }
+.recovery-banner .rb-body { flex: 1; }
+.recovery-banner .rb-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.recovery-banner .rb-sub { font-size: 12.5px; opacity: .8; margin-bottom: 12px; line-height: 1.5; }
+.recovery-banner .rb-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.rfb-btn--light { background: rgba(255,255,255,.15) !important; color: #fff !important; border: 1px solid rgba(255,255,255,.3) !important; }
+.rfb-btn--light:hover { background: rgba(255,255,255,.25) !important; }
 /* ── MÚLTIPLAS CONDUTAS ─────────────────────────────────────────────── */
 .mc-badge {
   display: inline-flex; align-items: center; gap: 6px;
@@ -910,10 +923,12 @@ function renderStep(id){
       var o=step.opts[parseInt(btn.dataset.i,10)];
       hist[hist.length-1].ch=o.v;
       if(DEMISSAO_KEYS.indexOf(o.nx)!==-1){
+        saveToStorage();
         showDemissaoGate(o.nx);
         document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
       } else {
         hist.push({id:o.nx,ch:null,justs:[{fund:"",prob:"",pag:""}]});
+        saveToStorage();
         render();
         document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
       }
@@ -992,13 +1007,14 @@ function renderSB(id){
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 function goBack(){
-  if(hist.length>1){hist.pop();hist[hist.length-1].ch=null;render();}
+  if(hist.length>1){hist.pop();hist[hist.length-1].ch=null;saveToStorage();render();}
 }
 function goBackTo(i){
-  hist=hist.slice(0,i+1);hist[hist.length-1].ch=null;render();
+  hist=hist.slice(0,i+1);hist[hist.length-1].ch=null;saveToStorage();render();
   document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function restart(){
+  clearStorage();
   CONDUTAS=[];
   SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
   hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
@@ -1462,6 +1478,7 @@ function showReport(){
 
   elModal.classList.add("open");
   elMB.scrollTop=0;
+  clearStorage(); // análise chegou ao relatório — sessão não precisa mais ser recuperada
 }
 
 document.getElementById("bcp").onclick=function(){
@@ -1721,6 +1738,7 @@ function adicionarConduta(){
   salvarCondutaAtual();
   SESSION.conduta="";
   hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
+  saveToStorage();
   window.scrollTo({top:0,behavior:"smooth"});
   showDescricaoConduta();
 }
@@ -1829,6 +1847,7 @@ function showIdentificacao(){
     SESSION.analista=analista;
     SESSION.unidade=unidade;
     SESSION.dataFatos=data;
+    saveToStorage();
     showDescricaoConduta();
   };
 }
@@ -1865,6 +1884,7 @@ function showDescricaoConduta(){
     if(!val){ta.classList.add("err");toast("Descreva a conduta antes de continuar.");return;}
     ta.classList.remove("err");
     SESSION.conduta=val;
+    saveToStorage();
     iniciarFluxo();
   };
 }
@@ -1893,6 +1913,7 @@ function showDemissaoGate(nextId){
 
   document.getElementById("dg-confirm").onclick=function(){
     hist.push({id:nextId,ch:null,justs:[{fund:"",prob:"",pag:""}]});
+    saveToStorage();
     render();
     document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
   };
@@ -1951,9 +1972,118 @@ function buildSessionBlock(){
     +'</div>';
 }
 
+// ── PERSISTÊNCIA (localStorage) ───────────────────────────────────────────────
+var STORAGE_KEY = "integritas_session_v2";
+
+function saveToStorage(){
+  try {
+    var cur=hist[hist.length-1];
+    var screen = SESSION.processo===""
+      ? "identification"
+      : SESSION.conduta===""
+        ? "conduta"
+        : R[cur.id] ? "result" : "flow";
+    var payload={
+      SESSION: SESSION,
+      CONDUTAS: CONDUTAS,
+      hist: hist,
+      screen: screen,
+      savedAt: new Date().toISOString()
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+  } catch(e){}
+}
+
+function loadFromStorage(){
+  try {
+    var raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return null;
+    var p=JSON.parse(raw);
+    // Validate minimum shape
+    if(!p||!p.SESSION||!p.hist||!Array.isArray(p.hist)||p.hist.length===0) return null;
+    return p;
+  } catch(e){ return null; }
+}
+
+function clearStorage(){
+  try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+}
+
+function restoreFromStorage(p){
+  SESSION=p.SESSION||{processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
+  CONDUTAS=p.CONDUTAS||[];
+  hist=p.hist||[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
+  var screen=p.screen||"flow";
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(screen==="identification"){ showIdentificacao(); }
+  else if(screen==="conduta"){ showDescricaoConduta(); }
+  else { render(); }
+}
+
+function describeRestoredState(p){
+  var proc=p.SESSION&&p.SESSION.processo?p.SESSION.processo:"processo não identificado";
+  var h=p.hist||[];
+  var cur=h[h.length-1]||{};
+  var stepName="";
+  if(R[cur.id]){
+    stepName="resultado já obtido";
+  } else if(S[cur.id]){
+    var eixo=S[cur.id].ax||"";
+    var qNum=h.filter(function(x){return x.ch!==null;}).length+1;
+    stepName=(eixo?eixo+" — ":"")+"Pergunta "+qNum;
+  }
+  var condutas=p.CONDUTAS&&p.CONDUTAS.length>0?" · "+(p.CONDUTAS.length)+" conduta"+(p.CONDUTAS.length!==1?"s":"")+" concluída"+(p.CONDUTAS.length!==1?"s":""):"";
+  var dt="";
+  if(p.savedAt){
+    try{
+      var d=new Date(p.savedAt);
+      dt=d.toLocaleDateString("pt-BR")+" às "+d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    }catch(e){}
+  }
+  return {proc:proc, step:stepName, condutas:condutas, dt:dt};
+}
+
+function checkAndShowRecovery(){
+  var saved=loadFromStorage();
+  if(!saved){showIdentificacao();return;}
+  var info=describeRestoredState(saved);
+  elFlow.innerHTML=
+    '<div class="recovery-banner">'
+    +'<div class="rb-icon">💾</div>'
+    +'<div class="rb-body">'
+    +'<div class="rb-title">Há uma análise em andamento</div>'
+    +'<div class="rb-sub">'
+    +'<strong>Processo:</strong> '+escapeHtml(info.proc)
+    +(info.step?' &nbsp;·&nbsp; <strong>Ponto:</strong> '+escapeHtml(info.step):'')
+    +escapeHtml(info.condutas)
+    +(info.dt?' &nbsp;·&nbsp; Salvo em '+info.dt:'')
+    +'</div>'
+    +'<div class="rb-actions">'
+    +'<button class="rfb-btn rfb-btn--primary" id="rec-resume">Retomar análise</button>'
+    +'<button class="rfb-btn rfb-btn--light" id="rec-new">Iniciar nova análise</button>'
+    +'</div>'
+    +'</div>'
+    +'</div>'
+    +'<div class="pre-card" style="opacity:.4;pointer-events:none">'
+    +'<h2>Identificação da Análise</h2>'
+    +'<p class="pre-sub">Preencha os dados do processo antes de iniciar o fluxo de análise disciplinar.</p>'
+    +'</div>';
+
+  document.getElementById("rec-resume").onclick=function(){
+    restoreFromStorage(saved);
+  };
+  document.getElementById("rec-new").onclick=function(){
+    clearStorage();
+    CONDUTAS=[];
+    SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
+    hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
+    showIdentificacao();
+  };
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.getElementById("printPage").innerHTML="";
-showIdentificacao();
+checkAndShowRecovery();
 </script>
 </body>
 </html>
