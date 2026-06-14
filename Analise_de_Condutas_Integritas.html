@@ -230,6 +230,37 @@ body{font-family:var(--rfb-font-body);font-size:14px;color:var(--rfb-text);backg
 .rep-session-block .rsb-item span:last-child { font-weight: 600; color: var(--rfb-text); }
 .rfb-btn--danger { background: var(--rfb-danger) !important; color: #fff !important; }
 .rfb-btn--danger:hover { background: #8b1210 !important; }
+/* ── MÚLTIPLAS CONDUTAS ─────────────────────────────────────────────── */
+.mc-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--rfb-navy-700); color: #fff;
+  font-size: 11px; font-weight: 700; border-radius: 20px;
+  padding: 3px 10px; margin-bottom: 14px; letter-spacing: .04em;
+}
+.mc-saved-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.mc-saved-item {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--rfb-bg); border: 1px solid var(--rfb-divider);
+  border-radius: var(--rfb-r-sm); padding: 9px 12px; font-size: 13px;
+}
+.mc-saved-item .mc-num { font-weight: 700; color: var(--rfb-navy-600); min-width: 22px; }
+.mc-saved-item .mc-desc { flex: 1; color: var(--rfb-text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+.mc-saved-item .mc-tag { font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; white-space: nowrap; }
+.mc-saved-item .mc-tag-s { background: #d4edda; color: #145c39; }
+.mc-saved-item .mc-tag-w { background: #fff3cd; color: #7a4e0e; }
+.mc-saved-item .mc-tag-d { background: #fde8e8; color: #7a1210; }
+.cumul-alert {
+  background: #fff8e6; border: 1.5px solid var(--rfb-gold-500);
+  border-radius: var(--rfb-r-sm); padding: 12px 14px; margin-bottom: 14px;
+}
+.cumul-alert .ca-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--rfb-gold-600); margin-bottom: 6px; }
+.cumul-alert .ca-item { font-size: 12.5px; color: var(--rfb-text); margin-bottom: 3px; }
+.rep-conduct-header {
+  background: var(--rfb-navy-700); color: #fff;
+  font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+  padding: 6px 14px; border-radius: var(--rfb-r-sm) var(--rfb-r-sm) 0 0; margin-top: 20px;
+}
+.rep-conduct-block { border: 1.5px solid var(--rfb-divider); border-radius: 0 0 var(--rfb-r-sm) var(--rfb-r-sm); padding: 16px 14px 12px; margin-bottom: 8px; }
 </style>
 </head>
 <body>
@@ -309,6 +340,33 @@ var ICO_FILE  = ico('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 
 
 // ── SESSION DATA ──────────────────────────────────────────────────────────────
 var SESSION = { processo: "", analista: "", unidade: "", dataFatos: "", conduta: "" };
+
+// ── MÚLTIPLAS CONDUTAS ────────────────────────────────────────────────────────
+// Condutas já concluídas. Cada entrada: {conduta, hist, resultId, res}
+var CONDUTAS = [];
+
+// Mapeamento de resultId → eixo temático para detecção de cumulatividade
+var EIXO_MAP = {
+  "res-ag-proporcional":"ag","res-ag-excesso-culpa":"ag","res-ag-excesso-dolo":"ag",
+  "res-ag-demissao":"ag","res-ag-sem-nexo":"ag",
+  "res-ameaca-116":"ameaca","res-ameaca-116-mod":"ameaca","res-ameaca-demissao":"ameaca",
+  "res-moral-adv":"moral","res-moral-susp":"moral","res-moral-demissao":"moral",
+  "res-disc-116":"disc","res-disc-117":"disc","res-disc-demissao":"disc"
+};
+
+// Regras de cumulatividade: par de eixos → mensagem orientativa
+var CUMUL_RULES = [
+  { eixos:["moral","disc"],
+    msg:"<strong>Assédio moral discriminatório</strong> — quando o assédio moral decorre de motivação discriminatória (gênero, raça, religião etc.), ambos os enquadramentos são cumulativamente aplicáveis ao mesmo servidor, com fundamento na NT nº 93/2024 e na Lei nº 14.457/2022. Recomenda-se instauração de PAD único." },
+  { eixos:["ag","ameaca"],
+    msg:"<strong>Violência e coação concorrentes</strong> — a presença simultânea de agressão física e ameaças configura padrão de conduta violenta reiterada, podendo ensejar enquadramento cumulativo nos arts. 116 e 132, VII, da Lei nº 8.112/90, além de eventual responsabilização penal (arts. 129 e 147 do CP)." },
+  { eixos:["moral","ameaca"],
+    msg:"<strong>Ameaça como instrumento de assédio</strong> — quando a ameaça é usada para constranger, intimidar ou manter o estado de sujeição da vítima, ela integra o contexto do assédio moral, podendo qualificá-lo. Os enquadramentos são cumuláveis (art. 116/132, XI e art. 116/132, V da Lei nº 8.112/90)." },
+  { eixos:["disc","ameaca"],
+    msg:"<strong>Ameaça com motivação discriminatória</strong> — a ameaça dirigida à vítima em razão de sua raça, gênero, orientação sexual ou outra característica protegida potencializa o enquadramento, podendo configurar, cumulativamente, discriminação (art. 1º, Lei nº 9.029/95) e ameaça (art. 147 do CP / art. 116 da Lei nº 8.112/90)." },
+  { eixos:["ag","moral"],
+    msg:"<strong>Agressão no contexto de assédio</strong> — a ocorrência de agressão física em cenário de assédio moral preexistente representa escalada de gravidade. Ambos os enquadramentos podem ser aplicados cumulativamente, devendo a autoridade avaliar se a agressão representa episódio autônomo ou desfecho do ciclo assediante." }
+];
 
 // Prazos prescricionais por penalidade (Lei 8.112/90, art. 142)
 // dias a partir da data dos fatos; 0 = imprescritível
@@ -876,8 +934,29 @@ function renderResult(id){
   }).join("");
   var comp=res.cp?'<div class="compl-box"><div class="ct">Análise complementar sugerida</div><p>'+res.cp+'</p>'
     +'<button class="rfb-btn rfb-btn--ghost rfb-btn--sm" id="brc">'+ICO_RST+' Iniciar nova análise</button></div>':'';
+
+  // Cumulativity check with already-saved condutas
+  var prevIds=CONDUTAS.map(function(c){return c.resultId;});
+  var allIds=prevIds.concat([id]);
+  var cumulAlerts=CONDUTAS.length>0?detectCumul(allIds):[];
+  var cumulHtml=cumulAlerts.length
+    ?'<div class="cumul-alert"><div class="ca-title">⚑ Cumulatividade detectada</div>'
+      +cumulAlerts.map(function(a){return'<div class="ca-item">'+a+'</div>';}).join('')
+      +'</div>':''  ;
+
+  var condNum=CONDUTAS.length+1;
+  var mcBadge=CONDUTAS.length>0
+    ?'<div class="mc-badge">Conduta '+condNum+' de '+(CONDUTAS.length+1)+'+ no caso</div>'
+    :'';
+
+  var rpLabel=CONDUTAS.length>0
+    ?ICO_FILE+' Relatório consolidado ('+condNum+' conduta'+(condNum!==1?"s":"")+')'
+    :ICO_FILE+' Gerar Relatório';
+
   elFlow.innerHTML=
     '<div class="res-card">'
+    +mcBadge
+    +cumulHtml
     +'<div class="res-head '+tc+'"><div class="res-eyebrow">'+res.lb+'</div>'
     +'<h2 class="res-title">'+res.ti+'</h2>'
     +(res.ar?'<div class="res-article"><span class="lex">Lei 8.112/90</span><span style="font-family:var(--rfb-font-mono)">'+res.ar+'</span></div>':'')
@@ -889,11 +968,13 @@ function renderResult(id){
     +comp
     +buildPrescBlock(id)
     +'<div class="res-actions">'
-    +'<button class="rfb-btn rfb-btn--primary" id="brp">'+ICO_FILE+' Gerar Relatório</button>'
+    +'<button class="rfb-btn rfb-btn--primary" id="brp">'+rpLabel+'</button>'
+    +'<button class="rfb-btn rfb-btn--secondary" id="broc" title="Reinicia o fluxo mantendo os dados do caso">+ Analisar outra conduta</button>'
     +'<button class="rfb-btn rfb-btn--secondary" id="brgb">'+ICO_BACK+' Revisar resposta</button>'
     +'<button class="rfb-btn rfb-btn--ghost" id="brst">'+ICO_RST+' Nova análise</button>'
     +'</div></div></div>';
   document.getElementById("brp").onclick=showReport;
+  document.getElementById("broc").onclick=adicionarConduta;
   document.getElementById("brgb").onclick=goBack;
   document.getElementById("brst").onclick=restart;
   var brc=document.getElementById("brc");
@@ -918,6 +999,7 @@ function goBackTo(i){
   document.getElementById("stepper").scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 function restart(){
+  CONDUTAS=[];
   SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
   hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
   window.scrollTo({top:0,behavior:"smooth"});
@@ -1248,78 +1330,118 @@ var ANALOGY_NOTE = "Ressalva-se que o enquadramento disciplinar acima indicado t
 
 var DISCLAIMER = "O presente relatório constitui instrumento de apoio à análise disciplinar preliminar, elaborado com o auxílio da ferramenta Condutas Funcionais — Integritas (Ferramentas COGER/RFB), e não substitui despacho, nota técnica, parecer jurídico ou decisão administrativa fundamentada. As Notas Técnicas da CGU/DICOR/CRG citadas (NT nº 3285/2023, NT nº 299/2023, NT nº 93/2024 e NT nº 544/2024) são orientativas e devem ser consultadas na íntegra para a tomada de decisão disciplinar. O enquadramento indicado baseia-se nos fatos declarados pelo usuário e pode ser alterado por circunstâncias não captadas pelo fluxo. A instauração de PAD ou Sindicância pressupõe juízo de admissibilidade pela autoridade competente (art. 143 da Lei nº 8.112/90).";
 
-function showReport(){
-  var cur=hist[hist.length-1];
-  var res=R[cur.id]; if(!res)return;
-  var path=hist.slice(0,-1).filter(function(h){return h.ch!==null;});
-  var now=new Date();
-  var ds=now.toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
-  var ts=now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
-  var did="INT-"+now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0")+"-"+(Math.floor(Math.random()*9000)+1000);
+// Build HTML for a single conduct block (used in modal and print)
+function buildReportBlock(condutaDesc, histArr, resultId, idx, total){
+  var res=R[resultId];
+  var path=histArr.slice(0,-1).filter(function(h){return h.ch!==null;});
   var tc=res.t==="success"?"t-success":res.t==="warning"?"t-warning":"t-danger";
-
-  // Build narrative text
-  var narrativeText = buildNarrative(path, res, "");
-  var conclusionText = buildConclusion(cur.id);
-
-  // Alt. 8 — alerta de assédio moral discriminatório
-  var discCheckStep = path.filter(function(h){return h.id==="moral-disc-check";})[0];
-  if(discCheckStep && discCheckStep.ch==="sim"){
-    conclusionText += " A presença de motivação discriminatória qualifica a conduta como assédio moral discriminatório. Recomenda-se análise complementar no Eixo 4 (Discriminação) da ferramenta, podendo resultar em cumulatividade de enquadramentos.";
+  var narrativeText=buildNarrative(path,res,"");
+  var conclusionText=buildConclusion(resultId);
+  var discCheckStep=path.filter(function(h){return h.id==="moral-disc-check";})[0];
+  if(discCheckStep&&discCheckStep.ch==="sim"){
+    conclusionText+=" A presença de motivação discriminatória qualifica a conduta como assédio moral discriminatório. Recomenda-se análise complementar no Eixo 4 (Discriminação) da ferramenta, podendo resultar em cumulatividade de enquadramentos.";
   }
-
-  // Path table for reference
   var ph=path.map(function(h,i){
     var step=S[h.id]; if(!step)return"";
     var autoJust=(JUST[h.id]&&JUST[h.id][h.ch])||"Escolha registrada para rastreabilidade.";
-    var justs=h.justs||[];
+    var filledJusts=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
     var justExtra="";
-    var filledJusts=justs.filter(function(j){return j.fund||j.prob;});
     if(filledJusts.length){
       justExtra='<div style="margin-top:8px;padding:8px 10px;background:rgba(11,44,95,0.05);border-left:3px solid var(--rfb-gold-500);border-radius:0 4px 4px 0;font-size:12.5px">'
         +filledJusts.map(function(j,ji){
           return (filledJusts.length>1?'<div style="font-size:11px;font-weight:700;color:var(--rfb-navy-600);margin-bottom:3px;margin-top:'+(ji>0?'8px':'0')+'">Justificativa '+(ji+1)+'</div>':'')
             +(j.fund?'<div style="margin-bottom:3px"><strong style="color:var(--rfb-navy-700)">Fundamentação:</strong> '+j.fund+'</div>':'')
             +(j.prob?'<div><strong style="color:var(--rfb-navy-700)">Elemento probatório:</strong> '+j.prob+(j.pag?' — <strong>Fl./Pág.:</strong> '+j.pag:'')+'</div>':'');
-        }).join("")
-        +'</div>';
+        }).join("")+'</div>';
     }
     return'<div class="pi"><div class="pn">'+(i+1)+'</div><div class="pc">'
       +'<div class="pq">'+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+'</div>'
       +'<span class="pa pa-'+ak(h.ch)+'">'+al(h.ch)+'</span>'
       +'<div class="pj"><strong>Análise:</strong> '+autoJust+'</div>'
-      +justExtra
-      +'</div></div>';
+      +justExtra+'</div></div>';
   }).join("");
 
-  elMB.innerHTML=
-    // Dados da sessão
-    buildSessionBlock()
-    // Descrição da conduta (editável — pré-preenchida com SESSION.conduta)
-    +'<div class="rep-desc-box">'
-    +'<div class="rep-st">Descrição sumária da conduta</div>'
-    +'<textarea id="descricaoConduta" class="rep-textarea" placeholder="Descreva aqui os fatos apurados: o que ocorreu, quando, onde, quem praticou a conduta e quem foi a vítima. Este campo será incluído no relatório impresso." rows="5">'+escapeHtml(SESSION.conduta)+'</textarea>'
-    +'</div>'
-    // Resultado
+  var header=total>1?'<div class="rep-conduct-header">Conduta '+(idx+1)+' de '+total+'</div><div class="rep-conduct-block">':"";
+  var footer=total>1?'</div>':"";
+
+  var block= header
+    +(condutaDesc?'<div class="rep-desc-box"><div class="rep-st">Descrição sumária da conduta</div>'
+      +'<div style="font-size:13px;color:var(--rfb-text);line-height:1.6;white-space:pre-wrap">'+escapeHtml(condutaDesc)+'</div></div>':'')
     +'<div><div class="rep-st">Resultado do enquadramento disciplinar</div>'
     +'<div class="rep-banner '+tc+'"><div class="rb-art">'+(res.ar||"Sem tipificação específica")+'</div>'
     +'<div class="rb-title">'+res.ti+'</div></div></div>'
-    // Análise em texto corrido
     +'<div><div class="rep-st">Análise da conduta</div>'
     +'<div class="rep-narrative">'+narrativeText.split("||PARA||").map(function(p){return'<p>'+p+'</p>';}).join("")+'</div></div>'
-    // Conclusão
     +'<div><div class="rep-st">Conclusão e enquadramento</div>'
-    +'<div class="rep-narrative">'
-    +(res.an?'<p class="rep-analogy">'+ANALOGY_NOTE+'</p>':'')
-    +'<p>'+conclusionText+'</p>'
-    +'</div></div>'
-    // Caminho percorrido (referência)
+    +'<div class="rep-narrative">'+(res.an?'<p class="rep-analogy">'+ANALOGY_NOTE+'</p>':'')
+    +'<p>'+conclusionText+'</p></div></div>'
     +'<div><div class="rep-st">Caminho percorrido — referência analítica</div>'
     +(ph||'<p style="font-size:13px;color:var(--rfb-text-muted)">Sem perguntas registradas.</p>')+'</div>'
-    // Dados
+    +footer;
+
+  // Store for print
+  return {html:block, narrativeText:narrativeText, conclusionText:conclusionText, path:path, res:res, tc:tc, condutaDesc:condutaDesc};
+}
+
+function showReport(){
+  var cur=hist[hist.length-1];
+  var res=R[cur.id]; if(!res)return;
+  var now=new Date();
+  var ds=now.toLocaleDateString("pt-BR",{day:"2-digit",month:"long",year:"numeric"});
+  var ts=now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+  var did="INT-"+now.getFullYear()+String(now.getMonth()+1).padStart(2,"0")+String(now.getDate()).padStart(2,"0")+"-"+(Math.floor(Math.random()*9000)+1000);
+
+  // Collect all condutas (saved + current)
+  var allCondutas=CONDUTAS.concat([{conduta:SESSION.conduta,hist:hist,resultId:cur.id,res:res}]);
+  var total=allCondutas.length;
+  var allResultIds=allCondutas.map(function(c){return c.resultId;});
+
+  // Cumulativity
+  var cumulAlerts=total>1?detectCumul(allResultIds):[];
+  var cumulHtml="";
+  if(cumulAlerts.length){
+    cumulHtml='<div><div class="rep-st" style="color:var(--rfb-gold-600)">⚑ Cumulatividade — análise conjunta</div>'
+      +'<div class="cumul-alert">'
+      +cumulAlerts.map(function(a){return'<div class="ca-item" style="margin-bottom:8px">'+a+'</div>';}).join("")
+      +'</div></div>';
+  }
+
+  // Build all blocks
+  var blocks=allCondutas.map(function(c,i){
+    return buildReportBlock(c.conduta,c.hist,c.resultId,i,total);
+  });
+
+  // Summary table when multi-conduct
+  var summaryHtml="";
+  if(total>1){
+    summaryHtml='<div><div class="rep-st">Quadro-resumo das condutas</div>'
+      +'<div style="display:flex;flex-direction:column;gap:8px">'
+      +blocks.map(function(b,i){
+        return'<div class="mc-saved-item" style="background:var(--rfb-surface)">'
+          +'<span class="mc-num">'+(i+1)+'</span>'
+          +(allCondutas[i].conduta?'<span class="mc-desc">'+escapeHtml(allCondutas[i].conduta.substring(0,70)+(allCondutas[i].conduta.length>70?"…":""))+'</span>':'<span class="mc-desc" style="color:var(--rfb-text-muted)">(sem descrição)</span>')
+          +'<span class="mc-tag '+(b.res.t==="success"?"mc-tag-s":b.res.t==="warning"?"mc-tag-w":"mc-tag-d")+'">'+escapeHtml(b.res.ti)+'</span>'
+          +'</div>';
+      }).join("")
+      +'</div></div>';
+  }
+
+  // Editable textarea only for current conduta (single mode)
+  var condutaEditHtml=total===1
+    ?'<div class="rep-desc-box"><div class="rep-st">Descrição sumária da conduta</div>'
+      +'<textarea id="descricaoConduta" class="rep-textarea" placeholder="Descreva aqui os fatos apurados." rows="5">'+escapeHtml(SESSION.conduta)+'</textarea></div>'
+    :'';
+
+  elMB.innerHTML=
+    buildSessionBlock()
+    +summaryHtml
+    +cumulHtml
+    +condutaEditHtml
+    +blocks.map(function(b){return b.html;}).join("")
     +'<div><div class="rep-st">Dados do relatório</div>'
     +'<table style="font-size:12.5px;color:var(--rfb-text-muted);line-height:1.8;border-collapse:collapse">'
     +'<tr><td style="font-weight:600;color:var(--rfb-text);padding-right:16px">Ferramenta:</td><td>Condutas Funcionais — Integritas · COGER/RFB</td></tr>'
+    +'<tr><td style="font-weight:600;color:var(--rfb-text)">Condutas analisadas:</td><td>'+total+'</td></tr>'
     +'<tr><td style="font-weight:600;color:var(--rfb-text)">Data:</td><td>'+ds+' às '+ts+'</td></tr>'
     +'<tr><td style="font-weight:600;color:var(--rfb-text)">Referência:</td><td style="font-family:var(--rfb-font-mono)">'+did+'</td></tr>'
     +'<tr><td style="font-weight:600;color:var(--rfb-text);vertical-align:top">Base normativa:</td>'
@@ -1327,15 +1449,16 @@ function showReport(){
     +'<p style="font-size:11.5px;color:var(--rfb-text-muted);margin-top:12px;line-height:1.6;border-top:1px solid var(--rfb-divider);padding-top:10px">'+DISCLAIMER+'</p>'
     +'</div>';
 
-  // Store did and narrativeText for print
-  elModal._did = did;
-  elModal._ds = ds;
-  elModal._ts = ts;
-  elModal._tc = tc;
-  elModal._res = res;
-  elModal._path = path;
-  elModal._narrativeText = narrativeText;
-  elModal._conclusionText = conclusionText;
+  // Store for print
+  elModal._did=did; elModal._ds=ds; elModal._ts=ts;
+  elModal._blocks=blocks; elModal._allCondutas=allCondutas;
+  elModal._cumulAlerts=cumulAlerts; elModal._total=total;
+  // legacy single-conduct fields for print compat
+  elModal._res=blocks[blocks.length-1].res;
+  elModal._path=blocks[blocks.length-1].path;
+  elModal._narrativeText=blocks[blocks.length-1].narrativeText;
+  elModal._conclusionText=blocks[blocks.length-1].conclusionText;
+  elModal._tc=blocks[blocks.length-1].tc;
 
   elModal.classList.add("open");
   elMB.scrollTop=0;
@@ -1355,39 +1478,6 @@ document.getElementById("bpr").onclick=function(){
   var did  = elModal._did||"";
   var ds   = elModal._ds||"";
   var ts   = elModal._ts||"";
-  var res  = elModal._res||{};
-  var path = elModal._path||[];
-  var narrativeText  = elModal._narrativeText||"";
-  var conclusionText = elModal._conclusionText||"";
-
-  var toneColor = res.t==="danger" ? "#7a1210" : res.t==="warning" ? "#7a4e0e" : "#145c39";
-
-  var pathRows = path.map(function(h,i){
-    var step = S[h.id]; if(!step) return "";
-    var autoJust = (JUST[h.id] && JUST[h.id][h.ch]) || "";
-    var justs2 = h.justs||[];
-    var filled2 = justs2.filter(function(j){return j.fund||j.prob;});
-    var justCell = autoJust;
-    if(filled2.length){
-      justCell += "<div style='margin-top:5pt;padding:5pt 7pt;background:#f0f4fa;border-left:3px solid #C9A35C;font-size:8pt'>"
-        +filled2.map(function(j,ji){
-          return (filled2.length>1?"<div style='font-weight:700;margin-bottom:2pt;margin-top:"+(ji>0?"6pt":"0")+"'>Justificativa "+(ji+1)+"</div>":"")
-            +(j.fund?"<div style='margin-bottom:2pt'><strong>Fundamentação:</strong> "+j.fund+"</div>":"")
-            +(j.prob?"<div><strong>Elem. probatório:</strong> "+j.prob+(j.pag?" — <strong>Fl./Pág.:</strong> "+j.pag:"")+"</div>":"");
-        }).join("")
-        +"</div>";
-    }
-    return "<tr style='border-bottom:1px solid #e8edf4'>"
-      +"<td style='padding:5pt 8pt;font-family:JetBrains Mono,monospace;font-size:8pt;color:#5B6781;white-space:nowrap;vertical-align:top'>"+(i+1)+"</td>"
-      +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740;vertical-align:top'>"+step.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
-      +"<td style='padding:5pt 8pt;vertical-align:top;white-space:nowrap'><span style='font-size:8pt;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#DCE6F4;color:#0B2C5F'>"+al(h.ch)+"</span></td>"
-      +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#5B6781;vertical-align:top'>"+justCell+"</td>"
-      +"</tr>";
-  }).join("");
-
-  var narrativeParas = narrativeText.split("||PARA||").map(function(p){
-    return "<p style='margin:0 0 9pt;text-align:justify'>"+p+"</p>";
-  }).join("");
 
   var sectionNum = 1;
   function sec(title){ return "<div style='font-family:Barlow Condensed,sans-serif;font-size:11pt;font-weight:700;text-transform:uppercase;color:#0B2C5F;border-left:4px solid #C9A35C;padding-left:8pt;margin:16pt 0 8pt'>"+(sectionNum++)+" — "+title+"</div>"; }
@@ -1431,7 +1521,42 @@ document.getElementById("bpr").onclick=function(){
     +"<p style='margin:0'>Nos termos do art. 143 da Lei nº 8.112/90, a autoridade competente que tiver ciência de irregularidade praticada por servidor público é obrigada a promover a sua apuração imediata, mediante sindicância ou processo administrativo disciplinar, assegurada ao acusado ampla defesa (art. 5º, LV, CF/88). O presente relatório subsidia o juízo de admissibilidade dessa providência.</p>"
     +"</div>";
 
-  if(descricao){
+  // Multi-conduct quadro-resumo
+  var allCondutas2=elModal._allCondutas||[];
+  var total2=elModal._total||1;
+  var cumulAlerts2=elModal._cumulAlerts||[];
+
+  if(total2>1){
+    html += sec("Quadro-resumo das condutas analisadas")
+      +"<table style='border-collapse:collapse;width:100%;margin-bottom:8pt'><thead>"
+      +"<tr style='background:#EEF3FA'>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;color:#5B6781;font-weight:600;width:20pt'>#</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;color:#5B6781;font-weight:600'>Conduta</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;color:#5B6781;font-weight:600'>Enquadramento</th>"
+      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;color:#5B6781;font-weight:600'>Penalidade</th>"
+      +"</tr></thead><tbody>"
+      +allCondutas2.map(function(ac,i){
+        var r2=R[ac.resultId]||{};
+        var pen2=(PRESC[ac.resultId]&&PRESC[ac.resultId].pen)||"—";
+        return "<tr style='border-bottom:1pt solid #e8edf4'>"
+          +"<td style='padding:5pt 8pt;font-family:monospace;font-size:8pt;color:#5B6781'>"+(i+1)+"</td>"
+          +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740'>"+(ac.conduta?ac.conduta.substring(0,80)+(ac.conduta.length>80?"…":""):"(sem descrição)")+"</td>"
+          +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740;font-weight:600'>"+r2.ti+"</td>"
+          +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740'>"+pen2+"</td>"
+          +"</tr>";
+      }).join("")
+      +"</tbody></table>";
+  }
+
+  if(cumulAlerts2.length){
+    html += sec("Cumulatividade — condutas concorrentes")
+      +"<div style='background:#FFF8E6;border:1.5pt solid #C9A35C;border-radius:4pt;padding:10pt 14pt'>"
+      +cumulAlerts2.map(function(a){return "<p style='margin:0 0 8pt;font-size:9.5pt;color:#1A2740;line-height:1.7'>"+a+"</p>";}).join("")
+      +"<p style='margin:0;font-size:9pt;color:#7a4e0e'>A existência de enquadramentos cumulativos recomenda instauração de PAD único para apuração conjunta de todas as condutas, com observância ao princípio da economicidade processual e ao due process of law (art. 5º, LV, CF/88).</p>"
+      +"</div>";
+  }
+
+  if(descricao && total2===1){
     html += sec("Descrição sumária da conduta")
       +"<div style='font-size:10pt;color:#1A2740;line-height:1.75;padding:9pt 12pt;background:#F5F7FA;border-radius:4pt;border:1pt solid #DCE6F4'>"+descricao.replace(/\n/g,"<br/>")+"</div>";
   }
@@ -1456,90 +1581,109 @@ document.getElementById("bpr").onclick=function(){
     +"<li><strong>NT nº 544/2024/CGUNE/DICOR/CRG</strong> — Possibilidades de enquadramento da conduta de ameaça praticada por servidor público federal.</li>"
     +"</ul></div>";
 
-  // Enquadramento
-  html += sec("Resultado do enquadramento disciplinar")
-    +"<div style='background:"+toneColor+";color:#fff;border-radius:4pt;padding:10pt 14pt;margin-bottom:10pt'>"
-    +"<div style='font-size:8pt;opacity:.75;margin-bottom:3pt'>"+res.lb+"</div>"
-    +"<div style='font-family:Barlow Condensed,sans-serif;font-size:16pt;font-weight:700;text-transform:uppercase'>"+res.ti+"</div>"
-    +(res.ar ? "<div style='font-family:JetBrains Mono,monospace;font-size:9pt;margin-top:5pt;opacity:.85'>Lei nº 8.112/90 — "+res.ar+"</div>" : "")
-    +"</div>"
-    +(res.lw ? "<div style='background:#EEF3FA;border-left:4px solid #0B2C5F;border-radius:0 4pt 4pt 0;padding:8pt 12pt'>"
-      +"<div style='font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt'>"+res.lw.h+"</div>"
-      +"<div style='font-size:9pt;color:#1A2740;line-height:1.6;font-family:JetBrains Mono,monospace'>"+res.lw.t+"</div></div>" : "");
+  // Per-conduct print sections (supports 1..N condutas)
+  var blocks2=elModal._blocks||[];
+  blocks2.forEach(function(b,bi){
+    var ac2=allCondutas2[bi]||{};
+    var r3=b.res;
+    var tc3=r3.t==="danger"?"#7a1210":r3.t==="warning"?"#7a4e0e":"#145c39";
+    var conductaLabel=total2>1?" — Conduta "+(bi+1)+" de "+total2:"";
 
-  // Análise dos elementos constitutivos — com justificativas integradas ao texto
-  // Monta um mapa stepId → justificativas preenchidas para intercalar no texto
-  var justMap={};
-  path.forEach(function(h){
-    var js=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
-    if(js.length) justMap[h.id]={ch:h.ch, justs:js};
-  });
+    // Description per-conduct
+    if(ac2.conduta){
+      html += sec("Descrição sumária da conduta"+conductaLabel)
+        +"<div style='font-size:10pt;color:#1A2740;line-height:1.75;padding:9pt 12pt;background:#F5F7FA;border-radius:4pt;border:1pt solid #DCE6F4'>"+ac2.conduta.replace(/\n/g,"<br/>")+"</div>";
+    }
 
-  // Reconstrói parágrafos narrativos intercalando os registros do analista
-  var narrativeBlocks = narrativeText.split("||PARA||").map(function(p,pi){
-    if(!p) return "";
-    var block="<p style='margin:0 0 9pt;text-align:justify'>"+p+"</p>";
-    // Após o último parágrafo de cada eixo insira as justificativas do passo correspondente
-    // Estratégia: ao final de cada parágrafo verifica se algum stepId aparece na narrativa
-    // e ancora a justificativa ao parágrafo mais próximo
-    return block;
-  }).join("");
-
-  // Constrói bloco de justificativas fluídas intercalado por passo
-  var justBlocks="";
-  path.forEach(function(h){
-    if(!justMap[h.id]) return;
-    var step=S[h.id]; if(!step) return;
-    var entry=justMap[h.id];
-    var qLabel=step.q.replace(/<em>/g,"").replace(/<\/em>/g,"");
-    var respLabel=al(entry.ch);
-    justBlocks+="<div style='margin:0 0 10pt;padding:10pt 14pt;background:#F5F8FF;border-left:3pt solid #1E4C99;border-radius:0 5pt 5pt 0'>"
-      +"<div style='font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1E4C99;margin-bottom:6pt;display:flex;gap:10pt;align-items:center'>"
-      +"<span>Registro do analista</span>"
-      +"<span style='background:#DCE6F4;color:#0B2C5F;padding:1pt 7pt;border-radius:10pt;font-weight:700'>"+qLabel+"</span>"
-      +"<span style='background:#0B2C5F;color:#fff;padding:1pt 7pt;border-radius:10pt'>Resposta: "+respLabel+"</span>"
+    // Enquadramento result banner
+    html += sec("Resultado do enquadramento disciplinar"+conductaLabel)
+      +"<div style='background:"+tc3+";color:#fff;border-radius:4pt;padding:10pt 14pt;margin-bottom:10pt'>"
+      +"<div style='font-size:8pt;opacity:.75;margin-bottom:3pt'>"+r3.lb+"</div>"
+      +"<div style='font-family:Barlow Condensed,sans-serif;font-size:16pt;font-weight:700;text-transform:uppercase'>"+r3.ti+"</div>"
+      +(r3.ar?"<div style='font-family:JetBrains Mono,monospace;font-size:9pt;margin-top:5pt;opacity:.85'>Lei nº 8.112/90 — "+r3.ar+"</div>":"")
       +"</div>"
-      +entry.justs.map(function(j,ji){
-        var num=(entry.justs.length>1?"<strong style='color:#1E4C99'>("+(ji+1)+") </strong>":"");
-        var parts=[];
-        if(j.fund) parts.push("<span>"+num+"<strong>Fundamentação:</strong> "+j.fund+"</span>");
-        if(j.prob){
-          var probTxt="<strong>Elemento probatório:</strong> "+j.prob;
-          if(j.pag) probTxt+=" <span style='background:#fff;border:1pt solid #c0c8d8;padding:0pt 5pt;border-radius:3pt;font-family:monospace;font-size:8pt'>Fl./Pág. "+j.pag+"</span>";
-          parts.push("<span>"+(j.fund?"":num)+probTxt+"</span>");
-        }
-        return "<div style='font-size:9pt;color:#1A2740;line-height:1.7;margin-bottom:"+(ji<entry.justs.length-1?"7pt":"0")+"'>"+parts.join(" — ")+"</div>";
-      }).join("")
+      +(r3.lw?"<div style='background:#EEF3FA;border-left:4px solid #0B2C5F;border-radius:0 4pt 4pt 0;padding:8pt 12pt'>"
+        +"<div style='font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt'>"+r3.lw.h+"</div>"
+        +"<div style='font-size:9pt;color:#1A2740;line-height:1.6;font-family:JetBrains Mono,monospace'>"+r3.lw.t+"</div></div>":"");
+
+    // Narrative
+    var narBlocks2=b.narrativeText.split("||PARA||").map(function(p){
+      return p?"<p style='margin:0 0 9pt;text-align:justify'>"+p+"</p>":"";
+    }).join("");
+
+    // Justificativas
+    var jMap2={};
+    b.path.forEach(function(h){
+      var js=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
+      if(js.length) jMap2[h.id]={ch:h.ch,justs:js};
+    });
+    var jBlocks2="";
+    b.path.forEach(function(h){
+      if(!jMap2[h.id]) return;
+      var step2=S[h.id]; if(!step2) return;
+      var entry2=jMap2[h.id];
+      var qL2=step2.q.replace(/<em>/g,"").replace(/<\/em>/g,"");
+      var rL2=al(entry2.ch);
+      jBlocks2+="<div style='margin:0 0 10pt;padding:10pt 14pt;background:#F5F8FF;border-left:3pt solid #1E4C99;border-radius:0 5pt 5pt 0'>"
+        +"<div style='font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1E4C99;margin-bottom:6pt;display:flex;gap:10pt;align-items:center'>"
+        +"<span>Registro do analista</span>"
+        +"<span style='background:#DCE6F4;color:#0B2C5F;padding:1pt 7pt;border-radius:10pt;font-weight:700'>"+qL2+"</span>"
+        +"<span style='background:#0B2C5F;color:#fff;padding:1pt 7pt;border-radius:10pt'>Resposta: "+rL2+"</span>"
+        +"</div>"
+        +entry2.justs.map(function(j,ji){
+          var num2=(entry2.justs.length>1?"<strong style='color:#1E4C99'>("+(ji+1)+") </strong>":"");
+          var parts2=[];
+          if(j.fund) parts2.push("<span>"+num2+"<strong>Fundamentação:</strong> "+j.fund+"</span>");
+          if(j.prob){var pb2="<strong>Elemento probatório:</strong> "+j.prob+(j.pag?" <span style='background:#fff;border:1pt solid #c0c8d8;padding:0pt 5pt;border-radius:3pt;font-family:monospace;font-size:8pt'>Fl./Pág. "+j.pag+"</span>":"");parts2.push("<span>"+(j.fund?"":num2)+pb2+"</span>");}
+          return "<div style='font-size:9pt;color:#1A2740;line-height:1.7;margin-bottom:"+(ji<entry2.justs.length-1?"7pt":"0")+"'>"+parts2.join(" — ")+"</div>";
+        }).join("")
+        +"</div>";
+    });
+
+    html += sec("Elementos constitutivos"+conductaLabel)
+      +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narBlocks2+"</div>"
+      +(jBlocks2?"<div style='margin-top:4pt'><div style='font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E4C99;margin-bottom:8pt;border-bottom:1pt solid #DCE6F4;padding-bottom:4pt'>Fundamentações e elementos probatórios registrados pelo analista</div>"+jBlocks2+"</div>":"");
+
+    html += sec("Conclusão"+conductaLabel)
+      +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"
+      +(r3.an?"<div style='margin-bottom:10pt;padding:9pt 11pt;background:#FBF2DF;border-left:3pt solid #B7791F;border-radius:0 3pt 3pt 0;font-size:9pt;color:#7a4e0e'>"+ANALOGY_NOTE+"</div>":"")
+      +"<p style='text-align:justify;margin-bottom:8pt'>"+b.conclusionText+"</p>"
+      +"<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta.</p>"
       +"</div>";
+
+    // Rastreabilidade
+    var pathRows2=b.path.map(function(h,i){
+      var step3=S[h.id]; if(!step3)return"";
+      var autoJust3=(JUST[h.id]&&JUST[h.id][h.ch])||"";
+      var filled3=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
+      var jCell3=autoJust3;
+      if(filled3.length){
+        jCell3+="<div style='margin-top:5pt;padding:5pt 7pt;background:#f0f4fa;border-left:3px solid #C9A35C;font-size:8pt'>"
+          +filled3.map(function(j,ji){
+            return (filled3.length>1?"<div style='font-weight:700;margin-bottom:2pt;margin-top:"+(ji>0?"6pt":"0")+"'>Justificativa "+(ji+1)+"</div>":"")
+              +(j.fund?"<div style='margin-bottom:2pt'><strong>Fundamentação:</strong> "+j.fund+"</div>":"")
+              +(j.prob?"<div><strong>Elem. probatório:</strong> "+j.prob+(j.pag?" — <strong>Fl./Pág.:</strong> "+j.pag:"")+"</div>":"");
+          }).join("")+"</div>";
+      }
+      return "<tr style='border-bottom:1px solid #e8edf4'>"
+        +"<td style='padding:5pt 8pt;font-family:JetBrains Mono,monospace;font-size:8pt;color:#5B6781;white-space:nowrap;vertical-align:top'>"+(i+1)+"</td>"
+        +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740;vertical-align:top'>"+step3.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
+        +"<td style='padding:5pt 8pt;vertical-align:top;white-space:nowrap'><span style='font-size:8pt;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#DCE6F4;color:#0B2C5F'>"+al(h.ch)+"</span></td>"
+        +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#5B6781;vertical-align:top'>"+jCell3+"</td>"
+        +"</tr>";
+    }).join("");
+
+    if(pathRows2){
+      html += sec("Caminho percorrido"+conductaLabel)
+        +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo, com resposta e fundamento técnico.</div>"
+        +"<table><thead><tr style='background:#EEF3FA'>"
+        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:22pt'>#</th>"
+        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
+        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:52pt'>Resposta</th>"
+        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fund. e registros</th>"
+        +"</tr></thead><tbody>"+pathRows2+"</tbody></table>";
+    }
   });
-
-  html += sec("Elementos constitutivos da conduta — análise fático-jurídica")
-    +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narrativeBlocks+"</div>"
-    +(justBlocks
-      ? "<div style='margin-top:4pt'>"
-        +"<div style='font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E4C99;margin-bottom:8pt;border-bottom:1pt solid #DCE6F4;padding-bottom:4pt'>Fundamentações e elementos probatórios registrados pelo analista</div>"
-        +justBlocks+"</div>"
-      : "");
-
-  // Conclusão
-  html += sec("Conclusão — tipificação disciplinar e penalidade cabível")
-    +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"
-    +(res.an ? "<div style='margin-bottom:10pt;padding:9pt 11pt;background:#FBF2DF;border-left:3pt solid #B7791F;border-radius:0 3pt 3pt 0;font-size:9pt;color:#7a4e0e'>"+ANALOGY_NOTE+"</div>" : "")
-    +"<p style='text-align:justify;margin-bottom:8pt'>"+conclusionText+"</p>"
-    +"<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta.</p>"
-    +"</div>";
-
-  // Caminho percorrido
-  if(pathRows){
-    html += sec("Caminho percorrido — rastreabilidade analítica")
-      +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo, com resposta, fundamentação técnica automática e justificativas inseridas pelo analista.</div>"
-      +"<table><thead><tr style='background:#EEF3FA'>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:22pt'>#</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:52pt'>Resposta</th>"
-      +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fund. automática e registros do analista</th>"
-      +"</tr></thead><tbody>"+pathRows+"</tbody></table>";
-  }
 
   // Rodapé
   html += "<div style='font-size:8pt;color:#888;border-top:1pt solid #ddd;margin-top:16pt;padding-top:7pt'>"+DISCLAIMER+"</div>"
@@ -1560,6 +1704,58 @@ document.getElementById("bpr").onclick=function(){
     alert("O navegador bloqueou a abertura da janela. Permita pop-ups para este site e tente novamente.");
   }
 };
+
+// ── MULTI-CONDUCT FUNCTIONS ───────────────────────────────────────────────────
+function salvarCondutaAtual(){
+  var cur=hist[hist.length-1];
+  if(!R[cur.id]) return; // só salva se há resultado
+  CONDUTAS.push({
+    conduta: SESSION.conduta,
+    hist: hist.slice(),
+    resultId: cur.id,
+    res: R[cur.id]
+  });
+}
+
+function adicionarConduta(){
+  salvarCondutaAtual();
+  SESSION.conduta="";
+  hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
+  window.scrollTo({top:0,behavior:"smooth"});
+  showDescricaoConduta();
+}
+
+function detectCumul(allResultIds){
+  var eixos=allResultIds.map(function(id){return EIXO_MAP[id]||null;}).filter(Boolean);
+  var unique=eixos.filter(function(e,i){return eixos.indexOf(e)===i;});
+  var alerts=[];
+  CUMUL_RULES.forEach(function(rule){
+    if(rule.eixos.every(function(e){return unique.indexOf(e)!==-1;})){
+      alerts.push(rule.msg);
+    }
+  });
+  // Múltiplos resultados de demissão
+  var nDem=allResultIds.filter(function(id){return DEMISSAO_KEYS.indexOf(id)!==-1;}).length;
+  if(nDem>=2){
+    alerts.push("<strong>Múltiplos enquadramentos ensejadores de demissão</strong> — foram identificados "+nDem+" condutas que, individualmente, já ensejariam a penalidade de demissão (art. 132 da Lei nº 8.112/90). A instauração de PAD único é recomendada para apuração conjunta, com due process garantido ao acusado.");
+  }
+  return alerts;
+}
+
+function buildMCSavedList(){
+  if(!CONDUTAS.length) return "";
+  return '<div class="mc-saved-list">'
+    +CONDUTAS.map(function(c,i){
+      var tc2=c.res.t==="success"?"mc-tag-s":c.res.t==="warning"?"mc-tag-w":"mc-tag-d";
+      var desc=c.conduta?c.conduta.substring(0,60)+(c.conduta.length>60?"…":""):"(sem descrição)";
+      return '<div class="mc-saved-item">'
+        +'<span class="mc-num">'+(i+1)+'</span>'
+        +'<span class="mc-desc">'+escapeHtml(desc)+'</span>'
+        +'<span class="mc-tag '+tc2+'">'+escapeHtml(c.res.ti)+'</span>'
+        +'</div>';
+    }).join("")
+    +'</div>';
+}
 
 // ── PRE-FLOW FUNCTIONS ────────────────────────────────────────────────────────
 function escapeHtml(s){
@@ -1638,9 +1834,16 @@ function showIdentificacao(){
 }
 
 function showDescricaoConduta(){
+  var condNum=CONDUTAS.length+1;
+  var badgeHtml=CONDUTAS.length>0
+    ? '<span class="mc-badge">'+CONDUTAS.length+' conduta'+(CONDUTAS.length!==1?"s":"")+'  analisada'+(CONDUTAS.length!==1?"s":"")+'</span><br>'
+    : '';
+  var savedHtml=buildMCSavedList();
   elFlow.innerHTML=
     '<div class="pre-card">'
-    +'<h2>Descrição da Conduta</h2>'
+    +badgeHtml
+    +savedHtml
+    +'<h2>Descrição da Conduta '+(CONDUTAS.length>0?condNum:'')+'</h2>'
     +'<p class="pre-sub">Descreva sumariamente a conduta investigada. Esse texto será incluído no relatório gerado ao final.</p>'
     +'<div class="pre-field"><label>Descrição da conduta apurada *</label>'
     +'<textarea id="pi-conduta" rows="6" maxlength="2000" placeholder="Descreva os fatos: o que ocorreu, quando, onde, quem praticou e quem foi a vítima. Seja objetivo e factual."></textarea>'
