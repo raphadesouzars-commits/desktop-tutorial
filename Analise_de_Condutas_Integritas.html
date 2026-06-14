@@ -272,12 +272,22 @@ var S = {
   "start":{ax:"Análise Inicial",ak:"ini",
     q:"Houve <em>agressão física</em>?",
     h:"Considera-se qualquer ato concreto contra a integridade corporal: socos, tapas, empurrões, chutes ou qualquer contato físico violento.",
-    opts:[{l:"Sim",s:"Houve ofensa física",v:"sim",nx:"ag-legitima"},{l:"Não",s:"Outro tipo de conduta",v:"nao",nx:"ameaca"}]},
+    opts:[{l:"Sim",s:"Houve ofensa física",v:"sim",nx:"ag-servico"},{l:"Não",s:"Outro tipo de conduta",v:"nao",nx:"ameaca"}]},
+
+  "ag-servico":{ax:"Eixo Agressão",ak:"ini",
+    q:"A agressão ocorreu <em>durante o exercício das funções</em> ou em contexto diretamente relacionado ao serviço?",
+    h:"O art. 132, VII exige nexo com o serviço. Servidor de férias, em licença ou em contexto completamente alheio às funções não se enquadra neste inciso. Considere se a agressão ocorreu no ambiente de trabalho, no exercício de atribuições funcionais ou em decorrência direta delas.",
+    opts:[{l:"Sim",s:"Nexo funcional presente",v:"sim",nx:"ag-legitima"},{l:"Não",s:"Fora do contexto de serviço",v:"nao",nx:"res-ag-sem-nexo"}]},
 
   "ag-legitima":{ax:"Eixo Agressão",ak:"ini",
     q:"A agressão ocorreu em <em>legítima defesa</em>?",
     h:"Reação proporcional a injusta agressão atual ou iminente, a direito próprio ou de outrem (art. 23, II, CP).",
-    opts:[{l:"Sim",s:"Excludente de ilicitude",v:"sim",nx:"res-sem-ilicito"},{l:"Não",s:"Ato agressivo injustificado",v:"nao",nx:"res-ag-132"}]},
+    opts:[{l:"Sim",s:"Excludente de ilicitude",v:"sim",nx:"ag-excesso"},{l:"Não",s:"Ato agressivo injustificado",v:"nao",nx:"res-ag-132"}]},
+
+  "ag-excesso":{ax:"Eixo Agressão",ak:"ini",
+    q:"Houve <em>excesso</em> na reação defensiva?",
+    h:"O excesso ocorre quando o agente, após já ter repelido a agressão ou além do estritamente necessário para repeli-la, continua a reagir com violência. O art. 23, parágrafo único, do Código Penal determina que o excesso doloso ou culposo é punível. A legítima defesa cobre apenas a reação proporcional e necessária — não o excesso.",
+    opts:[{l:"Não",s:"Reação foi proporcional",v:"nao",nx:"res-sem-ilicito"},{l:"Sim — doloso",s:"Continuou a agredir intencionalmente",v:"dolo",nx:"res-ag-excesso-dolo",st:"o-dng"},{l:"Sim — culposo",s:"Excedeu sem intenção (imprudência)",v:"culpa",nx:"res-ag-excesso-culpa",st:"o-alt"}]},
 
   "ameaca":{ax:"Eixo Ameaça",ak:"ameaca",
     q:"A conduta consistiu em <em>ameaça</em> (verbal, escrita ou gestual)?",
@@ -297,7 +307,7 @@ var S = {
   "ameaca-grav-sem":{ax:"Eixo Ameaça",ak:"ameaca",tc:true,
     q:"Qual a <em>gravidade da ameaça</em>?",
     h:"Avalie a intensidade da intimidação, o impacto sobre a vítima e a repercussão sobre o ambiente de trabalho.",
-    opts:[{l:"GRAVE",s:"Impacto intenso, coação",v:"grave",nx:"res-ameaca-132",st:"o-dng"},{l:"MODERADA",s:"Intimidação sem uso do cargo",v:"mod",nx:"res-ameaca-116",st:"o-alt"},{l:"LEVE",s:"Desconforto sem impacto grave",v:"leve",nx:"res-ameaca-116"}]},
+    opts:[{l:"GRAVE",s:"Impacto intenso, coação",v:"grave",nx:"res-ameaca-132",st:"o-dng"},{l:"MODERADA",s:"Ameaça de agressão física",v:"mod",nx:"res-ameaca-116-mod",st:"o-alt"},{l:"LEVE",s:"Ameaça de dano à imagem",v:"leve",nx:"res-ameaca-116"}]},
 
   // ── EIXO SEXUAL ───────────────────────────────────────────────────────────
   "sex-conotacao":{ax:"Eixo Sexual",ak:"sex",
@@ -313,7 +323,7 @@ var S = {
   // CAMINHO: COM FAVORECIMENTO
   "sex-consentida":{ax:"Eixo Sexual",ak:"sex",
     q:"A conduta foi <em>consentida</em>?",
-    h:"Consentimento livre (sem coerção), expresso ou inequivocamente demonstrado, por pessoa capaz. Não há consentimento válido quando existe relação de poder ou dependência hierárquica que comprometa a liberdade de escolha.",
+    h:"Atenção: consentimento em contexto de subordinação hierárquica pode estar viciado por medo de represália funcional. Silêncio, tolerância passiva ou ausência de resistência explícita não equivalem a consentimento genuíno quando existe assimetria de poder. Responda 'Sim — consentida' apenas se houver elementos concretos que indiquem adesão voluntária e livre da vítima, sem qualquer pressão decorrente da relação funcional.",
     opts:[{l:"Sim",s:"Consentimento válido",v:"sim",nx:"sex-moralidade-cons"},{l:"Não",s:"Sem consentimento",v:"nao",nx:"sex-impacto-fav"}]},
 
   "sex-moralidade-cons":{ax:"Eixo Sexual",ak:"sex",
@@ -366,7 +376,12 @@ var S = {
   "disc-reiteracao":{ax:"Eixo Discriminatório",ak:"disc",
     q:"A conduta discriminatória foi <em>reiterada</em> (padrão de comportamento)?",
     h:"O assédio discriminatório exige reiteração sistemática. Conduta pontual e conduta reiterada configuram tipificações distintas, conforme a NT 93/2024.",
-    opts:[{l:"Sim",s:"Padrão reiterado",v:"sim",nx:"disc-gravidade"},{l:"Não",s:"Ato pontual",v:"nao",nx:"disc-gravidade-pont"}]},
+    opts:[{l:"Sim",s:"Padrão reiterado",v:"sim",nx:"disc-cargo"},{l:"Não",s:"Ato pontual",v:"nao",nx:"disc-gravidade-pont"}]},
+
+  "disc-cargo":{ax:"Eixo Discriminatório",ak:"disc",
+    q:"O servidor utilizou <em>prerrogativas funcionais</em> como instrumento da conduta discriminatória?",
+    h:"Considera-se uso do cargo: recusar promoções ou progressões com base em característica pessoal protegida; atribuir sistematicamente tarefas degradantes ou de menor prestígio; sonegar informações ou acessos necessários ao trabalho; manipular avaliações funcionais de forma discriminatória. A mera existência de hierarquia não é suficiente — é necessário que o cargo tenha sido ativamente instrumentalizado.",
+    opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"res-disc-117",st:"o-dng"},{l:"Não",s:"Sem instrumentalização do cargo",v:"nao",nx:"disc-gravidade"}]},
 
   "disc-gravidade":{ax:"Eixo Discriminatório",ak:"disc",
     q:"Qual o grau de <em>ofensa à igualdade e dignidade</em> no padrão reiterado?",
@@ -387,12 +402,22 @@ var S = {
   "moral-dano":{ax:"Eixo Moral",ak:"moral",
     q:"Houve <em>dano ou repercussão grave</em> ao serviço ou à vítima?",
     h:"Lesão concreta à vítima (saúde, dignidade, carreira), prejuízo ao serviço público ou dano à imagem da administração.",
-    opts:[{l:"Sim",s:"Dano relevante",v:"sim",nx:"moral-moralidade-final"},{l:"Não",s:"Sem dano relevante",v:"nao",nx:"res-sem-ilicito"}]},
+    opts:[{l:"Sim",s:"Dano relevante",v:"sim",nx:"moral-isolado-cargo"},{l:"Não",s:"Sem dano relevante",v:"nao",nx:"res-sem-ilicito"}]},
+
+  "moral-isolado-cargo":{ax:"Eixo Assédio Moral",ak:"moral",
+    q:"O ato isolado grave foi praticado com <em>uso instrumental do cargo</em>?",
+    h:"Um único ato de extrema gravidade pode configurar assédio moral, especialmente quando o agressor utiliza as prerrogativas do cargo como instrumento de humilhação, exclusão ou coação. Exemplos: humilhação pública em reunião com uso da autoridade de chefia; exposição vexatória de limitações do servidor combinada com ameaça velada de consequências funcionais.",
+    opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"q-moral-subjetivo",st:"o-dng"},{l:"Não",s:"Sem uso instrumental do cargo",v:"nao",nx:"moral-moralidade-final"}]},
 
   "moral-direcao":{ax:"Eixo Moral",ak:"moral",tc:true,
     q:"Qual a <em>direção hierárquica</em> do assédio moral reiterado?",
     h:"A NT 93/2024 distingue: vertical descendente (chefe → subordinado), horizontal (entre pares) e ascendente (subordinado → chefe).",
-    opts:[{l:"VERTICAL",s:"Chefe a subordinado",v:"vertical",nx:"moral-cargo"},{l:"HORIZONTAL",s:"Entre pares",v:"horizontal",nx:"moral-moralidade-final",st:"o-alt"},{l:"ASCENDENTE",s:"Subordinado a chefe",v:"ascendente",nx:"moral-moralidade-final",st:"o-alt"}]},
+    opts:[{l:"VERTICAL",s:"Chefe a subordinado",v:"vertical",nx:"moral-cargo"},{l:"HORIZONTAL",s:"Entre pares",v:"horizontal",nx:"moral-disc-check",st:"o-alt"},{l:"ASCENDENTE",s:"Subordinado a chefe",v:"ascendente",nx:"moral-disc-check",st:"o-alt"}]},
+
+  "moral-disc-check":{ax:"Eixo Assédio Moral",ak:"moral",
+    q:"A escolha da vítima está associada a <em>característica pessoal protegida</em>?",
+    h:"Raça, cor, etnia, gênero, orientação sexual, identidade de gênero, religião, deficiência, origem, idade ou qualquer outra característica que tenha motivado a seleção da vítima. O assédio moral discriminatório é qualificado e exige análise cumulativa com o Eixo 4 (Discriminação).",
+    opts:[{l:"Sim",s:"Motivação discriminatória identificada",v:"sim",nx:"moral-moralidade-final",st:"o-dng"},{l:"Não",s:"Sem motivação discriminatória",v:"nao",nx:"moral-moralidade-final"}]},
 
   "moral-cargo":{ax:"Eixo Moral",ak:"moral",
     q:"Houve <em>uso do cargo ou poder hierárquico</em> na conduta reiterada?",
@@ -425,17 +450,33 @@ var R = {
     d:"A conduta caracteriza ofensa física em serviço a servidor ou a particular, hipótese de demissão prevista na Lei nº 8.112/90.",
     lw:{h:"Lei nº 8.112/90 — Art. 132, VII",t:"<q>A demissão será aplicada nos casos de: […] VII — ofensa física, em serviço, a servidor ou a particular, salvo em legítima defesa própria ou de outrem.</q>"},an:false,cp:null},
 
+  "res-ag-sem-nexo":{t:"warning",lb:"Análise",ti:"Agressão física sem nexo funcional",ar:"Art. 116, IX",
+    d:"A agressão física identificada não ocorreu em serviço nem em contexto diretamente relacionado ao exercício das funções, afastando o enquadramento no art. 132, VII, da Lei nº 8.112/1990. A conduta pode, contudo, configurar violação do dever de manter conduta compatível com a moralidade administrativa (art. 116, IX), caso produza repercussão funcional concreta — prejuízo à imagem institucional, comprometimento do ambiente de trabalho ou reflexo nas relações funcionais do servidor. Avalie as circunstâncias concretas para determinar o enquadramento aplicável e a eventual necessidade de apuração disciplinar.",
+    lw:{h:"Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null},
+
+  "res-ag-excesso-dolo":{t:"danger",lb:"Tipificação",ti:"Excesso doloso na legítima defesa",ar:"Art. 132, VII / Art. 116, IX",
+    d:"A legítima defesa inicial não cobre o excesso intencional praticado após a cessação da agressão ou além do estritamente necessário para repeli-la. O excesso doloso configura ato autônomo e ilícito, passível de enquadramento em ofensa física (art. 132, VII, da Lei nº 8.112/1990) se os elementos do tipo estiverem presentes, ou, subsidiariamente, em violação do dever de manter conduta compatível com a moralidade administrativa (art. 116, IX). A análise deve examinar a proporcionalidade da reação inicial e o momento em que a agressão cessou.",
+    lw:{h:"Código Penal — Art. 23, parágrafo único",t:"<q>O agente, em qualquer das hipóteses deste artigo, responderá pelo excesso doloso ou culposo.</q>"},an:false,cp:null},
+
+  "res-ag-excesso-culpa":{t:"warning",lb:"Tipificação",ti:"Excesso culposo na legítima defesa",ar:"Art. 116, IX",
+    d:"A legítima defesa inicial é reconhecida, mas a reação ultrapassou os limites necessários por imprudência ou descontrole emocional, sem intenção de causar dano além do necessário. O excesso culposo pode configurar descumprimento do dever de manter conduta compatível com a moralidade administrativa (art. 116, IX, da Lei nº 8.112/1990), com penalidade de advertência ou suspensão conforme a dosimetria do caso. A gravidade do excesso e o dano causado são elementos determinantes da sanção.",
+    lw:{h:"Código Penal — Art. 23, parágrafo único",t:"<q>O agente, em qualquer das hipóteses deste artigo, responderá pelo excesso doloso ou culposo.</q>"},an:false,cp:null},
+
   // Ameaça
   "res-ameaca-132":{t:"danger",lb:"Tipificação",ti:"Ameaça grave",ar:"Art. 132, V",
-    d:"Conduta de ameaça com alto grau de intimidação e coação caracteriza incontinência pública e conduta escandalosa, hipótese de demissão. Enquadramento orientativo conforme NT nº 544/2024.",
+    d:"Conduta de ameaça com alto grau de intimidação e coação caracteriza incontinência pública e conduta escandalosa, hipótese de demissão. Enquadramento orientativo conforme NT nº 544/2024. Atenção: caso a conduta de ameaça integre padrão reiterado de condutas hostis contra a mesma vítima, pode caracterizar também assédio moral. Recomenda-se análise complementar no Eixo 5 (Assédio Moral) da ferramenta.",
     lw:{h:"Lei nº 8.112/90 — Art. 132, V",t:"<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>"},an:true,
     cp:"A ameaça pode concomitantemente configurar assédio moral se praticada de forma reiterada. Considere análise complementar pelo eixo moral."},
   "res-ameaca-117":{t:"warning",lb:"Tipificação",ti:"Ameaça moderada — valimento do cargo",ar:"Art. 117, IX",
-    d:"Ameaça de intensidade moderada com uso do cargo configura valimento do cargo para fins ilícitos, com pena que pode chegar à demissão, conforme NT nº 544/2024.",
+    d:"Ameaça de intensidade moderada com uso do cargo configura valimento do cargo para fins ilícitos, com pena que pode chegar à demissão, conforme NT nº 544/2024. Atenção: caso a conduta de ameaça integre padrão reiterado de condutas hostis contra a mesma vítima, pode caracterizar também assédio moral. Recomenda-se análise complementar no Eixo 5 (Assédio Moral) da ferramenta.",
     lw:{h:"Lei nº 8.112/90 — Art. 117, IX",t:"<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>"},an:true,cp:null},
-  "res-ameaca-116":{t:"warning",lb:"Tipificação",ti:"Ameaça — conduta imprópria",ar:"Art. 116, XI",
-    d:"Ameaça sem uso do cargo ou de baixa intensidade configura falta de urbanidade e descumprimento do dever funcional, sujeita a advertência ou suspensão.",
-    lw:{h:"Lei nº 8.112/90 — Art. 116, XI",t:"<q>São deveres do servidor: […] XI — tratar com urbanidade as pessoas.</q>"},an:false,cp:null},
+  "res-ameaca-116":{t:"warning",lb:"Tipificação",ti:"Ameaça leve — falta de urbanidade",ar:"Art. 116, XI / Art. 117, V",
+    d:"Ameaça de baixa intensidade (ameaça de dano à imagem) sem uso do cargo configura falta de urbanidade e descumprimento do dever funcional, sujeita a advertência. O enquadramento pode se dar tanto no art. 116, XI (dever de urbanidade) quanto no art. 117, V (proibição de promover manifestação de desapreço no recinto da repartição), conforme a NT nº 544/2024/CGUNE/DICOR/CRG. Atenção: o prazo prescricional da advertência é de 180 dias (art. 142, III, da Lei nº 8.112/1990) — verificar se não houve prescrição antes da instauração da apuração. Atenção: caso a conduta de ameaça integre padrão reiterado de condutas hostis contra a mesma vítima, pode caracterizar também assédio moral. Recomenda-se análise complementar no Eixo 5 (Assédio Moral) da ferramenta.",
+    lw:{h:"Lei nº 8.112/90 — Art. 116, XI / Art. 117, V",t:"<q>São deveres do servidor: […] XI — tratar com urbanidade as pessoas.</q> / <q>Ao servidor é proibido: […] V — promover manifestação de apreço ou desapreço no recinto da repartição.</q>"},an:false,cp:null},
+
+  "res-ameaca-116-mod":{t:"warning",lb:"Tipificação",ti:"Ameaça de agressão física — conduta imprópria",ar:"Art. 116, IX",
+    d:"Diante dos elementos analisados, a conduta sob exame — ameaça de perpetrar agressão física, sem uso do cargo — caracteriza descumprimento do dever de manter conduta compatível com a moralidade administrativa, nos termos do art. 116, IX, da Lei nº 8.112/1990. A NT nº 544/2024/CGUNE/DICOR/CRG aponta expressamente a penalidade de suspensão como orientativa para este grau de gravidade, em razão da natureza dolosa da conduta e da capacidade de causar dano moral ao ameaçado. Atenção: o prazo prescricional para suspensão é de 2 anos (art. 142, II, da Lei nº 8.112/1990). Verificar se a autoridade competente pode ainda aplicar a pena de suspensão com base no art. 129, in fine, do mesmo diploma. Atenção: caso a conduta de ameaça integre padrão reiterado de condutas hostis contra a mesma vítima, pode caracterizar também assédio moral. Recomenda-se análise complementar no Eixo 5 (Assédio Moral) da ferramenta.",
+    lw:{h:"Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null},
 
   // Assédio sexual (com favorecimento)
   "res-sex-132":{t:"danger",lb:"Tipificação",ti:"Assédio sexual — impacto grave à vítima",ar:"Art. 132, V",
@@ -463,6 +504,10 @@ var R = {
     lw:{h:"Lei nº 8.112/90 — Art. 116, II e XI",t:"<q>São deveres do servidor: […] II — ser leal às instituições a que servir; […] XI — tratar com urbanidade as pessoas.</q>"},an:false,cp:null},
 
   // Discriminatório
+  "res-disc-117":{t:"danger",lb:"Tipificação",ti:"Assédio discriminatório — valimento do cargo",ar:"Art. 117, IX",
+    d:"Diante dos elementos analisados, a conduta sob exame — discriminação reiterada, dirigida a alvo específico, com instrumentalização das prerrogativas funcionais — caracteriza valimento do cargo para fins ilícitos, em detrimento da dignidade da função pública, nos termos do art. 117, IX, da Lei nº 8.112/1990, sujeitando o servidor à penalidade de demissão, conforme o art. 132, XIII, do mesmo diploma legal. O enquadramento decorre de interpretação sistêmica da NT nº 93/2024/CGUNE/DICOR/CRG. A conduta pode cumulativamente configurar assédio moral discriminatório — recomenda-se análise complementar no Eixo 5 da ferramenta.",
+    lw:{h:"Lei nº 8.112/90 — Art. 117, IX / Art. 132, XIII",t:"<q>Ao servidor é proibido: […] IX — valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.</q>"},an:true,cp:null},
+
   "res-disc-132":{t:"danger",lb:"Tipificação",ti:"Assédio discriminatório grave",ar:"Art. 132, V",
     d:"Conduta discriminatória dirigida a alvo específico com grave ofensa à igualdade e dignidade configura conduta escandalosa, hipótese de demissão. Enquadramento orientativo conforme NT nº 93/2024.",
     lw:{h:"Lei nº 8.112/90 — Art. 132, V",t:"<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>"},an:true,cp:null},
@@ -491,7 +536,12 @@ var C = {
   "start":[
     {ti:"Como usar este fluxograma",b:'<p>Responda cada pergunta com base nos <strong>fatos apurados</strong>, não na intenção declarada do agente. O fluxo cobre cinco eixos: agressão física, ameaça, conduta sexual, discriminação e assédio moral.</p><div class="ctx-hl">Em caso de dúvida, selecione a opção que melhor descreve o <strong>fato principal</strong> da conduta.</div>'},
     {ti:"Base normativa principal",b:'<span class="ctx-tag ctx-tag-blue">Lei nº 8.112/90</span><p><strong>NT nº 3285/2023/CGUNE/DICOR/CRG</strong> — Atos de conotação sexual e assédio sexual</p><p><strong>NT nº 93/2024/CGUNE/DICOR/CRG</strong> — Assédio moral e discriminação</p><p><strong>NT nº 544/2024/CGUNE/DICOR/CRG</strong> — Ameaça praticada por servidor federal</p><p class="ctx-source">Aprovadas pelo Corregedor-Geral da União</p>'}],
+  "ag-servico":[{ti:"Nexo funcional — art. 132, VII",b:'<span class="ctx-tag ctx-tag-blue">Art. 132, VII — Lei 8.112/90</span><p>O tipo exige que a ofensa física ocorra <strong>em serviço</strong>. Servidor em férias, licença ou contexto particular não se enquadra neste inciso.</p><div class="ctx-hl">A agressão sem nexo funcional pode ainda configurar violação do art. 116, IX, se produzir repercussão institucional.</div>'}],
   "ag-legitima":[{ti:"Legítima defesa — requisitos",b:'<span class="ctx-tag ctx-tag-blue">Art. 23, II — Código Penal</span><p>Requisitos <strong>cumulativos</strong>:</p><ul><li>Agressão injusta, atual ou iminente</li><li>Defesa de direito próprio ou alheio</li><li>Uso moderado dos meios necessários</li></ul><div class="ctx-hl">Excesso doloso ou culposo não exclui a ilicitude disciplinar.</div>'}],
+  "ag-excesso":[{ti:"Excesso na legítima defesa",b:'<span class="ctx-tag ctx-tag-amber">Art. 23, § único — CP</span><p>O excesso ocorre quando o agente continua a reagir após cessar a agressão ou usa violência além do necessário.</p><ul><li><strong>Doloso:</strong> continuou intencionalmente → punível como ato autônomo</li><li><strong>Culposo:</strong> excedeu por imprudência → pode gerar suspensão</li></ul>'}],
+  "disc-cargo":[{ti:"Valimento do cargo — discriminação",b:'<span class="ctx-tag ctx-tag-amber">Art. 117, IX — Lei 8.112/90</span><p>O cargo deve ser <strong>ativamente instrumentalizado</strong> — não basta a mera existência de hierarquia.</p><ul><li>Recusa de progressão por fator protegido</li><li>Atribuição sistemática de tarefas degradantes</li><li>Manipulação de avaliações funcionais</li></ul>'}],
+  "moral-isolado-cargo":[{ti:"Ato isolado grave com uso do cargo",b:'<span class="ctx-tag ctx-tag-amber">NT nº 93/2024</span><p>Ato isolado de extrema gravidade com uso das prerrogativas do cargo pode configurar assédio moral mesmo sem reiteração.</p><div class="ctx-hl">Se confirmado uso do cargo, avalie o elemento subjetivo (dolo/culpa) no próximo passo.</div>'}],
+  "moral-disc-check":[{ti:"Assédio moral discriminatório",b:'<span class="ctx-tag ctx-tag-amber">NT nº 93/2024</span><p>O assédio motivado por característica pessoal protegida é qualificado e exige <strong>análise cumulativa</strong> com o Eixo 4 (Discriminação).</p><div class="ctx-hl">Motivação discriminatória pode elevar o enquadramento e atrair a NT nº 93/2024 em conjunto com o eixo discriminatório.</div>'}],
   "ameaca":[{ti:"Conceito de ameaça — NT 544/2024",b:'<span class="ctx-tag ctx-tag-red">NT nº 544/2024/CGUNE/DICOR/CRG</span><p>A NT 544/2024 define ameaça como o <strong>anúncio de mal futuro e injusto</strong> dirigido a alguém com a finalidade de intimidar, coagir ou causar temor.</p><p>Pode ser verbal, escrita ou gestual, direta ou indireta.</p><div class="ctx-hl">A ameaça pode coexistir com assédio moral quando praticada de forma reiterada.</div><p class="ctx-source">NT nº 544/2024, itens 2 e 3</p>'}],
   "ameaca-cargo":[{ti:"Valimento do cargo — ameaça",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O uso do cargo agrava a ameaça quando o servidor se vale de:</p><ul><li>Posição de chefia ou hierarquia</li><li>Controle de avaliações, benefícios ou punições</li><li>Influência funcional, mesmo informal</li></ul><p class="ctx-source">NT nº 544/2024, item 4</p>'}],
   "ameaca-grav-cargo":CTX_DOSIMETRIA_AMEACA,
@@ -524,8 +574,13 @@ var C = {
 
 // ── JUST ──────────────────────────────────────────────────────────────────────
 var JUST = {
-  "start":{"sim":"A presença de contato físico direciona a análise para o eixo de agressão física (Art. 132, VII), exigindo verificação da excludente de legítima defesa.","nao":"A ausência de agressão física direciona a análise para verificação de ameaça, conduta autônoma tratada pela NT nº 544/2024."},
-  "ag-legitima":{"sim":"A legítima defesa é excludente de ilicitude (art. 23, II, CP) aplicável ao Direito Disciplinar por analogia. Afasta a infração quando presentes todos os requisitos legais.","nao":"Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90."},
+  "start":{"sim":"A presença de contato físico direciona a análise para o eixo de agressão física (Art. 132, VII), exigindo verificação do nexo funcional.","nao":"A ausência de agressão física direciona a análise para verificação de ameaça, conduta autônoma tratada pela NT nº 544/2024."},
+  "ag-servico":{"sim":"Nexo funcional presente — a agressão ocorreu em serviço, satisfazendo o elemento objetivo do art. 132, VII, da Lei 8.112/90.","nao":"Ausência de nexo funcional afasta o art. 132, VII. A conduta pode ainda configurar violação do art. 116, IX, se houver repercussão institucional."},
+  "ag-legitima":{"sim":"Legítima defesa reconhecida. Verificação do excesso é necessária (art. 23, § único, do CP).","nao":"Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90."},
+  "ag-excesso":{"nao":"Reação proporcional — legítima defesa integral, sem excesso. Afasta a responsabilidade disciplinar.","dolo":"Excesso doloso — ato autônomo ilícito, passível de enquadramento em art. 132, VII ou art. 116, IX.","culpa":"Excesso culposo — pode configurar art. 116, IX, com penalidade de advertência ou suspensão."},
+  "disc-cargo":{"sim":"Uso instrumental do cargo na conduta discriminatória — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — análise prossegue pela gravidade da conduta discriminatória."},
+  "moral-isolado-cargo":{"sim":"Uso do cargo no ato isolado grave — direciona análise ao elemento subjetivo (dolo/culpa).","nao":"Sem uso instrumental do cargo — análise prossegue pela ofensa à moralidade administrativa."},
+  "moral-disc-check":{"sim":"Motivação discriminatória identificada — conduta qualificada como assédio moral discriminatório. Análise complementar no Eixo 4 recomendada.","nao":"Sem motivação discriminatória — assédio moral sem qualificador discriminatório."},
   "ameaca":{"sim":"A ameaça é conduta autônoma com enquadramento próprio conforme a NT nº 544/2024/CGUNE/DICOR/CRG.","nao":"Sem ameaça identificada, a análise prossegue para verificar eventual conduta de conotação sexual."},
   "ameaca-cargo":{"sim":"O valimento do cargo agrava a tipificação da ameaça, podendo configurar Art. 117, IX. NT nº 544/2024, item 4.","nao":"Sem uso do cargo, a tipificação será determinada exclusivamente pela gravidade da ameaça (Art. 116 ou 132, V)."},
   "ameaca-grav-cargo":{"grave":"Ameaça grave com coação intensa e uso do cargo configura conduta escandalosa (Art. 132, V). NT nº 544/2024, item 5.","mod":"Ameaça moderada com uso do cargo configura valimento do cargo (Art. 117, IX). NT nº 544/2024.","leve":"Ameaça leve configura falta de urbanidade (Art. 116, XI). NT nº 544/2024."},
@@ -555,7 +610,8 @@ var JUST = {
 
 // ── LABELS ────────────────────────────────────────────────────────────────────
 var QL = {
-  "start":"Agressão física?","ag-legitima":"Legítima defesa?",
+  "start":"Agressão física?","ag-servico":"Em serviço?","ag-legitima":"Legítima defesa?","ag-excesso":"Excesso?",
+  "disc-cargo":"Uso do cargo (disc.)?","moral-isolado-cargo":"Uso do cargo (isolado)?","moral-disc-check":"Motivação discriminatória?",
   "ameaca":"Conduta de ameaça?","ameaca-cargo":"Uso do cargo (ameaça)?",
   "ameaca-grav-cargo":"Gravidade da ameaça?","ameaca-grav-sem":"Gravidade da ameaça?",
   "sex-conotacao":"Conotação sexual?","sex-favorecimento":"Fin. de favorecimento?",
@@ -1127,6 +1183,12 @@ function showReport(){
   // Build narrative text
   var narrativeText = buildNarrative(path, res, "");
   var conclusionText = buildConclusion(cur.id);
+
+  // Alt. 8 — alerta de assédio moral discriminatório
+  var discCheckStep = path.filter(function(h){return h.id==="moral-disc-check";})[0];
+  if(discCheckStep && discCheckStep.ch==="sim"){
+    conclusionText += " A presença de motivação discriminatória qualifica a conduta como assédio moral discriminatório. Recomenda-se análise complementar no Eixo 4 (Discriminação) da ferramenta, podendo resultar em cumulatividade de enquadramentos.";
+  }
 
   // Path table for reference
   var ph=path.map(function(h,i){
