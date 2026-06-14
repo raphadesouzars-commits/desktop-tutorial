@@ -1947,18 +1947,21 @@ function validateProcesso(val){
 }
 
 function showIdentificacao(){
+  elSN.textContent="—";
+  elCrumbs.innerHTML="";
+  elSB.innerHTML='<div class="ctx-block"><div class="ctx-block-title">Antes de iniciar</div><div class="ctx-block-body"><p>Preencha os dados do caso para que o relatório gerado possa ser utilizado como peça de fundamentação.</p><p>O <strong>número do processo</strong> e o <strong>servidor responsável</strong> são obrigatórios.</p><div class="ctx-hl">Os dados informados ficam apenas nesta sessão do navegador — não são enviados a nenhum servidor.</div></div></div>';
   elFlow.innerHTML=
     '<div class="pre-card">'
     +'<h2>Identificação da Análise</h2>'
     +'<p class="pre-sub">Preencha os dados do processo antes de iniciar o fluxo de análise disciplinar.</p>'
     +'<div class="pre-row">'
     +'<div class="pre-field"><label>Número do Processo *</label>'
-    +'<input id="pi-proc" type="text" placeholder="00000.000000/0000-00" maxlength="22"/></div>'
+    +'<input id="pi-proc" type="text" placeholder="Ex.: 10880.720001/2025-11"/></div>'
     +'<div class="pre-field"><label>Data dos Fatos</label>'
     +'<input id="pi-data" type="date"/></div>'
     +'</div>'
     +'<div class="pre-row">'
-    +'<div class="pre-field"><label>Nome do Analista *</label>'
+    +'<div class="pre-field"><label>Servidor responsável pela análise *</label>'
     +'<input id="pi-analista" type="text" placeholder="Nome completo"/></div>'
     +'<div class="pre-field"><label>Unidade / Seção</label>'
     +'<input id="pi-unidade" type="text" placeholder="Ex.: COGER/RFB – DF"/></div>'
@@ -1968,22 +1971,13 @@ function showIdentificacao(){
     +'</div>'
     +'</div>';
 
-  var piProc=document.getElementById("pi-proc");
-  piProc.oninput=function(){
-    var m=maskProcesso(this.value);
-    var cur=this.selectionStart;
-    this.value=m;
-    // restore cursor roughly
-    this.setSelectionRange(Math.min(cur,m.length),Math.min(cur,m.length));
-  };
-
   document.getElementById("pi-submit").onclick=function(){
     var proc=document.getElementById("pi-proc").value.trim();
     var analista=document.getElementById("pi-analista").value.trim();
     var unidade=document.getElementById("pi-unidade").value.trim();
     var data=document.getElementById("pi-data").value;
     var ok=true;
-    if(!validateProcesso(proc)){
+    if(!proc){
       document.getElementById("pi-proc").classList.add("err"); ok=false;
     } else {
       document.getElementById("pi-proc").classList.remove("err");
