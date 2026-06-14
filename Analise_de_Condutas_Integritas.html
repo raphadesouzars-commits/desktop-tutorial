@@ -432,9 +432,13 @@ var S = {
     h:"Selecione a opção que melhor descreve o fato principal apurado. Se houver múltiplas condutas, analise-as separadamente usando o botão 'Analisar outra conduta' ao final de cada resultado.",
     opts:[
       {l:"Agressão física",s:"Contato físico violento",v:"sim",nx:"ag-servico"},
-      {l:"Ameaça / ofensa verbal",s:"Intimidação, insulto ou xingamento",v:"nao",nx:"ameaca"},
-      {l:"Retaliação a denunciante",s:"Represália por ato protegido",v:"ret",nx:"ret-ato-protegido",st:"o-alt"},
-      {l:"Perseguição / stalking",s:"Vigilância ou contato insistente",v:"stalk",nx:"stalk-perseguicao",st:"o-alt"}
+      {l:"Ameaça",s:"Anúncio de mal futuro / intimidação",v:"ameaca",nx:"ameaca-cargo"},
+      {l:"Ofensa verbal",s:"Insulto, xingamento ou humilhação",v:"vverbal",nx:"vverbal-inicio"},
+      {l:"Assédio sexual",s:"Conduta de conotação sexual",v:"sex",nx:"sex-conotacao"},
+      {l:"Assédio moral",s:"Conduta hostil ou degradante",v:"moral",nx:"moral-isolado"},
+      {l:"Discriminação",s:"Conduta baseada em fator protegido",v:"disc",nx:"disc-fator"},
+      {l:"Retaliação a denunciante",s:"Represália por ato protegido",v:"ret",nx:"ret-ato-protegido"},
+      {l:"Perseguição / stalking",s:"Vigilância ou contato insistente",v:"stalk",nx:"stalk-perseguicao"}
     ]},
 
   "ag-servico":{ax:"Eixo Agressão",ak:"ini",
@@ -846,7 +850,7 @@ var C = {
 
 // ── JUST ──────────────────────────────────────────────────────────────────────
 var JUST = {
-  "start":{"sim":"Agressão física identificada — análise prossegue para verificação do nexo funcional (art. 132, VII).","nao":"Conduta de ameaça ou ofensa verbal — análise prossegue pelo Eixo Ameaça/Verbal (NT nº 544/2024).","ret":"Retaliação a ato protegido — análise prossegue pelo Eixo Retaliação ao Denunciante (Lei nº 13.608/2018).","stalk":"Perseguição reiterada — análise prossegue pelo Eixo Stalking Funcional (art. 147-A, CP / Lei nº 14.132/2021)."},
+  "start":{"sim":"Agressão física identificada — análise prossegue para verificação do nexo funcional (art. 132, VII).","ameaca":"Conduta de ameaça — análise prossegue pelo Eixo Ameaça (NT nº 544/2024).","vverbal":"Ofensa verbal direta — análise prossegue pelo Eixo Violência Verbal.","sex":"Conduta de conotação sexual — análise prossegue pelo Eixo Sexual (NT nº 3285/2023).","moral":"Conduta de assédio moral — análise prossegue pelo Eixo Assédio Moral (NT nº 93/2024).","disc":"Conduta discriminatória — análise prossegue pelo Eixo Discriminatório (NT nº 93/2024).","ret":"Retaliação a ato protegido — análise prossegue pelo Eixo Retaliação ao Denunciante (Lei nº 13.608/2018).","stalk":"Perseguição reiterada — análise prossegue pelo Eixo Stalking Funcional (art. 147-A, CP / Lei nº 14.132/2021)."},
   "ag-servico":{"sim":"Nexo funcional presente — a agressão ocorreu em serviço, satisfazendo o elemento objetivo do art. 132, VII, da Lei 8.112/90.","nao":"Ausência de nexo funcional afasta o art. 132, VII. A conduta pode ainda configurar violação do art. 116, IX, se houver repercussão institucional."},
   "ag-legitima":{"sim":"Legítima defesa reconhecida. Verificação do excesso é necessária (art. 23, § único, do CP).","nao":"Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90."},
   "ag-excesso":{"nao":"Reação proporcional — legítima defesa integral, sem excesso. Afasta a responsabilidade disciplinar.","dolo":"Excesso doloso — ato autônomo ilícito, passível de enquadramento em art. 132, VII ou art. 116, IX.","culpa":"Excesso culposo — pode configurar art. 116, IX, com penalidade de advertência ou suspensão."},
@@ -921,8 +925,8 @@ var AX = {ini:"ax-ini",sex:"ax-sex",disc:"ax-disc",moral:"ax-moral",ameaca:"ax-a
 
 function ql(id){return QL[id]||id;}
 function ak(v){return v==="sim"?"sim":v==="nao"?"nao":"alt";}
-function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",grave:"Grave",mod:"Moderada",leve:"Leve",dolo:"Dolo",culpa:"Culpa",nenhum:"Sem elemento",vertical:"Vertical",horizontal:"Horizontal",ascendente:"Ascendente",ret:"Retaliação a denunciante",stalk:"Perseguição / stalking",vverbal:"Ofensa verbal / xingamento"}[v]||v;}
-function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A",ret:"R",stalk:"P",vverbal:"V"}[v]||"?";}
+function al(v){return {sim:"Sim",nao:"Não",alta:"Alta",baixa:"Baixa/Média",grave:"Grave",mod:"Moderada",leve:"Leve",dolo:"Dolo",culpa:"Culpa",nenhum:"Sem elemento",vertical:"Vertical",horizontal:"Horizontal",ascendente:"Ascendente",ameaca:"Ameaça",vverbal:"Ofensa verbal",sex:"Assédio sexual",moral:"Assédio moral",disc:"Discriminação",ret:"Retaliação a denunciante",stalk:"Perseguição / stalking"}[v]||v;}
+function ash(v){return {sim:"S",nao:"N",alta:"A",baixa:"B",grave:"G",mod:"M",leve:"L",dolo:"D",culpa:"C",nenhum:"—",vertical:"V",horizontal:"H",ascendente:"A",ameaca:"A",vverbal:"V",sex:"S",moral:"M",disc:"D",ret:"R",stalk:"P"}[v]||"?";}
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 var hist = [{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
