@@ -371,7 +371,7 @@ var EIXO_MAP = {
   "res-outras-sex-132":"sex","res-outras-sex-117":"sex","res-outras-sex-116":"sex",
   "res-ret-117":"ret","res-ret-116":"ret",
   "res-vverbal-132":"vverbal","res-vverbal-117":"vverbal","res-vverbal-116":"vverbal",
-  "res-stalk-117":"stalk","res-stalk-116":"stalk"
+  "res-stalk-117":"stalk","res-stalk-116":"stalk","res-stalk-sem-nexo":"stalk"
 };
 
 // Regras de cumulatividade: par de eixos → mensagem orientativa
@@ -412,7 +412,8 @@ var PRESC = {
   "res-vverbal-117":      { pen: "Demissão", dias: 1825, art: "art. 142, I" },
   "res-vverbal-116":      { pen: "Advertência", dias: 180, art: "art. 142, III" },
   "res-stalk-117":        { pen: "Demissão", dias: 1825, art: "art. 142, I" },
-  "res-stalk-116":        { pen: "Suspensão", dias: 730, art: "art. 142, II" }
+  "res-stalk-116":        { pen: "Suspensão", dias: 730, art: "art. 142, II" },
+  "res-stalk-sem-nexo":   null
 };
 
 // Resultados que levam a demissão — requerem gate de confirmação
@@ -443,7 +444,7 @@ var S = {
 
   "ag-servico":{ax:"Eixo Agressão",ak:"ini",
     q:"A agressão ocorreu <em>durante o exercício das funções</em> ou em contexto diretamente relacionado ao serviço?",
-    h:"O art. 132, VII exige nexo com o serviço. Servidor de férias, em licença ou em contexto completamente alheio às funções não se enquadra neste inciso. Considere se a agressão ocorreu no ambiente de trabalho, no exercício de atribuições funcionais ou em decorrência direta delas.",
+    h:"O art. 132, VII exige nexo com o serviço. Servidor de férias, em licença ou em contexto completamente alheio às funções não se enquadra neste inciso. Considere se a agressão ocorreu no ambiente de trabalho, no exercício de atribuições funcionais ou em decorrência direta delas. A Convenção nº 190 da OIT, ratificada pelo Brasil em 2023, amplia o conceito de ambiente de trabalho para além das paredes da repartição: inclui viagens de trabalho, treinamentos, capacitações, eventos sociais ligados ao trabalho, deslocamentos custeados pela instituição e comunicações relacionadas ao trabalho por qualquer meio. Agressão ocorrida nesses contextos satisfaz o nexo funcional.",
     opts:[{l:"Sim",s:"Nexo funcional presente",v:"sim",nx:"ag-legitima"},{l:"Não",s:"Fora do contexto de serviço",v:"nao",nx:"res-ag-sem-nexo"}]},
 
   "ag-legitima":{ax:"Eixo Agressão",ak:"ini",
@@ -655,18 +656,13 @@ var S = {
 
   // ── EIXO 8 — STALKING FUNCIONAL ──────────────────────────────────────────
   "stalk-perseguicao":{ax:"Eixo Stalking Funcional",ak:"stalk",
-    q:"Houve <em>conduta reiterada de perseguição ou vigilância</em> da vítima no ambiente funcional?",
-    h:"Stalking funcional: padrão reiterado de monitoramento, seguimento, contato insistente indesejado ou vigilância que cause sofrimento, medo ou perturbação à vítima no contexto do trabalho. Base normativa: art. 147-A do CP (Lei nº 14.132/2021) e art. 116, IX, da Lei nº 8.112/90. Exige-se reiteração — ato isolado não configura stalking.",
-    opts:[{l:"Sim",s:"Perseguição reiterada identificada",v:"sim",nx:"stalk-meio"},{l:"Não",s:"Sem conduta persecutória reiterada",v:"nao",nx:"res-sem-ilicito"}]},
-
-  "stalk-meio":{ax:"Eixo Stalking Funcional",ak:"stalk",
-    q:"A perseguição ocorreu <em>por meio do ambiente de trabalho</em> ou com uso de recursos funcionais?",
-    h:"Considera-se uso do ambiente funcional: monitoramento de sistemas de ponto ou acesso; envio insistente de e-mails ou mensagens institucionais; controle da agenda ou deslocamentos do servidor; acesso indevido a dados pessoais ou funcionais da vítima via sistemas corporativos.",
-    opts:[{l:"Sim",s:"Ambiente de trabalho ou recursos funcionais",v:"sim",nx:"stalk-cargo"},{l:"Não",s:"Perseguição em contexto privado com impacto funcional",v:"nao",nx:"res-stalk-116"}]},
+    q:"Há padrão reiterado de perseguição, monitoramento ou contato insistente indesejado <em>com nexo funcional</em>?",
+    h:"O nexo funcional não exige que os meios usados sejam institucionais. Está presente quando: (a) as partes têm relação de trabalho — são colegas, superior e subordinado, ou mantêm qualquer vínculo funcional; (b) a perseguição tem origem na relação funcional — foi a convivência no trabalho que deu ao agressor o acesso, a oportunidade ou a motivação; ou (c) a perseguição produz repercussão no ambiente de trabalho da vítima — altera sua capacidade de trabalhar, sua presença na repartição ou suas relações funcionais. O meio privado (WhatsApp, redes sociais, seguimento físico fora da repartição) não afasta o enquadramento — afasta, quando muito, o art. 117, IX. O art. 116, IX captura plenamente o stalking por meios privados quando o nexo funcional está presente. Para o padrão, verifique: reiteração (mais de um episódio com continuidade temporal); indesejabilidade (a vítima sinalizou — formal ou comportamentalmente — que o contato é indesejado); perturbação (o padrão é objetivamente capaz de causar sofrimento ou restringir a liberdade da vítima).",
+    opts:[{l:"Sim",s:"Nexo funcional e padrão persecutório presentes",v:"sim",nx:"stalk-cargo"},{l:"Não",s:"Sem nexo funcional — avaliar comunicação ao MP pelo art. 147-A do CP",v:"nao",nx:"res-stalk-sem-nexo"}]},
 
   "stalk-cargo":{ax:"Eixo Stalking Funcional",ak:"stalk",
     q:"O agressor utilizou <em>prerrogativas funcionais</em> como instrumento da perseguição?",
-    h:"Uso do cargo na perseguição: chefia que usa poder hierárquico para monitorar e controlar deslocamentos da vítima; superior que acessa dados funcionais sigilosos para fins de vigilância; uso de atribuições gerenciais para manter contato insistente com o servidor perseguido.",
+    h:"Esta pergunta determina o patamar do enquadramento — não a existência do ilícito, que já foi estabelecida na pergunta anterior. O que distingue o art. 117, IX do art. 116, IX não é o meio usado na perseguição, mas se o agressor se valeu de algo que apenas o cargo lhe permite fazer. Exemplos de uso de prerrogativa: acessar o sistema de controle de ponto para monitorar horários da vítima usando credencial do cargo; usar o poder hierárquico para justificar presença na área da vítima; acessar dados pessoais da vítima via sistemas corporativos com credencial específica da função; convocar reuniões funcionais como oportunidade de contato forçado. Não satisfazem este critério: o uso de WhatsApp pessoal ou redes sociais; o seguimento físico fora da repartição; a presença em corredores comuns ou reuniões abertas a qualquer servidor. Nesses casos, o enquadramento é o art. 116, IX (suspensão) — não a ausência de ilícito.",
     opts:[{l:"Sim",s:"Usou prerrogativas do cargo",v:"sim",nx:"res-stalk-117"},{l:"Não",s:"Sem uso instrumental do cargo",v:"nao",nx:"res-stalk-116"}]}
 };
 
@@ -784,8 +780,12 @@ var R = {
     lw:{h:"CP — Art. 147-A / Lei nº 8.112/90 — Art. 117, IX",t:"<q>Art. 147-A do CP: Perseguir alguém, reiteradamente e por qualquer meio, ameaçando-lhe a integridade física ou psicológica, restringindo-lhe a capacidade de locomoção ou, de qualquer forma, invadindo ou perturbando sua esfera de liberdade ou privacidade.</q>"},an:true,cp:null},
 
   "res-stalk-116":{t:"warning",lb:"Tipificação",ti:"Stalking funcional — conduta imprópria",ar:"Art. 116, IX",
-    d:"A conduta sob exame configura perseguição reiterada com impacto no ambiente funcional, sem uso instrumental de prerrogativas do cargo. A conduta viola o dever de manter conduta compatível com a moralidade administrativa (art. 116, IX, da Lei nº 8.112/1990) e pode configurar também o crime de perseguição (art. 147-A do CP, Lei nº 14.132/2021), caso produza sofrimento ou perturbação à vítima. A penalidade orientativa é suspensão, conforme a gravidade e a frequência dos atos persecutórios. Recomenda-se análise de eventual assédio moral cumulativo.",
-    lw:{h:"CP — Art. 147-A / Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null}
+    d:"Diante dos elementos analisados, a conduta sob exame configura perseguição sistemática disciplinarmente relevante — com nexo funcional identificado entre o padrão de conduta e a relação de trabalho entre as partes — sem que haja, contudo, uso instrumental de prerrogativas específicas do cargo como mecanismo de execução da perseguição. O enquadramento é o art. 116, IX da Lei nº 8.112/1990 (dever de manter conduta compatível com a moralidade administrativa), com penalidade orientativa de suspensão. Este resultado abrange tanto o stalking praticado por meios funcionais compartilhados (e-mail institucional, canais corporativos, presença na repartição) quanto o stalking praticado por meios inteiramente privados (aplicativos de mensagens pessoais, redes sociais, seguimento físico fora da repartição) — desde que presente o nexo funcional e a repercussão no ambiente de trabalho da vítima. O canal privado não afasta o ilícito disciplinar; afasta apenas o patamar mais grave (art. 117, IX), que exige uso de prerrogativa específica do cargo. Quando os meios são privados, a fundamentação deve documentar expressamente: (a) a relação funcional entre as partes; (b) a repercussão do padrão no ambiente de trabalho — alteração de rotinas, evitação de espaços da repartição, impacto no desempenho, pedido de transferência ou afastamento médico. Essa documentação é o elemento que conecta a conduta privada ao ilícito disciplinar. Avaliar comunicação ao Ministério Público pelo crime de perseguição (art. 147-A do CP, Lei nº 14.132/2021) — que tramita de forma independente da apuração disciplinar (arts. 125 e 126 da Lei nº 8.112/1990). Avaliar cumulatividade com o Eixo 5 (Assédio Moral) quando o padrão de perseguição produziu impacto psicológico documentável sobre a vítima.",
+    lw:{h:"CP — Art. 147-A / Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null},
+
+  "res-stalk-sem-nexo":{t:"success",lb:"Análise",ti:"Sem ilícito disciplinar — perseguição sem nexo funcional",ar:null,
+    d:"O padrão de perseguição identificado não apresenta nexo funcional que ative o enquadramento disciplinar: agressor e vítima não mantêm relação de trabalho, e a perseguição não tem origem nem produz repercussão no ambiente de trabalho da vítima. O âmbito da apuração disciplinar não é ativado neste caso. Contudo, a ausência de nexo funcional não significa ausência de ilícito penal. O art. 147-A do Código Penal (inserido pela Lei nº 14.132/2021) tipifica o crime de perseguição independentemente de qualquer relação de trabalho entre as partes: 'Perseguir alguém, reiteradamente e por qualquer meio, ameaçando-lhe a integridade física ou psicológica, restringindo-lhe a capacidade de locomoção ou, de qualquer forma, invadindo ou perturbando sua esfera de liberdade ou privacidade.' Pena: reclusão de 6 meses a 2 anos. Quando o padrão identificado satisfaz os elementos do art. 147-A do CP, avalie a comunicação às autoridades policiais ou ao Ministério Público. As instâncias penal e disciplinar são independentes — a comunicação penal não depende de instauração de PAD, e pode ser feita diretamente pela vítima ou pela autoridade que tomou conhecimento dos fatos.",
+    lw:{h:"CP — Art. 147-A (Lei nº 14.132/2021)",t:"<q>Art. 147-A. Perseguir alguém, reiteradamente e por qualquer meio, ameaçando-lhe a integridade física ou psicológica, restringindo-lhe a capacidade de locomoção ou, de qualquer forma, invadindo ou perturbando sua esfera de liberdade ou privacidade. Pena — reclusão, de 6 (seis) meses a 2 (dois) anos, e multa.</q>"},an:false,cp:null}
 };
 
 // ── SIDEBAR CONTEXT ────────────────────────────────────────────────────────────
@@ -841,7 +841,6 @@ var C = {
   "vverbal-cargo":[{ti:"Uso do cargo na ofensa verbal",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O cargo qualifica a conduta quando o agressor usa:</p><ul><li>Posição de chefia ou autoridade institucional</li><li>Reuniões ou espaços gerenciais</li><li>Comunicações oficiais como veículo da ofensa</li></ul>'}],
   // Eixo 8 — Stalking Funcional
   "stalk-perseguicao":[{ti:"Stalking funcional — art. 147-A do CP",b:'<span class="ctx-tag ctx-tag-red">Lei nº 14.132/2021</span><p>O crime de perseguição (art. 147-A do CP) exige:</p><ul><li>Reiteração da conduta</li><li>Sofrimento, medo ou perturbação à vítima</li><li>Qualquer meio (físico, eletrônico, institucional)</li></ul><div class="ctx-hl">Ato isolado não configura stalking — é necessário padrão reiterado.</div><p class="ctx-source">Lei nº 14.132/2021 (art. 147-A CP)</p>'}],
-  "stalk-meio":[{ti:"Ambiente funcional como meio",b:'<span class="ctx-tag ctx-tag-amber">Stalking via recursos institucionais</span><ul><li>Monitoramento via sistemas de ponto/acesso</li><li>E-mails ou mensagens institucionais insistentes</li><li>Acesso indevido a dados pessoais via sistemas corporativos</li><li>Controle de agenda ou deslocamentos</li></ul>'}],
   "stalk-cargo":[{ti:"Uso do cargo na perseguição",b:'<span class="ctx-tag ctx-tag-blue">Art. 117, IX — Lei 8.112/90</span><p>O cargo é instrumentalizado quando o agressor usa poder de chefia, acesso privilegiado a sistemas ou prerrogativas gerenciais para manter vigilância ou controle sobre a vítima.</p>'}],
   "_result":[
     {ti:"Resultado da análise",b:'<p>O fluxo chegou a um enquadramento. Utilize o botão <strong>"Gerar Relatório"</strong> para obter a análise completa com fundamentação jurídica de cada escolha.</p>'},
@@ -891,8 +890,7 @@ var JUST = {
   "vverbal-disc":{"sim":"Motivação discriminatória identificada — análise redirecionada para o Eixo Discriminatório (NT nº 93/2024).","nao":"Sem motivação discriminatória — análise prossegue para verificar publicidade e gravidade da ofensa."},
   "vverbal-publica":{"sim":"Ofensa pública e grave — qualificador primário presente; análise prossegue para verificar uso do cargo.","nao":"Sem publicidade ou gravidade elevada — conduta enquadrada como falta de urbanidade (art. 116, XI)."},
   "vverbal-cargo":{"sim":"Uso do cargo identificado — valimento do cargo configura art. 117, IX, da Lei 8.112/90.","nao":"Sem uso do cargo — conduta escandalosa sem qualificador funcional (art. 132, V)."},
-  "stalk-perseguicao":{"sim":"Padrão persecutório reiterado confirmado — análise prossegue para identificar o meio e o enquadramento (art. 147-A CP / art. 116, IX, Lei 8.112/90).","nao":"Sem reiteração ou padrão persecutório identificado — ausente elemento essencial do stalking funcional."},
-  "stalk-meio":{"sim":"Ambiente funcional como meio de perseguição — análise prossegue para verificar uso de prerrogativas do cargo.","nao":"Perseguição em contexto privado com impacto funcional — enquadramento como conduta imprópria (art. 116, IX)."},
+  "stalk-perseguicao":{"sim":"Nexo funcional e padrão persecutório confirmados — análise prossegue para verificar uso de prerrogativas do cargo (art. 147-A CP / art. 116 ou 117, IX, Lei 8.112/90).","nao":"Sem nexo funcional — ausente elemento de conexão entre a perseguição e a relação de trabalho. Avaliar comunicação ao MP pelo art. 147-A do CP."},
   "stalk-cargo":{"sim":"Uso do cargo na perseguição — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — stalking enquadrado como conduta imprópria (art. 116, IX)."}
 };
 
@@ -917,7 +915,7 @@ var QL = {
   "vverbal-inicio":"Ofensa verbal?","vverbal-sexual":"Conotação sexual?",
   "vverbal-disc":"Motiv. discriminatória?","vverbal-publica":"Pública e grave?",
   "vverbal-cargo":"Uso do cargo (verbal)?",
-  "stalk-perseguicao":"Perseguição reiterada?","stalk-meio":"Meio funcional?",
+  "stalk-perseguicao":"Nexo funcional + padrão?",
   "stalk-cargo":"Uso do cargo (stalk.)?"
 };
 
