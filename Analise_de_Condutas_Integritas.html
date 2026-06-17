@@ -1922,25 +1922,54 @@ document.getElementById("bpr").onclick=function(){
   var ts   = elModal._ts||"";
 
   var sectionNum = 1;
-  function sec(title){ return "<div style='font-family:Barlow Condensed,sans-serif;font-size:11pt;font-weight:700;text-transform:uppercase;color:#0B2C5F;border-left:4px solid #C9A35C;padding-left:8pt;margin:16pt 0 8pt'>"+(sectionNum++)+" — "+title+"</div>"; }
+  function sec(title){ return "<div class='sec'>"+(sectionNum++)+" — "+title+"</div>"; }
 
   var html = "<!doctype html><html lang='pt-BR'><head><meta charset='utf-8'/>"
     +"<link href='https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap' rel='stylesheet'>"
     +"<style>"
     +"*{box-sizing:border-box;margin:0;padding:0;}"
-    +"body{font-family:Inter,sans-serif;color:#1A2740;padding:18mm 20mm;font-size:10pt;line-height:1.6;}"
-    +"@page{margin:15mm 18mm;}"
+    +"body{font-family:Inter,sans-serif;color:#1A2740;font-size:10pt;line-height:1.75;background:#fff;padding:0;}"
+    +"@page{size:A4;margin:18mm 20mm 20mm 20mm;}"
+    +"@page:first{margin-top:12mm;}"
+    +"h1,h2,h3,h4{page-break-after:avoid;}"
+    +"p{orphans:3;widows:3;}"
+    +"table{page-break-inside:auto;border-collapse:collapse;width:100%;}"
+    +"tr{page-break-inside:avoid;page-break-after:auto;}"
+    +"thead{display:table-header-group;}"
+    +".no-break{page-break-inside:avoid;}"
+    +".break-before{page-break-before:always;}"
+    +".sec{font-family:'Barlow Condensed',sans-serif;font-size:11pt;font-weight:700;text-transform:uppercase;color:#0B2C5F;border-left:4pt solid #C9A35C;padding:3pt 0 3pt 10pt;margin:18pt 0 9pt;letter-spacing:.3px;page-break-after:avoid;page-break-inside:avoid;}"
+    +".result-banner{border-radius:4pt;padding:10pt 14pt;margin-bottom:10pt;page-break-inside:avoid;}"
+    +".law-box{background:#EEF3FA;border-left:4pt solid #0B2C5F;border-radius:0 4pt 4pt 0;padding:8pt 12pt;margin-bottom:10pt;page-break-inside:avoid;}"
+    +".law-box .law-label{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt;}"
+    +".law-box .law-text{font-size:9pt;color:#1A2740;line-height:1.6;font-family:'JetBrains Mono',monospace;}"
+    +".analyst-note{margin:0 0 9pt;padding-left:16pt;border-left:2pt solid #C9A35C;text-align:justify;line-height:1.75;font-size:9.5pt;color:#2a3a50;page-break-inside:avoid;}"
+    +".analyst-note-label{font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8C6E2C;display:block;margin-bottom:3pt;}"
+    +".narrative p{margin:0 0 9pt;text-align:justify;line-height:1.8;orphans:3;widows:3;}"
+    +".alert-box{background:#FFF8E6;border:1.5pt solid #C9A35C;border-radius:4pt;padding:10pt 14pt;page-break-inside:avoid;margin-bottom:10pt;}"
+    +".trace-table th{padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;background:#EEF3FA;}"
+    +".trace-table td{padding:5pt 8pt;font-size:9pt;color:#1A2740;vertical-align:top;border-bottom:1pt solid #e8edf4;}"
+    +".badge{font-size:8pt;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#DCE6F4;color:#0B2C5F;}"
+    +".meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:4pt 20pt;background:#F5F7FA;border:1pt solid #DCE6F4;border-radius:4pt;padding:8pt 12pt;margin:10pt 0;font-size:9pt;page-break-inside:avoid;}"
+    +".doc-header{border-bottom:2.5pt solid #0B2C5F;padding-bottom:8pt;margin-bottom:10pt;page-break-inside:avoid;}"
+    +".doc-title{font-family:'Barlow Condensed',sans-serif;font-size:17pt;font-weight:700;color:#0B2C5F;text-transform:uppercase;letter-spacing:.4px;}"
+    +".doc-subtitle{font-size:9pt;color:#5B6781;margin-top:3pt;}"
+    +".doc-meta{font-size:9pt;color:#5B6781;margin-top:5pt;}"
+    +".doc-meta span{display:inline-block;margin-right:20pt;}"
+    +".doc-footer{font-size:8pt;color:#888;border-top:1pt solid #ddd;margin-top:16pt;padding-top:7pt;}"
+    +".doc-footer-bar{background:#0B2C5F;color:#fff;padding:7pt 12pt;font-size:8pt;margin-top:12pt;display:flex;justify-content:space-between;flex-wrap:wrap;}"
+    +".mono{font-family:'JetBrains Mono',monospace;}"
+    +".no-print{display:flex;gap:12px;justify-content:flex-end;margin-top:20pt;}"
     +"@media print{.no-print{display:none!important;}}"
-    +"table{border-collapse:collapse;width:100%;}"
     +"</style></head><body>"
 
     // Cabeçalho
-    +"<div style='margin-bottom:14pt'><img src='"+CAB_URI+"' style='width:100%;max-width:660px;height:auto'/></div>"
-    +"<div style='border-bottom:2.5px solid #0B2C5F;padding-bottom:8pt;margin-bottom:4pt'>"
-    +"<div style='font-family:Barlow Condensed,sans-serif;font-size:17pt;font-weight:700;color:#0B2C5F;text-transform:uppercase;letter-spacing:.4px'>Relatório de Análise de Conduta Funcional</div>"
-    +"<div style='font-size:9pt;color:#5B6781;margin-top:3pt'>Ferramentas COGER · Condutas Funcionais — Integritas</div>"
-    +"<div style='display:flex;gap:24pt;font-size:9pt;color:#5B6781;margin-top:5pt'>"
-    +"<span><strong style='color:#1A2740'>Referência:</strong> <span style='font-family:JetBrains Mono,monospace'>"+did+"</span></span>"
+    +"<div style='margin-bottom:14pt;page-break-inside:avoid'><img src='"+CAB_URI+"' style='width:100%;max-width:660px;height:auto'/></div>"
+    +"<div class='doc-header'>"
+    +"<div class='doc-title'>Relatório de Análise de Conduta Funcional</div>"
+    +"<div class='doc-subtitle'>Ferramentas COGER · Condutas Funcionais — Integritas</div>"
+    +"<div class='doc-meta'>"
+    +"<span><strong style='color:#1A2740'>Referência:</strong> <span class='mono'>"+did+"</span></span>"
     +"<span><strong style='color:#1A2740'>Data:</strong> "+ds+"</span>"
     +"<span><strong style='color:#1A2740'>Hora:</strong> "+ts+"</span>"
     +"</div></div>";
@@ -1948,7 +1977,7 @@ document.getElementById("bpr").onclick=function(){
   // Session meta block in print
   if(SESSION.processo||SESSION.analista){
     var dfPrint=SESSION.dataFatos?new Date(SESSION.dataFatos).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric"}):"—";
-    html += "<div style='display:grid;grid-template-columns:1fr 1fr;gap:4pt 20pt;background:#F5F7FA;border:1pt solid #DCE6F4;border-radius:4pt;padding:8pt 12pt;margin:10pt 0;font-size:9pt'>"
+    html += "<div class='meta-grid'>"
       +"<div><strong style='color:#5B6781'>Processo:</strong> "+(SESSION.processo||"—")+"</div>"
       +"<div><strong style='color:#5B6781'>Analista:</strong> "+(SESSION.analista||"—")+"</div>"
       +"<div><strong style='color:#5B6781'>Unidade:</strong> "+(SESSION.unidade||"—")+"</div>"
@@ -2031,6 +2060,8 @@ document.getElementById("bpr").onclick=function(){
     var tc3=r3.t==="danger"?"#7a1210":r3.t==="warning"?"#7a4e0e":"#145c39";
     var conductaLabel=total2>1?" — Conduta "+(bi+1)+" de "+total2:"";
 
+    if(bi>0){ html+="<div style='page-break-before:always'></div>"; }
+
     // Description per-conduct
     if(ac2.conduta){
       html += sec("Descrição sumária da conduta"+conductaLabel)
@@ -2039,52 +2070,52 @@ document.getElementById("bpr").onclick=function(){
 
     // Enquadramento result banner
     html += sec("Resultado do enquadramento disciplinar"+conductaLabel)
-      +"<div style='background:"+tc3+";color:#fff;border-radius:4pt;padding:10pt 14pt;margin-bottom:10pt'>"
+      +"<div class='result-banner no-break' style='background:"+tc3+";color:#fff'>"
       +"<div style='font-size:8pt;opacity:.75;margin-bottom:3pt'>"+r3.lb+"</div>"
       +"<div style='font-family:Barlow Condensed,sans-serif;font-size:16pt;font-weight:700;text-transform:uppercase'>"+r3.ti+"</div>"
-      +(r3.ar?"<div style='font-family:JetBrains Mono,monospace;font-size:9pt;margin-top:5pt;opacity:.85'>Lei nº 8.112/90 — "+r3.ar+"</div>":"")
+      +(r3.ar?"<div class='mono' style='font-size:9pt;margin-top:5pt;opacity:.85'>Lei nº 8.112/90 — "+r3.ar+"</div>":"")
       +"</div>"
-      +(r3.lw?"<div style='background:#EEF3FA;border-left:4px solid #0B2C5F;border-radius:0 4pt 4pt 0;padding:8pt 12pt'>"
-        +"<div style='font-size:7.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#0B2C5F;margin-bottom:4pt'>"+r3.lw.h+"</div>"
-        +"<div style='font-size:9pt;color:#1A2740;line-height:1.6;font-family:JetBrains Mono,monospace'>"+r3.lw.t+"</div></div>":"");
+      +(r3.lw?"<div class='law-box no-break'>"
+        +"<div class='law-label'>"+r3.lw.h+"</div>"
+        +"<div class='law-text'>"+r3.lw.t+"</div></div>":"");
 
-    // Narrative
-    var narBlocks2=b.narrativeText.split("||PARA||").map(function(p){
-      return p?"<p style='margin:0 0 9pt;text-align:justify'>"+p+"</p>":"";
-    }).join("");
-
-    // Justificativas
+    // Narrative + justificativas integradas (texto corrido)
     var jMap2={};
     b.path.forEach(function(h){
       var js=(h.justs||[]).filter(function(j){return j.fund||j.prob;});
       if(js.length) jMap2[h.id]={ch:h.ch,justs:js};
     });
-    var jBlocks2="";
+    var narrativeParas2=b.narrativeText.split("||PARA||").filter(Boolean);
+    var narHtml="";
+    // Render all narrative paragraphs first
+    narrativeParas2.forEach(function(p){
+      narHtml+="<p>"+p+"</p>";
+    });
+    // Then append analyst notes anchored to each step question
     b.path.forEach(function(h){
-      if(!jMap2[h.id]) return;
-      var step2=S[h.id]; if(!step2) return;
+      if(!jMap2[h.id])return;
+      var step2=S[h.id]; if(!step2)return;
       var entry2=jMap2[h.id];
-      var qL2=step2.q.replace(/<em>/g,"").replace(/<\/em>/g,"");
-      var rL2=al(entry2.ch);
-      jBlocks2+="<div style='margin:0 0 10pt;padding:10pt 14pt;background:#F5F8FF;border-left:3pt solid #1E4C99;border-radius:0 5pt 5pt 0'>"
-        +"<div style='font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#1E4C99;margin-bottom:6pt;display:flex;gap:10pt;align-items:center'>"
-        +"<span>Registro do analista</span>"
-        +"<span style='background:#DCE6F4;color:#0B2C5F;padding:1pt 7pt;border-radius:10pt;font-weight:700'>"+qL2+"</span>"
-        +"<span style='background:#0B2C5F;color:#fff;padding:1pt 7pt;border-radius:10pt'>Resposta: "+rL2+"</span>"
-        +"</div>"
-        +entry2.justs.map(function(j,ji){
-          var num2=(entry2.justs.length>1?"<strong style='color:#1E4C99'>("+(ji+1)+") </strong>":"");
-          var parts2=[];
-          if(j.fund) parts2.push("<span>"+num2+"<strong>Fundamentação:</strong> "+j.fund+"</span>");
-          if(j.prob){var pb2="<strong>Elemento probatório:</strong> "+j.prob+(j.pag?" <span style='background:#fff;border:1pt solid #c0c8d8;padding:0pt 5pt;border-radius:3pt;font-family:monospace;font-size:8pt'>Fl./Pág. "+j.pag+"</span>":"");parts2.push("<span>"+(j.fund?"":num2)+pb2+"</span>");}
-          return "<div style='font-size:9pt;color:#1A2740;line-height:1.7;margin-bottom:"+(ji<entry2.justs.length-1?"7pt":"0")+"'>"+parts2.join(" — ")+"</div>";
-        }).join("")
-        +"</div>";
+      var qLabel=step2.q.replace(/<[^>]+>/g,"");
+      entry2.justs.forEach(function(j,ji){
+        var lines=[];
+        if(j.fund) lines.push(j.fund.trim());
+        if(j.prob){
+          var probText=j.prob.trim();
+          if(j.pag) probText+=" (fl. "+j.pag+")";
+          lines.push("Elemento probatório: "+probText);
+        }
+        if(lines.length){
+          narHtml+="<p class='analyst-note'>"
+            +"<span class='analyst-note-label'>Registro do analista — "+qLabel+(entry2.justs.length>1?" ("+(ji+1)+")":"")+"</span>"
+            +lines.join(" — ")
+            +"</p>";
+        }
+      });
     });
 
-    html += sec("Elementos constitutivos"+conductaLabel)
-      +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narBlocks2+"</div>"
-      +(jBlocks2?"<div style='margin-top:4pt'><div style='font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E4C99;margin-bottom:8pt;border-bottom:1pt solid #DCE6F4;padding-bottom:4pt'>Fundamentações e elementos probatórios registrados pelo analista</div>"+jBlocks2+"</div>":"");
+    html += sec("Análise da conduta"+conductaLabel)
+      +"<div class='narrative'>"+narHtml+"</div>";
 
     // Análise fundamentada por resposta (THEORY_BLOCKS enrichment)
     var enrichPrintHtml="";
@@ -2109,12 +2140,14 @@ document.getElementById("bpr").onclick=function(){
         +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+enrichPrintHtml+"</div>";
     }
 
-    html += sec("Conclusão"+conductaLabel)
-      +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"
-      +(r3.an?"<div style='margin-bottom:10pt;padding:9pt 11pt;background:#FBF2DF;border-left:3pt solid #B7791F;border-radius:0 3pt 3pt 0;font-size:9pt;color:#7a4e0e'>"+ANALOGY_NOTE+"</div>":"")
-      +"<p style='text-align:justify;margin-bottom:8pt'>"+b.conclusionText+"</p>"
-      +"<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta.</p>"
-      +"</div>";
+    html += sec("Conclusão e enquadramento orientativo"+conductaLabel)
+      +(r3.an?"<div class='alert-box'><p style='font-size:9pt;color:#7a4e0e;margin:0'>"+ANALOGY_NOTE+"</p></div>":"")
+      +"<div class='no-break' style='font-size:10.5pt;color:#1A2740;line-height:1.85;text-align:justify;border-left:4pt solid #0B2C5F;padding:10pt 12pt;background:#F5F7FA;border-radius:0 4pt 4pt 0;margin-bottom:10pt'>"
+      +"<p style='margin:0'>"+b.conclusionText+"</p>"
+      +"</div>"
+      +"<p style='font-size:9pt;color:#5B6781;line-height:1.7;text-align:justify;padding:8pt 10pt;background:#FAFBFC;border:1pt solid #e0e5ef;border-radius:4pt'>"
+      +"Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta."
+      +"</p>";
 
     // Rastreabilidade
     var pathRows2=b.path.map(function(h,i){
@@ -2130,32 +2163,33 @@ document.getElementById("bpr").onclick=function(){
               +(j.prob?"<div><strong>Elem. probatório:</strong> "+j.prob+(j.pag?" — <strong>Fl./Pág.:</strong> "+j.pag:"")+"</div>":"");
           }).join("")+"</div>";
       }
-      return "<tr style='border-bottom:1px solid #e8edf4'>"
-        +"<td style='padding:5pt 8pt;font-family:JetBrains Mono,monospace;font-size:8pt;color:#5B6781;white-space:nowrap;vertical-align:top'>"+(i+1)+"</td>"
-        +"<td style='padding:5pt 8pt;font-size:9pt;color:#1A2740;vertical-align:top'>"+step3.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
-        +"<td style='padding:5pt 8pt;vertical-align:top;white-space:nowrap'><span style='font-size:8pt;font-weight:700;text-transform:uppercase;padding:2px 7px;border-radius:3px;background:#DCE6F4;color:#0B2C5F'>"+al(h.ch)+"</span></td>"
-        +"<td style='padding:5pt 8pt;font-size:8.5pt;color:#5B6781;vertical-align:top'>"+jCell3+"</td>"
+      return "<tr>"
+        +"<td class='mono' style='color:#5B6781;white-space:nowrap;vertical-align:top'>"+(i+1)+"</td>"
+        +"<td style='vertical-align:top'>"+step3.q.replace(/<em>/g,"").replace(/<\/em>/g,"")+"</td>"
+        +"<td style='vertical-align:top;white-space:nowrap'><span class='badge'>"+al(h.ch)+"</span></td>"
+        +"<td style='vertical-align:top;font-size:8.5pt;color:#5B6781'>"+jCell3+"</td>"
         +"</tr>";
     }).join("");
 
     if(pathRows2){
-      html += sec("Caminho percorrido"+conductaLabel)
-        +"<div style='font-size:9pt;color:#5B6781;margin-bottom:8pt'>Registro sequencial das perguntas respondidas no fluxo, com resposta e fundamento técnico.</div>"
-        +"<table><thead><tr style='background:#EEF3FA'>"
-        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:22pt'>#</th>"
-        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Pergunta</th>"
-        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600;width:52pt'>Resposta</th>"
-        +"<th style='padding:5pt 8pt;text-align:left;font-size:7.5pt;text-transform:uppercase;letter-spacing:.5px;color:#5B6781;font-weight:600'>Fund. e registros</th>"
+      html += sec("Caminho percorrido — rastreabilidade analítica"+conductaLabel)
+        +"<p style='font-size:9pt;color:#5B6781;margin-bottom:8pt;line-height:1.6'>"
+        +"Registro sequencial das perguntas respondidas no fluxo analítico, com a resposta adotada e o fundamento técnico automático. Os registros do analista aparecem integrados à análise da conduta na seção anterior.</p>"
+        +"<table class='trace-table'><thead><tr>"
+        +"<th style='width:22pt'>#</th>"
+        +"<th>Pergunta</th>"
+        +"<th style='width:52pt'>Resposta</th>"
+        +"<th>Fundamento técnico</th>"
         +"</tr></thead><tbody>"+pathRows2+"</tbody></table>";
     }
   });
 
   // Rodapé
-  html += "<div style='font-size:8pt;color:#888;border-top:1pt solid #ddd;margin-top:16pt;padding-top:7pt'>"+DISCLAIMER+"</div>"
-    +"<div style='background:#0B2C5F;color:#fff;padding:7pt 12pt;font-size:8pt;margin-top:12pt;display:flex;justify-content:space-between'>"
+  html += "<div class='doc-footer'>"+DISCLAIMER+"</div>"
+    +"<div class='doc-footer-bar'>"
     +"<span>Condutas Funcionais — Integritas · Ferramentas COGER · RFB</span>"
     +"<span>USO INTERNO · "+did+"</span></div>"
-    +"<div class='no-print' style='margin-top:20pt;display:flex;gap:12px;justify-content:flex-end'>"
+    +"<div class='no-print'>"
     +"<button onclick='window.print()' style='background:#0B2C5F;color:#fff;border:none;padding:10px 20px;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer'>Imprimir / Salvar PDF</button>"
     +"<button onclick='window.close()' style='background:#fff;color:#1A2740;border:1px solid #c0c8d8;padding:10px 20px;border-radius:6px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer'>Fechar</button>"
     +"</div>"
