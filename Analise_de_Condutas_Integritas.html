@@ -1265,6 +1265,171 @@ elModal.onclick=function(e){if(e.target===elModal)closeModal();};
 // ── NARRATIVE GENERATOR ───────────────────────────────────────────────────────
 // Produces flowing juridical text from the path taken through the flow
 
+// ── THEORY BLOCKS — fundamentação teórica por nó do fluxo ────────────────────
+// Fonte: Manual Integritas v2 — COGER/RFB — junho de 2026
+// Chave = ID do nó em S. Estrutura: { teoria: string, subsuncao: string }
+var THEORY_BLOCKS = {
+  // Eixo 1 — Agressão Física
+  "ag-servico":{
+    teoria:"O art. 132, VII, da Lei nº 8.112/1990 exige que a ofensa física ocorra 'em serviço' — requisito que a Convenção nº 190 da OIT (Eliminação da Violência e do Assédio no Mundo do Trabalho, 2019), ratificada pelo Brasil pelo Decreto Legislativo nº 26/2023, amplia para além das paredes da repartição: inclui viagens institucionais, treinamentos, eventos ligados ao trabalho e comunicações funcionais por qualquer canal. O elemento determinante não é o espaço físico, mas o nexo funcional — a agressão deve ter ocorrido por causa do cargo ou das funções, ou em contexto diretamente relacionado ao seu exercício.",
+    subsuncao:"A análise do nexo funcional é condição necessária para o enquadramento no {dispositivo} — sem ela, a demissão com base neste inciso não é cabível, por mais grave que tenha sido a agressão."
+  },
+  "ag-legitima":{
+    teoria:"A legítima defesa, prevista no art. 132, VII, da Lei nº 8.112/1990 como excludente de ilicitude expressa, tem seus requisitos preenchidos por analogia ao art. 25 do Código Penal, que exige quatro elementos cumulativos: (I) agressão injusta — não há legítima defesa contra ato funcional legítimo; (II) atualidade ou iminência — reação a agressão já encerrada não está coberta pela excludente; (III) uso moderado dos meios necessários; (IV) defesa de direito próprio ou de outrem. A ausência de qualquer um desses requisitos faz cair a excludente integralmente.",
+    subsuncao:"A verificação dos quatro requisitos cumulativos da legítima defesa é condição para afastar a responsabilização disciplinar prevista no {dispositivo}."
+  },
+  "ag-excesso":{
+    teoria:"O art. 23, parágrafo único, do Código Penal, aplicado por analogia ao direito disciplinar, estabelece que o agente responde pelo excesso doloso ou culposo, mesmo quando a reação inicial era legítima. O marco temporal decisivo é o momento em que a agressão sofrida cessou: a partir desse ponto, a legítima defesa não autoriza mais nenhuma conduta. O excesso doloso — quando o servidor quis continuar além do necessário — pode atrair o art. 132, VII; o excesso culposo — quando perdeu o controle sem intenção — enquadra-se no art. 116, IX, com penalidade de suspensão, conforme a dosimetria do art. 128 da Lei nº 8.112/1990.",
+    subsuncao:"A distinção entre excesso doloso e culposo é determinante para o enquadramento no {dispositivo} e para a dosimetria da penalidade aplicável."
+  },
+  // Eixo 2 — Ameaça
+  "ameaca":{
+    teoria:"A NT nº 544/2024/CGUNE/DICOR/CRG define ameaça como o anúncio de mal futuro e injusto dirigido à vítima com finalidade de intimidar, coagir ou causar temor, podendo ser verbal, escrita ou gestual, direta ou indireta. A distinção em relação à ofensa verbal é temporal: a ameaça olha para o futuro ('você vai se arrepender'); a ofensa verbal atinge o presente (xingamento, humilhação direta). A Lei nº 8.112/1990 não tipifica autonomamente a conduta de ameaçar, razão pela qual o enquadramento disciplinar é feito por interpretação sistêmica sobre os tipos abertos dos arts. 116 e 132, nos termos orientados pela NT nº 544/2024.",
+    subsuncao:"Verificada a conduta de ameaça e seus qualificadores, o enquadramento orientativo é {dispositivo}, nos termos da NT nº 544/2024/CGUNE/DICOR/CRG."
+  },
+  "ameaca-cargo":{
+    teoria:"O uso do cargo como instrumento da ameaça é o elemento qualificador que agrava o enquadramento disciplinar. Nos termos da NT nº 544/2024, o valimento do cargo ocorre quando o servidor aproveita conscientemente a posição hierárquica, a ascendência funcional ou o poder de influência para conferir credibilidade e força intimidatória à conduta. A mera existência de hierarquia entre as partes não satisfaz o requisito: exige-se que o cargo tenha sido ativa e instrumentalmente utilizado como vetor da intimidação.",
+    subsuncao:"O uso instrumental do cargo na prática da ameaça direciona o enquadramento para {dispositivo}, com dosimetria agravada nos termos do art. 128 da Lei nº 8.112/1990."
+  },
+  "ameaca-grav-cargo":{
+    teoria:"A NT nº 544/2024/CGUNE/DICOR/CRG gradua a gravidade da ameaça em três patamares: baixa intensidade (dano à imagem ou à carreira), média intensidade (ameaça de agressão física) e alta intensidade (ameaça de morte ou inserida em padrão sistemático de perseguição). A graduação importa porque determina o dispositivo aplicável — do art. 116, XI (advertência), passando pelo art. 116, IX (suspensão), até o art. 132, V (demissão). A dosimetria também considera se a ameaça é episódio isolado ou integra padrão reiterado de condutas hostis, caso em que pode configurar cumulativamente assédio moral.",
+    subsuncao:"O grau de intensidade da ameaça identificado nos autos direciona o enquadramento para {dispositivo}, com observância da dosimetria proporcional do art. 128 da Lei nº 8.112/1990."
+  },
+  "ameaca-grav-sem":{
+    teoria:"A NT nº 544/2024/CGUNE/DICOR/CRG gradua a gravidade da ameaça em três patamares: baixa intensidade (dano à imagem ou à carreira), média intensidade (ameaça de agressão física) e alta intensidade (ameaça de morte ou inserida em padrão sistemático de perseguição). A graduação importa porque determina o dispositivo aplicável — do art. 116, XI (advertência), passando pelo art. 116, IX (suspensão), até o art. 132, V (demissão). A dosimetria também considera se a ameaça é episódio isolado ou integra padrão reiterado de condutas hostis, caso em que pode configurar cumulativamente assédio moral.",
+    subsuncao:"O grau de intensidade da ameaça identificado nos autos direciona o enquadramento para {dispositivo}, com observância da dosimetria proporcional do art. 128 da Lei nº 8.112/1990."
+  },
+  // Eixo 3 — Assédio Sexual
+  "sex-conotacao":{
+    teoria:"A NT nº 3285/2023/CGUNE/DICOR/CRG adotou o critério do efeito produzido — e não da intenção do agressor — como elemento definidor do enquadramento disciplinar das condutas de conotação sexual, em linha com o Parecer JM-03 (Parecer nº 0015/2023/CONSUNIAO/CGU/AGU, vinculante para toda a Administração Pública Federal). A alegação de que a conduta era 'brincadeira', 'elogio' ou que 'não havia intenção de ofender' não é fundamento idôneo para afastar o enquadramento quando o impacto sobre a vítima está demonstrado nos autos. A conotação sexual objetiva é identificada pelo que um observador razoável reconheceria na conduta — não pelo que o agressor pretendia.",
+    subsuncao:"A presença de conotação sexual objetivamente identificável submete a conduta ao eixo de análise regido pela NT nº 3285/2023, com enquadramento nos termos do {dispositivo}."
+  },
+  "sex-favorecimento":{
+    teoria:"A doutrina distingue dois tipos de assédio sexual: o assédio por chantagem (quid pro quo), quando há exigência de conduta sexual em troca de benefícios ou para evitar prejuízos na relação de trabalho, identificado com o art. 117, IX, da Lei nº 8.112/1990; e o assédio por intimidação ou ambiental, quando há provocações sexuais inoportunas no ambiente de trabalho com o objetivo de prejudicar a atuação laboral ou criar situação ofensiva, identificado com o art. 132, V. A NT nº 3285/2023 adota essa distinção como bifurcação central do fluxo analítico, pois a finalidade da conduta determina a rota de enquadramento.",
+    subsuncao:"A finalidade de favorecimento sexual identificada caracteriza o assédio sexual stricto sensu, com enquadramento orientativo no {dispositivo}, nos termos dos itens 3 e 4 da NT nº 3285/2023."
+  },
+  "sex-consentida":{
+    teoria:"O consentimento válido, nos termos do item 3.2 da NT nº 3285/2023, exige liberdade real de recusa — sem risco funcional associado à recusa —, expressão positiva de adesão e capacidade da vítima. O silêncio não é consentimento quando existe hierarquia: a tolerância passiva ou a ausência de recusa formal pode decorrer de medo de represália, não de adesão livre. Em contextos de subordinação hierárquica, a presunção é de que o silêncio não representa consentimento válido.",
+    subsuncao:"A aferição do consentimento válido, nos termos do item 3.2 da NT nº 3285/2023, é elemento que determina a rota de enquadramento e a aplicabilidade do {dispositivo}."
+  },
+  "sex-impacto-fav":{
+    teoria:"O grave impacto à dignidade ou à liberdade da vítima é qualificador autônomo suficiente para o enquadramento mais grave, nos termos do item 3.4 da NT nº 3285/2023. O critério é o efeito produzido, não a intenção do agressor. Elementos probatórios que demonstram o impacto: laudo psicológico ou psiquiátrico, afastamento médico após os episódios, pedido de transferência, comprometimento documentado do desempenho, relato contemporâneo a terceiros (colegas, ouvidoria, familiares). A ausência de reiteração não afasta o enquadramento quando o impacto de ato único é grave.",
+    subsuncao:"O impacto grave identificado nos autos direciona o enquadramento para {dispositivo}, independentemente da ausência de reiteração ou de declaração de intenção do agressor."
+  },
+  "sex-cargo-fav":{
+    teoria:"O uso do cargo ou da ascendência funcional para praticar o assédio sexual é qualificador que corresponde ao assédio por chantagem (quid pro quo), nos termos do item 3.1 da NT nº 3285/2023. A instrumentalização do cargo inclui: chefia direta ou indireta, controle de avaliações, acesso a dados funcionais da vítima, convocação de reuniões como oportunidade de contato forçado. A influência funcional informal também conta — não é necessário que o agressor ocupe cargo de chefia formal, basta que o cargo lhe confira poder de fato sobre a vítima.",
+    subsuncao:"O uso instrumental do cargo para praticar o assédio sexual caracteriza o valimento do cargo para fins sexuais, com enquadramento no {dispositivo}, nos termos do item 3.1 da NT nº 3285/2023."
+  },
+  "sex-moralidade-ato":{
+    teoria:"O escândalo ou ofensa ostensiva à moralidade administrativa é o primeiro dos três qualificadores autônomos verificados na Rota B (atos de conotação sexual sem finalidade de favorecimento), nos termos do item 4.2 da NT nº 3285/2023. O critério é objetivo: a conduta ocorreu em repartição pública, durante expediente, de forma perceptível a colegas ou usuários do serviço, comprometendo a percepção de seriedade da Administração. Não é necessário demonstrar o dano à vítima individual neste ponto — o dano institucional basta.",
+    subsuncao:"O escândalo institucional ostensivo configura qualificador suficiente para o enquadramento no {dispositivo}, nos termos do item 4.2 da NT nº 3285/2023."
+  },
+  "sex-impacto-sem-fav":{
+    teoria:"O dano grave à vítima, mesmo ausente o escândalo público, constitui qualificador autônomo suficiente para o enquadramento mais grave, nos termos da NT nº 3285/2023. O bem jurídico protegido — a dignidade da pessoa — é lesado de forma significativa independentemente da publicidade do ato. A NT recomenda cautela: mesmo condutas abstratamente consideradas de baixo ou médio grau de reprovabilidade têm potencial para resultar em danos irreparáveis à saúde mental e psicológica das vítimas; a avaliação concreta do impacto não pode ser substituída por categorizações abstratas.",
+    subsuncao:"O dano grave identificado na vítima direciona o enquadramento para {dispositivo}, mesmo na ausência de publicidade ou de escândalo institucional."
+  },
+  // Eixo 4 — Discriminação
+  "disc-fator":{
+    teoria:"A NT nº 93/2024/CGUNE/DICOR/CRG, com base na Convenção nº 111 da OIT (Discriminação em Matéria de Emprego e Profissão, 1958), no art. 5º, XLII, da Constituição Federal e na Lei nº 9.029/1995, define os fatores protegidos: raça, cor, etnia, religião, sexo, gênero, identidade de gênero, orientação sexual, origem, deficiência, idade e aparência física. O agressor não precisa declarar o preconceito: o fator motivador pode ser inferido do contexto, do histórico de interações e do padrão de tratamento diferenciado. O elemento definidor é a motivação da conduta — não o seu conteúdo formal.",
+    subsuncao:"A motivação discriminatória identificada submete a conduta ao enquadramento no {dispositivo}, nos termos do item 3 da NT nº 93/2024/CGUNE/DICOR/CRG."
+  },
+  "disc-alvo":{
+    teoria:"A existência de alvo específico — pessoa ou grupo identificável — agrava o potencial ofensivo da conduta discriminatória, nos termos do item 4.1 da NT nº 93/2024. A discriminação dirigida a alvo específico é mais grave do que a manifestação difusa, pois é dotada de maior capacidade de causar dano concreto à dignidade, à saúde e ao desempenho profissional da vítima. A identificação do alvo pode ser individual (servidor específico) ou coletiva (grupo identificável por característica protegida).",
+    subsuncao:"A existência de alvo específico identificado é elemento que agrava o enquadramento, conduzindo à aplicação do {dispositivo} nos termos da NT nº 93/2024."
+  },
+  "disc-reiteracao":{
+    teoria:"A reiteração da conduta discriminatória configura padrão sistemático que caracteriza o assédio discriminatório como figura própria, de enquadramento mais grave que a discriminação pontual, nos termos do item 4.2 da NT nº 93/2024/CGUNE/DICOR/CRG. A Convenção nº 190 da OIT, ratificada pelo Brasil pelo Decreto Legislativo nº 26/2023, equipara comportamentos de ocorrência única muito graves à conduta reiterada, quando o dano produzido for de igual magnitude. A reiteração, quando presente, é circunstância que pode qualificar a discriminação como assédio discriminatório e ensejar enquadramentos cumulativos.",
+    subsuncao:"A reiteração sistemática identificada nos autos caracteriza assédio discriminatório, com enquadramento no {dispositivo} e possível cumulatividade com os eixos de assédio moral."
+  },
+  "disc-cargo":{
+    teoria:"O uso das prerrogativas funcionais como instrumento da conduta discriminatória é o qualificador que eleva o enquadramento ao patamar do art. 117, IX, da Lei nº 8.112/1990, nos termos do item 5 da NT nº 93/2024. O valimento do cargo ocorre quando o servidor instrumentaliza o poder diretivo, o controle de avaliações, a distribuição de tarefas ou qualquer outra prerrogativa funcional para perpetrar ou agravar a discriminação. Não basta a existência de hierarquia: exige-se que o cargo tenha sido ativo mecanismo de execução da conduta discriminatória.",
+    subsuncao:"O uso instrumental das prerrogativas funcionais como veículo da discriminação direciona o enquadramento para {dispositivo}, com possibilidade de penalidade de demissão nos termos do art. 132, XIII, da Lei nº 8.112/1990."
+  },
+  // Eixo 5 — Assédio Moral
+  "moral-isolado":{
+    teoria:"A NT nº 93/2024/CGUNE/DICOR/CRG identifica a reiteração como elemento definidor central do assédio moral, nos termos do item 6.1. O assédio moral manifesta-se, em regra, por condutas ativas comissivas repetidas ao longo do tempo. Entretanto, a mesma NT, com apoio na Convenção nº 190 da OIT, admite que condutas isoladas muito ofensivas, humilhantes ou degradantes — especialmente quando acompanhadas de uso do cargo — também podem configurar o ilícito disciplinar, desde que o dano relevante à dignidade da vítima esteja demonstrado (item 6.2). A avaliação do ato isolado exige apreciação in concreto do impacto, vedada a categorização abstrata de condutas.",
+    subsuncao:"A análise do ato isolado à luz do item 6.2 da NT nº 93/2024 orienta o enquadramento no {dispositivo}, com observância da dosimetria proporcional do art. 128 da Lei nº 8.112/1990."
+  },
+  "moral-direcao":{
+    teoria:"O assédio moral pode ser vertical descendente (do superior ao subordinado), vertical ascendente (do subordinado ao superior) ou horizontal (entre pares sem relação de hierarquia formal), bem como misto (coordenado entre superior e pares), nos termos do item 4.5.3 da NT nº 93/2024/CGUNE/DICOR/CRG. A direção do assédio importa para a análise do uso do cargo — presente nas modalidades que envolvem hierarquia — mas não determina isoladamente a gravidade do enquadramento. O Parecer JM-03 ressalvou que, mesmo no assédio horizontal ou ascendente, o cargo pode ser instrumento relevante na dinâmica da ofensa.",
+    subsuncao:"A direção identificada da conduta assediante é elemento relevante para a análise do uso do cargo e para o enquadramento no {dispositivo}."
+  },
+  "moral-cargo":{
+    teoria:"O valimento do cargo é o qualificador central do assédio moral no enquadramento da Lei nº 8.112/1990, nos termos do item 8.1 da NT nº 93/2024/CGUNE/DICOR/CRG e do Parecer JM-03. O valimento se manifesta quando o servidor instrumentaliza o poder diretivo — a distribuição de tarefas, o controle de avaliações, o acesso a benefícios, a convocação ou exclusão de reuniões — para fins de perseguição, humilhação ou marginalização. O agente que assim age não exerce o poder hierárquico em benefício do serviço, mas o desvia para satisfazer interesse ou capricho pessoal — desvio de finalidade que é a ratio do enquadramento no art. 117, IX.",
+    subsuncao:"O uso instrumental do cargo como vetor do assédio moral direciona o enquadramento para {dispositivo}, nos termos do item 8.1 da NT nº 93/2024 e do Parecer JM-03."
+  },
+  "moral-trabalho":{
+    teoria:"A distinção entre gestão rigorosa — legítima, mesmo que cause desconforto — e assédio moral é o ponto de maior dificuldade analítica, tratada no item 9 da NT nº 93/2024/CGUNE/DICOR/CRG. A diferença não está na forma da conduta, mas na finalidade: gestão visa ao serviço; assédio visa à pessoa. O Manual Integritas sugere o teste da finalidade com cinco perguntas: (1) a conduta é personalizada nesta vítima enquanto outros recebem tratamento diferente? (2) as tarefas são estruturadas para que o fracasso seja inevitável? (3) a intensidade é consistentemente desproporcional ao que o serviço exigiria? (4) a pressão escala quando a vítima resiste? (5) há motivação identificável além do serviço? Três ou mais respostas afirmativas constituem indício robusto de assédio.",
+    subsuncao:"A análise do elemento subjetivo à luz do item 9 da NT nº 93/2024 orienta o enquadramento entre gestão legítima e assédio moral, com resultado no {dispositivo}."
+  },
+  "q-moral-subjetivo":{
+    teoria:"O elemento subjetivo — dolo ou culpa — é determinante para a distinção entre assédio moral doloso e gestão negligente, nos termos da NT nº 93/2024/CGUNE/DICOR/CRG. O dolo se caracteriza pela ciência do caráter hostil da conduta e pela vontade direcionada a produzir o dano à dignidade ou ao ambiente de trabalho da vítima. A culpa se manifesta quando o agente, sem intenção de dano, adota padrão de gestão negligente cujos efeitos degradantes sobre a vítima eram previsíveis. Comunicações internas, declarações em depoimento e o histórico de interações são os elementos probatórios mais relevantes para identificar o elemento subjetivo.",
+    subsuncao:"O elemento subjetivo identificado nos autos determina o enquadramento entre as hipóteses previstas no {dispositivo}, com a dosimetria correspondente do art. 128 da Lei nº 8.112/1990."
+  },
+  // Eixo 6 — Retaliação ao Denunciante
+  "ret-ato-protegido":{
+    teoria:"A proteção do denunciante e da testemunha no serviço público federal decorre de múltiplas bases normativas: Lei nº 13.608/2018, art. 5º-A (proteção ao denunciante); Lei nº 14.230/2021, art. 3º, § 1º (proteção ao agente que colabora com a apuração de atos de improbidade); e Decreto nº 10.153/2019. O ato protegido abrange: denúncia de irregularidades com protocolo no Fala.BR ou sistema integrado; testemunho em PAD ou sindicância; recusa de ordem ilegal; exercício de direito sindical; petição administrativa. A proteção é incondicional quanto ao mérito da denúncia: o servidor que denunciou de boa-fé permanece protegido mesmo se a irregularidade denunciada, ao final da apuração, não se confirmar.",
+    subsuncao:"A identificação do ato protegido é condição necessária para o enquadramento da conduta adversa posterior como retaliação nos termos do {dispositivo}."
+  },
+  "ret-conduta-adversa":{
+    teoria:"A conduta adversa é o ato ou omissão que o retaliador pratica contra o servidor que exerceu direito protegido. Pode revestir aparência de legitimidade — portaria assinada, avaliação formalmente fundamentada, exclusão justificada de projeto — tornando difícil identificá-la como retaliação sem análise da substância e do contexto. Os exemplos típicos, listados no art. 5º-A, § 1º, da Lei nº 13.608/2018, incluem: remoção injustificada, avaliação negativa sem fundamento, exclusão de projetos, restrição de acesso a informações ou sistemas, transferência punitiva. O ponto central é a ausência de justificativa objetiva autônoma: se a medida tem fundamento legítimo independente do ato protegido, pode não ser retaliação.",
+    subsuncao:"A conduta adversa identificada, desprovida de justificativa funcional autônoma, é elemento que, combinado ao nexo causal, configura retaliação nos termos do {dispositivo}."
+  },
+  "ret-nexo":{
+    teoria:"O nexo de causalidade entre o ato protegido e a conduta adversa é o elemento definidor da retaliação — o que a distingue do assédio moral comum ou da discriminação. O agressor nunca declarará expressamente que está retaliando; o nexo é demonstrado pela convergência de indicadores indiretos: (1) proximidade temporal — a conduta adversa ocorre nos seis meses seguintes ao ato protegido; (2) ruptura de histórico positivo — o servidor tinha avaliações favoráveis e o tratamento mudou após o ato protegido; (3) ausência de justificativa objetiva para o tratamento diferenciado; (4) declarações ou comunicações que evidenciem motivação retaliadora. Três indicadores convergentes são suficientes para demonstrar o nexo.",
+    subsuncao:"O nexo causal identificado entre o ato protegido e a conduta adversa é elemento essencial para o enquadramento como retaliação no {dispositivo}."
+  },
+  "ret-cargo":{
+    teoria:"O uso instrumental das prerrogativas funcionais como mecanismo da represália é o qualificador que eleva o enquadramento ao art. 117, IX, da Lei nº 8.112/1990. O valimento do cargo ocorre quando o retaliador utiliza: o poder de chefia para impor remoção ou redistribuição punitiva de tarefas; o controle de avaliações de desempenho para prejudicar o servidor; o acesso a sistemas institucionais para monitorar ou restringir a atuação da vítima. A mera superioridade hierárquica sem instrumentalização ativa do cargo não satisfaz o requisito — e o enquadramento recai sobre o art. 116, IX.",
+    subsuncao:"O uso instrumental das prerrogativas funcionais como mecanismo da represália direciona o enquadramento para {dispositivo}, com dosimetria agravada nos termos do art. 128 da Lei nº 8.112/1990."
+  },
+  // Eixo 7 — Violência Verbal
+  "vverbal-inicio":{
+    teoria:"A violência verbal disciplinarmente relevante abrange insultos, xingamentos, humilhações e expressões depreciativas dirigidas a servidor ou particular no ambiente de trabalho ou em contexto funcional. A Lei nº 8.112/1990 não tipifica a ofensa verbal de forma autônoma; o enquadramento faz-se pelo art. 116, XI (dever de urbanidade) ou pelo art. 132, V (incontinência pública e conduta escandalosa), conforme a gravidade e a publicidade da conduta. A distinção em relação à ameaça é temporal: a ofensa verbal atinge o presente (xingamento, humilhação direta), enquanto a ameaça anuncia mal futuro.",
+    subsuncao:"A ofensa verbal identificada e seus qualificadores orientam o enquadramento no {dispositivo}, nos termos dos deveres funcionais da Lei nº 8.112/1990."
+  },
+  "vverbal-cargo":{
+    teoria:"O uso do cargo como instrumento da violência verbal é o qualificador que eleva o enquadramento ao art. 117, IX, da Lei nº 8.112/1990. A instrumentalização ocorre quando a humilhação se dá em reunião oficial presidida pelo agressor, por canal institucional de comunicação, em contexto de avaliação funcional ou em qualquer situação em que a autoridade hierárquica seja o elemento que confere à ofensa seu potencial danoso específico. Sem o cargo, a ofensa seria mero conflito interpessoal; com o cargo, torna-se desvio funcional grave.",
+    subsuncao:"O uso instrumental do cargo na prática da violência verbal direciona o enquadramento para {dispositivo}, com possibilidade de penalidade de demissão nos termos do art. 132, XIII, da Lei nº 8.112/1990."
+  },
+  // Eixo 8 — Stalking Funcional
+  "stalk-perseguicao":{
+    teoria:"O art. 147-A do Código Penal, introduzido pela Lei nº 14.132/2021, tipificou o crime de perseguição (stalking), definindo-o como perseguir alguém, reiteradamente e por qualquer meio, ameaçando-lhe a integridade física ou psicológica, restringindo-lhe a capacidade de locomoção ou, de qualquer forma, invadindo ou perturbando sua esfera de liberdade ou privacidade. Para o direito disciplinar, o art. 147-A opera como referência conceitual: o enquadramento faz-se pelo art. 116, IX, ou pelo art. 117, IX, da Lei nº 8.112/1990, conforme o uso ou não das prerrogativas funcionais. A reiteração é o elemento definidor — que distingue o stalking do episódio isolado —, mas a intensidade de cada episódio e o impacto acumulado sobre a vítima são igualmente relevantes. O nexo funcional está presente quando as partes têm relação de trabalho, quando a perseguição tem origem na relação funcional ou quando produz repercussão no ambiente de trabalho da vítima — independentemente dos meios utilizados.",
+    subsuncao:"O padrão reiterado de perseguição com nexo funcional identificado configura o stalking funcional, com enquadramento orientativo no {dispositivo}."
+  },
+  "stalk-cargo":{
+    teoria:"O uso de prerrogativas funcionais específicas como instrumento do stalking é o qualificador que eleva o enquadramento ao art. 117, IX, da Lei nº 8.112/1990. O valimento do cargo ocorre quando o agressor usa: sistemas de controle de ponto ou acesso para monitorar os deslocamentos da vítima; relatórios de produtividade ou avaliações como pretexto de contato forçado; poder de chefia para designar a vítima a atividades que forçam a convivência. A utilização de canal privado não afasta o enquadramento mais grave quando combinada com instrumentalização funcional em outros aspectos do padrão persecutório.",
+    subsuncao:"O uso instrumental de prerrogativas funcionais na perseguição direciona o enquadramento para {dispositivo}, com dosimetria agravada nos termos do art. 128 da Lei nº 8.112/1990."
+  }
+};
+
+/**
+ * buildEnrichedParagraph — monta bloco de fundamentação em 3 camadas.
+ * Camada 1: Teoria (THEORY_BLOCKS[nodeId].teoria)
+ * Camada 2: Fato declarado (fund + prob do analista) — opcional
+ * Camada 3: Subsunção (THEORY_BLOCKS[nodeId].subsuncao com {dispositivo} substituído)
+ * @param {string} nodeId       - ID do nó em S
+ * @param {string} dispositivo  - ex: "Art. 132, VII"
+ * @param {string} fund         - conteúdo de ji-fund
+ * @param {string} prob         - conteúdo de ji-prob
+ * @returns {string[]}          - array de parágrafos
+ */
+function buildEnrichedParagraph(nodeId, dispositivo, fund, prob) {
+  var block = THEORY_BLOCKS[nodeId];
+  if (!block) return [];
+  var out = [];
+  out.push(block.teoria);
+  if (fund && fund.trim().length > 0) {
+    var fato = "Nos presentes autos, constatou-se que: " + fund.trim() + ".";
+    if (prob && prob.trim().length > 0) {
+      fato += " O elemento probatório que fundamenta esta conclusão é o seguinte: " + prob.trim() + ".";
+    }
+    out.push(fato);
+  }
+  out.push(block.subsuncao.replace("{dispositivo}", dispositivo || "dispositivo aplicável"));
+  return out;
+}
+
 var NARR = {
   // ── Agressão física ──
   "start:sim:ag-legitima:sim": "A conduta sob exame envolveu contato físico direto com a pessoa da vítima. Todavia, verificou-se a presença dos requisitos legais da legítima defesa, nos termos do art. 23, II, do Código Penal, aplicável ao Direito Disciplinar por analogia: a reação foi proporcional a injusta agressão atual ou iminente, em defesa de direito próprio ou alheio. Presente a excludente de ilicitude, afasta-se a responsabilidade disciplinar do servidor.",
@@ -1615,6 +1780,30 @@ function buildReportBlock(condutaDesc, histArr, resultId, idx, total){
   var header=total>1?'<div class="rep-conduct-header">Conduta '+(idx+1)+' de '+total+'</div><div class="rep-conduct-block">':"";
   var footer=total>1?'</div>':"";
 
+  var dispositivo=res.ar||"";
+  var enrichedModalHtml="";
+  path.forEach(function(h){
+    if(!THEORY_BLOCKS[h.id])return;
+    var fund=h.justs&&h.justs[0]?(h.justs[0].fund||""):"";
+    var prob=h.justs&&h.justs[0]?(h.justs[0].prob||""):"";
+    var enriched=buildEnrichedParagraph(h.id,dispositivo,fund,prob);
+    if(!enriched.length)return;
+    var stepTitle=S[h.id]?S[h.id].q.replace(/<[^>]+>/g,""):h.id;
+    var lbls=["Fundamento teórico","Fato declarado","Subsunção"];
+    var clrs=["#1E4C99","#5B6781","#B7791F"];
+    enrichedModalHtml+='<div style="margin-bottom:10px;padding:10px 14px;background:rgba(11,44,95,0.04);border-left:3px solid var(--rfb-gold-500);border-radius:0 6px 6px 0">'
+      +'<div style="font-size:11px;font-weight:700;color:var(--rfb-navy-800);margin-bottom:8px;text-transform:uppercase">'+escapeHtml(stepTitle)+'</div>'
+      +enriched.map(function(para,idx2){
+        return'<p style="margin:0 0 2px;font-size:10px;font-weight:700;text-transform:uppercase;color:'+clrs[idx2]+'">'+lbls[idx2]+'</p>'
+          +'<p style="margin:0 0 8px;font-size:12.5px;color:var(--rfb-text);line-height:1.6">'+escapeHtml(para)+'</p>';
+      }).join("")+'</div>';
+  });
+  var enrichedSection=enrichedModalHtml
+    ?'<div><div class="rep-st">Análise fundamentada por resposta</div>'
+      +'<details style="margin-top:4px"><summary style="cursor:pointer;font-size:12.5px;color:var(--rfb-text-muted);padding:4px 0">Expandir fundamentos teóricos, fatos declarados e subsunção por resposta</summary>'
+      +'<div style="margin-top:8px">'+enrichedModalHtml+'</div></details></div>'
+    :"";
+
   var block= header
     +(condutaDesc?'<div class="rep-desc-box"><div class="rep-st">Descrição sumária da conduta</div>'
       +'<div style="font-size:13px;color:var(--rfb-text);line-height:1.6;white-space:pre-wrap">'+escapeHtml(condutaDesc)+'</div></div>':'')
@@ -1623,6 +1812,7 @@ function buildReportBlock(condutaDesc, histArr, resultId, idx, total){
     +'<div class="rb-title">'+res.ti+'</div></div></div>'
     +'<div><div class="rep-st">Análise da conduta</div>'
     +'<div class="rep-narrative">'+narrativeText.split("||PARA||").map(function(p){return'<p>'+p+'</p>';}).join("")+'</div></div>'
+    +enrichedSection
     +'<div><div class="rep-st">Conclusão e enquadramento</div>'
     +'<div class="rep-narrative">'+(res.an?'<p class="rep-analogy">'+ANALOGY_NOTE+'</p>':'')
     +'<p>'+conclusionText+'</p></div></div>'
@@ -1895,6 +2085,29 @@ document.getElementById("bpr").onclick=function(){
     html += sec("Elementos constitutivos"+conductaLabel)
       +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+narBlocks2+"</div>"
       +(jBlocks2?"<div style='margin-top:4pt'><div style='font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1E4C99;margin-bottom:8pt;border-bottom:1pt solid #DCE6F4;padding-bottom:4pt'>Fundamentações e elementos probatórios registrados pelo analista</div>"+jBlocks2+"</div>":"");
+
+    // Análise fundamentada por resposta (THEORY_BLOCKS enrichment)
+    var enrichPrintHtml="";
+    b.path.forEach(function(h){
+      if(!THEORY_BLOCKS[h.id])return;
+      var fund2=h.justs&&h.justs[0]?(h.justs[0].fund||""):"";
+      var prob2=h.justs&&h.justs[0]?(h.justs[0].prob||""):"";
+      var enriched2=buildEnrichedParagraph(h.id,r3.ar||"",fund2,prob2);
+      if(!enriched2.length)return;
+      var stepTitle2=S[h.id]?S[h.id].q.replace(/<[^>]+>/g,""):h.id;
+      var lbls2=["Fundamento teórico","Fato declarado","Subsunção"];
+      var clrs2=["#1E4C99","#5B6781","#B7791F"];
+      enrichPrintHtml+="<div style='margin-bottom:8pt;padding:8pt 10pt;background:#f7f9fc;border-left:3pt solid #C9A35C;border-radius:0 3pt 3pt 0'>"
+        +"<div style='font-size:8pt;font-weight:700;text-transform:uppercase;color:#1A2740;margin-bottom:6pt'>"+escapeHtml(stepTitle2)+"</div>"
+        +enriched2.map(function(para,pIdx){
+          return"<p style='margin:0 0 1pt;font-size:7.5pt;font-weight:700;text-transform:uppercase;color:"+clrs2[pIdx]+"'>"+lbls2[pIdx]+"</p>"
+            +"<p style='margin:0 0 6pt;font-size:9pt;color:#1A2740;line-height:1.65;text-align:justify'>"+escapeHtml(para)+"</p>";
+        }).join("")+"</div>";
+    });
+    if(enrichPrintHtml){
+      html+=sec("Análise fundamentada por resposta"+conductaLabel)
+        +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"+enrichPrintHtml+"</div>";
+    }
 
     html += sec("Conclusão"+conductaLabel)
       +"<div style='font-size:10pt;color:#1A2740;line-height:1.8'>"
