@@ -54,7 +54,7 @@ body{
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 .rfb-topbar-brand{display:flex;align-items:center;gap:11px;}
-.rfb-topbar-symbol{width:26px;height:26px;object-fit:contain;filter:brightness(0) invert(1);opacity:.88;}
+.rfb-topbar-symbol{width:26px;height:26px;color:#fff;opacity:.88;}
 .rfb-topbar-name{
   font-family:var(--rfb-font-display);font-size:14px;font-weight:700;
   letter-spacing:.7px;text-transform:uppercase;color:#F5F8FC;
@@ -505,7 +505,7 @@ body{
   <!-- top-bar -->
   <nav class="rfb-topbar">
     <div class="rfb-topbar-brand">
-      <img src="assets/rfb-symbol-white.png" alt="RFB" class="rfb-topbar-symbol"/>
+      <svg class="rfb-topbar-symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
       <span class="rfb-topbar-name">Receita Federal<span class="rfb-topbar-sep">&nbsp;&middot;&nbsp;</span>Corregedoria</span>
     </div>
     <div class="rfb-topbar-pill">
