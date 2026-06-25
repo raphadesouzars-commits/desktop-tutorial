@@ -208,10 +208,28 @@
   .stat-card .sc-delta{font-size:.73rem;margin-top:.25rem}
   .delta-up{color:#22c55e}.delta-dn{color:#ef4444}.delta-ne{color:var(--muted)}
 
-  .review-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid #ef4444;
-    border-radius:var(--rsm);padding:.9rem 1rem;margin-bottom:.5rem}
-  .ri-title{font-size:.88rem;font-weight:700;margin-bottom:.18rem}
-  .ri-reason{font-size:.76rem;color:var(--muted)}
+  /* ─ REVIEW ITEMS ─ */
+  .rev-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid #ef4444;
+    border-radius:var(--rsm);padding:.85rem 1rem;margin-bottom:.5rem}
+  .rev-item .ri-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem}
+  .rev-item .ri-name{font-size:.87rem;font-weight:700;flex:1}
+  .rev-item .ri-badge{font-size:.58rem;font-weight:800;padding:.15rem .45rem;border-radius:99px;
+    flex-shrink:0;text-transform:uppercase;letter-spacing:.03em}
+  .rev-item .ri-badge.auto{background:#ef444422;color:#ef4444}
+  .rev-item .ri-badge.man{background:#6366f122;color:#6366f1}
+  .rev-item .ri-reason{font-size:.74rem;color:var(--muted);margin-bottom:.65rem}
+  .rev-item .ri-checks{display:flex;gap:.5rem}
+  .ri-ck{flex:1;display:flex;align-items:center;gap:.45rem;background:var(--surface2);
+    border:1px solid var(--border);border-radius:var(--rsm);padding:.55rem .75rem;
+    cursor:pointer;font-size:.78rem;font-weight:600;color:var(--muted);transition:all .15s;text-align:left}
+  .ri-ck.on{background:var(--done)18;border-color:var(--done)55;color:var(--done)}
+  .ri-ck .ri-ck-box{width:16px;height:16px;border-radius:4px;border:2px solid currentColor;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.65rem}
+  .btn-mark-review{width:100%;background:none;border:1px solid var(--border);color:var(--muted);
+    border-radius:var(--rsm);padding:.6rem;cursor:pointer;font-size:.8rem;font-weight:600;
+    margin-top:.85rem;transition:border-color .15s,color .15s}
+  .btn-mark-review:hover{border-color:#6366f1;color:#6366f1}
+  .btn-mark-review.already{border-color:var(--done)55;color:var(--done)}
 
   .bysub-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);
     padding:.8rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:.45rem}
@@ -407,13 +425,21 @@ function topicKey(name){
 
 function load(){
   const raw = localStorage.getItem('painelV2');
-  if(raw){D=JSON.parse(raw);return}
-  D={perfil:null,materias:{},redacao:{sessoes:[]}};
+  if(raw){
+    D=JSON.parse(raw);
+    // migrate older saves without listaRevisao
+    if(!D.listaRevisao) D.listaRevisao=[];
+    return;
+  }
+  D={perfil:null,materias:{},redacao:{sessoes:[]},listaRevisao:[]};
   SUBJECTS.forEach(s=>{
     if(s.id!=='redacao') D.materias[s.id]={assuntosSelecionados:[],assuntos:{}};
   });
 }
-function save(){localStorage.setItem('painelV2',JSON.stringify(D))}
+function save(){
+  syncRevisao();
+  localStorage.setItem('painelV2',JSON.stringify(D));
+}
 
 function getM(sid){return D.materias[sid]}
 function getTopic(sid,tid){return getM(sid).assuntos[tid]}
@@ -516,49 +542,49 @@ function topicOverallPct(topic){
   const valid=avgs.filter(x=>x!==null);
   return valid.length?Math.round(valid.reduce((a,b)=>a+b,0)/valid.length):null;
 }
-function daysDiff(d1,d2){return Math.floor((d2-d1)/(86400000))}
-function lastSessionDate(sid,tid){
-  const t=getTopic(sid,tid);
-  let last=null;
-  AP_TYPES.forEach(at=>{
-    (t.apostilas[at.id].sessoes||[]).forEach(s=>{
-      const d=new Date(s.data);
-      if(!last||d>last)last=d;
-    });
-  });
-  return last;
-}
-function topicReviewReasons(sid,tid){
+// Returns reasons why a topic qualifies for AUTO entry into review list (performance only)
+function topicAutoReasons(sid,tid){
   const reasons=[];
-  const now=new Date();
-  const last=lastSessionDate(sid,tid);
-  if(!last||daysDiff(last,now)>14) reasons.push('sem sessão há mais de 14 dias');
   AP_TYPES.filter(a=>a.hasScore).forEach(at=>{
     const p=avgPct(getTopic(sid,tid).apostilas[at.id].sessoes);
-    if(p!==null&&p<60) reasons.push(`${at.name}: ${p}% de acerto`);
+    if(p!==null&&p<70) reasons.push(`${at.name}: ${p}% de acerto`);
   });
   return reasons;
 }
-function redacaoReviewReasons(){
-  const sess=D.redacao.sessoes;
-  const now=new Date();
-  const reasons=[];
-  if(!sess.length||daysDiff(new Date(sess[0].data),now)>14)
-    reasons.push('sem redação há mais de 14 dias');
-  const l3=sess.slice(0,3);
-  if(l3.length>=1){
-    const avg=l3.reduce((a,s)=>a+s.nota,0)/l3.length;
-    if(avg<6)reasons.push(`média das últimas ${l3.length}: ${avg.toFixed(1)}`);
-  }
-  return reasons;
+function redacaoAutoReasons(){
+  const l3=D.redacao.sessoes.slice(0,3);
+  if(!l3.length)return[];
+  const avg=l3.reduce((a,s)=>a+s.nota,0)/l3.length;
+  return avg<6?[`média das últimas ${l3.length} redações: ${avg.toFixed(1)}`]:[];
 }
+
+// ── LISTA DE REVISÃO ──
+function revKey(materia,assuntoId){return materia+'|'+assuntoId}
+function findRevItem(materia,assuntoId){
+  return D.listaRevisao.find(x=>x.materia===materia&&x.assuntoId===assuntoId);
+}
+function ensureRevItem(materia,assuntoId,origem){
+  if(!findRevItem(materia,assuntoId)){
+    D.listaRevisao.push({materia,assuntoId,origem,teoriaRevisada:false,exerciciosRevisados:false});
+  }
+}
+// Syncs automatic entries — called inside save(). Never removes items (only checklist does).
+function syncRevisao(){
+  if(!D.listaRevisao)D.listaRevisao=[];
+  SUBJECTS.forEach(s=>{
+    if(s.id==='redacao'){
+      if(redacaoAutoReasons().length) ensureRevItem('redacao','redacao','automatico');
+    }else{
+      (getM(s.id)?.assuntosSelecionados||[]).forEach(tid=>{
+        if(!getTopic(s.id,tid))return;
+        if(topicAutoReasons(s.id,tid).length) ensureRevItem(s.id,tid,'automatico');
+      });
+    }
+  });
+}
+
 function subjAlerts(sid){
-  if(sid==='redacao')return redacaoReviewReasons().length>0?1:0;
-  const sel=getM(sid).assuntosSelecionados||[];
-  return sel.filter(tid=>{
-    if(!getTopic(sid,tid))return false;
-    return topicReviewReasons(sid,tid).length>0;
-  }).length;
+  return D.listaRevisao.filter(x=>x.materia===sid).length;
 }
 function subjSessWeek(sid){
   const since=new Date();since.setDate(since.getDate()-7);
@@ -577,10 +603,72 @@ function subjSessWeek(sid){
 }
 function totalWeek(){return SUBJECTS.reduce((a,s)=>a+subjSessWeek(s.id),0)}
 function subjProgress(sid){
-  // returns {selected, done} counts
   const sel=getM(sid)?.assuntosSelecionados||[];
   const done=sel.filter(tid=>getTopic(sid,tid)&&topicDone(getTopic(sid,tid))).length;
   return {selected:sel.length,done};
+}
+
+// Toggle checklist checkbox; remove item when both checked
+function tickRevisao(materia,assuntoId,field){
+  const item=findRevItem(materia,assuntoId);
+  if(!item)return;
+  item[field]=!item[field];
+  if(item.teoriaRevisada&&item.exerciciosRevisados){
+    D.listaRevisao=D.listaRevisao.filter(x=>!(x.materia===materia&&x.assuntoId===assuntoId));
+    localStorage.setItem('painelV2',JSON.stringify(D)); // bypass syncRevisao to avoid re-adding
+    renderSemana();renderPainel();
+    showToast('Revisão concluída! ✅');
+    return;
+  }
+  localStorage.setItem('painelV2',JSON.stringify(D));
+  renderSemana();
+}
+
+function markForReview(sid,tid){
+  const already=findRevItem(sid,tid);
+  if(already){showToast('Já está na lista de revisão.');return;}
+  D.listaRevisao.push({materia:sid,assuntoId:tid,origem:'manual',teoriaRevisada:false,exerciciosRevisados:false});
+  localStorage.setItem('painelV2',JSON.stringify(D));
+  renderPainel();
+  renderAssunto(sid,tid);
+  showToast('Adicionado à lista de revisão! 📋');
+}
+
+function addManualRevisaoModal(){
+  // Build options: all selected topics across all subjects
+  const opts=[];
+  SUBJECTS.forEach(s=>{
+    if(s.id==='redacao'){
+      opts.push({label:`📝 Redação`,value:'redacao|redacao'});
+    }else{
+      (getM(s.id).assuntosSelecionados||[]).forEach(tid=>{
+        const t=getTopic(s.id,tid);
+        if(!t)return;
+        opts.push({label:`${s.icon} ${s.name} — ${t.nome}`,value:`${s.id}|${tid}`});
+      });
+    }
+  });
+  if(!opts.length){showToast('Nenhum assunto selecionado ainda.');return}
+  const optHtml=opts.map(o=>`<option value="${o.value}">${o.label}</option>`).join('');
+  showModal('Adicionar à revisão',`
+    <div class="form-group">
+      <label>Assunto</label>
+      <select class="form-input" id="manRevSel">${optHtml}</select>
+    </div>
+  `,[
+    {label:'Cancelar',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Adicionar',cls:'btn-pri',fn:'doAddManualRevisao()'},
+  ]);
+}
+
+function doAddManualRevisao(){
+  const val=document.getElementById('manRevSel').value;
+  const[materia,assuntoId]=val.split('|');
+  if(findRevItem(materia,assuntoId)){showToast('Já está na lista.');closeModal();return}
+  D.listaRevisao.push({materia,assuntoId,origem:'manual',teoriaRevisada:false,exerciciosRevisados:false});
+  localStorage.setItem('painelV2',JSON.stringify(D));
+  closeModal();renderSemana();renderPainel();
+  showToast('Adicionado à lista de revisão! 📋');
 }
 
 // ══════════════════════════════════════════════════════
@@ -754,11 +842,16 @@ function renderAssunto(sid,tid){
   const s=SUBJECTS.find(x=>x.id===sid);
   const done=topicDone(t);
 
-  let html=`<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+  const inReview=!!findRevItem(sid,tid);
+  let html=`<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
     <span style="font-size:.78rem;font-weight:800;padding:.22rem .65rem;border-radius:99px;
       background:${done?'var(--done)22':'var(--surface2)'};color:${done?'var(--done)':'var(--muted)'}">
       ${done?'✅ Concluído':'Em andamento'}
     </span>
+    <button class="btn-mark-review${inReview?' already':''}"
+      onclick="markForReview('${sid}','${tid}')">
+      ${inReview?'📋 Na lista de revisão':'+ Marcar para revisão'}
+    </button>
   </div>`;
 
   AP_TYPES.forEach(at=>{
@@ -965,28 +1058,15 @@ function delRedacao(i){
 // ══════════════════════════════════════════════════════
 function renderSemana(){
   const el=document.getElementById('semanaContent');
+  // run sync before rendering so auto items are up-to-date without a full save()
+  syncRevisao();
   const total=totalWeek();
   const nome=D.perfil==='malu'?'Malu':'Bruno';
+  const lr=D.listaRevisao||[];
 
-  // review items
-  const reviews=[];
-  SUBJECTS.forEach(s=>{
-    if(s.id==='redacao'){
-      const r=redacaoReviewReasons();
-      if(r.length)reviews.push({icon:s.icon,name:'Redação',reasons:r});
-    }else{
-      (getM(s.id).assuntosSelecionados||[]).forEach(tid=>{
-        if(!getTopic(s.id,tid))return;
-        const r=topicReviewReasons(s.id,tid);
-        if(r.length)reviews.push({icon:s.icon,name:`${s.name} — ${getTopic(s.id,tid).nome}`,reasons:r});
-      });
-    }
-  });
-
-  // by subject
+  // by subject sessions
   const bySub=SUBJECTS.map(s=>({s,n:subjSessWeek(s.id)})).filter(x=>x.n>0)
     .sort((a,b)=>b.n-a.n);
-
   const bySubHtml=!bySub.length
     ?`<p style="color:var(--muted);font-size:.85rem">Nenhuma sessão esta semana.</p>`
     :bySub.map(x=>`<div class="bysub-item">
@@ -995,16 +1075,47 @@ function renderSemana(){
         <div class="bysub-count">${x.n} sessão${x.n>1?'ões':''}</div>
       </div>`).join('');
 
-  const revHtml=!reviews.length
+  // review items
+  function revItemLabel(item){
+    if(item.materia==='redacao')return{icon:'📝',name:'Redação'};
+    const s=SUBJECTS.find(x=>x.id===item.materia);
+    const t=getTopic(item.materia,item.assuntoId);
+    return{icon:s?s.icon:'📖',name:`${s?s.name:item.materia} — ${t?t.nome:item.assuntoId}`};
+  }
+  function revItemReasons(item){
+    if(item.materia==='redacao')return redacaoAutoReasons();
+    if(!getTopic(item.materia,item.assuntoId))return[];
+    return topicAutoReasons(item.materia,item.assuntoId);
+  }
+
+  const revHtml=!lr.length
     ?`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
         padding:1.4rem;text-align:center;color:var(--muted)">
         <div style="font-size:2rem;margin-bottom:.4rem">✅</div>
-        <div style="font-size:.88rem">Nada crítico no momento!</div>
+        <div style="font-size:.88rem">Nada a revisar no momento!</div>
       </div>`
-    :reviews.map(r=>`<div class="review-item">
-        <div class="ri-title">${r.icon} ${r.name}</div>
-        <div class="ri-reason">${r.reasons.join(' · ')}</div>
-      </div>`).join('');
+    :lr.map(item=>{
+        const{icon,name}=revItemLabel(item);
+        const reasons=revItemReasons(item);
+        const badgeCls=item.origem==='manual'?'man':'auto';
+        const badgeTxt=item.origem==='manual'?'por você':'automático';
+        const mk=(field,label)=>`<button class="ri-ck${item[field]?' on':''}"
+          onclick="tickRevisao('${item.materia}','${item.assuntoId}','${field}')">
+          <div class="ri-ck-box">${item[field]?'✓':''}</div>${label}
+        </button>`;
+        return `<div class="rev-item">
+          <div class="ri-head">
+            <span>${icon}</span>
+            <span class="ri-name">${name}</span>
+            <span class="ri-badge ${badgeCls}">${badgeTxt}</span>
+          </div>
+          ${reasons.length?`<div class="ri-reason">${reasons.join(' · ')}</div>`:''}
+          <div class="ri-checks">
+            ${mk('teoriaRevisada','Teoria revisada')}
+            ${mk('exerciciosRevisados','Exercícios revisados')}
+          </div>
+        </div>`;
+      }).join('');
 
   // redacao delta
   const rsess=D.redacao.sessoes;
@@ -1013,7 +1124,7 @@ function renderSemana(){
     const diff=(rsess[0].nota-rsess[1].nota).toFixed(1);
     const cls=diff>0?'delta-up':diff<0?'delta-dn':'delta-ne';
     const sign=diff>0?'+':'';
-    redDelta=`<div class="stat-card">
+    redDelta=`<div class="stat-card" style="grid-column:1/-1">
       <div class="sc-lbl">Redação — última nota</div>
       <div class="sc-val" style="color:${rsess[0].nota>=6?'#22c55e':'#ef4444'}">${rsess[0].nota}</div>
       <div class="sc-delta ${cls}">${sign}${diff} vs anterior</div>
@@ -1033,19 +1144,25 @@ function renderSemana(){
     <div class="stats2">
       <div class="stat-card">
         <div class="sc-lbl">Pontos a revisar</div>
-        <div class="sc-val" style="color:${reviews.length?'#ef4444':'#22c55e'}">${reviews.length}</div>
-        <div class="sc-delta ${reviews.length?'delta-ne':'delta-up'}">${reviews.length?'assuntos/matérias':'Tudo em dia!'}</div>
+        <div class="sc-val" style="color:${lr.length?'#ef4444':'#22c55e'}">${lr.length}</div>
+        <div class="sc-delta ${lr.length?'delta-ne':'delta-up'}">${lr.length?'na lista':'Tudo em dia!'}</div>
       </div>
       <div class="stat-card">
         <div class="sc-lbl">Matérias ativas</div>
         <div class="sc-val">${bySub.length}</div>
         <div class="sc-delta delta-ne">esta semana</div>
       </div>
+      ${redDelta}
     </div>
-    ${redDelta}
     <div class="sec-title">Sessões por matéria</div>
     ${bySubHtml}
-    <div class="sec-title">⚠️ Pontos a revisar</div>
+    <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>📋 Lista de revisão</span>
+      <button onclick="addManualRevisaoModal()"
+        style="background:none;border:none;color:#6366f1;font-size:.75rem;font-weight:700;cursor:pointer">
+        + Adicionar manualmente
+      </button>
+    </div>
     ${revHtml}
   `;
 }
@@ -1067,7 +1184,7 @@ function closeModal(){document.getElementById('modalOv').classList.add('hidden')
 // ══════════════════════════════════════════════════════
 // UTILS
 // ══════════════════════════════════════════════════════
-function pctCls(p){if(p===null)return'pct-na';if(p>=75)return'pct-g';if(p>=60)return'pct-m';return'pct-b'}
+function pctCls(p){if(p===null)return'pct-na';if(p>=80)return'pct-g';if(p>=70)return'pct-m';return'pct-b'}
 function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`}
 function esc(s){return s.replace(/'/g,'\\x27')}
 function showToast(msg){
