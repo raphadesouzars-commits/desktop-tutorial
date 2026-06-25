@@ -664,7 +664,10 @@ function renderMateria(sid){
       return `<div class="topic-card${done?' done':''}" onclick="openTopic('${sid}','${tid}')">
         <div class="tc-dot" style="background:${done?'var(--done)':s.color}"></div>
         <div class="tc-info">
-          <div class="tc-name${done?' done-text':''}">${t.nome}${alerts?' ⚠️':''}</div>
+          <div class="tc-name${done?' done-text':''}">
+            ${t.nome}${alerts?' ⚠️':''}
+            ${t.origem==='manual'?'<span style="font-size:.62rem;font-weight:700;padding:.1rem .38rem;border-radius:99px;background:var(--surface2);color:var(--muted);margin-left:.35rem;vertical-align:middle">extra</span>':''}
+          </div>
           <div class="tc-sub">${concl}/3 etapas${pct!==null?' · '+pct+'% acerto':''}</div>
         </div>
         <div class="tc-arr">›</div>
@@ -679,7 +682,12 @@ function renderMateria(sid){
         <span class="ct-label">Catálogo de assuntos (${sel.size}/${catalog.length} selecionados)</span>
         <span class="ct-arrow">▾</span>
       </div>
-      <div class="catalog-body">${catItems}</div>
+      <div class="catalog-body">${catItems}
+        <div style="padding:.4rem .3rem .2rem">
+          <button class="add-btn" style="margin-top:.2rem;font-size:.8rem;padding:.7rem"
+            onclick="addManualTopicModal('${sid}')">+ Adicionar assunto não listado</button>
+        </div>
+      </div>
     </div>
     <div class="sec-title">Assuntos em acompanhamento</div>
     ${topicsHtml}`;
@@ -696,18 +704,45 @@ function toggleTopic(sid,key,name){
   const sel=m.assuntosSelecionados||[];
   const idx=sel.indexOf(key);
   if(idx===-1){
-    // add to selected; create apostila data if not exists
     if(!m.assuntos[key]){
-      m.assuntos[key]={nome:name,apostilas:makeApostilas()};
+      m.assuntos[key]={nome:name,origem:'catalogo',apostilas:makeApostilas()};
     }
     sel.push(key);
   }else{
-    // deselect — keep data, just remove from selected
     sel.splice(idx,1);
   }
   m.assuntosSelecionados=sel;
   save();
   renderMateria(sid);
+}
+
+function addManualTopicModal(sid){
+  showModal('Novo assunto extra',`
+    <div class="form-group">
+      <label>Nome do assunto</label>
+      <input class="form-input" id="manualTopicName" placeholder="Ex: Resolução de provas antigas" autofocus>
+    </div>
+  `,[
+    {label:'Cancelar',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Adicionar',cls:'btn-pri',fn:`doAddManualTopic('${sid}')`},
+  ]);
+}
+
+function doAddManualTopic(sid){
+  const name=document.getElementById('manualTopicName').value.trim();
+  if(!name)return;
+  const m=getM(sid);
+  const sel=m.assuntosSelecionados||[];
+  const key=topicKey(name)+'_m';
+  if(!m.assuntos[key]){
+    m.assuntos[key]={nome:name,origem:'manual',apostilas:makeApostilas()};
+  }
+  if(!sel.includes(key))sel.push(key);
+  m.assuntosSelecionados=sel;
+  save();
+  closeModal();
+  renderMateria(sid);
+  showToast('Assunto adicionado!');
 }
 
 // ══════════════════════════════════════════════════════
