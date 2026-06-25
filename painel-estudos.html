@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Painel de Estudos</title>
 <style>
   :root {
@@ -14,1291 +14,1039 @@
     --geografia: #14b8a6;
     --portugues: #ef4444;
     --redacao:   #ec4899;
+    --done:      #22c55e;
 
-    --bg: #0f0f14;
-    --surface: #1a1a24;
+    --bg:       #0f0f14;
+    --surface:  #1a1a24;
     --surface2: #22222f;
-    --border: #2e2e3f;
-    --text: #f1f1f5;
-    --muted: #8888aa;
-    --radius: 16px;
-    --radius-sm: 10px;
+    --border:   #2e2e3f;
+    --text:     #f1f1f5;
+    --muted:    #8888aa;
+    --radius:   16px;
+    --rsm:      10px;
   }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+    min-height:100dvh;overflow-x:hidden}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  /* ─ ONBOARDING ─ */
+  #onboarding{min-height:100dvh;display:flex;flex-direction:column;align-items:center;
+    justify-content:center;padding:2rem;text-align:center;
+    background:linear-gradient(135deg,#0f0f14 0%,#1a0f2e 100%)}
+  .ob-logo{font-size:3.5rem;margin-bottom:1rem}
+  .ob-h1{font-size:2rem;font-weight:900;margin-bottom:.4rem}
+  .ob-sub{color:var(--muted);font-size:1rem;margin-bottom:2.5rem}
+  .prof-btns{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+  .prof-btn{border:none;cursor:pointer;border-radius:var(--radius);padding:1.6rem 2.8rem;
+    font-size:1.25rem;font-weight:800;transition:transform .15s,box-shadow .15s;min-width:150px}
+  .prof-btn:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(0,0,0,.45)}
+  .prof-btn.malu{background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff}
+  .prof-btn.bruno{background:linear-gradient(135deg,#6366f1,#14b8a6);color:#fff}
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
+  /* ─ APP SHELL ─ */
+  #app{display:none;flex-direction:column;min-height:100dvh}
 
-  /* ── ONBOARDING ── */
-  #onboarding {
-    min-height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    text-align: center;
-    background: linear-gradient(135deg, #0f0f14 0%, #1a0f2e 100%);
-  }
-  #onboarding .logo { font-size: 3rem; margin-bottom: 1rem; }
-  #onboarding h1 { font-size: 1.8rem; font-weight: 800; margin-bottom: .5rem; }
-  #onboarding p { color: var(--muted); margin-bottom: 2.5rem; }
-  .profile-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
-  .profile-btn {
-    border: none; cursor: pointer; border-radius: var(--radius);
-    padding: 1.5rem 2.5rem; font-size: 1.2rem; font-weight: 700;
-    transition: transform .15s, box-shadow .15s;
-    min-width: 140px;
-  }
-  .profile-btn:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.4); }
-  .profile-btn.malu { background: linear-gradient(135deg,#ec4899,#a855f7); color:#fff; }
-  .profile-btn.bruno { background: linear-gradient(135deg,#6366f1,#14b8a6); color:#fff; }
+  /* ─ TOPBAR ─ */
+  .topbar{position:sticky;top:0;z-index:100;background:var(--surface);
+    border-bottom:1px solid var(--border);padding:.9rem 1.1rem;
+    display:flex;align-items:center;gap:.75rem}
+  .back-btn{background:var(--surface2);border:none;border-radius:50%;width:36px;height:36px;
+    cursor:pointer;color:var(--text);font-size:1.2rem;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0;display:none}
+  .topbar-title{font-size:1.05rem;font-weight:700;flex:1}
+  .profile-chip{font-size:.72rem;font-weight:700;padding:.28rem .7rem;border-radius:99px;
+    background:var(--surface2);color:var(--muted);cursor:pointer;flex-shrink:0;border:none}
+  .color-bar{height:3px;position:absolute;top:0;left:0;right:0}
 
-  /* ── APP SHELL ── */
-  #app { display: none; flex-direction: column; min-height: 100dvh; }
+  /* ─ PAGES ─ */
+  .page{display:none;flex:1;overflow-y:auto;padding:1rem 1rem 5.5rem}
+  .page.active{display:block}
 
-  /* ── TOP BAR ── */
-  .topbar {
-    position: sticky; top: 0; z-index: 100;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: .9rem 1.2rem;
-    display: flex; align-items: center; gap: .8rem;
-  }
-  .topbar .back-btn {
-    background: var(--surface2); border: none; border-radius: 50%;
-    width: 36px; height: 36px; cursor: pointer; color: var(--text);
-    font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .topbar h2 { font-size: 1.1rem; font-weight: 700; flex: 1; }
-  .topbar .profile-chip {
-    font-size: .75rem; font-weight: 600; padding: .3rem .7rem;
-    border-radius: 99px; background: var(--surface2);
-    color: var(--muted); cursor: pointer; flex-shrink: 0;
-  }
+  /* ─ BOTTOM NAV ─ */
+  .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--surface);
+    border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom)}
+  .nav-btn{flex:1;border:none;background:none;cursor:pointer;padding:.75rem .5rem;
+    display:flex;flex-direction:column;align-items:center;gap:.2rem;color:var(--muted);
+    font-size:.68rem;font-weight:700;transition:color .15s;letter-spacing:.01em}
+  .nav-btn .ni{font-size:1.35rem}
+  .nav-btn.active{color:#6366f1}
 
-  /* ── MAIN CONTENT ── */
-  .page { display: none; flex: 1; overflow-y: auto; padding: 1rem 1rem 5rem; }
-  .page.active { display: block; }
+  /* ─ PAINEL GRID ─ */
+  .cards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.85rem}
+  @media(min-width:560px){.cards-grid{grid-template-columns:repeat(3,1fr)}}
+  @media(min-width:820px){.cards-grid{grid-template-columns:repeat(4,1fr)}}
 
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 100;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-  }
-  .nav-btn {
-    flex: 1; border: none; background: none; cursor: pointer;
-    padding: .8rem .5rem; display: flex; flex-direction: column;
-    align-items: center; gap: .25rem; color: var(--muted);
-    font-size: .7rem; font-weight: 600; transition: color .15s;
-  }
-  .nav-btn .icon { font-size: 1.4rem; }
-  .nav-btn.active { color: #6366f1; }
+  .subj-card{border-radius:var(--radius);padding:1.15rem 1.1rem;cursor:pointer;
+    transition:transform .15s,box-shadow .15s;position:relative;overflow:hidden;
+    border:1px solid var(--border);background:var(--surface);min-height:135px;
+    display:flex;flex-direction:column}
+  .subj-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+  .subj-card .sc-bar{position:absolute;top:0;left:0;right:0;height:4px;border-radius:var(--radius) var(--radius) 0 0}
+  .subj-card .sc-icon{font-size:1.85rem;margin-bottom:.45rem}
+  .subj-card .sc-name{font-size:.95rem;font-weight:800;margin-bottom:auto}
+  .subj-card .sc-stats{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.3rem}
+  .stat-pill{font-size:.65rem;font-weight:700;padding:.2rem .5rem;border-radius:99px;
+    background:rgba(255,255,255,.07)}
+  .badge-alert{position:absolute;top:.65rem;right:.65rem;background:#ef4444;color:#fff;
+    font-size:.58rem;font-weight:800;border-radius:99px;padding:.18rem .45rem}
 
-  /* ── CARDS GRID ── */
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: .85rem;
-  }
-  @media(min-width:600px){ .cards-grid { grid-template-columns: repeat(3,1fr); } }
-  @media(min-width:900px){ .cards-grid { grid-template-columns: repeat(4,1fr); } }
+  /* ─ PROGRESS RING ─ */
+  .ring-wrap{position:absolute;bottom:.8rem;right:.8rem}
+  .ring-wrap svg{width:38px;height:38px;transform:rotate(-90deg)}
+  .ring-wrap .ring-bg{fill:none;stroke:var(--surface2);stroke-width:3}
+  .ring-wrap .ring-fill{fill:none;stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset .4s}
+  .ring-wrap .ring-text{font-size:.55rem;font-weight:800;text-anchor:middle;dominant-baseline:middle;
+    fill:var(--text);transform:rotate(90deg);transform-origin:50% 50%}
 
-  .subject-card {
-    border-radius: var(--radius); padding: 1.2rem;
-    cursor: pointer; transition: transform .15s, box-shadow .15s;
-    position: relative; overflow: hidden; border: 1px solid var(--border);
-    background: var(--surface);
-    min-height: 130px; display: flex; flex-direction: column;
-  }
-  .subject-card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(0,0,0,.35); }
-  .subject-card .accent {
-    position: absolute; top: 0; left: 0; right: 0; height: 4px;
-    border-radius: var(--radius) var(--radius) 0 0;
-  }
-  .subject-card .subj-icon { font-size: 1.8rem; margin-bottom: .5rem; }
-  .subject-card .subj-name { font-size: .95rem; font-weight: 700; margin-bottom: auto; }
-  .subject-card .subj-stats { margin-top: .8rem; }
-  .subject-card .stat-pill {
-    display: inline-block; font-size: .68rem; font-weight: 600;
-    padding: .2rem .55rem; border-radius: 99px;
-    background: rgba(255,255,255,.08); margin-top: .3rem;
-  }
-  .badge-alert {
-    position: absolute; top: .7rem; right: .7rem;
-    background: #ef4444; color: #fff; font-size: .6rem; font-weight: 700;
-    border-radius: 99px; padding: .15rem .45rem;
-  }
+  /* ─ SECTION TITLE ─ */
+  .sec-title{font-size:.72rem;font-weight:800;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.07em;margin:1.2rem 0 .65rem}
 
-  /* ── WEEK PAGE ── */
-  .week-header {
-    background: linear-gradient(135deg, var(--surface), #1a1030);
-    border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1rem;
-    border: 1px solid var(--border);
-  }
-  .week-header h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: .25rem; }
-  .week-header .sub { color: var(--muted); font-size: .85rem; }
-  .big-stat { font-size: 3rem; font-weight: 900; line-height: 1; }
-  .big-stat span { font-size: 1rem; font-weight: 400; color: var(--muted); }
+  /* ─ CATALOG / CHECKBOX LIST ─ */
+  .catalog-section{background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+  .catalog-toggle{display:flex;align-items:center;gap:.7rem;padding:.9rem 1.1rem;
+    cursor:pointer;user-select:none}
+  .catalog-toggle .ct-icon{font-size:1.1rem}
+  .catalog-toggle .ct-label{font-size:.88rem;font-weight:700;flex:1}
+  .catalog-toggle .ct-arrow{color:var(--muted);transition:transform .2s}
+  .catalog-toggle .ct-arrow.open{transform:rotate(180deg)}
+  .catalog-body{border-top:1px solid var(--border);padding:.6rem .4rem;display:none}
+  .catalog-body.open{display:block}
+  .cat-item{display:flex;align-items:center;gap:.75rem;padding:.55rem .7rem;
+    border-radius:var(--rsm);cursor:pointer;transition:background .12s}
+  .cat-item:hover{background:var(--surface2)}
+  .cat-cb{width:18px;height:18px;border-radius:5px;border:2px solid var(--border);
+    background:var(--surface2);display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;transition:background .15s,border-color .15s;font-size:.75rem}
+  .cat-cb.checked{background:#6366f1;border-color:#6366f1}
+  .cat-label{font-size:.85rem}
 
-  .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: .85rem; margin-bottom: 1rem; }
-  .stat-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.2rem;
-  }
-  .stat-card .label { font-size: .75rem; color: var(--muted); font-weight: 600; margin-bottom: .4rem; }
-  .stat-card .value { font-size: 2rem; font-weight: 800; }
-  .stat-card .delta { font-size: .75rem; margin-top: .2rem; }
-  .delta.up { color: #22c55e; } .delta.down { color: #ef4444; } .delta.neutral { color: var(--muted); }
+  /* ─ TOPIC CARDS ─ */
+  .topic-card{background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1rem 1.1rem;margin-bottom:.6rem;
+    cursor:pointer;transition:transform .12s;display:flex;align-items:center;gap:.85rem}
+  .topic-card:hover{transform:translateX(3px)}
+  .topic-card.done{border-color:var(--done)22}
+  .tc-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .tc-info{flex:1;min-width:0}
+  .tc-name{font-size:.9rem;font-weight:700}
+  .tc-name.done-text{color:var(--done)}
+  .tc-sub{font-size:.73rem;color:var(--muted);margin-top:.2rem}
+  .tc-arr{color:var(--muted);font-size:1.1rem}
 
-  .section-title {
-    font-size: .8rem; font-weight: 700; color: var(--muted);
-    text-transform: uppercase; letter-spacing: .06em;
-    margin: 1.2rem 0 .6rem;
-  }
+  /* ─ APOSTILA BLOCKS ─ */
+  .apostila-block{background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);margin-bottom:.85rem;overflow:hidden}
+  .apostila-block.done-block{border-color:var(--done)44}
+  .ap-head{padding:.95rem 1.1rem;display:flex;align-items:center;gap:.75rem;
+    cursor:pointer;user-select:none}
+  .ap-icon{font-size:1.4rem}
+  .ap-info{flex:1}
+  .ap-type{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .ap-name{font-size:.88rem;font-weight:600}
+  .ap-metric{text-align:right;flex-shrink:0}
+  .ap-pct{font-size:1.35rem;font-weight:900}
+  .ap-pct-lbl{font-size:.6rem;color:var(--muted)}
+  .ap-done-badge{font-size:.65rem;font-weight:700;padding:.18rem .5rem;border-radius:99px;
+    background:var(--done)22;color:var(--done);margin-left:.5rem}
+  .ap-arr{color:var(--muted);transition:transform .2s;flex-shrink:0}
+  .ap-arr.open{transform:rotate(180deg)}
+  .ap-body{border-top:1px solid var(--border);padding:1rem 1.1rem;display:none}
+  .ap-body.open{display:block}
+  .ap-name-row{margin-bottom:.85rem}
+  .ap-name-input{width:100%;background:var(--surface2);border:1px solid var(--border);
+    border-radius:var(--rsm);padding:.5rem .75rem;color:var(--text);font-size:.85rem}
+  .ap-name-input:focus{outline:none;border-color:#6366f1}
 
-  .review-item {
-    background: var(--surface); border: 1px solid var(--border);
-    border-left: 3px solid #ef4444;
-    border-radius: var(--radius-sm); padding: 1rem; margin-bottom: .6rem;
-  }
-  .review-item .ri-title { font-size: .9rem; font-weight: 700; margin-bottom: .2rem; }
-  .review-item .ri-reason { font-size: .78rem; color: var(--muted); }
+  .session-list{margin-bottom:.75rem}
+  .sess-item{background:var(--surface2);border-radius:var(--rsm);padding:.6rem .85rem;
+    margin-bottom:.35rem;font-size:.8rem;display:flex;gap:.5rem;align-items:flex-start;position:relative}
+  .sess-date{color:var(--muted);flex-shrink:0;min-width:60px}
+  .sess-info{flex:1}
+  .sess-del{position:absolute;top:.35rem;right:.4rem;background:none;border:none;
+    color:var(--muted);cursor:pointer;font-size:.75rem;opacity:0;transition:opacity .15s}
+  .sess-item:hover .sess-del{opacity:1}
 
-  .by-subject-item {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: .85rem 1rem;
-    display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem;
-  }
-  .by-subject-item .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .by-subject-item .name { flex: 1; font-size: .9rem; font-weight: 600; }
-  .by-subject-item .count { font-size: .85rem; color: var(--muted); }
+  .conclude-row{display:flex;gap:.6rem;margin-top:.85rem;padding-top:.85rem;border-top:1px solid var(--border)}
+  .btn-conclude{flex:1;border:2px solid var(--done);background:transparent;color:var(--done);
+    border-radius:var(--rsm);padding:.65rem;cursor:pointer;font-size:.82rem;font-weight:700;
+    transition:background .15s,color .15s}
+  .btn-conclude:hover,.btn-conclude.concluded{background:var(--done);color:#fff}
+  .btn-conclude.concluded{border-color:var(--done)}
+  .btn-reg{flex:1;background:var(--surface2);border:1px solid var(--border);
+    color:var(--text);border-radius:var(--rsm);padding:.65rem;cursor:pointer;
+    font-size:.82rem;font-weight:600;transition:background .15s}
+  .btn-reg:hover{background:#2a2a3e}
 
-  /* ── SUBJECT PAGE ── */
-  .topic-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.1rem 1.2rem;
-    margin-bottom: .7rem; cursor: pointer;
-    transition: transform .12s;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .topic-card:hover { transform: translateX(3px); }
-  .topic-card .tc-info { flex: 1; min-width: 0; }
-  .topic-card .tc-name { font-size: .95rem; font-weight: 700; }
-  .topic-card .tc-status { font-size: .75rem; margin-top: .25rem; }
-  .topic-card .tc-arrow { color: var(--muted); }
-  .status-dot {
-    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
-  }
-  .status-nao { background: var(--muted); }
-  .status-andamento { background: #f97316; }
-  .status-revisado { background: #22c55e; }
+  /* ─ REDAÇÃO ─ */
+  .red-stats{display:flex;gap:1.5rem;background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem}
+  .red-stat .rs-lbl{font-size:.68rem;font-weight:700;text-transform:uppercase;
+    letter-spacing:.05em;color:var(--muted);margin-bottom:.2rem}
+  .red-stat .rs-val{font-size:2.2rem;font-weight:900;line-height:1}
+  .red-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    padding:1rem 1.1rem;margin-bottom:.6rem;position:relative}
+  .rc-nota{position:absolute;top:1rem;right:1.1rem;font-size:1.7rem;font-weight:900}
+  .rc-tema{font-size:.9rem;font-weight:700;margin-bottom:.3rem;padding-right:3rem}
+  .rc-date{font-size:.74rem;color:var(--muted)}
+  .rc-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.74rem;margin-top:.5rem}
 
-  .add-btn {
-    width: 100%; border: 2px dashed var(--border); background: none; color: var(--muted);
-    border-radius: var(--radius); padding: 1rem; cursor: pointer;
-    font-size: .9rem; font-weight: 600; transition: border-color .15s, color .15s;
-    margin-top: .5rem;
-  }
-  .add-btn:hover { border-color: #6366f1; color: #6366f1; }
+  /* ─ WEEK PAGE ─ */
+  .week-hero{background:linear-gradient(135deg,#1a1030,var(--surface));
+    border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
+  .week-hero h2{font-size:1.35rem;font-weight:900;margin-bottom:.25rem}
+  .week-hero .wh-sub{color:var(--muted);font-size:.83rem;margin-bottom:1rem}
+  .big-num{font-size:3.5rem;font-weight:900;line-height:1}
+  .big-num span{font-size:.95rem;font-weight:400;color:var(--muted)}
 
-  /* ── TOPIC PAGE ── */
-  .apostila-block {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;
-  }
-  .apostila-header {
-    padding: 1rem 1.2rem; display: flex; align-items: center; gap: .8rem;
-    cursor: pointer; user-select: none;
-  }
-  .apostila-header .ah-icon { font-size: 1.4rem; }
-  .apostila-header .ah-info { flex: 1; }
-  .apostila-header .ah-type { font-size: .7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .05em; color: var(--muted); }
-  .apostila-header .ah-name { font-size: .9rem; font-weight: 600; }
-  .apostila-header .ah-metric { text-align: right; }
-  .apostila-header .ah-pct { font-size: 1.4rem; font-weight: 800; }
-  .apostila-header .ah-pct-label { font-size: .65rem; color: var(--muted); }
-  .apostila-toggle { color: var(--muted); transition: transform .2s; }
-  .apostila-toggle.open { transform: rotate(180deg); }
+  .stats2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-bottom:1rem}
+  .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem}
+  .stat-card .sc-lbl{font-size:.7rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.05em;margin-bottom:.35rem}
+  .stat-card .sc-val{font-size:1.9rem;font-weight:900}
+  .stat-card .sc-delta{font-size:.73rem;margin-top:.25rem}
+  .delta-up{color:#22c55e}.delta-dn{color:#ef4444}.delta-ne{color:var(--muted)}
 
-  .apostila-body { border-top: 1px solid var(--border); padding: 1rem 1.2rem; display: none; }
-  .apostila-body.open { display: block; }
+  .review-item{background:var(--surface);border:1px solid var(--border);border-left:3px solid #ef4444;
+    border-radius:var(--rsm);padding:.9rem 1rem;margin-bottom:.5rem}
+  .ri-title{font-size:.88rem;font-weight:700;margin-bottom:.18rem}
+  .ri-reason{font-size:.76rem;color:var(--muted)}
 
-  .apostila-name-row { display: flex; gap: .5rem; align-items: center; margin-bottom: 1rem; }
-  .apostila-name-input {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: .5rem .8rem; color: var(--text);
-    font-size: .85rem;
-  }
-  .apostila-name-input:focus { outline: none; border-color: #6366f1; }
+  .bysub-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--rsm);
+    padding:.8rem 1rem;display:flex;align-items:center;gap:.75rem;margin-bottom:.45rem}
+  .bysub-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+  .bysub-name{flex:1;font-size:.88rem;font-weight:600}
+  .bysub-count{font-size:.83rem;color:var(--muted)}
 
-  .session-list { margin-bottom: .8rem; }
-  .session-item {
-    background: var(--surface2); border-radius: var(--radius-sm);
-    padding: .7rem .9rem; margin-bottom: .4rem;
-    font-size: .82rem; display: flex; gap: .5rem; align-items: flex-start;
-    position: relative;
-  }
-  .session-item .si-date { color: var(--muted); flex-shrink: 0; }
-  .session-item .si-info { flex: 1; }
-  .session-item .si-pct { font-weight: 700; flex-shrink: 0; }
-  .session-item .si-del {
-    position: absolute; top: .4rem; right: .4rem;
-    background: none; border: none; color: var(--muted); cursor: pointer;
-    font-size: .8rem; opacity: 0; transition: opacity .15s;
-  }
-  .session-item:hover .si-del { opacity: 1; }
+  /* ─ MODAL ─ */
+  .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;
+    display:flex;align-items:flex-end;justify-content:center}
+  .modal-ov.hidden{display:none}
+  .modal{background:var(--surface);border-radius:var(--radius) var(--radius) 0 0;
+    padding:1.5rem;width:100%;max-width:520px;max-height:88dvh;overflow-y:auto}
+  .modal h3{font-size:1.05rem;font-weight:800;margin-bottom:1.1rem}
+  .form-group{margin-bottom:.9rem}
+  .form-group label{display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.35rem}
+  .form-input{width:100%;background:var(--surface2);border:1px solid var(--border);
+    border-radius:var(--rsm);padding:.6rem .85rem;color:var(--text);font-size:.95rem}
+  .form-input:focus{outline:none;border-color:#6366f1}
+  textarea.form-input{resize:vertical;min-height:80px}
+  .form-row{display:flex;gap:.75rem}
+  .form-row .form-group{flex:1}
+  .modal-acts{display:flex;gap:.6rem;margin-top:1.3rem}
+  .btn-pri{flex:1;background:#6366f1;color:#fff;border:none;border-radius:var(--rsm);
+    padding:.8rem;cursor:pointer;font-size:.93rem;font-weight:700;transition:background .15s}
+  .btn-pri:hover{background:#4f52d9}
+  .btn-sec{background:var(--surface2);color:var(--text);border:1px solid var(--border);
+    border-radius:var(--rsm);padding:.8rem 1.1rem;cursor:pointer;font-size:.93rem;font-weight:600}
 
-  .reg-btn {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--text); border-radius: var(--radius-sm); padding: .7rem;
-    cursor: pointer; font-size: .85rem; font-weight: 600; transition: background .15s;
-  }
-  .reg-btn:hover { background: #2a2a3e; }
-
-  /* ── REDAÇÃO PAGE ── */
-  .redacao-card {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 1.1rem 1.2rem; margin-bottom: .7rem;
-    position: relative;
-  }
-  .redacao-card .rc-tema { font-size: .9rem; font-weight: 700; margin-bottom: .4rem; }
-  .redacao-card .rc-date { font-size: .75rem; color: var(--muted); }
-  .redacao-card .rc-nota {
-    position: absolute; top: 1rem; right: 1.2rem;
-    font-size: 1.6rem; font-weight: 900;
-  }
-  .redacao-card .rc-del {
-    background: none; border: none; color: var(--muted);
-    cursor: pointer; font-size: .8rem; margin-top: .5rem; display: block;
-  }
-
-  /* ── PROGRESS BAR ── */
-  .prog-bar { height: 5px; background: var(--surface2); border-radius: 99px; margin-top: .5rem; overflow: hidden; }
-  .prog-fill { height: 100%; border-radius: 99px; transition: width .4s; }
-
-  /* ── MODAL ── */
-  .modal-overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,.7);
-    z-index: 200; display: flex; align-items: flex-end; justify-content: center;
-    padding: 0;
-  }
-  .modal-overlay.hidden { display: none; }
-  .modal {
-    background: var(--surface); border-radius: var(--radius) var(--radius) 0 0;
-    padding: 1.5rem; width: 100%; max-width: 520px; max-height: 85dvh;
-    overflow-y: auto;
-  }
-  .modal h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 1.2rem; }
-  .form-group { margin-bottom: 1rem; }
-  .form-group label { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: .4rem; }
-  .form-input {
-    width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: .65rem .9rem; color: var(--text);
-    font-size: .95rem;
-  }
-  .form-input:focus { outline: none; border-color: #6366f1; }
-  textarea.form-input { resize: vertical; min-height: 80px; }
-  .form-row { display: flex; gap: .8rem; }
-  .form-row .form-group { flex: 1; }
-  .modal-actions { display: flex; gap: .7rem; margin-top: 1.4rem; }
-  .btn-primary {
-    flex: 1; background: #6366f1; color: #fff; border: none;
-    border-radius: var(--radius-sm); padding: .8rem; cursor: pointer;
-    font-size: .95rem; font-weight: 700; transition: background .15s;
-  }
-  .btn-primary:hover { background: #4f52d9; }
-  .btn-secondary {
-    background: var(--surface2); color: var(--text); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: .8rem 1.2rem; cursor: pointer;
-    font-size: .95rem; font-weight: 600;
-  }
-
-  /* ── CONTEXT MENU ── */
-  .ctx-menu {
-    position: fixed; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: var(--radius-sm); padding: .4rem 0; z-index: 300; min-width: 150px;
-    box-shadow: 0 8px 24px rgba(0,0,0,.5);
-  }
-  .ctx-menu.hidden { display: none; }
-  .ctx-item {
-    padding: .65rem 1rem; font-size: .88rem; cursor: pointer;
-    transition: background .1s;
-  }
-  .ctx-item:hover { background: var(--border); }
-  .ctx-item.danger { color: #ef4444; }
-
-  /* ── SETTINGS ── */
-  .settings-btn {
-    background: none; border: none; color: var(--muted); cursor: pointer;
-    font-size: .8rem; padding: .4rem; text-decoration: underline;
-  }
-
-  /* ── MISC ── */
-  .empty-state {
-    text-align: center; padding: 3rem 1rem; color: var(--muted);
-  }
-  .empty-state .es-icon { font-size: 3rem; margin-bottom: .8rem; }
-  .empty-state p { font-size: .9rem; }
-
-  .toast {
-    position: fixed; bottom: 5rem; left: 50%; transform: translateX(-50%);
-    background: #22c55e; color: #fff; border-radius: 99px;
-    padding: .6rem 1.4rem; font-size: .85rem; font-weight: 600;
-    z-index: 400; opacity: 0; transition: opacity .3s;
-    pointer-events: none;
-  }
-  .toast.show { opacity: 1; }
-
-  .profile-banner {
-    padding: .4rem 1.2rem .6rem;
-    font-size: .78rem; font-weight: 600; color: var(--muted);
-    background: var(--surface);
-  }
-  .profile-banner strong { color: var(--text); }
-
-  /* pct colors */
-  .pct-good { color: #22c55e; }
-  .pct-mid  { color: #f97316; }
-  .pct-bad  { color: #ef4444; }
-  .pct-na   { color: var(--muted); }
-
-  .chip-row { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
-  .chip {
-    padding: .3rem .75rem; border-radius: 99px; font-size: .75rem; font-weight: 600;
-    background: var(--surface2); border: 1px solid var(--border); color: var(--muted);
-    cursor: pointer; transition: all .15s;
-  }
-  .chip.active { border-color: currentColor; }
+  /* ─ MISC ─ */
+  .add-btn{width:100%;border:2px dashed var(--border);background:none;color:var(--muted);
+    border-radius:var(--radius);padding:.95rem;cursor:pointer;font-size:.88rem;font-weight:700;
+    transition:border-color .15s,color .15s;margin-top:.5rem}
+  .add-btn:hover{border-color:#6366f1;color:#6366f1}
+  .empty{text-align:center;padding:3rem 1rem;color:var(--muted)}
+  .empty .ei{font-size:2.8rem;margin-bottom:.75rem}
+  .toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:#22c55e;
+    color:#fff;border-radius:99px;padding:.55rem 1.35rem;font-size:.83rem;font-weight:700;
+    z-index:400;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+  .toast.show{opacity:1}
+  .ctx-menu{position:fixed;background:var(--surface2);border:1px solid var(--border);
+    border-radius:var(--rsm);padding:.3rem 0;z-index:300;min-width:145px;
+    box-shadow:0 8px 24px rgba(0,0,0,.5)}
+  .ctx-menu.hidden{display:none}
+  .ctx-item{padding:.6rem 1rem;font-size:.86rem;cursor:pointer;transition:background .1s}
+  .ctx-item:hover{background:var(--border)}
+  .ctx-item.danger{color:#ef4444}
+  .pct-g{color:#22c55e}.pct-m{color:#f97316}.pct-b{color:#ef4444}.pct-na{color:var(--muted)}
+  .prof-bar{padding:.35rem 1.1rem .5rem;font-size:.76rem;font-weight:600;color:var(--muted);
+    background:var(--surface);border-bottom:1px solid var(--border)}
+  .prof-bar strong{color:var(--text)}
 </style>
 </head>
 <body>
 
 <!-- ONBOARDING -->
-<div id="onboarding">
-  <div class="logo">📚</div>
-  <h1>Painel de Estudos</h1>
-  <p>Este painel é de quem?</p>
-  <div class="profile-btns">
-    <button class="profile-btn malu" onclick="chooseProfile('malu')">🌸 Malu</button>
-    <button class="profile-btn bruno" onclick="chooseProfile('bruno')">🚀 Bruno</button>
+<div id="onboarding" style="display:none">
+  <div class="ob-logo">📚</div>
+  <h1 class="ob-h1">Painel de Estudos</h1>
+  <p class="ob-sub">Este painel é de quem?</p>
+  <div class="prof-btns">
+    <button class="prof-btn malu" onclick="chooseProfile('malu')">🌸 Malu</button>
+    <button class="prof-btn bruno" onclick="chooseProfile('bruno')">🚀 Bruno</button>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
-  <div class="topbar">
-    <button class="back-btn" id="backBtn" onclick="goBack()" style="display:none">‹</button>
-    <h2 id="topbarTitle">Painel</h2>
+  <div class="topbar" id="topbar">
+    <button class="back-btn" id="backBtn" onclick="goBack()">‹</button>
+    <span class="topbar-title" id="topbarTitle">Painel</span>
     <button class="profile-chip" id="profileChip" onclick="openSettings()"></button>
   </div>
-  <div class="profile-banner" id="profileBanner"></div>
+  <div class="prof-bar" id="profBar"></div>
 
-  <!-- PAINEL -->
-  <div class="page active" id="page-painel">
-    <div style="padding:.5rem 0 1rem">
-      <div id="subjectGrid" class="cards-grid"></div>
-    </div>
-  </div>
-
-  <!-- MATÉRIA -->
-  <div class="page" id="page-materia">
-    <div id="materiaContent"></div>
-  </div>
-
-  <!-- ASSUNTO -->
-  <div class="page" id="page-assunto">
-    <div id="assuntoContent"></div>
-  </div>
-
-  <!-- SEMANA -->
-  <div class="page" id="page-semana">
-    <div id="semanaContent"></div>
-  </div>
+  <div class="page active" id="page-painel"><div id="painelContent"></div></div>
+  <div class="page" id="page-materia"><div id="materiaContent"></div></div>
+  <div class="page" id="page-assunto"><div id="assuntoContent"></div></div>
+  <div class="page" id="page-semana"><div id="semanaContent"></div></div>
 
   <nav class="bottom-nav">
     <button class="nav-btn active" id="nav-painel" onclick="showMainPage('painel')">
-      <span class="icon">🏠</span>Painel
+      <span class="ni">🏠</span>Painel
     </button>
     <button class="nav-btn" id="nav-semana" onclick="showMainPage('semana')">
-      <span class="icon">📅</span>Minha Semana
+      <span class="ni">📅</span>Minha Semana
     </button>
   </nav>
 </div>
 
-<!-- MODALS -->
-<div class="modal-overlay hidden" id="modalOverlay" onclick="closeModal(event)">
+<div class="modal-ov hidden" id="modalOv" onclick="closeModalOv(event)">
   <div class="modal" id="modalBox">
     <h3 id="modalTitle"></h3>
     <div id="modalBody"></div>
-    <div class="modal-actions" id="modalActions"></div>
+    <div class="modal-acts" id="modalActs"></div>
   </div>
 </div>
-
-<!-- CONTEXT MENU -->
 <div class="ctx-menu hidden" id="ctxMenu"></div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-// ═══════════════════════════════════════════
-// DATA & CONSTANTS
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// CATALOG — fixed per edital EBMSP 2026.2
+// ══════════════════════════════════════════════════════
+const CATALOG = {
+  fisica: [
+    'Grandezas, Notação Científica e Vetores','Cinemática','Dinâmica e Leis de Newton',
+    'Atrito, Peso, Normal e Tração','Movimento Circular e Força Centrípeta','Hidrostática',
+    'Trabalho, Energia e Potência','Conservação de Energia Mecânica',
+    'Gravitação Universal e Leis de Kepler','Eletrostática','Eletrodinâmica e Circuitos',
+    'Magnetismo','Ondulatória','Óptica Geométrica','Termometria e Escalas Térmicas',
+    'Calorimetria e Mudanças de Estado','Termodinâmica e Gases Ideais',
+  ],
+  quimica: [
+    'Modelos Atômicos','Tabela Periódica','Ligações Químicas',
+    'Funções Inorgânicas (ácidos, bases, sais, óxidos)','Soluções e Concentração',
+    'Estequiometria','Termoquímica','Eletroquímica','Cinética Química',
+    'Equilíbrio Químico e pH','Radioatividade','Química Orgânica — Funções',
+    'Polímeros e Macromoléculas','Química Ambiental e Industrial','Energias e Combustíveis',
+  ],
+  biologia: [
+    'Citologia','Metabolismo Energético (fotossíntese e respiração)','Genética Mendeliana',
+    'Biotecnologia','Evolução','Origem da Vida','Sistemática e Classificação dos Seres Vivos',
+    'Ecologia','Ciclos Biogeoquímicos','Biomas e Problemas Ambientais',
+    'Doenças e Saúde Pública','Embriologia e Fisiologia Humana','Imunologia e Grupos Sanguíneos',
+  ],
+  matematica: [
+    'Conjuntos Numéricos','Razão, Proporção e Porcentagem','Progressões (PA e PG)',
+    'Princípios de Contagem','Geometria Plana','Geometria Espacial','Trigonometria',
+    'Funções do 1º e 2º Graus','Funções Exponenciais e Logarítmicas',
+    'Equações e Inequações','Estatística','Probabilidade','Geometria Analítica',
+  ],
+  historia: [
+    'Cultura e Patrimônio (povos indígenas e africanos)','Colonização e Conflitos na América',
+    'Cidadania e Democracia','Revoluções Políticas e Sociais',
+    'Formação Territorial e Política do Brasil','Movimentos Revolucionários do Séc. XX',
+    'Guerras Mundiais e Guerra Fria','Totalitarismos e Ditaduras na América Latina',
+    'Direitos Civis, Sociais e Políticos',
+    'Estruturas Produtivas (escravismo, feudalismo, capitalismo)',
+    'Economia Brasileira (açúcar, café, mineração, borracha)',
+    'Revolução Industrial e Industrialização Brasileira','Globalização e Novas Tecnologias',
+  ],
+  geografia: [
+    'Relação Homem-Natureza e Recursos Naturais','Impactos Ambientais e Mudanças Climáticas',
+    'Recursos Hídricos e Bacias Hidrográficas','Relevo e Solo','Climatologia',
+    'Biomas e Vegetação','Cartografia','Urbanização e Espaço Urbano',
+    'Fluxos Populacionais e Migrações','Geopolítica','Agronegócio e Estruturas Agrárias',
+  ],
+  portugues: [
+    'Gêneros Textuais','Texto Argumentativo','Coesão e Coerência Textual',
+    'Norma Culta e Variação Linguística','Funções da Linguagem',
+    'Literatura Brasileira — Movimentos','Análise Literária (épico, lírico, dramático)',
+    'Gêneros Digitais','Figuras de Linguagem e Recursos Expressivos',
+  ],
+};
+
 const SUBJECTS = [
-  { id:'fisica',     name:'Física',       icon:'⚡', color:'var(--fisica)'    },
-  { id:'biologia',   name:'Biologia',     icon:'🌿', color:'var(--biologia)'  },
-  { id:'quimica',    name:'Química',      icon:'🧪', color:'var(--quimica)'   },
-  { id:'matematica', name:'Matemática',   icon:'📐', color:'var(--matematica)'},
-  { id:'historia',   name:'História',     icon:'🏛️', color:'var(--historia)'  },
-  { id:'geografia',  name:'Geografia',    icon:'🌍', color:'var(--geografia)' },
-  { id:'portugues',  name:'Português',    icon:'✍️', color:'var(--portugues)' },
-  { id:'redacao',    name:'Redação',      icon:'📝', color:'var(--redacao)'   },
+  {id:'fisica',    name:'Física',     icon:'⚡', color:'var(--fisica)'},
+  {id:'biologia',  name:'Biologia',   icon:'🌿', color:'var(--biologia)'},
+  {id:'quimica',   name:'Química',    icon:'🧪', color:'var(--quimica)'},
+  {id:'matematica',name:'Matemática', icon:'📐', color:'var(--matematica)'},
+  {id:'historia',  name:'História',   icon:'🏛️', color:'var(--historia)'},
+  {id:'geografia', name:'Geografia',  icon:'🌍', color:'var(--geografia)'},
+  {id:'portugues', name:'Português',  icon:'✍️', color:'var(--portugues)'},
+  {id:'redacao',   name:'Redação',    icon:'📝', color:'var(--redacao)'},
 ];
 
-const APOSTILA_TYPES = [
-  { id:'multipla', name:'Múltipla Escolha', icon:'📘', hasScore: true  },
-  { id:'vf',       name:'Verdadeiro ou Falso', icon:'📗', hasScore: true  },
-  { id:'discursiva', name:'Discursiva',     icon:'📕', hasScore: false },
+const AP_TYPES = [
+  {id:'multipla',  name:'Múltipla Escolha',    icon:'📘', hasScore:true},
+  {id:'vf',        name:'Verdadeiro ou Falso',  icon:'📗', hasScore:true},
+  {id:'discursiva',name:'Discursiva',           icon:'📕', hasScore:false},
 ];
 
-let data = {};
-let currentSubjectId = null;
-let currentTopicId = null;
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+let D = {};
+let curSubj = null, curTopic = null;
 let navStack = [];
 
-// ═══════════════════════════════════════════
-// STORAGE
-// ═══════════════════════════════════════════
-function loadData() {
-  const raw = localStorage.getItem('painelEstudos_v1');
-  if (raw) { data = JSON.parse(raw); return; }
-  data = { perfil: null, materias: {}, redacao: { sessoes: [] } };
-  SUBJECTS.forEach(s => {
-    if (s.id !== 'redacao') data.materias[s.id] = { assuntos: {} };
+function makeApostilas(){
+  return {
+    multipla:  {nomeApostila:'',concluido:false,sessoes:[]},
+    vf:        {nomeApostila:'',concluido:false,sessoes:[]},
+    discursiva:{nomeApostila:'',concluido:false,sessoes:[]},
+  };
+}
+
+function topicKey(name){
+  return name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').substring(0,40);
+}
+
+function load(){
+  const raw = localStorage.getItem('painelV2');
+  if(raw){D=JSON.parse(raw);return}
+  D={perfil:null,materias:{},redacao:{sessoes:[]}};
+  SUBJECTS.forEach(s=>{
+    if(s.id!=='redacao') D.materias[s.id]={assuntosSelecionados:[],assuntos:{}};
   });
 }
+function save(){localStorage.setItem('painelV2',JSON.stringify(D))}
 
-function saveData() { localStorage.setItem('painelEstudos_v1', JSON.stringify(data)); }
+function getM(sid){return D.materias[sid]}
+function getTopic(sid,tid){return getM(sid).assuntos[tid]}
 
-function getTopics(subjId) { return data.materias[subjId]?.assuntos || {}; }
-
-function getTopic(subjId, topicId) { return getTopics(subjId)[topicId]; }
-
-function newTopicId(name) {
-  return name.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'')
-    .replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'') + '_' + Date.now();
+// ══════════════════════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════════════════════
+function chooseProfile(p){
+  D.perfil=p; save(); startApp();
 }
-
-// ═══════════════════════════════════════════
-// PROFILE / ONBOARDING
-// ═══════════════════════════════════════════
-function chooseProfile(nome) {
-  data.perfil = nome;
-  saveData();
-  startApp();
-}
-
-function startApp() {
-  document.getElementById('onboarding').style.display = 'none';
-  document.getElementById('app').style.display = 'flex';
-  const chip = document.getElementById('profileChip');
-  chip.textContent = data.perfil === 'malu' ? '🌸 Malu' : '🚀 Bruno';
-  document.getElementById('profileBanner').innerHTML =
-    `Painel de <strong>${data.perfil === 'malu' ? 'Malu' : 'Bruno'}</strong>`;
+function startApp(){
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('app').style.display='flex';
+  const label = D.perfil==='malu'?'🌸 Malu':'🚀 Bruno';
+  document.getElementById('profileChip').textContent=label;
+  document.getElementById('profBar').innerHTML=`Painel de <strong>${D.perfil==='malu'?'Malu':'Bruno'}</strong>`;
   renderPainel();
   showMainPage('painel');
 }
-
-function openSettings() {
-  showModal('Configurações', `
-    <p style="color:var(--muted);font-size:.9rem;margin-bottom:1.5rem">
-      Trocar o perfil deste aparelho apagará todos os dados locais.
+function openSettings(){
+  showModal('Configurações',`
+    <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem">
+      Trocar o perfil apaga todos os dados deste aparelho.
     </p>
-    <button class="btn-primary" style="background:#ef4444" onclick="confirmChangeProfile()">
+    <button class="btn-pri" style="background:#ef4444;width:100%" onclick="confirmSwitch()">
       Trocar perfil
-    </button>
-  `, []);
+    </button>`,[]);
+}
+function confirmSwitch(){
+  if(!confirm('Apagar todos os dados e trocar o perfil?'))return;
+  localStorage.removeItem('painelV2'); location.reload();
 }
 
-function confirmChangeProfile() {
-  if (!confirm('Isso apagará todos os dados deste aparelho. Continuar?')) return;
-  localStorage.removeItem('painelEstudos_v1');
-  location.reload();
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // NAVIGATION
-// ═══════════════════════════════════════════
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + id).classList.add('active');
+// ══════════════════════════════════════════════════════
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
 }
-
-function showMainPage(tab) {
-  navStack = [];
-  document.getElementById('backBtn').style.display = 'none';
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('nav-' + tab).classList.add('active');
-  if (tab === 'painel') {
-    setTitle('Painel'); renderPainel(); showPage('painel');
-  } else {
-    setTitle('Minha Semana'); renderSemana(); showPage('semana');
-  }
+function showMainPage(tab){
+  navStack=[];
+  document.getElementById('backBtn').style.display='none';
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('nav-'+tab).classList.add('active');
+  if(tab==='painel'){setTitle('Painel');renderPainel();showPage('painel')}
+  else{setTitle('Minha Semana');renderSemana();showPage('semana')}
 }
-
-function pushNav(state) {
+function pushNav(state){
   navStack.push(state);
-  document.getElementById('backBtn').style.display = 'flex';
+  document.getElementById('backBtn').style.display='flex';
 }
-
-function goBack() {
+function goBack(){
   navStack.pop();
-  if (navStack.length === 0) {
-    showMainPage('painel');
-  } else {
-    const prev = navStack[navStack.length - 1];
-    applyNavState(prev);
+  if(!navStack.length){showMainPage('painel');return}
+  const prev=navStack[navStack.length-1];
+  if(prev.page==='materia'){
+    curSubj=prev.sid;
+    setTitle(SUBJECTS.find(s=>s.id===prev.sid).name);
+    if(prev.sid==='redacao'){renderRedacao();showPage('materia')}
+    else{renderMateria(prev.sid);showPage('materia')}
+  }else if(prev.page==='assunto'){
+    curSubj=prev.sid;curTopic=prev.tid;
+    setTitle(getTopic(prev.sid,prev.tid).nome);
+    renderAssunto(prev.sid,prev.tid);showPage('assunto');
   }
 }
+function setTitle(t){document.getElementById('topbarTitle').textContent=t}
 
-function applyNavState(state) {
-  if (state.page === 'materia') {
-    currentSubjectId = state.subjId;
-    setTitle(SUBJECTS.find(s => s.id === state.subjId)?.name || '');
-    renderMateriaPage(state.subjId);
-    showPage('materia');
-  } else if (state.page === 'assunto') {
-    currentSubjectId = state.subjId;
-    currentTopicId = state.topicId;
-    const t = getTopic(state.subjId, state.topicId);
-    setTitle(t?.nome || '');
-    renderAssuntoPage(state.subjId, state.topicId);
-    showPage('assunto');
-  }
-}
-
-function setTitle(t) { document.getElementById('topbarTitle').textContent = t; }
-
-function openSubject(subjId) {
-  currentSubjectId = subjId;
-  const s = SUBJECTS.find(x => x.id === subjId);
+function openSubj(sid){
+  curSubj=sid;
+  const s=SUBJECTS.find(x=>x.id===sid);
   setTitle(s.name);
-  if (subjId === 'redacao') {
-    renderRedacaoPage();
-    showPage('materia');
-    pushNav({ page:'materia', subjId });
-  } else {
-    renderMateriaPage(subjId);
-    showPage('materia');
-    pushNav({ page:'materia', subjId });
-  }
+  if(sid==='redacao'){renderRedacao();showPage('materia')}
+  else{renderMateria(sid);showPage('materia')}
+  pushNav({page:'materia',sid});
 }
-
-function openTopic(subjId, topicId) {
-  currentSubjectId = subjId;
-  currentTopicId = topicId;
-  const t = getTopic(subjId, topicId);
-  setTitle(t.nome);
-  renderAssuntoPage(subjId, topicId);
+function openTopic(sid,tid){
+  curSubj=sid;curTopic=tid;
+  setTitle(getTopic(sid,tid).nome);
+  renderAssunto(sid,tid);
   showPage('assunto');
-  pushNav({ page:'assunto', subjId, topicId });
+  pushNav({page:'assunto',sid,tid});
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // METRICS
-// ═══════════════════════════════════════════
-function sessionsAvgPct(sessions) {
-  if (!sessions || sessions.length === 0) return null;
-  const scored = sessions.filter(s => s.total > 0);
-  if (scored.length === 0) return null;
-  const sum = scored.reduce((a, s) => a + (s.acertos / s.total) * 100, 0);
-  return Math.round(sum / scored.length);
+// ══════════════════════════════════════════════════════
+function avgPct(sessions){
+  if(!sessions||!sessions.length)return null;
+  const scored=sessions.filter(s=>s.total>0);
+  if(!scored.length)return null;
+  return Math.round(scored.reduce((a,s)=>a+(s.acertos/s.total)*100,0)/scored.length);
 }
-
-function topicStatus(topic) {
-  const types = APOSTILA_TYPES.map(t => topic.apostilas[t.id]?.sessoes?.length > 0);
-  const any = types.some(Boolean);
-  const all = types.every(Boolean);
-  if (!any) return 'nao';
-  if (all) return 'revisado';
-  return 'andamento';
+function topicDone(topic){
+  return AP_TYPES.every(at=>topic.apostilas[at.id].concluido);
 }
-
-function topicNeedsReview(subjId, topicId) {
-  const topic = getTopic(subjId, topicId);
-  const reasons = [];
-  const now = new Date();
-
-  // last session across all types
-  let lastDate = null;
-  APOSTILA_TYPES.forEach(at => {
-    const sess = topic.apostilas[at.id]?.sessoes || [];
-    sess.forEach(s => {
-      const d = new Date(s.data);
-      if (!lastDate || d > lastDate) lastDate = d;
+function topicOverallPct(topic){
+  const avgs=AP_TYPES.filter(a=>a.hasScore).map(at=>avgPct(topic.apostilas[at.id].sessoes));
+  const valid=avgs.filter(x=>x!==null);
+  return valid.length?Math.round(valid.reduce((a,b)=>a+b,0)/valid.length):null;
+}
+function daysDiff(d1,d2){return Math.floor((d2-d1)/(86400000))}
+function lastSessionDate(sid,tid){
+  const t=getTopic(sid,tid);
+  let last=null;
+  AP_TYPES.forEach(at=>{
+    (t.apostilas[at.id].sessoes||[]).forEach(s=>{
+      const d=new Date(s.data);
+      if(!last||d>last)last=d;
     });
   });
-  if (!lastDate || daysDiff(lastDate, now) > 14) {
-    reasons.push('sem sessão há mais de 14 dias');
-  }
-
-  // low accuracy
-  APOSTILA_TYPES.filter(t => t.hasScore).forEach(at => {
-    const sess = topic.apostilas[at.id]?.sessoes || [];
-    const avg = sessionsAvgPct(sess);
-    if (avg !== null && avg < 60) {
-      reasons.push(`${at.name}: ${avg}% de acerto`);
-    }
+  return last;
+}
+function topicReviewReasons(sid,tid){
+  const reasons=[];
+  const now=new Date();
+  const last=lastSessionDate(sid,tid);
+  if(!last||daysDiff(last,now)>14) reasons.push('sem sessão há mais de 14 dias');
+  AP_TYPES.filter(a=>a.hasScore).forEach(at=>{
+    const p=avgPct(getTopic(sid,tid).apostilas[at.id].sessoes);
+    if(p!==null&&p<60) reasons.push(`${at.name}: ${p}% de acerto`);
   });
-
   return reasons;
 }
-
-function redacaoNeedsReview() {
-  const sessions = data.redacao.sessoes;
-  const reasons = [];
-  const now = new Date();
-
-  if (sessions.length === 0 || daysDiff(new Date(sessions[0].data), now) > 14) {
+function redacaoReviewReasons(){
+  const sess=D.redacao.sessoes;
+  const now=new Date();
+  const reasons=[];
+  if(!sess.length||daysDiff(new Date(sess[0].data),now)>14)
     reasons.push('sem redação há mais de 14 dias');
-  }
-  const last3 = sessions.slice(0, 3);
-  if (last3.length >= 1) {
-    const avg = last3.reduce((a,s) => a + s.nota, 0) / last3.length;
-    if (avg < 6) reasons.push(`média das últimas ${last3.length} redações: ${avg.toFixed(1)}`);
+  const l3=sess.slice(0,3);
+  if(l3.length>=1){
+    const avg=l3.reduce((a,s)=>a+s.nota,0)/l3.length;
+    if(avg<6)reasons.push(`média das últimas ${l3.length}: ${avg.toFixed(1)}`);
   }
   return reasons;
 }
-
-function daysDiff(d1, d2) {
-  return Math.floor((d2 - d1) / (1000*60*60*24));
+function subjAlerts(sid){
+  if(sid==='redacao')return redacaoReviewReasons().length>0?1:0;
+  const sel=getM(sid).assuntosSelecionados||[];
+  return sel.filter(tid=>{
+    if(!getTopic(sid,tid))return false;
+    return topicReviewReasons(sid,tid).length>0;
+  }).length;
 }
-
-function subjectAlertCount(subjId) {
-  if (subjId === 'redacao') return redacaoNeedsReview().length > 0 ? 1 : 0;
-  const topics = getTopics(subjId);
-  return Object.keys(topics).filter(tid => topicNeedsReview(subjId, tid).length > 0).length;
-}
-
-function subjectSessionsThisWeek(subjId) {
-  const since = new Date(); since.setDate(since.getDate() - 7);
-  if (subjId === 'redacao') {
-    return data.redacao.sessoes.filter(s => new Date(s.data) >= since).length;
-  }
-  let count = 0;
-  const topics = getTopics(subjId);
-  Object.values(topics).forEach(t => {
-    APOSTILA_TYPES.forEach(at => {
-      (t.apostilas[at.id]?.sessoes || []).forEach(s => {
-        if (new Date(s.data) >= since) count++;
+function subjSessWeek(sid){
+  const since=new Date();since.setDate(since.getDate()-7);
+  if(sid==='redacao')return D.redacao.sessoes.filter(s=>new Date(s.data)>=since).length;
+  let n=0;
+  const sel=getM(sid).assuntosSelecionados||[];
+  sel.forEach(tid=>{
+    if(!getTopic(sid,tid))return;
+    AP_TYPES.forEach(at=>{
+      (getTopic(sid,tid).apostilas[at.id].sessoes||[]).forEach(s=>{
+        if(new Date(s.data)>=since)n++;
       });
     });
   });
-  return count;
+  return n;
+}
+function totalWeek(){return SUBJECTS.reduce((a,s)=>a+subjSessWeek(s.id),0)}
+function subjProgress(sid){
+  // returns {selected, done} counts
+  const sel=getM(sid)?.assuntosSelecionados||[];
+  const done=sel.filter(tid=>getTopic(sid,tid)&&topicDone(getTopic(sid,tid))).length;
+  return {selected:sel.length,done};
 }
 
-function totalSessionsThisWeek() {
-  return SUBJECTS.reduce((a, s) => a + subjectSessionsThisWeek(s.id), 0);
-}
-
-function subjectAvgPct(subjId) {
-  const topics = getTopics(subjId);
-  const all = [];
-  Object.values(topics).forEach(t => {
-    APOSTILA_TYPES.filter(x => x.hasScore).forEach(at => {
-      const p = sessionsAvgPct(t.apostilas[at.id]?.sessoes);
-      if (p !== null) all.push(p);
-    });
-  });
-  if (!all.length) return null;
-  return Math.round(all.reduce((a,b) => a+b,0) / all.length);
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // RENDER — PAINEL
-// ═══════════════════════════════════════════
-function renderPainel() {
-  const grid = document.getElementById('subjectGrid');
-  grid.innerHTML = '';
-  SUBJECTS.forEach(s => {
-    const alerts = subjectAlertCount(s.id);
-    const sessWeek = subjectSessionsThisWeek(s.id);
-    const avg = s.id !== 'redacao' ? subjectAvgPct(s.id) : null;
-    const topicCount = s.id !== 'redacao' ? Object.keys(getTopics(s.id)).length : null;
-
-    let statsHtml = '';
-    if (s.id === 'redacao') {
-      const sessions = data.redacao.sessoes;
-      const avgNota = sessions.length
-        ? (sessions.reduce((a,x) => a+x.nota,0) / sessions.length).toFixed(1) : '—';
-      statsHtml = `<span class="stat-pill">${sessions.length} redações</span>
-                   <span class="stat-pill">Média ${avgNota}</span>`;
-    } else {
-      statsHtml = `<span class="stat-pill">${topicCount} assunto${topicCount !== 1 ? 's' : ''}</span>`;
-      if (avg !== null) statsHtml += `<span class="stat-pill ${pctClass(avg)}">${avg}% acerto</span>`;
-      if (sessWeek) statsHtml += `<span class="stat-pill">${sessWeek} sessão${sessWeek>1?'ões':''} esta semana</span>`;
+// ══════════════════════════════════════════════════════
+function renderPainel(){
+  const el=document.getElementById('painelContent');
+  const rows=SUBJECTS.map(s=>{
+    const alerts=subjAlerts(s.id);
+    const sessW=subjSessWeek(s.id);
+    let statsHtml='';
+    if(s.id==='redacao'){
+      const sess=D.redacao.sessoes;
+      const avg=sess.length?(sess.reduce((a,x)=>a+x.nota,0)/sess.length).toFixed(1):'—';
+      statsHtml=`<span class="stat-pill">${sess.length} redaç${sess.length===1?'ão':'ões'}</span>
+        <span class="stat-pill">Média ${avg}</span>`;
+    }else{
+      const {selected,done}=subjProgress(s.id);
+      const pct=selected?Math.round((done/selected)*100):0;
+      const circ=2*Math.PI*15;
+      const offset=circ-circ*(selected?pct/100:0);
+      const ringColor=pct===100?'var(--done)':s.color;
+      statsHtml=`<span class="stat-pill">${selected} assunto${selected!==1?'s':''}</span>`;
+      if(sessW)statsHtml+=`<span class="stat-pill">${sessW} sessão${sessW>1?'ões':''}/sem</span>`;
+      var ringHtml=selected?`<div class="ring-wrap">
+        <svg viewBox="0 0 36 36">
+          <circle class="ring-bg" cx="18" cy="18" r="15"/>
+          <circle class="ring-fill" cx="18" cy="18" r="15"
+            stroke="${ringColor}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+          <text class="ring-text" x="18" y="18">${pct}%</text>
+        </svg></div>`:'';
     }
-
-    const card = document.createElement('div');
-    card.className = 'subject-card';
-    card.innerHTML = `
-      <div class="accent" style="background:${s.color}"></div>
-      ${alerts > 0 ? `<div class="badge-alert">${alerts} revisar</div>` : ''}
-      <div class="subj-icon">${s.icon}</div>
-      <div class="subj-name">${s.name}</div>
-      <div class="subj-stats">${statsHtml}</div>
-    `;
-    card.onclick = () => openSubject(s.id);
-    grid.appendChild(card);
-  });
-}
-
-function pctClass(pct) {
-  if (pct === null) return 'pct-na';
-  if (pct >= 75) return 'pct-good';
-  if (pct >= 60) return 'pct-mid';
-  return 'pct-bad';
-}
-
-function pctColor(pct) {
-  if (pct === null) return 'var(--muted)';
-  if (pct >= 75) return '#22c55e';
-  if (pct >= 60) return '#f97316';
-  return '#ef4444';
-}
-
-// ═══════════════════════════════════════════
-// RENDER — MATÉRIA
-// ═══════════════════════════════════════════
-function renderMateriaPage(subjId) {
-  const s = SUBJECTS.find(x => x.id === subjId);
-  const topics = getTopics(subjId);
-  const topicIds = Object.keys(topics);
-  const el = document.getElementById('materiaContent');
-
-  let html = '';
-  if (topicIds.length === 0) {
-    html = `<div class="empty-state">
-      <div class="es-icon">${s.icon}</div>
-      <p>Nenhum assunto cadastrado ainda.<br>Clique abaixo para adicionar o primeiro.</p>
+    return `<div class="subj-card" onclick="openSubj('${s.id}')">
+      <div class="sc-bar" style="background:${s.color}"></div>
+      ${alerts?`<div class="badge-alert">${alerts} revisar</div>`:''}
+      <div class="sc-icon">${s.icon}</div>
+      <div class="sc-name">${s.name}</div>
+      <div class="sc-stats">${statsHtml}</div>
+      ${s.id!=='redacao'?(ringHtml||''):''}
     </div>`;
-  } else {
-    html = topicIds.map(tid => {
-      const t = topics[tid];
-      const status = topicStatus(t);
-      const alerts = topicNeedsReview(subjId, tid);
-      const statusLabel = { nao:'Não iniciado', andamento:'Em andamento', revisado:'Revisado' }[status];
-      const statusColor = { nao:'status-nao', andamento:'status-andamento', revisado:'status-revisado' }[status];
-      const avg = (() => {
-        const avgs = APOSTILA_TYPES.filter(a => a.hasScore)
-          .map(at => sessionsAvgPct(t.apostilas[at.id]?.sessoes));
-        const valid = avgs.filter(x => x !== null);
-        return valid.length ? Math.round(valid.reduce((a,b) => a+b,0)/valid.length) : null;
-      })();
-      return `<div class="topic-card" onclick="openTopic('${subjId}','${tid}')"
-                oncontextmenu="topicCtxMenu(event,'${subjId}','${tid}')">
-        <div class="status-dot ${statusColor}"></div>
+  }).join('');
+  el.innerHTML=`<div class="cards-grid" style="padding:.4rem 0 .8rem">${rows}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// RENDER — MATÉRIA
+// ══════════════════════════════════════════════════════
+function renderMateria(sid){
+  const el=document.getElementById('materiaContent');
+  const m=getM(sid);
+  const sel=new Set(m.assuntosSelecionados||[]);
+  const catalog=CATALOG[sid]||[];
+  const s=SUBJECTS.find(x=>x.id===sid);
+
+  // Catalog section
+  let catItems=catalog.map(name=>{
+    const k=topicKey(name);
+    const checked=sel.has(k);
+    return `<div class="cat-item" onclick="toggleTopic('${sid}','${k}','${esc(name)}')">
+      <div class="cat-cb${checked?' checked':''}">
+        ${checked?'✓':''}
+      </div>
+      <span class="cat-label">${name}</span>
+    </div>`;
+  }).join('');
+
+  // Selected topics list
+  const selArr=m.assuntosSelecionados||[];
+  let topicsHtml='';
+  if(!selArr.length){
+    topicsHtml=`<div class="empty"><div class="ei">${s.icon}</div>
+      <p>Selecione os assuntos acima para começar a acompanhar.</p></div>`;
+  }else{
+    topicsHtml=selArr.map(tid=>{
+      const t=m.assuntos[tid];
+      if(!t)return'';
+      const done=topicDone(t);
+      const pct=topicOverallPct(t);
+      const alerts=topicReviewReasons(sid,tid).length;
+      const concl=AP_TYPES.filter(at=>t.apostilas[at.id].concluido).length;
+      return `<div class="topic-card${done?' done':''}" onclick="openTopic('${sid}','${tid}')">
+        <div class="tc-dot" style="background:${done?'var(--done)':s.color}"></div>
         <div class="tc-info">
-          <div class="tc-name">${t.nome} ${alerts.length > 0 ? '⚠️' : ''}</div>
-          <div class="tc-status" style="color:var(--muted)">${statusLabel}
-            ${avg !== null ? ` · <span class="${pctClass(avg)}">${avg}%</span>` : ''}</div>
+          <div class="tc-name${done?' done-text':''}">${t.nome}${alerts?' ⚠️':''}</div>
+          <div class="tc-sub">${concl}/3 etapas${pct!==null?' · '+pct+'% acerto':''}</div>
         </div>
-        <div class="tc-arrow">›</div>
+        <div class="tc-arr">›</div>
       </div>`;
     }).join('');
   }
 
-  el.innerHTML = html + `
-    <button class="add-btn" onclick="addTopicModal('${subjId}')">+ Novo assunto</button>`;
-}
-
-function topicCtxMenu(e, subjId, topicId) {
-  e.preventDefault();
-  const menu = document.getElementById('ctxMenu');
-  menu.innerHTML = `
-    <div class="ctx-item" onclick="renameTopicModal('${subjId}','${topicId}')">✏️ Renomear</div>
-    <div class="ctx-item danger" onclick="deleteTopic('${subjId}','${topicId}')">🗑️ Excluir</div>
-  `;
-  menu.style.left = e.clientX + 'px';
-  menu.style.top = e.clientY + 'px';
-  menu.classList.remove('hidden');
-  setTimeout(() => document.addEventListener('click', hideCtxMenu, { once: true }), 0);
-}
-
-function hideCtxMenu() { document.getElementById('ctxMenu').classList.add('hidden'); }
-
-function addTopicModal(subjId) {
-  showModal('Novo assunto', `
-    <div class="form-group">
-      <label>Nome do assunto</label>
-      <input class="form-input" id="newTopicName" placeholder="Ex: Genética, Termologia…" autofocus>
+  el.innerHTML=`
+    <div class="catalog-section">
+      <div class="catalog-toggle" onclick="toggleCatalog(this)">
+        <span class="ct-icon">📋</span>
+        <span class="ct-label">Catálogo de assuntos (${sel.size}/${catalog.length} selecionados)</span>
+        <span class="ct-arrow">▾</span>
+      </div>
+      <div class="catalog-body">${catItems}</div>
     </div>
-  `, [
-    { label:'Cancelar', cls:'btn-secondary', fn:'closeModal()' },
-    { label:'Criar', cls:'btn-primary', fn:`doAddTopic('${subjId}')` },
-  ]);
+    <div class="sec-title">Assuntos em acompanhamento</div>
+    ${topicsHtml}`;
 }
 
-function doAddTopic(subjId) {
-  const name = document.getElementById('newTopicName').value.trim();
-  if (!name) return;
-  const id = newTopicId(name);
-  data.materias[subjId].assuntos[id] = {
-    nome: name,
-    apostilas: {
-      multipla:   { nomeApostila:'', sessoes:[] },
-      vf:         { nomeApostila:'', sessoes:[] },
-      discursiva: { nomeApostila:'', sessoes:[] },
+function toggleCatalog(el){
+  const body=el.nextElementSibling;
+  body.classList.toggle('open');
+  el.querySelector('.ct-arrow').classList.toggle('open');
+}
+
+function toggleTopic(sid,key,name){
+  const m=getM(sid);
+  const sel=m.assuntosSelecionados||[];
+  const idx=sel.indexOf(key);
+  if(idx===-1){
+    // add to selected; create apostila data if not exists
+    if(!m.assuntos[key]){
+      m.assuntos[key]={nome:name,apostilas:makeApostilas()};
     }
-  };
-  saveData();
-  closeModalFn();
-  renderMateriaPage(subjId);
-  showToast('Assunto criado!');
+    sel.push(key);
+  }else{
+    // deselect — keep data, just remove from selected
+    sel.splice(idx,1);
+  }
+  m.assuntosSelecionados=sel;
+  save();
+  renderMateria(sid);
 }
 
-function renameTopicModal(subjId, topicId) {
-  const t = getTopic(subjId, topicId);
-  showModal('Renomear assunto', `
-    <div class="form-group">
-      <label>Novo nome</label>
-      <input class="form-input" id="renameInput" value="${t.nome}" autofocus>
-    </div>
-  `, [
-    { label:'Cancelar', cls:'btn-secondary', fn:'closeModal()' },
-    { label:'Salvar', cls:'btn-primary', fn:`doRenameTopic('${subjId}','${topicId}')` },
-  ]);
-}
-
-function doRenameTopic(subjId, topicId) {
-  const name = document.getElementById('renameInput').value.trim();
-  if (!name) return;
-  getTopic(subjId, topicId).nome = name;
-  saveData();
-  closeModalFn();
-  renderMateriaPage(subjId);
-  showToast('Assunto renomeado!');
-}
-
-function deleteTopic(subjId, topicId) {
-  if (!confirm('Excluir este assunto e todo o histórico?')) return;
-  delete data.materias[subjId].assuntos[topicId];
-  saveData();
-  renderMateriaPage(subjId);
-  showToast('Assunto excluído.');
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // RENDER — ASSUNTO
-// ═══════════════════════════════════════════
-function renderAssuntoPage(subjId, topicId) {
-  const topic = getTopic(subjId, topicId);
-  const el = document.getElementById('assuntoContent');
-  const s = SUBJECTS.find(x => x.id === subjId);
+// ══════════════════════════════════════════════════════
+function renderAssunto(sid,tid){
+  const el=document.getElementById('assuntoContent');
+  const t=getTopic(sid,tid);
+  const s=SUBJECTS.find(x=>x.id===sid);
+  const done=topicDone(t);
 
-  const status = topicStatus(topic);
-  const statusLabel = { nao:'Não iniciado', andamento:'Em andamento', revisado:'Revisado' }[status];
-  const statusColor = { nao:'var(--muted)', andamento:'#f97316', revisado:'#22c55e' }[status];
-
-  let html = `<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
-    <span style="font-size:.8rem;font-weight:700;padding:.25rem .7rem;border-radius:99px;background:${statusColor}22;color:${statusColor}">${statusLabel}</span>
+  let html=`<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem">
+    <span style="font-size:.78rem;font-weight:800;padding:.22rem .65rem;border-radius:99px;
+      background:${done?'var(--done)22':'var(--surface2)'};color:${done?'var(--done)':'var(--muted)'}">
+      ${done?'✅ Concluído':'Em andamento'}
+    </span>
   </div>`;
 
-  APOSTILA_TYPES.forEach(at => {
-    const ap = topic.apostilas[at.id];
-    const sessions = ap.sessoes || [];
-    const avg = at.hasScore ? sessionsAvgPct(sessions) : null;
-    const pct = avg !== null ? avg : null;
+  AP_TYPES.forEach(at=>{
+    const ap=t.apostilas[at.id];
+    const sess=ap.sessoes||[];
+    const pct=at.hasScore?avgPct(sess):null;
+    const conc=ap.concluido;
 
-    const metricHtml = at.hasScore
-      ? `<div class="ah-pct ${pctClass(pct)}">${pct !== null ? pct+'%' : '—'}</div>
-         <div class="ah-pct-label">acerto médio</div>`
-      : `<div class="ah-pct pct-na">${sessions.length}</div>
-         <div class="ah-pct-label">sessões</div>`;
+    const metricHtml=at.hasScore
+      ?`<div class="ap-pct ${pctCls(pct)}">${pct!==null?pct+'%':'—'}</div>
+        <div class="ap-pct-lbl">acerto médio</div>`
+      :`<div class="ap-pct pct-na">${sess.length}</div>
+        <div class="ap-pct-lbl">sessões</div>`;
 
-    const sessionsHtml = sessions.length === 0
-      ? `<p style="color:var(--muted);font-size:.82rem;margin-bottom:.8rem">Nenhuma sessão ainda.</p>`
-      : sessions.map((sess, i) => {
-          const info = at.hasScore
-            ? `${sess.acertos}/${sess.total} acertos <strong>${Math.round((sess.acertos/sess.total)*100)}%</strong>`
-            : sess.observacao || '—';
-          return `<div class="session-item">
-            <span class="si-date">${formatDate(sess.data)}</span>
-            <span class="si-info">${info}</span>
-            <button class="si-del" onclick="deleteSession('${subjId}','${topicId}','${at.id}',${i})">✕</button>
-          </div>`;
-        }).join('');
+    const sessHtml=!sess.length
+      ?`<p style="color:var(--muted);font-size:.8rem;margin-bottom:.7rem">Nenhuma sessão ainda.</p>`
+      :sess.map((s2,i)=>{
+        const info=at.hasScore
+          ?`${s2.acertos}/${s2.total} acertos — <strong>${Math.round((s2.acertos/s2.total)*100)}%</strong>`
+          :(s2.observacao||'—');
+        return `<div class="sess-item">
+          <span class="sess-date">${fmtDate(s2.data)}</span>
+          <span class="sess-info">${info}</span>
+          <button class="sess-del" onclick="deleteSess('${sid}','${tid}','${at.id}',${i})">✕</button>
+        </div>`;
+      }).join('');
 
-    html += `<div class="apostila-block" id="block-${at.id}">
-      <div class="apostila-header" onclick="toggleBlock('${at.id}')">
-        <div class="ah-icon">${at.icon}</div>
-        <div class="ah-info">
-          <div class="ah-type">${at.name}</div>
-          <div class="ah-name" id="apname-${at.id}">${ap.nomeApostila || 'Clique para nomear a apostila'}</div>
+    html+=`<div class="apostila-block${conc?' done-block':''}" id="apblock-${at.id}">
+      <div class="ap-head" onclick="toggleAp('${at.id}')">
+        <div class="ap-icon">${at.icon}</div>
+        <div class="ap-info">
+          <div class="ap-type">${at.name}${conc?`<span class="ap-done-badge">✓ Concluído</span>`:''}</div>
+          <div class="ap-name">${ap.nomeApostila||'Apostila não definida'}</div>
         </div>
-        <div class="ah-metric">${metricHtml}</div>
-        <div class="apostila-toggle" id="toggle-${at.id}">▾</div>
+        <div class="ap-metric">${metricHtml}</div>
+        <div class="ap-arr" id="apar-${at.id}">▾</div>
       </div>
-      <div class="apostila-body" id="body-${at.id}">
-        <div class="apostila-name-row">
-          <input class="apostila-name-input" placeholder="Nome / número da apostila (ex: Apostila 3)"
-            value="${ap.nomeApostila || ''}"
-            onchange="saveApostilaName('${subjId}','${topicId}','${at.id}',this.value)">
+      <div class="ap-body" id="apbody-${at.id}">
+        <div class="ap-name-row">
+          <input class="ap-name-input" placeholder="Ex: Apostila 3 — capítulo 4"
+            value="${ap.nomeApostila||''}"
+            onchange="saveApName('${sid}','${tid}','${at.id}',this.value)">
         </div>
-        <div class="session-list">${sessionsHtml}</div>
-        <button class="reg-btn" onclick="openRegModal('${subjId}','${topicId}','${at.id}')">
-          + Registrar sessão
-        </button>
+        <div class="session-list">${sessHtml}</div>
+        <div class="conclude-row">
+          <button class="btn-reg" onclick="openRegModal('${sid}','${tid}','${at.id}')">+ Registrar sessão</button>
+          <button class="btn-conclude${conc?' concluded':''}"
+            onclick="toggleConclude('${sid}','${tid}','${at.id}')">
+            ${conc?'↩ Reabrir etapa':'✓ Concluí esta etapa'}
+          </button>
+        </div>
       </div>
     </div>`;
   });
 
-  el.innerHTML = html;
+  el.innerHTML=html;
 }
 
-function toggleBlock(atId) {
-  const body = document.getElementById('body-' + atId);
-  const toggle = document.getElementById('toggle-' + atId);
-  body.classList.toggle('open');
-  toggle.classList.toggle('open');
+function toggleAp(atId){
+  const b=document.getElementById('apbody-'+atId);
+  const a=document.getElementById('apar-'+atId);
+  b.classList.toggle('open');
+  a.classList.toggle('open');
 }
 
-function saveApostilaName(subjId, topicId, atId, value) {
-  getTopic(subjId, topicId).apostilas[atId].nomeApostila = value;
-  saveData();
+function saveApName(sid,tid,atId,val){
+  getTopic(sid,tid).apostilas[atId].nomeApostila=val;
+  save();
 }
 
-function deleteSession(subjId, topicId, atId, idx) {
-  const sessions = getTopic(subjId, topicId).apostilas[atId].sessoes;
-  sessions.splice(idx, 1);
-  saveData();
-  renderAssuntoPage(subjId, topicId);
+function toggleConclude(sid,tid,atId){
+  const ap=getTopic(sid,tid).apostilas[atId];
+  ap.concluido=!ap.concluido;
+  save();
+  renderAssunto(sid,tid);
+  renderPainel();
+  showToast(ap.concluido?'Etapa concluída! ✅':'Etapa reaberta.');
 }
 
-function openRegModal(subjId, topicId, atId) {
-  const at = APOSTILA_TYPES.find(x => x.id === atId);
-  const today = new Date().toISOString().split('T')[0];
+function deleteSess(sid,tid,atId,idx){
+  getTopic(sid,tid).apostilas[atId].sessoes.splice(idx,1);
+  save();
+  renderAssunto(sid,tid);
+}
 
-  let bodyHtml = `<div class="form-group">
+// ══════════════════════════════════════════════════════
+// RENDER — SESSION MODAL
+// ══════════════════════════════════════════════════════
+function openRegModal(sid,tid,atId){
+  const at=AP_TYPES.find(x=>x.id===atId);
+  const today=new Date().toISOString().split('T')[0];
+  let body=`<div class="form-group">
     <label>Data</label>
-    <input type="date" class="form-input" id="sessData" value="${today}">
+    <input type="date" class="form-input" id="sd" value="${today}">
   </div>`;
-
-  if (at.hasScore) {
-    bodyHtml += `<div class="form-row">
-      <div class="form-group">
-        <label>Total de questões</label>
-        <input type="number" class="form-input" id="sessTotal" min="1" placeholder="Ex: 20">
-      </div>
-      <div class="form-group">
-        <label>Acertos</label>
-        <input type="number" class="form-input" id="sessAcertos" min="0" placeholder="Ex: 15">
-      </div>
+  if(at.hasScore){
+    body+=`<div class="form-row">
+      <div class="form-group"><label>Total de questões</label>
+        <input type="number" class="form-input" id="stot" min="1" placeholder="Ex: 20"></div>
+      <div class="form-group"><label>Acertos</label>
+        <input type="number" class="form-input" id="sacer" min="0" placeholder="Ex: 14"></div>
     </div>`;
-  } else {
-    bodyHtml += `<div class="form-group">
-      <label>Observações (opcional)</label>
-      <textarea class="form-input" id="sessObs" placeholder="Ex: tive dificuldade em…"></textarea>
+  }else{
+    body+=`<div class="form-group"><label>Observações (opcional)</label>
+      <textarea class="form-input" id="sobs" placeholder="Ex: revisar conceito X…"></textarea>
     </div>`;
   }
-
-  showModal(`Registrar sessão — ${at.name}`, bodyHtml, [
-    { label:'Cancelar', cls:'btn-secondary', fn:'closeModal()' },
-    { label:'Salvar', cls:'btn-primary', fn:`doRegSession('${subjId}','${topicId}','${atId}','${at.hasScore}')` },
+  showModal(`Registrar sessão — ${at.name}`,body,[
+    {label:'Cancelar',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Salvar',cls:'btn-pri',fn:`doReg('${sid}','${tid}','${atId}',${at.hasScore})`},
   ]);
 }
 
-function doRegSession(subjId, topicId, atId, hasScore) {
-  const data_val = document.getElementById('sessData').value;
-  if (!data_val) return;
-
-  const sessions = getTopic(subjId, topicId).apostilas[atId].sessoes;
-
-  if (hasScore === 'true') {
-    const total = parseInt(document.getElementById('sessTotal').value);
-    const acertos = parseInt(document.getElementById('sessAcertos').value);
-    if (isNaN(total) || isNaN(acertos) || acertos > total) {
-      alert('Preencha total e acertos corretamente.'); return;
-    }
-    sessions.push({ data: data_val, total, acertos });
-  } else {
-    const obs = document.getElementById('sessObs').value;
-    sessions.push({ data: data_val, observacao: obs });
+function doReg(sid,tid,atId,hasScore){
+  const dt=document.getElementById('sd').value;
+  if(!dt){alert('Informe a data.');return}
+  const sess=getTopic(sid,tid).apostilas[atId].sessoes;
+  if(hasScore){
+    const tot=parseInt(document.getElementById('stot').value);
+    const ac=parseInt(document.getElementById('sacer').value);
+    if(isNaN(tot)||isNaN(ac)||ac>tot){alert('Verifique total e acertos.');return}
+    sess.push({data:dt,total:tot,acertos:ac});
+  }else{
+    const obs=document.getElementById('sobs').value;
+    sess.push({data:dt,observacao:obs});
   }
-
-  saveData();
-  closeModalFn();
-  renderAssuntoPage(subjId, topicId);
+  save();
+  closeModal();
+  renderAssunto(sid,tid);
   renderPainel();
   showToast('Sessão registrada!');
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // RENDER — REDAÇÃO
-// ═══════════════════════════════════════════
-function renderRedacaoPage() {
-  const el = document.getElementById('materiaContent');
-  const sessions = data.redacao.sessoes;
-  const avgNota = sessions.length
-    ? (sessions.reduce((a,s) => a+s.nota,0)/sessions.length).toFixed(1) : null;
-  const last3avg = sessions.slice(0,3).length
-    ? (sessions.slice(0,3).reduce((a,s) => a+s.nota,0)/sessions.slice(0,3).length).toFixed(1) : null;
+// ══════════════════════════════════════════════════════
+function renderRedacao(){
+  const el=document.getElementById('materiaContent');
+  const sess=D.redacao.sessoes;
+  const avg=sess.length?(sess.reduce((a,s)=>a+s.nota,0)/sess.length).toFixed(1):null;
+  const l3avg=sess.slice(0,3).length?(sess.slice(0,3).reduce((a,s)=>a+s.nota,0)/sess.slice(0,3).length).toFixed(1):null;
 
-  let html = '';
-
-  if (avgNota) {
-    html += `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-      padding:1.2rem;margin-bottom:1rem;display:flex;gap:2rem;align-items:center">
-      <div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase">Média geral</div>
-        <div style="font-size:2.5rem;font-weight:900;color:${avgNota>=6?'#22c55e':'#ef4444'}">${avgNota}</div></div>
-      ${last3avg ? `<div><div style="font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase">Últimas 3</div>
-        <div style="font-size:2.5rem;font-weight:900;color:${last3avg>=6?'#22c55e':'#ef4444'}">${last3avg}</div></div>` : ''}
-    </div>`;
-  }
-
-  if (sessions.length === 0) {
-    html += `<div class="empty-state">
-      <div class="es-icon">📝</div>
-      <p>Nenhuma redação registrada ainda.</p>
-    </div>`;
-  } else {
-    html += sessions.map((s, i) => `
-      <div class="redacao-card">
-        <div class="rc-nota" style="color:${s.nota>=6?'#22c55e':'#ef4444'}">${s.nota}</div>
-        <div class="rc-tema">${s.tema || 'Sem tema'}</div>
-        <div class="rc-date">${formatDate(s.data)}</div>
-        <button class="rc-del" onclick="deleteRedacao(${i})">Excluir</button>
+  let html='';
+  if(avg){
+    html+=`<div class="red-stats">
+      <div class="red-stat">
+        <div class="rs-lbl">Média geral</div>
+        <div class="rs-val" style="color:${avg>=6?'#22c55e':'#ef4444'}">${avg}</div>
       </div>
-    `).join('');
+      ${l3avg?`<div class="red-stat">
+        <div class="rs-lbl">Últimas 3</div>
+        <div class="rs-val" style="color:${l3avg>=6?'#22c55e':'#ef4444'}">${l3avg}</div>
+      </div>`:''}
+      <div class="red-stat">
+        <div class="rs-lbl">Total</div>
+        <div class="rs-val">${sess.length}</div>
+      </div>
+    </div>`;
   }
-
-  html += `<button class="add-btn" onclick="addRedacaoModal()">+ Nova redação</button>`;
-  el.innerHTML = html;
+  if(!sess.length){
+    html+=`<div class="empty"><div class="ei">📝</div><p>Nenhuma redação registrada ainda.</p></div>`;
+  }else{
+    html+=sess.map((s,i)=>`
+      <div class="red-card">
+        <div class="rc-nota" style="color:${s.nota>=6?'#22c55e':'#ef4444'}">${s.nota}</div>
+        <div class="rc-tema">${s.tema||'Sem tema'}</div>
+        <div class="rc-date">${fmtDate(s.data)}</div>
+        <button class="rc-del" onclick="delRedacao(${i})">Excluir</button>
+      </div>`).join('');
+  }
+  html+=`<button class="add-btn" onclick="addRedModal()">+ Nova redação</button>`;
+  el.innerHTML=html;
 }
 
-function addRedacaoModal() {
-  const today = new Date().toISOString().split('T')[0];
-  showModal('Nova redação', `
-    <div class="form-group">
-      <label>Data</label>
-      <input type="date" class="form-input" id="redData" value="${today}">
-    </div>
-    <div class="form-group">
-      <label>Tema</label>
-      <input class="form-input" id="redTema" placeholder="Ex: Saúde pública no Brasil">
-    </div>
-    <div class="form-group">
-      <label>Nota (0 a 10)</label>
-      <input type="number" class="form-input" id="redNota" min="0" max="10" step="0.1" placeholder="Ex: 7.5">
-    </div>
-  `, [
-    { label:'Cancelar', cls:'btn-secondary', fn:'closeModal()' },
-    { label:'Salvar', cls:'btn-primary', fn:'doAddRedacao()' },
+function addRedModal(){
+  const today=new Date().toISOString().split('T')[0];
+  showModal('Nova redação',`
+    <div class="form-group"><label>Data</label>
+      <input type="date" class="form-input" id="rd" value="${today}"></div>
+    <div class="form-group"><label>Tema</label>
+      <input class="form-input" id="rtema" placeholder="Ex: Saúde pública no Brasil"></div>
+    <div class="form-group"><label>Nota (0 a 10)</label>
+      <input type="number" class="form-input" id="rnota" min="0" max="10" step="0.1" placeholder="Ex: 7.5"></div>
+  `,[
+    {label:'Cancelar',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Salvar',cls:'btn-pri',fn:'doAddRed()'},
   ]);
 }
-
-function doAddRedacao() {
-  const data_val = document.getElementById('redData').value;
-  const tema = document.getElementById('redTema').value.trim();
-  const nota = parseFloat(document.getElementById('redNota').value);
-  if (!data_val || isNaN(nota) || nota < 0 || nota > 10) {
-    alert('Preencha data e nota (0–10).'); return;
-  }
-  data.redacao.sessoes.unshift({ data: data_val, tema, nota });
-  saveData();
-  closeModalFn();
-  renderRedacaoPage();
-  renderPainel();
-  showToast('Redação registrada!');
+function doAddRed(){
+  const dt=document.getElementById('rd').value;
+  const tema=document.getElementById('rtema').value.trim();
+  const nota=parseFloat(document.getElementById('rnota').value);
+  if(!dt||isNaN(nota)||nota<0||nota>10){alert('Preencha data e nota (0–10).');return}
+  D.redacao.sessoes.unshift({data:dt,tema,nota});
+  save();closeModal();renderRedacao();renderPainel();showToast('Redação registrada!');
+}
+function delRedacao(i){
+  if(!confirm('Excluir esta redação?'))return;
+  D.redacao.sessoes.splice(i,1);save();renderRedacao();
 }
 
-function deleteRedacao(idx) {
-  if (!confirm('Excluir esta redação?')) return;
-  data.redacao.sessoes.splice(idx, 1);
-  saveData();
-  renderRedacaoPage();
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // RENDER — MINHA SEMANA
-// ═══════════════════════════════════════════
-function renderSemana() {
-  const el = document.getElementById('semanaContent');
-  const totalSess = totalSessionsThisWeek();
-  const now = new Date();
-  const weekStart = new Date(now); weekStart.setDate(now.getDate() - 7);
-  const prevStart = new Date(now); prevStart.setDate(now.getDate() - 14);
+// ══════════════════════════════════════════════════════
+function renderSemana(){
+  const el=document.getElementById('semanaContent');
+  const total=totalWeek();
+  const nome=D.perfil==='malu'?'Malu':'Bruno';
 
-  // Review items
-  const reviewItems = [];
-  SUBJECTS.forEach(s => {
-    if (s.id === 'redacao') {
-      const r = redacaoNeedsReview();
-      if (r.length) reviewItems.push({ subj: s, name: 'Redação', reasons: r });
-    } else {
-      Object.entries(getTopics(s.id)).forEach(([tid, t]) => {
-        const r = topicNeedsReview(s.id, tid);
-        if (r.length) reviewItems.push({ subj: s, name: `${s.name} — ${t.nome}`, reasons: r });
+  // review items
+  const reviews=[];
+  SUBJECTS.forEach(s=>{
+    if(s.id==='redacao'){
+      const r=redacaoReviewReasons();
+      if(r.length)reviews.push({icon:s.icon,name:'Redação',reasons:r});
+    }else{
+      (getM(s.id).assuntosSelecionados||[]).forEach(tid=>{
+        if(!getTopic(s.id,tid))return;
+        const r=topicReviewReasons(s.id,tid);
+        if(r.length)reviews.push({icon:s.icon,name:`${s.name} — ${getTopic(s.id,tid).nome}`,reasons:r});
       });
     }
   });
 
-  // By subject this week
-  const bySubject = SUBJECTS.map(s => ({
-    s, count: subjectSessionsThisWeek(s.id)
-  })).filter(x => x.count > 0).sort((a,b) => b.count - a.count);
+  // by subject
+  const bySub=SUBJECTS.map(s=>({s,n:subjSessWeek(s.id)})).filter(x=>x.n>0)
+    .sort((a,b)=>b.n-a.n);
 
-  let bySubjHtml = bySubject.length === 0
-    ? `<p style="color:var(--muted);font-size:.85rem">Nenhuma sessão registrada esta semana.</p>`
-    : bySubject.map(x => `
-      <div class="by-subject-item">
-        <div class="dot" style="background:${x.s.color}"></div>
-        <div class="name">${x.s.name}</div>
-        <div class="count">${x.count} sessão${x.count>1?'ões':''}</div>
+  const bySubHtml=!bySub.length
+    ?`<p style="color:var(--muted);font-size:.85rem">Nenhuma sessão esta semana.</p>`
+    :bySub.map(x=>`<div class="bysub-item">
+        <div class="bysub-dot" style="background:${x.s.color}"></div>
+        <div class="bysub-name">${x.s.name}</div>
+        <div class="bysub-count">${x.n} sessão${x.n>1?'ões':''}</div>
       </div>`).join('');
 
-  let reviewHtml = reviewItems.length === 0
-    ? `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
-        padding:1.5rem;text-align:center;color:var(--muted)">
-        <div style="font-size:2rem;margin-bottom:.5rem">✅</div>
-        <div style="font-size:.9rem">Nenhum ponto crítico no momento!</div>
+  const revHtml=!reviews.length
+    ?`<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+        padding:1.4rem;text-align:center;color:var(--muted)">
+        <div style="font-size:2rem;margin-bottom:.4rem">✅</div>
+        <div style="font-size:.88rem">Nada crítico no momento!</div>
       </div>`
-    : reviewItems.map(item => `
-        <div class="review-item">
-          <div class="ri-title">${item.subj.icon} ${item.name}</div>
-          <div class="ri-reason">${item.reasons.join(' · ')}</div>
-        </div>`).join('');
+    :reviews.map(r=>`<div class="review-item">
+        <div class="ri-title">${r.icon} ${r.name}</div>
+        <div class="ri-reason">${r.reasons.join(' · ')}</div>
+      </div>`).join('');
 
-  // redacao nota evolution
-  const redSess = data.redacao.sessoes;
-  let redEvol = '';
-  if (redSess.length >= 2) {
-    const last = redSess[0].nota;
-    const prev = redSess[1].nota;
-    const diff = (last - prev).toFixed(1);
-    const cls = diff > 0 ? 'up' : diff < 0 ? 'down' : 'neutral';
-    const sign = diff > 0 ? '+' : '';
-    redEvol = `<div class="stat-card">
-      <div class="label">Redação — última nota</div>
-      <div class="value" style="color:${last>=6?'#22c55e':'#ef4444'}">${last}</div>
-      <div class="delta ${cls}">${sign}${diff} vs anterior</div>
+  // redacao delta
+  const rsess=D.redacao.sessoes;
+  let redDelta='';
+  if(rsess.length>=2){
+    const diff=(rsess[0].nota-rsess[1].nota).toFixed(1);
+    const cls=diff>0?'delta-up':diff<0?'delta-dn':'delta-ne';
+    const sign=diff>0?'+':'';
+    redDelta=`<div class="stat-card">
+      <div class="sc-lbl">Redação — última nota</div>
+      <div class="sc-val" style="color:${rsess[0].nota>=6?'#22c55e':'#ef4444'}">${rsess[0].nota}</div>
+      <div class="sc-delta ${cls}">${sign}${diff} vs anterior</div>
     </div>`;
   }
 
-  const greeting = getGreeting();
+  const gr=new Date().getHours()<12?'Bom dia':new Date().getHours()<18?'Boa tarde':'Boa noite';
+  const em=total===0?'😴':total<5?'📖':total<10?'💪':'🔥';
 
-  el.innerHTML = `
-    <div class="week-header">
-      <div style="font-size:1.5rem;margin-bottom:.3rem">${getWeekEmoji(totalSess)}</div>
-      <h2>${greeting}, ${data.perfil === 'malu' ? 'Malu' : 'Bruno'}!</h2>
-      <div class="sub">Resumo dos últimos 7 dias</div>
-      <div style="margin-top:1rem">
-        <div class="big-stat">${totalSess} <span>sessões esta semana</span></div>
-      </div>
+  el.innerHTML=`
+    <div class="week-hero">
+      <div style="font-size:1.8rem;margin-bottom:.3rem">${em}</div>
+      <h2>${gr}, ${nome}!</h2>
+      <div class="wh-sub">Resumo dos últimos 7 dias</div>
+      <div class="big-num">${total} <span>sessões esta semana</span></div>
     </div>
-
-    <div class="stats-row">
+    <div class="stats2">
       <div class="stat-card">
-        <div class="label">Pontos a revisar</div>
-        <div class="value" style="color:${reviewItems.length>0?'#ef4444':'#22c55e'}">${reviewItems.length}</div>
-        <div class="delta ${reviewItems.length===0?'up':'neutral'}">${reviewItems.length===0?'Tudo em dia!':'matérias/assuntos'}</div>
+        <div class="sc-lbl">Pontos a revisar</div>
+        <div class="sc-val" style="color:${reviews.length?'#ef4444':'#22c55e'}">${reviews.length}</div>
+        <div class="sc-delta ${reviews.length?'delta-ne':'delta-up'}">${reviews.length?'assuntos/matérias':'Tudo em dia!'}</div>
       </div>
       <div class="stat-card">
-        <div class="label">Matérias ativas</div>
-        <div class="value">${bySubject.length}</div>
-        <div class="delta neutral">esta semana</div>
+        <div class="sc-lbl">Matérias ativas</div>
+        <div class="sc-val">${bySub.length}</div>
+        <div class="sc-delta delta-ne">esta semana</div>
       </div>
     </div>
-
-    ${redEvol}
-
-    <div class="section-title">Sessões por matéria</div>
-    ${bySubjHtml}
-
-    <div class="section-title">⚠️ Pontos a revisar</div>
-    ${reviewHtml}
+    ${redDelta}
+    <div class="sec-title">Sessões por matéria</div>
+    ${bySubHtml}
+    <div class="sec-title">⚠️ Pontos a revisar</div>
+    ${revHtml}
   `;
 }
 
-function getGreeting() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Bom dia';
-  if (h < 18) return 'Boa tarde';
-  return 'Boa noite';
-}
-
-function getWeekEmoji(n) {
-  if (n === 0) return '😴';
-  if (n < 5) return '📖';
-  if (n < 10) return '💪';
-  return '🔥';
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // MODAL
-// ═══════════════════════════════════════════
-function showModal(title, bodyHtml, actions) {
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBody').innerHTML = bodyHtml;
-  const actEl = document.getElementById('modalActions');
-  actEl.innerHTML = actions.map(a =>
-    `<button class="${a.cls}" onclick="${a.fn}">${a.label}</button>`
-  ).join('');
-  document.getElementById('modalOverlay').classList.remove('hidden');
-  setTimeout(() => {
-    const first = document.querySelector('.modal input, .modal textarea');
-    if (first) first.focus();
-  }, 100);
+// ══════════════════════════════════════════════════════
+function showModal(title,body,acts){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modalActs').innerHTML=acts.map(a=>
+    `<button class="${a.cls}" onclick="${a.fn}">${a.label}</button>`).join('');
+  document.getElementById('modalOv').classList.remove('hidden');
+  setTimeout(()=>{const f=document.querySelector('.modal input,.modal textarea');if(f)f.focus()},80);
 }
+function closeModalOv(e){if(e.target===document.getElementById('modalOv'))closeModal()}
+function closeModal(){document.getElementById('modalOv').classList.add('hidden')}
 
-function closeModal(e) {
-  if (e && e.target !== document.getElementById('modalOverlay')) return;
-  closeModalFn();
-}
-
-function closeModalFn() {
-  document.getElementById('modalOverlay').classList.add('hidden');
-}
-
-// ═══════════════════════════════════════════
-// TOAST
-// ═══════════════════════════════════════════
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // UTILS
-// ═══════════════════════════════════════════
-function formatDate(str) {
-  if (!str) return '';
-  const [y, m, d] = str.split('-');
-  return `${d}/${m}/${y}`;
+// ══════════════════════════════════════════════════════
+function pctCls(p){if(p===null)return'pct-na';if(p>=75)return'pct-g';if(p>=60)return'pct-m';return'pct-b'}
+function fmtDate(s){if(!s)return'';const[y,m,d]=s.split('-');return`${d}/${m}/${y}`}
+function esc(s){return s.replace(/'/g,'\\x27')}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
 }
 
-// ═══════════════════════════════════════════
+// ══════════════════════════════════════════════════════
 // INIT
-// ═══════════════════════════════════════════
-loadData();
-if (data.perfil) {
-  startApp();
-} else {
-  document.getElementById('onboarding').style.display = 'flex';
-}
+// ══════════════════════════════════════════════════════
+load();
+if(D.perfil){startApp()}
+else{document.getElementById('onboarding').style.display='flex'}
 </script>
 </body>
 </html>
