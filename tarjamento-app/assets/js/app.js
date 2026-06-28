@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v10';
+const VERSAO_APP = 'v11';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -143,14 +143,18 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
     if (normalizadas.every(p => BLOCKLIST_NOMES.has(p))) continue;
 
     bboxesDoMatch(m.index, m.index + seq.length, indice).forEach(bbox => {
-      // Evitar duplicatas: pular se já houver marcação com bbox sobreposto
-      const sobrepoe = marcacoes.some(mk =>
-        mk.pagina === pagina &&
-        mk.bbox.x < bbox.x + bbox.largura &&
-        mk.bbox.x + mk.bbox.largura > bbox.x &&
-        mk.bbox.y < bbox.y + bbox.altura &&
-        mk.bbox.y + mk.bbox.altura > bbox.y
-      );
+      // Evitar duplicatas: pular se já houver marcação NA MESMA LINHA com bbox sobreposto.
+      // Usa o centro vertical para comparar linhas — evita que o padding de tarjas em
+      // linhas adjacentes (acima/abaixo) suprima nomes na linha do meio.
+      const cy = bbox.y + bbox.altura / 2;
+      const sobrepoe = marcacoes.some(mk => {
+        if (mk.pagina !== pagina) return false;
+        // Checar sobreposição horizontal
+        if (mk.bbox.x >= bbox.x + bbox.largura || mk.bbox.x + mk.bbox.largura <= bbox.x) return false;
+        // Checar se é a MESMA LINHA (centros verticais próximos)
+        const mcy = mk.bbox.y + mk.bbox.altura / 2;
+        return Math.abs(mcy - cy) < Math.max(mk.bbox.altura, bbox.altura) * 0.55;
+      });
       if (sobrepoe) return;
 
       marcacoes.push({
@@ -872,13 +876,33 @@ async function gerarPDFFinal() {
 
       // Aplicar marcações no canvas (nível de pixel).
       // estado 'sugerido' e 'ignorado' NÃO são aplicados — somente 'incluido'.
-      // Ordem: tarjar primeiro, descaracterizar por último — garante que a
-      // descaracterização (CPF com asteriscos) nunca fique coberta por uma tarja.
       const marcacoesAtivas = (App.marcacoesPorPagina.get(p) || [])
-        .filter(m => m.estado === 'incluido')
-        .sort((a, b) => (a.tipo === 'descaracterizar' ? 1 : 0) - (b.tipo === 'descaracterizar' ? 1 : 0));
+        .filter(m => m.estado === 'incluido');
 
-      marcacoesAtivas.forEach(m => {
+      // Calcular caixas de descaracterização em coordenadas finais.
+      // Uma tarja que cubra ≥30% de uma área de descarac é IGNORADA para que os
+      // dígitos centrais do CPF fiquem visíveis (***.111.000-**).
+      const descaracBoxes = marcacoesAtivas
+        .filter(m => m.tipo === 'descaracterizar')
+        .map(m => ({
+          x: Math.floor(m.bbox.x * ESCALA_FINAL),
+          y: Math.floor(m.bbox.y * ESCALA_FINAL),
+          w: Math.ceil(m.bbox.largura  * ESCALA_FINAL),
+          h: Math.ceil(m.bbox.altura   * ESCALA_FINAL),
+        }));
+
+      function intersecaoArea(ax, ay, aw, ah, bx, by, bw, bh) {
+        const ox = Math.max(0, Math.min(ax + aw, bx + bw) - Math.max(ax, bx));
+        const oy = Math.max(0, Math.min(ay + ah, by + bh) - Math.max(ay, by));
+        return ox * oy;
+      }
+
+      // Tarjas primeiro, descarac por último (descarac renderiza sobre qualquer resíduo)
+      const ordenadas = [...marcacoesAtivas].sort(
+        (a, b) => (a.tipo === 'descaracterizar' ? 1 : 0) - (b.tipo === 'descaracterizar' ? 1 : 0)
+      );
+
+      ordenadas.forEach(m => {
         // bbox está em coordenadas scale=1.0.
         // Multiplicamos por ESCALA_FINAL para obter coordenadas do canvas final.
         const x = Math.floor(m.bbox.x * ESCALA_FINAL);
@@ -887,6 +911,11 @@ async function gerarPDFFinal() {
         const h = Math.ceil(m.bbox.altura   * ESCALA_FINAL);
 
         if (m.tipo === 'tarjar') {
+          // Pular se esta tarja cobre significativamente uma área de descarac
+          const coberta = descaracBoxes.some(d =>
+            intersecaoArea(x, y, w, h, d.x, d.y, d.w, d.h) > (d.w * d.h) * 0.30
+          );
+          if (coberta) return;
           ctx.fillStyle = '#000000';
           ctx.fillRect(x, y, w, h);
         } else if (m.tipo === 'descaracterizar') {
