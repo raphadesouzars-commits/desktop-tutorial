@@ -4,6 +4,10 @@
  */
 'use strict';
 
+// Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
+const VERSAO_APP = 'v7';
+console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
+
 // ─── Estado global ────────────────────────────────────────────────────────────
 const App = {
   etapaAtual: 1,
@@ -281,7 +285,8 @@ function coletarTermosFormulario() {
 // OCR_SCALE: escala usada para renderizar o canvas passado ao Tesseract.
 // As coordenadas do Tesseract estão nessa escala e precisam ser divididas por
 // OCR_SCALE para converter para o espaço de coordenadas scale=1.0 do PDF.js.
-const OCR_SCALE = 2.0;
+// 2.5 (~225 DPI) melhora o reconhecimento de números (CPF) e nomes em scans.
+const OCR_SCALE = 2.5;
 
 async function executarPreProcessamento() {
   coletarTermosFormulario();
@@ -378,10 +383,14 @@ async function executarPreProcessamento() {
 
           // CONVERSÃO CRÍTICA: coordenadas do Tesseract estão no espaço do canvas OCR
           // (scale=OCR_SCALE). Dividir por OCR_SCALE converte para espaço scale=1.0.
-          const x      = word.bbox.x0 / OCR_SCALE;
-          const y      = word.bbox.y0 / OCR_SCALE;
+          const x       = word.bbox.x0 / OCR_SCALE;
           const largura = (word.bbox.x1 - word.bbox.x0) / OCR_SCALE;
-          const altura  = (word.bbox.y1 - word.bbox.y0) / OCR_SCALE;
+          const altReal = (word.bbox.y1 - word.bbox.y0) / OCR_SCALE;
+          // Padding vertical de ~18% da altura: a caixa do Tesseract é justa aos
+          // glifos; expandir garante cobertura total de acentos e descidas (g, p, ç).
+          const padV    = altReal * 0.18;
+          const y       = word.bbox.y0 / OCR_SCALE - padV;
+          const altura  = altReal + padV * 2;
 
           const charStart = textoPlano.length;
           textoPlano += txt;
@@ -836,7 +845,7 @@ async function gerarPDFFinal() {
           ctx.fillStyle = '#000000';
           ctx.fillRect(x, y, w, h);
         } else if (m.tipo === 'descaracterizar') {
-          aplicarDescaracterizacaoCPF(ctx, x, y, w, h, m.texto);
+          aplicarDescaracterizacaoCPF(ctx, x, y, w, h);
         }
       });
 
@@ -868,35 +877,24 @@ async function gerarPDFFinal() {
   }
 }
 
-// Descaracterização de CPF: oculta os 3 primeiros e os 2 últimos dígitos.
-// Resultado: ***.456.789-** (separadores permanecem visíveis quando formatado)
-// `texto` é a string capturada pelo regex (ex: "057.040.567-09" ou "05704056709").
-// Calcula proporções pela posição real dos dígitos no texto — funciona com e sem formatação.
-function aplicarDescaracterizacaoCPF(ctx, x, y, w, h, texto) {
-  const n = texto ? texto.length : 11;
-  let firstCoverEnd = Math.ceil(n * 0.28); // fallback
-  let lastCoverStart = Math.floor(n * 0.82); // fallback
-
-  if (texto && n >= 11) {
-    let cnt = 0;
-    for (let i = 0; i < n; i++) {
-      if (/\d/.test(texto[i])) {
-        cnt++;
-        if (cnt === 3)  { firstCoverEnd = i + 1; }
-        if (cnt === 10) { lastCoverStart = i; break; }
-      }
-    }
-  }
-
-  const leftW  = Math.ceil((firstCoverEnd / n) * w) + 1;
-  const rightX = Math.max(Math.floor((lastCoverStart / n) * w) - 1, leftW + 4);
-  const rightW = w - rightX + 1;
+// Descaracterização de CPF: oculta os 3 primeiros e os 2 últimos dígitos,
+// deixando os dígitos centrais visíveis (***.456.789-**).
+//
+// Usa frações FIXAS da largura da caixa (30% à esquerda, 28% à direita) em vez de
+// calcular a posição exata de cada dígito. Isso é robusto: a caixa do OCR pode
+// incluir pontuação extra (ex.: a vírgula em "134.068.028-93,"), o que deslocaria
+// um cálculo proporcional e deixaria um dígito exposto. Cobrir frações fixas e
+// generosas garante que NENHUM dígito sensível vaze — sempre prioriza o sigilo.
+function aplicarDescaracterizacaoCPF(ctx, x, y, w, h) {
+  const leftW  = Math.ceil(w * 0.30);   // cobre os 3 primeiros dígitos + ponto
+  const rightX = Math.floor(w * 0.72);  // início da faixa direita
+  const rightW = w - rightX + 1;        // cobre 2 últimos dígitos + eventual vírgula
 
   ctx.fillStyle = '#000000';
   ctx.fillRect(x, y, leftW, h);
   ctx.fillRect(x + rightX, y, rightW, h);
 
-  const fs = Math.max(7, Math.min(Math.round(h * 0.75), 14));
+  const fs = Math.max(7, Math.min(Math.round(h * 0.7), 13));
   ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${fs}px monospace`;
   ctx.textBaseline = 'middle';

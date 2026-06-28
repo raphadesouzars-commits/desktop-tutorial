@@ -45,6 +45,17 @@ header {
 
 header img.logo { height: 40px; }
 
+#badge-versao {
+  margin-left: auto;
+  background: #1a3a5c;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.03em;
+}
+
 header .titulo {
   display: flex;
   flex-direction: column;
