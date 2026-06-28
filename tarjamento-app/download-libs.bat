@@ -22,9 +22,9 @@ if %errorlevel% neq 0 (
   set USE_POWERSHELL=1
 )
 
-set PDFJS_VERSION=4.9.155
+set PDFJS_VERSION=3.11.174
 
-echo [1/4] Baixando PDF.js...
+echo [1/4] Baixando PDF.js v%PDFJS_VERSION%...
 if defined USE_POWERSHELL (
   powershell -Command "Invoke-WebRequest 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/%PDFJS_VERSION%/pdf.min.js' -OutFile 'assets\js\pdf.min.js'"
   powershell -Command "Invoke-WebRequest 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/%PDFJS_VERSION%/pdf.worker.min.js' -OutFile 'assets\js\pdf.worker.min.js'"
@@ -44,13 +44,13 @@ echo    OK - jsPDF instalado
 
 echo [3/4] Baixando Tesseract.js...
 if defined USE_POWERSHELL (
-  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js' -OutFile 'assets\js\tesseract.min.js'"
-  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js' -OutFile 'assets\js\tesseract\worker.min.js'"
-  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js' -OutFile 'assets\js\tesseract\tesseract-core.wasm.js'"
+  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js' -OutFile 'assets\js\tesseract.min.js'"
+  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/worker.min.js' -OutFile 'assets\js\tesseract\worker.min.js'"
+  powershell -Command "Invoke-WebRequest 'https://cdn.jsdelivr.net/npm/tesseract.js-core@4/tesseract-core.wasm.js' -OutFile 'assets\js\tesseract\tesseract-core.wasm.js'"
 ) else (
-  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" -o "assets\js\tesseract.min.js"
-  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js" -o "assets\js\tesseract\worker.min.js"
-  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js" -o "assets\js\tesseract\tesseract-core.wasm.js"
+  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js" -o "assets\js\tesseract.min.js"
+  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/worker.min.js" -o "assets\js\tesseract\worker.min.js"
+  curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js-core@4/tesseract-core.wasm.js" -o "assets\js\tesseract\tesseract-core.wasm.js"
 )
 echo    OK - Tesseract.js instalado
 

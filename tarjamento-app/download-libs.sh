@@ -17,28 +17,41 @@ echo ""
 mkdir -p assets/js/tesseract
 mkdir -p assets/lang
 
-# ── PDF.js (Mozilla) ─────────────────────────────────────────────────────────
-PDFJS_VERSION="4.9.155"
+# ── PDF.js (Mozilla) — versão 3.11.174, estável e amplamente testada ─────────
+PDFJS_VERSION="3.11.174"
 echo "[1/4] Baixando PDF.js v${PDFJS_VERSION}..."
 curl -fsSL "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.min.js" \
   -o assets/js/pdf.min.js
 curl -fsSL "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${PDFJS_VERSION}/pdf.worker.min.js" \
   -o assets/js/pdf.worker.min.js
+
+# Verificar se o download funcionou
+if [ ! -s "assets/js/pdf.min.js" ]; then
+  echo "   ⚠ cdnjs falhou, tentando unpkg..."
+  curl -fsSL "https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.min.js" \
+    -o assets/js/pdf.min.js
+  curl -fsSL "https://unpkg.com/pdfjs-dist@${PDFJS_VERSION}/build/pdf.worker.min.js" \
+    -o assets/js/pdf.worker.min.js
+fi
 echo "   ✓ PDF.js instalado"
 
 # ── jsPDF ─────────────────────────────────────────────────────────────────────
 echo "[2/4] Baixando jsPDF..."
 curl -fsSL "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" \
   -o assets/js/jspdf.min.js
+if [ ! -s "assets/js/jspdf.min.js" ]; then
+  curl -fsSL "https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js" \
+    -o assets/js/jspdf.min.js
+fi
 echo "   ✓ jsPDF instalado"
 
 # ── Tesseract.js ─────────────────────────────────────────────────────────────
 echo "[3/4] Baixando Tesseract.js..."
-curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" \
+curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js" \
   -o assets/js/tesseract.min.js
-curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/worker.min.js" \
+curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/worker.min.js" \
   -o assets/js/tesseract/worker.min.js
-curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js-core@5/tesseract-core.wasm.js" \
+curl -fsSL "https://cdn.jsdelivr.net/npm/tesseract.js-core@4/tesseract-core.wasm.js" \
   -o assets/js/tesseract/tesseract-core.wasm.js
 echo "   ✓ Tesseract.js instalado"
 

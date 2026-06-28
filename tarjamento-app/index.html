@@ -405,11 +405,19 @@
 <script>
   window.addEventListener('load', function() {
     const avisos = [];
+
+    // Verificar se aberto via file:// (bloqueia Web Workers / PDF.js)
+    if (location.protocol === 'file:') {
+      avisos.push('⚠️ Você abriu o arquivo diretamente pelo explorador (file://). ' +
+        'Isso impede o funcionamento do PDF.js. ' +
+        'Use o script <strong>iniciar.bat</strong> (Windows) ou <strong>bash iniciar.sh</strong> (Linux/Mac) para abrir a ferramenta corretamente via servidor local.');
+    }
+
     if (typeof pdfjsLib === 'undefined') {
-      avisos.push('PDF.js não carregado — a ferramenta não funcionará. Execute o script download-libs para obter as bibliotecas necessárias.');
+      avisos.push('PDF.js não carregado — a ferramenta não funcionará. Execute o script <strong>download-libs.bat/.sh</strong> para baixar as bibliotecas necessárias.');
     }
     if (typeof window.jspdf === 'undefined' && typeof jspdf === 'undefined') {
-      avisos.push('jsPDF não carregado — não será possível gerar o PDF final. Execute o script download-libs.');
+      avisos.push('jsPDF não carregado — não será possível gerar o PDF final. Execute o script <strong>download-libs.bat/.sh</strong>.');
     }
     if (typeof Tesseract === 'undefined') {
       console.info('Tesseract.js não disponível — PDFs escaneados não terão OCR, mas PDFs com texto nativo funcionarão normalmente.');
@@ -417,7 +425,7 @@
     if (avisos.length > 0) {
       document.getElementById('alerta-global').className = 'alerta alerta-erro';
       document.getElementById('alerta-global').innerHTML =
-        '<span class="alerta-icone">❌</span><div><strong>Bibliotecas não encontradas:</strong><ul style="margin-top:6px;margin-left:16px">' +
+        '<span class="alerta-icone">❌</span><div><strong>Problema de configuração:</strong><ul style="margin-top:6px;margin-left:16px">' +
         avisos.map(a => '<li>' + a + '</li>').join('') +
         '</ul></div>';
       document.getElementById('alerta-global').classList.remove('hidden');

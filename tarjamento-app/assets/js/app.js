@@ -197,8 +197,18 @@ async function processarArquivo(file) {
     document.getElementById('info-arquivo').classList.add('visivel');
     document.getElementById('btn-avancar-etapa1').disabled = false;
   } catch (err) {
-    mostrarAlerta('erro', 'Não foi possível abrir o PDF. Verifique se o arquivo não está corrompido ou protegido por senha.');
-    console.error(err);
+    console.error('Erro ao abrir PDF:', err);
+    let msg = 'Não foi possível abrir o PDF.';
+    if (typeof pdfjsLib === 'undefined') {
+      msg = 'A biblioteca PDF.js não foi carregada. Execute o script download-libs para baixar as dependências e use os scripts iniciar.sh/.bat para abrir a ferramenta (não abra o index.html diretamente pelo explorador de arquivos).';
+    } else if (err && err.name === 'PasswordException') {
+      msg = 'O PDF está protegido por senha. Remova a senha antes de processar.';
+    } else if (err && err.name === 'InvalidPDFException') {
+      msg = 'O arquivo não é um PDF válido ou está corrompido.';
+    } else if (location.protocol === 'file:') {
+      msg = 'Abra a ferramenta pelo script iniciar.sh (Linux/Mac) ou iniciar.bat (Windows), não diretamente pelo navegador. O protocolo file:// bloqueia o funcionamento do PDF.js.';
+    }
+    mostrarAlerta('erro', msg);
   } finally {
     exibirCarregando(false);
   }
