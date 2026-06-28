@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v12';
+const VERSAO_APP = 'v13';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -998,7 +998,7 @@ async function gerarPDFFinal() {
           ctx.fillStyle = '#000000';
           ctx.fillRect(x, y, w, h);
         } else if (m.tipo === 'descaracterizar') {
-          aplicarDescaracterizacaoCPF(ctx, x, y, w, h);
+          aplicarDescaracterizacaoCPF(ctx, x, y, w, h, m.texto || '');
         }
       });
 
@@ -1033,28 +1033,48 @@ async function gerarPDFFinal() {
 }
 
 // Descaracterização de CPF: oculta os 3 primeiros e os 2 últimos dígitos,
-// deixando os dígitos centrais visíveis (***.456.789-**).
+// deixando os 6 dígitos centrais visíveis: ***.456.789-**
 //
-// Usa frações FIXAS da largura da caixa (30% à esquerda, 28% à direita) em vez de
-// calcular a posição exata de cada dígito. Isso é robusto: a caixa do OCR pode
-// incluir pontuação extra (ex.: a vírgula em "134.068.028-93,"), o que deslocaria
-// um cálculo proporcional e deixaria um dígito exposto. Cobrir frações fixas e
-// generosas garante que NENHUM dígito sensível vaze — sempre prioriza o sigilo.
-function aplicarDescaracterizacaoCPF(ctx, x, y, w, h) {
-  const leftW  = Math.ceil(w * 0.30);   // cobre os 3 primeiros dígitos + ponto
-  const rightX = Math.floor(w * 0.72);  // início da faixa direita
-  const rightW = w - rightX + 1;        // cobre 2 últimos dígitos + eventual vírgula
+// Algoritmo baseado em posição real dos dígitos no texto capturado.
+// Para "134.068.028-93" (14 chars total):
+//   - chars 0-2  → dígitos 1-3  → ocultar  (fração 3/14 da largura)
+//   - chars 3-11 → pontuação + dígitos 4-9 → visível
+//   - chars 12-13 → dígitos 10-11 → ocultar  (a partir de 12/14)
+// Funciona com qualquer formatação: "13406802893", "134.068.028-93", "134 068 028 93".
+function aplicarDescaracterizacaoCPF(ctx, x, y, w, h, textoCPF) {
+  // Localizar posições char dos dígitos 1-3 (leftEnd) e dígito 10 (rightStart)
+  // a partir do texto real. Isso é independente do separador usado (. - espaço).
+  let leftEndChar = -1, rightStartChar = -1;
+  let digitCount = 0;
+  const txt = (textoCPF || '').replace(/[^\d.,\- ]/g, ''); // limpar lixo de OCR
+  const total = txt.length || 14; // fallback para CPF formatado padrão
+
+  for (let i = 0; i < txt.length; i++) {
+    if (/\d/.test(txt[i])) {
+      digitCount++;
+      if (digitCount === 3)  leftEndChar    = i + 1; // char após o 3º dígito
+      if (digitCount === 10) rightStartChar = i;     // char do 10º dígito
+    }
+  }
+
+  // Fallback para frações exatas do formato padrão XXX.XXX.XXX-XX (14 chars)
+  if (leftEndChar  < 0) leftEndChar  = Math.round(total * 3  / 14);
+  if (rightStartChar < 0) rightStartChar = Math.round(total * 12 / 14);
+
+  const leftW  = Math.ceil(  (leftEndChar    / total) * w );
+  const rightX = Math.floor( (rightStartChar / total) * w );
+  const rightW = w - rightX + 1; // +1 garante cobertura completa do último pixel
 
   ctx.fillStyle = '#000000';
-  ctx.fillRect(x, y, leftW, h);
+  ctx.fillRect(x,          y, leftW,  h);
   ctx.fillRect(x + rightX, y, rightW, h);
 
-  const fs = Math.max(7, Math.min(Math.round(h * 0.7), 13));
+  const fs = Math.max(7, Math.min(Math.round(h * 0.75), 13));
   ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${fs}px monospace`;
   ctx.textBaseline = 'middle';
-  ctx.fillText('***', x + 2, y + h / 2);
-  ctx.fillText('**',  x + rightX + 2, y + h / 2);
+  ctx.fillText('***', x + 2,           y + h / 2);
+  ctx.fillText('**',  x + rightX + 2,  y + h / 2);
 }
 
 // ─── Navegação entre etapas ───────────────────────────────────────────────────
