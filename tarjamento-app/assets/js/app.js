@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v8';
+const VERSAO_APP = 'v9';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -208,7 +208,17 @@ async function processarArquivo(file) {
     });
     App.pdfBytes = new Uint8Array(bytes);
     App.pdfNome = file.name;
-    App.pdfDoc = await pdfjsLib.getDocument({ data: App.pdfBytes }).promise;
+    // standardFontDataUrl/cMapUrl são ESSENCIAIS para PDFs que usam fontes
+    // padrão NÃO embutidas (comum em relatórios do eCAC/Portal IRPF-JAVA).
+    // Sem isso, o PDF.js renderiza o texto em posição vertical incorreta e as
+    // tarjas (calculadas pelas métricas corretas do texto) ficam desalinhadas.
+    // São apenas arquivos estáticos de fonte — nenhum dado do PDF é enviado.
+    App.pdfDoc = await pdfjsLib.getDocument({
+      data: App.pdfBytes,
+      standardFontDataUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/standard_fonts/',
+      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+      cMapPacked: true,
+    }).promise;
     App.totalPaginas = App.pdfDoc.numPages;
 
     document.getElementById('nome-arquivo').textContent = file.name;
