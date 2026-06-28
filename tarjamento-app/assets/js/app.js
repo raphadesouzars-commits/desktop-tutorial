@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v7';
+const VERSAO_APP = 'v8';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -140,23 +140,22 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
     // Skip se qualquer palavra substantiva tiver menos de 2 chars
     if (substantivas.some(p => p.length < 2)) continue;
 
-    const bbox = bboxDoMatch(m.index, m.index + seq.length, indice);
-    if (!bbox) continue;
+    bboxesDoMatch(m.index, m.index + seq.length, indice).forEach(bbox => {
+      // Evitar duplicatas: pular se já houver marcação com bbox sobreposto
+      const sobrepoe = marcacoes.some(mk =>
+        mk.pagina === pagina &&
+        mk.bbox.x < bbox.x + bbox.largura &&
+        mk.bbox.x + mk.bbox.largura > bbox.x &&
+        mk.bbox.y < bbox.y + bbox.altura &&
+        mk.bbox.y + mk.bbox.altura > bbox.y
+      );
+      if (sobrepoe) return;
 
-    // Evitar duplicatas: pular se já houver marcação com bbox sobreposto
-    const sobrepoe = marcacoes.some(mk =>
-      mk.pagina === pagina &&
-      mk.bbox.x < bbox.x + bbox.largura &&
-      mk.bbox.x + mk.bbox.largura > bbox.x &&
-      mk.bbox.y < bbox.y + bbox.altura &&
-      mk.bbox.y + mk.bbox.altura > bbox.y
-    );
-    if (sobrepoe) continue;
-
-    marcacoes.push({
-      id: gerarId(), pagina, texto: seq, bbox,
-      origem: 'Sugestão automática: possível nome próprio',
-      tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
+      marcacoes.push({
+        id: gerarId(), pagina, texto: seq, bbox,
+        origem: 'Sugestão automática: possível nome próprio',
+        tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
+      });
     });
   }
 }
@@ -437,22 +436,40 @@ async function executarPreProcessamento() {
 
 // ─── Mapeamento texto→bbox via índice de offsets ──────────────────────────────
 // Encontra os itens cujo intervalo [charStart, charEnd] sobrepõe [matchStart, matchEnd]
-// e une seus bboxes em um único retângulo com pequeno padding.
-function bboxDoMatch(matchStart, matchEnd, indice) {
-  // Filtrar itens que participam do match
+// e os AGRUPA POR LINHA (pela coordenada Y). Retorna UMA caixa por linha.
+//
+// Crítico: se um match toca itens de linhas diferentes (ex.: o regex de nome
+// casa "...SUPREMO TRIBUNAL" no fim de uma linha + "FEDERAL LUIZ" no início da
+// próxima), unir tudo numa só caixa produziria um retângulo gigante do topo de
+// uma linha até a base da outra, mal posicionado. Agrupar por linha garante
+// caixas justas e corretamente posicionadas em cada linha.
+function bboxesDoMatch(matchStart, matchEnd, indice) {
   const participantes = indice.filter(it =>
     it.charEnd > matchStart && it.charStart < matchEnd
   );
-  if (participantes.length === 0) return null;
+  if (participantes.length === 0) return [];
 
-  const x    = Math.min(...participantes.map(i => i.x));
-  const y    = Math.min(...participantes.map(i => i.y));
-  const xMax = Math.max(...participantes.map(i => i.x + i.largura));
-  const yMax = Math.max(...participantes.map(i => i.y + i.altura));
+  // Agrupar por linha: itens cujo centro vertical está próximo pertencem à mesma linha.
+  const linhas = [];
+  participantes
+    .slice()
+    .sort((a, b) => a.y - b.y)
+    .forEach(it => {
+      const cy = it.y + it.altura / 2;
+      let linha = linhas.find(L => Math.abs(L.cy - cy) < Math.max(L.alturaMax, it.altura) * 0.7);
+      if (!linha) { linha = { cy, alturaMax: it.altura, itens: [] }; linhas.push(linha); }
+      linha.itens.push(it);
+      linha.alturaMax = Math.max(linha.alturaMax, it.altura);
+    });
 
-  // Padding de 3px em todas as direções para garantir cobertura completa
-  const P = 3;
-  return { x: x - P, y: y - P, largura: (xMax - x) + P * 2, altura: (yMax - y) + P * 2 };
+  const P = 3; // padding em px para cobertura completa
+  return linhas.map(L => {
+    const x    = Math.min(...L.itens.map(i => i.x));
+    const y    = Math.min(...L.itens.map(i => i.y));
+    const xMax = Math.max(...L.itens.map(i => i.x + i.largura));
+    const yMax = Math.max(...L.itens.map(i => i.y + i.altura));
+    return { x: x - P, y: y - P, largura: (xMax - x) + P * 2, altura: (yMax - y) + P * 2 };
+  });
 }
 
 // ─── Detecção de padrões automáticos ─────────────────────────────────────────
@@ -463,12 +480,12 @@ function detectarPadroesAutomaticos(pagina, texto, indice, marcacoes) {
     let m;
     while ((m = re.exec(texto)) !== null) {
       if (regra.filtro && !regra.filtro(m[0])) continue;
-      const bbox = bboxDoMatch(m.index, m.index + m[0].length, indice);
-      if (!bbox) continue;
-      marcacoes.push({
-        id: gerarId(), pagina, texto: m[0], bbox,
-        origem: `Regra automática: ${regra.nome}`,
-        tipo: regra.tratamento, estado: 'incluido', fonteRegra: regra.id,
+      bboxesDoMatch(m.index, m.index + m[0].length, indice).forEach(bbox => {
+        marcacoes.push({
+          id: gerarId(), pagina, texto: m[0], bbox,
+          origem: `Regra automática: ${regra.nome}`,
+          tipo: regra.tratamento, estado: 'incluido', fonteRegra: regra.id,
+        });
       });
     }
   });
@@ -499,8 +516,7 @@ function detectarTermosCadastrados(pagina, texto, indice, marcacoes) {
         }
       }
 
-      const bbox = bboxDoMatch(pos, pos + tNorm.length, indice);
-      if (bbox) {
+      bboxesDoMatch(pos, pos + tNorm.length, indice).forEach(bbox => {
         marcacoes.push({
           id: gerarId(), pagina,
           texto: texto.slice(pos, pos + termo.termo.length) || termo.termo,
@@ -508,7 +524,7 @@ function detectarTermosCadastrados(pagina, texto, indice, marcacoes) {
           origem: `Termo cadastrado: ${nomeExibicaoPapel(termo.papel)} — ${termo.termo}`,
           tipo: termo.tratamento, estado: 'incluido', fonteTermo: termo,
         });
-      }
+      });
       idx = pos + tNorm.length;
     }
   });
@@ -865,7 +881,9 @@ async function gerarPDFFinal() {
 
     atualizarProgresso(100, 'Gerando download...');
     const nomeBase = App.pdfNome.replace(/\.pdf$/i, '');
-    const nomeOut  = `${nomeBase}_tarjado.pdf`;
+    // A versão entra no nome do arquivo: serve de diagnóstico para confirmar
+    // qual build gerou a saída (ex.: "..._tarjado_v8.pdf").
+    const nomeOut  = `${nomeBase}_tarjado_${VERSAO_APP}.pdf`;
     doc.save(nomeOut);
     document.getElementById('nome-arquivo-gerado').textContent = nomeOut;
     document.getElementById('barra-progresso-container').style.display = 'none';
