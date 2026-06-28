@@ -6,40 +6,29 @@
 
 'use strict';
 
-// ─── Estado global da aplicação ──────────────────────────────────────────────
+// ─── Estado global ────────────────────────────────────────────────────────────
 const App = {
   etapaAtual: 1,
   pdfBytes: null,
   pdfNome: '',
-  pdfDoc: null,          // PDF.js PDFDocumentProxy
+  pdfDoc: null,
   totalPaginas: 0,
   paginaAtual: 1,
   escala: 1.5,
+  escalaAtual: 1.5,
+  viewportAtual: null,
 
-  // Contexto do processo
-  contexto: {
-    julgado: 'nao',      // 'nao' | 'sancionado' | 'absolvido'
-    assedio: false,
-  },
-
-  // Termos cadastrados (Etapa 2)
+  contexto: { julgado: 'nao', assedio: false },
   termos: [],
-
-  // Regras automáticas ativas
   regrasAtivas: new Set(),
 
-  // Candidatos a marcação por página: Map<pagina, Array<Marcacao>>
+  // Map<pagina, Array<Marcacao>>
   marcacoesPorPagina: new Map(),
-
-  // Dados OCR por página (cache)
-  ocrCache: new Map(),
-
-  // Dados de texto por página (PDF.js)
+  // Map<pagina, { indice: Array<{item, charOffset}>, textoPlano: string, viewport }>
   textoPorPagina: new Map(),
 
-  // Modo de seleção manual
   modoSelecao: false,
-  selecaoInicio: null,
+  tesseractWorker: null,
 };
 
 // ─── Regras de detecção automática ───────────────────────────────────────────
@@ -47,42 +36,38 @@ const REGRAS = [
   {
     id: 'cpf',
     nome: 'CPF',
-    regex: /\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g,
+    // Aceita com e sem pontuação, com espaços entre partes (OCR às vezes insere espaços)
+    regex: /\b\d{3}[\s.]?\d{3}[\s.]?\d{3}[\s\-]?\d{2}\b/g,
     tratamento: 'descaracterizar',
     ativa: true,
-    descricao: 'Número de CPF',
   },
   {
     id: 'cnpj',
     nome: 'CNPJ',
-    regex: /\b\d{2}\.?\d{3}\.?\d{3}\/?\.?\d{4}-?\d{2}\b/g,
+    regex: /\b\d{2}[\s.]?\d{3}[\s.]?\d{3}[\s\/]?\d{4}[\s\-]?\d{2}\b/g,
     tratamento: 'tarjar',
     ativa: false,
-    descricao: 'CNPJ (dado público — aparece desmarcado por padrão)',
   },
   {
     id: 'rg',
     nome: 'RG / Identidade',
-    regex: /(?:RG|R\.G\.|Identidade|Cédula de Identidade)[:\s#nº°]*([0-9]{1,2}\.?[0-9]{3}\.?[0-9]{3}-?[0-9A-Za-z])/gi,
+    regex: /(?:R\.?G\.?|Identidade|Cédula de Identidade)[:\s#nNºo°]*([0-9]{1,2}[\s.]?[0-9]{3}[\s.]?[0-9]{3}[\s\-]?[0-9A-Za-z])/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Número de RG / Identidade',
   },
   {
     id: 'matricula',
     nome: 'Matrícula / SIAPE',
-    regex: /(?:matr[íi]cula|SIAPE)[:\s#nº°]*([0-9]{6,8})/gi,
+    regex: /(?:matr[íi]cula|SIAPE)[:\s#nNºo°]*([0-9]{6,8})/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Matrícula funcional / SIAPE',
   },
   {
     id: 'conta',
     nome: 'Conta Bancária / Agência',
-    regex: /(?:ag[eê]ncia|conta(?:\s+corrente|\s+poupan[çc]a)?)[:\s#nº°]*([0-9]{3,6}-?[0-9X])/gi,
+    regex: /(?:ag[eê]ncia|conta(?:\s+corrente|\s+poupan[çc]a)?)[:\s#nNºo°]*([0-9]{3,6}[\s\-]?[0-9X])/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Conta bancária ou agência',
   },
   {
     id: 'nascimento',
@@ -90,7 +75,6 @@ const REGRAS = [
     regex: /(?:nasc(?:ido|eu|imento)?(?:\s+em)?|data\s+de\s+nascimento)[:\s]*([0-9]{1,2}[\/\-\.][0-9]{1,2}[\/\-\.][0-9]{2,4})/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Data de nascimento',
   },
   {
     id: 'email',
@@ -98,40 +82,35 @@ const REGRAS = [
     regex: /\b[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}\b/g,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Endereço de e-mail',
-    filtro: (match) => !match.includes('@receita.fazenda.gov.br') && !match.includes('@rfb.gov.br'),
+    filtro: (m) => !m.toLowerCase().includes('@receita.fazenda.gov.br') && !m.toLowerCase().includes('@rfb.gov.br'),
   },
   {
     id: 'telefone',
     nome: 'Telefone',
-    regex: /(?:\+55\s?)?(?:\(?\d{2}\)?\s?)(?:9\s?)?\d{4}[-\s]?\d{4}/g,
+    regex: /(?:\+?55[\s\-]?)?(?:\(?[0-9]{2}\)?[\s\-]?)?(?:9[\s]?)?[0-9]{4}[\s\-]?[0-9]{4}/g,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Número de telefone brasileiro',
   },
   {
     id: 'endereco',
     nome: 'Endereço Residencial',
-    regex: /(?:Rua|Av\.|Avenida|Travessa|Alameda|Rodovia|Estrada|R\.)\s+[A-Za-zÀ-ú\s]+,?\s*n[°º]?\s*\d+/gi,
+    regex: /(?:Rua|Av\.|Avenida|Travessa|Alameda|Estrada|R\.)\s+[A-Za-zÀ-ú\s]{3,40},?\s*n[°º]?\s*[0-9]+/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Endereço residencial',
   },
   {
     id: 'saude',
     nome: 'Palavras-chave de Saúde',
-    regex: /\b(CID|atestado\s+m[eé]dico|laudo\s+m[eé]dico|afastamento\s+por|diagn[oó]stico|doen[çc]a|gestante|gravidez|licen[çc]a\s+saúde|saúde\s+mental|transtorno|depress[aã]o|ans[ie]edade)\b/gi,
+    regex: /\b(CID[\s\-]?[A-Z][0-9]+|atestado\s+m[eé]dico|laudo\s+m[eé]dico|afastamento\s+por|diagn[oó]stico|gestante|gravidez|licen[çc]a[\s\-]saúde|saúde\s+mental|transtorno|depress[aãa]o|ansiedade)\b/gi,
     tratamento: 'tarjar',
     ativa: true,
-    descricao: 'Informações de saúde (dados sensíveis)',
   },
 ];
 
-// ─── Identificadores indiretos para alerta ────────────────────────────────────
 const IDENTIFICADORES_INDIRETOS = [
   /\bcargo\b/i, /\blota[çc][aã]o\b/i, /\bsetor\b/i, /\bunidade\b/i,
-  /\bcomiss[aã]o\b/i, /\bdata\b.*\d{4}/i, /\bn[°º]\s*(?:processo|proc)/i,
-  /\bmatrimonial\b/i, /\bfilia[çc][aã]o\b/i,
+  /\bcomiss[aã]o\b/i, /\d{1,2}\/\d{1,2}\/\d{2,4}/,
+  /\bn[°º\.]\s*(?:processo|proc\.?)\b/i, /\bfilia[çc][aã]o\b/i,
 ];
 
 // ─── Inicialização ────────────────────────────────────────────────────────────
@@ -153,24 +132,16 @@ function configurarUpload() {
   const input = document.getElementById('input-arquivo');
 
   area.addEventListener('click', () => input.click());
-
-  area.addEventListener('dragover', e => {
-    e.preventDefault();
-    area.classList.add('drag-over');
-  });
-
+  area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
   area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
-
   area.addEventListener('drop', e => {
     e.preventDefault();
     area.classList.remove('drag-over');
     const file = e.dataTransfer.files[0];
     if (file) processarArquivo(file);
   });
-
   input.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) processarArquivo(file);
+    if (e.target.files[0]) processarArquivo(e.target.files[0]);
   });
 }
 
@@ -179,14 +150,11 @@ async function processarArquivo(file) {
     mostrarAlerta('erro', 'Arquivo inválido. Por favor, selecione um arquivo PDF.');
     return;
   }
-
   exibirCarregando(true, 'Lendo arquivo PDF...');
-
   try {
     const bytes = await lerArquivoComoArrayBuffer(file);
     App.pdfBytes = new Uint8Array(bytes);
     App.pdfNome = file.name;
-
     const loadingTask = pdfjsLib.getDocument({ data: App.pdfBytes });
     App.pdfDoc = await loadingTask.promise;
     App.totalPaginas = App.pdfDoc.numPages;
@@ -221,75 +189,43 @@ function lerArquivoComoArrayBuffer(file) {
   });
 }
 
-// ─── ETAPA 2: Formulário de identificação ────────────────────────────────────
+// ─── ETAPA 2: Formulário ──────────────────────────────────────────────────────
 function configurarFormularioEtapa2() {
-  document.getElementById('btn-add-investigado').addEventListener('click', () =>
-    adicionarTermoPapel('investigado', 'lista-investigados'));
-  document.getElementById('btn-add-vitima').addEventListener('click', () =>
-    adicionarTermoPapel('vitima', 'lista-vitimas'));
-  document.getElementById('btn-add-testemunha').addEventListener('click', () =>
-    adicionarTermoPapel('testemunha', 'lista-testemunhas'));
-  document.getElementById('btn-add-denunciante').addEventListener('click', () =>
-    adicionarTermoPapel('denunciante', 'lista-denunciantes'));
-  document.getElementById('btn-add-terceiro').addEventListener('click', () =>
-    adicionarTermoPapel('terceiro', 'lista-terceiros'));
-  document.getElementById('btn-add-livre').addEventListener('click', () =>
-    adicionarTermoPapel('livre', 'lista-livres'));
-
-  // Atualizar tratamento do investigado ao mudar status do julgamento
-  document.querySelectorAll('input[name="julgado"]').forEach(el => {
-    el.addEventListener('change', () => {
-      App.contexto.julgado = el.value;
-      atualizarTagInvestigado();
-    });
+  [
+    ['btn-add-investigado', 'investigado', 'lista-investigados'],
+    ['btn-add-vitima',      'vitima',      'lista-vitimas'],
+    ['btn-add-testemunha',  'testemunha',  'lista-testemunhas'],
+    ['btn-add-denunciante', 'denunciante', 'lista-denunciantes'],
+    ['btn-add-terceiro',    'terceiro',    'lista-terceiros'],
+    ['btn-add-livre',       'livre',       'lista-livres'],
+  ].forEach(([btnId, papel, listaId]) => {
+    document.getElementById(btnId).addEventListener('click', () =>
+      adicionarTermoPapel(papel, listaId));
   });
 
-  document.querySelectorAll('input[name="assedio"]').forEach(el => {
-    el.addEventListener('change', () => {
-      App.contexto.assedio = el.value === 'sim';
-    });
-  });
+  document.querySelectorAll('input[name="julgado"]').forEach(el =>
+    el.addEventListener('change', () => { App.contexto.julgado = el.value; atualizarTagInvestigado(); }));
+  document.querySelectorAll('input[name="assedio"]').forEach(el =>
+    el.addEventListener('change', () => { App.contexto.assedio = el.value === 'sim'; }));
 }
 
 function atualizarTagInvestigado() {
   const tag = document.getElementById('tag-investigado');
   if (!tag) return;
-  if (App.contexto.julgado === 'absolvido') {
-    tag.textContent = 'Tarjar';
-    tag.className = 'tag-tratamento tag-tarjar';
-  } else if (App.contexto.julgado === 'sancionado') {
-    tag.textContent = 'Manter';
-    tag.className = 'tag-tratamento tag-manter';
-  } else {
-    tag.textContent = 'Tarjar';
-    tag.className = 'tag-tratamento tag-tarjar';
-  }
+  const isManter = App.contexto.julgado === 'sancionado';
+  tag.textContent = isManter ? 'Manter' : 'Tarjar';
+  tag.className = 'tag-tratamento ' + (isManter ? 'tag-manter' : 'tag-tarjar');
 }
 
 function tratamentoPorPapel(papel) {
-  switch (papel) {
-    case 'investigado':
-      return App.contexto.julgado === 'sancionado' ? 'manter' : 'tarjar';
-    case 'vitima':
-    case 'testemunha':
-    case 'denunciante':
-    case 'terceiro':
-      return 'tarjar';
-    case 'livre':
-      return 'tarjar';
-    default:
-      return 'tarjar';
-  }
+  if (papel === 'investigado') return App.contexto.julgado === 'sancionado' ? 'manter' : 'tarjar';
+  return 'tarjar';
 }
 
 function adicionarTermoPapel(papel, listaId) {
   const lista = document.getElementById(listaId);
-  const id = `termo-${Date.now()}-${Math.random().toString(36).slice(2)}`;
-
   const div = document.createElement('div');
   div.className = 'item-termo';
-  div.dataset.id = id;
-
   div.innerHTML = `
     <input type="text" placeholder="Nome ou termo..." class="input-termo" data-papel="${papel}">
     <select class="select-busca" title="Tipo de busca">
@@ -298,7 +234,6 @@ function adicionarTermoPapel(papel, listaId) {
     </select>
     <button class="btn-remover-termo" title="Remover" onclick="this.closest('.item-termo').remove()">✕</button>
   `;
-
   lista.appendChild(div);
   div.querySelector('.input-termo').focus();
 }
@@ -310,98 +245,134 @@ function coletarTermosFormulario() {
     if (!val) return;
     const papel = input.dataset.papel;
     const busca = input.closest('.item-termo').querySelector('.select-busca').value;
-
-    // Suporte a múltiplos termos separados por vírgula
     val.split(',').forEach(t => {
       const termo = t.trim();
       if (!termo) return;
-      App.termos.push({
-        termo,
-        papel,
-        tratamento: tratamentoPorPapel(papel),
-        buscaExata: busca === 'exata',
-      });
+      App.termos.push({ termo, papel, tratamento: tratamentoPorPapel(papel), buscaExata: busca === 'exata' });
     });
   });
 }
 
 // ─── ETAPA 3: Pré-processamento ───────────────────────────────────────────────
+const OCR_SCALE = 2.0; // escala usada para renderizar o canvas do OCR
+
 async function executarPreProcessamento() {
   coletarTermosFormulario();
   App.marcacoesPorPagina.clear();
-  App.ocrCache.clear();
   App.textoPorPagina.clear();
 
-  atualizarProgresso(0, `Iniciando processamento (0 / ${App.totalPaginas} páginas)...`);
   document.getElementById('barra-progresso-container').style.display = 'block';
+  atualizarProgresso(0, `Iniciando (0 / ${App.totalPaginas} páginas)...`);
+
+  // Inicializar worker Tesseract uma vez para todas as páginas (mais eficiente)
+  let tesseractWorker = null;
+  if (typeof Tesseract !== 'undefined') {
+    try {
+      atualizarProgresso(2, 'Inicializando OCR (Tesseract.js)...');
+      tesseractWorker = await Tesseract.createWorker('por', 1, {
+        logger: () => {},
+      });
+    } catch (e) {
+      console.warn('Não foi possível inicializar Tesseract:', e);
+    }
+  }
 
   for (let p = 1; p <= App.totalPaginas; p++) {
-    atualizarProgresso(
-      Math.round(((p - 1) / App.totalPaginas) * 80),
-      `Processando página ${p} de ${App.totalPaginas}...`
-    );
+    const pct = Math.round(((p - 1) / App.totalPaginas) * 88) + 2;
+    atualizarProgresso(pct, `Analisando página ${p} de ${App.totalPaginas}...`);
 
     const page = await App.pdfDoc.getPage(p);
+
+    // ── Extrair texto nativo via PDF.js ──────────────────────────────────────
     const textContent = await page.getTextContent();
-    const itensTexto = textContent.items;
-    const viewport = page.getViewport({ scale: 1.0 });
+    // viewport scale=1.0 → coordenadas em "pontos PDF" convertidos para canvas
+    const viewport1 = page.getViewport({ scale: 1.0 });
 
+    // Construir índice de posições com rastreamento de offset de caractere
+    // Cada entrada: { texto, x, y, largura, altura, charStart, charEnd }
+    const indice = [];
     let textoPlano = '';
-    const itensPosicionados = [];
 
-    itensTexto.forEach(item => {
-      if (!item.str || !item.str.trim()) return;
-      textoPlano += item.str + ' ';
-      // Transformar coordenadas PDF (origem inferior-esquerda) para tela (origem superior-esquerda)
-      const tx = pdfjsLib.Util.transform(viewport.transform, item.transform);
+    textContent.items.forEach(item => {
+      if (!item.str) return;
+      // Aplicar transform do viewport para obter coordenadas de canvas
+      const tx = pdfjsLib.Util.transform(viewport1.transform, item.transform);
       const x = tx[4];
-      const y = tx[5] - item.height;
-      itensPosicionados.push({
-        texto: item.str,
-        x, y,
-        largura: item.width,
-        altura: item.height || 12,
-      });
+      // tx[5] é a posição Y do baseline no canvas (Y cresce para baixo)
+      // Subtraímos item.height para chegar ao TOPO da caixa de texto
+      // Usamos abs() porque fontes rotacionadas podem dar valores negativos
+      const alturaReal = Math.abs(item.height) || Math.abs(tx[3]) || 12;
+      const y = tx[5] - alturaReal;
+      const largura = Math.abs(item.width) || 10;
+
+      const charStart = textoPlano.length;
+      // Adicionar o texto sem espaço extra — espaço será adicionado depois
+      // mas guardamos o offset ANTES do espaço
+      textoPlano += item.str;
+      const charEnd = textoPlano.length;
+      // Separador entre itens (espaço) para evitar colagem de palavras
+      textoPlano += ' ';
+
+      indice.push({ texto: item.str, x, y, largura, altura: alturaReal, charStart, charEnd });
     });
 
-    const precisaOCR = textoPlano.trim().length < 50;
+    const temTextoNativo = textoPlano.trim().replace(/\s+/g, '').length > 20;
 
-    if (precisaOCR) {
-      atualizarProgresso(
-        Math.round(((p - 1) / App.totalPaginas) * 80) + 5,
-        `OCR na página ${p} de ${App.totalPaginas}...`
-      );
-      const resultadoOCR = await executarOCR(page);
-      if (resultadoOCR) {
-        App.ocrCache.set(p, resultadoOCR);
-        // Adicionar itens do OCR ao texto posicionado
-        resultadoOCR.palavras.forEach(w => {
-          itensPosicionados.push({
-            texto: w.text,
-            x: w.bbox.x0,
-            y: w.bbox.y0,
-            largura: w.bbox.x1 - w.bbox.x0,
-            altura: w.bbox.y1 - w.bbox.y0,
-            dePocr: true,
-          });
-          textoPlano += w.text + ' ';
+    // ── OCR para páginas escaneadas ───────────────────────────────────────────
+    if (!temTextoNativo && tesseractWorker) {
+      atualizarProgresso(pct + 2, `OCR na página ${p}...`);
+      try {
+        // Renderizar página em alta resolução para o OCR
+        const vpOcr = page.getViewport({ scale: OCR_SCALE });
+        const cvOcr = document.createElement('canvas');
+        cvOcr.width = vpOcr.width;
+        cvOcr.height = vpOcr.height;
+        const ctxOcr = cvOcr.getContext('2d');
+        // Fundo branco (melhora o OCR)
+        ctxOcr.fillStyle = '#fff';
+        ctxOcr.fillRect(0, 0, cvOcr.width, cvOcr.height);
+        await page.render({ canvasContext: ctxOcr, viewport: vpOcr }).promise;
+
+        const resultado = await tesseractWorker.recognize(cvOcr);
+
+        resultado.data.words.forEach(word => {
+          if (!word.text || !word.text.trim()) return;
+
+          // CORREÇÃO CRÍTICA: coordenadas do Tesseract estão no espaço do canvas OCR
+          // (escala OCR_SCALE). Dividimos por OCR_SCALE para converter para escala 1.0
+          const x = word.bbox.x0 / OCR_SCALE;
+          const y = word.bbox.y0 / OCR_SCALE;
+          const largura = (word.bbox.x1 - word.bbox.x0) / OCR_SCALE;
+          const altura = (word.bbox.y1 - word.bbox.y0) / OCR_SCALE;
+
+          const charStart = textoPlano.length;
+          textoPlano += word.text;
+          const charEnd = textoPlano.length;
+          textoPlano += ' ';
+
+          indice.push({ texto: word.text, x, y, largura, altura, charStart, charEnd, deOcr: true });
         });
+      } catch (e) {
+        console.warn(`OCR falhou na página ${p}:`, e);
       }
     }
 
-    App.textoPorPagina.set(p, { itens: itensPosicionados, textoPlano, viewport });
+    App.textoPorPagina.set(p, { indice, textoPlano, viewport: viewport1 });
 
     const marcacoes = [];
-    detectarPadroesAutomaticos(p, textoPlano, itensPosicionados, marcacoes);
-    detectarTermosCadastrados(p, textoPlano, itensPosicionados, marcacoes);
-
+    detectarPadroesAutomaticos(p, textoPlano, indice, marcacoes);
+    detectarTermosCadastrados(p, textoPlano, indice, marcacoes);
     App.marcacoesPorPagina.set(p, marcacoes);
   }
 
-  atualizarProgresso(90, 'Verificando alertas de identificação indireta...');
-  verificarIdentificacaoIndireta();
+  // Encerrar worker OCR
+  if (tesseractWorker) {
+    try { await tesseractWorker.terminate(); } catch (e) {}
+  }
 
-  atualizarProgresso(100, 'Processamento concluído!');
+  atualizarProgresso(95, 'Verificando alertas de identificação indireta...');
+  verificarIdentificacaoIndireta();
+  atualizarProgresso(100, 'Concluído!');
 
   const totalMarcacoes = [...App.marcacoesPorPagina.values()].reduce((s, m) => s + m.length, 0);
   document.getElementById('stat-marcacoes').textContent = totalMarcacoes;
@@ -411,83 +382,64 @@ async function executarPreProcessamento() {
     document.getElementById('barra-progresso-container').style.display = 'none';
     document.getElementById('resultados-processamento').classList.remove('hidden');
     document.getElementById('nav-etapa3').style.display = 'flex';
-  }, 500);
+  }, 400);
 }
 
-async function executarOCR(page) {
-  if (typeof Tesseract === 'undefined') {
-    console.warn('Tesseract.js não disponível — OCR ignorado para esta página.');
-    return null;
-  }
+// ─── Detecção com índice de offsets (ABORDAGEM CORRIGIDA) ────────────────────
+//
+// Em vez de buscar strings nos itens depois do fato (frágil, falha quando
+// PDF.js divide "123.456." e "789-01" em itens separados), agora:
+// 1. textoPlano é construído rastreando charStart/charEnd de cada item
+// 2. O regex roda no textoPlano → encontra match em [matchStart, matchEnd]
+// 3. Buscamos todos os itens cujo [charStart, charEnd] se sobrepõe ao match
+// 4. Unimos os bboxes desses itens → bbox final correto mesmo com itens divididos
 
-  // Renderizar página em canvas para OCR
-  const viewport = page.getViewport({ scale: 2.0 });
-  const canvas = document.createElement('canvas');
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  const ctx = canvas.getContext('2d');
-  await page.render({ canvasContext: ctx, viewport }).promise;
+function bboxDoMatch(matchStart, matchEnd, indice) {
+  const itensMatch = indice.filter(item =>
+    item.charEnd > matchStart && item.charStart < matchEnd
+  );
+  if (itensMatch.length === 0) return null;
 
-  try {
-    const resultado = await Tesseract.recognize(canvas, 'por', {
-      logger: () => {},
-      workerPath: 'assets/js/tesseract/worker.min.js',
-      langPath: 'assets/lang/',
-      corePath: 'assets/js/tesseract/tesseract-core.wasm.js',
-    });
+  const x = Math.min(...itensMatch.map(i => i.x));
+  const y = Math.min(...itensMatch.map(i => i.y));
+  const xMax = Math.max(...itensMatch.map(i => i.x + i.largura));
+  const yMax = Math.max(...itensMatch.map(i => i.y + i.altura));
 
-    const palavras = [];
-    resultado.data.words.forEach(word => {
-      if (word.text.trim()) {
-        palavras.push({ text: word.text, bbox: word.bbox, confidence: word.confidence });
-      }
-    });
-
-    return { palavras, textoCompleto: resultado.data.text };
-  } catch (err) {
-    console.warn('Erro no OCR:', err);
-    return null;
-  }
+  // Pequena folga para garantir cobertura total (OCR tem imprecisão)
+  const PAD = 2;
+  return { x: x - PAD, y: y - PAD, largura: (xMax - x) + PAD * 2, altura: (yMax - y) + PAD * 2 };
 }
 
-// ─── Detecção de padrões automáticos ─────────────────────────────────────────
-function detectarPadroesAutomaticos(pagina, texto, itens, marcacoes) {
+function detectarPadroesAutomaticos(pagina, texto, indice, marcacoes) {
   REGRAS.forEach(regra => {
     if (!App.regrasAtivas.has(regra.id)) return;
 
-    // Reset lastIndex
-    regra.regex.lastIndex = 0;
+    const re = new RegExp(regra.regex.source, regra.regex.flags);
     let match;
-    const regraClone = new RegExp(regra.regex.source, regra.regex.flags);
-
-    while ((match = regraClone.exec(texto)) !== null) {
+    while ((match = re.exec(texto)) !== null) {
       const textoMatch = match[0];
       if (regra.filtro && !regra.filtro(textoMatch)) continue;
 
-      // Localizar posição nos itens
-      const bboxs = encontrarPosicaoTexto(textoMatch, itens);
-      if (bboxs.length === 0) continue;
+      const matchStart = match.index;
+      const matchEnd = match.index + textoMatch.length;
+      const bbox = bboxDoMatch(matchStart, matchEnd, indice);
+      if (!bbox) continue;
 
-      bboxs.forEach(bbox => {
-        const id = gerarId();
-        marcacoes.push({
-          id,
-          pagina,
-          texto: textoMatch,
-          bbox,
-          origem: `Regra automática: ${regra.nome}`,
-          tipo: regra.tratamento,
-          estado: 'incluido',
-          fonteRegra: regra.id,
-          prioridade: regra.ativa ? 'normal' : 'baixa',
-        });
+      marcacoes.push({
+        id: gerarId(),
+        pagina,
+        texto: textoMatch,
+        bbox,
+        origem: `Regra automática: ${regra.nome}`,
+        tipo: regra.tratamento,
+        estado: 'incluido',
+        fonteRegra: regra.id,
       });
     }
   });
 }
 
-// ─── Detecção de termos cadastrados ──────────────────────────────────────────
-function detectarTermosCadastrados(pagina, texto, itens, marcacoes) {
+function detectarTermosCadastrados(pagina, texto, indice, marcacoes) {
   App.termos.forEach(termo => {
     if (termo.tratamento === 'manter') return;
 
@@ -495,218 +447,148 @@ function detectarTermosCadastrados(pagina, texto, itens, marcacoes) {
     const textoNorm = normalizarTexto(texto);
 
     let idx = 0;
-    while (true) {
+    while (idx < textoNorm.length) {
       const pos = textoNorm.indexOf(termoNorm, idx);
       if (pos === -1) break;
 
-      // Verificar se é palavra exata (se solicitado)
       if (termo.buscaExata) {
         const antes = pos > 0 ? textoNorm[pos - 1] : ' ';
         const depois = pos + termoNorm.length < textoNorm.length ? textoNorm[pos + termoNorm.length] : ' ';
-        if (/\w/.test(antes) || /\w/.test(depois)) {
+        if (/[a-z0-9àáâãäéêíóõôúçüñ]/i.test(antes) || /[a-z0-9àáâãäéêíóõôúçüñ]/i.test(depois)) {
           idx = pos + 1;
           continue;
         }
       }
 
-      const textoOriginal = texto.slice(pos, pos + termo.termo.length);
-      const bboxs = encontrarPosicaoTexto(textoOriginal, itens);
-
-      bboxs.forEach(bbox => {
+      const bbox = bboxDoMatch(pos, pos + termoNorm.length, indice);
+      if (bbox) {
         marcacoes.push({
           id: gerarId(),
           pagina,
-          texto: textoOriginal || termo.termo,
+          texto: texto.slice(pos, pos + termo.termo.length) || termo.termo,
           bbox,
           origem: `Termo cadastrado: ${nomeExibicaoPapel(termo.papel)} — ${termo.termo}`,
           tipo: termo.tratamento,
           estado: 'incluido',
           fonteTermo: termo,
         });
-      });
-
-      idx = pos + 1;
-    }
-  });
-}
-
-function encontrarPosicaoTexto(busca, itens) {
-  const resultados = [];
-  const buscaNorm = normalizarTexto(busca);
-
-  // Tentar match direto em itens individuais
-  itens.forEach(item => {
-    if (normalizarTexto(item.texto).includes(buscaNorm)) {
-      resultados.push({ x: item.x, y: item.y, largura: item.largura, altura: item.altura });
-    }
-  });
-
-  // Se não encontrou, tentar match em janela deslizante de itens consecutivos
-  if (resultados.length === 0 && itens.length > 1) {
-    for (let i = 0; i < itens.length - 1; i++) {
-      let textoJanela = '';
-      let j = i;
-      while (j < itens.length && textoJanela.length < busca.length * 2) {
-        textoJanela += itens[j].texto + ' ';
-        if (normalizarTexto(textoJanela).includes(buscaNorm)) {
-          const xMin = Math.min(...itens.slice(i, j + 1).map(t => t.x));
-          const yMin = Math.min(...itens.slice(i, j + 1).map(t => t.y));
-          const xMax = Math.max(...itens.slice(i, j + 1).map(t => t.x + t.largura));
-          const yMax = Math.max(...itens.slice(i, j + 1).map(t => t.y + t.altura));
-          resultados.push({
-            x: xMin, y: yMin,
-            largura: xMax - xMin,
-            altura: yMax - yMin,
-          });
-          break;
-        }
-        j++;
       }
-      if (resultados.length > 0) break;
+      idx = pos + termoNorm.length;
     }
-  }
-
-  return resultados;
+  });
 }
 
 // ─── Alerta de identificação indireta ────────────────────────────────────────
 function verificarIdentificacaoIndireta() {
   const alertas = [];
-
   App.textoPorPagina.forEach((dados, pagina) => {
     const texto = dados.textoPlano;
-    let contadorIndiretos = 0;
-    const encontrados = [];
-
-    IDENTIFICADORES_INDIRETOS.forEach(re => {
-      if (re.test(texto)) {
-        contadorIndiretos++;
-        encontrados.push(re.source.split('\\b').join('').replace(/[^a-záàãâéêíóõôúç\s]/gi, ''));
-      }
-    });
-
-    if (contadorIndiretos >= 3) {
+    const encontrados = IDENTIFICADORES_INDIRETOS.filter(re => re.test(texto));
+    if (encontrados.length >= 3) {
       const marcacoesPagina = App.marcacoesPorPagina.get(pagina) || [];
       const temNomeMarcado = marcacoesPagina.some(m =>
         m.fonteTermo && ['vitima', 'testemunha', 'investigado'].includes(m.fonteTermo.papel) && m.estado === 'incluido'
       );
-
-      if (!temNomeMarcado) {
-        alertas.push({ pagina, identificadores: encontrados.slice(0, 4) });
-      }
+      if (!temNomeMarcado) alertas.push({ pagina });
     }
   });
 
   if (alertas.length > 0) {
-    App.alertasIdentificacaoIndireta = alertas;
     const container = document.getElementById('alertas-indiretos');
     if (container) {
       container.innerHTML = alertas.map(a => `
         <div class="alerta alerta-aviso">
           <span class="alerta-icone">⚠️</span>
-          <div>
-            <strong>Atenção — Página ${a.pagina}:</strong>
-            Identificadores indiretos detectados (${a.identificadores.join(', ')}).
-            Este trecho pode permitir identificação mesmo sem o nome explícito. Revise se o tarjamento é suficiente.
-          </div>
-        </div>
-      `).join('');
+          <div><strong>Atenção — Página ${a.pagina}:</strong>
+          Identificadores indiretos detectados que podem permitir identificação mesmo sem o nome explícito. Revise o tarjamento.</div>
+        </div>`).join('');
       container.classList.remove('hidden');
     }
   }
 }
 
 // ─── ETAPA 4: Revisão visual ──────────────────────────────────────────────────
-let canvasRenderTask = null;
+let renderTaskAtual = null;
 
 async function inicializarRevisao() {
   App.paginaAtual = 1;
-
-  // Copiar alertas de identificação indireta para etapa 4
   const alertasEt3 = document.getElementById('alertas-indiretos');
   const alertasEt4 = document.getElementById('alertas-indiretos-revisao');
-  if (alertasEt3 && alertasEt4 && alertasEt3.innerHTML) {
+  if (alertasEt3 && alertasEt4 && alertasEt3.innerHTML.trim()) {
     alertasEt4.innerHTML = alertasEt3.innerHTML;
     alertasEt4.classList.remove('hidden');
   }
-
   await renderizarPaginaRevisao(1);
   atualizarPainelMarcacoes();
   configurarSelecaoManual();
 }
 
 async function renderizarPaginaRevisao(numPagina) {
-  if (canvasRenderTask) {
-    canvasRenderTask.cancel();
-    canvasRenderTask = null;
-  }
+  if (renderTaskAtual) { try { renderTaskAtual.cancel(); } catch (e) {} renderTaskAtual = null; }
 
   const page = await App.pdfDoc.getPage(numPagina);
-  const canvas = document.getElementById('canvas-pdf');
-  const ctx = canvas.getContext('2d');
+  const canvasPdf = document.getElementById('canvas-pdf');
+  const overlayCanvas = document.getElementById('overlay-marcacoes');
+  const ctxPdf = canvasPdf.getContext('2d');
 
   const viewport = page.getViewport({ scale: App.escala });
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
+  canvasPdf.width = viewport.width;
+  canvasPdf.height = viewport.height;
+  overlayCanvas.width = viewport.width;
+  overlayCanvas.height = viewport.height;
+  overlayCanvas.style.width = canvasPdf.style.width;
+  overlayCanvas.style.height = canvasPdf.style.height;
 
-  const overlay = document.getElementById('overlay-marcacoes');
-  overlay.width = viewport.width;
-  overlay.height = viewport.height;
-
-  canvasRenderTask = page.render({ canvasContext: ctx, viewport });
-  await canvasRenderTask.promise;
-  canvasRenderTask = null;
-
-  // Guardar escala atual para conversão de coordenadas
   App.escalaAtual = App.escala;
   App.viewportAtual = viewport;
 
-  desenharMarcacoesOverlay(numPagina, viewport);
+  ctxPdf.fillStyle = '#fff';
+  ctxPdf.fillRect(0, 0, canvasPdf.width, canvasPdf.height);
+
+  renderTaskAtual = page.render({ canvasContext: ctxPdf, viewport });
+  await renderTaskAtual.promise;
+  renderTaskAtual = null;
+
+  desenharMarcacoesOverlay(numPagina);
   atualizarNavPaginas();
 }
 
-function desenharMarcacoesOverlay(numPagina, viewport) {
+function desenharMarcacoesOverlay(numPagina) {
   const overlay = document.getElementById('overlay-marcacoes');
   const ctx = overlay.getContext('2d');
   ctx.clearRect(0, 0, overlay.width, overlay.height);
 
   const marcacoes = App.marcacoesPorPagina.get(numPagina) || [];
-
   marcacoes.forEach(m => {
     if (m.estado !== 'incluido') return;
-    const { x, y, largura, altura } = escalarBbox(m.bbox, viewport);
+    // As bbox estão em coordenadas de escala 1.0; multiplicamos pela escala atual
+    const x = m.bbox.x * App.escalaAtual;
+    const y = m.bbox.y * App.escalaAtual;
+    const w = m.bbox.largura * App.escalaAtual;
+    const h = m.bbox.altura * App.escalaAtual;
 
     if (m.tipo === 'tarjar') {
-      ctx.fillStyle = 'rgba(220, 38, 38, 0.35)';
+      ctx.fillStyle = 'rgba(220, 38, 38, 0.38)';
       ctx.strokeStyle = '#dc2626';
     } else if (m.tipo === 'descaracterizar') {
-      ctx.fillStyle = 'rgba(217, 119, 6, 0.35)';
+      ctx.fillStyle = 'rgba(217, 119, 6, 0.38)';
       ctx.strokeStyle = '#d97706';
     } else {
-      return; // manter
+      return;
     }
-
-    ctx.fillRect(x, y, largura, altura);
+    ctx.fillRect(x, y, w, h);
     ctx.lineWidth = 1.5;
-    ctx.strokeRect(x, y, largura, altura);
+    ctx.strokeRect(x, y, w, h);
   });
-}
-
-function escalarBbox(bbox, viewport) {
-  // As coordenadas dos itens já estão no espaço do viewport com escala 1.0
-  // Precisamos multiplicar pela escala atual
-  const fatorEscala = viewport.scale;
-  return {
-    x: bbox.x * fatorEscala,
-    y: bbox.y * fatorEscala,
-    largura: bbox.largura * fatorEscala,
-    altura: bbox.altura * fatorEscala,
-  };
 }
 
 function atualizarPainelMarcacoes() {
   const lista = document.getElementById('lista-marcacoes-painel');
   const marcacoes = App.marcacoesPorPagina.get(App.paginaAtual) || [];
+  const contEl = document.getElementById('contador-marcacoes-painel');
+
+  const incluidas = marcacoes.filter(m => m.estado === 'incluido').length;
+  if (contEl) contEl.textContent = `${incluidas} / ${marcacoes.length}`;
 
   if (marcacoes.length === 0) {
     lista.innerHTML = '<p style="color:#6b7280;padding:12px;font-size:12px;text-align:center">Nenhuma marcação nesta página</p>';
@@ -715,7 +597,6 @@ function atualizarPainelMarcacoes() {
 
   lista.innerHTML = marcacoes.map(m => {
     const removida = m.estado !== 'incluido';
-    const tipoLabel = m.tipo === 'tarjar' ? 'Tarjar' : m.tipo === 'descaracterizar' ? 'Descaracterizar' : 'Manter';
     return `
       <div class="item-marcacao ${removida ? 'removida' : ''}" id="marcacao-${m.id}">
         <div class="texto-marcacao">${escapeHtml(m.texto)}</div>
@@ -733,39 +614,23 @@ function atualizarPainelMarcacoes() {
               onclick="restaurarMarcacao('${m.id}')">↺ Restaurar</button>
           `}
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
 function alterarTipoMarcacao(id, novoTipo) {
-  const marcacoes = App.marcacoesPorPagina.get(App.paginaAtual) || [];
-  const m = marcacoes.find(x => x.id === id);
-  if (m) {
-    m.tipo = novoTipo;
-    desenharMarcacoesOverlay(App.paginaAtual, App.viewportAtual);
-    atualizarPainelMarcacoes();
-  }
+  const m = (App.marcacoesPorPagina.get(App.paginaAtual) || []).find(x => x.id === id);
+  if (m) { m.tipo = novoTipo; desenharMarcacoesOverlay(App.paginaAtual); atualizarPainelMarcacoes(); }
 }
 
 function removerMarcacao(id) {
-  const marcacoes = App.marcacoesPorPagina.get(App.paginaAtual) || [];
-  const m = marcacoes.find(x => x.id === id);
-  if (m) {
-    m.estado = 'removido';
-    desenharMarcacoesOverlay(App.paginaAtual, App.viewportAtual);
-    atualizarPainelMarcacoes();
-  }
+  const m = (App.marcacoesPorPagina.get(App.paginaAtual) || []).find(x => x.id === id);
+  if (m) { m.estado = 'removido'; desenharMarcacoesOverlay(App.paginaAtual); atualizarPainelMarcacoes(); }
 }
 
 function restaurarMarcacao(id) {
-  const marcacoes = App.marcacoesPorPagina.get(App.paginaAtual) || [];
-  const m = marcacoes.find(x => x.id === id);
-  if (m) {
-    m.estado = 'incluido';
-    desenharMarcacoesOverlay(App.paginaAtual, App.viewportAtual);
-    atualizarPainelMarcacoes();
-  }
+  const m = (App.marcacoesPorPagina.get(App.paginaAtual) || []).find(x => x.id === id);
+  if (m) { m.estado = 'incluido'; desenharMarcacoesOverlay(App.paginaAtual); atualizarPainelMarcacoes(); }
 }
 
 function atualizarNavPaginas() {
@@ -779,220 +644,183 @@ function atualizarNavPaginas() {
 function configurarSelecaoManual() {
   const canvas = document.getElementById('canvas-pdf');
   const painelCanvas = document.getElementById('painel-canvas');
-  let selRect = null;
   let arrastando = false;
   let inicio = { x: 0, y: 0 };
+  let selRect = null;
 
   canvas.addEventListener('mousedown', e => {
     if (!App.modoSelecao) return;
     arrastando = true;
     const rect = canvas.getBoundingClientRect();
-    inicio = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-
-    selRect = document.getElementById('selecao-manual-rect');
-    if (!selRect) {
-      selRect = document.createElement('div');
-      selRect.id = 'selecao-manual-rect';
-      painelCanvas.appendChild(selRect);
-    }
-    selRect.style.left = inicio.x + 'px';
-    selRect.style.top = inicio.y + 'px';
-    selRect.style.width = '0';
-    selRect.style.height = '0';
-    selRect.style.display = 'block';
+    const scaleX = canvas.width / rect.width;
+    inicio = { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleX };
+    selRect = document.getElementById('selecao-manual-rect') || document.createElement('div');
+    selRect.id = 'selecao-manual-rect';
+    painelCanvas.appendChild(selRect);
+    selRect.style.cssText = `position:absolute;border:2px solid #2563eb;background:rgba(37,99,235,0.12);display:block;pointer-events:none;left:${e.clientX - rect.left + painelCanvas.scrollLeft}px;top:${e.clientY - rect.top}px;width:0;height:0`;
   });
 
   canvas.addEventListener('mousemove', e => {
-    if (!arrastando || !App.modoSelecao) return;
+    if (!arrastando || !selRect) return;
     const rect = canvas.getBoundingClientRect();
-    const atual = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    const x = Math.min(inicio.x, atual.x);
-    const y = Math.min(inicio.y, atual.y);
-    const w = Math.abs(atual.x - inicio.x);
-    const h = Math.abs(atual.y - inicio.y);
-    selRect.style.left = x + 'px';
-    selRect.style.top = y + 'px';
-    selRect.style.width = w + 'px';
-    selRect.style.height = h + 'px';
+    const cx = e.clientX - rect.left;
+    const cy = e.clientY - rect.top;
+    const x0 = Math.min(inicio.x / (canvas.width / rect.width), cx);
+    const y0 = Math.min(inicio.y / (canvas.width / rect.width), cy);
+    selRect.style.left = x0 + 'px';
+    selRect.style.top = y0 + 'px';
+    selRect.style.width = Math.abs(cx - inicio.x / (canvas.width / rect.width)) + 'px';
+    selRect.style.height = Math.abs(cy - inicio.y / (canvas.width / rect.width)) + 'px';
   });
 
   canvas.addEventListener('mouseup', e => {
-    if (!arrastando || !App.modoSelecao) return;
+    if (!arrastando) return;
     arrastando = false;
+    if (selRect) selRect.style.display = 'none';
 
     const rect = canvas.getBoundingClientRect();
-    const fim = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    const x = Math.min(inicio.x, fim.x);
-    const y = Math.min(inicio.y, fim.y);
+    const scaleX = canvas.width / rect.width;
+    const fim = { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleX };
     const w = Math.abs(fim.x - inicio.x);
     const h = Math.abs(fim.y - inicio.y);
+    if (w < 5 || h < 5) return;
 
-    if (selRect) { selRect.style.display = 'none'; }
-
-    if (w < 5 || h < 5) return; // seleção muito pequena
-
-    // Converter coordenadas canvas → PDF (sem escala)
-    const fator = 1 / App.escala;
+    // Converter de coordenadas canvas (escala atual) para coordenadas bbox (escala 1.0)
     const bboxPdf = {
-      x: x * fator, y: y * fator,
-      largura: w * fator, altura: h * fator,
+      x: Math.min(inicio.x, fim.x) / App.escalaAtual,
+      y: Math.min(inicio.y, fim.y) / App.escalaAtual,
+      largura: w / App.escalaAtual,
+      altura: h / App.escalaAtual,
     };
-
     adicionarMarcacaoManual(bboxPdf);
   });
 }
 
 function adicionarMarcacaoManual(bbox) {
-  const tipo = prompt('Tipo de marcação:\n1 — Tarjar (bloco preto)\n2 — Descaracterizar (máscara parcial)\nDigite 1 ou 2:');
-  const tipoMap = { '1': 'tarjar', '2': 'descaracterizar' };
-  const tipoSelecionado = tipoMap[tipo] || 'tarjar';
-
+  const tipo = confirm('Clique OK para TARJAR (bloco preto)\nClique Cancelar para DESCARACTERIZAR (máscara parcial)') ? 'tarjar' : 'descaracterizar';
   const marcacoes = App.marcacoesPorPagina.get(App.paginaAtual) || [];
   marcacoes.push({
-    id: gerarId(),
-    pagina: App.paginaAtual,
-    texto: '[Seleção manual]',
-    bbox,
-    origem: 'Marcação manual do usuário',
-    tipo: tipoSelecionado,
-    estado: 'incluido',
+    id: gerarId(), pagina: App.paginaAtual, texto: '[Seleção manual]',
+    bbox, origem: 'Marcação manual', tipo, estado: 'incluido',
   });
   App.marcacoesPorPagina.set(App.paginaAtual, marcacoes);
-
-  desenharMarcacoesOverlay(App.paginaAtual, App.viewportAtual);
+  desenharMarcacoesOverlay(App.paginaAtual);
   atualizarPainelMarcacoes();
-
   App.modoSelecao = false;
   document.getElementById('canvas-pdf').classList.remove('modo-selecao');
   document.getElementById('btn-selecao-manual').textContent = '✏️ Selecionar área';
-  ocultarInfoSelecao();
+  const info = document.getElementById('info-selecao');
+  if (info) info.style.display = 'none';
 }
 
 // ─── ETAPA 5: Geração do PDF final ────────────────────────────────────────────
 async function gerarPDFFinal() {
-  if (typeof jspdf === 'undefined' && typeof window.jspdf === 'undefined') {
-    mostrarAlerta('erro', 'Biblioteca jsPDF não carregada. Verifique se o arquivo assets/js/jspdf.min.js está presente.');
+  const jsPDFLib = window.jspdf;
+  if (!jsPDFLib) {
+    mostrarAlerta('erro', 'jsPDF não carregado. Verifique sua conexão e recarregue a página.');
     return;
   }
+  const { jsPDF } = jsPDFLib;
 
-  const { jsPDF } = window.jspdf || jspdf;
-
-  exibirCarregando(true, 'Gerando PDF final...');
-  atualizarProgresso(0, 'Preparando geração do PDF final...');
   document.getElementById('barra-progresso-container').style.display = 'block';
+  atualizarProgresso(0, 'Preparando PDF final...');
+
+  const DPI = 150;
+  const ESCALA_FINAL = DPI / 72;
 
   try {
-    const doc = new jsPDF({ unit: 'pt', compress: true });
-    let primeiraPagina = true;
+    const doc = new jsPDF({ unit: 'pt', compress: true, hotfixes: ['px_scaling'] });
+    let primeira = true;
 
     for (let p = 1; p <= App.totalPaginas; p++) {
       atualizarProgresso(
-        Math.round((p / App.totalPaginas) * 100),
+        Math.round((p / App.totalPaginas) * 95),
         `Rasterizando página ${p} de ${App.totalPaginas}...`
       );
 
       const page = await App.pdfDoc.getPage(p);
-      const escalaFinal = 200 / 72; // ~200 DPI
-      const viewport = page.getViewport({ scale: escalaFinal });
+      const vp = page.getViewport({ scale: ESCALA_FINAL });
 
-      // Canvas de rasterização
-      const canvas = document.createElement('canvas');
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      const ctx = canvas.getContext('2d');
-
-      // Fundo branco
+      const cv = document.createElement('canvas');
+      cv.width = Math.round(vp.width);
+      cv.height = Math.round(vp.height);
+      const ctx = cv.getContext('2d');
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillRect(0, 0, cv.width, cv.height);
+      await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
-      // Renderizar PDF
-      await page.render({ canvasContext: ctx, viewport }).promise;
-
-      // Aplicar marcações
+      // Aplicar marcações no canvas (nível de pixel)
       const marcacoes = App.marcacoesPorPagina.get(p) || [];
       marcacoes.forEach(m => {
         if (m.estado !== 'incluido') return;
 
-        const fator = escalaFinal;
-        const x = m.bbox.x * fator;
-        const y = m.bbox.y * fator;
-        const w = m.bbox.largura * fator;
-        const h = m.bbox.altura * fator;
+        // bbox está em escala 1.0 → multiplicar por ESCALA_FINAL para canvas final
+        const x = Math.floor(m.bbox.x * ESCALA_FINAL);
+        const y = Math.floor(m.bbox.y * ESCALA_FINAL);
+        const w = Math.ceil(m.bbox.largura * ESCALA_FINAL);
+        const h = Math.ceil(m.bbox.altura * ESCALA_FINAL);
 
         if (m.tipo === 'tarjar') {
-          // Bloco preto sólido
           ctx.fillStyle = '#000000';
           ctx.fillRect(x, y, w, h);
         } else if (m.tipo === 'descaracterizar') {
-          // CPF: manter dígitos 4-9, ocultar 1-3 e 10-11
           if (m.fonteRegra === 'cpf') {
-            aplicarDescaracterizacaoCPF(ctx, m, fator);
+            aplicarDescaracterizacaoCPF(ctx, x, y, w, h);
           } else {
-            // Genérico: cobrir 70% da área da esquerda
+            // Genérico: cobrir 30% inicial + 20% final
             ctx.fillStyle = '#000000';
-            ctx.fillRect(x, y, w * 0.35, h);
-            ctx.fillRect(x + w * 0.7, y, w * 0.3, h);
+            ctx.fillRect(x, y, Math.ceil(w * 0.30), h);
+            ctx.fillRect(x + Math.floor(w * 0.80), y, Math.ceil(w * 0.20), h);
           }
         }
       });
 
-      // Converter canvas para imagem
-      const imgData = canvas.toDataURL('image/jpeg', 0.92);
+      // Tamanho da página em pontos para o jsPDF
+      const largPt = vp.width / ESCALA_FINAL;
+      const altPt = vp.height / ESCALA_FINAL;
 
-      // Dimensões em pontos (pt) para o PDF
-      const largPt = (canvas.width / escalaFinal) * (72 / 96) * (96 / 72);
-      const altPt = (canvas.height / escalaFinal) * (72 / 96) * (96 / 72);
-
-      // Calcular tamanho de página em pontos
-      const largPdf = viewport.width / escalaFinal * (72 / 72);
-      const altPdf = viewport.height / escalaFinal * (72 / 72);
-
-      if (!primeiraPagina) {
-        doc.addPage([largPdf, altPdf]);
+      if (!primeira) {
+        doc.addPage([largPt, altPt]);
       } else {
-        doc.internal.pageSize.width = largPdf;
-        doc.internal.pageSize.height = altPdf;
-        primeiraPagina = false;
+        // Ajustar primeira página
+        doc.internal.pageSize.width = largPt;
+        doc.internal.pageSize.height = altPt;
+        primeira = false;
       }
 
-      doc.addImage(imgData, 'JPEG', 0, 0, largPdf, altPdf);
+      const imgData = cv.toDataURL('image/jpeg', 0.90);
+      doc.addImage(imgData, 'JPEG', 0, 0, largPt, altPt, undefined, 'FAST');
     }
 
+    atualizarProgresso(100, 'Gerando download...');
     const nomeBase = App.pdfNome.replace(/\.pdf$/i, '');
-    const nomeArquivo = `${nomeBase}_tarjado.pdf`;
-    doc.save(nomeArquivo);
-
-    document.getElementById('nome-arquivo-gerado').textContent = nomeArquivo;
+    doc.save(`${nomeBase}_tarjado.pdf`);
+    document.getElementById('nome-arquivo-gerado').textContent = `${nomeBase}_tarjado.pdf`;
     document.getElementById('barra-progresso-container').style.display = 'none';
     avancarEtapa(5);
   } catch (err) {
+    console.error('Erro na geração:', err);
     mostrarAlerta('erro', 'Erro ao gerar PDF: ' + err.message);
-    console.error(err);
-  } finally {
-    exibirCarregando(false);
     document.getElementById('barra-progresso-container').style.display = 'none';
   }
 }
 
-function aplicarDescaracterizacaoCPF(ctx, marcacao, fator) {
-  const x = marcacao.bbox.x * fator;
-  const y = marcacao.bbox.y * fator;
-  const w = marcacao.bbox.largura * fator;
-  const h = marcacao.bbox.altura * fator;
+function aplicarDescaracterizacaoCPF(ctx, x, y, w, h) {
+  // Formato CPF: AAA.BBB.CCC-DD → ocultar AAA e DD, manter BBB.CCC
+  // Aproximação por posição proporcional
+  const fsBold = Math.max(8, Math.min(h * 0.85, 13));
 
-  // CPF: ***.456.789-** → ocultar primeiros 3 dígitos e últimos 2
-  // Aproximação: ocultar ~27% inicial e ~18% final
+  // Cobrir primeiros ~27% (3 dígitos) e últimos ~18% (2 dígitos)
   ctx.fillStyle = '#000000';
-  ctx.fillRect(x, y, w * 0.27, h);
-  ctx.fillRect(x + w * 0.82, y, w * 0.18, h);
+  ctx.fillRect(x, y, Math.ceil(w * 0.28), h);
+  ctx.fillRect(x + Math.floor(w * 0.82), y, Math.ceil(w * 0.18), h);
 
-  // Desenhar asteriscos sobre as áreas ocultas
+  // Escrever asteriscos brancos sobre as faixas pretas
   ctx.fillStyle = '#ffffff';
-  const fontSize = Math.min(h * 0.9, 11);
-  ctx.font = `bold ${fontSize}px monospace`;
+  ctx.font = `bold ${fsBold}px monospace`;
   ctx.textBaseline = 'middle';
   ctx.fillText('***', x + 1, y + h / 2);
-  ctx.fillText('**', x + w * 0.82 + 1, y + h / 2);
+  ctx.fillText('**', x + Math.floor(w * 0.82) + 1, y + h / 2);
 }
 
 // ─── Navegação entre etapas ───────────────────────────────────────────────────
@@ -1007,7 +835,6 @@ function configurarBotoesNavegacao() {
     await inicializarRevisao();
   });
   document.getElementById('btn-gerar-pdf').addEventListener('click', gerarPDFFinal);
-
   document.getElementById('btn-pagina-anterior').addEventListener('click', async () => {
     if (App.paginaAtual > 1) {
       App.paginaAtual--;
@@ -1015,7 +842,6 @@ function configurarBotoesNavegacao() {
       atualizarPainelMarcacoes();
     }
   });
-
   document.getElementById('btn-proxima-pagina').addEventListener('click', async () => {
     if (App.paginaAtual < App.totalPaginas) {
       App.paginaAtual++;
@@ -1023,94 +849,72 @@ function configurarBotoesNavegacao() {
       atualizarPainelMarcacoes();
     }
   });
-
   document.getElementById('btn-selecao-manual').addEventListener('click', () => {
     App.modoSelecao = !App.modoSelecao;
     const canvas = document.getElementById('canvas-pdf');
     const btn = document.getElementById('btn-selecao-manual');
+    const info = document.getElementById('info-selecao') || (() => {
+      const el = document.createElement('div');
+      el.id = 'info-selecao';
+      document.body.appendChild(el);
+      return el;
+    })();
     if (App.modoSelecao) {
       canvas.classList.add('modo-selecao');
       btn.textContent = '✕ Cancelar seleção';
-      exibirInfoSelecao();
+      info.textContent = 'Clique e arraste para selecionar a área a tarjar';
+      info.style.display = 'block';
     } else {
       canvas.classList.remove('modo-selecao');
       btn.textContent = '✏️ Selecionar área';
-      ocultarInfoSelecao();
+      info.style.display = 'none';
     }
   });
-
   document.getElementById('btn-novo-documento').addEventListener('click', () => {
-    if (confirm('Iniciar novo processamento? O trabalho atual será perdido.')) {
-      location.reload();
-    }
+    if (confirm('Iniciar novo processamento? O trabalho atual será perdido.')) location.reload();
   });
 }
 
 function avancarEtapa(num) {
-  // Marcar etapa anterior como concluída
-  const etapaAnterior = document.querySelector(`.step[data-step="${App.etapaAtual}"]`);
-  if (etapaAnterior) {
-    etapaAnterior.classList.remove('ativa');
-    etapaAnterior.classList.add('concluida');
-  }
-
+  const anterior = document.querySelector(`.step[data-step="${App.etapaAtual}"]`);
+  if (anterior) { anterior.classList.remove('ativa'); anterior.classList.add('concluida'); }
   App.etapaAtual = num;
-
-  // Ativar nova etapa
-  document.querySelectorAll('.step').forEach(s => {
-    s.classList.remove('ativa');
-  });
-  const novaStep = document.querySelector(`.step[data-step="${num}"]`);
-  if (novaStep) novaStep.classList.add('ativa');
-
-  // Mostrar/ocultar seções
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('ativa'));
+  const nova = document.querySelector(`.step[data-step="${num}"]`);
+  if (nova) nova.classList.add('ativa');
   document.querySelectorAll('.etapa-secao').forEach(s => s.classList.add('hidden'));
   const secao = document.getElementById(`etapa-${num}`);
   if (secao) secao.classList.remove('hidden');
-
   window.scrollTo(0, 0);
 }
 
-// ─── Renderizar lista de regras (Etapa 2) ────────────────────────────────────
+// ─── Lista de regras (Etapa 2) ────────────────────────────────────────────────
 function renderizarListaRegras() {
   const lista = document.getElementById('lista-regras-auto');
   if (!lista) return;
-
   lista.innerHTML = REGRAS.map(r => `
     <div class="item-regra">
       <input type="checkbox" id="regra-${r.id}" ${r.ativa ? 'checked' : ''}
         onchange="toggleRegra('${r.id}', this.checked)">
       <label for="regra-${r.id}" class="nome-regra">${r.nome}</label>
-      <span class="tag-tratamento ${r.tratamento === 'tarjar' ? 'tag-tarjar' : r.tratamento === 'descaracterizar' ? 'tag-descaracterizar' : 'tag-manter'}">
-        ${r.tratamento === 'descaracterizar' ? 'Descarac.' : r.tratamento === 'tarjar' ? 'Tarjar' : 'Manter'}
+      <span class="tag-tratamento ${r.tratamento === 'tarjar' ? 'tag-tarjar' : 'tag-descaracterizar'}">
+        ${r.tratamento === 'descaracterizar' ? 'Descarac.' : 'Tarjar'}
       </span>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
 function toggleRegra(id, ativo) {
-  if (ativo) App.regrasAtivas.add(id);
-  else App.regrasAtivas.delete(id);
+  if (ativo) App.regrasAtivas.add(id); else App.regrasAtivas.delete(id);
 }
 
 // ─── Utilitários ─────────────────────────────────────────────────────────────
 function normalizarTexto(texto) {
-  return texto
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '');
+  return texto.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 }
 
 function nomeExibicaoPapel(papel) {
-  const mapa = {
-    investigado: 'Investigado',
-    vitima: 'Vítima',
-    testemunha: 'Testemunha',
-    denunciante: 'Denunciante',
-    terceiro: 'Terceiro',
-    livre: 'Termo livre',
-  };
-  return mapa[papel] || papel;
+  return { investigado: 'Investigado', vitima: 'Vítima', testemunha: 'Testemunha',
+           denunciante: 'Denunciante', terceiro: 'Terceiro', livre: 'Termo livre' }[papel] || papel;
 }
 
 function gerarId() {
@@ -1124,22 +928,14 @@ function formatarTamanho(bytes) {
 }
 
 function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function exibirCarregando(ativo, msg = '') {
   const el = document.getElementById('indicador-carregando');
   if (!el) return;
-  if (ativo) {
-    el.textContent = msg;
-    el.classList.remove('hidden');
-  } else {
-    el.classList.add('hidden');
-  }
+  el.textContent = msg;
+  el.classList.toggle('hidden', !ativo);
 }
 
 function atualizarProgresso(pct, label) {
@@ -1152,24 +948,9 @@ function atualizarProgresso(pct, label) {
 function mostrarAlerta(tipo, msg) {
   const el = document.getElementById('alerta-global');
   if (!el) { alert(msg); return; }
+  const icones = { erro: '❌', aviso: '⚠️', info: 'ℹ️', sucesso: '✅' };
   el.className = `alerta alerta-${tipo}`;
-  el.innerHTML = `<span class="alerta-icone">${tipo === 'erro' ? '❌' : tipo === 'aviso' ? '⚠️' : 'ℹ️'}</span><div>${escapeHtml(msg)}</div>`;
+  el.innerHTML = `<span class="alerta-icone">${icones[tipo] || 'ℹ️'}</span><div>${msg}</div>`;
   el.classList.remove('hidden');
-  setTimeout(() => el.classList.add('hidden'), 8000);
-}
-
-function exibirInfoSelecao() {
-  let el = document.getElementById('info-selecao');
-  if (!el) {
-    el = document.createElement('div');
-    el.id = 'info-selecao';
-    document.body.appendChild(el);
-  }
-  el.textContent = 'Clique e arraste para selecionar uma área a tarjar';
-  el.style.display = 'block';
-}
-
-function ocultarInfoSelecao() {
-  const el = document.getElementById('info-selecao');
-  if (el) el.style.display = 'none';
+  setTimeout(() => el.classList.add('hidden'), 10000);
 }
