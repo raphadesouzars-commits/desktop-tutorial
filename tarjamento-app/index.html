@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjamento Coger — Corregedoria RFB</title>
+  <meta name="description" content="Ferramenta de tarjamento automático de documentos PDF — Corregedoria da Receita Federal do Brasil">
+  <!-- Sem recursos externos: todas as bibliotecas são locais -->
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- Aviso de privacidade fixo -->
+<div id="aviso-privacidade">
+  🔒 Este arquivo nunca sai do seu computador. Nenhuma informação é enviada pela internet.
+  Ao fechar esta aba, o trabalho não salvo será perdido.
+</div>
+
+<!-- Cabeçalho -->
+<header>
+  <div class="titulo">
+    <h1>Tarjamento Coger</h1>
+    <span>Ferramenta de Tarjamento Automático de Documentos PDF — Corregedoria da Receita Federal do Brasil</span>
+  </div>
+</header>
+
+<!-- Indicador de etapas -->
+<nav id="steps-bar" role="navigation" aria-label="Etapas do processamento">
+  <div class="step ativa" data-step="1">
+    <span class="num">1</span> Upload
+  </div>
+  <div class="step" data-step="2">
+    <span class="num">2</span> Identificação
+  </div>
+  <div class="step" data-step="3">
+    <span class="num">3</span> Processamento
+  </div>
+  <div class="step" data-step="4">
+    <span class="num">4</span> Revisão
+  </div>
+  <div class="step" data-step="5">
+    <span class="num">5</span> Download
+  </div>
+</nav>
+
+<!-- Alerta global -->
+<div id="conteudo-principal">
+  <div id="alerta-global" class="alerta hidden" role="alert"></div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 1 — Upload do PDF
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-1" class="etapa-secao">
+    <div class="card">
+      <h2>📄 1. Upload do Documento PDF</h2>
+
+      <div id="area-upload" role="button" tabindex="0" aria-label="Clique ou arraste um arquivo PDF aqui"
+           onkeypress="if(event.key==='Enter'||event.key===' ')document.getElementById('input-arquivo').click()">
+        <div class="icone">📂</div>
+        <strong>Clique aqui ou arraste o arquivo PDF</strong>
+        <p>Apenas arquivos PDF. O documento será processado inteiramente no seu navegador.</p>
+      </div>
+      <input type="file" id="input-arquivo" accept="application/pdf" style="display:none" aria-hidden="true">
+
+      <div id="info-arquivo" role="status">
+        <span style="font-size:24px">✅</span>
+        <div>
+          <strong id="nome-arquivo"></strong><br>
+          <span style="font-size:12px;color:#6b7280">
+            <span id="paginas-arquivo"></span> &nbsp;|&nbsp; <span id="tamanho-arquivo"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="alerta alerta-info mt-16">
+        <span class="alerta-icone">ℹ️</span>
+        <div>
+          <strong>Privacidade total:</strong> O conteúdo do PDF é processado exclusivamente na memória do seu navegador.
+          Nenhuma informação é transmitida pela rede. Verificável em DevTools → Rede.
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:8px">
+      <button id="btn-avancar-etapa1" class="btn btn-primario" disabled>
+        Avançar → Identificação do Processo
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 2 — Identificação do processo e campos estruturados
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-2" class="etapa-secao hidden">
+
+    <!-- 2.1 Perguntas de contexto -->
+    <div class="card">
+      <h2>⚖️ 2.1 Contexto do Processo</h2>
+
+      <div class="secao-formulario">
+        <h3>O processo já foi julgado?</h3>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="julgado" value="nao" checked> Não / Em andamento
+          </label>
+          <label>
+            <input type="radio" name="julgado" value="sancionado"> Sim, com aplicação de sanção
+          </label>
+          <label>
+            <input type="radio" name="julgado" value="absolvido"> Sim, com absolvição
+          </label>
+        </div>
+      </div>
+
+      <div class="secao-formulario">
+        <h3>Este processo trata de assédio moral, sexual ou discriminação?</h3>
+        <div class="radio-group">
+          <label>
+            <input type="radio" name="assedio" value="nao" checked> Não
+          </label>
+          <label>
+            <input type="radio" name="assedio" value="sim"> Sim (ativa proteção máxima à vítima)
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2.2 Campos estruturados por papel -->
+    <div class="card">
+      <h2>👥 2.2 Pessoas e Termos a Tarjar</h2>
+      <p style="color:#6b7280;font-size:13px;margin-bottom:16px">
+        Cadastre os nomes e identificadores específicos do processo.
+        Cada campo já tem um tratamento padrão conforme as regras da Corregedoria.
+        Deixe em branco campos que não se aplicam.
+      </p>
+
+      <!-- Investigado/Acusado -->
+      <div class="grupo-papel" id="grupo-investigado">
+        <div class="grupo-papel-header">
+          <h4>🔍 Investigado / Acusado</h4>
+          <span id="tag-investigado" class="tag-tratamento tag-tarjar">Tarjar</span>
+        </div>
+        <p style="font-size:11px;color:#6b7280;margin-bottom:8px">
+          Tratamento depende do resultado do julgamento (seção 2.1). Se sancionado: manter nome. Se absolvido: tarjar.
+        </p>
+        <div id="lista-investigados" class="lista-termos"></div>
+        <button class="btn-adicionar" id="btn-add-investigado">+ Adicionar investigado</button>
+      </div>
+
+      <!-- Vítima -->
+      <div class="grupo-papel papel-vitima">
+        <div class="grupo-papel-header">
+          <h4>🛡️ Vítima</h4>
+          <span class="tag-tratamento tag-tarjar">Tarjar sempre</span>
+        </div>
+        <p style="font-size:11px;color:#6b7280;margin-bottom:8px">
+          Nome, matrícula e contatos da vítima são sempre tarjados, independente do resultado.
+        </p>
+        <div class="lista-termos" id="lista-vitimas"></div>
+        <button class="btn-adicionar" id="btn-add-vitima">+ Adicionar vítima / contato</button>
+      </div>
+
+      <!-- Testemunha -->
+      <div class="grupo-papel papel-testemunha">
+        <div class="grupo-papel-header">
+          <h4>👁️ Testemunha</h4>
+          <span class="tag-tratamento tag-tarjar">Tarjar (risco de retaliação)</span>
+        </div>
+        <div class="lista-termos" id="lista-testemunhas"></div>
+        <button class="btn-adicionar" id="btn-add-testemunha">+ Adicionar testemunha</button>
+      </div>
+
+      <!-- Denunciante -->
+      <div class="grupo-papel papel-denunciante">
+        <div class="grupo-papel-header">
+          <h4>📢 Denunciante</h4>
+          <span class="tag-tratamento tag-tarjar">Tarjar sempre (Decreto 10.153/2019)</span>
+        </div>
+        <div class="lista-termos" id="lista-denunciantes"></div>
+        <button class="btn-adicionar" id="btn-add-denunciante">+ Adicionar denunciante</button>
+      </div>
+
+      <!-- Terceiro -->
+      <div class="grupo-papel papel-terceiro">
+        <div class="grupo-papel-header">
+          <h4>👤 Terceiro Mencionado Incidentalmente</h4>
+          <span class="tag-tratamento tag-tarjar">Tarjar (princípio da necessidade)</span>
+        </div>
+        <div class="lista-termos" id="lista-terceiros"></div>
+        <button class="btn-adicionar" id="btn-add-terceiro">+ Adicionar terceiro</button>
+      </div>
+
+      <!-- Termos livres -->
+      <div class="grupo-papel papel-livre">
+        <div class="grupo-papel-header">
+          <h4>🔤 Outros Termos / Expressões Livres</h4>
+          <span class="tag-tratamento tag-tarjar">Tarjar</span>
+        </div>
+        <div class="lista-termos" id="lista-livres"></div>
+        <button class="btn-adicionar" id="btn-add-livre">+ Adicionar termo</button>
+      </div>
+    </div>
+
+    <!-- Regras automáticas -->
+    <div class="card">
+      <h2>🤖 Detecção Automática de Dados Pessoais</h2>
+      <p style="font-size:13px;color:#6b7280;margin-bottom:12px">
+        As regras abaixo serão aplicadas automaticamente sobre o texto do documento.
+        Desmarque as que não se aplicam ao seu caso.
+      </p>
+      <div id="lista-regras-auto" class="lista-regras"></div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-secundario" onclick="avancarEtapa(1)">← Voltar</button>
+      <button id="btn-avancar-etapa2" class="btn btn-primario">
+        Iniciar Processamento Automático →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 3 — Pré-processamento
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-3" class="etapa-secao hidden">
+    <div class="card">
+      <h2>⚙️ 3. Processamento Automático</h2>
+
+      <div id="barra-progresso-container">
+        <p class="progresso-label" id="progresso-label">Iniciando...</p>
+        <div class="barra-progresso">
+          <div class="barra-progresso-fill" id="barra-progresso-fill" style="width:0%"></div>
+        </div>
+      </div>
+
+      <div id="indicador-carregando" class="alerta alerta-info hidden" role="status">
+        ⏳ Aguarde...
+      </div>
+
+      <div id="resultados-processamento" class="hidden">
+        <div class="alerta alerta-sucesso">
+          <span class="alerta-icone">✅</span>
+          <div><strong>Processamento concluído!</strong> Revise as marcações antes de gerar o PDF final.</div>
+        </div>
+
+        <div class="estatisticas">
+          <div class="stat-item">
+            <span class="stat-numero" id="stat-paginas">0</span>
+            <span class="stat-label">Páginas processadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-numero" id="stat-marcacoes">0</span>
+            <span class="stat-label">Marcações encontradas</span>
+          </div>
+        </div>
+
+        <div id="alertas-indiretos" class="hidden mt-16"></div>
+
+        <div class="alerta alerta-aviso mt-16">
+          <span class="alerta-icone">⚠️</span>
+          <div>
+            <strong>Importante:</strong> A detecção automática é uma <em>ajuda</em>, não uma decisão final.
+            Na próxima etapa, revise todas as marcações antes de gerar o PDF definitivo.
+            Assinaturas manuscritas em imagens devem ser verificadas e marcadas manualmente.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="nav-etapa3" style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px;display:none">
+      <button id="btn-avancar-etapa3" class="btn btn-primario">
+        Avançar para Revisão →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 4 — Revisão Visual
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-4" class="etapa-secao hidden">
+
+    <!-- Alertas de identificação indireta (replicado aqui da etapa 3) -->
+    <div id="alertas-indiretos-revisao" class="hidden"></div>
+
+    <!-- Legenda -->
+    <div class="card" style="padding:12px 16px">
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:13px">
+        <strong>Legenda:</strong>
+        <span style="display:flex;align-items:center;gap:6px">
+          <span style="display:inline-block;width:20px;height:14px;background:rgba(220,38,38,0.35);border:1.5px solid #dc2626;"></span>
+          Tarjar (bloco preto)
+        </span>
+        <span style="display:flex;align-items:center;gap:6px">
+          <span style="display:inline-block;width:20px;height:14px;background:rgba(217,119,6,0.35);border:1.5px solid #d97706;"></span>
+          Descaracterizar (máscara parcial)
+        </span>
+        <div style="margin-left:auto;display:flex;gap:8px">
+          <button id="btn-selecao-manual" class="btn btn-secundario btn-pequeno">✏️ Selecionar área</button>
+          <button id="btn-gerar-pdf" class="btn btn-primario">
+            ✅ Concluir e Gerar PDF Final
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="container-revisao">
+      <!-- Canvas do PDF -->
+      <div id="painel-canvas" style="position:relative">
+        <canvas id="canvas-pdf" aria-label="Visualização do documento PDF"></canvas>
+        <canvas id="overlay-marcacoes" style="position:absolute;top:0;left:0;pointer-events:none"></canvas>
+      </div>
+
+      <!-- Painel de marcações -->
+      <div id="painel-marcacoes">
+        <div class="painel-header">
+          <span>Marcações</span>
+          <span id="contador-marcacoes-painel" style="font-size:11px;opacity:0.8"></span>
+        </div>
+        <div class="nav-paginas">
+          <button id="btn-pagina-anterior" aria-label="Página anterior">‹</button>
+          <span>Pág. <strong id="num-pagina-atual">1</strong> / <span id="total-paginas-revisao">1</span></span>
+          <button id="btn-proxima-pagina" aria-label="Próxima página">›</button>
+        </div>
+        <div id="lista-marcacoes-painel"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 5 — Download do PDF final
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-5" class="etapa-secao hidden">
+    <div class="card">
+      <div id="area-download">
+        <span class="icone-sucesso">✅</span>
+        <h3>PDF Tarjado Gerado com Sucesso!</h3>
+        <p style="color:#6b7280;margin-top:8px">
+          O arquivo <strong id="nome-arquivo-gerado"></strong> foi gerado e o download iniciado automaticamente.
+        </p>
+
+        <div class="alerta alerta-aviso" style="text-align:left;margin-top:24px">
+          <span class="alerta-icone">⚠️</span>
+          <div>
+            <strong>Verifique a irreversibilidade antes de enviar o documento:</strong>
+            <ul style="margin-top:6px;margin-left:16px;font-size:13px">
+              <li>Abra o PDF gerado em um leitor (ex.: Adobe Acrobat, PDF-XChange).</li>
+              <li>Tente selecionar texto com Ctrl+A / Ctrl+C — <strong>não deve ser possível extrair texto</strong>.</li>
+              <li>Verifique se as áreas tarjadas estão completamente cobertas com blocos pretos.</li>
+              <li>Confirme que dados sensíveis não aparecem nos metadados do arquivo.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="alerta alerta-info" style="text-align:left;margin-top:12px">
+          <span class="alerta-icone">ℹ️</span>
+          <div>
+            O PDF gerado consiste inteiramente de imagens rasterizadas — nenhuma camada de texto remanescente.
+            O conteúdo original não é recuperável por seleção, cópia ou inspeção do stream do PDF.
+          </div>
+        </div>
+
+        <div style="margin-top:24px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+          <button id="btn-novo-documento" class="btn btn-primario">📄 Processar Novo Documento</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /conteudo-principal -->
+
+<footer>
+  Tarjamento Coger v1.0 — Corregedoria da Receita Federal do Brasil
+  · Ferramenta 100% offline, processamento local no navegador
+  · Conformidade: LGPD · LAI · Portaria Normativa CGU nº 27/2022
+</footer>
+
+<!-- ─── Bibliotecas locais ─────────────────────────────────────────────────── -->
+<!-- PDF.js -->
+<script src="assets/js/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/js/pdf.worker.min.js';
+  }
+</script>
+
+<!-- Tesseract.js (OCR) — carregado de forma assíncrona; não-crítico se ausente -->
+<script>
+  (function() {
+    const s = document.createElement('script');
+    s.src = 'assets/js/tesseract.min.js';
+    s.onerror = function() {
+      console.warn('Tesseract.js não encontrado — OCR indisponível para PDFs escaneados. Execute download-libs para obter as bibliotecas.');
+    };
+    document.head.appendChild(s);
+  })();
+</script>
+
+<!-- jsPDF -->
+<script src="assets/js/jspdf.min.js"></script>
+
+<!-- Aplicação -->
+<script src="assets/js/app.js"></script>
+
+<!-- Verificação de bibliotecas após carregamento -->
+<script>
+  window.addEventListener('load', function() {
+    const avisos = [];
+    if (typeof pdfjsLib === 'undefined') {
+      avisos.push('PDF.js não carregado — a ferramenta não funcionará. Execute o script download-libs para obter as bibliotecas necessárias.');
+    }
+    if (typeof window.jspdf === 'undefined' && typeof jspdf === 'undefined') {
+      avisos.push('jsPDF não carregado — não será possível gerar o PDF final. Execute o script download-libs.');
+    }
+    if (typeof Tesseract === 'undefined') {
+      console.info('Tesseract.js não disponível — PDFs escaneados não terão OCR, mas PDFs com texto nativo funcionarão normalmente.');
+    }
+    if (avisos.length > 0) {
+      document.getElementById('alerta-global').className = 'alerta alerta-erro';
+      document.getElementById('alerta-global').innerHTML =
+        '<span class="alerta-icone">❌</span><div><strong>Bibliotecas não encontradas:</strong><ul style="margin-top:6px;margin-left:16px">' +
+        avisos.map(a => '<li>' + a + '</li>').join('') +
+        '</ul></div>';
+      document.getElementById('alerta-global').classList.remove('hidden');
+    }
+  });
+</script>
+
+</body>
+</html>

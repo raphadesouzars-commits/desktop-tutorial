@@ -1,0 +1,10 @@
+Execute o script download-libs.sh (Linux/macOS) ou download-libs.bat (Windows)
+na raiz da pasta tarjamento-app para baixar as bibliotecas necessárias:
+
+  pdf.min.js          — PDF.js (renderização de PDF)
+  pdf.worker.min.js   — Web Worker do PDF.js
+  tesseract.min.js    — Tesseract.js (OCR)
+  jspdf.min.js        — jsPDF (geração do PDF final)
+  tesseract/          — Core do Tesseract (WASM)
+
+Após o download, a ferramenta funciona 100% offline.

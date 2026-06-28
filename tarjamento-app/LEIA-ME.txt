@@ -1,0 +1,146 @@
+══════════════════════════════════════════════════════════════════════
+   TARJAMENTO COGER — Ferramenta de Tarjamento Automático de PDF
+   Corregedoria da Receita Federal do Brasil
+══════════════════════════════════════════════════════════════════════
+
+SOBRE A FERRAMENTA
+──────────────────
+Ferramenta web standalone, 100% client-side, para tarjamento de
+documentos PDF antes de seu fornecimento a terceiros (pedidos de LAI,
+publicações etc.), em conformidade com a LGPD, a LAI e a Portaria
+Normativa CGU nº 27/2022.
+
+PRIVACIDADE E SEGURANÇA
+───────────────────────
+• O conteúdo dos documentos NUNCA sai do seu computador.
+• Nenhuma requisição de rede é feita após o carregamento inicial.
+• Tudo é processado na memória do navegador (RAM).
+• Ao fechar a aba, todos os dados são perdidos — nada é persistido
+  em disco, cookies, localStorage ou IndexedDB.
+• Verificável: abra o DevTools (F12) → aba Rede → carregue um PDF
+  → nenhuma requisição de saída deve aparecer durante o processamento.
+
+
+REQUISITOS
+──────────
+• Navegador: Chrome, Edge ou Firefox (últimas 2 versões)
+• Python 3 OU Node.js instalado (para o servidor local)
+• Conexão com a internet APENAS na primeira vez (para baixar as libs)
+
+
+INSTALAÇÃO (PRIMEIRA VEZ)
+──────────────────────────
+1. Execute o script de download das bibliotecas:
+
+   Windows:  download-libs.bat
+   Linux:    bash download-libs.sh
+   macOS:    bash download-libs.sh
+
+   Este script baixa (~15 MB):
+   - PDF.js (renderização de PDF)
+   - jsPDF (geração do PDF final)
+   - Tesseract.js (OCR para PDFs escaneados)
+   - por.traineddata (dicionário de OCR em português)
+
+2. Após o download, a pasta pode ser usada OFFLINE.
+
+
+COMO USAR
+─────────
+1. Execute o script de inicialização:
+
+   Windows:  iniciar.bat (duplo clique)
+   Linux:    bash iniciar.sh
+   macOS:    bash iniciar.sh
+
+2. O navegador abrirá automaticamente em http://localhost:8765
+
+3. Siga as 5 etapas na interface:
+
+   ETAPA 1 — Upload
+   ─────────────────
+   Carregue o PDF a ser tarjado. O arquivo é lido localmente.
+
+   ETAPA 2 — Identificação do processo
+   ─────────────────────────────────────
+   • Informe o contexto: o processo já foi julgado? Envolve assédio?
+   • Cadastre nomes e identificadores por papel (investigado, vítima,
+     testemunha, denunciante, terceiro, termos livres).
+   • Configure as regras de detecção automática.
+
+   ETAPA 3 — Processamento automático
+   ────────────────────────────────────
+   O sistema detecta automaticamente:
+   - CPF, CNPJ, RG, matrículas, contas bancárias
+   - E-mails, telefones, endereços
+   - Datas de nascimento, palavras-chave de saúde
+   - Termos cadastrados na Etapa 2
+   Para PDFs escaneados, OCR é executado (Tesseract.js).
+
+   ETAPA 4 — Revisão visual
+   ──────────────────────────
+   • Revise TODAS as marcações antes de gerar o PDF.
+   • Vermelho translúcido = será tarjado (bloco preto)
+   • Laranja translúcido = será descaracterizado (ex.: ***.456.789-**)
+   • Use o painel lateral para remover, alterar ou adicionar marcações.
+   • Use "Selecionar área" para marcar regiões manualmente (ex.: imagens,
+     assinaturas, fotos).
+   • ATENÇÃO: assinaturas manuscritas em imagens NÃO são detectadas
+     automaticamente — marque-as manualmente.
+
+   ETAPA 5 — Download
+   ────────────────────
+   O PDF final é gerado como imagem rasterizada (sem texto extraível).
+   Verifique a irreversibilidade: tente Ctrl+A no PDF resultante —
+   nenhum texto deve ser selecionável.
+
+
+REGRAS DE TRATAMENTO PADRÃO (por papel)
+────────────────────────────────────────
+ Papel              | Tratamento padrão
+ ─────────────────────────────────────────
+ Investigado (sancionado) | MANTER nome/matrícula
+ Investigado (absolvido)  | TARJAR nome/matrícula
+ Investigado — CPF        | DESCARACTERIZAR sempre (***.456.789-**)
+ Vítima                   | TARJAR sempre (Cap. 7 da apostila)
+ Vítima — contatos        | TARJAR sempre
+ Testemunha               | TARJAR (risco de retaliação)
+ Denunciante              | TARJAR sempre (Decreto 10.153/2019)
+ Terceiro incidental      | TARJAR (princípio da necessidade)
+ Termo livre              | TARJAR (editável)
+
+
+ALERTA DE IDENTIFICAÇÃO INDIRETA
+──────────────────────────────────
+A ferramenta emite um aviso (não bloqueante) quando detecta, em uma
+mesma página, 3 ou mais identificadores indiretos (cargo + lotação +
+data + nº de processo etc.) sem um nome marcado para tarjamento.
+Este aviso é para orientar o julgamento do servidor — não impede a
+continuação.
+
+
+LIMITAÇÕES CONHECIDAS
+──────────────────────
+• OCR em documentos escaneados pode ter erros de reconhecimento,
+  especialmente em documentos de baixa qualidade.
+• Nomes próprios são detectados APENAS se cadastrados na Etapa 2
+  (não há reconhecimento de entidade nomeada automático por IA).
+• Assinaturas manuscritas e fotos devem ser marcadas manualmente.
+• Documentos protegidos por senha não são suportados.
+• O processamento de documentos muito grandes (>100 páginas) pode
+  ser lento em computadores com pouca memória.
+
+
+SUPORTE TÉCNICO
+───────────────
+Em caso de dúvidas, entre em contato com a equipe de TI da Coger-RFB.
+
+
+CONFORMIDADE LEGAL
+──────────────────
+• Lei nº 13.709/2018 (LGPD)
+• Lei nº 12.527/2011 (LAI)
+• Portaria Normativa CGU nº 27/2022
+• Decreto nº 10.153/2019 (proteção ao denunciante)
+
+══════════════════════════════════════════════════════════════════════
