@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v13';
+const VERSAO_APP = 'v14';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -118,6 +118,21 @@ const BLOCKLIST_NOMES = new Set([
   'COM','SEM','SOB','POR','PARA','QUE','NAO','SIM','MAS','ATE',
   'TOTAL','VALOR','DATA','HORA','LOCAL','TIPO','FORMA','MODO',
   'NUMERO','CODIGO','CHAVE','SENHA','REGISTRO','DOCUMENTO','FOLHA',
+  // Termos de seção/resumo de documentos oficiais
+  'RESUMO','FATOS','RELATO','DESCRICAO','APURACAO','DILIGENCIA','DILIGENCIAS',
+  'PROVIDENCIA','PROVIDENCIAS','RESULTADO','RESULTADOS','INSTRUCOES',
+  'CONCLUSOES','CONCLUSAO','RECOMENDACAO','RECOMENDACOES',
+  'HISTORICO','ANTECEDENTES','FUNDAMENTACAO','DISPOSITIVO',
+  // Forças de segurança e postos
+  'POLICIA','POLICIAL','POLICIAIS','MILITAR','MILITARES','CIVIL','CIVICO',
+  'EXERCITO','MARINHA','AERONAUTICA','BOMBEIRO','BOMBEIROS','GUARDA',
+  'SGT','SARGENTO','CAP','CAPITAO','TEN','TENENTE','CEL','CORONEL',
+  'SOLDADO','CABO','SUBOFICIAL','ASPIRANTE','MAJOR','GENERAL',
+  // Localidades/estados comuns em documentos RFB
+  'BAHIA','SAO','MINAS','GERAIS','PARANA','GAUCHO','GAUCHA','CATARINENSE',
+  // Órgãos e termos processuais
+  'SINDICANCIA','INQUERITO','PROCEDIMENTO','CORREGEDORIA','CORREICAO',
+  'AUDITORIA','FISCALIZACAO','INSPECAO','BOLETIM','OCORRENCIA',
 ]);
 
 // Regex: 1–6 palavras em MAIÚSCULAS (incluindo nome sozinho com ≥5 chars).
@@ -239,6 +254,88 @@ function detectarNomesContexto(pagina, texto, indice, marcacoes) {
       marcacoes.push({
         id: gerarId(), pagina, texto: seq, bbox,
         origem: 'Sugestão automática: possível nome (contexto de cargo)',
+        tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
+      });
+    });
+  }
+}
+
+// ─── Detecção geral de nomes em Title Case ────────────────────────────────────
+// Captura sequências de 2–6 palavras Title Case que parecem nomes de pessoas,
+// mesmo sem contexto de cargo (cobre listas separadas por ponto-e-vírgula,
+// parágrafos narrativos, etc.).
+// Usa blocklist forte para filtrar organizações, lugares e termos institucionais.
+const BLOCKLIST_TITULO = new Set([
+  // Forças de segurança / postos
+  'policia','policial','policiais','militar','militares','exercito','marinha',
+  'aeronautica','bombeiro','bombeiros','guarda','civil','civico','civica',
+  // Instituições e órgãos
+  'receita','fazenda','tribunal','ministerio','secretaria','departamento',
+  'coordenacao','gerencia','divisao','delegacia','regional','especial',
+  'federal','nacional','estadual','municipal','distrital','publico','publica',
+  'instituto','fundacao','empresa','companhia','associacao','sindicato',
+  'conselho','comissao','comite','controladoria','corregedoria','auditoria',
+  'procuradoria','advocacia','defensoria',
+  // Entes federativos e lugares
+  'uniao','brasil','brasileiro','brasileira','estado','municipio','prefeitura',
+  'camara','senado','congresso','governo','republica',
+  'bahia','paulo','janeiro','minas','gerais','parana','catarinense','gaucho',
+  'rio','sao','belo','porto','alegre','horizonte','brasilia','goiania',
+  'fortaleza','manaus','recife','salvador','natal','belem','curitiba',
+  // Termos processuais/documentais
+  'processo','relatorio','portaria','resolucao','instrucao','normativa',
+  'sindicancia','inquerito','procedimento','boletim','ocorrencia',
+  'despacho','acordao','sentenca','decisao','parecer','nota','oficio',
+  'memorando','circular','ordem','determinacao',
+  // Seções/estrutura de documento
+  'resumo','fatos','relato','conclusao','conclusoes','consideracoes',
+  'introducao','historico','antecedentes','fundamentacao','dispositivo',
+  'apuracao','diligencia','providencia','resultado','recomendacao',
+  // Meses/dias (capitalizados no início de frase)
+  'segunda','terca','quarta','quinta','sexta','sabado','domingo',
+  'fevereiro','marco','abril','maio','junho','julho',
+  'agosto','setembro','outubro','novembro','dezembro',
+  // Palavras comuns capitalizadas no início de frase
+  'conforme','segundo','mediante','inclusive','respectivamente','diante',
+  'considerando','vistos','determinado','expedido','aprovado',
+  'este','esta','esse','essa','aquele','aquela','outro','outra',
+  'primeiro','primeira','segundo','segunda','terceiro','terceira',
+  // Adjetivos / qualificadores comuns
+  'novo','nova','grande','pequeno','alto','baixo','superior','inferior',
+  'norte','sul','leste','oeste','central','geral',
+]);
+
+// Regex: 2-6 palavras Title Case (≥3 chars cada), com preposições minúsculas entre elas.
+const RE_TITULO = /\b([A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ][a-záéíóúâêôãõàüç]{2,}(?:\s+(?:de|do|da|dos|das|e|[A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ][a-záéíóúâêôãõàüç]{2,})){1,5})\b/g;
+
+function detectarNomesTituloGeral(pagina, texto, indice, marcacoes) {
+  const PARTICULAS = new Set(['de','do','da','dos','das','e']);
+  const norm = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+  const re = new RegExp(RE_TITULO.source, RE_TITULO.flags);
+  let m;
+  while ((m = re.exec(texto)) !== null) {
+    const seq = m[1];
+    const palavras = seq.split(/\s+/);
+    const substantivas = palavras.filter(p => !PARTICULAS.has(norm(p)));
+
+    // Mínimo: 2 substantivas de ≥3 chars, ao menos 1 com ≥4 chars
+    if (substantivas.filter(p => p.length >= 3).length < 2) continue;
+    if (!substantivas.some(p => p.length >= 4)) continue;
+    // Pular se QUALQUER substantiva estiver na blocklist → provável org/lugar/termo
+    if (substantivas.some(p => BLOCKLIST_TITULO.has(norm(p)))) continue;
+
+    bboxesDoMatch(m.index, m.index + seq.length, indice, true).forEach(bbox => {
+      const cy = bbox.y + bbox.altura / 2;
+      const sobrepoe = marcacoes.some(mk => {
+        if (mk.pagina !== pagina) return false;
+        if (mk.bbox.x >= bbox.x + bbox.largura || mk.bbox.x + mk.bbox.largura <= bbox.x) return false;
+        const mcy = mk.bbox.y + mk.bbox.altura / 2;
+        return Math.abs(mcy - cy) < Math.max(mk.bbox.altura, bbox.altura) * 0.55;
+      });
+      if (sobrepoe) return;
+      marcacoes.push({
+        id: gerarId(), pagina, texto: seq, bbox,
+        origem: 'Sugestão automática: possível nome próprio',
         tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
       });
     });
@@ -506,6 +603,7 @@ async function executarPreProcessamento() {
     detectarTermosCadastrados(p, textoPlano, indice, marcacoes);
     detectarNomesProvaveis(p, textoPlano, indice, marcacoes);
     detectarNomesContexto(p, textoPlano, indice, marcacoes);
+    detectarNomesTituloGeral(p, textoPlano, indice, marcacoes);
     App.marcacoesPorPagina.set(p, marcacoes);
   }
 
