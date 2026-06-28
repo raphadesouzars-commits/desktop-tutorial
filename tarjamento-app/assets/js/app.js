@@ -29,8 +29,9 @@ const App = {
 const REGRAS = [
   {
     id: 'cpf', nome: 'CPF',
-    // Permissivo: aceita com/sem pontos, hífens, espaços entre grupos (frequente em OCR)
-    regex: /(?<!\d)\d{3}[\s.,]?\d{3}[\s.,]?\d{3}[\s\-]?\d{2}(?!\d)/g,
+    // OCR pode dividir "567-09" em dois tokens: "567" + "-09" → espaço antes do hífen.
+    // [\s.,\-]{0,2} cobre " -", "-", ".", " " entre o último grupo de 3 e os 2 finais.
+    regex: /(?<!\d)\d{3}[\s.,]?\d{3}[\s.,]?\d{3}[\s.,\-]{0,2}\d{2}(?!\d)/g,
     tratamento: 'descaracterizar', ativa: true,
   },
   {
@@ -85,6 +86,76 @@ const IDENT_INDIRETOS = [
   /\bcargo\b/i, /\blota[çc][aã]o\b/i, /\bsetor\b/i, /\bunidade\b/i,
   /\d{1,2}\/\d{1,2}\/\d{2,4}/, /\bn[°º\.]\s*proc/i, /\bfilia[çc][aã]o\b/i,
 ];
+
+// ─── Detecção heurística de nomes próprios ────────────────────────────────────
+// Palavras/siglas que aparecem em maiúsculas mas NÃO são nomes de pessoas.
+const BLOCKLIST_NOMES = new Set([
+  'MINISTERIO','SECRETARIA','DEPARTAMENTO','COORDENACAO','DIVISAO','GERENCIA',
+  'RECEITA','FEDERAL','BRASIL','FAZENDA','TRIBUTARIA','TRIBUTARIO',
+  'TRIBUNAL','SUPERIOR','JUSTICA','CORTE','SUPREMO','PLENO','TURMA',
+  'PROCESSO','RELATORIO','PORTARIA','RESOLUCAO','INSTRUCAO','NORMATIVA',
+  'REPRESENTACAO','FUNCIONAL','ADMINISTRATIVA','ADMINISTRATIVO','ADMINISTRATIVOS',
+  'PROCURADORIA','ADVOCACIA','GERAL','UNIAO','NACIONAL','ESPECIAL',
+  'ESTADO','MUNICIPIO','PREFEITURA','CAMARA','SENADO','CONGRESSO',
+  'JANEIRO','FEVEREIRO','MARCO','ABRIL','MAIO','JUNHO',
+  'JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO',
+  'SEGUNDA','TERCA','QUARTA','QUINTA','SEXTA','SABADO','DOMINGO',
+  'CONTRIBUINTE','SERVIDOR','SERVIDORA','FUNCIONARIO','FUNCIONARIA',
+  'INVESTIGADO','INVESTIGADA','AUDITORA','AUDITOR','TECNICO','TECNICA',
+  'CAPITULO','SECAO','ARTIGO','PARAGRAFO','INCISO','ALINEA',
+  'CONFIDENCIAL','SIGILOSO','RESTRITO','PUBLICO','PRIVADO',
+  'OBJETO','ASSUNTO','EMENTA','CONCLUSAO','INTRODUCAO','CONSIDERACOES',
+  'COGER','RFB','CGU','TCU','STF','STJ','TST','TRF','TRT','CNJ',
+  'IRPF','IRPJ','DIRF','DCTF','SEFAZ','SEFIN','SPED','ECF','ECD',
+  'DELEGACIA','REGIONAL','FISCAL','ADUANEIRA','ESPECIAL','REPRE',
+  'COM','SEM','SOB','POR','PARA','QUE','NAO','SIM','MAS','ATE',
+  'TOTAL','VALOR','DATA','HORA','LOCAL','TIPO','FORMA','MODO',
+  'NUMERO','CODIGO','CHAVE','SENHA','REGISTRO','DOCUMENTO','FOLHA',
+]);
+
+// Regex: sequência de 2–6 palavras todas em MAIÚSCULAS
+// Partículas "DE/DO/DA/DOS/DAS/E" são permitidas como conectores mas não contam como nome.
+const RE_NOMES_CAPS = /\b([A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,}(?:\s+(?:DE|DO|DA|DOS|DAS|E|[A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,})){1,5})\b/g;
+
+function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
+  const PARTICULAS = new Set(['DE','DO','DA','DOS','DAS','E']);
+  const re = new RegExp(RE_NOMES_CAPS.source, RE_NOMES_CAPS.flags);
+  let m;
+  while ((m = re.exec(texto)) !== null) {
+    const seq = m[1];
+    const palavras = seq.split(/\s+/);
+    const substantivas = palavras.filter(p => !PARTICULAS.has(p));
+    if (substantivas.length < 2) continue;
+
+    // Normalizar (sem acentos) para comparar com blocklist
+    const normalizadas = substantivas.map(p =>
+      p.normalize('NFD').replace(/[̀-ͯ]/g, '')
+    );
+    // Skip se TODAS as palavras substantivas estiverem na blocklist
+    if (normalizadas.every(p => BLOCKLIST_NOMES.has(p))) continue;
+    // Skip se qualquer palavra substantiva tiver menos de 2 chars
+    if (substantivas.some(p => p.length < 2)) continue;
+
+    const bbox = bboxDoMatch(m.index, m.index + seq.length, indice);
+    if (!bbox) continue;
+
+    // Evitar duplicatas: pular se já houver marcação com bbox sobreposto
+    const sobrepoe = marcacoes.some(mk =>
+      mk.pagina === pagina &&
+      mk.bbox.x < bbox.x + bbox.largura &&
+      mk.bbox.x + mk.bbox.largura > bbox.x &&
+      mk.bbox.y < bbox.y + bbox.altura &&
+      mk.bbox.y + mk.bbox.altura > bbox.y
+    );
+    if (sobrepoe) continue;
+
+    marcacoes.push({
+      id: gerarId(), pagina, texto: seq, bbox,
+      origem: 'Sugestão automática: possível nome próprio',
+      tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
+    });
+  }
+}
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -330,6 +401,7 @@ async function executarPreProcessamento() {
     const marcacoes = [];
     detectarPadroesAutomaticos(p, textoPlano, indice, marcacoes);
     detectarTermosCadastrados(p, textoPlano, indice, marcacoes);
+    detectarNomesProvaveis(p, textoPlano, indice, marcacoes);
     App.marcacoesPorPagina.set(p, marcacoes);
   }
 
@@ -339,8 +411,9 @@ async function executarPreProcessamento() {
   verificarIdentificacaoIndireta();
   atualizarProgresso(100, 'Concluído!');
 
-  const total = [...App.marcacoesPorPagina.values()].reduce((s, m) => s + m.length, 0);
-  document.getElementById('stat-marcacoes').textContent = total;
+  const total = [...App.marcacoesPorPagina.values()].reduce((s, m) => s + m.filter(x => x.estado !== 'sugerido').length, 0);
+  const sugeridos = [...App.marcacoesPorPagina.values()].reduce((s, m) => s + m.filter(x => x.estado === 'sugerido').length, 0);
+  document.getElementById('stat-marcacoes').textContent = sugeridos > 0 ? `${total} (+${sugeridos} nomes a revisar)` : total;
   document.getElementById('stat-paginas').textContent = App.totalPaginas;
 
   setTimeout(() => {
@@ -508,9 +581,19 @@ function desenharOverlay(numPagina) {
   const E = App._escalaRevisao; // fator de escala: bbox(scale=1) → canvas pixels
 
   (App.marcacoesPorPagina.get(numPagina) || []).forEach(m => {
-    if (m.estado !== 'incluido') return;
+    if (m.estado !== 'incluido' && m.estado !== 'sugerido') return;
     const x = m.bbox.x * E, y = m.bbox.y * E;
     const w = m.bbox.largura * E, h = m.bbox.altura * E;
+
+    if (m.estado === 'sugerido') {
+      ctx.save();
+      ctx.setLineDash([5, 3]);
+      ctx.strokeStyle = '#f59e0b';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x, y, w, h);
+      ctx.restore();
+      return;
+    }
 
     if (m.tipo === 'tarjar') {
       ctx.fillStyle = 'rgba(220,38,38,0.40)';
@@ -529,14 +612,19 @@ function atualizarPainelMarcacoes() {
   const lista  = document.getElementById('lista-marcacoes-painel');
   const marcas = App.marcacoesPorPagina.get(App.paginaAtual) || [];
   const incl   = marcas.filter(m => m.estado === 'incluido').length;
+  const suger  = marcas.filter(m => m.estado === 'sugerido').length;
   const cnt    = document.getElementById('contador-marcacoes-painel');
-  if (cnt) cnt.textContent = `${incl}/${marcas.length}`;
+  if (cnt) cnt.textContent = suger > 0 ? `${incl} tarj. + ${suger} sugerido(s)` : `${incl}/${marcas.filter(m=>m.estado!=='sugerido').length}`;
 
-  if (marcas.length === 0) {
+  const confirmadas = marcas.filter(m => m.estado !== 'sugerido');
+  const sugeridas   = marcas.filter(m => m.estado === 'sugerido');
+
+  if (confirmadas.length === 0 && sugeridas.length === 0) {
     lista.innerHTML = '<p style="color:#6b7280;padding:12px;font-size:12px;text-align:center">Nenhuma marcação nesta página</p>';
     return;
   }
-  lista.innerHTML = marcas.map(m => {
+
+  const renderConfirmada = m => {
     const ok = m.estado === 'incluido';
     return `
       <div class="item-marcacao ${ok ? '' : 'removida'}" id="marcacao-${m.id}">
@@ -556,7 +644,28 @@ function atualizarPainelMarcacoes() {
           `}
         </div>
       </div>`;
-  }).join('');
+  };
+
+  const renderSugerida = m => `
+    <div class="item-marcacao sugerido" id="marcacao-${m.id}">
+      <div class="texto-marcacao">${escapeHtml(m.texto)}</div>
+      <div class="origem-marcacao">${escapeHtml(m.origem)}</div>
+      <div class="acoes-marcacao">
+        <button class="btn-marcacao btn-confirmar-sugestao"
+          onclick="confirmarSugestao('${m.id}')">✓ Tarjar</button>
+        <button class="btn-marcacao btn-ignorar-sugestao"
+          onclick="ignorarSugestao('${m.id}')">✗ Ignorar</button>
+      </div>
+    </div>`;
+
+  let html = confirmadas.map(renderConfirmada).join('');
+  if (sugeridas.length > 0) {
+    html += `<div class="secao-sugestoes">
+      <div class="titulo-sugestoes">⚠️ Possíveis nomes próprios — revise e decida:</div>
+      ${sugeridas.map(renderSugerida).join('')}
+    </div>`;
+  }
+  lista.innerHTML = html;
 }
 
 function getMarca(id) { return (App.marcacoesPorPagina.get(App.paginaAtual)||[]).find(m=>m.id===id); }
@@ -572,6 +681,14 @@ function removerMarcacao(id) {
 function restaurarMarcacao(id) {
   const m = getMarca(id); if (!m) return;
   m.estado = 'incluido'; desenharOverlay(App.paginaAtual); atualizarPainelMarcacoes();
+}
+function confirmarSugestao(id) {
+  const m = getMarca(id); if (!m) return;
+  m.estado = 'incluido'; desenharOverlay(App.paginaAtual); atualizarPainelMarcacoes();
+}
+function ignorarSugestao(id) {
+  const m = getMarca(id); if (!m) return;
+  m.estado = 'ignorado'; desenharOverlay(App.paginaAtual); atualizarPainelMarcacoes();
 }
 
 function atualizarNavPaginas() {
@@ -704,6 +821,7 @@ async function gerarPDFFinal() {
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
       // Aplicar marcações no canvas (nível de pixel)
+      // estado 'sugerido' e 'ignorado' NÃO são aplicados — somente 'incluido'.
       (App.marcacoesPorPagina.get(p) || []).forEach(m => {
         if (m.estado !== 'incluido') return;
 
@@ -718,7 +836,7 @@ async function gerarPDFFinal() {
           ctx.fillStyle = '#000000';
           ctx.fillRect(x, y, w, h);
         } else if (m.tipo === 'descaracterizar') {
-          aplicarDescaracterizacaoCPF(ctx, x, y, w, h);
+          aplicarDescaracterizacaoCPF(ctx, x, y, w, h, m.texto);
         }
       });
 
@@ -751,20 +869,39 @@ async function gerarPDFFinal() {
 }
 
 // Descaracterização de CPF: oculta os 3 primeiros e os 2 últimos dígitos.
-// Formato: AAA.BBB.CCC-DD → ***.BBB.CCC-**
-function aplicarDescaracterizacaoCPF(ctx, x, y, w, h) {
-  // Cobrir primeiros ~27% (3 dígitos de 11) e últimos ~18% (2 dígitos de 11)
-  ctx.fillStyle = '#000000';
-  ctx.fillRect(x, y, Math.ceil(w * 0.28), h);
-  ctx.fillRect(x + Math.floor(w * 0.82), y, Math.ceil(w * 0.18) + 1, h);
+// Resultado: ***.456.789-** (separadores permanecem visíveis quando formatado)
+// `texto` é a string capturada pelo regex (ex: "057.040.567-09" ou "05704056709").
+// Calcula proporções pela posição real dos dígitos no texto — funciona com e sem formatação.
+function aplicarDescaracterizacaoCPF(ctx, x, y, w, h, texto) {
+  const n = texto ? texto.length : 11;
+  let firstCoverEnd = Math.ceil(n * 0.28); // fallback
+  let lastCoverStart = Math.floor(n * 0.82); // fallback
 
-  // Asteriscos brancos sobre as faixas cobertas
+  if (texto && n >= 11) {
+    let cnt = 0;
+    for (let i = 0; i < n; i++) {
+      if (/\d/.test(texto[i])) {
+        cnt++;
+        if (cnt === 3)  { firstCoverEnd = i + 1; }
+        if (cnt === 10) { lastCoverStart = i; break; }
+      }
+    }
+  }
+
+  const leftW  = Math.ceil((firstCoverEnd / n) * w) + 1;
+  const rightX = Math.max(Math.floor((lastCoverStart / n) * w) - 1, leftW + 4);
+  const rightW = w - rightX + 1;
+
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(x, y, leftW, h);
+  ctx.fillRect(x + rightX, y, rightW, h);
+
   const fs = Math.max(7, Math.min(Math.round(h * 0.75), 14));
   ctx.fillStyle = '#ffffff';
   ctx.font = `bold ${fs}px monospace`;
   ctx.textBaseline = 'middle';
   ctx.fillText('***', x + 2, y + h / 2);
-  ctx.fillText('**',  x + Math.floor(w * 0.82) + 2, y + h / 2);
+  ctx.fillText('**',  x + rightX + 2, y + h / 2);
 }
 
 // ─── Navegação entre etapas ───────────────────────────────────────────────────
