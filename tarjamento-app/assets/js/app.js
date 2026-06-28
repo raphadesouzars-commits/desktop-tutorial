@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v9';
+const VERSAO_APP = 'v10';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -117,9 +117,9 @@ const BLOCKLIST_NOMES = new Set([
   'NUMERO','CODIGO','CHAVE','SENHA','REGISTRO','DOCUMENTO','FOLHA',
 ]);
 
-// Regex: sequência de 2–6 palavras todas em MAIÚSCULAS
-// Partículas "DE/DO/DA/DOS/DAS/E" são permitidas como conectores mas não contam como nome.
-const RE_NOMES_CAPS = /\b([A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,}(?:\s+(?:DE|DO|DA|DOS|DAS|E|[A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,})){1,5})\b/g;
+// Regex: 1–6 palavras em MAIÚSCULAS (incluindo nome sozinho com ≥5 chars).
+// {0,5} permite palavra única; o filtro de comprimento e blocklist filtra falsos positivos.
+const RE_NOMES_CAPS = /\b([A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,}(?:\s+(?:DE|DO|DA|DOS|DAS|E|[A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ]{2,})){0,5})\b/g;
 
 function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
   const PARTICULAS = new Set(['DE','DO','DA','DOS','DAS','E']);
@@ -129,7 +129,11 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
     const seq = m[1];
     const palavras = seq.split(/\s+/);
     const substantivas = palavras.filter(p => !PARTICULAS.has(p));
-    if (substantivas.length < 2) continue;
+    if (substantivas.length === 0) continue;
+    // Palavra única: exigir ≥5 chars para reduzir falsos positivos (siglas, abreviaturas)
+    if (substantivas.length === 1 && substantivas[0].length < 5) continue;
+    // Múltiplas palavras: ao menos 2 substantivas
+    if (substantivas.length > 1 && substantivas.filter(p => p.length >= 2).length < 2) continue;
 
     // Normalizar (sem acentos) para comparar com blocklist
     const normalizadas = substantivas.map(p =>
@@ -137,8 +141,6 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
     );
     // Skip se TODAS as palavras substantivas estiverem na blocklist
     if (normalizadas.every(p => BLOCKLIST_NOMES.has(p))) continue;
-    // Skip se qualquer palavra substantiva tiver menos de 2 chars
-    if (substantivas.some(p => p.length < 2)) continue;
 
     bboxesDoMatch(m.index, m.index + seq.length, indice).forEach(bbox => {
       // Evitar duplicatas: pular se já houver marcação com bbox sobreposto
@@ -448,20 +450,33 @@ async function executarPreProcessamento() {
 // Encontra os itens cujo intervalo [charStart, charEnd] sobrepõe [matchStart, matchEnd]
 // e os AGRUPA POR LINHA (pela coordenada Y). Retorna UMA caixa por linha.
 //
-// Crítico: se um match toca itens de linhas diferentes (ex.: o regex de nome
-// casa "...SUPREMO TRIBUNAL" no fim de uma linha + "FEDERAL LUIZ" no início da
-// próxima), unir tudo numa só caixa produziria um retângulo gigante do topo de
-// uma linha até a base da outra, mal posicionado. Agrupar por linha garante
-// caixas justas e corretamente posicionadas em cada linha.
+// Para PDFs com texto nativo, um item pode ser uma linha inteira. Usar o bbox
+// completo do item quando o match é apenas uma parte dele gera caixas muito largas.
+// A solução é calcular um sub-bbox PROPORCIONAL: se o match cobre K% dos caracteres
+// do item, a largura da caixa é K% da largura do item, posicionada proporcionalmente.
+// Para itens OCR (deOcr:true), cada palavra já é seu próprio item → usar bbox completo.
 function bboxesDoMatch(matchStart, matchEnd, indice) {
   const participantes = indice.filter(it =>
     it.charEnd > matchStart && it.charStart < matchEnd
   );
   if (participantes.length === 0) return [];
 
+  // Calcular sub-bbox proporcional por item.
+  const participantesComSub = participantes.map(it => {
+    if (it.deOcr) return { ...it, subX: it.x, subW: it.largura };
+    const itemLen = it.charEnd - it.charStart;
+    if (itemLen === 0) return { ...it, subX: it.x, subW: it.largura };
+    // Fração do item coberta pelo match
+    const mStart = Math.max(matchStart, it.charStart) - it.charStart;
+    const mEnd   = Math.min(matchEnd,   it.charEnd)   - it.charStart;
+    const subX = it.x + (mStart / itemLen) * it.largura;
+    const subW = Math.max(4, ((mEnd - mStart) / itemLen) * it.largura);
+    return { ...it, subX, subW };
+  });
+
   // Agrupar por linha: itens cujo centro vertical está próximo pertencem à mesma linha.
   const linhas = [];
-  participantes
+  participantesComSub
     .slice()
     .sort((a, b) => a.y - b.y)
     .forEach(it => {
@@ -474,9 +489,9 @@ function bboxesDoMatch(matchStart, matchEnd, indice) {
 
   const P = 3; // padding em px para cobertura completa
   return linhas.map(L => {
-    const x    = Math.min(...L.itens.map(i => i.x));
+    const x    = Math.min(...L.itens.map(i => i.subX));
     const y    = Math.min(...L.itens.map(i => i.y));
-    const xMax = Math.max(...L.itens.map(i => i.x + i.largura));
+    const xMax = Math.max(...L.itens.map(i => i.subX + i.subW));
     const yMax = Math.max(...L.itens.map(i => i.y + i.altura));
     return { x: x - P, y: y - P, largura: (xMax - x) + P * 2, altura: (yMax - y) + P * 2 };
   });
@@ -855,11 +870,15 @@ async function gerarPDFFinal() {
       ctx.fillRect(0, 0, cv.width, cv.height);
       await page.render({ canvasContext: ctx, viewport: vp }).promise;
 
-      // Aplicar marcações no canvas (nível de pixel)
+      // Aplicar marcações no canvas (nível de pixel).
       // estado 'sugerido' e 'ignorado' NÃO são aplicados — somente 'incluido'.
-      (App.marcacoesPorPagina.get(p) || []).forEach(m => {
-        if (m.estado !== 'incluido') return;
+      // Ordem: tarjar primeiro, descaracterizar por último — garante que a
+      // descaracterização (CPF com asteriscos) nunca fique coberta por uma tarja.
+      const marcacoesAtivas = (App.marcacoesPorPagina.get(p) || [])
+        .filter(m => m.estado === 'incluido')
+        .sort((a, b) => (a.tipo === 'descaracterizar' ? 1 : 0) - (b.tipo === 'descaracterizar' ? 1 : 0));
 
+      marcacoesAtivas.forEach(m => {
         // bbox está em coordenadas scale=1.0.
         // Multiplicamos por ESCALA_FINAL para obter coordenadas do canvas final.
         const x = Math.floor(m.bbox.x * ESCALA_FINAL);
