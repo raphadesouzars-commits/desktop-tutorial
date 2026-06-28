@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v11';
+const VERSAO_APP = 'v12';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -112,6 +112,9 @@ const BLOCKLIST_NOMES = new Set([
   'COGER','RFB','CGU','TCU','STF','STJ','TST','TRF','TRT','CNJ',
   'IRPF','IRPJ','DIRF','DCTF','SEFAZ','SEFIN','SPED','ECF','ECD',
   'DELEGACIA','REGIONAL','FISCAL','ADUANEIRA','ESPECIAL','REPRE',
+  'MINISTRO','MINISTRA','PRESIDENTE','VICE','ASSESSOR','ASSESSORA',
+  'DIRETOR','DIRETORA','SUPERVISOR','SUPERVISORA','COORDENADOR','COORDENADORA',
+  'CHEFE','SUBCHEFE','SUBSECRETARIO','SUBSECRETARIA','PROCURADOR','PROCURADORA',
   'COM','SEM','SOB','POR','PARA','QUE','NAO','SIM','MAS','ATE',
   'TOTAL','VALOR','DATA','HORA','LOCAL','TIPO','FORMA','MODO',
   'NUMERO','CODIGO','CHAVE','SENHA','REGISTRO','DOCUMENTO','FOLHA',
@@ -142,7 +145,7 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
     // Skip se TODAS as palavras substantivas estiverem na blocklist
     if (normalizadas.every(p => BLOCKLIST_NOMES.has(p))) continue;
 
-    bboxesDoMatch(m.index, m.index + seq.length, indice).forEach(bbox => {
+    bboxesDoMatch(m.index, m.index + seq.length, indice, true).forEach(bbox => {
       // Evitar duplicatas: pular se já houver marcação NA MESMA LINHA com bbox sobreposto.
       // Usa o centro vertical para comparar linhas — evita que o padding de tarjas em
       // linhas adjacentes (acima/abaixo) suprima nomes na linha do meio.
@@ -160,6 +163,82 @@ function detectarNomesProvaveis(pagina, texto, indice, marcacoes) {
       marcacoes.push({
         id: gerarId(), pagina, texto: seq, bbox,
         origem: 'Sugestão automática: possível nome próprio',
+        tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
+      });
+    });
+  }
+}
+
+// ─── Detecção de nomes por contexto de cargo/papel ───────────────────────────
+// Captura nomes em Title Case que seguem palavras de cargo ou papel processual.
+// Cobre casos como "Ministro João Silva", "cônjuge Maria de Souza", etc.
+// O regex ALL-CAPS não captura esses nomes; este detector os complementa.
+const PALAVRAS_CARGO = [
+  'Ministro','Ministra','Secretário','Secretária','Secretario','Secretaria',
+  'Diretor','Diretora','Presidente','Vice','Assessor','Assessora',
+  'servidor','servidora','Servidor','Servidora',
+  'investigado','investigada','Investigado','Investigada',
+  'vítima','Vítima','vitima','Vitima',
+  'testemunha','Testemunha','denunciante','Denunciante',
+  'réu','Réu','ré','Ré','requerente','Requerente','requerido','Requerido',
+  'autor','Autor','autora','Autora',
+  'cônjuge','Cônjuge','conjuge','Conjuge',
+  'esposo','Esposo','esposa','Esposa',
+  'filho','Filho','filha','Filha',
+  'genitor','Genitor','genitora','Genitora',
+  'representante','Representante','procurador','Procurador','procuradora','Procuradora',
+  'contribuinte','Contribuinte','paciente','Paciente',
+];
+
+// Padrão de nome em Title Case: Palavra capitalizada + opcionais (de/do/da + capitalizada)
+const RE_NOME_TITULO = '([A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ][a-záéíóúâêôãõàüç]{1,}(?:\\s+(?:de|do|da|dos|das|e|[A-ZÁÉÍÓÚÂÊÔÃÕÀÜÇ][a-záéíóúâêôãõàüç]{1,})){0,4})';
+
+function detectarNomesContexto(pagina, texto, indice, marcacoes) {
+  // Palavras comuns que NÃO são nomes de pessoa, mas aparecem capitalizadas
+  const NAO_NOMES = new Set([
+    'Receita','Federal','Fazenda','Ministerio','Secretaria','Tribunal','Superior',
+    'Justica','Corte','Supremo','Brasil','Nacional','Estadual','Municipal',
+    'Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho',
+    'Agosto','Setembro','Outubro','Novembro','Dezembro',
+    'Segunda','Terca','Quarta','Quinta','Sexta','Sabado','Domingo',
+    'Processo','Relatorio','Portaria','Resolucao','Instrucao',
+    'Uniao','Estado','Municipio','Prefeitura','Camara','Senado','Congresso',
+    'Este','Esta','Esse','Essa','Aquele','Aquela','Outro','Outra',
+    'Como','Para','Pelo','Pela','Sobre','Entre','Conforme','Segundo',
+    'Inclusive','Respectivamente','Mediante','Referente',
+  ]);
+
+  const escapados = PALAVRAS_CARGO.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const re = new RegExp(
+    '(?:' + escapados.join('|') + ')\\s+' + RE_NOME_TITULO,
+    'g'
+  );
+
+  let m;
+  while ((m = re.exec(texto)) !== null) {
+    const seq = m[1];
+    if (!seq || seq.length < 4) continue;
+    const palavras = seq.split(/\s+/);
+    // Checar se ao menos 1 palavra não é uma palavra comum
+    const temNome = palavras.some(p => !NAO_NOMES.has(p) && p.length >= 3);
+    if (!temNome) continue;
+
+    // Posição do nome dentro do texto (o nome é o grupo 1, está no final do match)
+    const nomeStart = m.index + m[0].length - seq.length;
+    const nomeEnd   = m.index + m[0].length;
+
+    bboxesDoMatch(nomeStart, nomeEnd, indice, true).forEach(bbox => {
+      const cy = bbox.y + bbox.altura / 2;
+      const sobrepoe = marcacoes.some(mk => {
+        if (mk.pagina !== pagina) return false;
+        if (mk.bbox.x >= bbox.x + bbox.largura || mk.bbox.x + mk.bbox.largura <= bbox.x) return false;
+        const mcy = mk.bbox.y + mk.bbox.altura / 2;
+        return Math.abs(mcy - cy) < Math.max(mk.bbox.altura, bbox.altura) * 0.55;
+      });
+      if (sobrepoe) return;
+      marcacoes.push({
+        id: gerarId(), pagina, texto: seq, bbox,
+        origem: 'Sugestão automática: possível nome (contexto de cargo)',
         tipo: 'tarjar', estado: 'sugerido', fonteRegra: 'nome_proprio',
       });
     });
@@ -426,6 +505,7 @@ async function executarPreProcessamento() {
     detectarPadroesAutomaticos(p, textoPlano, indice, marcacoes);
     detectarTermosCadastrados(p, textoPlano, indice, marcacoes);
     detectarNomesProvaveis(p, textoPlano, indice, marcacoes);
+    detectarNomesContexto(p, textoPlano, indice, marcacoes);
     App.marcacoesPorPagina.set(p, marcacoes);
   }
 
@@ -454,20 +534,19 @@ async function executarPreProcessamento() {
 // Encontra os itens cujo intervalo [charStart, charEnd] sobrepõe [matchStart, matchEnd]
 // e os AGRUPA POR LINHA (pela coordenada Y). Retorna UMA caixa por linha.
 //
-// Para PDFs com texto nativo, um item pode ser uma linha inteira. Usar o bbox
-// completo do item quando o match é apenas uma parte dele gera caixas muito largas.
-// A solução é calcular um sub-bbox PROPORCIONAL: se o match cobre K% dos caracteres
-// do item, a largura da caixa é K% da largura do item, posicionada proporcionalmente.
-// Para itens OCR (deOcr:true), cada palavra já é seu próprio item → usar bbox completo.
-function bboxesDoMatch(matchStart, matchEnd, indice) {
+// usarSubBbox=true: calcula sub-bbox proporcional ao intervalo de caracteres.
+//   Use para NOMES onde queremos cobrir apenas a palavra detectada, não a linha inteira.
+// usarSubBbox=false (padrão): usa o bbox completo do item.
+//   Use para CPF, CNPJ e demais padrões onde precisamos de bbox preciso e completo.
+function bboxesDoMatch(matchStart, matchEnd, indice, usarSubBbox = false) {
   const participantes = indice.filter(it =>
     it.charEnd > matchStart && it.charStart < matchEnd
   );
   if (participantes.length === 0) return [];
 
-  // Calcular sub-bbox proporcional por item.
   const participantesComSub = participantes.map(it => {
-    if (it.deOcr) return { ...it, subX: it.x, subW: it.largura };
+    // Sem sub-bbox: itens OCR já são palavras individuais; itens nativos usam bbox completo.
+    if (!usarSubBbox || it.deOcr) return { ...it, subX: it.x, subW: it.largura };
     const itemLen = it.charEnd - it.charStart;
     if (itemLen === 0) return { ...it, subX: it.x, subW: it.largura };
     // Fração do item coberta pelo match
