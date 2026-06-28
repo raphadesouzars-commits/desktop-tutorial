@@ -374,29 +374,22 @@
   · Conformidade: LGPD · LAI · Portaria Normativa CGU nº 27/2022
 </footer>
 
-<!-- ─── Bibliotecas locais ─────────────────────────────────────────────────── -->
-<!-- PDF.js -->
-<script src="assets/js/pdf.min.js"></script>
+<!-- ─── Bibliotecas via CDN ────────────────────────────────────────────────── -->
+<!-- PDF.js 3.11.174 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   if (typeof pdfjsLib !== 'undefined') {
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'assets/js/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
 </script>
 
-<!-- Tesseract.js (OCR) — carregado de forma assíncrona; não-crítico se ausente -->
-<script>
-  (function() {
-    const s = document.createElement('script');
-    s.src = 'assets/js/tesseract.min.js';
-    s.onerror = function() {
-      console.warn('Tesseract.js não encontrado — OCR indisponível para PDFs escaneados. Execute download-libs para obter as bibliotecas.');
-    };
-    document.head.appendChild(s);
-  })();
-</script>
+<!-- jsPDF 2.5.1 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-<!-- jsPDF -->
-<script src="assets/js/jspdf.min.js"></script>
+<!-- Tesseract.js 4 (OCR — opcional, apenas para PDFs escaneados) -->
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"
+        onerror="console.info('Tesseract não carregado — OCR indisponível para PDFs escaneados.')"></script>
 
 <!-- Aplicação -->
 <script src="assets/js/app.js"></script>
@@ -405,27 +398,16 @@
 <script>
   window.addEventListener('load', function() {
     const avisos = [];
-
-    // Verificar se aberto via file:// (bloqueia Web Workers / PDF.js)
-    if (location.protocol === 'file:') {
-      avisos.push('⚠️ Você abriu o arquivo diretamente pelo explorador (file://). ' +
-        'Isso impede o funcionamento do PDF.js. ' +
-        'Use o script <strong>iniciar.bat</strong> (Windows) ou <strong>bash iniciar.sh</strong> (Linux/Mac) para abrir a ferramenta corretamente via servidor local.');
-    }
-
     if (typeof pdfjsLib === 'undefined') {
-      avisos.push('PDF.js não carregado — a ferramenta não funcionará. Execute o script <strong>download-libs.bat/.sh</strong> para baixar as bibliotecas necessárias.');
+      avisos.push('PDF.js não carregado. Verifique sua conexão com a internet e recarregue a página.');
     }
     if (typeof window.jspdf === 'undefined' && typeof jspdf === 'undefined') {
-      avisos.push('jsPDF não carregado — não será possível gerar o PDF final. Execute o script <strong>download-libs.bat/.sh</strong>.');
-    }
-    if (typeof Tesseract === 'undefined') {
-      console.info('Tesseract.js não disponível — PDFs escaneados não terão OCR, mas PDFs com texto nativo funcionarão normalmente.');
+      avisos.push('jsPDF não carregado. Verifique sua conexão com a internet e recarregue a página.');
     }
     if (avisos.length > 0) {
       document.getElementById('alerta-global').className = 'alerta alerta-erro';
       document.getElementById('alerta-global').innerHTML =
-        '<span class="alerta-icone">❌</span><div><strong>Problema de configuração:</strong><ul style="margin-top:6px;margin-left:16px">' +
+        '<span class="alerta-icone">❌</span><div><strong>Erro ao carregar bibliotecas:</strong><ul style="margin-top:6px;margin-left:16px">' +
         avisos.map(a => '<li>' + a + '</li>').join('') +
         '</ul></div>';
       document.getElementById('alerta-global').classList.remove('hidden');
