@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v14';
+const VERSAO_APP = 'v15';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -508,58 +508,34 @@ async function executarPreProcessamento() {
         mostrarAlerta('aviso', 'OCR iniciado em modo inglês (dados do português indisponíveis). Números como CPF ainda serão detectados. Textos em português podem ter menor precisão.');
       } catch (errEng) {
         worker = null;
-        mostrarAlerta('aviso', 'OCR não foi possível inicializar. Documentos escaneados não terão detecção automática — use a seleção manual na Etapa 4 para marcar as áreas sensíveis.');
+        mostrarAlerta('aviso', 'OCR não foi possível inicializar. A detecção automática usará extração de texto nativo (menos precisa para posicionamento de bboxes) — use a seleção manual na Etapa 4 para complementar.');
       }
     }
   }
 
   // ── Processar páginas ─────────────────────────────────────────────────────
+  // PIPELINE UNIFICADO: OCR em TODAS as páginas quando Tesseract disponível.
+  // Cada palavra OCR tem sua própria bbox precisa e consistente — sem a
+  // fragmentação imprevisível dos textItems do PDF.js que causava todos os
+  // erros de posicionamento anteriores.
+  // Fallback para extração nativa PDF.js apenas quando Tesseract indisponível.
   for (let p = 1; p <= App.totalPaginas; p++) {
     const pct = 10 + Math.round(((p - 1) / App.totalPaginas) * 85);
-    atualizarProgresso(pct, `Analisando página ${p} de ${App.totalPaginas}...`);
+    atualizarProgresso(pct, `OCR página ${p} de ${App.totalPaginas}${App.totalPaginas > 5 ? ' (pode levar alguns minutos)' : ''}...`);
 
     const page = await App.pdfDoc.getPage(p);
-    const viewport1 = page.getViewport({ scale: 1.0 });
 
-    // Índice de itens com rastreamento de offset de caractere no textoPlano.
-    // Cada item: { x, y, largura, altura, charStart, charEnd }
-    // Todos os valores x/y/largura/altura estão em coordenadas de scale=1.0.
+    // indice: { x, y, largura, altura, charStart, charEnd, deOcr }
+    // Coordenadas em scale=1.0 (coordenadas de PDF.js sem escala).
     const indice = [];
     let textoPlano = '';
 
-    // ── Extrair texto nativo (PDF com texto) ─────────────────────────────────
-    const tc = await page.getTextContent();
-    tc.items.forEach(item => {
-      if (!item.str) return;
-      // Transformar coordenadas: PDF (Y↑) → canvas (Y↓)
-      const tx = pdfjsLib.Util.transform(viewport1.transform, item.transform);
-      const x = tx[4];
-      // tx[5] = posição Y do baseline no canvas.
-      // A altura do item em PDF user space corresponde a ~escala 1 px por pt.
-      // Subtraímos para obter o TOPO da caixa de texto.
-      const altReal = Math.abs(item.height) || 12;
-      const y = tx[5] - altReal;
-      const larg = Math.abs(item.width) || 8;
-
-      const charStart = textoPlano.length;
-      textoPlano += item.str;
-      const charEnd = textoPlano.length;
-      textoPlano += ' '; // separador não-rastreado
-
-      indice.push({ x, y, largura: larg, altura: altReal + 2, charStart, charEnd });
-    });
-
-    // ── OCR se a página for escaneada (pouco/nenhum texto nativo) ────────────
-    const temTextoNativo = textoPlano.trim().replace(/\s+/g, '').length > 20;
-    let usouOCR = false;
-
-    if (!temTextoNativo && worker) {
-      atualizarProgresso(pct + 2, `OCR na página ${p}/${App.totalPaginas}...`);
+    if (worker) {
+      // ── Caminho principal: renderizar → OCR → bbox por palavra ─────────────
       try {
-        // Renderizar página em canvas de alta resolução para o OCR
         const vpOcr = page.getViewport({ scale: OCR_SCALE });
         const cvOcr = document.createElement('canvas');
-        cvOcr.width = Math.round(vpOcr.width);
+        cvOcr.width  = Math.round(vpOcr.width);
         cvOcr.height = Math.round(vpOcr.height);
         const ctxOcr = cvOcr.getContext('2d');
         ctxOcr.fillStyle = '#ffffff';
@@ -570,18 +546,17 @@ async function executarPreProcessamento() {
 
         resultado.data.words.forEach(word => {
           const txt = word.text?.trim();
-          if (!txt || word.confidence < 20) return; // ignorar palavras de baixa confiança
+          if (!txt || word.confidence < 20) return;
 
-          // CONVERSÃO CRÍTICA: coordenadas do Tesseract estão no espaço do canvas OCR
-          // (scale=OCR_SCALE). Dividir por OCR_SCALE converte para espaço scale=1.0.
+          // Coordenadas Tesseract → scale=1.0 (dividir por OCR_SCALE)
           const x       = word.bbox.x0 / OCR_SCALE;
           const largura = (word.bbox.x1 - word.bbox.x0) / OCR_SCALE;
           const altReal = (word.bbox.y1 - word.bbox.y0) / OCR_SCALE;
-          // Padding vertical de ~18% da altura: a caixa do Tesseract é justa aos
-          // glifos; expandir garante cobertura total de acentos e descidas (g, p, ç).
-          const padV    = altReal * 0.18;
-          const y       = word.bbox.y0 / OCR_SCALE - padV;
-          const altura  = altReal + padV * 2;
+          // Padding vertical: bbox Tesseract é justa aos glifos; expandir para
+          // cobrir acentos superiores e descidas (g, p, ç, etc.)
+          const padV   = altReal * 0.18;
+          const y      = word.bbox.y0 / OCR_SCALE - padV;
+          const altura = altReal + padV * 2;
 
           const charStart = textoPlano.length;
           textoPlano += txt;
@@ -590,10 +565,41 @@ async function executarPreProcessamento() {
 
           indice.push({ x, y, largura, altura, charStart, charEnd, deOcr: true });
         });
-        usouOCR = true;
       } catch (e) {
-        console.warn(`OCR falhou na página ${p}:`, e);
+        console.warn(`OCR falhou na página ${p}, usando texto nativo:`, e);
+        textoPlano = '';
+        indice.length = 0;
+        const viewport1 = page.getViewport({ scale: 1.0 });
+        const tc = await page.getTextContent();
+        tc.items.forEach(item => {
+          if (!item.str) return;
+          const tx = pdfjsLib.Util.transform(viewport1.transform, item.transform);
+          const x = tx[4];
+          const altReal = Math.abs(item.height) || 12;
+          const y = tx[5] - altReal;
+          const charStart = textoPlano.length;
+          textoPlano += item.str;
+          const charEnd = textoPlano.length;
+          textoPlano += ' ';
+          indice.push({ x, y, largura: Math.abs(item.width) || 8, altura: altReal + 2, charStart, charEnd });
+        });
       }
+    } else {
+      // ── Fallback: Tesseract indisponível → texto nativo do PDF.js ──────────
+      const viewport1 = page.getViewport({ scale: 1.0 });
+      const tc = await page.getTextContent();
+      tc.items.forEach(item => {
+        if (!item.str) return;
+        const tx = pdfjsLib.Util.transform(viewport1.transform, item.transform);
+        const x = tx[4];
+        const altReal = Math.abs(item.height) || 12;
+        const y = tx[5] - altReal;
+        const charStart = textoPlano.length;
+        textoPlano += item.str;
+        const charEnd = textoPlano.length;
+        textoPlano += ' ';
+        indice.push({ x, y, largura: Math.abs(item.width) || 8, altura: altReal + 2, charStart, charEnd });
+      });
     }
 
     App.textoPorPagina.set(p, { indice, textoPlano });
