@@ -5,7 +5,7 @@
 'use strict';
 
 // Versão da aplicação. Confira no console (F12) que esta é a versão carregada.
-const VERSAO_APP = 'v15';
+const VERSAO_APP = 'v16';
 console.info(`%cTarjamento Coger ${VERSAO_APP} carregado`, 'color:#1a3a5c;font-weight:bold');
 
 // ─── Estado global ────────────────────────────────────────────────────────────
@@ -340,6 +340,96 @@ function detectarNomesTituloGeral(pagina, texto, indice, marcacoes) {
       });
     });
   }
+}
+
+// ─── ETAPA 3.5: Revisão de candidatos de nomes ───────────────────────────────
+function mostrarCandidatosNomes() {
+  // Coletar todas as marcações "sugerido" e deduplicar por texto normalizado.
+  // A chave é o texto normalizado (sem acentos, minúsculas); o texto exibido
+  // é a forma mais frequente ou a primeira encontrada.
+  const mapa = new Map(); // norm → { texto, norm, count, paginas }
+  App.marcacoesPorPagina.forEach((marcacoes, pagina) => {
+    marcacoes.forEach(m => {
+      if (m.estado !== 'sugerido') return;
+      const norm = normalizarTexto(m.texto);
+      if (!mapa.has(norm)) {
+        mapa.set(norm, { texto: m.texto, norm, count: 0, paginas: new Set() });
+      }
+      const c = mapa.get(norm);
+      c.count++;
+      c.paginas.add(pagina);
+    });
+  });
+
+  // Ordenar por frequência (desc) e depois alfabeticamente.
+  const candidatos = [...mapa.values()].sort((a, b) =>
+    b.count - a.count || a.texto.localeCompare(b.texto, 'pt-BR')
+  );
+  App._candidatosNomes = candidatos;
+
+  const container  = document.getElementById('lista-candidatos-nomes');
+  const acoesTopo  = document.getElementById('candidatos-acoes-topo');
+  const contador   = document.getElementById('candidatos-contador');
+
+  if (candidatos.length === 0) {
+    container.innerHTML = `
+      <div class="alerta alerta-info">
+        <span class="alerta-icone">ℹ️</span>
+        <div>Nenhum nome candidato detectado automaticamente. Clique em "Confirmar e Avançar" para continuar para a revisão.</div>
+      </div>`;
+    acoesTopo.style.display = 'none';
+    return;
+  }
+
+  acoesTopo.style.display = 'flex';
+  contador.textContent = `${candidatos.length} candidato(s)`;
+
+  container.innerHTML = candidatos.map((c, i) => {
+    const pags = [...c.paginas].sort((a, b) => a - b).map(p => 'p.' + p).join(', ');
+    return `
+      <div class="item-candidato">
+        <input type="checkbox" id="cand-${i}" class="checkbox-candidato" data-norm="${escapeHtml(c.norm)}">
+        <label for="cand-${i}" class="candidato-label">
+          <input type="text" class="input-candidato-texto" value="${escapeHtml(c.texto)}"
+                 aria-label="Texto do nome (editável para correção de OCR)">
+        </label>
+        <span class="badge-ocorrencias" title="Ocorrências no documento">${c.count}× — ${pags}</span>
+      </div>`;
+  }).join('');
+}
+
+function selecionarTodosCandidatos(marcar) {
+  document.querySelectorAll('.checkbox-candidato').forEach(cb => { cb.checked = marcar; });
+}
+
+function confirmarCandidatosNomes() {
+  // Mapear decisões (marcado/desmarcado) e textos editados da UI.
+  const decisoes = new Map(); // norm → { checked, textoNovo }
+  document.querySelectorAll('.item-candidato').forEach(item => {
+    const cb    = item.querySelector('.checkbox-candidato');
+    const input = item.querySelector('.input-candidato-texto');
+    if (!cb) return;
+    decisoes.set(cb.dataset.norm, {
+      checked:   cb.checked,
+      textoNovo: input ? input.value.trim() : '',
+    });
+  });
+
+  // Aplicar decisões em todas as páginas.
+  App.marcacoesPorPagina.forEach(marcacoes => {
+    marcacoes.forEach(m => {
+      if (m.estado !== 'sugerido') return;
+      const norm = normalizarTexto(m.texto);
+      const d = decisoes.get(norm);
+      if (!d) { m.estado = 'ignorado'; return; }
+      if (d.checked) {
+        m.estado = 'incluido';
+        if (d.textoNovo) m.texto = d.textoNovo;
+      } else {
+        m.estado = 'ignorado';
+      }
+    });
+  });
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
@@ -1188,7 +1278,12 @@ function configurarBotoesNavegacao() {
     avancarEtapa(3);
     await executarPreProcessamento();
   });
-  document.getElementById('btn-avancar-etapa3').addEventListener('click', async () => {
+  document.getElementById('btn-avancar-etapa3').addEventListener('click', () => {
+    avancarEtapa(3.5);
+    mostrarCandidatosNomes();
+  });
+  document.getElementById('btn-confirmar-candidatos').addEventListener('click', async () => {
+    confirmarCandidatosNomes();
     avancarEtapa(4);
     await inicializarRevisao();
   });

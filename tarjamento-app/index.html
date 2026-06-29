@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tarjamento Coger — Corregedoria RFB</title>
   <meta name="description" content="Ferramenta de tarjamento automático de documentos PDF — Corregedoria da Receita Federal do Brasil">
-  <link rel="stylesheet" href="assets/css/style.css?v=10">
+  <link rel="stylesheet" href="assets/css/style.css?v=16">
 </head>
 <body>
 
@@ -21,7 +21,7 @@
     <h1>Tarjamento Coger</h1>
     <span>Ferramenta de Tarjamento Automático de Documentos PDF — Corregedoria da Receita Federal do Brasil</span>
   </div>
-  <span id="badge-versao" title="Versão da ferramenta — confirme que está usando a versão mais recente">v15</span>
+  <span id="badge-versao" title="Versão da ferramenta — confirme que está usando a versão mais recente">v16</span>
 </header>
 
 <!-- Indicador de etapas -->
@@ -34,6 +34,9 @@
   </div>
   <div class="step" data-step="3">
     <span class="num">3</span> Processamento
+  </div>
+  <div class="step step-nomes" data-step="3.5">
+    <span class="num">↳</span> Nomes
   </div>
   <div class="step" data-step="4">
     <span class="num">4</span> Revisão
@@ -269,7 +272,38 @@
 
     <div id="nav-etapa3" style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px;display:none">
       <button id="btn-avancar-etapa3" class="btn btn-primario">
-        Avançar para Revisão →
+        Revisar Nomes Detectados →
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       ETAPA 3.5 — Revisão de Nomes Candidatos
+  ══════════════════════════════════════════════════════════════════ -->
+  <div id="etapa-3.5" class="etapa-secao hidden">
+    <div class="card">
+      <h2>👤 3.5 — Revisão de Nomes Próprios Detectados</h2>
+      <p style="color:#6b7280;font-size:13px;margin-bottom:16px">
+        Os nomes abaixo foram identificados automaticamente por heurística (ALL-CAPS, Title Case e contexto de papel processual).
+        <strong>Marque os que devem ser tarjados</strong> em todo o documento.
+        Você pode corrigir erros de OCR editando o texto no campo antes de confirmar.
+        Nomes não marcados serão ignorados.
+      </p>
+
+      <div id="candidatos-acoes-topo" style="display:none;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
+        <button class="btn btn-secundario btn-pequeno" onclick="selecionarTodosCandidatos(true)">☑ Marcar todos</button>
+        <button class="btn btn-secundario btn-pequeno" onclick="selecionarTodosCandidatos(false)">☐ Desmarcar todos</button>
+        <span id="candidatos-contador" style="margin-left:auto;font-size:12px;color:#6b7280"></span>
+      </div>
+
+      <div id="lista-candidatos-nomes">
+        <!-- preenchido por JS após processamento -->
+      </div>
+    </div>
+
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+      <button id="btn-confirmar-candidatos" class="btn btn-primario">
+        Confirmar e Avançar para Revisão →
       </button>
     </div>
   </div>
@@ -392,7 +426,7 @@
         onerror="console.info('Tesseract não carregado — OCR indisponível para PDFs escaneados.')"></script>
 
 <!-- Aplicação -->
-<script src="assets/js/app.js?v=10"></script>
+<script src="assets/js/app.js?v=16"></script>
 
 <!-- Verificação de bibliotecas após carregamento -->
 <script>

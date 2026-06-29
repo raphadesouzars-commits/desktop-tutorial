@@ -734,3 +734,84 @@ footer {
   cursor: pointer;
 }
 .btn-ignorar-sugestao:hover { background: #4b5563; }
+
+/* ── Etapa 3.5: lista de candidatos de nomes ── */
+.step-nomes {
+  min-width: 80px;
+  font-size: 11px;
+}
+
+.step-nomes .num {
+  font-size: 14px;
+  width: auto;
+  padding: 0 4px;
+  border-radius: 4px;
+}
+
+#lista-candidatos-nomes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.item-candidato {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--raio);
+  transition: background 0.1s;
+}
+
+.item-candidato:has(.checkbox-candidato:checked) {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.item-candidato .checkbox-candidato {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.candidato-label {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.input-candidato-texto {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--cor-texto);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.input-candidato-texto:hover {
+  border-color: var(--cor-borda);
+  background: #fff;
+}
+
+.input-candidato-texto:focus {
+  outline: none;
+  border-color: var(--cor-secundaria);
+  background: #fff;
+}
+
+.badge-ocorrencias {
+  flex-shrink: 0;
+  font-size: 11px;
+  color: #6b7280;
+  background: #e5e7eb;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
