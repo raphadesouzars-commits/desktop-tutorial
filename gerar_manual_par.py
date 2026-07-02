@@ -328,7 +328,7 @@ r_sub.font.color.rgb = AZUL_MEDIO
 p_sub2 = doc.add_paragraph()
 p_sub2.alignment = WD_ALIGN_PARAGRAPH.CENTER
 p_sub2.paragraph_format.space_before = Pt(60)
-r_sub2 = p_sub2.add_run('Versão 2025')
+r_sub2 = p_sub2.add_run('Versão 2026 — Conforme Manual de Responsabilização de Entes Privados da CGU (3ª ed., jun/2026)')
 r_sub2.font.name = 'Arial'; r_sub2.font.size = Pt(11)
 r_sub2.font.color.rgb = CINZA_TEXTO
 
@@ -519,6 +519,8 @@ tabela(
 )
 heading2('2.3 Orientações complementares')
 bullet('IN CGU nº 1/2015 — metodologia de avaliação do programa de integridade;')
+bullet('Manual de Responsabilização de Entes Privados da CGU (3ª ed., jun/2026) — metodologia oficial de dosimetria (Tabela 3.1: interrupção de serviço público; Tabela 6: colaboração);')
+bullet('Portaria Conjunta CGU nº 6/2022 — Adendo nº 1 ao Manual Prático de Avaliação de Programa de Integridade; fator multiplicador de 1,25 (Art. 23, V);')
 bullet('Guia CGU de Responsabilização de Pessoas Jurídicas — parâmetros interpretativos e tabelas de referência;')
 bullet('Tabela 5 do Guia CGU — escalonamento dos percentuais de ressarcimento (Art. 23, II).')
 
@@ -645,15 +647,16 @@ heading3('a) Interrupção no Fornecimento de Serviço Público')
 tabela(
     ['Situação', '%'],
     [
-        ['Ausência de interrupção',                           '0%'],
-        ['Até 1 semana ou vila/povoado',                      '1,0%'],
-        ['Até 2 semanas ou cidade até 500 mil hab.',          '2,0%'],
-        ['Até 3 semanas ou cidade +500 mil hab./Estado',      '3,0%'],
-        ['Mais de 4 semanas ou 2 ou mais Estados',            '4,0%'],
+        ['Ausência de interrupção no fornecimento de serviço público',                                   '0%'],
+        ['Até 1 semana, ou impacto em município com até 100 mil habitantes',                             '1,0%'],
+        ['Até 2 semanas, ou impacto em município com até 400 mil habitantes',                            '2,0%'],
+        ['Até 3 semanas, ou município com mais de 400 mil hab., ou mais de um município do mesmo Estado', '3,0%'],
+        ['Superior a 4 semanas, ou dois ou mais Estados, ou dois ou mais municípios com +400 mil hab.',  '4,0%'],
     ],
     cor_header=VERMELHO,
     col_widths=[13, 3]
 )
+nota('Atualização do Manual CGU (3ª ed., jun/2026), Tabela 3.1: os limiares de porte de município passam a ser 100 mil e 400 mil habitantes, substituindo os antigos critérios "vila/povoado" e de 500 mil habitantes.')
 heading3('b) Interrupção na Execução de Obra Contratada')
 tabela(
     ['Período ↓ / Residual →', '< 10%', 'Até 30%', 'Até 50%', 'Até 70%', '> 70%'],
@@ -738,16 +741,16 @@ tabela(['Situação', '%'],
 nota('O percentual máximo de 1,0% exige confirmação expressa de devolução integral. Devolução parcial reduz o percentual para 0,5%.')
 
 heading2('7.3 Art. 23, III — Colaboração', cor=VERDE_ATEN)
-body('Reconhecida ainda que não haja admissão de responsabilidade. Cada condição acrescenta 0,5%, com teto de 1,5% (condições cumuláveis):')
-tabela(['Condição (cumulável)', '%'],
+body('Reconhecida ainda que não haja admissão de responsabilidade. Conforme a Tabela 6 do Manual CGU (3ª ed., jun/2026), a colaboração NÃO é soma fixa de 0,5% por condição, mas valoração por faixa:')
+tabela(['Condições factualmente presentes', 'Percentual'],
     [
-        ['Ausência de colaboração',           '0%'],
-        ['Admitiu a prática do ato',          '+0,5%'],
-        ['Forneceu elementos para a apuração','+0,5%'],
-        ['Renunciou aos prazos processuais',  '+0,5%'],
+        ['Nenhuma condição', '0%'],
+        ['Uma ou duas condições', 'Faixa discricionária de 0,5% a 1,0% (fixada pela autoridade conforme a utilidade e relevância da colaboração)'],
+        ['As três condições, simultaneamente', '1,5% fixo (sem discricionariedade)'],
     ],
-    cor_header=VERDE_ATEN, col_widths=[13, 3])
-nota('A mera entrega de documentos exigidos por lei NÃO configura colaboração. Conta a utilidade de informações e provas adicionais e inéditas. Admitir o ato sem assumir a responsabilidade jurídica enquadra-se neste inciso (III); o inciso IV exige reconhecimento formal da responsabilidade objetiva.')
+    cor_header=VERDE_ATEN, col_widths=[5, 11])
+body('As três condições que se registram (fato objetivo): (i) admitiu a prática do ato; (ii) forneceu elementos para a apuração; (iii) renunciou aos prazos processuais.')
+nota('Mudança de metodologia: a calculadora deixou de somar 0,5% por condição e passou a abrir um campo editável (faixa 0,5%–1,0%) quando há 1 ou 2 condições, travando em 1,5% quando há 3. A mera entrega de documentos exigidos por lei NÃO configura colaboração — conta a utilidade de informações e provas adicionais e inéditas. Admitir o ato sem assumir a responsabilidade jurídica enquadra-se neste inciso (III); o inciso IV exige reconhecimento formal da responsabilidade objetiva.')
 
 heading2('7.4 Art. 23, IV — Admissão Voluntária da Responsabilidade', cor=VERDE_ATEN)
 body('Avaliada em dois eixos: conteúdo (parcial/total) × tempestividade (4 momentos processuais).')
@@ -767,11 +770,20 @@ tabela(['Condição', '%'],
 
 heading2('7.5 Art. 23, V — Programa de Integridade', cor=VERDE_ATEN)
 body('Atenuante de até 5% pela comprovada existência e efetiva aplicação de programa de integridade. O percentual máximo somente é atribuível quando o programa for anterior à prática do ato lesivo (Art. 23, parágrafo único, III).')
-cite('Fórmula: [COI × MPI] + APJ   —   teto: 5%')
+cite('Resultado da planilha = [COI × MPI] + APJ   →   se ≥ 1%, aplica-se × 1,25   →   Atenuante = min(resultado, 5%)')
 body('Onde: COI = Cultura Organizacional e Instâncias de Governança; MPI = Mecanismos, Políticas e Procedimentos de Integridade; APJ = Atuação da Pessoa Jurídica em relação ao ato lesivo.')
+body('Fator multiplicador de 1,25 (Portaria Conjunta CGU nº 6/2022 — Adendo nº 1 ao Manual Prático de Avaliação de PI): incide sobre o resultado da planilha sempre que este for igual ou superior a 1%. O teto de 5% é aplicado DEPOIS do multiplicador.')
+tabela(['Resultado da planilha', 'Fator 1,25', 'Resultado final'],
+    [
+        ['Inferior a 1% (ex.: 0,8%)', 'Não incide', '0,8%'],
+        ['Igual ou superior a 1% (ex.: 1,0%)', 'Incide', '1,25%'],
+        ['Próximo ao teto (ex.: 4,2%)', 'Incide, mas o teto prevalece', '5,0% (4,2 × 1,25 = 5,25 → teto)'],
+    ],
+    cor_header=VERDE_ATEN, col_widths=[6, 5, 6])
 tabela(['Situação', '%'],
     [['Sem programa ou não comprovado', '0%'], ['Programa apresentado e avaliado (bloco APJ-Anterior)', 'até −5,0%'], ['Programa instituído após o ato lesivo (bloco APJ-Posterior)', 'reduzido']],
     cor_header=VERDE_ATEN, col_widths=[13, 3])
+nota('A calculadora exibe o valor pré e pós-multiplicador no painel, no relatório e na minuta, para transparência do cálculo.')
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  8. CÁLCULO FINAL E LIMITES LEGAIS
@@ -1016,6 +1028,12 @@ body('Não. A reincidência (Art. 22, V) exige decisão definitiva anterior. Est
 heading2('Como é calculada a publicação quando a multa é ajustada pelo piso legal?')
 body('Quando a multa final é elevada ao valor da vantagem auferida (piso), aplica-se o Cenário B: Alíquota de Referência = (Multa Final ÷ Faturamento Bruto) × 100. Isso garante que o prazo de publicação reflita a gravidade proporcional real da sanção.')
 
+heading2('Como a colaboração é valorada com 1, 2 ou 3 condições presentes? (atualização CGU 2026)')
+body('Conforme a Tabela 6 do Manual CGU, uma ou duas condições ensejam percentual discricionário de 0,5% a 1,0% (fixado pela autoridade conforme a utilidade da colaboração); as três condições, simultaneamente, ensejam 1,5% fixo. A calculadora abre um campo editável (faixa 0,5–1,0%) para 1 ou 2 condições e trava em 1,5% para 3 — não soma mais 0,5% por condição.')
+
+heading2('O que é o fator de 1,25 no Programa de Integridade? (atualização CGU 2026)')
+body('Conforme a Portaria Conjunta CGU nº 6/2022, ao resultado da planilha [COI × MPI] + APJ aplica-se um fator multiplicador de 1,25 sempre que esse resultado for igual ou superior a 1%, respeitado o teto de 5%. O fator não incide sobre resultados abaixo de 1%, e o teto de 5% é aplicado depois do multiplicador (ex.: 4,2% × 1,25 = 5,25% → limitado a 5,0%).')
+
 # ══════════════════════════════════════════════════════════════════════════════
 #  13. CASOS ESPECIAIS
 # ══════════════════════════════════════════════════════════════════════════════
@@ -1197,7 +1215,7 @@ p_rodape = doc.add_paragraph()
 p_rodape.alignment = WD_ALIGN_PARAGRAPH.CENTER
 r_rod = p_rodape.add_run(
     'Manual elaborado com base na Calculadora de Multa PAR — Corregedoria da Receita Federal do Brasil\n'
-    'Fundamentos: Lei nº 12.846/2013 | Decreto nº 11.129/2022 | IN CGU nº 1/2015 | Guia CGU'
+    'Fundamentos: Lei nº 12.846/2013 | Decreto nº 11.129/2022 | IN CGU nº 1/2015 | Manual CGU (3ª ed., jun/2026) | Portaria Conjunta CGU nº 6/2022'
 )
 r_rod.font.name = 'Arial'; r_rod.font.size = Pt(9)
 r_rod.font.color.rgb = RGBColor(0x88, 0x88, 0x88)

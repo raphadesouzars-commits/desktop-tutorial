@@ -306,6 +306,8 @@ A ferramenta funciona integralmente **offline**, sendo adequada a ambientes com 
 ### Orientações complementares
 
 - **IN CGU nº 1/2015** — metodologia de avaliação do programa de integridade;
+- **Manual de Responsabilização de Entes Privados da CGU (3ª ed., jun/2026)** — metodologia oficial de dosimetria, incluindo a Tabela 3.1 (faixas de interrupção de serviço público) e a Tabela 6 (colaboração);
+- **Portaria Conjunta CGU nº 6/2022** — Adendo nº 1 ao Manual Prático de Avaliação de Programa de Integridade; institui o fator multiplicador de 1,25 (Art. 23, V);
 - **Manual Prático de Cálculo de Multa da CGU** — procedimentos e tabelas;
 - **Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU** — parâmetros interpretativos por inciso;
 - **Tabela 5 do Guia CGU** — escalonamento dos percentuais de ressarcimento (Art. 23, II).
@@ -490,11 +492,13 @@ Agravante de **até 4%**. O inciso contempla **três hipóteses distintas**; a c
 
 | Situação | % |
 |---|---|
-| Ausência de interrupção | 0% |
-| Até 1 semana ou vila/povoado | 1,0% |
-| Até 2 semanas ou cidade até 500 mil hab. | 2,0% |
-| Até 3 semanas ou cidade com +500 mil hab./Estado | 3,0% |
-| Mais de 4 semanas ou 2 ou mais Estados | 4,0% |
+| Ausência de interrupção no fornecimento de serviço público | 0% |
+| Até 1 semana, ou impacto em município com até 100 mil habitantes | 1,0% |
+| Até 2 semanas, ou impacto em município com até 400 mil habitantes | 2,0% |
+| Até 3 semanas, ou impacto em município com mais de 400 mil habitantes, ou em mais de um município do mesmo Estado | 3,0% |
+| Superior a 4 semanas, ou impacto em dois ou mais Estados, ou em dois ou mais municípios com mais de 400 mil habitantes | 4,0% |
+
+> **Atualização Manual CGU (3ª ed., jun/2026):** os limiares de porte de município seguem os critérios objetivos da Tabela 3.1 do Manual — **100 mil** e **400 mil** habitantes —, substituindo os antigos cortes textuais ("vila/povoado") e de 500 mil habitantes.
 
 ### Aba b) Interrupção na Execução de Obra Contratada
 
@@ -619,20 +623,36 @@ Atenuante de **até 1,0%** pela **devolução espontânea da vantagem auferida**
 ## 21. Etapa 10 — Atenuante: Colaboração (Art. 23, III)
 
 ### Teoria
-Atenuante de **até 1,5%** pelo **grau de colaboração** da PJ, reconhecida ainda que não haja admissão de responsabilidade. Cada condição acrescenta **0,5%** (cumuláveis).
+Atenuante de **até 1,5%** pelo **grau de colaboração** da PJ, reconhecida ainda que não haja admissão de responsabilidade.
 
-> **Atenção:** a **mera entrega de documentos exigidos por lei não configura colaboração**. O percentual é fracionado conforme a **utilidade das informações adicionais** fornecidas.
+> **Atenção:** a **mera entrega de documentos exigidos por lei não configura colaboração**. O percentual reflete a **utilidade e a relevância das informações adicionais** fornecidas.
 
-### Condições (cumuláveis)
+### Regra de valoração (Tabela 6 do Manual CGU)
 
-| Condição | % |
+A **Tabela 6 do Manual CGU (3ª ed., jun/2026)** não trata as três condições como somas fixas de 0,5% cada. A regra é a seguinte:
+
+| Condições factualmente presentes | Percentual |
 |---|---|
-| Ausência de colaboração | 0% |
-| Fornecimento tempestivo de elementos/provas inéditas | +0,5% |
-| Facilitação de depoimentos e identificação de terceiros coautores | +0,5% |
-| Renúncia expressa e voluntária a prazos processuais meramente protelatórios | +0,5% |
+| Nenhuma condição | 0% |
+| **Uma ou duas** condições | **Faixa discricionária de 0,5% a 1,0%** — a autoridade fixa o valor conforme a utilidade e a relevância da colaboração |
+| **As três** condições, simultaneamente | **1,5% fixo** (sem margem de discricionariedade) |
 
-> As condições são cumuláveis (checkboxes independentes); o sistema soma automaticamente, respeitando o teto de 1,5%.
+### As três condições (registro factual)
+
+Os checkboxes servem para registrar **quais** condições ocorreram (fato objetivo), não para somar percentuais:
+
+- Admitiu a prática do ato;
+- Forneceu elementos para a apuração;
+- Renunciou aos prazos processuais.
+
+### Como preencher na calculadora
+
+1. Ative "Houve alguma forma de colaboração";
+2. Marque as condições factualmente presentes;
+3. **Se marcar 1 ou 2 condições:** aparece um campo numérico para a autoridade escolher o percentual entre **0,5% e 1,0%**, refletindo a utilidade da colaboração;
+4. **Se marcar as 3 condições:** o sistema fixa automaticamente **1,5%**, sem campo editável.
+
+> **Mudança em relação à versão anterior:** a calculadora deixou de somar 0,5% por condição marcada (soma determinística) e passou a implementar a margem de valoração qualitativa prevista no Manual CGU.
 
 > **Distinção importante:** admitir a infração sem assumir a responsabilidade jurídica, ou cooperar parcialmente, enquadra-se **neste inciso (III)**. O inciso IV (Admissão Voluntária) exige reconhecimento expresso e formal da responsabilidade objetiva.
 
@@ -673,12 +693,28 @@ Atenuante de **até 5%** pela **comprovada existência e efetiva aplicação** d
 ### Fórmula de cálculo
 
 ```
-Atenuante = [COI × MPI] + APJ          (teto: 5%)
+Resultado da planilha = [COI × MPI] + APJ
+Se resultado ≥ 1%  →  × 1,25   (fator multiplicador)
+Atenuante final    =  min(resultado ajustado, 5%)   (teto)
 ```
 
 - **COI** — Cultura Organizacional e Instâncias de Governança;
 - **MPI** — Mecanismos, Políticas e Procedimentos de Integridade;
 - **APJ** — Atuação da Pessoa Jurídica em relação ao ato lesivo.
+
+### Fator multiplicador de 1,25 (Portaria Conjunta CGU nº 6/2022)
+
+> **Atualização Manual CGU (3ª ed., jun/2026):** conforme a **Portaria Conjunta CGU nº 6/2022** (Adendo nº 1 ao Manual Prático de Avaliação de Programa de Integridade), ao resultado da planilha `[COI × MPI] + APJ` aplica-se um **fator multiplicador de 1,25** sempre que esse resultado for **igual ou superior a 1%**, respeitado o teto de 5%.
+
+Regras de aplicação do fator:
+
+| Resultado da planilha | Fator 1,25 | Resultado final |
+|---|---|---|
+| Inferior a 1% (ex.: 0,8%) | **Não** incide | 0,8% |
+| Igual ou superior a 1% (ex.: 1,0%) | Incide | 1,0% × 1,25 = **1,25%** |
+| Alto, próximo ao teto (ex.: 4,2%) | Incide, mas o teto prevalece | 4,2% × 1,25 = 5,25% → **5,0%** (teto) |
+
+> **Ponto de atenção:** o teto de 5% é aplicado **depois** do multiplicador — do contrário, o fator de 1,25 nunca surtiria efeito nos casos próximos ao teto. A calculadora exibe o valor **pré** e **pós**-multiplicador no painel, no relatório e na minuta, para transparência do cálculo.
 
 ### Fluxo
 
@@ -813,9 +849,9 @@ A minuta produz texto técnico-jurídico fluido descrevendo: a base de cálculo 
 4. Atenuantes (Art. 23, I a V) → soma dos percentuais
    I   Não consumação                  (0% ou 0,5%)
    II  Ressarcimento/Devolução         (0% a 1,0%)
-   III Colaboração                     (0% a 1,5%) ← entrega legal obrigatória ≠ colaboração
+   III Colaboração                     (0% a 1,5%) ← 1-2 cond.: faixa 0,5-1,0%; 3 cond.: 1,5% fixo
    IV  Admissão voluntária             (0% a 2,0%)
-   V   Programa de integridade         (0% a 5,0%) ← 5% só se anterior ao ato
+   V   Programa de integridade         (0% a 5,0%) ← [COI×MPI]+APJ × 1,25 (se ≥1%); 5% só se anterior
 
 5. Índice Final = Σ Agravantes − Σ Atenuantes
 6. Multa Bruta = Faturamento × Índice Final
@@ -1010,6 +1046,12 @@ Pelo Art. 25, §2º, a multa é fixada no valor mínimo (vantagem auferida). Se 
 ### A entrega de documentos exigidos por lei conta como colaboração?
 **Não.** A mera entrega do que a lei já obriga não configura colaboração (Art. 23, III). Conta a utilidade de informações/provas **adicionais e inéditas**.
 
+### Como a colaboração é valorada quando há 1, 2 ou 3 condições presentes?
+Conforme a Tabela 6 do Manual CGU: **uma ou duas** condições ensejam percentual **discricionário de 0,5% a 1,0%**, que a autoridade fixa segundo a utilidade da colaboração; as **três** condições, simultaneamente, ensejam **1,5% fixo**. A calculadora abre um campo editável (faixa 0,5–1,0%) quando há 1 ou 2 condições e trava em 1,5% quando há 3.
+
+### O que é o fator de 1,25 no Programa de Integridade?
+Conforme a **Portaria Conjunta CGU nº 6/2022**, ao resultado da planilha `[COI × MPI] + APJ` aplica-se um **fator multiplicador de 1,25** sempre que esse resultado for **igual ou superior a 1%**, respeitado o teto de 5%. O fator **não** incide sobre resultados abaixo de 1%, e o teto de 5% é aplicado **depois** do multiplicador (ex.: 4,2% × 1,25 = 5,25% → limitado a 5,0%).
+
 ### O programa de integridade posterior ao ato lesivo pode atenuar?
 Sim, mas com percentual reduzido (bloco APJ-Posterior). O máximo de 5% é exclusivo de programas preexistentes.
 
@@ -1025,4 +1067,4 @@ Preencha todas as etapas → "Imprimir Relatório Final (PDF)" → "Salvar como 
 ---
 
 *Manual teórico-prático elaborado com base no conteúdo do Treinamento em PAR da Corregedoria da Receita Federal do Brasil e na lógica da Calculadora de Multa PAR.*
-*Fundamentos: Lei nº 12.846/2013; Decreto nº 11.129/2022; IN CGU nº 1/2015; Guia CGU de Responsabilização de Pessoas Jurídicas; Manual Prático de Cálculo de Multa da CGU; Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU.*
+*Fundamentos: Lei nº 12.846/2013; Decreto nº 11.129/2022; IN CGU nº 1/2015; Manual de Responsabilização de Entes Privados da CGU (3ª ed., jun/2026); Portaria Conjunta CGU nº 6/2022; Manual Prático de Cálculo de Multa da CGU; Sugestão de Escalonamento das Circunstâncias Agravantes e Atenuantes da CGU.*
