@@ -428,8 +428,8 @@ body{
 .pre-card .pre-sub{font-size:12.5px;color:var(--rfb-text-muted);margin-bottom:22px;}
 .pre-field{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
 .pre-field label{font-size:11.5px;font-weight:600;color:var(--rfb-navy-600);text-transform:uppercase;letter-spacing:.05em;}
-.pre-field input,.pre-field textarea{border:1.5px solid var(--rfb-border-strong);border-radius:var(--rfb-r-sm);padding:9px 12px;font-size:13.5px;font-family:var(--rfb-font-body);color:var(--rfb-text);background:var(--rfb-bg);transition:border-color var(--transition);resize:vertical;}
-.pre-field input:focus,.pre-field textarea:focus{outline:none;border-color:var(--rfb-navy-500);box-shadow:0 0 0 3px rgba(30,76,153,.09);}
+.pre-field input,.pre-field textarea,.pre-field select{border:1.5px solid var(--rfb-border-strong);border-radius:var(--rfb-r-sm);padding:9px 12px;font-size:13.5px;font-family:var(--rfb-font-body);color:var(--rfb-text);background:var(--rfb-bg);transition:border-color var(--transition);resize:vertical;}
+.pre-field input:focus,.pre-field textarea:focus,.pre-field select:focus{outline:none;border-color:var(--rfb-navy-500);box-shadow:0 0 0 3px rgba(30,76,153,.09);}
 .pre-field input.err,.pre-field textarea.err{border-color:var(--rfb-danger);}
 .pre-char-counter{font-size:11px;color:var(--rfb-text-faint);text-align:right;}
 .pre-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
@@ -586,7 +586,7 @@ var ICO_RST   = ico('<path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/>');
 var ICO_FILE  = ico('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>');
 
 // ── SESSION DATA ──────────────────────────────────────────────────────────────
-var SESSION = { processo: "", analista: "", unidade: "", dataFatos: "", conduta: "" };
+var SESSION = { processo: "", analista: "", unidade: "", dataFatos: "", conduta: "", antecedentes: "", reparacao: "" };
 
 // ── MÚLTIPLAS CONDUTAS ────────────────────────────────────────────────────────
 // Condutas já concluídas. Cada entrada: {conduta, hist, resultId, res}
@@ -600,7 +600,7 @@ var EIXO_MAP = {
   "res-ameaca-132":"ameaca","res-ameaca-117":"ameaca",
   "res-moral-adv":"moral","res-moral-susp":"moral","res-moral-demissao":"moral",
   "res-moral-132":"moral","res-moral-117":"moral","res-cond-imp-org":"moral",
-  "res-disc-116":"disc","res-disc-117":"disc","res-disc-demissao":"disc","res-disc-132":"disc",
+  "res-disc-116":"disc","res-disc-117":"disc","res-disc-demissao":"disc","res-disc-132":"disc","res-disc-132-dif":"disc",
   "res-sex-132":"sex","res-sex-117":"sex","res-sex-116":"sex",
   "res-outras-sex-132":"sex","res-outras-sex-117":"sex","res-outras-sex-116":"sex",
   "res-ret-117":"ret","res-ret-116":"ret",
@@ -626,7 +626,9 @@ var CUMUL_RULES = [
 // dias a partir da data dos fatos; 0 = imprescritível
 var PRESC = {
   "res-sem-ilicito":   null,
+  "res-sem-ilicito-alerta-hierarquia": null,
   "res-ag-sem-nexo":   null,
+  "res-ag-acidental":  null,
   "res-ag-proporcional": { pen: "Advertência", dias: 180, art: "art. 142, III" },
   "res-ag-excesso-culpa": { pen: "Suspensão", dias: 730, art: "art. 142, II" },
   "res-ag-excesso-dolo":  { pen: "Demissão", dias: 1825, art: "art. 142, I" },
@@ -640,6 +642,7 @@ var PRESC = {
   "res-disc-116":         { pen: "Advertência / Suspensão", dias: 730, art: "art. 142, II" },
   "res-disc-117":         { pen: "Suspensão / Demissão", dias: 1825, art: "art. 142, I" },
   "res-disc-demissao":    { pen: "Demissão", dias: 1825, art: "art. 142, I" },
+  "res-disc-132-dif":     { pen: "Demissão", dias: 1825, art: "art. 142, I" },
   "res-ret-117":          { pen: "Demissão", dias: 1825, art: "art. 142, I" },
   "res-ret-116":          { pen: "Advertência / Suspensão", dias: 730, art: "art. 142, II" },
   "res-vverbal-132":      { pen: "Demissão", dias: 1825, art: "art. 142, I" },
@@ -656,7 +659,7 @@ var DEMISSAO_KEYS = [
   "res-ag-132","res-ag-excesso-dolo","res-ag-demissao",
   "res-ameaca-132","res-ameaca-117","res-ameaca-demissao",
   "res-sex-132","res-sex-117","res-outras-sex-132","res-outras-sex-117",
-  "res-disc-132","res-disc-117","res-disc-demissao",
+  "res-disc-132","res-disc-132-dif","res-disc-117","res-disc-demissao",
   "res-moral-132","res-moral-117","res-moral-demissao",
   "res-ret-117","res-vverbal-132","res-vverbal-117","res-stalk-117"
 ];
@@ -722,11 +725,16 @@ var S = {
   "ag-servico":{ax:"Eixo Agressão",ak:"ini",
     q:"A agressão ocorreu <em>durante o exercício das funções</em> ou em contexto diretamente relacionado ao serviço?",
     h:hBlock("A agressão aconteceu por causa do cargo ou das funções — ou apenas no mesmo lugar?","<strong>Hierarquia não é nexo funcional.</strong> A mera existência de relação chefe-subordinado não satisfaz o requisito. O cargo ou a função precisa ter sido o meio, o motivo ou o contexto determinante da agressão. A Convenção nº 190 da OIT amplia o conceito além das paredes da repartição: inclui viagens, treinamentos, eventos ligados ao trabalho e comunicações funcionais por qualquer canal.","Se a agressão teria ocorrido exatamente da mesma forma entre dois civis sem qualquer relação funcional: responda NÃO."),
-    opts:[{l:"Sim",s:"Nexo funcional presente",v:"sim",nx:"ag-legitima"},{l:"Não",s:"Fora do contexto de serviço",v:"nao",nx:"res-ag-sem-nexo"}]},
+    opts:[{l:"Sim",s:"Nexo funcional presente",v:"sim",nx:"ag-dolo"},{l:"Não",s:"Fora do contexto de serviço",v:"nao",nx:"res-ag-sem-nexo"}]},
+
+  "ag-dolo":{ax:"Eixo Agressão",ak:"ini",
+    q:"O contato físico foi <em>intencional</em>?",
+    h:hBlock("O servidor quis o contato físico ofensivo — ou ele decorreu de acidente, reflexo involuntário ou contexto sem intenção agressiva (ex.: esbarrão em espaço apertado, gesto mal interpretado)?","<strong>Intencional:</strong> vontade dirigida ao contato físico com o outro, ainda que sem dolo de lesão grave — basta a vontade do toque ofensivo (empurrão, tapa, contenção física não consentida). <strong>Não intencional:</strong> contato acidental, sem vontade de agredir ou de tocar de forma ofensiva.","Se não há qualquer elemento de vontade dirigida ao contato — mero acidente ou mal-entendido: responda NÃO."),
+    opts:[{l:"Sim",s:"Contato físico intencional",v:"sim",nx:"ag-legitima"},{l:"Não",s:"Contato acidental, sem intenção agressiva",v:"nao",nx:"res-ag-acidental"}]},
 
   "ag-legitima":{ax:"Eixo Agressão",ak:"ini",
     q:"A agressão ocorreu em <em>legítima defesa</em>?",
-    h:hBlock("O servidor reagiu a uma agressão que já estava ocorrendo — ou que estava prestes a ocorrer?","<strong>Legítima defesa exige cumulatividade:</strong> agressão injusta + atual ou iminente + reação com meios moderados + defesa de direito próprio ou alheio. Falta qualquer um desses elementos e a excludente cai.","Se houver dúvida sobre proporcionalidade da reação, a próxima pergunta trata especificamente do excesso."),
+    h:hBlock("O servidor reagiu a uma agressão que já estava ocorrendo — ou que estava prestes a ocorrer?","<strong>Legítima defesa exige cumulatividade:</strong> agressão injusta + atual ou iminente + reação com meios moderados + defesa de direito próprio ou alheio. Falta qualquer um desses elementos e a excludente cai.","Se houver dúvida sobre proporcionalidade da reação, a próxima pergunta trata especificamente do excesso. Atenção — agressão mútua: quando ambos os servidores trocam agressões, a provocação recíproca não configura, por si só, legítima defesa para nenhuma das partes. Cada servidor envolvido deve ser analisado individualmente, em fluxo de análise separado (utilize 'Analisar outra conduta' ao final), verificando-se para cada um, de forma autônoma, se estão presentes os elementos cumulativos da legítima defesa. A ausência de comprovação individualizada mantém o enquadramento do art. 132, VII para o respectivo servidor."),
     opts:[{l:"Sim",s:"Excludente de ilicitude",v:"sim",nx:"ag-excesso"},{l:"Não",s:"Ato agressivo injustificado",v:"nao",nx:"res-ag-132"}]},
 
   "ag-excesso":{ax:"Eixo Agressão",ak:"ini",
@@ -746,12 +754,12 @@ var S = {
 
   "ameaca-grav-cargo":{ax:"Eixo Ameaça",ak:"ameaca",tc:true,
     q:"Qual a <em>gravidade da ameaça</em>?",
-    h:hBlock("Qual o nível de coação efetivamente produzida sobre a vítima?","<strong>Grave:</strong> coação de alta intensidade — medo concreto de represália grave, impacto psicológico documentável, paralisia funcional da vítima. <strong>Moderada:</strong> intimidação real sem coação intensa. <strong>Leve:</strong> desconforto sem impacto objetivo.","Em caso de dúvida entre grave e moderada: verifique se há evidência de afastamento, pedido de transferência ou laudo médico associado."),
+    h:hBlock("Qual o nível de coação efetivamente produzida sobre a vítima?","<strong>Grave:</strong> coação de alta intensidade — medo concreto de represália grave, impacto psicológico documentável, paralisia funcional da vítima. <strong>Moderada:</strong> intimidação real sem coação intensa. <strong>Leve:</strong> desconforto sem impacto objetivo. <strong>Fator de ponderação — verossimilhança:</strong> pondere a capacidade concreta do agressor de executar o mal prometido (proximidade com a vítima, histórico de violência, meios disponíveis, contexto da ameaça). Uma ameaça de conteúdo grave mas manifestamente inverossímil — sem qualquer indício de capacidade ou intenção real de execução — tende à classificação moderada, mesmo que o teor literal sugira gravidade máxima. O inverso também se aplica: conteúdo aparentemente mais brando associado a alta verossimilhança de execução pode justificar classificação mais grave.","Em caso de dúvida entre grave e moderada: verifique se há evidência de afastamento, pedido de transferência ou laudo médico associado, e pondere a verossimilhança da ameaça como fator adicional de gradação — não como critério isolado ou automático."),
     opts:[{l:"GRAVE",s:"Impacto intenso, coação",v:"grave",nx:"res-ameaca-132",st:"o-dng"},{l:"MODERADA",s:"Intimidação com uso do cargo",v:"mod",nx:"res-ameaca-117",st:"o-alt"},{l:"LEVE",s:"Desconforto sem impacto grave",v:"leve",nx:"res-ameaca-116"}]},
 
   "ameaca-grav-sem":{ax:"Eixo Ameaça",ak:"ameaca",tc:true,
     q:"Qual a <em>gravidade da ameaça</em>?",
-    h:hBlock("Qual o nível de coação efetivamente produzida sobre a vítima?","<strong>Grave:</strong> coação de alta intensidade — medo concreto de represália grave, impacto psicológico documentável. <strong>Moderada:</strong> ameaça de agressão física real, sem coação grave. <strong>Leve:</strong> ameaça de dano à imagem sem coação física ou funcional.","Em caso de dúvida entre grave e moderada: verifique se há evidência de afastamento, pedido de transferência ou laudo médico associado."),
+    h:hBlock("Qual o nível de coação efetivamente produzida sobre a vítima?","<strong>Grave:</strong> coação de alta intensidade — medo concreto de represália grave, impacto psicológico documentável. <strong>Moderada:</strong> ameaça de agressão física real, sem coação grave. <strong>Leve:</strong> ameaça de dano à imagem sem coação física ou funcional. <strong>Fator de ponderação — verossimilhança:</strong> pondere a capacidade concreta do agressor de executar o mal prometido (proximidade com a vítima, histórico de violência, meios disponíveis, contexto da ameaça). Uma ameaça de conteúdo grave mas manifestamente inverossímil tende à classificação moderada, mesmo que o teor literal sugira gravidade máxima; o inverso também se aplica.","Em caso de dúvida entre grave e moderada: verifique se há evidência de afastamento, pedido de transferência ou laudo médico associado, e pondere a verossimilhança da ameaça como fator adicional de gradação — não como critério isolado ou automático."),
     opts:[{l:"GRAVE",s:"Impacto intenso, coação",v:"grave",nx:"res-ameaca-132",st:"o-dng"},{l:"MODERADA",s:"Ameaça de agressão física",v:"mod",nx:"res-ameaca-116-mod",st:"o-alt"},{l:"LEVE",s:"Ameaça de dano à imagem",v:"leve",nx:"res-ameaca-116"}]},
 
   // ── EIXO SEXUAL ───────────────────────────────────────────────────────────
@@ -774,7 +782,12 @@ var S = {
   "sex-moralidade-cons":{ax:"Eixo Sexual",ak:"sex",
     q:"A conduta consentida ocorreu em repartição pública ou causou <em>escândalo institucional ostensivo</em>?",
     h:hBlock("A conduta consentida foi perceptível a terceiros na repartição — ou ocorreu em contexto privado?","<strong>Escândalo institucional</strong> não exige escândalo público amplo: basta que colegas de trabalho, subordinados ou usuários tenham sido expostos à conduta durante o expediente, comprometendo a percepção de seriedade da administração.","Se ocorreu em ambiente particular, fora do expediente, sem visibilidade funcional: responda NÃO."),
-    opts:[{l:"Sim",s:"Ofensa à moralidade administrativa",v:"sim",nx:"res-sex-cons-132"},{l:"Não",s:"Sem ofensa relevante",v:"nao",nx:"res-sem-ilicito"}]},
+    opts:[{l:"Sim",s:"Ofensa à moralidade administrativa",v:"sim",nx:"res-sex-cons-132"},{l:"Não",s:"Sem ofensa relevante",v:"nao",nx:"sex-cons-hierarquia"}]},
+
+  "sex-cons-hierarquia":{ax:"Eixo Sexual",ak:"sex",
+    q:"Há <em>relação hierárquica direta</em> (chefia-subordinado, ainda que informal) entre os envolvidos na conduta consentida?",
+    h:hBlock("Um dos envolvidos ocupa posição de chefia direta ou indireta, ou de influência funcional relevante (avaliação, distribuição de tarefas, controle de benefícios), sobre o outro?","Esta pergunta não reabre a tipificação da conduta sexual — a conduta já foi determinada como consentida e sem ofensa institucional ostensiva. O objetivo é apenas identificar risco de conflito de interesse decorrente da assimetria hierárquica, para fins de recomendação de impedimento — não altera a conclusão de ausência de ilícito disciplinar quanto à conduta sexual em si.","Responda SIM mesmo que a relação hierárquica seja apenas de fato (ascendência funcional informal), não somente formal."),
+    opts:[{l:"Sim",s:"Há hierarquia direta entre os envolvidos",v:"sim",nx:"res-sem-ilicito-alerta-hierarquia"},{l:"Não",s:"Sem relação hierárquica direta",v:"nao",nx:"res-sem-ilicito"}]},
 
   // Com favorecimento + sem consentimento → verifica impacto
   "sex-impacto-fav":{ax:"Eixo Sexual",ak:"sex",
@@ -815,8 +828,18 @@ var S = {
 
   "disc-alvo":{ax:"Eixo Discriminatório",ak:"disc",
     q:"Há <em>alvo específico</em> (pessoa ou grupo identificável)?",
-    h:hBlock("Há um alvo identificável — ou a conduta foi difusa, sem destinatário específico?","<strong>Alvo identificável:</strong> pessoa nomeada ou grupo com característica comum reconhecível (ex.: mulheres do setor, colegas negros). <strong>Difusa:</strong> piadas genéricas sem destinatário claro — impacto menor, tipificação diversa.","Se a conduta não teve alvo definido: responda NÃO — enquadramento como conduta imprópria (art. 116)."),
-    opts:[{l:"Sim",s:"Alvo identificável",v:"sim",nx:"disc-reiteracao"},{l:"Não",s:"Sem alvo definido",v:"nao",nx:"res-cond-imp"}]},
+    h:hBlock("Há um alvo identificável — ou a conduta foi difusa, sem destinatário específico?","<strong>Alvo identificável:</strong> pessoa nomeada ou grupo com característica comum reconhecível (ex.: mulheres do setor, colegas negros). <strong>Difusa:</strong> piadas ou práticas genéricas sem destinatário individual claro — a ausência de alvo específico não significa, por si só, menor gravidade; a próxima pergunta avalia o efeito coletivo quando a conduta é difusa.","Se a conduta não teve alvo definido: responda NÃO."),
+    opts:[{l:"Sim",s:"Alvo identificável",v:"sim",nx:"disc-reiteracao"},{l:"Não",s:"Sem alvo definido",v:"nao",nx:"disc-difusa-reiteracao"}]},
+
+  "disc-difusa-reiteracao":{ax:"Eixo Discriminatório",ak:"disc",
+    q:"A conduta discriminatória difusa (piadas, comentários ou práticas genéricas sem destinatário individual específico) é <em>reiterada</em> e cria <em>ambiente hostil generalizado</em> percebido pelo grupo afetado?",
+    h:hBlock("Mesmo sem uma vítima individualizada, o padrão se repete a ponto de tornar o ambiente de trabalho hostil para os servidores que compartilham a característica protegida?","<strong>Ambiente hostil coletivo:</strong> piadas, comentários ou práticas discriminatórias recorrentes, toleradas ou normalizadas no setor, que produzem clima de desrespeito sistemático a um grupo protegido — ainda que nenhum integrante específico seja apontado individualmente em cada episódio. <strong>Ato isolado difuso:</strong> comentário único, sem repetição, sem evidência de efeito coletivo.","Se houve apenas um episódio, sem padrão de repetição: responda NÃO — segue como conduta imprópria pontual."),
+    opts:[{l:"Sim",s:"Padrão reiterado com efeito coletivo",v:"sim",nx:"disc-difusa-gravidade"},{l:"Não",s:"Episódio isolado sem efeito coletivo documentado",v:"nao",nx:"res-cond-imp"}]},
+
+  "disc-difusa-gravidade":{ax:"Eixo Discriminatório",ak:"disc",
+    q:"O ambiente hostil coletivo atinge grau de gravidade que compromete de forma severa a moralidade administrativa e o ambiente institucional?",
+    h:hBlock("Há elementos concretos de que o clima organizacional foi seriamente afetado pelo padrão discriminatório difuso?","<strong>Gravidade alta:</strong> queixas formais recorrentes de múltiplos servidores do grupo afetado, laudo ou pesquisa de clima organizacional documentando o problema, evasão ou pedidos de transferência de integrantes do grupo, repercussão externa à repartição. <strong>Gravidade baixa/média:</strong> percepção de desconforto sem documentação robusta de dano coletivo.","Na dúvida: verifique se há mais de um relato independente ou registro formal (ouvidoria, CGU, pesquisa de clima) sustentando a gravidade."),
+    opts:[{l:"ALTA",s:"Dano coletivo grave e documentado",v:"alta",nx:"res-disc-132-dif",st:"o-dng"},{l:"BAIXA/MÉDIA",s:"Impacto coletivo limitado",v:"baixa",nx:"res-cond-imp",st:"o-alt"}]},
 
   "disc-reiteracao":{ax:"Eixo Discriminatório",ak:"disc",
     q:"A conduta discriminatória foi <em>reiterada</em> (padrão de comportamento)?",
@@ -971,11 +994,17 @@ var R = {
   "res-sem-ilicito":{t:"success",lb:"Conclusão",ti:"Sem ilícito disciplinar",ar:null,
     d:"A análise indica que a conduta examinada não configura infração disciplinar passível de apuração pela Corregedoria no presente fluxo.",
     lw:{h:"Encaminhamento sugerido",t:"Arquivamento ou tratamento administrativo não disciplinar, conforme avaliação técnica do caso concreto."},an:false,cp:null},
+  "res-sem-ilicito-alerta-hierarquia":{t:"success",lb:"Conclusão",ti:"Sem ilícito disciplinar — alerta de impedimento funcional",ar:null,
+    d:"A análise indica que a conduta examinada, por ser consentida e não ter causado escândalo institucional ostensivo, não configura infração disciplinar passível de apuração pela Corregedoria no presente fluxo. Contudo, tendo em vista a existência de relação hierárquica direta entre os envolvidos, recomenda-se atenção institucional ao ponto: a autoridade competente deve verificar a existência de impedimento ou suspeição do superior hierárquico em avaliações de desempenho, decisões sobre promoção, distribuição de tarefas ou qualquer ato funcional que envolva a subordinada ou o subordinado, de modo a prevenir tanto favorecimento indevido quanto eventual retaliação futura decorrente do relacionamento. Este alerta não implica reconhecimento de ilícito disciplinar na conduta consentida em si, mas indica ponto de atenção para a gestão de conflito de interesses.",
+    lw:{h:"Encaminhamento sugerido",t:"Arquivamento quanto ao ilícito disciplinar; comunicar à chefia imediata superior a recomendação de impedimento/suspeição em atos funcionais envolvendo os servidores relacionados, para prevenção de conflito de interesse."},an:false,cp:null},
 
   "res-ag-132":{t:"danger",lb:"Tipificação",ti:"Ofensa física",ar:"Art. 132, VII",
     d:"A conduta caracteriza ofensa física em serviço a servidor ou a particular, hipótese de demissão prevista na Lei nº 8.112/90.",
     lw:{h:"Lei nº 8.112/90 — Art. 132, VII",t:"<q>A demissão será aplicada nos casos de: […] VII — ofensa física, em serviço, a servidor ou a particular, salvo em legítima defesa própria ou de outrem.</q>"},an:false,cp:null},
 
+  "res-ag-acidental":{t:"success",lb:"Análise",ti:"Contato físico sem dolo — ausência de agressão",ar:null,
+    d:"O contato físico identificado não decorreu de vontade dirigida à ofensa, mas de circunstância acidental, reflexo involuntário ou mal-entendido de contexto, elemento que afasta a tipificação de agressão física para os fins do art. 132, VII, da Lei nº 8.112/1990 — que pressupõe conduta comissiva dolosa. Recomenda-se, ainda assim, avaliar se o episódio, mesmo sem dolo, produziu repercussão funcional relevante (mal-estar duradouro, necessidade de mediação entre as partes) que justifique tratamento administrativo não disciplinar.",
+    lw:{h:"Encaminhamento sugerido",t:"Arquivamento quanto ao ilícito disciplinar de agressão física; avaliar tratamento administrativo não disciplinar conforme a repercussão do episódio."},an:false,cp:null},
   "res-ag-sem-nexo":{t:"warning",lb:"Análise",ti:"Agressão física sem nexo funcional",ar:"Art. 116, IX",
     d:"A agressão física identificada não ocorreu em serviço nem em contexto diretamente relacionado ao exercício das funções, afastando o enquadramento no art. 132, VII, da Lei nº 8.112/1990. A conduta pode, contudo, configurar violação do dever de manter conduta compatível com a moralidade administrativa (art. 116, IX), caso produza repercussão funcional concreta — prejuízo à imagem institucional, comprometimento do ambiente de trabalho ou reflexo nas relações funcionais do servidor. Avalie as circunstâncias concretas para determinar o enquadramento aplicável e a eventual necessidade de apuração disciplinar.",
     lw:{h:"Lei nº 8.112/90 — Art. 116, IX",t:"<q>São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa.</q>"},an:true,cp:null},
@@ -1036,6 +1065,9 @@ var R = {
 
   "res-disc-132":{t:"danger",lb:"Tipificação",ti:"Assédio discriminatório grave",ar:"Art. 132, V",
     d:"Conduta discriminatória dirigida a alvo específico com grave ofensa à igualdade e dignidade configura conduta escandalosa, hipótese de demissão. Enquadramento orientativo conforme NT nº 93/2024.",
+    lw:{h:"Lei nº 8.112/90 — Art. 132, V",t:"<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>"},an:true,cp:null},
+  "res-disc-132-dif":{t:"danger",lb:"Tipificação",ti:"Discriminação difusa — ambiente hostil coletivo grave",ar:"Art. 132, V",
+    d:"A conduta discriminatória, ainda que sem alvo individual específico, configurou padrão reiterado que produziu ambiente de trabalho hostil generalizado, atingindo a coletividade de servidores pertencentes ao grupo protegido. O bem jurídico tutelado nesta hipótese transcende a esfera individual e alcança a moralidade administrativa e a higidez do ambiente institucional como um todo, caracterizando incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/1990. O enquadramento decorre de interpretação sistêmica da NT nº 93/2024/CGUNE/DICOR/CRG, que não condiciona a gravidade da discriminação à existência de vítima individualizada quando o padrão reiterado produz dano documentável ao clima organizacional e à dignidade coletiva do grupo afetado. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
     lw:{h:"Lei nº 8.112/90 — Art. 132, V",t:"<q>A demissão será aplicada nos casos de: […] V — incontinência pública e conduta escandalosa, na repartição.</q>"},an:true,cp:null},
   "res-cond-imp":{t:"warning",lb:"Tipificação",ti:"Conduta imprópria",ar:"Art. 116, II, IX e XI",
     d:"A conduta caracteriza descumprimento de deveres funcionais sem o grau de gravidade que justifique demissão. Sujeita a advertência ou suspensão, com dosimetria proporcional.",
@@ -1103,6 +1135,7 @@ var C = {
     crit:"Responda com base nos <strong>fatos apurados</strong>, não na intenção declarada do agente. Selecione o eixo que melhor descreve o fato principal da conduta."
   }),
   "ag-servico":sbBlock({norm:{art:"Art. 132, VII",body:"O tipo exige que a ofensa física ocorra <strong>em serviço</strong>. Servidor em férias, licença ou contexto particular não se enquadra neste inciso."},crit:"Avalie se a agressão ocorreu no ambiente de trabalho, no exercício das funções ou em contexto diretamente relacionado a elas. A Convenção nº 190 da OIT amplia esse conceito: viagens, treinamentos, eventos ligados ao trabalho.",alert:"A agressão sem nexo funcional pode ainda configurar violação do art. 116, IX, se houver repercussão institucional."}),
+  "ag-dolo":sbBlock({norm:{art:"Art. 132, VII — elemento subjetivo",body:"A agressão física como tipo disciplinar pressupõe conduta comissiva dolosa — vontade dirigida ao contato físico ofensivo. Contato acidental, reflexo involuntário ou mal-entendido de contexto afastam a tipificação."},crit:"O critério é a vontade do toque ofensivo, não do dano. Basta a intenção do contato físico sem consentimento (empurrão, tapa, contenção).",alert:"Na dúvida entre intencional e acidental: verifique se há testemunhas, contexto da situação e histórico de tensão entre as partes."}),
   "ag-legitima":sbBlock({norm:{art:"Art. 23, II — CP",body:"Requisitos <strong>cumulativos</strong>: agressão injusta (atual ou iminente) + defesa de direito próprio ou alheio + uso moderado dos meios necessários."},crit:"Verifique se todos os requisitos estão presentes. A falta de qualquer um afasta a excludente.",alert:"Excesso doloso ou culposo não exclui a ilicitude disciplinar — é tratado na pergunta seguinte."}),
   "ag-excesso":sbBlock({norm:{art:"Art. 23, § único — CP",body:"O excesso ocorre quando o agente continua a reagir <em>após cessar a agressão</em> ou usa violência além do necessário."},crit:"<strong>Doloso:</strong> continuou intencionalmente → ato autônomo ilícito, art. 132, VII ou 116, IX.<br><strong>Culposo:</strong> excedeu por imprudência → art. 116, IX, advertência ou suspensão."}),
   "disc-cargo":sbBlock({norm:{art:"Art. 117, IX — Lei 8.112/90",body:"O cargo deve ser <strong>ativamente instrumentalizado</strong> — a mera existência de hierarquia não basta."},crit:"Exemplos de instrumentalização: recusa de progressão por fator protegido; tarefas degradantes sistemáticas; manipulação de avaliações; sonegação de informações necessárias ao trabalho.",alert:"Se apenas existe relação hierárquica sem uso instrumental do cargo: a análise prossegue pela gravidade da conduta discriminatória."}),
@@ -1116,13 +1149,16 @@ var C = {
   "sex-favorecimento":sbBlock({norm:{art:"NT nº 3285/2023 — itens 3-4",body:"<strong>Com favorecimento (Rota A):</strong> conduta visa obter vantagem sexual — figura mais grave, art. 216-A CP como referência.<br><br><strong>Sem favorecimento (Rota B):</strong> ato sexualizado sem essa finalidade — tipificação pelo impacto institucional e individual."},crit:"Esta pergunta define a rota de análise. As duas rotas produzem enquadramentos distintos — mas ambas podem resultar em infração grave."}),
   "sex-consentida":sbBlock({norm:{art:"NT nº 3285/2023 — item 3.2",body:"Consentimento válido exige: liberdade real (sem coerção), expressão positiva ou comportamento inequívoco de adesão, e capacidade da vítima."},crit:"<strong>Silêncio não é consentimento</strong> em contexto de subordinação hierárquica. A tolerância passiva pode decorrer do medo de represália — não representa adesão livre.",alert:"Responda SIM apenas se houver evidência positiva de adesão voluntária — não pela simples ausência de recusa."}),
   "sex-moralidade-cons":sbBlock({norm:{art:"Art. 37 — CF/88 · NT nº 3285/2023",body:"Conduta consentida viola a moralidade administrativa quando ocorre de forma ostensiva em repartição pública durante o expediente, gerando escândalo perceptível a terceiros."},crit:"O critério é a visibilidade funcional — colegas, subordinados ou usuários expostos à conduta durante o serviço."}),
+  "sex-cons-hierarquia":sbBlock({norm:{art:"NT nº 3285/2023 — conflito de interesses",body:"Esta pergunta não reabre a tipificação disciplinar — a conduta já foi determinada como consentida e sem ofensa institucional ostensiva. O objetivo é identificar risco de conflito de interesse por assimetria hierárquica, para fins de recomendação de impedimento."},crit:"Responda SIM mesmo quando a hierarquia é apenas funcional de fato — ascendência informal em avaliações, distribuição de tarefas ou controle de benefícios.",alert:"A recomendação de impedimento não altera a conclusão de ausência de ilícito disciplinar quanto à conduta sexual em si."}),
   "sex-impacto-fav":sbBlock({norm:{art:"NT nº 3285/2023 — item 3.4",body:"O impacto grave é qualificador que eleva o enquadramento ao art. 132, V. Independe da intenção do agressor."},crit:"Elementos probatórios: laudo psicológico/psiquiátrico; afastamento médico; pedido de transferência; comprometimento do desempenho; relato contemporâneo a terceiros.",alert:"A declaração 'era brincadeira' ou 'não pretendia ofender' não afasta o enquadramento quando o impacto está demonstrado."}),
   "sex-cargo-fav":sbBlock({norm:{art:"NT nº 3285/2023 — item 3.1",body:"Uso do cargo: chefia direta ou indireta, controle de avaliações, acesso a dados funcionais da vítima, convocação de reuniões como pretexto de contato."},crit:"A mera existência de hierarquia não satisfaz este critério — o cargo precisa ter sido o instrumento da conduta."}),
   "sex-moralidade-ato":sbBlock({norm:{art:"NT nº 3285/2023 — item 4.2",body:"Para atos sem favorecimento, o primeiro qualificador é o escândalo institucional: conduta ostensiva em repartição pública perceptível a terceiros."},crit:"O escândalo institucional basta — independentemente do impacto individual à vítima. Se presente, o enquadramento não precisa de mais qualificadores."}),
   "sex-impacto-sem-fav":sbBlock({norm:{art:"NT nº 3285/2023 — item 3.4",body:"Segundo qualificador (rota B, sem escândalo): dano grave à vítima. Mesmo sem visibilidade pública, o bem jurídico protegido foi lesado de forma significativa."},crit:"Os mesmos elementos probatórios se aplicam: laudo, afastamento, relato contemporâneo, pedido de transferência."}),
   "sex-cargo-sem-fav":sbBlock({norm:{art:"NT nº 3285/2023",body:"Terceiro qualificador (rota B): uso do cargo. Sem escândalo e sem dano grave documentado, o uso instrumental do cargo eleva o enquadramento."},crit:"Se nenhum dos três qualificadores (escândalo, dano grave, cargo) está presente: enquadramento como conduta imprópria (art. 116)."}),
   "disc-fator":sbBlock({norm:{art:"NT nº 93/2024 — item 3",body:"Fatores protegidos: raça, cor, etnia, sexo, gênero, identidade de gênero, orientação sexual, religião, origem, deficiência, idade, aparência física."},crit:"O fator motivador é suficiente — o agente não precisa declarar o preconceito. O contexto e o padrão de tratamento diferenciado são evidência suficiente."}),
-  "disc-alvo":sbBlock({norm:{art:"NT nº 93/2024 — item 4.1",body:"<strong>Com alvo identificável:</strong> maior potencial ofensivo — assédio discriminatório. <strong>Sem alvo definido (difusa):</strong> tipificada como conduta imprópria."},crit:"Alvo identificável inclui grupos com característica comum reconhecível (ex.: mulheres do setor, servidores negros da unidade)."}),
+  "disc-alvo":sbBlock({norm:{art:"NT nº 93/2024 — item 4.1",body:"<strong>Com alvo identificável:</strong> maior potencial ofensivo — assédio discriminatório. <strong>Sem alvo definido (difusa):</strong> ausência de alvo não significa menor gravidade — a próxima pergunta avalia o efeito coletivo."},crit:"Alvo identificável inclui grupos com característica comum reconhecível (ex.: mulheres do setor, servidores negros da unidade)."}),
+  "disc-difusa-reiteracao":sbBlock({norm:{art:"NT nº 93/2024 — item 4",body:"Discriminação difusa reiterada: piadas, comentários ou práticas discriminatórias recorrentes sem destinatário individual específico, que produzem clima de desrespeito sistemático a um grupo protegido."},crit:"A reiteração é o elemento essencial: um episódio isolado difuso segue como conduta imprópria. O padrão repetido com efeito coletivo documentado pode atingir gravidade de demissão.",alert:"Verifique se há mais de um episódio identificável e se há percepção coletiva do grupo afetado — relatos de múltiplos servidores, ouvidoria, pesquisa de clima."}),
+  "disc-difusa-gravidade":sbBlock({norm:{art:"NT nº 93/2024 — item 4",body:"<strong>Alta gravidade:</strong> queixas formais de múltiplos servidores, laudo ou pesquisa de clima documentando o problema, evasão ou pedidos de transferência do grupo afetado. <strong>Baixa/média:</strong> percepção de desconforto sem documentação robusta de dano coletivo."},crit:"A gravidade alta do ambiente hostil coletivo pode configurar incontinência pública (art. 132, V) mesmo sem vítima individualizada.",alert:"Na dúvida: exija ao menos dois elementos independentes de comprovação — relato de outro servidor, registro em ouvidoria, ou dado objetivo de pesquisa de clima."}),
   "disc-reiteracao":sbBlock({norm:{art:"NT nº 93/2024 — item 4.2",body:"<strong>Reiterada (assédio discriminatório):</strong> padrão consistente, enquadramento mais grave. <strong>Pontual:</strong> ato isolado, tipificação pelo impacto."},crit:"Reiteração: dois ou mais episódios com o mesmo fator protegido e continuidade temporal.",alert:"Ato pontual não significa ausência de ilícito — pode ser discriminação grave se o impacto for significativo."}),
   "disc-gravidade":sbBlock({norm:{art:"NT nº 93/2024 — item 5",body:"Dosimetria do assédio discriminatório reiterado: intensidade dos episódios, frequência, repercussão no ambiente e impacto concreto sobre a vítima."},crit:"Alta gravidade direciona para art. 132, V (demissão). Baixa/média para art. 116 (advertência/suspensão)."}),
   "disc-gravidade-pont":sbBlock({norm:{art:"NT nº 93/2024 — item 4.3",body:"Mesmo ato discriminatório pontual pode configurar infração grave se causar dano concreto significativo à vítima ou ao ambiente de trabalho."},crit:"Sem evidência de dano concreto: enquadramento como conduta imprópria (art. 116)."}),
@@ -1160,6 +1196,7 @@ var C = {
 var JUST = {
   "start":{"sim":"Agressão física identificada — análise prossegue para verificação do nexo funcional (art. 132, VII).","ameaca":"Conduta de ameaça — análise prossegue pelo Eixo Ameaça (NT nº 544/2024).","vverbal":"Ofensa verbal direta — análise prossegue pelo Eixo Violência Verbal.","sex":"Conduta de conotação sexual — análise prossegue pelo Eixo Sexual (NT nº 3285/2023).","moral":"Conduta de assédio moral — análise prossegue pelo Eixo Assédio Moral (NT nº 93/2024).","disc":"Conduta discriminatória — análise prossegue pelo Eixo Discriminatório (NT nº 93/2024).","ret":"Retaliação a ato protegido — análise prossegue pelo Eixo Retaliação ao Denunciante (Lei nº 13.608/2018).","stalk":"Perseguição reiterada — análise prossegue pelo Eixo Stalking Funcional (art. 147-A, CP / Lei nº 14.132/2021)."},
   "ag-servico":{"sim":"Nexo funcional presente — a agressão ocorreu em serviço, satisfazendo o elemento objetivo do art. 132, VII, da Lei 8.112/90.","nao":"Ausência de nexo funcional afasta o art. 132, VII. A conduta pode ainda configurar violação do art. 116, IX, se houver repercussão institucional."},
+  "ag-dolo":{"sim":"Contato físico intencional confirmado — vontade dirigida ao toque ofensivo, satisfazendo o elemento subjetivo do tipo. Análise prossegue para verificação de excludentes.","nao":"Ausência de dolo afasta a tipificação de agressão física. Contato acidental não configura a infração do art. 132, VII."},
   "ag-legitima":{"sim":"Legítima defesa reconhecida. Verificação do excesso é necessária (art. 23, § único, do CP).","nao":"Ausente a excludente, a agressão física em serviço configura a infração do art. 132, VII, da Lei 8.112/90."},
   "ag-excesso":{"nao":"Reação proporcional — legítima defesa integral, sem excesso. Afasta a responsabilidade disciplinar.","dolo":"Excesso doloso — ato autônomo ilícito, passível de enquadramento em art. 132, VII ou art. 116, IX.","culpa":"Excesso culposo — pode configurar art. 116, IX, com penalidade de advertência ou suspensão."},
   "disc-cargo":{"sim":"Uso instrumental do cargo na conduta discriminatória — atrai o art. 117, IX, c/c art. 132, XIII, da Lei 8.112/90.","nao":"Sem instrumentalização do cargo — análise prossegue pela gravidade da conduta discriminatória."},
@@ -1172,14 +1209,17 @@ var JUST = {
   "sex-conotacao":{"sim":"A conotação sexual é elemento inicial do eixo. A NT 3285/2023 exige verificação subsequente da finalidade (favorecimento ou não), que determina a rota de análise.","nao":"Sem conotação sexual, a análise prossegue para verificar eventual motivação discriminatória."},
   "sex-favorecimento":{"sim":"A finalidade de favorecimento sexual é elemento definidor do assédio sexual stricto sensu (art. 216-A CP). NT nº 3285/2023, itens 3-4.","nao":"Sem finalidade de favorecimento, a conduta é enquadrada como ato de conotação sexual — tipificação determinada pelo impacto institucional e individual. NT nº 3285/2023."},
   "sex-consentida":{"sim":"O consentimento afasta o assédio sexual na forma típica. Verifica-se, contudo, se houve ofensa à moralidade administrativa. NT nº 3285/2023, item 3.2.","nao":"A ausência de consentimento é elemento essencial do tipo. Direciona a análise para aferição do impacto à dignidade da vítima. NT nº 3285/2023."},
-  "sex-moralidade-cons":{"sim":"Conduta com finalidade de favorecimento sexual, ainda que consentida, que ocorre de forma ostensiva em repartição pública viola a moralidade administrativa. NT nº 3285/2023, item 3.3.","nao":"Conduta consentida sem ofensa à moralidade não configura ilícito disciplinar no presente fluxo. NT nº 3285/2023."},
+  "sex-moralidade-cons":{"sim":"Conduta consentida ostensiva em repartição viola a moralidade administrativa. NT nº 3285/2023, item 3.3.","nao":"Conduta consentida sem ofensa à moralidade — análise prossegue para verificar existência de relação hierárquica e risco de conflito de interesse. NT nº 3285/2023."},
+  "sex-cons-hierarquia":{"sim":"Relação hierárquica direta identificada — sem ilícito disciplinar, mas com recomendação de impedimento em atos funcionais envolvendo os servidores. NT nº 3285/2023.","nao":"Sem hierarquia direta — conduta consentida sem ilícito disciplinar e sem risco de conflito de interesse identificado. NT nº 3285/2023."},
   "sex-impacto-fav":{"sim":"Grave impacto à dignidade ou liberdade da vítima, em conduta de assédio sexual não consentido, caracteriza conduta escandalosa (Art. 132, V). NT nº 3285/2023, item 3.4.","nao":"Sem impacto grave à vítima, a análise prossegue para verificar o uso do cargo como qualificador. NT nº 3285/2023."},
   "sex-cargo-fav":{"sim":"O uso do cargo para praticar assédio sexual configura valimento do cargo (Art. 117, IX), mesmo sem impacto grave documentado. NT nº 3285/2023, item 3.1.","nao":"Sem uso do cargo e sem impacto grave, o assédio sexual é enquadrado como conduta imprópria (Art. 116). NT nº 3285/2023."},
   "sex-moralidade-ato":{"sim":"O escândalo institucional ostensivo é qualificador suficiente para o enquadramento em Art. 132, V ou 116, IX, independentemente do impacto individual. NT nº 3285/2023, item 4.2.","nao":"Sem escândalo institucional, a análise prossegue para o impacto individual à vítima como segundo qualificador. NT nº 3285/2023."},
   "sex-impacto-sem-fav":{"sim":"O dano grave à vítima, mesmo sem escândalo público, equipara o resultado ao do escândalo institucional — o bem jurídico protegido (dignidade) foi lesado significativamente. NT nº 3285/2023, item 3.4.","nao":"Sem escândalo institucional e sem dano grave à vítima, a análise prossegue para o uso do cargo como terceiro qualificador. NT nº 3285/2023."},
   "sex-cargo-sem-fav":{"sim":"O uso do cargo para praticar ato de conotação sexual, mesmo sem favorecimento, escândalo ou dano grave, configura valimento do cargo (Art. 117, IX). NT nº 3285/2023.","nao":"Sem nenhum dos qualificadores (escândalo, dano grave, uso do cargo), a conduta é enquadrada como imprópria (Art. 116). NT nº 3285/2023."},
   "disc-fator":{"sim":"A motivação por fator protegido qualifica a conduta como discriminatória. NT nº 93/2024, item 3.","nao":"Sem fator discriminatório, a análise prossegue para o eixo de assédio moral."},
-  "disc-alvo":{"sim":"Alvo específico agrava o potencial ofensivo. Análise de reiteração é necessária. NT nº 93/2024, item 4.1.","nao":"Conduta difusa sem alvo — conduta imprópria (Art. 116). NT nº 93/2024."},
+  "disc-alvo":{"sim":"Alvo específico agrava o potencial ofensivo. Análise de reiteração é necessária. NT nº 93/2024, item 4.1.","nao":"Conduta difusa sem alvo individual — análise prossegue para avaliar se houve efeito coletivo reiterado sobre grupo protegido. NT nº 93/2024."},
+  "disc-difusa-reiteracao":{"sim":"Padrão reiterado de discriminação difusa com efeito coletivo documentado — análise prossegue para aferição da gravidade do ambiente hostil. NT nº 93/2024.","nao":"Episódio isolado difuso sem padrão de repetição — configura conduta imprópria (Art. 116). NT nº 93/2024."},
+  "disc-difusa-gravidade":{"alta":"Alta gravidade do ambiente hostil coletivo — discriminação difusa reiterada grave configura conduta escandalosa (Art. 132, V). NT nº 93/2024.","baixa":"Impacto coletivo limitado — enquadramento como conduta imprópria (Art. 116). NT nº 93/2024."},
   "disc-reiteracao":{"sim":"Reiteração caracteriza assédio discriminatório com enquadramento mais grave. NT nº 93/2024, item 4.2.","nao":"Ato pontual com fator protegido — tipificação depende do impacto concreto. NT nº 93/2024, item 4.3."},
   "disc-gravidade":{"alta":"Alta gravidade do assédio discriminatório configura conduta escandalosa (Art. 132, V). NT nº 93/2024, item 5.","baixa":"Baixa ou média gravidade — conduta imprópria (Art. 116). NT nº 93/2024."},
   "disc-gravidade-pont":{"sim":"Dano grave de ato pontual pode configurar Art. 132, V. NT nº 93/2024, item 4.3.","nao":"Sem dano grave, configura-se conduta imprópria (Art. 116). NT nº 93/2024."},
@@ -1207,16 +1247,16 @@ var JUST = {
 
 // ── LABELS ────────────────────────────────────────────────────────────────────
 var QL = {
-  "start":"Agressão física?","ag-servico":"Em serviço?","ag-legitima":"Legítima defesa?","ag-excesso":"Excesso?",
+  "start":"Agressão física?","ag-servico":"Em serviço?","ag-dolo":"Contato intencional?","ag-legitima":"Legítima defesa?","ag-excesso":"Excesso?",
   "disc-cargo":"Uso do cargo (disc.)?","moral-isolado-cargo":"Uso do cargo (isolado)?","moral-disc-check":"Motivação discriminatória?",
   "ameaca":"Conduta de ameaça?","ameaca-cargo":"Uso do cargo (ameaça)?",
   "ameaca-grav-cargo":"Gravidade da ameaça?","ameaca-grav-sem":"Gravidade da ameaça?",
   "sex-conotacao":"Conotação sexual?","sex-favorecimento":"Fin. de favorecimento?",
-  "sex-consentida":"Consentida?","sex-moralidade-cons":"Escândalo institucional?",
+  "sex-consentida":"Consentida?","sex-moralidade-cons":"Escândalo institucional?","sex-cons-hierarquia":"Hierarquia direta?",
   "sex-impacto-fav":"Impacto grave à vítima?","sex-cargo-fav":"Uso do cargo (sexual)?",
   "sex-moralidade-ato":"Escândalo institucional?",
   "sex-impacto-sem-fav":"Impacto grave à vítima?","sex-cargo-sem-fav":"Uso do cargo (sexual)?",
-  "disc-fator":"Fator protegido?","disc-alvo":"Alvo específico?","disc-reiteracao":"Conduta reiterada?",
+  "disc-fator":"Fator protegido?","disc-alvo":"Alvo específico?","disc-difusa-reiteracao":"Disc. difusa reiterada?","disc-difusa-gravidade":"Gravidade coletiva?","disc-reiteracao":"Conduta reiterada?",
   "disc-gravidade":"Gravidade (reiterada)?","disc-gravidade-pont":"Impacto grave (pontual)?",
   "moral-isolado":"Ato isolado?","moral-dano":"Dano relevante?","moral-direcao":"Direção hierárquica?",
   "moral-cargo":"Uso do cargo (moral)?","moral-moralidade-final":"Ofensa à moralidade?",
@@ -1485,7 +1525,7 @@ function goBackTo(i){
 function restart(){
   clearStorage();
   CONDUTAS=[];
-  SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
+  SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:"",antecedentes:"",reparacao:""};
   hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
   window.scrollTo({top:0,behavior:"smooth"});
   showIdentificacao();
@@ -1592,6 +1632,16 @@ var NARRATIVE = {
     "nao": {
       teoria: "Apurou-se, em seguida, se a agressão ocorreu durante o exercício das funções ou em contexto diretamente relacionado ao serviço.",
       subsuncao: "Não se identificou nexo funcional: a agressão ocorreu fora do contexto de serviço, o que afasta o enquadramento no art. 132, VII, da Lei nº 8.112/90, sem prejuízo de eventual repercussão institucional a ser aferida separadamente."
+    }
+  },
+  "ag-dolo": {
+    "sim": {
+      teoria: "Verificou-se, em seguida, se o contato físico foi intencional — se houve vontade dirigida ao toque ofensivo. O tipo disciplinar do art. 132, VII, da Lei nº 8.112/90 pressupõe conduta comissiva dolosa: basta a vontade do contato físico sem consentimento, ainda que sem dolo de lesão grave específica.",
+      subsuncao: "Confirmada a intencionalidade do contato, o elemento subjetivo do tipo está presente, e a análise prossegue para verificação de excludentes de ilicitude."
+    },
+    "nao": {
+      teoria: "Verificou-se, em seguida, se o contato físico foi intencional. O contato identificado não decorreu de vontade dirigida à ofensa, mas de circunstância acidental, reflexo involuntário ou mal-entendido de contexto.",
+      subsuncao: "A ausência de dolo afasta a tipificação de agressão física para os fins do art. 132, VII, da Lei nº 8.112/90, que pressupõe conduta comissiva dolosa."
     }
   },
   "ag-legitima": {
@@ -1766,8 +1816,18 @@ var NARRATIVE = {
       subsuncao: "Configura-se ofensa à moralidade administrativa tutelada pelo art. 37 da Constituição Federal e pelo art. 116, IX, da Lei nº 8.112/90."
     },
     "nao": {
-      teoria: "Verificou-se, ainda, que a conduta não gerou escândalo institucional nem ofensa ostensiva à moralidade administrativa.",
-      subsuncao: "Conjugado ao consentimento válido, esse fato afasta a configuração de ilícito disciplinar no presente fluxo analítico."
+      teoria: "Verificou-se, ainda, que a conduta não gerou escândalo institucional nem ofensa ostensiva à moralidade administrativa. A análise prossegue para verificar a existência de relação hierárquica direta entre os envolvidos, para fins de identificação de risco de conflito de interesse.",
+      subsuncao: "Conjugado ao consentimento válido e à ausência de escândalo institucional, a conduta não configura ilícito disciplinar — mas pode demandar recomendação de impedimento funcional se houver assimetria hierárquica."
+    }
+  },
+  "sex-cons-hierarquia": {
+    "sim": {
+      teoria: "Identificou-se relação hierárquica direta entre os envolvidos — chefia direta ou indireta, ou influência funcional relevante sobre avaliações, distribuição de tarefas ou controle de benefícios. Esta constatação não reabre a tipificação da conduta sexual, já determinada como consentida e sem ofensa institucional ostensiva. O objetivo é exclusivamente identificar risco de conflito de interesse decorrente da assimetria hierárquica, para fins de recomendação administrativa.",
+      subsuncao: "Sem ilícito disciplinar quanto à conduta sexual em si. Recomenda-se à autoridade competente verificar e aplicar os impedimentos cabíveis em atos funcionais que envolvam os servidores relacionados, para prevenção de favorecimento indevido ou retaliação futura."
+    },
+    "nao": {
+      teoria: "Não se identificou relação hierárquica direta entre os envolvidos — os servidores não se encontram em posição de chefia ou influência funcional um sobre o outro.",
+      subsuncao: "A conduta consentida, sem escândalo institucional e sem assimetria hierárquica, não configura ilícito disciplinar e não demanda providência de impedimento funcional no presente fluxo."
     }
   },
   "sex-impacto-fav": {
@@ -1835,8 +1895,27 @@ var NARRATIVE = {
       teoria: "A conduta foi dirigida a pessoa ou grupo identificável, o que agrava o potencial ofensivo, nos termos do item 4.1 da NT nº 93/2024."
     },
     "nao": {
-      teoria: "A conduta discriminatória não foi dirigida a alvo específico identificável, tratando-se de manifestação difusa.",
-      subsuncao: "A ausência de alvo definido afasta o enquadramento mais grave, remanescendo, em tese, conduta imprópria (art. 116 da Lei nº 8.112/90)."
+      teoria: "A conduta discriminatória não foi dirigida a alvo específico identificável, tratando-se de manifestação difusa. A ausência de alvo individual não significa, por si só, menor gravidade — a análise prossegue para avaliar o efeito coletivo reiterado sobre o grupo afetado."
+    }
+  },
+  "disc-difusa-reiteracao": {
+    "sim": {
+      teoria: "Verificou-se que a conduta discriminatória difusa — piadas, comentários ou práticas genéricas sem destinatário individual — foi reiterada e produziu ambiente de trabalho hostil generalizado para os servidores pertencentes ao grupo protegido. A reiteração com efeito coletivo documentado caracteriza padrão discriminatório de gravidade que supera o ato isolado difuso, nos termos de interpretação sistêmica da NT nº 93/2024.",
+      subsuncao: "O padrão reiterado de discriminação difusa com ambiente hostil coletivo documentado qualifica a conduta para análise da gravidade institucional do impacto produzido."
+    },
+    "nao": {
+      teoria: "A conduta discriminatória difusa foi praticada de forma isolada, sem padrão de repetição e sem evidência de efeito coletivo documentado sobre o grupo afetado.",
+      subsuncao: "O episódio isolado difuso, sem efeito coletivo demonstrado, configura conduta imprópria pontual, nos termos do art. 116 da Lei nº 8.112/90."
+    }
+  },
+  "disc-difusa-gravidade": {
+    "alta": {
+      teoria: "O ambiente hostil coletivo gerado pelo padrão discriminatório difuso reiterado foi avaliado como de alta gravidade, com elementos concretos que documentam dano institucional severo: queixas formais de múltiplos servidores do grupo afetado, laudo ou pesquisa de clima organizacional, evasão ou pedidos de transferência, ou repercussão externa à repartição, nos termos de interpretação sistêmica da NT nº 93/2024.",
+      subsuncao: "O padrão discriminatório difuso reiterado de alta gravidade configura incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de demissão. O enquadramento decorre do dano documentável ao clima organizacional e à dignidade coletiva do grupo afetado, independentemente da individualização da vítima."
+    },
+    "baixa": {
+      teoria: "O impacto coletivo do padrão discriminatório difuso foi avaliado como de gravidade baixa ou média, sem documentação robusta de dano institucional severo.",
+      subsuncao: "Sem gravidade suficiente para configurar conduta escandalosa, o enquadramento recai em conduta imprópria, nos termos do art. 116 da Lei nº 8.112/90."
     }
   },
   "disc-reiteracao": {
@@ -2129,6 +2208,12 @@ var CONCLUSIONS = {
 
   "res-disc-132": "Diante do exposto, verifica-se que a conduta sob exame — assédio ou discriminação reiterada, com alta gravidade, dirigida a alvo específico em razão de fator protegido (origem, raça, cor, gênero, orientação sexual, religião, deficiência ou outro elemento identitário tutelado pelo ordenamento) — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. O bem jurídico tutelado é a igualdade de tratamento, a dignidade da pessoa humana e a higidez do ambiente de trabalho, que o Estado tem dever constitucional de promover (art. 5º, caput e XLI, CF/88). A NT nº 93/2024/CGUNE/DICOR/CRG (item 5) estabelece os critérios de aferição da gravidade e da reiteração que qualificam a conduta ao patamar do art. 132, V. A responsabilidade disciplinar é autônoma e independe de eventual responsabilidade penal por crime de preconceito (Lei nº 7.716/89). A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90.",
 
+  "res-disc-132-dif": "Diante do exposto, verifica-se que a conduta sob exame — discriminação difusa reiterada que produziu ambiente de trabalho hostil generalizado para os servidores pertencentes ao grupo protegido, com impacto coletivo de alta gravidade documentado — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. O enquadramento decorre de interpretação sistêmica da NT nº 93/2024/CGUNE/DICOR/CRG, que não condiciona a gravidade da discriminação à existência de vítima individualizada quando o padrão reiterado produz dano documentável ao clima organizacional e à dignidade coletiva do grupo afetado. A responsabilidade disciplinar é autônoma e independente de eventual responsabilidade penal (Lei nº 7.716/89). A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90, com especial atenção ao alcance coletivo do dano institucional produzido.",
+
+  "res-ag-acidental": "Diante do exposto, verifica-se que o contato físico identificado não decorreu de vontade dirigida à ofensa, mas de circunstância acidental, reflexo involuntário ou mal-entendido de contexto — elemento que afasta a tipificação de agressão física para os fins do art. 132, VII, da Lei nº 8.112/90, que pressupõe conduta comissiva dolosa. Não se verificam, portanto, elementos constitutivos suficientes para a instauração de procedimento disciplinar com fundamento naquele dispositivo. Recomenda-se, todavia, avaliar se o episódio produziu repercussão funcional relevante — mal-estar duradouro, necessidade de mediação entre as partes, comprometimento do ambiente de trabalho — que justifique tratamento administrativo não disciplinar (mediação, orientação gerencial ou capacitação), conforme avaliação da autoridade competente à luz do caso concreto.",
+
+  "res-sem-ilicito-alerta-hierarquia": "Diante do exposto, verifica-se que a conduta sob exame, por ser consentida e não ter gerado escândalo institucional ostensivo, não reúne os elementos constitutivos mínimos de infração disciplinar passível de apuração pela Corregedoria no presente fluxo. Contudo, identificou-se a existência de relação hierárquica direta entre os envolvidos, circunstância que impõe atenção institucional específica: a autoridade competente deve verificar a existência de impedimento ou suspeição do superior hierárquico em avaliações de desempenho, decisões sobre promoção, distribuição de tarefas ou qualquer ato funcional que envolva a subordinada ou o subordinado, de modo a prevenir tanto favorecimento indevido quanto eventual retaliação futura decorrente do relacionamento. Recomenda-se o arquivamento fundamentado do ponto de vista disciplinar, com comunicação à chefia imediata superior sobre a recomendação de impedimento em atos funcionais que envolvam os servidores relacionados, nos termos dos princípios da impessoalidade (art. 37, caput, CF/88) e da moralidade administrativa. Este encaminhamento não implica reconhecimento de ilícito na conduta consentida em si.",
+
   "res-cond-imp": "Diante do exposto, verifica-se que a conduta sob exame configura, em tese, descumprimento de deveres funcionais — notadamente os deveres de manutenção de conduta compatível com a moralidade administrativa (art. 116, IX), de urbanidade no trato com servidores e particulares (art. 116, XI) e de exercício das atribuições com lealdade às instituições (art. 116, II), todos da Lei nº 8.112/90. A ausência dos qualificadores necessários ao enquadramento nas hipóteses mais graves (art. 132, V, ou art. 117, IX) não afasta a ilicitude disciplinar da conduta, que permanece passível de sanção no patamar de advertência ou suspensão (art. 127, I e II), com dosimetria proporcional e fundamentada nos termos do art. 128 da Lei nº 8.112/90, considerando a natureza e gravidade da infração, os danos causados e os antecedentes funcionais do servidor.",
 
   "res-moral-132": "Diante do exposto, verifica-se que a conduta sob exame — assédio moral com grave ofensa à moralidade administrativa, caracterizado por condutas reiteradas de humilhação, vexação, intimidação ou marginalização do servidor — configura, em tese, incontinência pública e conduta escandalosa na repartição, nos termos do art. 132, V, da Lei nº 8.112/90, hipótese de penalidade de demissão. Nos termos da NT nº 93/2024/CGUNE/DICOR/CRG, o assédio moral no serviço público caracteriza-se pela reiteração de condutas abusivas que ultrapassam o exercício regular do poder diretivo, com potencial de causar dano psicológico, social ou profissional à vítima. O enquadramento no art. 132, V, exige a constatação de que a conduta, pelo conjunto de seus elementos — reiteração, gravidade, impacto institucional e individual —, atinge o patamar de escândalo ou degradação moral da repartição. A ausência de tipificação autônoma do assédio moral na Lei nº 8.112/90 é suprida por interpretação sistêmica, conforme orientação da NT nº 93/2024. A dosimetria observará os critérios do art. 128 da Lei nº 8.112/90, com atenção ao dano psicológico e profissional imposto à vítima.",
@@ -2165,6 +2250,24 @@ var CONCLUSIONS = {
 
   "res-stalk-sem-nexo": "Diante do exposto, verifica-se que o padrão de perseguição identificado não apresenta nexo funcional apto a ativar o enquadramento disciplinar, uma vez que agressor e vítima não mantêm relação de trabalho e a conduta não tem origem nem produz repercussão no ambiente funcional da vítima. A ausência de nexo funcional, todavia, não afasta eventual ilícito penal: o art. 147-A do Código Penal, incluído pela Lei nº 14.132/2021, tipifica o crime de perseguição independentemente de relação de trabalho entre as partes. Recomenda-se orientar a vítima quanto à possibilidade de comunicação às autoridades policiais ou ao Ministério Público, sem prejuízo de eventual reavaliação do nexo funcional caso novos elementos surjam."
 };
+
+function buildDosimetriaComplementar(){
+  var antTextMap={
+    "":"não informados nos autos até o presente momento — a autoridade competente deve diligenciar sua apuração antes da decisão final",
+    "primario":"o servidor é primário, sem histórico de conduta disciplinar similar ou relacionada",
+    "reincidente-similar":"o servidor ostenta histórico de conduta disciplinar similar ou relacionada, circunstância que deve ser considerada como agravante na dosimetria, nos termos do art. 128 da Lei nº 8.112/90",
+    "reincidente-diverso":"o servidor ostenta histórico de conduta disciplinar de natureza diversa, circunstância a ser ponderada pela autoridade competente na dosimetria"
+  };
+  var repTextMap={
+    "":"não há informação nos autos sobre eventual reparação do dano, quando aplicável",
+    "integral":"o dano identificado foi integralmente reparado antes da conclusão do processo, circunstância que pode ser considerada como atenuante na dosimetria",
+    "parcial":"o dano identificado foi parcialmente reparado, ou há compromisso formal de reparação, circunstância a ser ponderada pela autoridade competente",
+    "nao-reparado":"o dano identificado não foi reparado, sem perspectiva de reparação até o presente momento"
+  };
+  var ant=antTextMap[SESSION.antecedentes||""];
+  var rep=repTextMap[SESSION.reparacao||""];
+  return "<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Quanto aos antecedentes funcionais, "+ant+". Quanto à reparação do dano, "+rep+". Ambos os elementos integram os critérios do art. 128 da Lei nº 8.112/90 e devem ser expressamente considerados na motivação do ato de dosimetria pela autoridade competente.</p>";
+}
 
 function buildConclusion(resultId) {
   return CONCLUSIONS[resultId] || "Diante do exposto, o enquadramento disciplinar resultante da análise encontra-se identificado acima. A autoridade competente deverá instaurar o competente Processo Administrativo Disciplinar (art. 148 e seguintes da Lei nº 8.112/90) ou a Sindicância, conforme a gravidade dos indícios, para apuração dos fatos e aplicação da penalidade cabível, observados o contraditório e a ampla defesa (art. 5º, LV, CF/88).";
@@ -2494,6 +2597,7 @@ document.getElementById("bpr").onclick=function(){
       +(r3.an?"<div style='margin-bottom:10pt;padding:9pt 11pt;background:#FBF2DF;border-left:3pt solid #B7791F;border-radius:0 3pt 3pt 0;font-size:9pt;color:#7a4e0e'>"+ANALOGY_NOTE+"</div>":"")
       +"<p style='text-align:justify;margin-bottom:8pt'>"+b.conclusionText+"</p>"
       +"<p style='text-align:justify;font-size:9.5pt;color:#5B6781'>Em cumprimento ao disposto no art. 128 da Lei nº 8.112/90, a dosimetria da penalidade deverá considerar: a natureza e a gravidade da infração cometida; os danos que dela provierem para o serviço público; as circunstâncias agravantes ou atenuantes; e os antecedentes funcionais do servidor. O princípio da individualização da pena impede a aplicação automática da penalidade máxima sem a devida fundamentação concreta.</p>"
+      +buildDosimetriaComplementar()
       +"</div>";
 
     // Rastreabilidade
@@ -2690,6 +2794,22 @@ function showDescricaoConduta(){
     +'<textarea id="pi-conduta" rows="6" maxlength="2000" placeholder="Descreva os fatos: o que ocorreu, quando, onde, quem praticou e quem foi a vítima. Seja objetivo e factual."></textarea>'
     +'<div class="pre-char-counter"><span id="pi-cc">0</span>/2000 caracteres</div>'
     +'</div>'
+    +'<div class="pre-row" style="margin-top:8px">'
+    +'<div class="pre-field"><label>Antecedentes funcionais do servidor (art. 128)</label>'
+    +'<select id="pi-antecedentes">'
+    +'<option value="">Não informado / não apurado neste momento</option>'
+    +'<option value="primario">Primário — sem histórico de conduta similar</option>'
+    +'<option value="reincidente-similar">Reincidente — histórico de conduta similar ou relacionada</option>'
+    +'<option value="reincidente-diverso">Reincidente — histórico de conduta disciplinar diversa</option>'
+    +'</select></div>'
+    +'<div class="pre-field"><label>Reparação do dano (quando houver dano material ou moral identificável)</label>'
+    +'<select id="pi-reparacao">'
+    +'<option value="">Não informado / não aplicável</option>'
+    +'<option value="integral">Integralmente reparado antes da conclusão do processo</option>'
+    +'<option value="parcial">Parcialmente reparado ou com compromisso formal de reparação</option>'
+    +'<option value="nao-reparado">Não reparado, sem perspectiva de reparação</option>'
+    +'</select></div>'
+    +'</div>'
     +'<div style="margin-top:8px;display:flex;gap:12px;justify-content:flex-end">'
     +'<button class="rfb-btn rfb-btn--ghost" id="pi-back2">'+ICO_BACK+' Voltar</button>'
     +'<button class="rfb-btn rfb-btn--primary" id="pi-submit2">Iniciar Análise '+ICO_ARROW+'</button>'
@@ -2698,6 +2818,8 @@ function showDescricaoConduta(){
 
   var ta=document.getElementById("pi-conduta");
   var cc=document.getElementById("pi-cc");
+  if(SESSION.antecedentes) document.getElementById("pi-antecedentes").value=SESSION.antecedentes;
+  if(SESSION.reparacao) document.getElementById("pi-reparacao").value=SESSION.reparacao;
   ta.oninput=function(){ cc.textContent=ta.value.length; };
 
   document.getElementById("pi-back2").onclick=showIdentificacao;
@@ -2706,6 +2828,8 @@ function showDescricaoConduta(){
     if(!val){ta.classList.add("err");toast("Descreva a conduta antes de continuar.");return;}
     ta.classList.remove("err");
     SESSION.conduta=val;
+    SESSION.antecedentes=document.getElementById("pi-antecedentes").value;
+    SESSION.reparacao=document.getElementById("pi-reparacao").value;
     saveToStorage();
     iniciarFluxo();
   };
@@ -2832,7 +2956,7 @@ function clearStorage(){
 }
 
 function restoreFromStorage(p){
-  SESSION=p.SESSION||{processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
+  SESSION=p.SESSION||{processo:"",analista:"",unidade:"",dataFatos:"",conduta:"",antecedentes:"",reparacao:""};
   CONDUTAS=p.CONDUTAS||[];
   hist=p.hist||[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
   var screen=p.screen||"flow";
@@ -2897,7 +3021,7 @@ function checkAndShowRecovery(){
   document.getElementById("rec-new").onclick=function(){
     clearStorage();
     CONDUTAS=[];
-    SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:""};
+    SESSION={processo:"",analista:"",unidade:"",dataFatos:"",conduta:"",antecedentes:"",reparacao:""};
     hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
     showIdentificacao();
   };
