@@ -6,19 +6,51 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 0.1.0 (Parte 1 — Esqueleto + Tela do Processo)
+  Versão do arquivo: 1.0.0 (Fase 1 — MVP completo, Partes 1-5 + Atualização Incremental 01)
   Data: 2026-07-08
 
   Changelog:
-  - 0.1.0: esqueleto do arquivo único; CATALOGO completo (papéis, blocos, perguntas gerais,
-    10 infrações, textos-modelo, 13 dicas contextuais, 13 fórmulas de incidentes, checklist);
-    Tela do Processo (matriz de apuração, dados do processo/comissão, lista de depoentes);
-    autosave em localStorage; export/import de .json do processo com validação de versão
-    de esquema e opções "substituir"/"abrir como novo" (R11); bloqueio de criação de
-    depoente sem matriz completa (R1).
+  - 0.1.0 (Parte 1): esqueleto do arquivo único; CATALOGO completo (papéis, blocos, perguntas
+    gerais, 10 infrações, textos-modelo, 13 dicas contextuais, 13 fórmulas de incidentes,
+    checklist); Tela do Processo (matriz de apuração, dados do processo/comissão, lista de
+    depoentes); autosave em localStorage; export/import de .json do processo com validação
+    de versão de esquema e opções "substituir"/"abrir como novo" (R11); bloqueio de criação
+    de depoente sem matriz completa (R1).
+  - 0.2.0 (Parte 2): wizard do depoente — Etapa 1 (Dados do Ato, herança editável do processo,
+    modalidade, estratégia da equipe opcional) e Etapa 2 (identificação com aviso LGPD,
+    elementos buscados, seletor de papel Testemunha/Acusado, seletor de infração, perfil
+    opcional); stepper clicável com validação ao avançar da Etapa 2.
+  - 0.3.0 (Parte 3): Etapa 3 — Montagem do Roteiro. Geração do roteiro por papel + infração;
+    praxe e advertências não removíveis (R2); badge de finalidade obrigatória e botão
+    "+ Adicionar pergunta" (R5/R10); reordenação; fluxo de silêncio do acusado (R4); Kit de
+    Incidentes lateral (13 entradas em accordion).
+  - 0.4.0 (Parte 4): Etapa 4 — Revisão, Checklist, Termo, Cartão de Mesa e Impressão.
+    Visualização do roteiro final; checklist condicional com persistência; alertas de
+    nulidade para o acusado (R3); termo de redução com merge e variantes por papel/silêncio;
+    impressão isolada via #area-impressao (R8/R9) com opção de Cartão de Mesa condensado.
+  - 0.5.0 (Atualização incremental 01): 11ª infração `inf_enriquecimento_ilicito` (art. 132,
+    IV c/c art. 9º, VII, Lei 8.429/92); campos opcionais `observacaoControversia` e
+    `notaTerceiroInterposto`; perguntas com campo `destinatario` (acusado/terceiro
+    interposto/testemunha geral) sem alterar o filtro por `papeis` das demais infrações;
+    pergunta obrigatória não removível (oportunidade formal de justificação); checkbox de
+    terceiro interposto na Etapa 2; painel de controvérsia recolhível na Etapa 3; grupo de
+    checklist patrimonial condicional; 15 dicas contextuais no total.
+  - 1.0.0 (Parte 5): revisão final de consistência (ids, contraste — badge de status
+    "oitiva realizada" ajustado para AA —, teclado, ausência de ids órfãos/duplicados);
+    teste guiado ponta a ponta executado e reportado.
 
-  Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md.
+  Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
+  (e a Atualização Incremental 01, que adicionou a 11ª infração).
   Em caso de dúvida sobre conteúdo jurídico, esses documentos prevalecem sobre o código.
+
+  Pendências conhecidas (sinalizadas ao usuário, não resolvidas por conta própria):
+  - Blocos "Abertura para objeções da defesa" e "Palavra à defesa/reperguntas" não têm
+    texto-modelo próprio no banco de conteúdo da Fase 1 (marcados com TODO no código).
+  - `coger-ui.css` oficial não foi fornecido; variáveis de cor navy/dourado usadas como
+    placeholder fiel à identidade descrita no documento estrutural.
+  - Infração `inf_enriquecimento_ilicito` inclui tanto `pena` quanto `penaAbstrata` (mesmo
+    valor) por divergência de nome de campo entre o snippet da atualização incremental e o
+    padrão já usado pelas demais 10 infrações — decisão do usuário pendente sobre qual manter.
 -->
 <style>
   /* ===================================================================
@@ -199,7 +231,7 @@
   }
   .badge-status.rascunho{ background:#E4E7EB; color:#3A4552; }
   .badge-status.roteiro_pronto{ background: var(--cor-destaque-clara); color:#5C4400; }
-  .badge-status.oitiva_realizada{ background:#D9EAD9; color: var(--cor-sucesso); }
+  .badge-status.oitiva_realizada{ background:#D9EAD9; color:#1B5E20; }
 
   .vazio{ color: var(--cor-texto-suave); font-style: italic; font-size:.85rem; padding: 10px 0; }
 
@@ -689,7 +721,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v0.1.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.0.0</div>
 </footer>
 
 <script>
