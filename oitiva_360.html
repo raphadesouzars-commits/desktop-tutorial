@@ -82,10 +82,18 @@
     border-radius: 999px;
   }
 
-  main{
-    max-width: 980px;
+  .layout-app{
+    display:flex;
+    gap: 20px;
+    align-items:flex-start;
+    max-width: 1300px;
     margin: 0 auto;
     padding: 20px 24px 60px;
+  }
+  main{
+    max-width: 980px;
+    flex: 1;
+    min-width: 0;
   }
 
   h2{ color: var(--cor-primaria); font-size:1.1rem; border-bottom:1px solid var(--cor-borda); padding-bottom:6px; }
@@ -230,6 +238,73 @@
     padding:8px 10px; font-size:.78rem; color: var(--cor-primaria-escura); margin-bottom:8px;
   }
 
+  /* ---- Etapa 3: Montagem do Roteiro ---- */
+  .lembrete-fixo{
+    background:#F0F4F8; border-left:4px solid var(--cor-destaque); border-radius:4px;
+    padding:8px 12px; font-size:.85rem; margin-bottom:14px;
+  }
+  .cartao-texto-fixo{
+    background:#FAFAF5; border:1px dashed var(--cor-destaque); border-radius: var(--raio);
+    padding:10px 12px; margin-bottom:8px; white-space:pre-wrap; font-size:.85rem;
+  }
+  .cartao-texto-fixo .cabecalho-fixo{ display:flex; justify-content:space-between; font-size:.7rem; color:var(--cor-texto-suave); margin-bottom:4px; }
+  .lista-checklist-info{ font-size:.85rem; margin:0; padding-left:20px; }
+  .lista-checklist-info li{ margin-bottom:4px; }
+
+  .item-pergunta{ display:flex; gap:8px; align-items:flex-start; padding:8px 0; border-bottom:1px dashed var(--cor-borda); }
+  .item-pergunta:last-child{ border-bottom:none; }
+  .item-pergunta .item-corpo{ flex:1; display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .item-pergunta textarea{ min-height:44px; font-size:.85rem; }
+  .item-pergunta .item-corpo-topo{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .item-controles{ display:flex; flex-direction:column; gap:2px; align-items:stretch; }
+  .item-controles button{ padding:2px 6px; font-size:.7rem; }
+
+  .badge-finalidade{
+    display:inline-block; font-size:.68rem; padding:2px 9px; border-radius:999px; font-weight:600; white-space:nowrap;
+  }
+  .badge-finalidade.fin-materialidade{ background:#DCEEFB; color:#0B4C7C; }
+  .badge-finalidade.fin-autoria{ background:#E6E0F8; color:#4B2E92; }
+  .badge-finalidade.fin-subjetivo{ background:#FDE8E8; color:#9B2C2C; }
+  .badge-finalidade.fin-circunstancia{ background:#E3F5E1; color:#276221; }
+  .badge-finalidade.fin-praxe{ background:#F0EAD6; color:#6B5B10; }
+  .badge-finalidade.fin-contexto{ background:#EDEDED; color:#444; }
+  select.select-finalidade{ width:auto; font-size:.7rem; padding:2px 6px; }
+  .badge-lock{ font-size:.7rem; color: var(--cor-texto-suave); white-space:nowrap; }
+
+  .alerta-silencio{
+    background: var(--cor-erro-fundo); border:2px solid var(--cor-erro); border-radius: var(--raio);
+    padding:14px 16px; font-weight:600; color: var(--cor-erro); margin:14px 0;
+  }
+  .escolha-simples{ display:flex; gap:16px; font-size:.85rem; margin-top:8px; }
+  .escolha-simples label{ display:flex; align-items:center; gap:6px; font-weight:400; }
+  .escolha-simples input{ width:auto; }
+
+  .form-add-pergunta{ margin-top:8px; border-top:1px dashed var(--cor-borda); padding-top:8px; }
+  .form-add-pergunta summary{ cursor:pointer; font-size:.82rem; font-weight:600; color: var(--cor-primaria); list-style:none; }
+  .form-add-pergunta summary::-webkit-details-marker{ display:none; }
+  .form-add-pergunta summary::before{ content:"+ "; }
+  .form-add-pergunta .corpo-form{ margin-top:8px; }
+
+  .aviso-conteudo-pendente{
+    border:1px dashed var(--cor-erro); background:#FFF7F7; color:#7A2020; border-radius: var(--raio);
+    padding:8px 10px; font-size:.8rem; margin-bottom:8px;
+  }
+
+  /* ---- Kit de Incidentes (aside) ---- */
+  aside#kit-incidentes{ width:290px; flex-shrink:0; }
+  aside#kit-incidentes .cartao{ position:sticky; top:12px; max-height:calc(100vh - 24px); overflow-y:auto; }
+  .incidente-grupo{ margin-bottom:6px; }
+  .incidente-grupo > summary{ cursor:pointer; font-weight:600; font-size:.82rem; color: var(--cor-primaria-escura); padding:4px 0; }
+  .incidente-item{ font-size:.78rem; margin: 6px 0 10px 4px; padding-left:8px; border-left:2px solid var(--cor-borda); }
+  .incidente-item .situacao{ font-weight:600; color: var(--cor-primaria-escura); }
+  .incidente-item .seq{ margin:4px 0 4px 16px; padding-left:14px; }
+  .incidente-item .formula{ font-style:italic; color: var(--cor-texto-suave); }
+  @media (max-width: 900px){
+    .layout-app{ flex-direction:column; }
+    aside#kit-incidentes{ width:100%; }
+    aside#kit-incidentes .cartao{ position:static; max-height:none; }
+  }
+
   footer.rodape-app{
     background: var(--cor-primaria-escura);
     color:#cfd8e3;
@@ -255,7 +330,8 @@
   <div class="selo">Ferramenta de apoio à decisão</div>
 </header>
 
-<!-- Stepper do wizard do depoente: etapas 1-2 funcionais (Parte 2); 3-4 stub (Partes 3-4) -->
+<!-- Stepper do wizard do depoente: etapas 1-2 funcionais (Parte 2); 3 funcional (Parte 3); 4 stub (Parte 4) -->
+<div class="layout-app">
 <main>
   <div id="stepper-depoente" hidden>
     <button type="button" class="etapa ativa" data-etapa="1">1. Dados do Ato</button>
@@ -311,6 +387,11 @@
           <label for="campo-portaria">Portaria</label>
           <input type="text" id="campo-portaria" data-campo-processo="portaria">
         </div>
+      </div>
+      <div class="campo">
+        <label for="campo-orgao-local">Órgão/lotação</label>
+        <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Usado no merge da abertura formal (âmbito de {{orgao_local}}).</div>
+        <input type="text" id="campo-orgao-local" data-campo-processo="orgaoLocal">
       </div>
       <div class="grade-2">
         <div class="campo">
@@ -495,10 +576,8 @@
       <div id="erro-etapa-2"></div>
     </div>
 
-    <!-- Etapa 3 — stub (Parte 3) -->
-    <div id="wizard-etapa-3" class="wizard-etapa-conteudo" hidden>
-      <div class="cartao"><p class="vazio">Etapa 3 — Montagem do Roteiro será implementada na Parte 3.</p></div>
-    </div>
+    <!-- Etapa 3 — Montagem do Roteiro (conteúdo gerado dinamicamente por renderEtapa3()) -->
+    <div id="wizard-etapa-3" class="wizard-etapa-conteudo" hidden></div>
 
     <!-- Etapa 4 — stub (Parte 4) -->
     <div id="wizard-etapa-4" class="wizard-etapa-conteudo" hidden>
@@ -515,8 +594,13 @@
 </main>
 
 <aside id="kit-incidentes" hidden>
-  <!-- Populado na Parte 3 -->
+  <div class="cartao">
+    <h2 style="margin-top:0;">Kit de Incidentes</h2>
+    <div id="dica-ancora-kit-incidentes"></div>
+    <div id="kit-incidentes-conteudo"></div>
+  </div>
 </aside>
+</div><!-- /.layout-app -->
 
 <dialog id="dialogo-conflito-import">
   <div class="corpo-dialogo">
@@ -894,6 +978,7 @@ function processoVazio(){
       id: gerarId(),
       numero: "",
       portaria: "",
+      orgaoLocal: "",
       comissao: { presidente: "", vogais: [], secretario: "" },
       criadoEm: agoraISO(),
       atualizadoEm: agoraISO()
@@ -965,6 +1050,7 @@ function renderCamposProcesso(){
 
   document.getElementById("campo-numero").value = estado.processo.numero || "";
   document.getElementById("campo-portaria").value = estado.processo.portaria || "";
+  document.getElementById("campo-orgao-local").value = estado.processo.orgaoLocal || "";
   document.getElementById("campo-presidente").value = estado.processo.comissao.presidente || "";
   document.getElementById("campo-secretario").value = estado.processo.comissao.secretario || "";
 
@@ -1278,6 +1364,8 @@ function garantirEstruturaAto(d){
   d.ato.modalidade = d.ato.modalidade || "presencial";
   d.ato.estrategia = d.ato.estrategia || {};
   d.perfil = d.perfil || {};
+  d.roteiro = d.roteiro || [];
+  if (d.acusadoSilencio === undefined) d.acusadoSilencio = false;
 }
 
 function abrirWizard(depoenteId){
@@ -1296,6 +1384,7 @@ function fecharWizard(){
   document.getElementById("tela-processo").hidden = false;
   document.getElementById("tela-wizard-depoente").hidden = true;
   document.getElementById("stepper-depoente").hidden = true;
+  document.getElementById("kit-incidentes").hidden = true;
   renderListaDepoentes();
 }
 
@@ -1319,7 +1408,15 @@ function validarEtapa2(mostrarErros){
 
 function irParaEtapa(destino, opcoes){
   opcoes = opcoes || {};
-  if (!opcoes.forcar && etapaAtiva === 2 && destino > 2 && !validarEtapa2(true)){
+  if (!opcoes.forcar && destino > 2 && !validarEtapa2(true)){
+    etapaAtiva = 2;
+    document.querySelectorAll("#stepper-depoente .etapa").forEach(btn => {
+      btn.classList.toggle("ativa", Number(btn.dataset.etapa) === 2);
+    });
+    document.querySelectorAll(".wizard-etapa-conteudo").forEach((div, idx) => {
+      div.hidden = (idx + 1) !== 2;
+    });
+    renderEtapa2();
     return; // permanece na etapa 2, erros exibidos
   }
   etapaAtiva = destino;
@@ -1331,8 +1428,11 @@ function irParaEtapa(destino, opcoes){
     div.hidden = (idx + 1) !== destino;
   });
 
+  document.getElementById("kit-incidentes").hidden = destino < 3;
+
   if (destino === 1) renderEtapa1();
   if (destino === 2) renderEtapa2();
+  if (destino === 3) renderEtapa3();
 
   document.getElementById("btn-wizard-voltar").disabled = (destino === 1);
   document.getElementById("btn-wizard-avancar").textContent = (destino >= 4) ? "Concluído" : "Avançar →";
@@ -1536,6 +1636,321 @@ function ligarNavegacaoWizard(){
 }
 
 /* =====================================================================
+   WIZARD DO DEPOENTE — Etapa 3 (Montagem do Roteiro)
+   ===================================================================== */
+const BLOCOS_OCULTOS_SILENCIO = ["contexto_funcional", "materialidade", "autoria_participacao", "elemento_subjetivo", "circunstancias_art128", "palavra_defesa", "fechamento"];
+
+const RES_FINALIDADE = { materialidade: "Materialidade", autoria: "Autoria", subjetivo: "Elemento subjetivo", circunstancia: "Circunstância", praxe: "Praxe", contexto: "Contexto" };
+function finalidadeLabel(f){ return RES_FINALIDADE[f] || f; }
+
+function formatarDataBR(iso){
+  if (!iso) return "";
+  const partes = iso.split("-");
+  return partes.length === 3 ? (partes[2] + "/" + partes[1] + "/" + partes[0]) : iso;
+}
+
+function mergeTexto(modelo, ctx){
+  return String(modelo || "").replace(/\{\{(\w+)\}\}/g, (m, chave) => {
+    const v = ctx[chave];
+    return (v === undefined || v === null || v === "") ? "" : v;
+  });
+}
+
+function contextoMerge(d){
+  return {
+    nome: d.identificacao || "",
+    processo: d.ato.numero || "",
+    portaria: d.ato.portaria || "",
+    presidente: d.ato.comissao.presidente || "",
+    vogais: (d.ato.comissao.vogais || []).filter(v => v && v.trim()).join(", "),
+    secretario: d.ato.comissao.secretario || "",
+    data: formatarDataBR(d.ato.data),
+    hora: d.ato.hora || "",
+    local: d.ato.local || "",
+    orgao_local: estado.processo.orgaoLocal || ""
+  };
+}
+
+function gerarRoteiroInicial(d){
+  const ctx = contextoMerge(d);
+  const papelObj = CATALOGO.papeis.find(p => p.id === d.papel);
+  return CATALOGO.blocos.map(bloco => {
+    let itens = [];
+
+    if (bloco.id === "preparacao_cenario"){
+      itens = CATALOGO.checklistItens.filter(c => c.condicao === "sempre").map((c, i) => ({
+        origem: "catalogo", tipo: "checklist_ref", refId: c.id, texto: c.texto, removivel: false, ordem: i + 1
+      }));
+
+    } else if (["acolhimento", "abertura_formal", "avisos_legais_lgpd"].includes(bloco.id)){
+      const chave = bloco.id === "avisos_legais_lgpd" ? "avisos_lgpd" : bloco.id;
+      itens = [{ origem: "catalogo", tipo: "texto_modelo", refId: chave, texto: mergeTexto(CATALOGO.textosModelo[chave], ctx), removivel: false, ordem: 1 }];
+
+    } else if (bloco.id === "qualificacao_compromisso"){
+      let ordem = 1;
+      if (papelObj){
+        CATALOGO.perguntasPraxe.forEach(pq => {
+          if (papelObj.perguntasPraxe.includes(pq.id)){
+            itens.push({ origem: "catalogo", tipo: "pergunta", refId: pq.id, texto: pq.texto, finalidade: pq.finalidade, removivel: false, ordem: ordem++ });
+          }
+        });
+        (papelObj.advertencias || []).forEach(advId => {
+          itens.push({ origem: "catalogo", tipo: "texto_modelo", refId: advId, texto: mergeTexto(CATALOGO.textosModelo[advId], ctx), removivel: false, ordem: ordem++ });
+        });
+      }
+
+    } else if (bloco.id === "objecoes_defesa" || bloco.id === "palavra_defesa"){
+      itens = [{ origem: "catalogo", tipo: "pendente", refId: null, texto: "", removivel: false, ordem: 1 }];
+      // <!-- TODO: conteúdo pendente --> este bloco não tem texto-modelo próprio no banco de conteúdo da Fase 1.
+
+    } else if (bloco.tipo === "perguntas"){
+      itens = CATALOGO.perguntas
+        .filter(q => q.bloco === bloco.id && q.papeis.includes(d.papel) && (q.infracoes.includes("todas") || q.infracoes.includes(d.infracao)))
+        .map((q, i) => ({ origem: "catalogo", tipo: "pergunta", refId: q.id, texto: q.texto, finalidade: q.finalidade, removivel: true, ordem: i + 1 }));
+    }
+
+    return { blocoId: bloco.id, itens };
+  });
+}
+
+function renderEtapa3(){
+  const d = getDepoenteAtivo();
+  if (!d) return;
+  document.getElementById("wizard-titulo-depoente").textContent = "Depoente: " + d.identificacao;
+  document.getElementById("wizard-subtitulo-depoente").textContent = "Etapa 3 — Montagem do Roteiro";
+
+  const container = document.getElementById("wizard-etapa-3");
+
+  if (!d.roteiro || !d.roteiro.length){
+    d.roteiro = gerarRoteiroInicial(d);
+    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
+    salvarLocalStorage();
+  }
+
+  const desatualizado = d.roteiroGeradoPara && (d.roteiroGeradoPara.papel !== d.papel || d.roteiroGeradoPara.infracao !== d.infracao);
+
+  let html = "";
+
+  html += "<div class=\"cartao lembrete-fixo\"><strong>Elementos buscados com este depoente:</strong> " + escapeHtml(d.elementosBuscados || "—") + "</div>";
+  html += "<div id=\"dica-ancora-montagem-geral\"></div>";
+
+  if (desatualizado){
+    html += "<div class=\"cartao aviso-pedagogico\">O papel ou a categoria de infração foram alterados na Etapa 2 desde a última geração do roteiro. " +
+      "As perguntas sugeridas atuais podem não corresponder mais à seleção. " +
+      "<button type=\"button\" class=\"secundario pequeno\" id=\"btn-regenerar-roteiro\" style=\"margin-left:8px;\">Regenerar roteiro</button></div>";
+  }
+
+  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+
+  CATALOGO.blocos.forEach(bloco => {
+    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+
+    const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { blocoId: bloco.id, itens: [] };
+    html += "<div class=\"cartao\" data-bloco-card=\"" + bloco.id + "\">";
+    html += "<h3 style=\"margin-top:0;\">" + escapeHtml(bloco.nome) + (bloco.condicional ? " <span style=\"font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)\">(" + escapeHtml(bloco.condicional) + ")</span>" : "") + "</h3>";
+
+    html += renderItensBloco(bloco, grupo);
+
+    if (bloco.id === "qualificacao_compromisso" && d.papel === "acusado"){
+      html += "<div class=\"escolha-simples\">" +
+        "<label><input type=\"radio\" name=\"acusado-silencio\" value=\"nao\"" + (!d.acusadoSilencio ? " checked" : "") + "> É do interesse do(a) acusado(a) responder às perguntas</label>" +
+        "<label><input type=\"radio\" name=\"acusado-silencio\" value=\"sim\"" + (d.acusadoSilencio ? " checked" : "") + "> Manifestou o exercício do direito ao silêncio</label>" +
+        "</div>";
+    }
+
+    if (bloco.tipo === "perguntas"){
+      html += renderFormAddPergunta(bloco.id);
+    }
+
+    html += "</div>";
+  });
+
+  if (silencioExercido){
+    html += "<div class=\"alerta-silencio\">Direito ao silêncio exercido — não formular questionamentos a este depoente (art. 15, parágrafo único, I, da Lei nº 13.869/2019). Os blocos de perguntas foram ocultados.</div>";
+  }
+
+  container.innerHTML = html;
+  ligarEventosEtapa3(container);
+  renderDicas("montagem_roteiro", "dica-ancora-montagem-geral");
+}
+
+function renderItensBloco(bloco, grupo){
+  if (bloco.id === "preparacao_cenario"){
+    return "<ul class=\"lista-checklist-info\">" + grupo.itens.map(it => "<li>" + escapeHtml(it.texto) + "</li>").join("") + "</ul>";
+  }
+
+  let html = "";
+  grupo.itens.forEach((item, idx) => {
+    if (item.tipo === "texto_modelo"){
+      html += "<div class=\"cartao-texto-fixo\"><div class=\"cabecalho-fixo\"><span>🔒 Texto fixo — não editável</span></div>" + escapeHtml(item.texto) + "</div>";
+    } else if (item.tipo === "pendente"){
+      html += "<div class=\"aviso-conteudo-pendente\">Texto-modelo pendente de definição no banco de conteúdo para este bloco. Consulte o Kit de Incidentes ao lado para a condução deste momento do ato.</div>" +
+        "<!-- TODO: conteúdo pendente -->";
+    } else if (item.tipo === "pergunta"){
+      const bloqueado = item.removivel === false;
+      html += "<div class=\"item-pergunta\" data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\">";
+      html += "<div class=\"item-corpo\">";
+      html += "<div class=\"item-corpo-topo\">";
+      if (bloqueado){
+        html += "<span class=\"badge-finalidade fin-" + item.finalidade + "\">" + finalidadeLabel(item.finalidade) + "</span>";
+        html += "<span class=\"badge-lock\">🔒 não removível</span>";
+      } else {
+        html += "<select class=\"select-finalidade\" data-campo-item-finalidade data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\">" +
+          Object.keys(RES_FINALIDADE).filter(f => f !== "praxe").map(f => "<option value=\"" + f + "\"" + (item.finalidade === f ? " selected" : "") + ">" + RES_FINALIDADE[f] + "</option>").join("") +
+          "</select>";
+      }
+      html += "</div>";
+      if (bloqueado){
+        html += "<div style=\"font-size:.85rem;\">" + escapeHtml(item.texto) + "</div>";
+      } else {
+        html += "<textarea data-campo-item-texto data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\">" + escapeHtml(item.texto) + "</textarea>";
+      }
+      html += "</div>";
+      html += "<div class=\"item-controles\">";
+      html += "<button type=\"button\" data-acao=\"mover-cima\" data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\" aria-label=\"Mover pergunta para cima\" title=\"Mover para cima\"" + (idx === 0 ? " disabled" : "") + ">↑</button>";
+      html += "<button type=\"button\" data-acao=\"mover-baixo\" data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\" aria-label=\"Mover pergunta para baixo\" title=\"Mover para baixo\"" + (idx === grupo.itens.length - 1 ? " disabled" : "") + ">↓</button>";
+      if (!bloqueado){
+        html += "<button type=\"button\" class=\"perigo\" data-acao=\"remover-item\" data-bloco=\"" + bloco.id + "\" data-index=\"" + idx + "\" aria-label=\"Remover pergunta\" title=\"Remover\">×</button>";
+      }
+      html += "</div>";
+      html += "</div>";
+    }
+  });
+  return html || "<p class=\"vazio\">Nenhum item neste bloco.</p>";
+}
+
+function renderFormAddPergunta(blocoId){
+  return "<details class=\"form-add-pergunta\">" +
+    "<summary>Adicionar pergunta</summary>" +
+    "<div class=\"corpo-form\">" +
+      "<div class=\"campo\">" +
+        "<label class=\"obrigatorio\" for=\"novo-texto-" + blocoId + "\">Texto da pergunta</label>" +
+        "<textarea id=\"novo-texto-" + blocoId + "\" data-novo-texto=\"" + blocoId + "\"></textarea>" +
+      "</div>" +
+      "<div class=\"campo\">" +
+        "<label class=\"obrigatorio\" for=\"novo-finalidade-" + blocoId + "\">Finalidade probatória</label>" +
+        "<select id=\"novo-finalidade-" + blocoId + "\" data-novo-finalidade=\"" + blocoId + "\">" +
+          "<option value=\"\">Selecione…</option>" +
+          Object.keys(RES_FINALIDADE).filter(f => f !== "praxe").map(f => "<option value=\"" + f + "\">" + RES_FINALIDADE[f] + "</option>").join("") +
+        "</select>" +
+      "</div>" +
+      "<div data-novo-erro=\"" + blocoId + "\"></div>" +
+      "<button type=\"button\" data-acao=\"add-pergunta\" data-bloco=\"" + blocoId + "\">Adicionar pergunta</button>" +
+    "</div>" +
+  "</details>";
+}
+
+function ligarEventosEtapa3(container){
+  container.querySelectorAll("[data-campo-item-texto]").forEach(el => {
+    el.addEventListener("input", () => {
+      const d = getDepoenteAtivo();
+      const grupo = d.roteiro.find(r => r.blocoId === el.dataset.bloco);
+      grupo.itens[Number(el.dataset.index)].texto = el.value;
+      salvarLocalStorage();
+    });
+  });
+
+  container.querySelectorAll("[data-campo-item-finalidade]").forEach(el => {
+    el.addEventListener("change", () => {
+      const d = getDepoenteAtivo();
+      const grupo = d.roteiro.find(r => r.blocoId === el.dataset.bloco);
+      grupo.itens[Number(el.dataset.index)].finalidade = el.value;
+      salvarLocalStorage();
+    });
+  });
+
+  container.querySelectorAll("[data-acao=mover-cima], [data-acao=mover-baixo], [data-acao=remover-item]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const d = getDepoenteAtivo();
+      const grupo = d.roteiro.find(r => r.blocoId === btn.dataset.bloco);
+      const idx = Number(btn.dataset.index);
+      const acao = btn.dataset.acao;
+      if (acao === "remover-item"){
+        if (grupo.itens[idx].removivel === false) return;
+        grupo.itens.splice(idx, 1);
+      } else if (acao === "mover-cima" && idx > 0){
+        [grupo.itens[idx - 1], grupo.itens[idx]] = [grupo.itens[idx], grupo.itens[idx - 1]];
+      } else if (acao === "mover-baixo" && idx < grupo.itens.length - 1){
+        [grupo.itens[idx + 1], grupo.itens[idx]] = [grupo.itens[idx], grupo.itens[idx + 1]];
+      }
+      grupo.itens.forEach((it, i) => { it.ordem = i + 1; });
+      salvarLocalStorage();
+      renderEtapa3();
+    });
+  });
+
+  container.querySelectorAll("[data-acao=add-pergunta]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const blocoId = btn.dataset.bloco;
+      const textareaEl = container.querySelector("[data-novo-texto=\"" + blocoId + "\"]");
+      const selectEl = container.querySelector("[data-novo-finalidade=\"" + blocoId + "\"]");
+      const erroEl = container.querySelector("[data-novo-erro=\"" + blocoId + "\"]");
+      const texto = textareaEl.value.trim();
+      const finalidade = selectEl.value;
+      if (!texto || !finalidade){
+        erroEl.innerHTML = "<div class=\"aviso-erro\">Informe o texto da pergunta e selecione a finalidade probatória — nenhuma pergunta é salva sem finalidade (R5).</div>";
+        return;
+      }
+      const d = getDepoenteAtivo();
+      const grupo = d.roteiro.find(r => r.blocoId === blocoId);
+      const novaOrdem = grupo.itens.length ? Math.max(...grupo.itens.map(i => i.ordem || 0)) + 1 : 1;
+      grupo.itens.push({ origem: "usuario", tipo: "pergunta", texto: texto, finalidade: finalidade, removivel: true, ordem: novaOrdem });
+      salvarLocalStorage();
+      renderEtapa3();
+    });
+  });
+
+  container.querySelectorAll("input[name=acusado-silencio]").forEach(r => {
+    r.addEventListener("change", () => {
+      if (!r.checked) return;
+      const d = getDepoenteAtivo();
+      d.acusadoSilencio = (r.value === "sim");
+      salvarLocalStorage();
+      renderEtapa3();
+    });
+  });
+
+  const btnRegenerar = document.getElementById("btn-regenerar-roteiro");
+  if (btnRegenerar){
+    btnRegenerar.addEventListener("click", () => {
+      if (!confirm("Isso substituirá as perguntas atuais do roteiro (inclusive as adicionadas manualmente) pelas sugestões do banco para o papel e infração atuais. Deseja continuar?")) return;
+      const d = getDepoenteAtivo();
+      d.roteiro = gerarRoteiroInicial(d);
+      d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
+      salvarLocalStorage();
+      renderEtapa3();
+    });
+  }
+}
+
+/* =====================================================================
+   Kit de Incidentes (aside — visível nas etapas 3 e 4)
+   ===================================================================== */
+function renderKitIncidentes(){
+  const grupos = {};
+  CATALOGO.formulasIncidentes.forEach(inc => {
+    (grupos[inc.grupo] = grupos[inc.grupo] || []).push(inc);
+  });
+
+  const html = Object.keys(grupos).map(nomeGrupo => (
+    "<details class=\"incidente-grupo\">" +
+      "<summary>" + escapeHtml(nomeGrupo) + "</summary>" +
+      grupos[nomeGrupo].map(inc => (
+        "<div class=\"incidente-item\">" +
+          "<div class=\"situacao\">" + escapeHtml(inc.situacao) + "</div>" +
+          (inc.sequencia ? "<ol class=\"seq\">" + inc.sequencia.map(s => "<li>" + escapeHtml(s) + "</li>").join("") + "</ol>" : "") +
+          "<div class=\"formula\">" + escapeHtml(inc.formulaVerbal) + "</div>" +
+          (inc.baseLegal ? "<div style=\"font-size:.72rem;color:var(--cor-texto-suave);margin-top:2px;\">" + escapeHtml(inc.baseLegal) + "</div>" : "") +
+        "</div>"
+      )).join("") +
+    "</details>"
+  )).join("");
+
+  document.getElementById("kit-incidentes-conteudo").innerHTML = html;
+  renderDicas("kit_incidentes", "dica-ancora-kit-incidentes");
+}
+
+/* =====================================================================
    Validação do CATALOGO no console (critério de aceite da Parte 1)
    ===================================================================== */
 function validarCatalogo(){
@@ -1561,6 +1976,7 @@ function init(){
   ligarCamposWizardEtapa1();
   ligarCamposWizardEtapa2();
   ligarNavegacaoWizard();
+  renderKitIncidentes();
   renderTudo();
   validarCatalogo();
 }
