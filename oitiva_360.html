@@ -270,6 +270,13 @@
   .badge-finalidade.fin-contexto{ background:#EDEDED; color:#444; }
   select.select-finalidade{ width:auto; font-size:.7rem; padding:2px 6px; }
   .badge-lock{ font-size:.7rem; color: var(--cor-texto-suave); white-space:nowrap; }
+  .nota-pergunta{ cursor:help; font-size:.8rem; }
+
+  /* ---- Atualização incremental 01: painel de controvérsia (enriquecimento ilícito) ---- */
+  .callout-controversia{ border:2px solid var(--cor-destaque); background:#FFFBEA; }
+  .callout-controversia summary{ cursor:pointer; font-weight:700; color:#7A5B00; font-size:.9rem; list-style:none; }
+  .callout-controversia summary::-webkit-details-marker{ display:none; }
+  .callout-controversia > div{ margin-top:8px; font-size:.85rem; color:#5c4400; white-space:pre-wrap; }
 
   .alerta-silencio{
     background: var(--cor-erro-fundo); border:2px solid var(--cor-erro); border-radius: var(--raio);
@@ -584,6 +591,17 @@
           </select>
         </div>
         <div id="infracao-detalhe"></div>
+        <div id="dica-ancora-infracao-enriquecimento"></div>
+      </div>
+
+      <!-- Atualização incremental 01: exibido apenas para infracao == inf_enriquecimento_ilicito e papel == testemunha -->
+      <div class="cartao" id="cartao-terceiro-interposto" hidden>
+        <h3 style="margin-top:0;">Terceiro interposto</h3>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;font-weight:400;">
+          <input type="checkbox" id="dep-terceiro-interposto" style="width:auto;margin-top:3px;">
+          Este depoente é possível terceiro interposto (familiar/pessoa em cujo nome está bem sob suspeita)
+        </label>
+        <div id="dica-ancora-terceiro-interposto"></div>
       </div>
 
       <div class="cartao">
@@ -847,7 +865,24 @@ const CATALOGO = {
     { id: "q_inf_normas_002", bloco: "materialidade", texto: "A norma aplicável (IN, portaria, ordem de serviço) estava vigente e era conhecida no setor? Como era divulgada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
     { id: "q_inf_normas_003", bloco: "materialidade", texto: "O descumprimento foi pontual ou recorrente? Há outros casos semelhantes no setor?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
     { id: "q_inf_normas_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) conhecia a norma apontada? Recebeu orientação ou treinamento sobre ela? Por que o procedimento não foi seguido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" }
+    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
+
+    // ---- Específicas: Enriquecimento ilícito (inf_enriquecimento_ilicito) ----
+    // Atualização incremental 01: perguntas com campo "destinatario" (acusado | terceiro_interposto | testemunha_geral),
+    // em vez do filtro por "papeis" usado nas demais infrações (ver gerarRoteiroInicial).
+    { id: "q_inf_enriquecimento_001", bloco: "materialidade", texto: "Descreva, livremente e em ordem cronológica, a evolução do seu patrimônio no período apurado: bens adquiridos, valores, épocas e origem dos recursos de cada aquisição.", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_002", bloco: "materialidade", texto: "Em relação ao [bem X identificado nos autos]: quando e como surgiu a oportunidade da aquisição, com quem foi negociada, qual o valor efetivamente pago e de que forma (à vista, parcelado, espécie, transferência)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_003", bloco: "materialidade", texto: "Quais foram todas as suas fontes de renda no período (remuneração, aluguéis, atividades autorizadas, rendimentos de aplicações)? Elas constam das suas declarações de IRPF?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_004", bloco: "materialidade", texto: "Houve, no período, recebimento de empréstimos, doações, herança, venda de bens anteriores ou qualquer outro ingresso relevante? Existe documentação (contrato, escritura, registro, declaração do doador no IRPF dele)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_005", bloco: "materialidade", texto: "Há bens, contas, investimentos ou negócios registrados em nome de familiares ou terceiros dos quais o(a) senhor(a) tenha o uso, o proveito ou o controle de fato? Quem paga as despesas desses bens (tributos, condomínio, manutenção, reformas)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_006", bloco: "elemento_subjetivo", texto: "Por que a aquisição do [bem X] foi realizada em nome de [terceiro], e não em seu próprio nome? Quem escolheu o bem, negociou o preço e acompanhou a formalização?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_007", bloco: "materialidade", texto: "O(a) senhor(a) realizou, no período, pagamentos relevantes em espécie? Qual a origem física desses recursos e por que não transitaram por conta bancária?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_008", bloco: "elemento_subjetivo", texto: "Nos termos do art. 9º, VII, da Lei 8.429/92, é assegurada ao agente a demonstração da licitude da origem da evolução patrimonial. Deseja apresentar, neste ato ou em prazo a ser fixado, justificativa documentada para cada acréscimo identificado no relatório da sindicância patrimonial?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo", obrigatoria: true, nota: "Pergunta obrigatória — documenta a oportunidade formal de justificação." },
+    { id: "q_inf_enriquecimento_009", bloco: "materialidade", texto: "Qual era a sua ocupação e a sua renda mensal aproximada à época da aquisição do [bem X]? Essa renda consta de declarações de IRPF ou registros formais?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_010", bloco: "materialidade", texto: "Conte como foi a compra do [bem X]: como soube que estava à venda, quem negociou, qual o valor, como foi pago e de onde vieram os recursos.", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_011", bloco: "materialidade", texto: "Quem utiliza o bem atualmente, quem paga os tributos e despesas dele e quem toma as decisões sobre ele (alugar, reformar, vender)?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_012", bloco: "autoria_participacao", texto: "Qual foi a participação de [servidor acusado] na escolha, na negociação, no pagamento ou na administração desse bem?", finalidade: "autoria", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_013", bloco: "circunstancias_art128", texto: "O(a) senhor(a) observou, no período, mudança objetiva no padrão de vida do(a) acusado(a) — veículos, imóveis, viagens, despesas — que lhe tenha chamado a atenção? Relate apenas o que presenciou diretamente, indicando época e circunstâncias.", finalidade: "circunstancia", destinatario: "testemunha_geral", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -948,7 +983,11 @@ const CATALOGO = {
     { id: "inf_sigilo", grupo: "demissao_132", nome: "Violação de sigilo fiscal", dispositivo: "Art. 132, IX c/c art. 116, VIII, Lei 8.112/90; art. 198 do CTN", penaAbstrata: "demissão", elementosTipicos: ["acesso a informação protegida por sigilo fiscal em razão do cargo", "revelação a terceiro não autorizado (ou acesso imotivado, conforme o enquadramento)", "ausência de hipótese legal de compartilhamento", "ciência do caráter sigiloso"], observacoes: "Infração característica do contexto RFB. Distinguir três situações com regimes distintos: (a) acesso imotivado sem repasse; (b) acesso com repasse a terceiro; (c) repasse mediante vantagem (conexão com art. 117, XII). Logs de sistemas, trilhas de auditoria e correlação temporal entre consulta e evento externo são o eixo probatório.", modulo: "nucleo" },
     { id: "inf_incompativel", grupo: "proibicoes_117", nome: "Exercício de atividades incompatíveis com o cargo/função ou com o horário de trabalho", dispositivo: "Art. 117, XVIII, Lei 8.112/90", penaAbstrata: "suspensão (art. 130)", elementosTipicos: ["exercício de qualquer atividade (remunerada ou não) incompatível com o cargo/função ou com o horário de trabalho", "habitualidade", "prejuízo efetivo ou potencial ao desempenho funcional"], observacoes: "Duas vertentes autônomas: incompatibilidade material (conflito com as atribuições — ex.: consultoria tributária por auditor) e incompatibilidade de horário (atividade paralela durante o expediente). Não confundir com a acumulação ilegal de cargos públicos (art. 132, XII, rito próprio do art. 133).", modulo: "nucleo" },
     { id: "inf_urbanidade", grupo: "deveres_116", nome: "Falta de urbanidade", dispositivo: "Art. 116, XI, Lei 8.112/90", penaAbstrata: "advertência (art. 129); suspensão em caso de reincidência", elementosTipicos: ["tratamento desrespeitoso, grosseiro ou ofensivo a colegas, superiores, subordinados ou público", "no exercício da função ou em razão dela", "aferição contextual (distinguir rispidez pontual em situação de tensão de padrão de tratamento)"], observacoes: "Infração leve mas frequente em denúncias de atendimento. A prova costuma ser testemunhal e, quando existente, registro audiovisual do atendimento. Atenção ao contexto bilateral (provocação, tumulto) — relevante para o art. 128, não para excluir o dever.", modulo: "nucleo" },
-    { id: "inf_normas", grupo: "deveres_116", nome: "Descumprimento do dever de observar as normas legais e regulamentares", dispositivo: "Art. 116, III, Lei 8.112/90", penaAbstrata: "advertência (art. 129); gradação conforme a gravidade", elementosTipicos: ["existência de norma legal ou regulamentar válida e vigente aplicável à atividade", "conduta comissiva ou omissiva em desacordo com a norma", "exigibilidade de conduta diversa", "ciência (real ou presumida) da norma"], observacoes: "Enquadramento subsidiário e de espectro amplo — exige indicação precisa da norma violada (portaria, IN, ordem de serviço, manual), sob pena de capitulação genérica (risco de nulidade da indiciação). A oitiva deve estabelecer: qual norma, como foi divulgada, qual conduta a contrariou.", modulo: "nucleo" }
+    { id: "inf_normas", grupo: "deveres_116", nome: "Descumprimento do dever de observar as normas legais e regulamentares", dispositivo: "Art. 116, III, Lei 8.112/90", penaAbstrata: "advertência (art. 129); gradação conforme a gravidade", elementosTipicos: ["existência de norma legal ou regulamentar válida e vigente aplicável à atividade", "conduta comissiva ou omissiva em desacordo com a norma", "exigibilidade de conduta diversa", "ciência (real ou presumida) da norma"], observacoes: "Enquadramento subsidiário e de espectro amplo — exige indicação precisa da norma violada (portaria, IN, ordem de serviço, manual), sob pena de capitulação genérica (risco de nulidade da indiciação). A oitiva deve estabelecer: qual norma, como foi divulgada, qual conduta a contrariou.", modulo: "nucleo" },
+    // Atualização incremental 01 (enriquecimento ilícito): campo "pena" mantido literalmente conforme o
+    // snippet da atualização, e "penaAbstrata" duplicado para consistência com as demais 10 entradas e com
+    // renderInfracaoDetalhe(), que lê inf.penaAbstrata — ver divergência reportada ao final da parte.
+    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", pena: "demissão", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" }
   ],
 
   // ---- Checklist (comum + acusado + videoconferência) ----
@@ -965,7 +1004,12 @@ const CATALOGO = {
     { id: "chk_video_teste",          texto: "Teste prévio de conexão, áudio, vídeo e gravação", condicao: "modalidade == videoconferencia" },
     { id: "chk_video_avisos",         texto: "Avisos de gravação e LGPD incluídos na abertura", condicao: "modalidade == videoconferencia" },
     { id: "chk_video_reservada",      texto: "Regra de \"conversa reservada\" advogado-cliente definida (mudo/câmera ou telefone)", condicao: "modalidade == videoconferencia" },
-    { id: "chk_video_foco",           texto: "Foco total: sem WhatsApp Web ou conversas paralelas da comissão durante o ato", condicao: "modalidade == videoconferencia" }
+    { id: "chk_video_foco",           texto: "Foco total: sem WhatsApp Web ou conversas paralelas da comissão durante o ato", condicao: "modalidade == videoconferencia" },
+    // Atualização incremental 01: grupo condicional por infração (reaproveita o mesmo padrão de condição
+    // "chave == valor" já usado acima para papel/modalidade — ver itensChecklistAplicaveis()).
+    { id: "chk_patrimonio_documentacao", texto: "Documentação patrimonial e financeira relacionada aos autos e organizada por item de discrepância (IRPF, extratos, matrículas, contratos)", condicao: "infracao == inf_enriquecimento_ilicito" },
+    { id: "chk_patrimonio_oportunidade", texto: "Oportunidade formal de justificação da origem do acréscimo patrimonial incluída no roteiro do acusado (art. 9º, VII, Lei 8.429/92)", condicao: "infracao == inf_enriquecimento_ilicito" },
+    { id: "chk_patrimonio_terceiros",    texto: "Identificados eventuais terceiros interpostos (familiares) a serem ouvidos separadamente", condicao: "infracao == inf_enriquecimento_ilicito" }
   ],
 
   // ---- Dicas contextuais (Fabian Maia) — camada de coaching ----
@@ -982,7 +1026,10 @@ const CATALOGO = {
     { id: "dica_postura",             ancora: "revisao",              texto: "Postura da comissão: firme, polida, técnica e imperturbável. Você sabe exatamente onde está e o que está fazendo ali — sua autoridade decorre da lei e da designação, não de validação externa." },
     { id: "dica_performance",         ancora: "revisao",              texto: "A condução de uma oitiva é uma performance técnica de alto nível: segurança, domínio dos autos e inteligência emocional transformam o ato processual em peça de excelência probatória." },
     { id: "dica_indeferimento",       ancora: "kit_incidentes",       texto: "Nem sempre vale a pena indeferir pergunta da defesa: por vezes ela busca exatamente o indeferimento para alegar cerceamento. Avalie se responder não é o caminho mais seguro." },
-    { id: "dica_um_peso",             ancora: "montagem_roteiro",     texto: "Um peso, uma medida: se a comissão cobra da defesa perguntas não indutivas, deve garantir que os seus próprios questionamentos também não insinuem respostas." }
+    { id: "dica_um_peso",             ancora: "montagem_roteiro",     texto: "Um peso, uma medida: se a comissão cobra da defesa perguntas não indutivas, deve garantir que os seus próprios questionamentos também não insinuem respostas." },
+    // Atualização incremental 01 (enriquecimento ilícito):
+    { id: "dica_enriquecimento",      ancora: "infracao_enriquecimento", texto: "Neste enquadramento (art. 132, IV, c/c art. 9º, VII, Lei 8.429/92), não é necessário provar dolo específico nem vincular o acréscimo a um ato de ofício determinado. Basta a evolução patrimonial a descoberto: comprovada a discrepância, o ônus de justificar a origem lícita é do próprio agente (STJ, REsp 1.923.138-RJ). Foque a oitiva em reconstituir o fluxo patrimonial e em oferecer, formalmente, a oportunidade de justificação." },
+    { id: "dica_terceiro_interposto", ancora: "terceiro_interposto",      texto: "Se este depoente for familiar em cujo nome está bem sob suspeita (terceiro interposto), lembre-se: ele presta compromisso como testemunha, mas a ressalva da não autoincriminação tem aplicação real — a recusa a responder ponto que possa revelar sua própria participação em ocultação é legítima e não configura falso testemunho. Teste a genuinidade da aquisição: capacidade financeira própria, narrativa espontânea da compra e posse de fato (quem usa, quem paga, quem decide)." }
   ]
 };
 
@@ -1399,6 +1446,10 @@ function garantirEstruturaAto(d){
   d.roteiro = d.roteiro || [];
   d.checklist = d.checklist || {};
   if (d.acusadoSilencio === undefined) d.acusadoSilencio = false;
+  // Atualização incremental 01 (enriquecimento ilícito): campos opcionais no esquema, default seguro
+  // para depoentes/arquivos .json anteriores a esta atualização (sem quebrar a importação de arquivos antigos).
+  if (d.terceiroInterposto === undefined) d.terceiroInterposto = false;
+  if (d.controversiaRecolhida === undefined) d.controversiaRecolhida = false;
 }
 
 function abrirWizard(depoenteId){
@@ -1562,6 +1613,7 @@ function renderEtapa2(){
       const dep = getDepoenteAtivo();
       dep.papel = r.value;
       salvarLocalStorage();
+      atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
     });
   });
 
@@ -1570,6 +1622,7 @@ function renderEtapa2(){
     "<option value=\"" + i.id + "\"" + (d.infracao === i.id ? " selected" : "") + ">" + escapeHtml(i.nome) + " — " + escapeHtml(i.dispositivo) + "</option>"
   )).join("");
   renderInfracaoDetalhe(d.infracao);
+  atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
 }
 
 function renderInfracaoDetalhe(infracaoId){
@@ -1578,6 +1631,27 @@ function renderInfracaoDetalhe(infracaoId){
   wrap.innerHTML = inf
     ? "<div class=\"infracao-detalhe\"><strong>Elementos típicos:</strong> " + escapeHtml(inf.elementosTipicos.join("; ")) + "<br><strong>Pena em abstrato:</strong> " + escapeHtml(inf.penaAbstrata) + "</div>"
     : "";
+  // Atualização incremental 01: dica exibida imediatamente ao selecionar a 11ª infração.
+  if (infracaoId === "inf_enriquecimento_ilicito"){
+    renderDicas("infracao_enriquecimento", "dica-ancora-infracao-enriquecimento");
+  } else {
+    document.getElementById("dica-ancora-infracao-enriquecimento").innerHTML = "";
+  }
+}
+
+function atualizarVisibilidadeTerceiroInterposto(){
+  const d = getDepoenteAtivo();
+  if (!d) return;
+  const cartao = document.getElementById("cartao-terceiro-interposto");
+  const mostrar = d.infracao === "inf_enriquecimento_ilicito" && d.papel === "testemunha";
+  cartao.hidden = !mostrar;
+  if (!mostrar) return;
+  document.getElementById("dep-terceiro-interposto").checked = !!d.terceiroInterposto;
+  if (d.terceiroInterposto){
+    renderDicas("terceiro_interposto", "dica-ancora-terceiro-interposto");
+  } else {
+    document.getElementById("dica-ancora-terceiro-interposto").innerHTML = "";
+  }
 }
 
 function ligarCamposWizardEtapa1(){
@@ -1653,6 +1727,15 @@ function ligarCamposWizardEtapa2(){
     d.infracao = ev.target.value || null;
     salvarLocalStorage();
     renderInfracaoDetalhe(d.infracao);
+    atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
+  });
+  // Atualização incremental 01 (enriquecimento ilícito):
+  document.getElementById("dep-terceiro-interposto").addEventListener("change", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.terceiroInterposto = ev.target.checked;
+    salvarLocalStorage();
+    atualizarVisibilidadeTerceiroInterposto();
   });
 }
 
@@ -1739,8 +1822,19 @@ function gerarRoteiroInicial(d){
 
     } else if (bloco.tipo === "perguntas"){
       itens = CATALOGO.perguntas
-        .filter(q => q.bloco === bloco.id && q.papeis.includes(d.papel) && (q.infracoes.includes("todas") || q.infracoes.includes(d.infracao)))
-        .map((q, i) => ({ origem: "catalogo", tipo: "pergunta", refId: q.id, texto: q.texto, finalidade: q.finalidade, removivel: true, ordem: i + 1 }));
+        .filter(q => q.bloco === bloco.id && (q.infracoes.includes("todas") || q.infracoes.includes(d.infracao)))
+        .filter(q => {
+          // Atualização incremental 01: perguntas com "destinatario" (ex.: inf_enriquecimento_ilicito) usam essa
+          // nova regra de seleção; o filtro por "papeis" das demais 10 infrações permanece inalterado abaixo.
+          if (q.destinatario){
+            if (q.destinatario === "acusado") return d.papel === "acusado";
+            if (q.destinatario === "terceiro_interposto") return d.papel === "testemunha" && !!d.terceiroInterposto;
+            if (q.destinatario === "testemunha_geral") return d.papel === "testemunha" && !d.terceiroInterposto;
+            return false;
+          }
+          return q.papeis.includes(d.papel);
+        })
+        .map((q, i) => ({ origem: "catalogo", tipo: "pergunta", refId: q.id, texto: q.texto, finalidade: q.finalidade, removivel: !q.obrigatoria, nota: q.nota, ordem: i + 1 }));
     }
 
     return { blocoId: bloco.id, itens };
@@ -1750,7 +1844,7 @@ function gerarRoteiroInicial(d){
 function garantirRoteiroGerado(d){
   if (!d.roteiro || !d.roteiro.length){
     d.roteiro = gerarRoteiroInicial(d);
-    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
+    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto };
     if (d.status === "rascunho") d.status = "roteiro_pronto";
     salvarLocalStorage();
   }
@@ -1766,7 +1860,11 @@ function renderEtapa3(){
 
   garantirRoteiroGerado(d);
 
-  const desatualizado = d.roteiroGeradoPara && (d.roteiroGeradoPara.papel !== d.papel || d.roteiroGeradoPara.infracao !== d.infracao);
+  const desatualizado = d.roteiroGeradoPara && (
+    d.roteiroGeradoPara.papel !== d.papel ||
+    d.roteiroGeradoPara.infracao !== d.infracao ||
+    !!d.roteiroGeradoPara.terceiroInterposto !== !!d.terceiroInterposto // Atualização incremental 01
+  );
 
   let html = "";
 
@@ -1774,9 +1872,22 @@ function renderEtapa3(){
   html += "<div id=\"dica-ancora-montagem-geral\"></div>";
 
   if (desatualizado){
-    html += "<div class=\"cartao aviso-pedagogico\">O papel ou a categoria de infração foram alterados na Etapa 2 desde a última geração do roteiro. " +
+    html += "<div class=\"cartao aviso-pedagogico\">O papel, a categoria de infração ou a marcação de terceiro interposto foram alterados na Etapa 2 desde a última geração do roteiro. " +
       "As perguntas sugeridas atuais podem não corresponder mais à seleção. " +
       "<button type=\"button\" class=\"secundario pequeno\" id=\"btn-regenerar-roteiro\" style=\"margin-left:8px;\">Regenerar roteiro</button></div>";
+  }
+
+  // Atualização incremental 01: painel de controvérsia — acima dos blocos de perguntas, não dispensável,
+  // recolhível após a primeira leitura (estado persistido em d.controversiaRecolhida).
+  const infracaoAtual = CATALOGO.infracoes.find(i => i.id === d.infracao);
+  if (infracaoAtual && infracaoAtual.observacaoControversia){
+    html += "<details class=\"cartao callout-controversia\" id=\"callout-controversia\"" + (d.controversiaRecolhida ? "" : " open") + ">" +
+      "<summary>⚠️ Ponto de atenção — controvérsia jurídica</summary>" +
+      "<div>" + escapeHtml(infracaoAtual.observacaoControversia) + "</div>" +
+      "</details>";
+  }
+  if (infracaoAtual && infracaoAtual.notaTerceiroInterposto && d.papel === "testemunha" && d.terceiroInterposto){
+    html += "<div class=\"cartao aviso-pedagogico\"><strong>Nota sobre o terceiro interposto:</strong> " + escapeHtml(infracaoAtual.notaTerceiroInterposto) + "</div>";
   }
 
   const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
@@ -1838,6 +1949,9 @@ function renderItensBloco(bloco, grupo){
           Object.keys(RES_FINALIDADE).filter(f => f !== "praxe").map(f => "<option value=\"" + f + "\"" + (item.finalidade === f ? " selected" : "") + ">" + RES_FINALIDADE[f] + "</option>").join("") +
           "</select>";
       }
+      if (item.nota){
+        html += "<span class=\"nota-pergunta\" title=\"" + escapeHtml(item.nota) + "\">ℹ️</span>";
+      }
       html += "</div>";
       if (bloqueado){
         html += "<div style=\"font-size:.85rem;\">" + escapeHtml(item.texto) + "</div>";
@@ -1880,6 +1994,16 @@ function renderFormAddPergunta(blocoId){
 }
 
 function ligarEventosEtapa3(container){
+  // Atualização incremental 01: persiste o estado recolhido/expandido do painel de controvérsia.
+  const calloutControversia = container.querySelector("#callout-controversia");
+  if (calloutControversia){
+    calloutControversia.addEventListener("toggle", () => {
+      const d = getDepoenteAtivo();
+      d.controversiaRecolhida = !calloutControversia.open;
+      salvarLocalStorage();
+    });
+  }
+
   container.querySelectorAll("[data-campo-item-texto]").forEach(el => {
     el.addEventListener("input", () => {
       const d = getDepoenteAtivo();
@@ -1955,7 +2079,7 @@ function ligarEventosEtapa3(container){
       if (!confirm("Isso substituirá as perguntas atuais do roteiro (inclusive as adicionadas manualmente) pelas sugestões do banco para o papel e infração atuais. Deseja continuar?")) return;
       const d = getDepoenteAtivo();
       d.roteiro = gerarRoteiroInicial(d);
-      d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
+      d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto };
       salvarLocalStorage();
       renderEtapa3();
     });
@@ -2007,7 +2131,9 @@ function itensChecklistAplicaveis(d){
   return CATALOGO.checklistItens.filter(c =>
     c.condicao === "sempre" ||
     (c.condicao === "papel == acusado" && d.papel === "acusado") ||
-    (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia")
+    (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia") ||
+    // Atualização incremental 01: grupo condicional por infração (enriquecimento ilícito).
+    (c.condicao === "infracao == inf_enriquecimento_ilicito" && d.infracao === "inf_enriquecimento_ilicito")
   );
 }
 
@@ -2261,13 +2387,13 @@ function montarAreaImpressao(d, comCartaoMesa){
    ===================================================================== */
 function validarCatalogo(){
   console.info("Oitiva 360 — validação do CATALOGO:", {
-    infracoes: CATALOGO.infracoes.length + " (esperado: 10)",
+    infracoes: CATALOGO.infracoes.length + " (esperado: 11)",
     blocos: CATALOGO.blocos.length + " (esperado: 13)",
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
-    dicas: CATALOGO.dicas.length + " (esperado: 13)",
+    dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 13)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 50)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 63)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
 }
