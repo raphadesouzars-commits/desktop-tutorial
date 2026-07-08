@@ -206,9 +206,29 @@
   #stepper-depoente{ display:flex; gap:0; margin: 10px 0 18px; }
   #stepper-depoente .etapa{
     flex:1; text-align:center; padding:8px 4px; font-size:.75rem; color:var(--cor-texto-suave);
-    border-bottom:3px solid var(--cor-borda);
+    border:none; border-bottom:3px solid var(--cor-borda); background:transparent; border-radius:0;
+    cursor:pointer;
   }
+  #stepper-depoente .etapa:hover{ background: var(--cor-fundo); }
   #stepper-depoente .etapa.ativa{ color: var(--cor-primaria); border-bottom-color: var(--cor-destaque); font-weight:600; }
+
+  .wizard-topo{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; }
+  .wizard-topo h2{ border-bottom:none; padding-bottom:0; margin-bottom:2px; }
+  .wizard-nav{ display:flex; justify-content:space-between; margin-top:16px; }
+  .papel-opcoes{ display:flex; flex-direction:column; gap:8px; }
+  .papel-opcao{
+    display:flex; gap:10px; border:1px solid var(--cor-borda); border-radius: var(--raio);
+    padding:10px 12px; cursor:pointer;
+  }
+  .papel-opcao:has(input:checked){ border-color: var(--cor-primaria); background:#F0F4F8; }
+  .papel-opcao input{ width:auto; margin-top:3px; }
+  .papel-opcao .papel-nome{ font-weight:600; color: var(--cor-primaria-escura); font-size:.88rem; }
+  .papel-opcao .papel-desc{ font-size:.78rem; color: var(--cor-texto-suave); margin-top:2px; }
+  .infracao-detalhe{ font-size:.78rem; color: var(--cor-texto-suave); background:#F0F4F8; border-radius: var(--raio); padding:8px 10px; margin-top:6px; }
+  .aviso-lgpd{
+    background:#F0F4F8; border:1px solid var(--cor-borda); border-radius: var(--raio);
+    padding:8px 10px; font-size:.78rem; color: var(--cor-primaria-escura); margin-bottom:8px;
+  }
 
   footer.rodape-app{
     background: var(--cor-primaria-escura);
@@ -235,13 +255,13 @@
   <div class="selo">Ferramenta de apoio à decisão</div>
 </header>
 
-<!-- Stepper do wizard do depoente: esqueleto oculto, funcionalidade nas Partes 2-4 -->
+<!-- Stepper do wizard do depoente: etapas 1-2 funcionais (Parte 2); 3-4 stub (Partes 3-4) -->
 <main>
   <div id="stepper-depoente" hidden>
-    <div class="etapa ativa" data-etapa="1">1. Dados do Ato</div>
-    <div class="etapa" data-etapa="2">2. Depoente</div>
-    <div class="etapa" data-etapa="3">3. Montagem do Roteiro</div>
-    <div class="etapa" data-etapa="4">4. Revisão e Checklist</div>
+    <button type="button" class="etapa ativa" data-etapa="1">1. Dados do Ato</button>
+    <button type="button" class="etapa" data-etapa="2">2. Depoente</button>
+    <button type="button" class="etapa" data-etapa="3">3. Montagem do Roteiro</button>
+    <button type="button" class="etapa" data-etapa="4">4. Revisão e Checklist</button>
   </div>
 
   <!-- ============================= TELA DO PROCESSO ============================= -->
@@ -319,11 +339,177 @@
 
   </section>
 
-  <!-- ============================= WIZARD DO DEPOENTE (esqueleto — Partes 2-4) ============================= -->
+  <!-- ============================= WIZARD DO DEPOENTE (etapas 1-2 — Parte 2; 3-4 stub) ============================= -->
   <section id="tela-wizard-depoente" hidden>
-    <div class="cartao">
-      <p class="vazio">O wizard do depoente (Etapas 1-4) será implementado nas próximas partes.</p>
+
+    <div class="wizard-topo">
+      <div>
+        <h2 id="wizard-titulo-depoente">Depoente</h2>
+        <div style="font-size:.78rem;color:var(--cor-texto-suave);" id="wizard-subtitulo-depoente"></div>
+      </div>
+      <button type="button" class="secundario" id="btn-voltar-processo">← Voltar à lista de depoentes</button>
     </div>
+
+    <!-- Etapa 1 — Dados do Ato -->
+    <div id="wizard-etapa-1" class="wizard-etapa-conteudo">
+      <div class="cartao">
+        <h3 style="margin-top:0;">Dados herdados do processo <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(editáveis pontualmente para este ato)</span></h3>
+        <div class="grade-2">
+          <div class="campo">
+            <label for="ato-numero">Nº do processo</label>
+            <input type="text" id="ato-numero" data-campo-ato="numero">
+          </div>
+          <div class="campo">
+            <label for="ato-portaria">Portaria</label>
+            <input type="text" id="ato-portaria" data-campo-ato="portaria">
+          </div>
+        </div>
+        <div class="grade-2">
+          <div class="campo">
+            <label for="ato-presidente">Presidente da comissão</label>
+            <input type="text" id="ato-presidente" data-campo-ato-comissao="presidente">
+          </div>
+          <div class="campo">
+            <label for="ato-secretario">Secretário(a)</label>
+            <input type="text" id="ato-secretario" data-campo-ato-comissao="secretario">
+          </div>
+        </div>
+        <div class="campo">
+          <label>Vogais</label>
+          <div class="lista-vogais" id="lista-vogais-ato"></div>
+          <button type="button" class="secundario pequeno" id="btn-add-vogal-ato" style="margin-top:6px;">+ Adicionar vogal</button>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3 style="margin-top:0;">Data, hora e local do ato</h3>
+        <div class="grade-3">
+          <div class="campo">
+            <label for="ato-data">Data</label>
+            <input type="date" id="ato-data" data-campo-ato="data">
+          </div>
+          <div class="campo">
+            <label for="ato-hora">Hora</label>
+            <input type="time" id="ato-hora" data-campo-ato="hora">
+          </div>
+          <div class="campo">
+            <label for="ato-local">Local</label>
+            <input type="text" id="ato-local" data-campo-ato="local">
+          </div>
+        </div>
+        <div class="campo">
+          <label>Modalidade</label>
+          <div style="display:flex;gap:16px;font-size:.85rem;">
+            <label style="display:flex;align-items:center;gap:6px;font-weight:400;">
+              <input type="radio" name="ato-modalidade" value="presencial" data-campo-ato-modalidade style="width:auto;"> Presencial
+            </label>
+            <label style="display:flex;align-items:center;gap:6px;font-weight:400;">
+              <input type="radio" name="ato-modalidade" value="videoconferencia" data-campo-ato-modalidade style="width:auto;"> Videoconferência
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3 style="margin-top:0;">Estratégia da equipe <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(opcional)</span></h3>
+        <div id="dica-ancora-estrategia"></div>
+        <div class="grade-2">
+          <div class="campo">
+            <label for="ato-quem-pergunta">Quem pergunta</label>
+            <input type="text" id="ato-quem-pergunta" data-campo-estrategia="quemPergunta">
+          </div>
+          <div class="campo">
+            <label for="ato-quem-revisa">Quem revisa ("guardião da pergunta de ouro")</label>
+            <input type="text" id="ato-quem-revisa" data-campo-estrategia="quemRevisa">
+          </div>
+        </div>
+        <div class="campo">
+          <label for="ato-formato-abertura">Formato de abertura</label>
+          <select id="ato-formato-abertura" data-campo-estrategia="formatoAbertura">
+            <option value="">Não definido</option>
+            <option value="explanacao_livre">Explanação livre inicial</option>
+            <option value="respostas_pontuais">Apenas respostas pontuais</option>
+          </select>
+        </div>
+        <div id="dica-ancora-explanacao"></div>
+        <div class="campo">
+          <label for="ato-momento-documentos">Momento de exibição de documentos</label>
+          <textarea id="ato-momento-documentos" data-campo-estrategia="momentoExibicaoDocumentos"></textarea>
+        </div>
+        <div id="dica-ancora-documentos-estrategia"></div>
+      </div>
+    </div>
+
+    <!-- Etapa 2 — Depoente -->
+    <div id="wizard-etapa-2" class="wizard-etapa-conteudo" hidden>
+      <div class="cartao">
+        <h3 style="margin-top:0;">Identificação</h3>
+        <div class="aviso-lgpd">Recomendamos usar iniciais ou nome fictício. Esta ferramenta não deve armazenar dados pessoais reais dos envolvidos (aviso LGPD).</div>
+        <div class="campo">
+          <label class="obrigatorio" for="dep-identificacao">Identificação</label>
+          <input type="text" id="dep-identificacao">
+        </div>
+        <div id="dica-ancora-elementos-buscados-wizard"></div>
+        <div class="campo">
+          <label class="obrigatorio" for="dep-elementos-buscados">Elementos buscados com este depoente</label>
+          <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Por que ouvir ESTA pessoa? O que ela pode trazer?</div>
+          <textarea id="dep-elementos-buscados"></textarea>
+        </div>
+      </div>
+
+      <div class="cartao">
+        <h3 style="margin-top:0;">Papel do depoente</h3>
+        <div class="papel-opcoes" id="papel-opcoes"></div>
+      </div>
+
+      <div class="cartao">
+        <h3 style="margin-top:0;">Categoria de infração</h3>
+        <div class="campo">
+          <label class="obrigatorio" for="dep-infracao">Infração apurada</label>
+          <select id="dep-infracao">
+            <option value="">Selecione…</option>
+          </select>
+        </div>
+        <div id="infracao-detalhe"></div>
+      </div>
+
+      <div class="cartao">
+        <h3 style="margin-top:0;">Perfil do depoente <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(opcional)</span></h3>
+        <div id="dica-ancora-perfil"></div>
+        <div class="campo">
+          <label for="dep-nivel-conhecimento">Nível de conhecimento dos fatos</label>
+          <select id="dep-nivel-conhecimento">
+            <option value="">Não definido</option>
+            <option value="viu">Presenciou diretamente (viu)</option>
+            <option value="ouviu_participante">Ouviu de participante direto</option>
+            <option value="documentos">Teve acesso a documentos/registros</option>
+            <option value="ouviu_dizer">Ouviu dizer (relato de terceiros)</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="dep-vinculos">Vínculos com investigado/vítima/administração</label>
+          <textarea id="dep-vinculos"></textarea>
+        </div>
+      </div>
+
+      <div id="erro-etapa-2"></div>
+    </div>
+
+    <!-- Etapa 3 — stub (Parte 3) -->
+    <div id="wizard-etapa-3" class="wizard-etapa-conteudo" hidden>
+      <div class="cartao"><p class="vazio">Etapa 3 — Montagem do Roteiro será implementada na Parte 3.</p></div>
+    </div>
+
+    <!-- Etapa 4 — stub (Parte 4) -->
+    <div id="wizard-etapa-4" class="wizard-etapa-conteudo" hidden>
+      <div class="cartao"><p class="vazio">Etapa 4 — Revisão e Checklist será implementada na Parte 4.</p></div>
+    </div>
+
+    <div class="wizard-nav">
+      <button type="button" class="secundario" id="btn-wizard-voltar">← Voltar</button>
+      <button type="button" id="btn-wizard-avancar">Avançar →</button>
+    </div>
+
   </section>
 
 </main>
@@ -836,7 +1022,7 @@ function renderListaDepoentes(){
           "<td>" + (d.papel ? escapeHtml((CATALOGO.papeis.find(p=>p.id===d.papel)||{}).nome || d.papel) : "<span class=\"vazio\">não definido</span>") + "</td>" +
           "<td>" + (d.infracao ? escapeHtml((CATALOGO.infracoes.find(i=>i.id===d.infracao)||{}).nome || d.infracao) : "<span class=\"vazio\">não definida</span>") + "</td>" +
           "<td><span class=\"badge-status " + d.status + "\">" + statusLabel(d.status) + "</span></td>" +
-          "<td><button type=\"button\" class=\"secundario pequeno\" disabled title=\"Wizard disponível na Parte 2\">Editar roteiro</button> " +
+          "<td><button type=\"button\" class=\"secundario pequeno\" data-abrir-wizard=\"" + d.id + "\">Abrir depoente</button> " +
               "<button type=\"button\" class=\"perigo pequeno\" data-remover-depoente=\"" + d.id + "\">Remover</button></td>" +
         "</tr>"
       )).join("") +
@@ -852,6 +1038,12 @@ function renderListaDepoentes(){
         salvarLocalStorage();
         renderListaDepoentes();
       }
+    });
+  });
+
+  wrap.querySelectorAll("[data-abrir-wizard]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      abrirWizard(btn.dataset.abrirWizard);
     });
   });
 
@@ -1060,6 +1252,290 @@ document.getElementById("btn-abrir-como-novo").addEventListener("click", () => {
 });
 
 /* =====================================================================
+   WIZARD DO DEPOENTE — Etapas 1 (Dados do Ato) e 2 (Depoente)
+   ===================================================================== */
+let depoenteAtivoId = null;
+let etapaAtiva = 1;
+
+function getDepoenteAtivo(){
+  return estado.depoentes.find(d => d.id === depoenteAtivoId) || null;
+}
+
+function garantirEstruturaAto(d){
+  d.ato = d.ato || {};
+  if (d.ato.numero === undefined) d.ato.numero = estado.processo.numero;
+  if (d.ato.portaria === undefined) d.ato.portaria = estado.processo.portaria;
+  if (!d.ato.comissao) {
+    d.ato.comissao = {
+      presidente: estado.processo.comissao.presidente,
+      vogais: (estado.processo.comissao.vogais || []).slice(),
+      secretario: estado.processo.comissao.secretario
+    };
+  }
+  d.ato.data = d.ato.data || "";
+  d.ato.hora = d.ato.hora || "";
+  d.ato.local = d.ato.local || "";
+  d.ato.modalidade = d.ato.modalidade || "presencial";
+  d.ato.estrategia = d.ato.estrategia || {};
+  d.perfil = d.perfil || {};
+}
+
+function abrirWizard(depoenteId){
+  const d = estado.depoentes.find(x => x.id === depoenteId);
+  if (!d) return;
+  garantirEstruturaAto(d);
+  depoenteAtivoId = depoenteId;
+  document.getElementById("tela-processo").hidden = true;
+  document.getElementById("tela-wizard-depoente").hidden = false;
+  document.getElementById("stepper-depoente").hidden = false;
+  irParaEtapa(1, { forcar: true });
+}
+
+function fecharWizard(){
+  depoenteAtivoId = null;
+  document.getElementById("tela-processo").hidden = false;
+  document.getElementById("tela-wizard-depoente").hidden = true;
+  document.getElementById("stepper-depoente").hidden = true;
+  renderListaDepoentes();
+}
+
+function validarEtapa2(mostrarErros){
+  const d = getDepoenteAtivo();
+  if (!d) return false;
+  const faltando = [];
+  if (!d.identificacao || !d.identificacao.trim()) faltando.push("identificação");
+  if (!d.elementosBuscados || !d.elementosBuscados.trim()) faltando.push("elementos buscados");
+  if (!d.papel) faltando.push("papel do depoente");
+  if (!d.infracao) faltando.push("categoria de infração");
+
+  if (mostrarErros){
+    const wrap = document.getElementById("erro-etapa-2");
+    wrap.innerHTML = faltando.length
+      ? "<div class=\"aviso-erro\">Para avançar, preencha: " + faltando.map(escapeHtml).join(", ") + ".</div>"
+      : "";
+  }
+  return faltando.length === 0;
+}
+
+function irParaEtapa(destino, opcoes){
+  opcoes = opcoes || {};
+  if (!opcoes.forcar && etapaAtiva === 2 && destino > 2 && !validarEtapa2(true)){
+    return; // permanece na etapa 2, erros exibidos
+  }
+  etapaAtiva = destino;
+
+  document.querySelectorAll("#stepper-depoente .etapa").forEach(btn => {
+    btn.classList.toggle("ativa", Number(btn.dataset.etapa) === destino);
+  });
+  document.querySelectorAll(".wizard-etapa-conteudo").forEach((div, idx) => {
+    div.hidden = (idx + 1) !== destino;
+  });
+
+  if (destino === 1) renderEtapa1();
+  if (destino === 2) renderEtapa2();
+
+  document.getElementById("btn-wizard-voltar").disabled = (destino === 1);
+  document.getElementById("btn-wizard-avancar").textContent = (destino >= 4) ? "Concluído" : "Avançar →";
+  document.getElementById("btn-wizard-avancar").disabled = (destino === 4);
+}
+
+function renderEtapa1(){
+  const d = getDepoenteAtivo();
+  if (!d) return;
+  document.getElementById("wizard-titulo-depoente").textContent = "Depoente: " + d.identificacao;
+  document.getElementById("wizard-subtitulo-depoente").textContent = "Etapa 1 — Dados do Ato";
+
+  document.getElementById("ato-numero").value = d.ato.numero || "";
+  document.getElementById("ato-portaria").value = d.ato.portaria || "";
+  document.getElementById("ato-presidente").value = d.ato.comissao.presidente || "";
+  document.getElementById("ato-secretario").value = d.ato.comissao.secretario || "";
+  document.getElementById("ato-data").value = d.ato.data || "";
+  document.getElementById("ato-hora").value = d.ato.hora || "";
+  document.getElementById("ato-local").value = d.ato.local || "";
+  document.querySelectorAll("[data-campo-ato-modalidade]").forEach(r => {
+    r.checked = (r.value === d.ato.modalidade);
+  });
+  document.getElementById("ato-quem-pergunta").value = d.ato.estrategia.quemPergunta || "";
+  document.getElementById("ato-quem-revisa").value = d.ato.estrategia.quemRevisa || "";
+  document.getElementById("ato-formato-abertura").value = d.ato.estrategia.formatoAbertura || "";
+  document.getElementById("ato-momento-documentos").value = d.ato.estrategia.momentoExibicaoDocumentos || "";
+
+  renderVogaisAto(d);
+  renderDicas("estrategia", "dica-ancora-estrategia");
+  renderDicas("montagem_roteiro", "dica-ancora-documentos-estrategia");
+  // dica_explanacao também está ancorada em "estrategia"; exibida junto ao campo de formato de abertura
+  document.getElementById("dica-ancora-explanacao").innerHTML =
+    CATALOGO.dicas.filter(dc => dc.id === "dica_explanacao").map(dc =>
+      "<details class=\"dica\"><summary>" + escapeHtml(dc.texto.split(" ").slice(0,4).join(" ")) + "…</summary><div>" + escapeHtml(dc.texto) + "</div></details>"
+    ).join("");
+}
+
+function renderVogaisAto(d){
+  const wrap = document.getElementById("lista-vogais-ato");
+  const vogais = d.ato.comissao.vogais || [];
+  if (!vogais.length){
+    wrap.innerHTML = "<p class=\"vazio\" style=\"margin:0;\">Nenhum vogal adicionado.</p>";
+    return;
+  }
+  wrap.innerHTML = vogais.map((v, i) => (
+    "<div class=\"linha-vogal\">" +
+      "<input type=\"text\" value=\"" + escapeHtml(v) + "\" data-indice-vogal-ato=\"" + i + "\" aria-label=\"Vogal " + (i+1) + "\">" +
+      "<button type=\"button\" class=\"secundario pequeno\" data-remover-vogal-ato=\"" + i + "\" aria-label=\"Remover vogal " + (i+1) + "\">×</button>" +
+    "</div>"
+  )).join("");
+
+  wrap.querySelectorAll("[data-indice-vogal-ato]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const dep = getDepoenteAtivo();
+      dep.ato.comissao.vogais[Number(inp.dataset.indiceVogalAto)] = inp.value;
+      salvarLocalStorage();
+    });
+  });
+  wrap.querySelectorAll("[data-remover-vogal-ato]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const dep = getDepoenteAtivo();
+      dep.ato.comissao.vogais.splice(Number(btn.dataset.removerVogalAto), 1);
+      salvarLocalStorage();
+      renderVogaisAto(dep);
+    });
+  });
+}
+
+function renderEtapa2(){
+  const d = getDepoenteAtivo();
+  if (!d) return;
+  document.getElementById("wizard-titulo-depoente").textContent = "Depoente: " + d.identificacao;
+  document.getElementById("wizard-subtitulo-depoente").textContent = "Etapa 2 — Depoente";
+
+  document.getElementById("dep-identificacao").value = d.identificacao || "";
+  document.getElementById("dep-elementos-buscados").value = d.elementosBuscados || "";
+  document.getElementById("dep-nivel-conhecimento").value = d.perfil.nivelConhecimento || "";
+  document.getElementById("dep-vinculos").value = d.perfil.vinculos || "";
+
+  renderDicas("elementos_buscados", "dica-ancora-elementos-buscados-wizard");
+  renderDicas("perfil", "dica-ancora-perfil");
+
+  const opcoesWrap = document.getElementById("papel-opcoes");
+  opcoesWrap.innerHTML = CATALOGO.papeis.map(p => (
+    "<label class=\"papel-opcao\">" +
+      "<input type=\"radio\" name=\"papel-depoente\" value=\"" + p.id + "\"" + (d.papel === p.id ? " checked" : "") + ">" +
+      "<span><span class=\"papel-nome\">" + escapeHtml(p.nome) + "</span>" +
+      "<span class=\"papel-desc\">" + escapeHtml(p.descricaoRegime) + "</span></span>" +
+    "</label>"
+  )).join("");
+  opcoesWrap.querySelectorAll("input[name=papel-depoente]").forEach(r => {
+    r.addEventListener("change", () => {
+      const dep = getDepoenteAtivo();
+      dep.papel = r.value;
+      salvarLocalStorage();
+    });
+  });
+
+  const selectInfracao = document.getElementById("dep-infracao");
+  selectInfracao.innerHTML = "<option value=\"\">Selecione…</option>" + CATALOGO.infracoes.map(i => (
+    "<option value=\"" + i.id + "\"" + (d.infracao === i.id ? " selected" : "") + ">" + escapeHtml(i.nome) + " — " + escapeHtml(i.dispositivo) + "</option>"
+  )).join("");
+  renderInfracaoDetalhe(d.infracao);
+}
+
+function renderInfracaoDetalhe(infracaoId){
+  const wrap = document.getElementById("infracao-detalhe");
+  const inf = CATALOGO.infracoes.find(i => i.id === infracaoId);
+  wrap.innerHTML = inf
+    ? "<div class=\"infracao-detalhe\"><strong>Elementos típicos:</strong> " + escapeHtml(inf.elementosTipicos.join("; ")) + "<br><strong>Pena em abstrato:</strong> " + escapeHtml(inf.penaAbstrata) + "</div>"
+    : "";
+}
+
+function ligarCamposWizardEtapa1(){
+  document.querySelectorAll("[data-campo-ato]").forEach(campo => {
+    campo.addEventListener("input", () => {
+      const d = getDepoenteAtivo();
+      if (!d) return;
+      d.ato[campo.dataset.campoAto] = campo.value;
+      salvarLocalStorage();
+    });
+  });
+  document.querySelectorAll("[data-campo-ato-comissao]").forEach(campo => {
+    campo.addEventListener("input", () => {
+      const d = getDepoenteAtivo();
+      if (!d) return;
+      d.ato.comissao[campo.dataset.campoAtoComissao] = campo.value;
+      salvarLocalStorage();
+    });
+  });
+  document.querySelectorAll("[data-campo-ato-modalidade]").forEach(campo => {
+    campo.addEventListener("change", () => {
+      const d = getDepoenteAtivo();
+      if (!d || !campo.checked) return;
+      d.ato.modalidade = campo.value;
+      salvarLocalStorage();
+    });
+  });
+  document.querySelectorAll("[data-campo-estrategia]").forEach(campo => {
+    campo.addEventListener("input", () => {
+      const d = getDepoenteAtivo();
+      if (!d) return;
+      d.ato.estrategia[campo.dataset.campoEstrategia] = campo.value;
+      salvarLocalStorage();
+    });
+  });
+  document.getElementById("btn-add-vogal-ato").addEventListener("click", () => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.ato.comissao.vogais.push("");
+    salvarLocalStorage();
+    renderVogaisAto(d);
+  });
+}
+
+function ligarCamposWizardEtapa2(){
+  document.getElementById("dep-identificacao").addEventListener("input", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.identificacao = ev.target.value;
+    salvarLocalStorage();
+  });
+  document.getElementById("dep-elementos-buscados").addEventListener("input", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.elementosBuscados = ev.target.value;
+    salvarLocalStorage();
+  });
+  document.getElementById("dep-nivel-conhecimento").addEventListener("change", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.perfil.nivelConhecimento = ev.target.value;
+    salvarLocalStorage();
+  });
+  document.getElementById("dep-vinculos").addEventListener("input", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.perfil.vinculos = ev.target.value;
+    salvarLocalStorage();
+  });
+  document.getElementById("dep-infracao").addEventListener("change", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.infracao = ev.target.value || null;
+    salvarLocalStorage();
+    renderInfracaoDetalhe(d.infracao);
+  });
+}
+
+function ligarNavegacaoWizard(){
+  document.getElementById("btn-voltar-processo").addEventListener("click", fecharWizard);
+  document.querySelectorAll("#stepper-depoente .etapa").forEach(btn => {
+    btn.addEventListener("click", () => irParaEtapa(Number(btn.dataset.etapa)));
+  });
+  document.getElementById("btn-wizard-voltar").addEventListener("click", () => {
+    if (etapaAtiva > 1) irParaEtapa(etapaAtiva - 1, { forcar: true });
+  });
+  document.getElementById("btn-wizard-avancar").addEventListener("click", () => {
+    if (etapaAtiva < 4) irParaEtapa(etapaAtiva + 1);
+  });
+}
+
+/* =====================================================================
    Validação do CATALOGO no console (critério de aceite da Parte 1)
    ===================================================================== */
 function validarCatalogo(){
@@ -1082,6 +1558,9 @@ function init(){
   carregarLocalStorage();
   ligarCamposMatriz();
   ligarCamposProcesso();
+  ligarCamposWizardEtapa1();
+  ligarCamposWizardEtapa2();
+  ligarNavegacaoWizard();
   renderTudo();
   validarCatalogo();
 }
