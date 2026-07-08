@@ -317,7 +317,39 @@
 
   @media print{
     header.cabecalho-institucional, .acoes-topo, #stepper-depoente, aside, footer.rodape-app, button{ display:none !important; }
+    body *:not(#area-impressao):not(#area-impressao *){ display:none !important; }
+    #area-impressao{ display:block !important; color:#000; }
   }
+
+  /* ---- Etapa 4: revisão, checklist, termo, impressão ---- */
+  .item-checklist{ display:flex; align-items:flex-start; gap:8px; font-size:.85rem; padding:4px 0; }
+  .item-checklist input{ width:auto; margin-top:3px; }
+  .alerta-nulidade{
+    background: var(--cor-erro-fundo); border:2px solid var(--cor-erro); border-radius: var(--raio);
+    padding:12px 14px; color: var(--cor-erro); font-size:.85rem;
+  }
+  .alerta-nulidade ul{ margin:6px 0 0 18px; padding:0; }
+  .aviso-ok{
+    background:#E8F5E9; border:1px solid var(--cor-sucesso); color:#1B5E20; border-radius: var(--raio);
+    padding:10px 12px; font-size:.85rem;
+  }
+  #termo-texto{ min-height:260px; font-family: "Courier New", monospace; font-size:.8rem; white-space:pre-wrap; }
+  .status-toggle{ display:flex; align-items:center; gap:8px; font-size:.85rem; margin-top:8px; }
+
+  /* ---- Área de impressão (populada dinamicamente antes de window.print()) ---- */
+  #area-impressao{ display:none; color:#000; background:#fff; font-size:12pt; }
+  #area-impressao .impresso-cabecalho{ border-bottom:2px solid #000; margin-bottom:14px; padding-bottom:8px; font-size:11pt; }
+  #area-impressao h3{ color:#000; border-bottom:1px solid #999; font-size:12pt; margin-top:18px; }
+  #area-impressao h2{ color:#000; }
+  #area-impressao .impresso-texto-fixo{ white-space:pre-wrap; margin-bottom:10px; font-size:11pt; }
+  #area-impressao .impresso-pergunta{ display:flex; gap:10px; margin-bottom:14px; page-break-inside:avoid; }
+  #area-impressao .impresso-pergunta .num{ font-weight:700; width:22px; flex-shrink:0; }
+  #area-impressao .impresso-pergunta .texto{ flex:2; font-size:11pt; }
+  #area-impressao .impresso-pergunta .notas{ flex:1; border-left:1px dashed #999; padding-left:10px; min-height:40px; color:#777; font-size:9pt; }
+  #area-impressao .impresso-rodape{ margin-top:26px; border-top:1px solid #000; padding-top:8px; font-size:9pt; text-align:center; }
+  #area-impressao .cartao-mesa-pagina{ page-break-before: always; }
+  #area-impressao .cartao-mesa-grid{ column-count:2; column-gap:24px; font-size:9pt; }
+  #area-impressao .cartao-mesa-item{ break-inside:avoid; margin-bottom:10px; }
 </style>
 </head>
 <body>
@@ -579,10 +611,8 @@
     <!-- Etapa 3 — Montagem do Roteiro (conteúdo gerado dinamicamente por renderEtapa3()) -->
     <div id="wizard-etapa-3" class="wizard-etapa-conteudo" hidden></div>
 
-    <!-- Etapa 4 — stub (Parte 4) -->
-    <div id="wizard-etapa-4" class="wizard-etapa-conteudo" hidden>
-      <div class="cartao"><p class="vazio">Etapa 4 — Revisão e Checklist será implementada na Parte 4.</p></div>
-    </div>
+    <!-- Etapa 4 — Revisão, Checklist, Termo, Cartão de Mesa e Impressão (conteúdo gerado por renderEtapa4()) -->
+    <div id="wizard-etapa-4" class="wizard-etapa-conteudo" hidden></div>
 
     <div class="wizard-nav">
       <button type="button" class="secundario" id="btn-wizard-voltar">← Voltar</button>
@@ -636,6 +666,8 @@
     <button type="button" id="btn-confirmar-add-depoente">Adicionar</button>
   </div>
 </dialog>
+
+<div id="area-impressao" hidden></div>
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
@@ -1365,6 +1397,7 @@ function garantirEstruturaAto(d){
   d.ato.estrategia = d.ato.estrategia || {};
   d.perfil = d.perfil || {};
   d.roteiro = d.roteiro || [];
+  d.checklist = d.checklist || {};
   if (d.acusadoSilencio === undefined) d.acusadoSilencio = false;
 }
 
@@ -1433,6 +1466,7 @@ function irParaEtapa(destino, opcoes){
   if (destino === 1) renderEtapa1();
   if (destino === 2) renderEtapa2();
   if (destino === 3) renderEtapa3();
+  if (destino === 4) renderEtapa4();
 
   document.getElementById("btn-wizard-voltar").disabled = (destino === 1);
   document.getElementById("btn-wizard-avancar").textContent = (destino >= 4) ? "Concluído" : "Avançar →";
@@ -1713,6 +1747,15 @@ function gerarRoteiroInicial(d){
   });
 }
 
+function garantirRoteiroGerado(d){
+  if (!d.roteiro || !d.roteiro.length){
+    d.roteiro = gerarRoteiroInicial(d);
+    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
+    if (d.status === "rascunho") d.status = "roteiro_pronto";
+    salvarLocalStorage();
+  }
+}
+
 function renderEtapa3(){
   const d = getDepoenteAtivo();
   if (!d) return;
@@ -1721,11 +1764,7 @@ function renderEtapa3(){
 
   const container = document.getElementById("wizard-etapa-3");
 
-  if (!d.roteiro || !d.roteiro.length){
-    d.roteiro = gerarRoteiroInicial(d);
-    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao };
-    salvarLocalStorage();
-  }
+  garantirRoteiroGerado(d);
 
   const desatualizado = d.roteiroGeradoPara && (d.roteiroGeradoPara.papel !== d.papel || d.roteiroGeradoPara.infracao !== d.infracao);
 
@@ -1948,6 +1987,273 @@ function renderKitIncidentes(){
 
   document.getElementById("kit-incidentes-conteudo").innerHTML = html;
   renderDicas("kit_incidentes", "dica-ancora-kit-incidentes");
+}
+
+/* =====================================================================
+   WIZARD DO DEPOENTE — Etapa 4 (Revisão, Checklist, Termo, Cartão de Mesa, Impressão)
+   ===================================================================== */
+const MESES_EXTENSO = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+
+function dataPorExtenso(iso){
+  if (!iso) return "____";
+  const [y, m, dd] = iso.split("-").map(Number);
+  if (!y || !m || !dd) return "____";
+  return dd + " de " + MESES_EXTENSO[m - 1] + " de " + y;
+}
+
+function statusLabelEtapa4(s){ return statusLabel(s); }
+
+function itensChecklistAplicaveis(d){
+  return CATALOGO.checklistItens.filter(c =>
+    c.condicao === "sempre" ||
+    (c.condicao === "papel == acusado" && d.papel === "acusado") ||
+    (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia")
+  );
+}
+
+function renderRoteiroLeitura(d){
+  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  let html = "";
+  let algumBloco = false;
+
+  CATALOGO.blocos.forEach(bloco => {
+    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+    const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { itens: [] };
+    if (!grupo.itens.length) return;
+    algumBloco = true;
+    html += "<h4 style=\"margin:14px 0 4px;\">" + escapeHtml(bloco.nome) + "</h4>";
+    grupo.itens.forEach(item => {
+      if (item.tipo === "texto_modelo"){
+        html += "<div class=\"cartao-texto-fixo\">" + escapeHtml(item.texto) + "</div>";
+      } else if (item.tipo === "checklist_ref"){
+        html += "<div style=\"font-size:.85rem;\">• " + escapeHtml(item.texto) + "</div>";
+      } else if (item.tipo === "pergunta"){
+        html += "<div style=\"font-size:.85rem;margin-bottom:6px;\"><span class=\"badge-finalidade fin-" + item.finalidade + "\">" + finalidadeLabel(item.finalidade) + "</span> " + escapeHtml(item.texto) + "</div>";
+      }
+    });
+  });
+
+  if (silencioExercido){
+    html += "<div class=\"alerta-silencio\">Direito ao silêncio exercido — blocos de perguntas ocultados nesta visualização (e na impressão).</div>";
+  }
+
+  return algumBloco ? html : "<p class=\"vazio\">Roteiro ainda não gerado. Volte à Etapa 3.</p>";
+}
+
+function gerarTermoTexto(d){
+  const ctx = contextoMerge(d);
+  const tipo = d.papel === "acusado" ? "INTERROGATÓRIO" : "OITIVA DE TESTEMUNHA";
+  const papelLabel = d.papel === "acusado" ? "investigado(a)/acusado(a)" : "testemunha";
+  const intimacao = d.papel === "acusado" ? "notificado(a)" : "intimado(a)";
+
+  let texto = "TERMO DE " + tipo + "\n\n";
+  texto += "Aos " + dataPorExtenso(d.ato.data) + ", às " + (ctx.hora || "____") + ", em " + (ctx.local || "____") +
+    ", presente a Comissão de Processo Administrativo Disciplinar instituída pela Portaria " + (ctx.portaria || "____") +
+    ", composta por " + (ctx.presidente || "____") + " (presidente), " + (ctx.vogais || "____") + " (vogais), secretariada por " +
+    (ctx.secretario || "____") + ", compareceu " + (ctx.nome || "____") + ", regularmente " + intimacao + " na condição de " + papelLabel + ".";
+  if (d.papel === "acusado"){
+    texto += " Presente também seu defensor constituído, quando constituído, Dr(a). ___, OAB/__ nº ___.";
+  }
+
+  texto += "\n\nIniciados os trabalhos, o presidente procedeu à qualificação civil e funcional do(a) depoente, conferindo os dados com documento oficial de identificação.";
+
+  if (d.papel === "testemunha"){
+    texto += " Inquirido(a) aos costumes, declarou não ser parente, amigo(a) íntimo(a) ou inimigo(a) de qualquer das partes, nem ter interesse na matéria. Advertido(a) das penas do crime de falso testemunho (art. 342 do Código Penal) e ressalvada a garantia contra a autoincriminação, prestou o compromisso legal de dizer a verdade.";
+  } else {
+    texto += " Cientificado(a) do direito constitucional ao silêncio e de que seu exercício não importa confissão nem será interpretado em prejuízo da defesa, bem como da facultatividade do acompanhamento por procurador (Súmula Vinculante nº 5/STF), manifestou " +
+      (d.acusadoSilencio
+        ? "a opção pelo exercício do direito ao silêncio, razão pela qual a comissão não lhe dirigiu questionamentos (art. 15, parágrafo único, I, da Lei nº 13.869/2019)."
+        : "interesse em responder às perguntas que lhe foram formuladas.");
+  }
+
+  texto += "\n\n[Registro de incidentes, se houver: contradita, arguição de parcialidade, questões de ordem, protestos — com a deliberação da comissão.]";
+  texto += "\n\nPassou-se à inquirição pela comissão:\n[transcrição das perguntas e respostas]";
+  texto += "\n\nDada a palavra à defesa, [formulou as seguintes reperguntas | nada requereu].";
+  texto += "\n\nNada mais havendo, encerrou-se o presente termo, que, lido e achado conforme, vai assinado por todos os presentes.";
+  return texto;
+}
+
+function renderEtapa4(){
+  const d = getDepoenteAtivo();
+  if (!d) return;
+  garantirRoteiroGerado(d);
+  document.getElementById("wizard-titulo-depoente").textContent = "Depoente: " + d.identificacao;
+  document.getElementById("wizard-subtitulo-depoente").textContent = "Etapa 4 — Revisão e Checklist";
+
+  if (!d.termoTexto){
+    d.termoTexto = gerarTermoTexto(d);
+    salvarLocalStorage();
+  }
+
+  const itensChecklist = itensChecklistAplicaveis(d);
+  const pendentesAcusado = d.papel === "acusado"
+    ? CATALOGO.checklistItens.filter(c => c.condicao === "papel == acusado" && !d.checklist[c.id])
+    : [];
+
+  let html = "";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Status do depoente</h3>";
+  html += "<span class=\"badge-status " + d.status + "\">" + statusLabelEtapa4(d.status) + "</span>";
+  html += "<div class=\"status-toggle\"><label><input type=\"checkbox\" id=\"chk-oitiva-realizada\"" + (d.status === "oitiva_realizada" ? " checked" : "") + "> Marcar oitiva como realizada</label></div>";
+  html += "</div>";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Visualização do roteiro completo</h3>";
+  html += "<div id=\"dica-ancora-revisao\"></div>";
+  html += renderRoteiroLeitura(d);
+  html += "</div>";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Checklist pré-oitiva</h3>";
+  html += itensChecklist.map(c => (
+    "<label class=\"item-checklist\"><input type=\"checkbox\" data-checklist-item=\"" + c.id + "\"" + (d.checklist[c.id] ? " checked" : "") + "> " + escapeHtml(c.texto) + "</label>"
+  )).join("");
+  if (d.ato.modalidade === "videoconferencia"){
+    html += "<div id=\"dica-ancora-checklist-video\"></div>";
+  }
+  html += "</div>";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Alertas de nulidade</h3>";
+  if (d.papel === "acusado"){
+    html += pendentesAcusado.length
+      ? "<div class=\"alerta-nulidade\">Itens obrigatórios do checklist do(a) acusado(a) ainda não confirmados:<ul>" + pendentesAcusado.map(c => "<li>" + escapeHtml(c.texto) + "</li>").join("") + "</ul></div>"
+      : "<div class=\"aviso-ok\">Todos os itens obrigatórios do checklist do(a) acusado(a) estão confirmados.</div>";
+  } else {
+    html += "<p class=\"vazio\">Sem exigências específicas de nulidade para o papel de testemunha além do checklist comum acima.</p>";
+  }
+  html += "</div>";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Termo de redução</h3>";
+  html += "<textarea id=\"termo-texto\">" + escapeHtml(d.termoTexto) + "</textarea>";
+  html += "<div class=\"acoes-topo\" style=\"margin-top:8px;\">" +
+    "<button type=\"button\" class=\"secundario\" id=\"btn-copiar-termo\">Copiar termo</button>" +
+    "<button type=\"button\" class=\"secundario\" id=\"btn-regenerar-termo\">Regenerar termo</button>" +
+    "</div>";
+  html += "</div>";
+
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Impressão</h3>";
+  html += "<div class=\"acoes-topo\">" +
+    "<button type=\"button\" id=\"btn-imprimir-roteiro\">Imprimir roteiro</button>" +
+    "<button type=\"button\" class=\"secundario\" id=\"btn-imprimir-cartao-mesa\">Imprimir com Cartão de Mesa</button>" +
+    "</div>";
+  html += "</div>";
+
+  const container = document.getElementById("wizard-etapa-4");
+  container.innerHTML = html;
+  ligarEventosEtapa4(container, d);
+  renderDicas("revisao", "dica-ancora-revisao");
+  renderDicas("checklist_video", "dica-ancora-checklist-video");
+}
+
+function ligarEventosEtapa4(container, d){
+  const chkOitiva = document.getElementById("chk-oitiva-realizada");
+  if (chkOitiva){
+    chkOitiva.addEventListener("change", () => {
+      d.status = chkOitiva.checked ? "oitiva_realizada" : "roteiro_pronto";
+      salvarLocalStorage();
+      renderEtapa4();
+    });
+  }
+
+  const ITENS_NULIDADE_ACUSADO = ["chk_intimacao_3dias", "chk_ultimo_ato", "chk_advertencias_acusado"];
+  container.querySelectorAll("[data-checklist-item]").forEach(chk => {
+    chk.addEventListener("change", () => {
+      d.checklist[chk.dataset.checklistItem] = chk.checked;
+      salvarLocalStorage();
+      if (ITENS_NULIDADE_ACUSADO.includes(chk.dataset.checklistItem)){
+        renderEtapa4();
+      }
+    });
+  });
+
+  const termoTextarea = document.getElementById("termo-texto");
+  termoTextarea.addEventListener("input", () => {
+    d.termoTexto = termoTextarea.value;
+    salvarLocalStorage();
+  });
+
+  document.getElementById("btn-copiar-termo").addEventListener("click", async () => {
+    const btn = document.getElementById("btn-copiar-termo");
+    try{
+      await navigator.clipboard.writeText(termoTextarea.value);
+      btn.textContent = "Copiado!";
+    }catch(erro){
+      termoTextarea.focus();
+      termoTextarea.select();
+      btn.textContent = "Selecionado — use Ctrl+C";
+    }
+    setTimeout(() => { btn.textContent = "Copiar termo"; }, 1800);
+  });
+
+  document.getElementById("btn-regenerar-termo").addEventListener("click", () => {
+    if (!confirm("Isso substituirá o texto atual do termo (inclusive edições manuais) pelo modelo gerado a partir dos dados do ato. Deseja continuar?")) return;
+    d.termoTexto = gerarTermoTexto(d);
+    salvarLocalStorage();
+    renderEtapa4();
+  });
+
+  document.getElementById("btn-imprimir-roteiro").addEventListener("click", () => {
+    montarAreaImpressao(d, false);
+    window.print();
+  });
+  document.getElementById("btn-imprimir-cartao-mesa").addEventListener("click", () => {
+    montarAreaImpressao(d, true);
+    window.print();
+  });
+}
+
+function montarAreaImpressao(d, comCartaoMesa){
+  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
+  const infracaoObj = CATALOGO.infracoes.find(i => i.id === d.infracao);
+  let numero = 0;
+  let html = "";
+
+  html += "<div class=\"impresso-cabecalho\">";
+  html += "<strong>Oitiva 360 — Roteiro de Oitiva</strong><br>";
+  html += "Processo nº " + escapeHtml(d.ato.numero || estado.processo.numero || "—") + " · Portaria " + escapeHtml(d.ato.portaria || estado.processo.portaria || "—") + "<br>";
+  html += "Depoente: " + escapeHtml(d.identificacao) + " · Papel: " + escapeHtml(papelNome) + (infracaoObj ? " · Infração: " + escapeHtml(infracaoObj.nome) : "") + "<br>";
+  html += "Data/hora/local: " + escapeHtml(formatarDataBR(d.ato.data) || "—") + " " + escapeHtml(d.ato.hora || "") + " — " + escapeHtml(d.ato.local || "—");
+  html += "</div>";
+
+  CATALOGO.blocos.forEach(bloco => {
+    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+    const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { itens: [] };
+    if (!grupo.itens.length) return;
+    html += "<h3>" + escapeHtml(bloco.nome) + "</h3>";
+    grupo.itens.forEach(item => {
+      if (item.tipo === "texto_modelo"){
+        html += "<div class=\"impresso-texto-fixo\">" + escapeHtml(item.texto) + "</div>";
+      } else if (item.tipo === "checklist_ref"){
+        html += "<div class=\"impresso-texto-fixo\">• " + escapeHtml(item.texto) + "</div>";
+      } else if (item.tipo === "pergunta"){
+        numero++;
+        html += "<div class=\"impresso-pergunta\"><div class=\"num\">" + numero + ".</div><div class=\"texto\">" + escapeHtml(item.texto) + " <em>[" + finalidadeLabel(item.finalidade) + "]</em></div><div class=\"notas\">Anotações</div></div>";
+      }
+    });
+  });
+
+  if (silencioExercido){
+    html += "<div class=\"impresso-texto-fixo\"><strong>Direito ao silêncio exercido</strong> — nos termos do art. 15, parágrafo único, I, da Lei nº 13.869/2019, não foram formulados questionamentos a este depoente.</div>";
+  }
+
+  html += "<div class=\"impresso-rodape\">Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão. Cobre PAD (Lei 8.112/90); o PAR possui regime próprio. · Oitiva 360</div>";
+
+  if (comCartaoMesa){
+    html += "<div class=\"cartao-mesa-pagina\">";
+    html += "<h2>Cartão de Mesa — Kit de Incidentes (consulta rápida)</h2>";
+    html += "<div class=\"cartao-mesa-grid\">";
+    CATALOGO.formulasIncidentes.filter(inc => inc.cartaoMesa).forEach(inc => {
+      html += "<div class=\"cartao-mesa-item\"><strong>" + escapeHtml(inc.situacao) + "</strong><br>" + escapeHtml(inc.formulaVerbal) + "</div>";
+    });
+    html += "</div></div>";
+  }
+
+  document.getElementById("area-impressao").innerHTML = html;
 }
 
 /* =====================================================================
