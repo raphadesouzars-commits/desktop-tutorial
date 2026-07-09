@@ -4,6 +4,64 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-page { display: flex; flex-direction: column; gap: 20px; }
 .vdc-hidden { display: none !important; }
 
+/* Identidade institucional (hub) — topbar + hero, padrão comum às ferramentas Coger --------- */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 0 32px; height: 56px;
+  background: rgba(3,14,36,.96);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.topbar__brand { display: flex; align-items: center; gap: 12px; }
+.topbar__name {
+  font-family: var(--rfb-font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase; color: #F5F8FC;
+}
+.topbar__name span { opacity: .45; margin: 0 6px; font-weight: 400; }
+.topbar__pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 12px; border-radius: 999px;
+  background: rgba(201,163,92,.12); border: 1px solid rgba(201,163,92,.25);
+  font-size: 10.5px; font-weight: 600; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--rfb-gold-400);
+}
+.topbar__pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rfb-gold-500); box-shadow: 0 0 0 2.5px rgba(201,163,92,.30); }
+
+.hero { position: relative; height: 220px; overflow: hidden;
+  background: linear-gradient(160deg, #030E24 0%, var(--rfb-navy-800) 60%, var(--rfb-navy-700) 100%); }
+.hero__noise { position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity: .5; }
+.hero__glow { position: absolute; left: 50%; top: -60px; transform: translateX(-50%);
+  width: 700px; height: 300px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(46,99,184,.35) 0%, transparent 70%);
+  pointer-events: none; }
+.hero__gold-line { position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--rfb-gold-500) 25%, var(--rfb-gold-400) 50%, var(--rfb-gold-500) 75%, transparent 100%);
+  opacity: .8; }
+.hero__content { position: relative; z-index: 2; height: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px;
+  display: flex; flex-direction: column; justify-content: center; }
+.hero__eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600;
+  letter-spacing: 1.8px; text-transform: uppercase; color: var(--rfb-gold-400); margin-bottom: 16px; }
+.hero__eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--rfb-gold-500); border-radius: 1px; }
+.hero__title { font-family: var(--rfb-font-display); font-size: clamp(32px, 5vw, 48px); font-weight: 700;
+  letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; color: #FFFFFF; }
+.hero__title em { font-style: normal; color: var(--rfb-gold-400); }
+.hero__sub { margin-top: 10px; font-size: 13.5px; color: #A8BEDD; letter-spacing: .2px; line-height: 1.5; }
+@media (max-width: 900px) { .hero { height: 190px; } }
+@media print { .topbar, .hero { display: none !important; } }
+
+footer.rodape-app {
+  background: var(--rfb-navy-900);
+  color: #cfd8e3;
+  padding: 14px 24px;
+  font-size: .75rem;
+  text-align: center;
+}
+footer.rodape-app strong { color: #fff; }
+footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
+
 /* Epígrafe ------------------------------------------------------------------ */
 .vdc-epigraph {
   text-align: center;
@@ -34,6 +92,17 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-status-icon--none { background: #EDF1F7; color: var(--rfb-text-faint); }
 .vdc-empty-state { text-align: center; padding: 48px 20px; color: var(--rfb-text-muted); }
 .vdc-empty-state .rfb-h3 { color: var(--rfb-text-faint); margin-bottom: 8px; }
+.vdc-edit-affordance { text-align: center; color: var(--rfb-text-faint); width: 32px; font-size: 14px; }
+.vdc-item-row:hover .vdc-edit-affordance { color: var(--rfb-navy-700); }
+
+/* Membros da comissão (nome/cargo/matrícula) --------------------------------*/
+.vdc-rotulo-campo { font-weight: 400 !important; font-size: 11px !important; color: var(--rfb-text-muted) !important; text-transform: none !important; margin-bottom: 2px !important; }
+.vdc-lista-vogais { display: flex; flex-direction: column; gap: 8px; }
+.vdc-cabecalho-vogais { display: grid; grid-template-columns: 1.6fr 1.2fr 1fr 28px; gap: 8px; font-size: 11px; color: var(--rfb-text-muted); text-transform: uppercase; letter-spacing: .3px; }
+.vdc-linha-vogal { display: grid; grid-template-columns: 1.6fr 1.2fr 1fr 28px; gap: 8px; align-items: center; }
+.vdc-linha-vogal input { min-width: 0; }
+.vdc-linha-vogal .vdc-close-btn { justify-self: center; }
+@media (max-width: 760px) { .vdc-cabecalho-vogais { display: none; } .vdc-linha-vogal { grid-template-columns: 1fr; } }
 
 /* Dicas contextuais (coaching) -----------------------------------------------*/
 .vdc-tip { display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--rfb-r-md); background: var(--rfb-info-bg); border: 1px solid rgba(30,76,153,.22); border-left: 4px solid var(--rfb-info); font-size: 12.5px; color: var(--rfb-navy-900); }
@@ -78,18 +147,44 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-toast--success { background: var(--rfb-success); }
 @keyframes vdc-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Relatório -------------------------------------------------------------------------*/
-.vdc-report-header { text-align: center; padding: 8px 0 16px; border-bottom: 2px solid var(--rfb-gold-500); margin-bottom: 20px; }
-.vdc-report-header h1 { font-family: var(--rfb-font-display); text-transform: uppercase; color: var(--rfb-navy-900); font-size: 22px; margin: 0 0 4px; }
-.vdc-report-meta { font-size: 12px; color: var(--rfb-text-muted); display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 4px 20px; margin-bottom: 18px; }
+/* Relatório — padrão institucional de impressão (mesmo padrão do Oitiva 360) --------------- */
+.vdc-relatorio { color: #1A2740; }
+.vdc-relatorio .impresso-topo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.vdc-relatorio .impresso-marca { font-family: var(--rfb-font-display); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--rfb-navy-800); }
+.vdc-relatorio .impresso-marca span { color: var(--rfb-text-faint); font-weight: 400; margin: 0 4px; }
+.vdc-relatorio .impresso-titulo { font-family: var(--rfb-font-display); font-size: 26px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--rfb-navy-800); margin: 4px 0 2px; }
+.vdc-relatorio .impresso-subtitulo { font-size: 12px; color: var(--rfb-text-muted); margin-bottom: 10px; }
+.vdc-relatorio .impresso-epigrafe { font-style: italic; color: var(--rfb-navy-700); font-size: 13px; margin-bottom: 10px; }
+.vdc-relatorio .impresso-refs {
+  font-size: 11px; color: var(--rfb-text); border-top: 2px solid var(--rfb-navy-800); border-bottom: 1px solid var(--rfb-navy-100);
+  padding: 8px 0; margin-bottom: 16px; display: flex; gap: 28px; flex-wrap: wrap;
+}
+.vdc-relatorio .impresso-refs b { color: var(--rfb-navy-800); }
+.vdc-relatorio .impresso-infobox { border: 1px solid var(--rfb-navy-100); border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 12px; page-break-inside: avoid; }
+.vdc-relatorio .impresso-infobox .linha { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 4px; }
+.vdc-relatorio .impresso-infobox .divisor { border-top: 1px solid var(--rfb-navy-50); margin: 8px 0; }
+.vdc-relatorio .impresso-infobox .rotulo { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--rfb-text-faint); margin-bottom: 2px; }
+.vdc-relatorio h3.impresso-secao {
+  display: flex; align-items: center; gap: 8px; font-family: var(--rfb-font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .3px; text-transform: uppercase; color: var(--rfb-navy-800); margin: 22px 0 10px; border: none; padding: 0;
+}
+.vdc-relatorio h3.impresso-secao::before { content: ""; display: inline-block; width: 4px; height: 16px; background: var(--rfb-gold-500); border-radius: 1px; }
+.vdc-relatorio .impresso-alerta {
+  background: var(--rfb-warning-bg); border-left: 4px solid var(--rfb-gold-600); border-radius: 4px; padding: 12px 14px;
+  margin: 14px 0; font-size: 12px; color: #6B5B10; font-weight: 600;
+}
+.vdc-relatorio .impresso-hash { font-family: var(--rfb-font-mono); font-size: 10.5px; word-break: break-all; color: var(--rfb-navy-700); line-height: 1.5; }
+.vdc-relatorio .impresso-hash small { color: var(--rfb-text-muted); font-family: var(--rfb-font-body); }
+.vdc-relatorio .impresso-rodape { margin-top: 28px; border-top: 1px solid var(--rfb-navy-100); padding-top: 10px; }
+.vdc-relatorio .impresso-rodape .disclaimer { font-size: 11px; color: var(--rfb-text-muted); text-align: justify; margin-bottom: 8px; }
+.vdc-relatorio .impresso-rodape .linha-final { display: flex; justify-content: space-between; gap: 12px; font-size: 10px; color: var(--rfb-text-faint); text-transform: uppercase; letter-spacing: .3px; }
 .vdc-report-appendix { margin-top: 28px; page-break-before: always; }
 .vdc-report-item-block { border: 1px solid var(--rfb-border); border-radius: var(--rfb-r-md); padding: 14px 16px; margin-bottom: 14px; page-break-inside: avoid; }
-.vdc-report-footer-note { font-size: 10.5px; color: var(--rfb-text-faint); text-align: center; margin-top: 24px; border-top: 1px solid var(--rfb-divider); padding-top: 10px; }
 
 @media print {
   body { background: white !important; }
   .vdc-main { max-width: none; padding: 0; }
-  .rfb-topbar, .rfb-footer, .no-print { display: none !important; }
+  .topbar, .hero, .rodape-app, .no-print { display: none !important; }
   .vdc-report-item-block, .rfb-card { break-inside: avoid; }
   a[href]::after { content: ""; }
 }

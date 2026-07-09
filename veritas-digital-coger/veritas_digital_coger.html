@@ -757,6 +757,64 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-page { display: flex; flex-direction: column; gap: 20px; }
 .vdc-hidden { display: none !important; }
 
+/* Identidade institucional (hub) — topbar + hero, padrão comum às ferramentas Coger --------- */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; padding: 0 32px; height: 56px;
+  background: rgba(3,14,36,.96);
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.topbar__brand { display: flex; align-items: center; gap: 12px; }
+.topbar__name {
+  font-family: var(--rfb-font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .8px; text-transform: uppercase; color: #F5F8FC;
+}
+.topbar__name span { opacity: .45; margin: 0 6px; font-weight: 400; }
+.topbar__pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 12px; border-radius: 999px;
+  background: rgba(201,163,92,.12); border: 1px solid rgba(201,163,92,.25);
+  font-size: 10.5px; font-weight: 600; letter-spacing: .6px;
+  text-transform: uppercase; color: var(--rfb-gold-400);
+}
+.topbar__pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rfb-gold-500); box-shadow: 0 0 0 2.5px rgba(201,163,92,.30); }
+
+.hero { position: relative; height: 220px; overflow: hidden;
+  background: linear-gradient(160deg, #030E24 0%, var(--rfb-navy-800) 60%, var(--rfb-navy-700) 100%); }
+.hero__noise { position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  opacity: .5; }
+.hero__glow { position: absolute; left: 50%; top: -60px; transform: translateX(-50%);
+  width: 700px; height: 300px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(46,99,184,.35) 0%, transparent 70%);
+  pointer-events: none; }
+.hero__gold-line { position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--rfb-gold-500) 25%, var(--rfb-gold-400) 50%, var(--rfb-gold-500) 75%, transparent 100%);
+  opacity: .8; }
+.hero__content { position: relative; z-index: 2; height: 100%; max-width: 1100px; margin: 0 auto; padding: 0 40px;
+  display: flex; flex-direction: column; justify-content: center; }
+.hero__eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 600;
+  letter-spacing: 1.8px; text-transform: uppercase; color: var(--rfb-gold-400); margin-bottom: 16px; }
+.hero__eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--rfb-gold-500); border-radius: 1px; }
+.hero__title { font-family: var(--rfb-font-display); font-size: clamp(32px, 5vw, 48px); font-weight: 700;
+  letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; color: #FFFFFF; }
+.hero__title em { font-style: normal; color: var(--rfb-gold-400); }
+.hero__sub { margin-top: 10px; font-size: 13.5px; color: #A8BEDD; letter-spacing: .2px; line-height: 1.5; }
+@media (max-width: 900px) { .hero { height: 190px; } }
+@media print { .topbar, .hero { display: none !important; } }
+
+footer.rodape-app {
+  background: var(--rfb-navy-900);
+  color: #cfd8e3;
+  padding: 14px 24px;
+  font-size: .75rem;
+  text-align: center;
+}
+footer.rodape-app strong { color: #fff; }
+footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
+
 /* Epígrafe ------------------------------------------------------------------ */
 .vdc-epigraph {
   text-align: center;
@@ -787,6 +845,17 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-status-icon--none { background: #EDF1F7; color: var(--rfb-text-faint); }
 .vdc-empty-state { text-align: center; padding: 48px 20px; color: var(--rfb-text-muted); }
 .vdc-empty-state .rfb-h3 { color: var(--rfb-text-faint); margin-bottom: 8px; }
+.vdc-edit-affordance { text-align: center; color: var(--rfb-text-faint); width: 32px; font-size: 14px; }
+.vdc-item-row:hover .vdc-edit-affordance { color: var(--rfb-navy-700); }
+
+/* Membros da comissão (nome/cargo/matrícula) --------------------------------*/
+.vdc-rotulo-campo { font-weight: 400 !important; font-size: 11px !important; color: var(--rfb-text-muted) !important; text-transform: none !important; margin-bottom: 2px !important; }
+.vdc-lista-vogais { display: flex; flex-direction: column; gap: 8px; }
+.vdc-cabecalho-vogais { display: grid; grid-template-columns: 1.6fr 1.2fr 1fr 28px; gap: 8px; font-size: 11px; color: var(--rfb-text-muted); text-transform: uppercase; letter-spacing: .3px; }
+.vdc-linha-vogal { display: grid; grid-template-columns: 1.6fr 1.2fr 1fr 28px; gap: 8px; align-items: center; }
+.vdc-linha-vogal input { min-width: 0; }
+.vdc-linha-vogal .vdc-close-btn { justify-self: center; }
+@media (max-width: 760px) { .vdc-cabecalho-vogais { display: none; } .vdc-linha-vogal { grid-template-columns: 1fr; } }
 
 /* Dicas contextuais (coaching) -----------------------------------------------*/
 .vdc-tip { display: flex; gap: 10px; padding: 12px 14px; border-radius: var(--rfb-r-md); background: var(--rfb-info-bg); border: 1px solid rgba(30,76,153,.22); border-left: 4px solid var(--rfb-info); font-size: 12.5px; color: var(--rfb-navy-900); }
@@ -831,18 +900,44 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 .vdc-toast--success { background: var(--rfb-success); }
 @keyframes vdc-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Relatório -------------------------------------------------------------------------*/
-.vdc-report-header { text-align: center; padding: 8px 0 16px; border-bottom: 2px solid var(--rfb-gold-500); margin-bottom: 20px; }
-.vdc-report-header h1 { font-family: var(--rfb-font-display); text-transform: uppercase; color: var(--rfb-navy-900); font-size: 22px; margin: 0 0 4px; }
-.vdc-report-meta { font-size: 12px; color: var(--rfb-text-muted); display: grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap: 4px 20px; margin-bottom: 18px; }
+/* Relatório — padrão institucional de impressão (mesmo padrão do Oitiva 360) --------------- */
+.vdc-relatorio { color: #1A2740; }
+.vdc-relatorio .impresso-topo { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.vdc-relatorio .impresso-marca { font-family: var(--rfb-font-display); font-size: 12px; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--rfb-navy-800); }
+.vdc-relatorio .impresso-marca span { color: var(--rfb-text-faint); font-weight: 400; margin: 0 4px; }
+.vdc-relatorio .impresso-titulo { font-family: var(--rfb-font-display); font-size: 26px; font-weight: 700; letter-spacing: .3px; text-transform: uppercase; color: var(--rfb-navy-800); margin: 4px 0 2px; }
+.vdc-relatorio .impresso-subtitulo { font-size: 12px; color: var(--rfb-text-muted); margin-bottom: 10px; }
+.vdc-relatorio .impresso-epigrafe { font-style: italic; color: var(--rfb-navy-700); font-size: 13px; margin-bottom: 10px; }
+.vdc-relatorio .impresso-refs {
+  font-size: 11px; color: var(--rfb-text); border-top: 2px solid var(--rfb-navy-800); border-bottom: 1px solid var(--rfb-navy-100);
+  padding: 8px 0; margin-bottom: 16px; display: flex; gap: 28px; flex-wrap: wrap;
+}
+.vdc-relatorio .impresso-refs b { color: var(--rfb-navy-800); }
+.vdc-relatorio .impresso-infobox { border: 1px solid var(--rfb-navy-100); border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; font-size: 12px; page-break-inside: avoid; }
+.vdc-relatorio .impresso-infobox .linha { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 4px; }
+.vdc-relatorio .impresso-infobox .divisor { border-top: 1px solid var(--rfb-navy-50); margin: 8px 0; }
+.vdc-relatorio .impresso-infobox .rotulo { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--rfb-text-faint); margin-bottom: 2px; }
+.vdc-relatorio h3.impresso-secao {
+  display: flex; align-items: center; gap: 8px; font-family: var(--rfb-font-display); font-size: 15px; font-weight: 700;
+  letter-spacing: .3px; text-transform: uppercase; color: var(--rfb-navy-800); margin: 22px 0 10px; border: none; padding: 0;
+}
+.vdc-relatorio h3.impresso-secao::before { content: ""; display: inline-block; width: 4px; height: 16px; background: var(--rfb-gold-500); border-radius: 1px; }
+.vdc-relatorio .impresso-alerta {
+  background: var(--rfb-warning-bg); border-left: 4px solid var(--rfb-gold-600); border-radius: 4px; padding: 12px 14px;
+  margin: 14px 0; font-size: 12px; color: #6B5B10; font-weight: 600;
+}
+.vdc-relatorio .impresso-hash { font-family: var(--rfb-font-mono); font-size: 10.5px; word-break: break-all; color: var(--rfb-navy-700); line-height: 1.5; }
+.vdc-relatorio .impresso-hash small { color: var(--rfb-text-muted); font-family: var(--rfb-font-body); }
+.vdc-relatorio .impresso-rodape { margin-top: 28px; border-top: 1px solid var(--rfb-navy-100); padding-top: 10px; }
+.vdc-relatorio .impresso-rodape .disclaimer { font-size: 11px; color: var(--rfb-text-muted); text-align: justify; margin-bottom: 8px; }
+.vdc-relatorio .impresso-rodape .linha-final { display: flex; justify-content: space-between; gap: 12px; font-size: 10px; color: var(--rfb-text-faint); text-transform: uppercase; letter-spacing: .3px; }
 .vdc-report-appendix { margin-top: 28px; page-break-before: always; }
 .vdc-report-item-block { border: 1px solid var(--rfb-border); border-radius: var(--rfb-r-md); padding: 14px 16px; margin-bottom: 14px; page-break-inside: avoid; }
-.vdc-report-footer-note { font-size: 10.5px; color: var(--rfb-text-faint); text-align: center; margin-top: 24px; border-top: 1px solid var(--rfb-divider); padding-top: 10px; }
 
 @media print {
   body { background: white !important; }
   .vdc-main { max-width: none; padding: 0; }
-  .rfb-topbar, .rfb-footer, .no-print { display: none !important; }
+  .topbar, .hero, .rodape-app, .no-print { display: none !important; }
   .vdc-report-item-block, .rfb-card { break-inside: avoid; }
   a[href]::after { content: ""; }
 }
@@ -853,26 +948,31 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
 </style>
 </head>
 <body class="rfb-app">
-<div class="rfb-canvas" style="--rfb-hero-h:0px;min-height:100vh;">
 
-  <header class="rfb-topbar no-print">
-    <div class="rfb-topbar__brand">
-      <span class="rfb-topbar__name">VERITAS DIGITAL <span>·</span> COGER</span>
-    </div>
-    <div class="rfb-topbar__pill" id="topbar-status">
-      <span class="rfb-topbar__pill-dot"></span>
-      <span id="topbar-status-text">nenhum dossiê carregado</span>
-    </div>
-  </header>
+<nav class="topbar no-print">
+  <div class="topbar__brand">
+    <span class="topbar__name">Receita Federal <span>·</span> Corregedoria</span>
+  </div>
+  <div class="topbar__pill"><span class="topbar__pill-dot"></span><span id="topbar-status-text">nenhum dossiê carregado</span></div>
+</nav>
 
-  <main id="app" class="vdc-main"></main>
-
-  <footer class="rfb-footer no-print">
-    <span class="rfb-footer__brand">Veritas Digital - Coger</span>
-    <span>Coger/RFB — Divisão de Processos (Dproc) · Apoio à decisão, não substitui perícia formal nem análise do caso concreto.</span>
-  </footer>
-
+<div class="hero">
+  <div class="hero__noise" aria-hidden="true"></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__gold-line" aria-hidden="true"></div>
+  <div class="hero__content">
+    <div class="hero__eyebrow">Ferramenta interativa</div>
+    <h1 class="hero__title">Veritas <em>Digital</em></h1>
+    <p class="hero__sub">Coger · Cadeia de Custódia Digital — investigação, pareceres e comissões</p>
+  </div>
 </div>
+
+<main id="app" class="vdc-main"></main>
+
+<footer class="rodape-app no-print">
+  <div><strong>Veritas Digital - Coger — ferramenta de apoio à decisão, não substitui perícia formal nem análise do caso concreto.</strong></div>
+  <div class="pad-par">Coger/RFB — Divisão de Processos (Dproc) · Investigação, pareceres e comissões</div>
+</footer>
 
 <template id="tpl-toast"><div class="vdc-toast"></div></template>
 
@@ -951,7 +1051,7 @@ async function hashDossieMetadata(dossie) {
 var CATALOGO = {
   epigrafe: { texto: "Toda prova, antes de provar, deve ser provada.", autor: "Iacoviello" },
   disclaimerCurto: "Ferramenta de apoio à decisão. Não realiza perícia técnica, não valida assinatura digital ICP-Brasil e não substitui laudo pericial formal.",
-  disclaimerLongo: "Veritas Digital - Coger é uma ferramenta de apoio à decisão para comissões de PAD/sindicância. Documenta a consistência interna e a continuidade de elementos de prova digitais e documentais, mas não realiza perícia técnica formal, não valida assinatura digital ICP-Brasil e não substitui laudo pericial quando a autenticidade de um elemento for seriamente contestada. O carimbo de data/hora registrado é o relógio do sistema local do usuário — não é um selo de tempo com autoridade certificadora. A avaliação do caso concreto é sempre da comissão.",
+  disclaimerLongo: "Veritas Digital - Coger é uma ferramenta de apoio à decisão para as unidades da Corregedoria da RFB — investigação, parecer técnico e comissões de PAD/sindicância. Documenta a consistência interna e a continuidade de elementos de prova digitais e documentais, mas não realiza perícia técnica formal, não valida assinatura digital ICP-Brasil e não substitui laudo pericial quando a autenticidade de um elemento for seriamente contestada. O carimbo de data/hora registrado é o relógio do sistema local do usuário — não é um selo de tempo com autoridade certificadora. A avaliação do caso concreto é sempre da unidade responsável.",
   fundamentacao: "A cadeia de custódia tem disciplina legal expressa apenas no processo penal (art. 158-A a 158-F do CPP, Lei 13.964/2019). No PAD, sua aplicação decorre por analogia e principiologia — verdade real, devido processo, ampla defesa — reforçada pela intercambialidade doutrinária de provas entre PAD e processo penal (compartilhamento de interceptações e dados de operações conjuntas). Esta ferramenta não sugere vinculação normativa direta ao CPP.",
   dicas: {
     dica_integralidade: "Cuidado: decisões não devem se fundamentar em prints de tela, áudios isolados ou trechos sem contexto. Se este é um extrato parcial, registre por que o conteúdo integral não foi anexado e avalie a necessidade de complementação.",
@@ -1019,16 +1119,30 @@ function novoItemDraft() {
   };
 }
 
+function membroVazio() { return { nome: "", cargo: "", matricula: "" }; }
 function novoDossie() {
   return {
     versaoFerramenta: "1.0", versaoEsquema: "2.0", hashDoDossie: "",
     processo: {
-      id: uid(), numero: "", portaria: "",
-      comissao: { presidente: "", vogais: [], secretario: "" },
+      id: uid(), numero: "", portaria: "", secaoResponsavel: "",
+      comissao: { presidente: membroVazio(), secretario: membroVazio(), vogais: [] },
       criadoEm: nowIso(), atualizadoEm: nowIso()
     },
     itens: []
   };
+}
+function migrarMembro(m) {
+  if (!m) return membroVazio();
+  if (typeof m === "string") return { nome: m, cargo: "", matricula: "" };
+  return { nome: m.nome || "", cargo: m.cargo || "", matricula: m.matricula || "" };
+}
+function migrarDossie(d) {
+  if (!d || !d.processo || !d.processo.comissao) return d;
+  var c = d.processo.comissao;
+  c.presidente = migrarMembro(c.presidente);
+  c.secretario = migrarMembro(c.secretario);
+  c.vogais = (c.vogais || []).map(migrarMembro);
+  return d;
 }
 
 /* ============================================================
@@ -1146,7 +1260,7 @@ function viewInicio() {
     '<div class="rfb-card"><div class="rfb-card__body" style="text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center;">' +
       '<div class="rfb-eyebrow">Coger/RFB — Divisão de Processos (Dproc)</div>' +
       '<h1 class="rfb-h1" style="font-size:28px;">Veritas Digital - Coger</h1>' +
-      '<p class="rfb-body rfb-body--muted" style="max-width:560px;">Cadeia de custódia dos elementos de prova digitais e documentais juntados ao processo — da coleta/recebimento ao relatório final.</p>' +
+      '<p class="rfb-body rfb-body--muted" style="max-width:560px;">Cadeia de custódia dos elementos de prova digitais e documentais juntados ao processo — da coleta/recebimento ao relatório final. Uso transversal às unidades da Corregedoria: investigação, parecer técnico e comissões de PAD/sindicância.</p>' +
       '<div class="vdc-actions">' +
         '<button class="rfb-btn rfb-btn--primary" onclick="App.criarDossie()">+ Novo dossiê</button>' +
         '<label class="rfb-btn rfb-btn--secondary" style="cursor:pointer;">Importar dossiê (.json)<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarArquivo(event)"></label>' +
@@ -1164,9 +1278,9 @@ function viewProcesso() {
   var p = DB.dossie.processo;
   var itensHtml = DB.dossie.itens.length === 0
     ? '<div class="vdc-empty-state"><div class="rfb-h3">Nenhum item cadastrado</div><div class="rfb-body--muted">Adicione o primeiro elemento de prova do processo.</div></div>'
-    : '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th></th><th>Título</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Custodiante</th><th>Status</th><th>Fls.</th></tr></thead><tbody>' +
+    : '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th></th><th>Título</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Custodiante</th><th>Status</th><th>Fls.</th><th></th></tr></thead><tbody>' +
       DB.dossie.itens.map(function (it) {
-        return '<tr class="vdc-item-row" onclick="App.abrirItem(\'' + it.id + '\')">' +
+        return '<tr class="vdc-item-row" onclick="App.abrirItem(\'' + it.id + '\')" title="Abrir e editar item">' +
           '<td><span class="vdc-status-icon ' + statusIconClasse(it) + '" title="' + RESULTADO[it.resultadoAgregado] + '">' + statusIconGlifo(it) + '</span></td>' +
           '<td>' + escapeHtml(it.titulo || "(sem título)") + (it.sigilo !== "publico" ? ' <span class="rfb-badge rfb-badge--neutral">' + SIGILO[it.sigilo] + '</span>' : '') + '</td>' +
           '<td>' + (CATEGORIAS[it.categoria] || "—") + '</td>' +
@@ -1175,6 +1289,7 @@ function viewProcesso() {
           '<td>' + escapeHtml(it.custodianteAtual || "—") + '</td>' +
           '<td><span class="rfb-badge rfb-badge--' + statusBadgeCor(it.status) + '">' + STATUS_ITEM[it.status] + '</span></td>' +
           '<td>' + escapeHtml(it.folhaAutos || "—") + '</td>' +
+          '<td class="vdc-edit-affordance" title="Abrir e editar item">&#9998;</td>' +
         '</tr>';
       }).join("") + '</tbody></table></div>';
 
@@ -1190,9 +1305,24 @@ function viewProcesso() {
       '<div class="vdc-grid-3">' +
         '<div class="rfb-field"><label class="rfb-label">Nº do processo</label><input class="rfb-input" value="' + escapeHtml(p.numero) + '" onchange="App.setProcesso(\'numero\', this.value)"></div>' +
         '<div class="rfb-field"><label class="rfb-label">Portaria</label><input class="rfb-input" value="' + escapeHtml(p.portaria) + '" onchange="App.setProcesso(\'portaria\', this.value)"></div>' +
-        '<div class="rfb-field"><label class="rfb-label">Presidente da comissão</label><input class="rfb-input" value="' + escapeHtml(p.comissao.presidente) + '" onchange="App.setProcesso(\'comissao.presidente\', this.value)"></div>' +
-        '<div class="rfb-field"><label class="rfb-label">Secretário</label><input class="rfb-input" value="' + escapeHtml(p.comissao.secretario) + '" onchange="App.setProcesso(\'comissao.secretario\', this.value)"></div>' +
-        '<div class="rfb-field" style="grid-column: span 2;"><label class="rfb-label">Vogais <span class="rfb-label__hint">um por linha</span></label><textarea class="rfb-textarea" rows="2" onchange="App.setVogais(this.value)">' + escapeHtml((p.comissao.vogais || []).join("\n")) + '</textarea></div>' +
+        '<div class="rfb-field"><label class="rfb-label">Seção/unidade responsável</label><input class="rfb-input" value="' + escapeHtml(p.secaoResponsavel || "") + '" onchange="App.setProcesso(\'secaoResponsavel\', this.value)" placeholder="Investigação, parecer técnico ou comissão"></div>' +
+      '</div>' +
+      '<div class="rfb-divider"></div>' +
+      membroCampoHtml("Presidente da comissão", "presidente", p.comissao.presidente) +
+      membroCampoHtml("Secretário(a)", "secretario", p.comissao.secretario) +
+      '<div class="rfb-field"><label class="rfb-label">Vogais</label>' +
+        '<div class="vdc-lista-vogais">' +
+          (p.comissao.vogais.length ? '<div class="vdc-cabecalho-vogais"><span>Nome</span><span>Cargo</span><span>Matrícula</span><span></span></div>' : '') +
+          p.comissao.vogais.map(function (v, i) {
+            return '<div class="vdc-linha-vogal">' +
+              '<input class="rfb-input" placeholder="Nome" value="' + escapeHtml(v.nome) + '" onchange="App.setVogalCampo(' + i + ', \'nome\', this.value)">' +
+              '<input class="rfb-input" placeholder="Cargo" value="' + escapeHtml(v.cargo) + '" onchange="App.setVogalCampo(' + i + ', \'cargo\', this.value)">' +
+              '<input class="rfb-input" placeholder="Matrícula" value="' + escapeHtml(v.matricula) + '" onchange="App.setVogalCampo(' + i + ', \'matricula\', this.value)">' +
+              '<button type="button" class="vdc-close-btn" title="Remover vogal" onclick="App.removerVogal(' + i + ')">&times;</button>' +
+            '</div>';
+          }).join("") +
+        '</div>' +
+        '<button type="button" class="rfb-btn rfb-btn--secondary rfb-btn--sm" style="margin-top:8px;" onclick="App.adicionarVogal()">+ Adicionar vogal</button>' +
       '</div>' +
       '<div class="rfb-help" style="margin-top:10px;">hashDoDossie: <code style="font-family:var(--rfb-font-mono);">' + (DB.dossie.hashDoDossie || "—") + '</code> · atualizado em ' + fmtDT(p.atualizadoEm) + '</div>' +
     '</div></div>' +
@@ -1210,6 +1340,14 @@ function viewProcesso() {
 }
 function statusBadgeCor(status) {
   return { ativo: "success", substituido: "info", contestado: "warning", descartado: "neutral" }[status] || "neutral";
+}
+function membroCampoHtml(label, papel, membro) {
+  return '<div class="rfb-field" style="margin-top:12px;"><label class="rfb-label">' + label + '</label>' +
+    '<div class="vdc-grid-3">' +
+      '<div><label class="rfb-label vdc-rotulo-campo">Nome</label><input class="rfb-input" value="' + escapeHtml(membro.nome) + '" onchange="App.setMembro(\'' + papel + '\', \'nome\', this.value)"></div>' +
+      '<div><label class="rfb-label vdc-rotulo-campo">Cargo</label><input class="rfb-input" value="' + escapeHtml(membro.cargo) + '" onchange="App.setMembro(\'' + papel + '\', \'cargo\', this.value)"></div>' +
+      '<div><label class="rfb-label vdc-rotulo-campo">Matrícula</label><input class="rfb-input" value="' + escapeHtml(membro.matricula) + '" onchange="App.setMembro(\'' + papel + '\', \'matricula\', this.value)"></div>' +
+    '</div></div>';
 }
 
 /* ============================================================
@@ -1583,39 +1721,65 @@ function referenciaHash(it, a) {
 /* ============================================================
    Relatório
    ============================================================ */
+function membroResumoHtml(label, m) {
+  if (!m || !m.nome) return "<div><b>" + label + ":</b> —</div>";
+  var partes = [escapeHtml(m.nome)];
+  if (m.cargo) partes.push(escapeHtml(m.cargo));
+  if (m.matricula) partes.push("mat. " + escapeHtml(m.matricula));
+  return "<div><b>" + label + ":</b> " + partes.join(" — ") + "</div>";
+}
+function itemHashCelulaHtml(it) {
+  if (it.arquivos.length === 0) return "—";
+  return '<div class="impresso-hash">' + it.arquivos.map(function (a) {
+    return (it.arquivos.length > 1 ? '<small>' + escapeHtml(a.descricao || a.nomeArquivo) + ':</small> ' : '') + a.hashLocal;
+  }).join("<br>") + '</div>';
+}
 function viewRelatorio() {
   var d = DB.dossie, p = d.processo;
   var temSigilo = d.itens.some(function (i) { return i.sigilo !== "publico"; });
   return '<div class="vdc-page">' +
     '<div class="vdc-actions no-print"><button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.voltarProcesso()">&larr; Voltar</button><button class="rfb-btn rfb-btn--primary rfb-btn--sm" onclick="window.print()">Imprimir / Salvar PDF</button></div>' +
-    '<div class="rfb-card"><div class="rfb-card__body">' +
-      '<div class="vdc-report-header"><h1>Veritas Digital - Coger</h1><div class="rfb-body--small">Relatório de Cadeia de Custódia</div>' +
-        '<div style="font-style:italic;margin-top:8px;">&ldquo;' + escapeHtml(CATALOGO.epigrafe.texto) + '&rdquo; — ' + escapeHtml(CATALOGO.epigrafe.autor) + '</div></div>' +
-      '<div class="vdc-report-meta">' +
-        '<div><strong>Processo:</strong> ' + escapeHtml(p.numero || "—") + '</div>' +
-        '<div><strong>Portaria:</strong> ' + escapeHtml(p.portaria || "—") + '</div>' +
-        '<div><strong>Presidente:</strong> ' + escapeHtml(p.comissao.presidente || "—") + '</div>' +
-        '<div><strong>Secretário:</strong> ' + escapeHtml(p.comissao.secretario || "—") + '</div>' +
-        '<div><strong>Vogais:</strong> ' + escapeHtml((p.comissao.vogais || []).join(", ") || "—") + '</div>' +
-        '<div><strong>Gerado em:</strong> ' + fmtDT(nowIso()) + '</div>' +
-        '<div><strong>hashDoDossie:</strong> <code>' + d.hashDoDossie + '</code></div>' +
+    '<div class="rfb-card vdc-relatorio"><div class="rfb-card__body">' +
+
+      '<div class="impresso-topo"><div class="impresso-marca">Receita Federal <span>·</span> Corregedoria</div></div>' +
+      '<div class="impresso-titulo">Veritas Digital - Coger</div>' +
+      '<div class="impresso-subtitulo">Relatório de Cadeia de Custódia · Investigação, pareceres e comissões</div>' +
+      '<div class="impresso-epigrafe">&ldquo;' + escapeHtml(CATALOGO.epigrafe.texto) + '&rdquo; — ' + escapeHtml(CATALOGO.epigrafe.autor) + '</div>' +
+
+      '<div class="impresso-refs">' +
+        '<span><b>Processo nº</b> ' + escapeHtml(p.numero || "—") + '</span>' +
+        '<span><b>Portaria</b> ' + escapeHtml(p.portaria || "—") + '</span>' +
+        '<span><b>Seção/unidade</b> ' + escapeHtml(p.secaoResponsavel || "—") + '</span>' +
+        '<span><b>Gerado em</b> ' + fmtDT(nowIso()) + '</span>' +
       '</div>' +
-      (temSigilo ? '<div class="rfb-alert rfb-alert--warning vdc-sigilo-warning"><div><div class="rfb-alert__title">Atenção — conteúdo classificado</div><div class="rfb-alert__msg">Este relatório contém itens de acesso restrito e/ou sigilosos. Trate a divulgação e o compartilhamento conforme a classificação de cada item.</div></div></div>' : '') +
-      '<div class="rfb-table-wrap" style="margin-top:16px;"><table class="rfb-table"><thead><tr><th>Item</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Última conferência</th><th>Status</th><th>Fls.</th></tr></thead><tbody>' +
+
+      '<div class="impresso-infobox">' +
+        membroResumoHtml("Presidente", p.comissao.presidente) +
+        membroResumoHtml("Secretário(a)", p.comissao.secretario) +
+        (p.comissao.vogais.length ? p.comissao.vogais.map(function (v, i) { return membroResumoHtml("Vogal " + (i + 1), v); }).join("") : "<div><b>Vogais:</b> —</div>") +
+        '<div class="divisor"></div>' +
+        '<div class="linha"><div><div class="rotulo">hashDoDossie</div><span style="font-family:var(--rfb-font-mono);font-size:10.5px;">' + d.hashDoDossie + '</span></div></div>' +
+      '</div>' +
+
+      (temSigilo ? '<div class="impresso-alerta">Atenção — conteúdo classificado: este relatório contém itens de acesso restrito e/ou sigilosos. Trate a divulgação e o compartilhamento conforme a classificação de cada item.</div>' : '') +
+
+      '<h3 class="impresso-secao">1. Itens (elementos de prova)</h3>' +
+      '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th>Item</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Hash</th><th>Status</th><th>Fls.</th></tr></thead><tbody>' +
         d.itens.map(function (it) {
           return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS[it.categoria] || "—") + '</td><td>' + (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") + '</td>' +
-            '<td>' + it.arquivos.length + '</td><td>' + (RESULTADO[it.resultadoAgregado] || "—") + '</td><td>' + STATUS_ITEM[it.status] + '</td><td>' + escapeHtml(it.folhaAutos || "—") + '</td></tr>';
+            '<td>' + it.arquivos.length + '</td><td>' + itemHashCelulaHtml(it) + '</td><td>' + STATUS_ITEM[it.status] + '</td><td>' + escapeHtml(it.folhaAutos || "—") + '</td></tr>';
         }).join("") + '</tbody></table></div>' +
-      '<div class="rfb-body--small rfb-body--muted" style="margin-top:16px;"><strong>Fundamentação doutrinária:</strong> ' + escapeHtml(CATALOGO.fundamentacao) + '</div>' +
-      '<div class="vdc-report-footer-note">' + escapeHtml(CATALOGO.disclaimerLongo) + '</div>' +
 
-      '<div class="vdc-report-appendix">' +
-        '<div class="rfb-h3">Apêndice — linha do tempo detalhada</div>' +
+      '<h3 class="impresso-secao">2. Apêndice — linha do tempo detalhada</h3>' +
         d.itens.map(function (it) {
           var evs = eventosMesclados(it);
           return '<div class="vdc-report-item-block"><div style="font-weight:600;margin-bottom:6px;">' + escapeHtml(it.titulo) + '</div>' +
             '<div class="vdc-timeline">' + (evs.length ? evs.map(timelineEventHtml).join("") : '<div class="rfb-body--small rfb-body--muted">Sem eventos.</div>') + '</div></div>';
         }).join("") +
+
+      '<div class="impresso-rodape">' +
+        '<div class="disclaimer"><strong>Fundamentação doutrinária:</strong> ' + escapeHtml(CATALOGO.fundamentacao) + '<br><br>' + escapeHtml(CATALOGO.disclaimerLongo) + '</div>' +
+        '<div class="linha-final"><span>Veritas Digital - Coger · Ferramentas Coger · RFB</span><span>' + escapeHtml(p.numero || "sem número") + '</span></div>' +
       '</div>' +
     '</div></div>' +
   '</div>';
@@ -1657,7 +1821,7 @@ window.App = {
     App._finalizarImportacao(m.parsed, m.hashDivergente);
   },
   _finalizarImportacao: function (parsed, hashDivergente) {
-    DB.dossie = parsed;
+    DB.dossie = migrarDossie(parsed);
     UI.modal = null;
     UI.view = "processo";
     persistir().then(function () {
@@ -1677,7 +1841,10 @@ window.App = {
   },
 
   setProcesso: function (path, value) { set(DB.dossie.processo, path, value); persistir().then(updateTopbar); },
-  setVogais: function (value) { DB.dossie.processo.comissao.vogais = value.split("\n").map(function (s) { return s.trim(); }).filter(Boolean); persistir(); },
+  setMembro: function (papel, sub, value) { DB.dossie.processo.comissao[papel][sub] = value; persistir(); },
+  adicionarVogal: function () { DB.dossie.processo.comissao.vogais.push(membroVazio()); persistir().then(render); },
+  removerVogal: function (i) { DB.dossie.processo.comissao.vogais.splice(i, 1); persistir().then(render); },
+  setVogalCampo: function (i, sub, value) { DB.dossie.processo.comissao.vogais[i][sub] = value; persistir(); },
 
   voltarProcesso: function () { UI.view = "processo"; UI.editingField = null; render(); },
   abrirItem: function (id) { UI.view = "itemDetalhe"; UI.editingField = id; render(); },
@@ -1868,7 +2035,7 @@ window.App = {
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
   var saved = carregarLocal();
-  if (saved) { DB.dossie = saved; UI.view = "processo"; }
+  if (saved) { DB.dossie = migrarDossie(saved); UI.view = "processo"; }
   render();
 });
 

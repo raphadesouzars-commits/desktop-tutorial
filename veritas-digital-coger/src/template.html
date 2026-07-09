@@ -17,26 +17,31 @@
 </style>
 </head>
 <body class="rfb-app">
-<div class="rfb-canvas" style="--rfb-hero-h:0px;min-height:100vh;">
 
-  <header class="rfb-topbar no-print">
-    <div class="rfb-topbar__brand">
-      <span class="rfb-topbar__name">VERITAS DIGITAL <span>·</span> COGER</span>
-    </div>
-    <div class="rfb-topbar__pill" id="topbar-status">
-      <span class="rfb-topbar__pill-dot"></span>
-      <span id="topbar-status-text">nenhum dossiê carregado</span>
-    </div>
-  </header>
+<nav class="topbar no-print">
+  <div class="topbar__brand">
+    <span class="topbar__name">Receita Federal <span>·</span> Corregedoria</span>
+  </div>
+  <div class="topbar__pill"><span class="topbar__pill-dot"></span><span id="topbar-status-text">nenhum dossiê carregado</span></div>
+</nav>
 
-  <main id="app" class="vdc-main"></main>
-
-  <footer class="rfb-footer no-print">
-    <span class="rfb-footer__brand">Veritas Digital - Coger</span>
-    <span>Coger/RFB — Divisão de Processos (Dproc) · Apoio à decisão, não substitui perícia formal nem análise do caso concreto.</span>
-  </footer>
-
+<div class="hero">
+  <div class="hero__noise" aria-hidden="true"></div>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__gold-line" aria-hidden="true"></div>
+  <div class="hero__content">
+    <div class="hero__eyebrow">Ferramenta interativa</div>
+    <h1 class="hero__title">Veritas <em>Digital</em></h1>
+    <p class="hero__sub">Coger · Cadeia de Custódia Digital — investigação, pareceres e comissões</p>
+  </div>
 </div>
+
+<main id="app" class="vdc-main"></main>
+
+<footer class="rodape-app no-print">
+  <div><strong>Veritas Digital - Coger — ferramenta de apoio à decisão, não substitui perícia formal nem análise do caso concreto.</strong></div>
+  <div class="pad-par">Coger/RFB — Divisão de Processos (Dproc) · Investigação, pareceres e comissões</div>
+</footer>
 
 <template id="tpl-toast"><div class="vdc-toast"></div></template>
 
