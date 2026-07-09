@@ -560,6 +560,13 @@
             </label>
           </div>
         </div>
+        <div class="campo">
+          <label style="display:flex;align-items:center;gap:8px;font-weight:400;font-size:.85rem;">
+            <input type="checkbox" id="ato-defensor-presente" style="width:auto;">
+            Há defensor constituído presente?
+          </label>
+          <div style="font-size:.78rem;color:var(--cor-texto-suave);">Define se o bloco "Palavra à defesa / reperguntas" entra no roteiro.</div>
+        </div>
       </div>
 
       <div class="cartao">
@@ -926,6 +933,10 @@ const CATALOGO = {
     avisos_lgpd: "Antes de iniciarmos, deixo registrados os seguintes avisos:\n- O acesso aos registros deste ato e às informações dele decorrentes é restrito aos interessados neste procedimento, que tramita sob cláusula de acesso restrito para proteção da intimidade dos envolvidos e da elucidação dos fatos.\n- A utilização indevida de documentos, áudios e imagens decorrentes deste ato, em especial a veiculação irregular da imagem de qualquer dos presentes ou o tratamento inadequado de seus dados pessoais, poderá ensejar responsabilização, nos termos da legislação vigente.\n- Os termos e registros desta audiência serão armazenados nos autos do processo nº {{processo}} e poderão instrumentalizar outros procedimentos de responsabilização administrativa, podendo, nas hipóteses legais, ser compartilhados com órgãos responsáveis pela persecução administrativa, civil ou criminal.\n- Nos termos do art. 7º, inciso II, da Lei nº 13.709/2018 (LGPD), o tratamento de dados pessoais nesta hipótese decorre do cumprimento de obrigação legal desta unidade correcional e dispensa o consentimento dos titulares.\n- O(a) acusado(a) e seu(sua) procurador(a) terão acesso aos registros deste ato pelos meios processuais próprios e ficam advertidos quanto à responsabilização por utilização indevida.",
     orientacoes_testemunha: "Informo que o depoimento será prestado de forma oral. A comissão formulará suas perguntas e, ao final, será dada a palavra à defesa para os questionamentos que entender pertinentes, os quais serão dirigidos por meu intermédio. Deixo claro que nada está sendo apurado em relação ao(à) senhor(a). Peço apenas que procure ser o(a) mais claro(a) e preciso(a) possível e que nos informe, com transparência, se ao longo do depoimento surgir situação que gere dúvida ou constrangimento. Sua contribuição é muito importante para esta apuração.",
     fechamento: "Antes de encerrarmos: o(a) senhor(a) deseja acrescentar algo que considere relevante e que não tenha sido perguntado? Tem conhecimento de outras pessoas que possam contribuir com o esclarecimento dos fatos? [À defesa:] A defesa deseja formular reperguntas ou consignar algo em ata?",
+    // Resolução da pendência dos blocos 6 e 12 (seções 2.6 e 2.7 do banco de conteúdo — a numeração do
+    // termo de redução foi deslocada de 2.6 para 2.8, mantendo o mesmo conteúdo).
+    abertura_objecoes_defesa: "Antes de darmos início à inquirição, relembro as regras deste ato: as perguntas serão formuladas exclusivamente pela comissão; a defesa não poderá interromper os questionamentos da comissão nem as respostas do(a) depoente, sendo-lhe reservado o momento próprio, ao final, para reperguntas, sempre dirigidas por meu intermédio. Feito esse registro, pergunto à defesa se há, neste momento, alguma arguição de impedimento ou suspeição em relação ao(à) depoente, ou questão preliminar quanto à regularidade deste ato.\n\nHavendo arguição: seguir o procedimento de contradita descrito no Kit de Incidentes (inc_contradita): perguntar ao(à) depoente se confirma o impedimento/suspeição → exigir do arguente elementos imediatos de prova → deliberar e registrar em ata.\n\nNada havendo: \"Registro que nada foi suscitado pela defesa e damos início à inquirição.\"",
+    palavra_defesa_reperguntas: "Concluída a inquirição pela comissão, concedo a palavra à defesa. Doutor(a) [procurador], deseja formular reperguntas ao(à) depoente? As perguntas devem ser dirigidas a mim, que as reformularei ao(à) depoente quando necessário, e não poderão ser feitas de forma indutiva, capciosa ou ofensiva, cabendo à comissão indeferir motivadamente as que assim se apresentarem, com o devido registro em ata.\n\nHavendo reperguntas: conduzir cada uma pelo presidente; aplicar, se necessário, as fórmulas do Kit de Incidentes para perguntas ofensivas (inc_ofensiva) ou indutivas (inc_indutiva).\n\nNada havendo: \"A defesa nada requer. Encerro esta fase e passamos ao fechamento do ato.\"",
     modelo_termo: "TERMO DE {{TIPO: OITIVA DE TESTEMUNHA | INTERROGATÓRIO}}\n\nAos {{data por extenso}}, às {{hora}}, em {{local}}, presente a Comissão de Processo\nAdministrativo Disciplinar instituída pela Portaria {{portaria}}, composta por\n{{presidente}} (presidente), {{vogais}} (vogais), secretariada por {{secretario}},\ncompareceu {{nome}}, regularmente {{intimado(a)/notificado(a)}} na condição de\n{{papel}}. {{Se acusado: Presente também seu defensor constituído, Dr(a). ___,\nOAB/__ nº ___.}}\n\nIniciados os trabalhos, o presidente procedeu à qualificação civil e funcional\ndo(a) depoente, conferindo os dados com documento oficial de identificação.\n{{Se testemunha: Inquirido(a) aos costumes, declarou não ser parente, amigo(a)\níntimo(a) ou inimigo(a) de qualquer das partes, nem ter interesse na matéria.\nAdvertido(a) das penas do crime de falso testemunho (art. 342 do Código Penal)\ne ressalvada a garantia contra a autoincriminação, prestou o compromisso legal\nde dizer a verdade.}}\n{{Se acusado: Cientificado(a) do direito constitucional ao silêncio e de que seu\nexercício não importa confissão nem será interpretado em prejuízo da defesa,\nbem como da facultatividade do acompanhamento por procurador (Súmula Vinculante\nnº 5/STF), manifestou {{interesse em responder às perguntas | a opção pelo\nexercício do direito ao silêncio, razão pela qual a comissão não lhe dirigiu\nquestionamentos (art. 15, parágrafo único, I, da Lei nº 13.869/2019)}}.}}\n\n{{Registro de incidentes, se houver: contradita, arguição de parcialidade,\nquestões de ordem, protestos — com a deliberação da comissão.}}\n\nPassou-se à inquirição pela comissão:\n[transcrição das perguntas e respostas]\n\nDada a palavra à defesa, {{formulou as seguintes reperguntas | nada requereu}}.\n\nNada mais havendo, encerrou-se o presente termo, que, lido e achado conforme,\nvai assinado por todos os presentes."
   },
 
@@ -1016,10 +1027,9 @@ const CATALOGO = {
     { id: "inf_incompativel", grupo: "proibicoes_117", nome: "Exercício de atividades incompatíveis com o cargo/função ou com o horário de trabalho", dispositivo: "Art. 117, XVIII, Lei 8.112/90", penaAbstrata: "suspensão (art. 130)", elementosTipicos: ["exercício de qualquer atividade (remunerada ou não) incompatível com o cargo/função ou com o horário de trabalho", "habitualidade", "prejuízo efetivo ou potencial ao desempenho funcional"], observacoes: "Duas vertentes autônomas: incompatibilidade material (conflito com as atribuições — ex.: consultoria tributária por auditor) e incompatibilidade de horário (atividade paralela durante o expediente). Não confundir com a acumulação ilegal de cargos públicos (art. 132, XII, rito próprio do art. 133).", modulo: "nucleo" },
     { id: "inf_urbanidade", grupo: "deveres_116", nome: "Falta de urbanidade", dispositivo: "Art. 116, XI, Lei 8.112/90", penaAbstrata: "advertência (art. 129); suspensão em caso de reincidência", elementosTipicos: ["tratamento desrespeitoso, grosseiro ou ofensivo a colegas, superiores, subordinados ou público", "no exercício da função ou em razão dela", "aferição contextual (distinguir rispidez pontual em situação de tensão de padrão de tratamento)"], observacoes: "Infração leve mas frequente em denúncias de atendimento. A prova costuma ser testemunhal e, quando existente, registro audiovisual do atendimento. Atenção ao contexto bilateral (provocação, tumulto) — relevante para o art. 128, não para excluir o dever.", modulo: "nucleo" },
     { id: "inf_normas", grupo: "deveres_116", nome: "Descumprimento do dever de observar as normas legais e regulamentares", dispositivo: "Art. 116, III, Lei 8.112/90", penaAbstrata: "advertência (art. 129); gradação conforme a gravidade", elementosTipicos: ["existência de norma legal ou regulamentar válida e vigente aplicável à atividade", "conduta comissiva ou omissiva em desacordo com a norma", "exigibilidade de conduta diversa", "ciência (real ou presumida) da norma"], observacoes: "Enquadramento subsidiário e de espectro amplo — exige indicação precisa da norma violada (portaria, IN, ordem de serviço, manual), sob pena de capitulação genérica (risco de nulidade da indiciação). A oitiva deve estabelecer: qual norma, como foi divulgada, qual conduta a contrariou.", modulo: "nucleo" },
-    // Atualização incremental 01 (enriquecimento ilícito): campo "pena" mantido literalmente conforme o
-    // snippet da atualização, e "penaAbstrata" duplicado para consistência com as demais 10 entradas e com
-    // renderInfracaoDetalhe(), que lê inf.penaAbstrata — ver divergência reportada ao final da parte.
-    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", pena: "demissão", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" }
+    // Atualização incremental 01 (enriquecimento ilícito): campo renomeado de "pena" para "penaAbstrata"
+    // (correção de nomenclatura do documento), no mesmo padrão das demais 10 entradas.
+    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" }
   ],
 
   // ---- Checklist (comum + acusado + videoconferência) ----
@@ -1473,6 +1483,9 @@ function garantirEstruturaAto(d){
   d.ato.hora = d.ato.hora || "";
   d.ato.local = d.ato.local || "";
   d.ato.modalidade = d.ato.modalidade || "presencial";
+  // Resolução da pendência dos blocos 6 e 12: define se o Bloco 12 (palavra à defesa/reperguntas) entra
+  // no roteiro — omitido por completo quando não houver defensor constituído presente.
+  if (d.ato.defensorPresente === undefined) d.ato.defensorPresente = false;
   d.ato.estrategia = d.ato.estrategia || {};
   d.perfil = d.perfil || {};
   d.roteiro = d.roteiro || [];
@@ -1572,6 +1585,7 @@ function renderEtapa1(){
   document.querySelectorAll("[data-campo-ato-modalidade]").forEach(r => {
     r.checked = (r.value === d.ato.modalidade);
   });
+  document.getElementById("ato-defensor-presente").checked = !!d.ato.defensorPresente;
   document.getElementById("ato-quem-pergunta").value = d.ato.estrategia.quemPergunta || "";
   document.getElementById("ato-quem-revisa").value = d.ato.estrategia.quemRevisa || "";
   document.getElementById("ato-formato-abertura").value = d.ato.estrategia.formatoAbertura || "";
@@ -1711,6 +1725,13 @@ function ligarCamposWizardEtapa1(){
       salvarLocalStorage();
     });
   });
+  // Resolução da pendência dos blocos 6 e 12:
+  document.getElementById("ato-defensor-presente").addEventListener("change", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    d.ato.defensorPresente = ev.target.checked;
+    salvarLocalStorage();
+  });
   document.querySelectorAll("[data-campo-estrategia]").forEach(campo => {
     campo.addEventListener("input", () => {
       const d = getDepoenteAtivo();
@@ -1789,6 +1810,16 @@ function ligarNavegacaoWizard(){
    ===================================================================== */
 const BLOCOS_OCULTOS_SILENCIO = ["contexto_funcional", "materialidade", "autoria_participacao", "elemento_subjetivo", "circunstancias_art128", "palavra_defesa", "fechamento"];
 
+// Resolução da pendência dos blocos 6 e 12: centraliza a decisão de omitir um bloco inteiro do roteiro
+// (silêncio do acusado já existente + bloco 12 sem defensor constituído presente), reaproveitada nas
+// três telas que percorrem CATALOGO.blocos (Etapa 3, Etapa 4 e impressão).
+function blocoDeveSerOmitido(bloco, d){
+  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return true;
+  if (bloco.id === "palavra_defesa" && !d.ato.defensorPresente) return true;
+  return false;
+}
+
 const RES_FINALIDADE = { materialidade: "Materialidade", autoria: "Autoria", subjetivo: "Elemento subjetivo", circunstancia: "Circunstância", praxe: "Praxe", contexto: "Contexto" };
 function finalidadeLabel(f){ return RES_FINALIDADE[f] || f; }
 
@@ -1848,9 +1879,16 @@ function gerarRoteiroInicial(d){
         });
       }
 
-    } else if (bloco.id === "objecoes_defesa" || bloco.id === "palavra_defesa"){
-      itens = [{ origem: "catalogo", tipo: "pendente", refId: null, texto: "", removivel: false, ordem: 1 }];
-      // <!-- TODO: conteúdo pendente --> este bloco não tem texto-modelo próprio no banco de conteúdo da Fase 1.
+    } else if (bloco.id === "objecoes_defesa"){
+      // Resolução da pendência (seção 2.6 do banco de conteúdo): sempre presente — independe de haver
+      // defensor constituído (a pergunta sobre impedimento/suspeição é feita à defesa quando presente).
+      itens = [{ origem: "catalogo", tipo: "texto_modelo", refId: "abertura_objecoes_defesa", texto: mergeTexto(CATALOGO.textosModelo.abertura_objecoes_defesa, ctx), removivel: false, ordem: 1 }];
+
+    } else if (bloco.id === "palavra_defesa"){
+      // Resolução da pendência (seção 2.7): este bloco só se aplica quando houver defensor constituído
+      // presente no ato — a ocultação em si acontece em renderEtapa3()/montarAreaImpressao() conforme
+      // d.ato.defensorPresente, para reagir a alterações feitas na Etapa 1 sem exigir regeneração do roteiro.
+      itens = [{ origem: "catalogo", tipo: "texto_modelo", refId: "palavra_defesa_reperguntas", texto: mergeTexto(CATALOGO.textosModelo.palavra_defesa_reperguntas, ctx), removivel: false, ordem: 1 }];
 
     } else if (bloco.tipo === "perguntas"){
       itens = CATALOGO.perguntas
@@ -1925,7 +1963,7 @@ function renderEtapa3(){
   const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
 
   CATALOGO.blocos.forEach(bloco => {
-    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+    if (blocoDeveSerOmitido(bloco, d)) return;
 
     const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { blocoId: bloco.id, itens: [] };
     html += "<div class=\"cartao\" data-bloco-card=\"" + bloco.id + "\">";
@@ -2175,7 +2213,7 @@ function renderRoteiroLeitura(d){
   let algumBloco = false;
 
   CATALOGO.blocos.forEach(bloco => {
-    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+    if (blocoDeveSerOmitido(bloco, d)) return;
     const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { itens: [] };
     if (!grupo.itens.length) return;
     algumBloco = true;
@@ -2379,7 +2417,7 @@ function montarAreaImpressao(d, comCartaoMesa){
   html += "</div>";
 
   CATALOGO.blocos.forEach(bloco => {
-    if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return;
+    if (blocoDeveSerOmitido(bloco, d)) return;
     const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { itens: [] };
     if (!grupo.itens.length) return;
     html += "<h3>" + escapeHtml(bloco.nome) + "</h3>";
