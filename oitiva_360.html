@@ -6,10 +6,10 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.6.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.6.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
-  depoente, Kit de Incidentes com 18 itens em caixa (texto completo do documento-fonte),
+  depoente, Kit de Incidentes com 17 itens em caixa (texto completo do documento-fonte),
   alinhamento justificado, categoria "Outras Infrações" e Cartão de Papéis do Depoente)
   Data: 2026-07-09
 
@@ -106,12 +106,12 @@
     (2) Cartão de Papéis do Depoente (impressão): inicialmente adiado por faltar o texto completo
     dos "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E); implementado na 1.6.0
     (ver abaixo) assim que o usuário enviou o documento-fonte.
-    (3) Kit de Incidentes ampliado de 13 para 18 itens: `inc_diligencia` desmembrado (perícia
-    ganhou card próprio, `inc_pericia`) e 4 itens novos (`inc_perguntas_impertinentes`,
-    `inc_pedido_esclarecimento`, `inc_impugnacao_pergunta_comissao`, `inc_advogado_testemunha`
-    — este último reconstituído de fonte mista, sinalizado em comentário no código). Diagramação
-    convertida de lista corrida (borda só embaixo) para caixa própria por item, na tela
-    (`.incidente-item`) e na impressão (`.cartao-mesa-item`).
+    (3) Kit de Incidentes ampliado de 13 para 17 itens: `inc_diligencia` desmembrado (perícia
+    ganhou card próprio, `inc_pericia`) e itens novos `inc_perguntas_impertinentes`,
+    `inc_pedido_esclarecimento` e `inc_advogado_testemunha` (este último reconstituído de fonte
+    mista, sinalizado em comentário no código). Diagramação convertida de lista corrida (borda só
+    embaixo) para caixa própria por item, na tela (`.incidente-item`) e na impressão
+    (`.cartao-mesa-item`).
     (4) Alinhamento de texto corrido trocado de left/right para justificado (`text-align:
     justify`), em blocos de prosa na tela e na impressão (descrições de papéis, textos-modelo
     fixos, fórmulas do kit de incidentes, perguntas do roteiro impresso, termo, avisos
@@ -136,6 +136,11 @@
     `inc_reservada`, `inc_abalo`) foram atualizadas para o texto completo/verbatim, também com
     nomes de exemplo purgados; `inc_opiniao` passou a reunir as duas variantes do documento
     (elucubração da defesa vs. juízo de valor do próprio depoente).
+  - 1.6.1 (ajuste no kit de incidentes, a pedido do usuário): "Pedido para fazer esclarecimento" e
+    "Impugnação de pergunta da comissão" eram dois cards distintos desde a 1.5.0, com base no
+    resumo da mensagem original; o documento-fonte completo (1.6.0) trouxe uma única fórmula para
+    essa situação, então os dois foram fundidos em `inc_pedido_esclarecimento` — kit com 17 itens
+    (não mais 18).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1750,7 +1755,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.6.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.6.1</div>
 </footer>
 
 <script>
@@ -2110,7 +2115,9 @@ const CATALOGO = {
       situacao: "Blindagem contra desestabilização (informativo, sem fórmula fixa)",
       formulaVerbal: "Frases de efeito comuns: \"Você é formado em Direito?\", \"Vou denunciar a parcialidade dessa comissão!\", \"Vou abrir processo criminal contra vocês!\", \"Hoje sou eu, amanhã será você!\". Resposta única: manter tom equilibrado, não personalizar, registrar objetivamente em ata o necessário e prosseguir. Exceção crítica: diante de menção a autoagressão, suspender o ato, oferecer intervalo e acionar apoio médico/psicológico — o cuidado com a pessoa precede o rito."
     },
-    // Orientações de Implementação (2026-07-09): 5 itens novos, ampliando o kit de 13 para 18.
+    // Orientações de Implementação (2026-07-09): 5 itens novos, ampliando o kit de 13 para 18 —
+    // reduzido para 17 após a fusão de "Pedido de esclarecimento" com "Impugnação de pergunta da
+    // comissão" (ver comentário junto a inc_pedido_esclarecimento, abaixo).
     {
       id: "inc_pericia", grupo: "Postura da defesa", cartaoMesa: true,
       situacao: "Pedido de perícia",
@@ -2126,14 +2133,13 @@ const CATALOGO = {
       formulaVerbal: "\"Eu faço questão de deixar claro, Doutor(a), que o nosso processo trata da conduta A. É isso que está em discussão aqui. A postura do(a) investigado(a) fora desses aspectos não está sendo questionada. Eu mesmo, de antemão, pela pouca convivência que tive com ele(a), já sei que se trata de um(a) bom(boa) profissional e de um(a) bom(boa) colega de trabalho.\""
     },
     {
+      // Mesclado (2026-07-09, a pedido do usuário): "Pedido para fazer esclarecimento" e "Impugnação de
+      // pergunta da comissão" eram dois cards distintos na 1.5.0 (baseados no resumo da mensagem
+      // original), mas o documento-fonte completo traz uma única fórmula para essa situação — os dois
+      // foram fundidos neste item, com o texto verbatim do documento.
       id: "inc_pedido_esclarecimento", grupo: "Condução do ato", cartaoMesa: true,
-      situacao: "Pedido para fazer esclarecimento",
-      formulaVerbal: "\"Para que não percamos a espontaneidade do depoimento da testemunha, eu peço para aguardar o encerramento da oitiva (ou desse bloco de perguntas), que eu lhe passarei a palavra para que o senhor possa fazer qualquer esclarecimento, inclusive, se for o caso, a própria pergunta.\""
-    },
-    {
-      id: "inc_impugnacao_pergunta_comissao", grupo: "Postura da defesa", cartaoMesa: true,
-      situacao: "Impugnação de pergunta da comissão",
-      formulaVerbal: "\"Peço desculpas, Doutor, se o meu questionamento não foi feito da melhor forma. Tentarei reformular a pergunta. O que eu quero saber é: (...)\""
+      situacao: "Pedido de esclarecimento / impugnação de pergunta da comissão",
+      formulaVerbal: "\"Para que não percamos a espontaneidade do depoimento da testemunha, peço ao senhor que aguarde o encerramento da oitiva. Esse tipo de pergunta cabe e, ao final, passarei a palavra para que o senhor possa fazer qualquer comentário, inclusive se for o caso, protestar em ata.\""
     },
     {
       // Orientações de Implementação (2026-07-09): fórmula reconstituída a partir de fonte mista (o
@@ -3860,7 +3866,7 @@ function validarCatalogo(){
     blocos: CATALOGO.blocos.length + " (esperado: 13)",
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
-    formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 18)",
+    formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     modelosAbordagemPapel: CATALOGO.modelosAbordagemPapel.length + " (esperado: 5)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
     perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75)",
