@@ -6,8 +6,8 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.0.0 (Fase 1 — MVP completo, Partes 1-5 + Atualização Incremental 01)
-  Data: 2026-07-08
+  Versão do arquivo: 1.1.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de pendências)
+  Data: 2026-07-09
 
   Changelog:
   - 0.1.0 (Parte 1): esqueleto do arquivo único; CATALOGO completo (papéis, blocos, perguntas
@@ -38,19 +38,20 @@
   - 1.0.0 (Parte 5): revisão final de consistência (ids, contraste — badge de status
     "oitiva realizada" ajustado para AA —, teclado, ausência de ids órfãos/duplicados);
     teste guiado ponta a ponta executado e reportado.
+  - 1.1.0 (Resolução de pendências): campo `pena` removido de `inf_enriquecimento_ilicito`
+    (mantido apenas `penaAbstrata`, padrão das demais 10 infrações). Blocos 6 ("Abertura
+    para objeções da defesa") e 12 ("Palavra à defesa/reperguntas") deixam de ser
+    placeholder: textos-modelo das seções 2.6/2.7 do banco de conteúdo. Bloco 12 passa a
+    ser omitido por completo quando não houver defensor constituído presente (novo campo
+    `d.ato.defensorPresente`, checkbox na Etapa 1); bloco 6 permanece sempre presente.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração).
   Em caso de dúvida sobre conteúdo jurídico, esses documentos prevalecem sobre o código.
 
-  Pendências conhecidas (sinalizadas ao usuário, não resolvidas por conta própria):
-  - Blocos "Abertura para objeções da defesa" e "Palavra à defesa/reperguntas" não têm
-    texto-modelo próprio no banco de conteúdo da Fase 1 (marcados com TODO no código).
+  Pendências conhecidas:
   - `coger-ui.css` oficial não foi fornecido; variáveis de cor navy/dourado usadas como
     placeholder fiel à identidade descrita no documento estrutural.
-  - Infração `inf_enriquecimento_ilicito` inclui tanto `pena` quanto `penaAbstrata` (mesmo
-    valor) por divergência de nome de campo entre o snippet da atualização incremental e o
-    padrão já usado pelas demais 10 infrações — decisão do usuário pendente sobre qual manter.
 -->
 <style>
   /* ===================================================================
@@ -728,7 +729,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.0.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.1.0</div>
 </footer>
 
 <script>
