@@ -6,11 +6,11 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.6.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.7.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
-  depoente, Kit de Incidentes com 17 itens em caixa (texto completo do documento-fonte),
-  alinhamento justificado, categoria "Outras Infrações" e Cartão de Papéis do Depoente)
+  depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
+  Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar)
   Data: 2026-07-09
 
   Changelog:
@@ -141,6 +141,14 @@
     resumo da mensagem original; o documento-fonte completo (1.6.0) trouxe uma única fórmula para
     essa situação, então os dois foram fundidos em `inc_pedido_esclarecimento` — kit com 17 itens
     (não mais 18).
+  - 1.7.0 (ajustes solicitados pelo usuário, 2026-07-09): removida por completo a funcionalidade
+    "Imprimir Cartão de Papéis" da Etapa 4 (Revisão e Checklist) — botão, handler,
+    `montarAreaImpressaoCartaoPapeis()`, `CATALOGO.modelosAbordagemPapel` e o CSS específico
+    (`.cartao-papeis-grid`/`.cartao-papel-item`) foram removidos. Campo "Nº do processo" passa a
+    ser obrigatório para exportar: o botão "Exportar .json do processo" fica desabilitado (com
+    aviso pedagógico) enquanto o campo estiver vazio, garantindo que o nome do arquivo .json
+    exportado sempre traga o número real do processo, nunca o fallback "sem-numero"
+    (`numeroProcessoPreenchido()`/`atualizarAvisoNumeroProcesso()`).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1277,24 +1285,14 @@
   #area-impressao .impresso-rodape .disclaimer{ font-size:8pt; color: var(--rfb-text-muted); text-align:justify; margin-bottom:8px; }
   #area-impressao .impresso-rodape .linha-final{ display:flex; justify-content:space-between; gap:12px; font-size:7.5pt; color: var(--rfb-text-faint); text-transform:uppercase; letter-spacing:.3px; }
   #area-impressao .cartao-mesa-grid{ column-count:2; column-gap:16px; font-size:8.5pt; margin-top:8px; }
-  /* Orientações de Implementação (2026-07-09): itens do Kit de Incidentes e do Cartão de Papéis do
-     Depoente deixam de ser lista corrida (borda só embaixo) e passam a caixa própria por item. */
+  /* Orientações de Implementação (2026-07-09): itens do Kit de Incidentes deixam de ser lista
+     corrida (borda só embaixo) e passam a caixa própria por item. */
   #area-impressao .cartao-mesa-item{
     break-inside:avoid; margin-bottom:12px; padding:10px 12px;
     border:1px solid var(--rfb-navy-100); border-radius:6px; background: var(--rfb-navy-50);
     text-align: justify;
   }
   #area-impressao .cartao-mesa-item .situacao{ font-weight:700; color: var(--rfb-navy-800); display:block; margin-bottom:4px; }
-  #area-impressao .cartao-papeis-grid{ margin-top:8px; }
-  #area-impressao .cartao-papel-item{
-    break-inside:avoid; page-break-inside:avoid; margin-bottom:14px; padding:12px 16px;
-    border:1px solid var(--rfb-navy-100); border-radius:6px; background: var(--rfb-navy-50);
-  }
-  #area-impressao .cartao-papel-item .nome-papel{
-    font-family: var(--rfb-font-display); font-weight:700; font-size:11pt; color: var(--rfb-navy-800);
-    display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.3px;
-  }
-  #area-impressao .cartao-papel-item .fala-modelo{ white-space:pre-wrap; text-align: justify; }
   #area-impressao .impresso-termo{ white-space:pre-wrap; font-family: var(--rfb-font-mono); font-size:9.5pt; line-height:1.7; margin-top:14px; text-align: justify; }
 </style>
 </head>
@@ -1394,6 +1392,7 @@
       <button id="btn-exportar-processo" type="button">Exportar .json do processo</button>
       <input type="file" id="input-importar" accept="application/json,.json" hidden>
     </div>
+    <div id="aviso-numero-processo"></div>
 
     <div class="cartao" id="cartao-matriz">
       <h2>Matriz de Apuração <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(nível processo — obrigatória)</span></h2>
@@ -1424,7 +1423,7 @@
       <h2>Dados do Processo</h2>
       <div class="grade-2">
         <div class="campo">
-          <label for="campo-numero">Nº do processo</label>
+          <label class="obrigatorio" for="campo-numero">Nº do processo</label>
           <input type="text" id="campo-numero" data-campo-processo="numero">
         </div>
         <div class="campo">
@@ -1755,7 +1754,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.6.1</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.0</div>
 </footer>
 
 <script>
@@ -2152,42 +2151,6 @@ const CATALOGO = {
     }
   ],
 
-  // ---- Cartão de Papéis do Depoente (impressão) — Orientações de Implementação (2026-07-09) ----
-  // Falas-modelo completas do documento "7 Pontos Essenciais para uma Oitiva Segura" (Fabian Maia/CGU),
-  // seção "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E), enviado pelo usuário nesta
-  // rodada. Nomes de exemplo do documento-fonte (Terência Varrone, Lúcio Cornélio Sula) substituídos por
-  // placeholders entre colchetes; pronomes de exemplo (a senhora/o senhor) neutralizados para
-  // "o(a) senhor(a)", no mesmo padrão de reaproveitamento genérico já usado no restante do catálogo — o
-  // conteúdo jurídico/substantivo não foi resumido nem parafraseado. O item D (Vítima) é reproduzido tal
-  // como consta da fonte: notas descritivas, não uma fala em primeira pessoa (a fonte não traz uma).
-  modelosAbordagemPapel: [
-    {
-      papelId: "testemunha",
-      titulo: "A. Oitiva de Testemunha",
-      falaModelo: "Pois bem! Hoje procederemos à oitiva da testemunha [depoente]. Antes de tomarmos o seu depoimento, preciso que o(a) senhor(a) nos responda a alguns questionamentos:\n— O(a) senhor(a) tem algum vínculo de parentesco direto ou por afinidade com o(a) investigado(a) neste procedimento?\n— O(a) senhor(a) tem algo que o(a) impeça de prestar este depoimento ou o(a) torne impedido(a) de fazê-lo?\n— O(a) senhor(a) tem amizade íntima ou inimizade notória com o(a) investigado(a)?\n— Alerto que, em face de sua condição de testemunha, o(a) senhor(a) tem o dever de contribuir com esta apuração e assume, desde já, o compromisso de dizer a verdade, sob pena de incidir no crime de falso testemunho. De acordo?\n\n(Abertura para a defesa): (A defesa tem alguma objeção à contribuição da testemunha com este processo ou ao compromisso firmado com ela?)\n\nInformo que o depoimento será prestado de forma oral. Faremos algumas perguntas de início e, depois, passaremos a palavra ao(à) advogado(a) para que ele(a) possa fazer os seus relevantes questionamentos, bem como ao(à) investigado(a), se assim for do seu interesse.\n\nDeixo claro que nada está sendo apurado em face do(a) senhor(a) e lhe peço apenas para tentar ser o(a) mais claro(a) e preciso(a) possível nas suas respostas, bem como para nos informar, com plena transparência, se ao longo do depoimento houver alguma situação que possa gerar dúvida ou constrangê-lo(a). O(a) senhor(a) é muito importante para esta apuração e, em função disso, merece receber, de nossa parte, o melhor tratamento possível."
-    },
-    {
-      papelId: "declarante_informante",
-      titulo: "B. Oitiva de Declarante/Informante",
-      falaModelo: "Em face do relacionamento que o(a) senhor(a) mantém com o(a) investigado(a) ou de sua participação anterior no contexto sob investigação, não lhe solicitaremos que preste o compromisso formal de dizer a verdade, razão pela qual o(a) ouviremos na condição de informante. Ainda assim, apelamos à sua boa vontade para pedir que contribua o máximo possível com o nosso trabalho e com a busca pela verdade que estamos empreendendo. Deixo claro que nada está sendo apurado em face do(a) senhor(a) e lhe peço apenas para tentar ser o(a) mais claro(a) e preciso(a) possível nas suas respostas, bem como para nos informar, com plena transparência, se ao longo do depoimento houver alguma situação que possa gerar dúvida ou constrangê-lo(a). O(a) senhor(a) é muito importante para esta apuração."
-    },
-    {
-      papelId: "situacao_indefinida",
-      titulo: "C. Oitiva de Pessoa em Situação Indefinida",
-      falaModelo: "[Depoente], o(a) senhor(a) foi convocado(a) para nos ajudar a entender algumas situações relacionadas aos fatos apurados neste processo. A princípio, não visualizamos nada que possa indicar alguma atuação irregular de sua parte, o que nos levaria a ouvi-lo(a), neste momento, na condição de testemunha. Nada obstante, olhando os autos, vemos que o(a) senhor(a) de alguma maneira está inserido(a) no contexto fático das irregularidades. Em função disso, por cautela, pretendemos dar o seguinte encaminhamento à situação:\na) não o(a) ouviremos como testemunha (sem compromisso legal); e\nb) permitiremos que o(a) senhor(a), caso queira, faça uso do direito ao silêncio se, eventualmente, visualizar que alguma resposta sua possa vir a lhe trazer algum tipo de prejuízo aos seus interesses.\n\nPerceba que estamos lhe ofertando o melhor cenário possível e fazemos isso tão somente por estarmos envolvidos em um contexto de dúvida. Em todo caso, pedimos ao(à) senhor(a) para, se possível, responder aos nossos questionamentos e, com isso, nos ajudar a esclarecer plenamente a sua situação e a situação da própria investigação. Podemos proceder dessa forma? A Defesa teria alguma objeção?"
-    },
-    {
-      papelId: "vitima",
-      titulo: "D. Oitiva da Vítima",
-      falaModelo: "— A vítima não é testemunha.\n— Não presta o compromisso legal de dizer a verdade (não responde por falso testemunho, mas atenção à denunciação caluniosa).\n— Documentação: Termo de Depoimento × Termo de Declarações × Alegações do(a) Ofendido(a), conforme o caso."
-    },
-    {
-      papelId: "acusado",
-      titulo: "E. Interrogatório do Investigado",
-      falaModelo: "(Registro que este ato foi marcado em comum acordo com a defesa para esta data e que, ainda assim, a intimação foi encaminhada ao(à) investigado(a) e ao(à) seu(sua) advogado(a) com mais de três dias úteis de antecedência.) Informo ao(à) investigado(a) que, nos termos da legislação vigente, o(a) senhor(a) não é obrigado(a) a participar deste ato e tem o direito legal de permanecer em silêncio, caso queira, diante dos questionamentos que lhe serão feitos. Informo também que, nos termos da Lei de Abuso de Autoridade, caso o(a) senhor(a) queira exercer o seu direito constitucional ao silêncio, esta comissão não lhe fará qualquer questionamento, de modo a não incidir no delito previsto no artigo 15, parágrafo único, inciso I, da Lei nº 13.869/2019.\n\nSabendo que o(a) senhor(a) está participando deste ato com o auxílio de advogado(a) regularmente constituído(a), e sem sofrer qualquer tipo de coação, pergunto-lhe se é do seu interesse responder às perguntas que lhe serão feitas? Pergunto ao(à) advogado(a), Dr(a). [advogado], se tem alguma objeção e se concorda que passemos para o interrogatório do(a) acusado(a) propriamente dito. Registro, por fim, que caso, diante de alguma pergunta ou de algum momento deste ato processual, o(a) senhor(a) queira fazer uso do direito ao silêncio, tal direito, obviamente, lhe será inteiramente garantido."
-    }
-  ],
-
   // ---- Taxonomia própria de infrações (10 do rol inicial — Fase 1) ----
   infracoes: [
     { id: "inf_desidia", grupo: "proibicoes_117", nome: "Desídia", dispositivo: "Art. 117, XV, Lei 8.112/90", penaAbstrata: "demissão (art. 132, XIII)", elementosTipicos: ["conduta culposa (negligência, desatenção, desinteresse)", "habitualidade/reiteração (ato isolado não configura, em regra)", "descumprimento de atribuições do cargo", "ausência de justificativa razoável"], observacoes: "A prova central é o padrão: sequência de atrasos, pendências, retrabalhos e cobranças documentadas. Distinguir desídia (culpa) de insubordinação (dolo) e de mero baixo desempenho por causas alheias à vontade.", modulo: "nucleo" },
@@ -2420,6 +2383,22 @@ function renderCamposProcesso(){
   document.getElementById("campo-secretario-matricula").value = estado.processo.comissao.secretario.matricula || "";
 
   renderVogais();
+  atualizarAvisoNumeroProcesso();
+}
+
+// Número do processo é obrigatório para exportar (a pedido do usuário, 2026-07-09): garante que o
+// nome do arquivo .json exportado sempre traga o número real do processo, nunca o fallback "sem-numero".
+function numeroProcessoPreenchido(){
+  return !!(estado.processo.numero && estado.processo.numero.trim());
+}
+
+function atualizarAvisoNumeroProcesso(){
+  const avisoWrap = document.getElementById("aviso-numero-processo");
+  const btnExportar = document.getElementById("btn-exportar-processo");
+  const preenchido = numeroProcessoPreenchido();
+  btnExportar.disabled = !preenchido;
+  avisoWrap.innerHTML = preenchido ? "" :
+    "<div class=\"aviso-pedagogico\">Preencha o \"Nº do processo\" para habilitar a exportação — o número é usado no nome do arquivo .json exportado.</div>";
 }
 
 // Lista de vogais (ou outros membros repetíveis): cada linha com 3 campos (nome/cargo/matrícula).
@@ -2548,6 +2527,7 @@ function ligarCamposProcesso(){
     campo.addEventListener("input", () => {
       estado.processo[campo.dataset.campoProcesso] = campo.value;
       salvarLocalStorage();
+      if (campo.dataset.campoProcesso === "numero") atualizarAvisoNumeroProcesso();
     });
   });
   document.querySelectorAll("[data-campo-membro]").forEach(campo => {
@@ -2625,6 +2605,7 @@ document.getElementById("btn-confirmar-add-depoente").addEventListener("click", 
    Export / Import do .json do processo (R11 — nunca mesclar)
    ===================================================================== */
 document.getElementById("btn-exportar-processo").addEventListener("click", () => {
+  if (!numeroProcessoPreenchido()) return; // botão já fica desabilitado, dupla checagem
   const conteudo = JSON.stringify(estado, null, 2);
   const blob = new Blob([conteudo], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -3612,7 +3593,6 @@ function renderEtapa4(){
   html += "<div class=\"acoes-topo\">" +
     "<button type=\"button\" id=\"btn-imprimir-roteiro\">Imprimir roteiro</button>" +
     "<button type=\"button\" class=\"secundario\" id=\"btn-imprimir-cartao-mesa\">Imprimir Cartão de Mesa</button>" +
-    "<button type=\"button\" class=\"secundario\" id=\"btn-imprimir-cartao-papeis\">Imprimir Cartão de Papéis</button>" +
     "</div>";
   html += "</div>";
 
@@ -3681,11 +3661,6 @@ function ligarEventosEtapa4(container, d){
   document.getElementById("btn-imprimir-cartao-mesa").addEventListener("click", () => {
     // Impressão isolada: só o Cartão de Mesa, sem o roteiro antes.
     montarAreaImpressaoCartaoMesa();
-    prepararAreaImpressaoParaImpressao();
-    window.print();
-  });
-  document.getElementById("btn-imprimir-cartao-papeis").addEventListener("click", () => {
-    montarAreaImpressaoCartaoPapeis();
     prepararAreaImpressaoParaImpressao();
     window.print();
   });
@@ -3810,24 +3785,6 @@ function montarAreaImpressaoCartaoMesa(){
   document.getElementById("area-impressao").innerHTML = html;
 }
 
-// Orientações de Implementação (2026-07-09): Cartão de Papéis do Depoente — cabeçalho único de avisos
-// legais/LGPD (não repetido em cada caixa individual), uma caixa por hipótese de papel, retrato
-// (herda o @page global, sem orientação especial), paginando livremente se não couber em 1 página.
-function montarAreaImpressaoCartaoPapeis(){
-  const ctx = { processo: estado.processo.numero || "" };
-  let html = "";
-  html += htmlCabecalhoImpressao("Cartão de Papéis do Depoente", "Modelos de Abordagem — Ferramentas Coger · Oitiva 360");
-  html += "<div class=\"impresso-texto-fixo\">" + escapeHtml(mergeTexto(CATALOGO.textosModelo.avisos_lgpd, ctx)) + "</div>";
-  html += "<div class=\"cartao-papeis-grid\">";
-  CATALOGO.modelosAbordagemPapel.forEach(m => {
-    html += "<div class=\"cartao-papel-item\"><span class=\"nome-papel\">" + escapeHtml(m.titulo) + "</span>" +
-      "<div class=\"fala-modelo\">" + escapeHtml(m.falaModelo) + "</div></div>";
-  });
-  html += "</div>";
-  html += htmlRodapeImpressao("Uso interno · Consulta rápida durante o ato");
-  document.getElementById("area-impressao").innerHTML = html;
-}
-
 function montarAreaImpressaoTermo(d){
   const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
   let html = "";
@@ -3867,7 +3824,6 @@ function validarCatalogo(){
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
-    modelosAbordagemPapel: CATALOGO.modelosAbordagemPapel.length + " (esperado: 5)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
     perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
