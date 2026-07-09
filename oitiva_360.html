@@ -6,12 +6,13 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.7.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.7.2 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
   Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar +
-  texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo)
+  texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
+  bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado)
   Data: 2026-07-09
 
   Changelog:
@@ -158,6 +159,13 @@
     espaçamento (o termo continua um campo editável/copiável, fonte monoespaçada), com valores
     truncados em 22 caracteres para não quebrar linha e desalinhar a tabela na impressão; múltiplos
     vogais são unidos com "; " dentro da mesma coluna.
+  - 1.7.2 (correção de bug, a pedido do usuário): o botão de navegação do wizard, ao chegar na
+    Etapa 4, troca o rótulo para "Concluído" (`irParaEtapa()`) mas ficava sempre desabilitado
+    (`disabled = (destino === 4)`) e, mesmo se habilitado, seu handler de clique só agia quando
+    `etapaAtiva < 4` — ou seja, nunca havia ação associada a "Concluído", um beco sem saída na
+    interface. Corrigido: o botão permanece sempre habilitado e, na Etapa 4, o clique agora chama
+    `fecharWizard()`, fechando o wizard e voltando à lista de depoentes (mesmo destino do botão
+    "← Voltar à lista de depoentes").
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1762,7 +1770,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.1</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.2</div>
 </footer>
 
 <script>
@@ -2811,7 +2819,6 @@ function irParaEtapa(destino, opcoes){
 
   document.getElementById("btn-wizard-voltar").disabled = (destino === 1);
   document.getElementById("btn-wizard-avancar").textContent = (destino >= 4) ? "Concluído" : "Avançar →";
-  document.getElementById("btn-wizard-avancar").disabled = (destino === 4);
 }
 
 function renderEtapa1(){
@@ -3026,7 +3033,11 @@ function ligarNavegacaoWizard(){
     if (etapaAtiva > 1) irParaEtapa(etapaAtiva - 1, { forcar: true });
   });
   document.getElementById("btn-wizard-avancar").addEventListener("click", () => {
+    // Na Etapa 4, o botão vira "Concluído" (ver irParaEtapa()) — antes ficava desabilitado e sem
+    // ação (bug corrigido a pedido do usuário, 2026-07-09): agora fecha o wizard e volta à lista de
+    // depoentes, igual ao botão "← Voltar à lista de depoentes".
     if (etapaAtiva < 4) irParaEtapa(etapaAtiva + 1);
+    else fecharWizard();
   });
 }
 
