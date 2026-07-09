@@ -6,12 +6,11 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.5.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.6.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
-  depoente, Kit de Incidentes com 18 itens em caixa, alinhamento justificado, categoria "Outras
-  Infrações". Pendente: Cartão de Papéis do Depoente — aguarda o documento-fonte com o texto
-  completo dos modelos A-E, ver nota no changelog abaixo)
+  depoente, Kit de Incidentes com 18 itens em caixa (texto completo do documento-fonte),
+  alinhamento justificado, categoria "Outras Infrações" e Cartão de Papéis do Depoente)
   Data: 2026-07-09
 
   Changelog:
@@ -104,10 +103,9 @@
     Corrigida, de passagem, uma lacuna da Parte 2: o "texto de abertura específico do papel"
     (`textoAbertura`/`orientacoes_testemunha`) existia no catálogo mas nunca era inserido no
     roteiro gerado — agora é.
-    (2) Cartão de Papéis do Depoente (impressão): PENDENTE — depende do texto completo dos
-    "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E) do documento "7 Pontos
-    Essenciais para uma Oitiva Segura" (Fabian Maia/CGU), que não foi anexado a esta rodada;
-    apenas o CSS-base (`.cartao-papeis-grid`/`.cartao-papel-item`) foi preparado.
+    (2) Cartão de Papéis do Depoente (impressão): inicialmente adiado por faltar o texto completo
+    dos "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E); implementado na 1.6.0
+    (ver abaixo) assim que o usuário enviou o documento-fonte.
     (3) Kit de Incidentes ampliado de 13 para 18 itens: `inc_diligencia` desmembrado (perícia
     ganhou card próprio, `inc_pericia`) e 4 itens novos (`inc_perguntas_impertinentes`,
     `inc_pedido_esclarecimento`, `inc_impugnacao_pergunta_comissao`, `inc_advogado_testemunha`
@@ -124,6 +122,20 @@
     infração, sem dispositivo/pena próprios, com 12 perguntas genéricas (contexto funcional,
     materialidade, autoria, dolo/culpa, art. 128) — nenhuma marcada como obrigatória, todas
     editáveis/removíveis como qualquer pergunta do sistema.
+  - 1.6.0 (Cartão de Papéis do Depoente + refinamento do Kit de Incidentes com o documento-fonte
+    completo, 2026-07-09): novo `CATALOGO.modelosAbordagemPapel` com o texto completo dos 5
+    modelos de abordagem (A-E) do documento "7 Pontos Essenciais para uma Oitiva Segura" (Fabian
+    Maia/CGU), enviado pelo usuário nesta rodada; nomes de exemplo do documento-fonte (Terência
+    Varrone, Lúcio Cornélio Sula) substituídos por placeholders entre colchetes e pronomes
+    neutralizados (o(a) senhor(a)), no mesmo padrão do restante do catálogo — sem resumir nem
+    parafrasear o conteúdo jurídico. Nova peça de impressão `montarAreaImpressaoCartaoPapeis()` /
+    botão "Imprimir Cartão de Papéis": cabeçalho único de avisos legais/LGPD, uma caixa por
+    hipótese, retrato, rodapé padrão. Aproveitando o mesmo documento-fonte (mais completo que o
+    resumo usado na 1.5.0), 9 fórmulas do Kit de Incidentes (`inc_ofensiva`, `inc_indutiva`,
+    `inc_imprecisao`, `inc_contradicao`, `inc_questao_ordem`, `inc_opiniao`, `inc_consulta`,
+    `inc_reservada`, `inc_abalo`) foram atualizadas para o texto completo/verbatim, também com
+    nomes de exemplo purgados; `inc_opiniao` passou a reunir as duas variantes do documento
+    (elucubração da defesa vs. juízo de valor do próprio depoente).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1738,7 +1750,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.5.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.6.0</div>
 </footer>
 
 <script>
@@ -2038,49 +2050,53 @@ const CATALOGO = {
       formulaVerbal: "\"Doutor(a), o(a) senhor(a) tem o direito de apresentar suas alegações, mas não de intimidar a testemunha. Por favor, sente-se e dirija a mim a sua manifestação.\""
     },
     {
+      // Orientações de Implementação (2026-07-09) — atualizado para o texto completo do documento-fonte
+      // ("Roteiros das Simulações de Oitiva e Interrogatório", Marcos Salles Teixeira/CGU-CRG), com
+      // pronomes neutralizados (o(a) senhor(a)) para reaproveitamento genérico, no mesmo padrão já usado
+      // no restante do catálogo — o texto original do documento usa exemplos no feminino (ex.: "a senhora").
       id: "inc_ofensiva", grupo: "Postura da defesa", cartaoMesa: true,
       situacao: "Pergunta ofensiva ou desrespeitosa",
-      formulaVerbal: "Grau 1 (reforma): \"Peço que reflita sobre a pergunta e a reformule. A testemunha está aqui para colaborar e merece tratamento adequado.\" / Grau 2 (corte): \"A testemunha não responderá a esse questionamento; considero que foi formulado em termos ofensivos. O incidente será registrado em ata. Deseja formulá-la em outros termos?\""
+      formulaVerbal: "Fórmula 1 (pedindo reforma): \"Eu gostaria de pedir ao(à) senhor(a) que refletisse sobre a pergunta e a reformulasse. A testemunha está aqui para colaborar e eu acho que merece receber um tratamento adequado da nossa parte.\" / Fórmula 2 (corte firme): \"A testemunha não responderá a esse questionamento. Eu considero que a pergunta foi feita em termos ofensivos. Esse incidente será registrado em ata e, posteriormente, deliberaremos sobre ele. (Variação: deseja fazer a pergunta em outros termos?)\""
     },
     {
       id: "inc_indutiva", grupo: "Técnica de inquirição", cartaoMesa: true,
       situacao: "Pergunta indutiva ou insinuativa (da defesa ou da própria comissão)",
-      formulaVerbal: "\"Peço que reformule: da forma como foi feita, a pergunta praticamente insinua a resposta — o que pode, inclusive, enfraquecer a credibilidade do que vier a ser dito.\" (Vale também para a comissão — um peso, uma medida.)"
+      formulaVerbal: "\"Eu peço ao(à) senhor(a) que reformule a pergunta. Da forma como foi feita, a pergunta praticamente insinua uma resposta. Eu chamo atenção para esse ponto porque isso pode, até mesmo, enfraquecer a relevância e a credibilidade daquilo que vier a ser dito para a própria Defesa.\" Cuidado: um peso, uma medida — a comissão não deve, ela própria, formular perguntas indutivas."
     },
     {
       id: "inc_imprecisao", grupo: "Depoimento do depoente", cartaoMesa: true,
       situacao: "Imprecisão do depoente",
-      formulaVerbal: "\"A despeito da sua resposta, não compreendi exatamente o que ocorreu. Poderia repetir de forma bem pautada, quase como se estivesse me descrevendo uma fotografia?\""
+      formulaVerbal: "\"A despeito da sua resposta, não entendi exatamente o que ocorreu. O(a) senhor(a) poderia, por gentileza, repetir o que afirmou de forma bem pautada, quase como se estivesse me descrevendo uma fotografia?\""
     },
     {
       id: "inc_contradicao", grupo: "Depoimento do depoente", cartaoMesa: true,
       situacao: "Contradição / possível falso testemunho",
-      formulaVerbal: "Contradição: \"Posso estar enganado(a), mas em alguns momentos tenho a impressão de que há informações contraditórias sobre o ponto X. Peço precisão quanto a isso.\" / Gravidade maior: \"Chamo a atenção para a seriedade deste momento. Outras pessoas depuseram e há documentos nos autos. Peço que reflita, lembrando que o(a) senhor(a) prestou compromisso de dizer a verdade, sob pena de falso testemunho.\""
+      formulaVerbal: "Contradição clara: \"Eu posso estar enganado(a). Mas, em alguns momentos, tenho a impressão de que o(a) senhor(a) está dando informações contraditórias a respeito do ponto X. Peço que seja preciso(a) quanto a isso.\" / Flagrante mentira ou evidente omissão: \"Eu quero chamar a atenção do(a) depoente para a seriedade deste momento. Além do(a) senhor(a), outras pessoas prestaram depoimento e nós temos uma série de documentos nos autos. Salvo se eu entendi mal, o(a) senhor(a) não está sendo tão preciso(a) neste momento. Eu peço para que reflita e alerto para o fato de que o(a) senhor(a) prestou compromisso legal de dizer a verdade, sob pena de incidir no crime de falso testemunho.\""
     },
     {
       id: "inc_questao_ordem", grupo: "Postura da defesa", cartaoMesa: true,
       situacao: "Questão de ordem da defesa",
-      formulaVerbal: "\"Qual ponto deseja abordar, doutor(a)? Se for questão de ordem processual, concedo a palavra imediatamente; se for de mérito, peço que aguarde o momento próprio.\""
+      formulaVerbal: "\"Qual o ponto que o senhor deseja abordar sobre a dinâmica do depoimento, Doutor(a)? Sim, eu lhe concedo a palavra imediatamente. Se for alguma questão de mérito, peço que aguarde, mas se for de ordem processual, passo a palavra e lhe escuto com o maior prazer e atenção.\""
     },
     {
       id: "inc_opiniao", grupo: "Depoimento do depoente", cartaoMesa: true,
       situacao: "Elucubrações e juízo de valor",
-      formulaVerbal: "\"Peço que nos detenhamos aos fatos: relate o que efetivamente presenciou ou sabe, sem ingressar no terreno da suposição. Isso preserva o próprio depoimento.\""
+      formulaVerbal: "Elucubrações da defesa (\"o que você acha?\"): \"Doutor(a), eu chamo atenção para a necessidade de nos determos aos fatos. Com todo respeito à opinião da testemunha, e sobretudo para preservá-la, eu acho que o ideal é que nos limitemos aos acontecimentos, sem ingressar no terreno da suposição ou dos achismos.\" / Juízo de valor pelo próprio depoente: \"Eu queria pedir ao(à) senhor(a), numa forma de preservar o ato, que, na medida do possível, se limitasse aos fatos e nos relatasse aquilo que efetivamente presenciou ou sabe. É natural a gente querer emitir a nossa opinião, mas dentro do procedimento há toda uma lógica que precisamos seguir.\""
     },
     {
       id: "inc_consulta", grupo: "Condução do ato", cartaoMesa: true,
       situacao: "Consulta a anotações / vista dos autos",
-      formulaVerbal: "\"O depoimento é oral. Consultar uma anotação ou conferir um dado pontual é possível; ler um documento como resposta, não. Quanto aos autos: será dada vista estritamente dos documentos objeto das perguntas — o processo corre sob acesso restrito.\""
+      formulaVerbal: "\"Eu preciso deixar claro que esse depoimento tem que ser prestado de forma oral e não pode ser trazido por escrito. O(a) senhor(a) me pede simplesmente para consultar umas anotações ou para olhar o processo para checar uma informação X ou Y; isso é possível. O que eu não posso aceitar que ocorra é que o(a) senhor(a) consulte um dado documento para me ler exatamente o que consta dele e fazer disso a sua resposta.\""
     },
     {
       id: "inc_reservada", grupo: "Condução do ato", cartaoMesa: true,
       situacao: "Conversa reservada advogado-cliente",
-      formulaVerbal: "\"Peço que desliguem microfone e câmera, ou conversem pelo telefone. Cinco minutos são suficientes? A comissão aguardará na sala.\""
+      formulaVerbal: "\"Doutor(a), peço ao(à) senhor(a) e ao(à) investigado(a) para desligarem o microfone (e a câmera também, se preferirem), ou conversarem por meio do telefone celular. Pode ser útil. 5 minutos seriam suficientes para vocês? A comissão permanecerá na sala aguardando.\""
     },
     {
       id: "inc_abalo", grupo: "Cuidado com o depoente", cartaoMesa: true,
       situacao: "Abalo emocional do depoente",
-      formulaVerbal: "\"Tenho a sensação de que o(a) senhor(a) não está confortável neste momento. Sugiro um intervalo de cinco minutos para tomar água e respirar. Podemos proceder assim?\""
+      formulaVerbal: "\"Eu estou com a sensação, [depoente], que o(a) senhor(a) não está se sentindo confortável neste momento. Eu queria lhe sugerir que déssemos um intervalo para o(a) senhor(a) tomar água, respirar um pouco e voltar com mais tranquilidade. Podemos proceder dessa forma? Acho que 5 minutos de intervalo será bom para o(a) senhor(a) e para todo mundo.\""
     },
     {
       // Orientações de Implementação (2026-07-09): desmembrado — este card trata só de diligência;
@@ -2107,7 +2123,7 @@ const CATALOGO = {
         "Pense: será mesmo que sempre vale a pena indeferir?",
         "Será que, por vezes, a defesa não busca exatamente esse indeferimento para alegar cerceamento de defesa?"
       ],
-      formulaVerbal: "\"Eu faço questão de deixar claro, Doutor, que o nosso processo trata da conduta A e B. É isso que está em discussão aqui. A postura do investigado fora desses aspectos não está sendo questionada. Eu mesmo, de antemão, pela pouca convivência que tive com ele, já sei que se trata de um bom profissional e de um bom colega de trabalho.\""
+      formulaVerbal: "\"Eu faço questão de deixar claro, Doutor(a), que o nosso processo trata da conduta A. É isso que está em discussão aqui. A postura do(a) investigado(a) fora desses aspectos não está sendo questionada. Eu mesmo, de antemão, pela pouca convivência que tive com ele(a), já sei que se trata de um(a) bom(boa) profissional e de um(a) bom(boa) colega de trabalho.\""
     },
     {
       id: "inc_pedido_esclarecimento", grupo: "Condução do ato", cartaoMesa: true,
@@ -2127,6 +2143,42 @@ const CATALOGO = {
       id: "inc_advogado_testemunha", grupo: "Condução do ato", cartaoMesa: true,
       situacao: "Advogado da testemunha",
       formulaVerbal: "\"Doutor(a), a testemunha não é acusada de nada neste processo. Seu(sua) advogado(a) particular pode acompanhar o ato para zelar pela regularidade e assessorá-la, mas não tem direito à palavra nem a formular perguntas durante esta oitiva. Eventuais manifestações ou objeções de V.Sa. vinculam apenas o(a) seu(sua) cliente, não o ato como um todo.\""
+    }
+  ],
+
+  // ---- Cartão de Papéis do Depoente (impressão) — Orientações de Implementação (2026-07-09) ----
+  // Falas-modelo completas do documento "7 Pontos Essenciais para uma Oitiva Segura" (Fabian Maia/CGU),
+  // seção "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E), enviado pelo usuário nesta
+  // rodada. Nomes de exemplo do documento-fonte (Terência Varrone, Lúcio Cornélio Sula) substituídos por
+  // placeholders entre colchetes; pronomes de exemplo (a senhora/o senhor) neutralizados para
+  // "o(a) senhor(a)", no mesmo padrão de reaproveitamento genérico já usado no restante do catálogo — o
+  // conteúdo jurídico/substantivo não foi resumido nem parafraseado. O item D (Vítima) é reproduzido tal
+  // como consta da fonte: notas descritivas, não uma fala em primeira pessoa (a fonte não traz uma).
+  modelosAbordagemPapel: [
+    {
+      papelId: "testemunha",
+      titulo: "A. Oitiva de Testemunha",
+      falaModelo: "Pois bem! Hoje procederemos à oitiva da testemunha [depoente]. Antes de tomarmos o seu depoimento, preciso que o(a) senhor(a) nos responda a alguns questionamentos:\n— O(a) senhor(a) tem algum vínculo de parentesco direto ou por afinidade com o(a) investigado(a) neste procedimento?\n— O(a) senhor(a) tem algo que o(a) impeça de prestar este depoimento ou o(a) torne impedido(a) de fazê-lo?\n— O(a) senhor(a) tem amizade íntima ou inimizade notória com o(a) investigado(a)?\n— Alerto que, em face de sua condição de testemunha, o(a) senhor(a) tem o dever de contribuir com esta apuração e assume, desde já, o compromisso de dizer a verdade, sob pena de incidir no crime de falso testemunho. De acordo?\n\n(Abertura para a defesa): (A defesa tem alguma objeção à contribuição da testemunha com este processo ou ao compromisso firmado com ela?)\n\nInformo que o depoimento será prestado de forma oral. Faremos algumas perguntas de início e, depois, passaremos a palavra ao(à) advogado(a) para que ele(a) possa fazer os seus relevantes questionamentos, bem como ao(à) investigado(a), se assim for do seu interesse.\n\nDeixo claro que nada está sendo apurado em face do(a) senhor(a) e lhe peço apenas para tentar ser o(a) mais claro(a) e preciso(a) possível nas suas respostas, bem como para nos informar, com plena transparência, se ao longo do depoimento houver alguma situação que possa gerar dúvida ou constrangê-lo(a). O(a) senhor(a) é muito importante para esta apuração e, em função disso, merece receber, de nossa parte, o melhor tratamento possível."
+    },
+    {
+      papelId: "declarante_informante",
+      titulo: "B. Oitiva de Declarante/Informante",
+      falaModelo: "Em face do relacionamento que o(a) senhor(a) mantém com o(a) investigado(a) ou de sua participação anterior no contexto sob investigação, não lhe solicitaremos que preste o compromisso formal de dizer a verdade, razão pela qual o(a) ouviremos na condição de informante. Ainda assim, apelamos à sua boa vontade para pedir que contribua o máximo possível com o nosso trabalho e com a busca pela verdade que estamos empreendendo. Deixo claro que nada está sendo apurado em face do(a) senhor(a) e lhe peço apenas para tentar ser o(a) mais claro(a) e preciso(a) possível nas suas respostas, bem como para nos informar, com plena transparência, se ao longo do depoimento houver alguma situação que possa gerar dúvida ou constrangê-lo(a). O(a) senhor(a) é muito importante para esta apuração."
+    },
+    {
+      papelId: "situacao_indefinida",
+      titulo: "C. Oitiva de Pessoa em Situação Indefinida",
+      falaModelo: "[Depoente], o(a) senhor(a) foi convocado(a) para nos ajudar a entender algumas situações relacionadas aos fatos apurados neste processo. A princípio, não visualizamos nada que possa indicar alguma atuação irregular de sua parte, o que nos levaria a ouvi-lo(a), neste momento, na condição de testemunha. Nada obstante, olhando os autos, vemos que o(a) senhor(a) de alguma maneira está inserido(a) no contexto fático das irregularidades. Em função disso, por cautela, pretendemos dar o seguinte encaminhamento à situação:\na) não o(a) ouviremos como testemunha (sem compromisso legal); e\nb) permitiremos que o(a) senhor(a), caso queira, faça uso do direito ao silêncio se, eventualmente, visualizar que alguma resposta sua possa vir a lhe trazer algum tipo de prejuízo aos seus interesses.\n\nPerceba que estamos lhe ofertando o melhor cenário possível e fazemos isso tão somente por estarmos envolvidos em um contexto de dúvida. Em todo caso, pedimos ao(à) senhor(a) para, se possível, responder aos nossos questionamentos e, com isso, nos ajudar a esclarecer plenamente a sua situação e a situação da própria investigação. Podemos proceder dessa forma? A Defesa teria alguma objeção?"
+    },
+    {
+      papelId: "vitima",
+      titulo: "D. Oitiva da Vítima",
+      falaModelo: "— A vítima não é testemunha.\n— Não presta o compromisso legal de dizer a verdade (não responde por falso testemunho, mas atenção à denunciação caluniosa).\n— Documentação: Termo de Depoimento × Termo de Declarações × Alegações do(a) Ofendido(a), conforme o caso."
+    },
+    {
+      papelId: "acusado",
+      titulo: "E. Interrogatório do Investigado",
+      falaModelo: "(Registro que este ato foi marcado em comum acordo com a defesa para esta data e que, ainda assim, a intimação foi encaminhada ao(à) investigado(a) e ao(à) seu(sua) advogado(a) com mais de três dias úteis de antecedência.) Informo ao(à) investigado(a) que, nos termos da legislação vigente, o(a) senhor(a) não é obrigado(a) a participar deste ato e tem o direito legal de permanecer em silêncio, caso queira, diante dos questionamentos que lhe serão feitos. Informo também que, nos termos da Lei de Abuso de Autoridade, caso o(a) senhor(a) queira exercer o seu direito constitucional ao silêncio, esta comissão não lhe fará qualquer questionamento, de modo a não incidir no delito previsto no artigo 15, parágrafo único, inciso I, da Lei nº 13.869/2019.\n\nSabendo que o(a) senhor(a) está participando deste ato com o auxílio de advogado(a) regularmente constituído(a), e sem sofrer qualquer tipo de coação, pergunto-lhe se é do seu interesse responder às perguntas que lhe serão feitas? Pergunto ao(à) advogado(a), Dr(a). [advogado], se tem alguma objeção e se concorda que passemos para o interrogatório do(a) acusado(a) propriamente dito. Registro, por fim, que caso, diante de alguma pergunta ou de algum momento deste ato processual, o(a) senhor(a) queira fazer uso do direito ao silêncio, tal direito, obviamente, lhe será inteiramente garantido."
     }
   ],
 
@@ -3554,6 +3606,7 @@ function renderEtapa4(){
   html += "<div class=\"acoes-topo\">" +
     "<button type=\"button\" id=\"btn-imprimir-roteiro\">Imprimir roteiro</button>" +
     "<button type=\"button\" class=\"secundario\" id=\"btn-imprimir-cartao-mesa\">Imprimir Cartão de Mesa</button>" +
+    "<button type=\"button\" class=\"secundario\" id=\"btn-imprimir-cartao-papeis\">Imprimir Cartão de Papéis</button>" +
     "</div>";
   html += "</div>";
 
@@ -3622,6 +3675,11 @@ function ligarEventosEtapa4(container, d){
   document.getElementById("btn-imprimir-cartao-mesa").addEventListener("click", () => {
     // Impressão isolada: só o Cartão de Mesa, sem o roteiro antes.
     montarAreaImpressaoCartaoMesa();
+    prepararAreaImpressaoParaImpressao();
+    window.print();
+  });
+  document.getElementById("btn-imprimir-cartao-papeis").addEventListener("click", () => {
+    montarAreaImpressaoCartaoPapeis();
     prepararAreaImpressaoParaImpressao();
     window.print();
   });
@@ -3746,6 +3804,24 @@ function montarAreaImpressaoCartaoMesa(){
   document.getElementById("area-impressao").innerHTML = html;
 }
 
+// Orientações de Implementação (2026-07-09): Cartão de Papéis do Depoente — cabeçalho único de avisos
+// legais/LGPD (não repetido em cada caixa individual), uma caixa por hipótese de papel, retrato
+// (herda o @page global, sem orientação especial), paginando livremente se não couber em 1 página.
+function montarAreaImpressaoCartaoPapeis(){
+  const ctx = { processo: estado.processo.numero || "" };
+  let html = "";
+  html += htmlCabecalhoImpressao("Cartão de Papéis do Depoente", "Modelos de Abordagem — Ferramentas Coger · Oitiva 360");
+  html += "<div class=\"impresso-texto-fixo\">" + escapeHtml(mergeTexto(CATALOGO.textosModelo.avisos_lgpd, ctx)) + "</div>";
+  html += "<div class=\"cartao-papeis-grid\">";
+  CATALOGO.modelosAbordagemPapel.forEach(m => {
+    html += "<div class=\"cartao-papel-item\"><span class=\"nome-papel\">" + escapeHtml(m.titulo) + "</span>" +
+      "<div class=\"fala-modelo\">" + escapeHtml(m.falaModelo) + "</div></div>";
+  });
+  html += "</div>";
+  html += htmlRodapeImpressao("Uso interno · Consulta rápida durante o ato");
+  document.getElementById("area-impressao").innerHTML = html;
+}
+
 function montarAreaImpressaoTermo(d){
   const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
   let html = "";
@@ -3785,6 +3861,7 @@ function validarCatalogo(){
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 18)",
+    modelosAbordagemPapel: CATALOGO.modelosAbordagemPapel.length + " (esperado: 5)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
     perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
