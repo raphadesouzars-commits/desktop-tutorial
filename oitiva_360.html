@@ -6,11 +6,12 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.7.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.7.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
-  Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar)
+  Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar +
+  texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo)
   Data: 2026-07-09
 
   Changelog:
@@ -149,6 +150,14 @@
     aviso pedagógico) enquanto o campo estiver vazio, garantindo que o nome do arquivo .json
     exportado sempre traga o número real do processo, nunca o fallback "sem-numero"
     (`numeroProcessoPreenchido()`/`atualizarAvisoNumeroProcesso()`).
+  - 1.7.1 (ajustes solicitados pelo usuário, 2026-07-09): removido o texto de ajuda "Usado no merge
+    da abertura formal (âmbito de {{orgao_local}})" abaixo do campo "Órgão/lotação" (Dados do
+    Processo). Termo de Redução passa a incluir, ao final, uma tabela com os dados dos membros da
+    comissão em 3 colunas (Presidente / Vogal(is) / Secretário(a)), cada uma com Nome, Cargo e
+    Matrícula (`formatarColunasMembrosTermo()`) — texto simples com colunas alinhadas por
+    espaçamento (o termo continua um campo editável/copiável, fonte monoespaçada), com valores
+    truncados em 22 caracteres para não quebrar linha e desalinhar a tabela na impressão; múltiplos
+    vogais são unidos com "; " dentro da mesma coluna.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1433,7 +1442,6 @@
       </div>
       <div class="campo">
         <label for="campo-orgao-local">Órgão/lotação</label>
-        <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Usado no merge da abertura formal (âmbito de {{orgao_local}}).</div>
         <input type="text" id="campo-orgao-local" data-campo-processo="orgaoLocal">
       </div>
       <div class="campo">
@@ -1754,7 +1762,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.1</div>
 </footer>
 
 <script>
@@ -3474,6 +3482,43 @@ function renderRoteiroLeitura(d){
 // um título específico não previsto na fonte — e o parágrafo de qualificação é adaptado por papel
 // (compromisso / direito ao silêncio / colaboração voluntária sem compromisso), a partir da mesma
 // descricaoRegime já usada nas advertências do roteiro.
+// Tabela de membros da comissão para o final do Termo de Redução — 3 colunas (Presidente / Vogal(is) /
+// Secretário(a)), cada uma com Nome, Cargo e Matrícula empilhados. Formatação em texto simples com
+// colunas alinhadas por espaçamento (padEnd), já que o termo é um campo de texto editável/copiável
+// (fonte monoespaçada, JetBrains Mono, tanto na tela quanto na impressão).
+function formatarColunasMembrosTermo(d){
+  const pres = d.ato.comissao.presidente || {};
+  const sec = d.ato.comissao.secretario || {};
+  const vogaisPreenchidos = (d.ato.comissao.vogais || []).filter(v => v && v.nome && v.nome.trim());
+  const juntarVogais = (campo) => vogaisPreenchidos.length
+    ? vogaisPreenchidos.map(v => (v[campo] && v[campo].trim()) ? v[campo] : "—").join("; ")
+    : "—";
+
+  const colunas = [
+    { titulo: "Presidente", nome: pres.nome || "—", cargo: pres.cargo || "—", matricula: pres.matricula || "—" },
+    { titulo: "Vogal(is)", nome: juntarVogais("nome"), cargo: juntarVogais("cargo"), matricula: juntarVogais("matricula") },
+    { titulo: "Secretário(a)", nome: sec.nome || "—", cargo: sec.cargo || "—", matricula: sec.matricula || "—" }
+  ];
+
+  // Largura por coluna limitada a 28 caracteres (mais reticências se exceder), para as 3 colunas não
+  // ultrapassarem a largura útil da página impressa (fonte monoespaçada) e o texto não quebrar linha
+  // no meio de uma coluna, o que desalinharia a tabela.
+  const LARGURA_MAX_CONTEUDO = 22;
+  const truncar = (s) => s.length > LARGURA_MAX_CONTEUDO ? s.slice(0, LARGURA_MAX_CONTEUDO - 1) + "…" : s;
+  colunas.forEach(c => { c.nome = truncar(c.nome); c.cargo = truncar(c.cargo); c.matricula = truncar(c.matricula); });
+
+  const largura = Math.max(24, ...colunas.flatMap(c => [c.titulo, c.nome, c.cargo, "mat. " + c.matricula].map(s => s.length))) + 2;
+  const linha = (valores) => valores.map(v => v.padEnd(largura)).join("").replace(/\s+$/, "");
+
+  let tabela = "Membros da comissão:\n\n";
+  tabela += linha(colunas.map(c => c.titulo)) + "\n";
+  tabela += linha(colunas.map(() => "-".repeat(largura - 2))) + "\n";
+  tabela += linha(colunas.map(c => c.nome)) + "\n";
+  tabela += linha(colunas.map(c => c.cargo)) + "\n";
+  tabela += linha(colunas.map(c => "mat. " + c.matricula)) + "\n";
+  return tabela;
+}
+
 function gerarTermoTexto(d){
   const ctx = contextoMerge(d);
   const papelObj = CATALOGO.papeis.find(p => p.id === d.papel) || {};
@@ -3525,6 +3570,7 @@ function gerarTermoTexto(d){
   texto += "\n\nPassou-se à inquirição pela comissão:\n[transcrição das perguntas e respostas]";
   texto += "\n\nDada a palavra à defesa, [formulou as seguintes reperguntas | nada requereu].";
   texto += "\n\nNada mais havendo, encerrou-se o presente termo, que, lido e achado conforme, vai assinado por todos os presentes.";
+  texto += "\n\n" + formatarColunasMembrosTermo(d);
   return texto;
 }
 
