@@ -1328,6 +1328,7 @@ function viewProcesso() {
       '<div class="vdc-actions no-print">' +
         '<label class="rfb-btn rfb-btn--secondary rfb-btn--sm" style="cursor:pointer;">Importar<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarArquivo(event)"></label>' +
         '<button class="rfb-btn rfb-btn--secondary rfb-btn--sm" onclick="App.exportarDossie()">Exportar .json</button>' +
+        '<button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.abrirModal(\'reiniciar\', {})">Reiniciar</button>' +
       '</div>' +
     '</div><div class="rfb-card__body">' +
       '<div class="vdc-grid-3">' +
@@ -1680,6 +1681,7 @@ function renderModal() {
   if (!UI.modal) return "";
   if (UI.modal.tipo === "evento") return renderModalEvento();
   if (UI.modal.tipo === "importarChoice") return renderModalImportChoice();
+  if (UI.modal.tipo === "reiniciar") return renderModalReiniciar();
   return "";
 }
 var EVENTO_TIPO_OPTIONS = [
@@ -1743,6 +1745,22 @@ function renderModalImportChoice() {
     (UI.modal.hashDivergente ? '<div class="rfb-alert rfb-alert--danger"><div><div class="rfb-alert__title">Atenção</div><div class="rfb-alert__msg">O hashDoDossie do arquivo importado não confere com o conteúdo — possível indício de alteração externa do arquivo.</div></div></div>' : '') +
     '</div>' +
     '<div class="vdc-modal__foot"><button class="rfb-btn rfb-btn--secondary" onclick="App.fecharModal()">Cancelar</button><button class="rfb-btn rfb-btn--primary" onclick="App.confirmarImportacao()">Substituir e importar</button></div>' +
+  '</div></div>';
+}
+function renderModalReiniciar() {
+  var d = DB.dossie;
+  return '<div class="vdc-modal-overlay" onclick="if(event.target===this) App.fecharModal()"><div class="vdc-modal">' +
+    '<div class="vdc-modal__head"><span class="rfb-h3">Reiniciar dossiê</span><button class="vdc-close-btn" onclick="App.fecharModal()">&times;</button></div>' +
+    '<div class="vdc-modal__body">' +
+      '<p class="rfb-body">Este dossiê (' + escapeHtml(d.processo.numero || "sem número") + ') tem ' + d.itens.length + ' item(ns) e está salvo neste navegador — reabrir o navegador continuaria carregando-o automaticamente.</p>' +
+      '<p class="rfb-body">Reiniciar apaga o dossiê deste navegador (localStorage) e volta à tela inicial, para começar um novo ou importar outro. <strong>Exporte o .json antes, se ainda precisar destes dados.</strong></p>' +
+      '<div class="rfb-alert rfb-alert--warning"><div><div class="rfb-alert__msg">Esta ação não pode ser desfeita — o dossiê só será recuperável se você tiver exportado o .json antes.</div></div></div>' +
+    '</div>' +
+    '<div class="vdc-modal__foot">' +
+      '<button class="rfb-btn rfb-btn--secondary" onclick="App.fecharModal()">Cancelar</button>' +
+      '<button class="rfb-btn rfb-btn--secondary" onclick="App.exportarDossie()">Exportar .json antes</button>' +
+      '<button class="rfb-btn rfb-btn--danger" onclick="App.confirmarReiniciar()">Reiniciar mesmo assim</button>' +
+    '</div>' +
   '</div></div>';
 }
 
@@ -1891,6 +1909,14 @@ window.App = {
   confirmarImportacao: function () {
     var m = UI.modal;
     App._finalizarImportacao(m.parsed, m.hashDivergente);
+  },
+  confirmarReiniciar: function () {
+    localStorage.removeItem(STORAGE_KEY);
+    DB.dossie = null;
+    UI.modal = null;
+    UI.view = "inicio";
+    render();
+    toast("Dossiê apagado deste navegador. Comece um novo ou importe um .json.", "success");
   },
   _finalizarImportacao: function (parsed, hashDivergente) {
     DB.dossie = migrarDossie(parsed);
