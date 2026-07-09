@@ -6,9 +6,12 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.4.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 1.5.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
-  identificado e impressão do Termo de Redução)
+  identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
+  depoente, Kit de Incidentes com 18 itens em caixa, alinhamento justificado, categoria "Outras
+  Infrações". Pendente: Cartão de Papéis do Depoente — aguarda o documento-fonte com o texto
+  completo dos modelos A-E, ver nota no changelog abaixo)
   Data: 2026-07-09
 
   Changelog:
@@ -85,6 +88,42 @@
     fazia o diálogo de "processo já aberto" aparecer indevidamente em toda importação; e um
     bug de CSS análogo ao do stepper (Parte 1.2.0) em que `.grade-2{ display:grid }` sobrepunha
     o atributo `hidden` da caixa de identificação do defensor.
+  - 1.5.0 (Orientações de Implementação, 2026-07-09 — 5 mudanças solicitadas em bloco):
+    (1) Seletor "Papel do depoente" ampliado de 2 para 5 opções, na ordem Testemunha →
+    Declarante/Informante → Pessoa em Situação Indefinida → Vítima → Investigado/Acusado.
+    Cada papel novo tem descrição, advertência/orientação de abertura e alerta de nulidade
+    próprios (CATALOGO.papeis); o direito ao silêncio deixou de ser exclusividade do acusado
+    (papelTemDireitoSilencio()) e passa a se aplicar também à "Pessoa em Situação Indefinida",
+    que exige confirmação explícita de consulta prévia à defesa sobre o enquadramento antes de
+    prosseguir (novo item de checklist `chk_consulta_defesa_enquadramento`, com a fórmula
+    "Podemos proceder dessa forma? A Defesa teria alguma objeção?" incluída no roteiro gerado).
+    O banco de perguntas genéricas de apuração de fato (antes só testemunha/acusado) foi
+    estendido aos 3 papéis novos; perguntas de exame do dolo/intenção do próprio investigado
+    permanecem exclusivas do acusado. `gerarTermoTexto()` passa a ramificar por
+    compromisso/silêncio/colaboração voluntária conforme o papel, em vez do binário anterior.
+    Corrigida, de passagem, uma lacuna da Parte 2: o "texto de abertura específico do papel"
+    (`textoAbertura`/`orientacoes_testemunha`) existia no catálogo mas nunca era inserido no
+    roteiro gerado — agora é.
+    (2) Cartão de Papéis do Depoente (impressão): PENDENTE — depende do texto completo dos
+    "Modelos de Abordagem Conforme a Condição Jurídica" (itens A-E) do documento "7 Pontos
+    Essenciais para uma Oitiva Segura" (Fabian Maia/CGU), que não foi anexado a esta rodada;
+    apenas o CSS-base (`.cartao-papeis-grid`/`.cartao-papel-item`) foi preparado.
+    (3) Kit de Incidentes ampliado de 13 para 18 itens: `inc_diligencia` desmembrado (perícia
+    ganhou card próprio, `inc_pericia`) e 4 itens novos (`inc_perguntas_impertinentes`,
+    `inc_pedido_esclarecimento`, `inc_impugnacao_pergunta_comissao`, `inc_advogado_testemunha`
+    — este último reconstituído de fonte mista, sinalizado em comentário no código). Diagramação
+    convertida de lista corrida (borda só embaixo) para caixa própria por item, na tela
+    (`.incidente-item`) e na impressão (`.cartao-mesa-item`).
+    (4) Alinhamento de texto corrido trocado de left/right para justificado (`text-align:
+    justify`), em blocos de prosa na tela e na impressão (descrições de papéis, textos-modelo
+    fixos, fórmulas do kit de incidentes, perguntas do roteiro impresso, termo, avisos
+    legais/LGPD); títulos, rótulos e listas curtas não foram alterados. Nota: não foi encontrado
+    right-alignment pré-existente no CSS — o padrão anterior já era left/default; ainda assim,
+    aplicado o justificado solicitado.
+    (5) Nova categoria de conduta residual "Outras Infrações" (`inf_outras`) no seletor de
+    infração, sem dispositivo/pena próprios, com 12 perguntas genéricas (contexto funcional,
+    materialidade, autoria, dolo/culpa, art. 128) — nenhuma marcada como obrigatória, todas
+    editáveis/removíveis como qualquer pergunta do sistema.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -990,6 +1029,7 @@
     font-size:.82rem;
     color: var(--cor-primaria-escura);
     margin-top:8px;
+    text-align: justify;
   }
   .aviso-erro{
     background: var(--cor-erro-fundo);
@@ -1047,11 +1087,12 @@
   .papel-opcao:has(input:checked){ border-color: var(--cor-primaria); background:#F0F4F8; }
   .papel-opcao input{ width:auto; margin-top:3px; }
   .papel-opcao .papel-nome{ font-weight:600; color: var(--cor-primaria-escura); font-size:.88rem; }
-  .papel-opcao .papel-desc{ font-size:.78rem; color: var(--cor-texto-suave); margin-top:2px; }
-  .infracao-detalhe{ font-size:.78rem; color: var(--cor-texto-suave); background:#F0F4F8; border-radius: var(--raio); padding:8px 10px; margin-top:6px; }
+  .papel-opcao .papel-desc{ font-size:.78rem; color: var(--cor-texto-suave); margin-top:2px; text-align: justify; }
+  .infracao-detalhe{ font-size:.78rem; color: var(--cor-texto-suave); background:#F0F4F8; border-radius: var(--raio); padding:8px 10px; margin-top:6px; text-align: justify; }
   .aviso-lgpd{
     background:#F0F4F8; border:1px solid var(--cor-borda); border-radius: var(--raio);
     padding:8px 10px; font-size:.78rem; color: var(--cor-primaria-escura); margin-bottom:8px;
+    text-align: justify;
   }
 
   /* ---- Etapa 3: Montagem do Roteiro ---- */
@@ -1062,6 +1103,7 @@
   .cartao-texto-fixo{
     background:#FAFAF5; border:1px dashed var(--cor-destaque); border-radius: var(--raio);
     padding:10px 12px; margin-bottom:8px; white-space:pre-wrap; font-size:.85rem;
+    text-align: justify;
   }
   .cartao-texto-fixo .cabecalho-fixo{ display:flex; justify-content:space-between; font-size:.7rem; color:var(--cor-texto-suave); margin-bottom:4px; }
   .lista-checklist-info{ font-size:.85rem; margin:0; padding-left:20px; }
@@ -1092,11 +1134,11 @@
   .callout-controversia{ border:2px solid var(--cor-destaque); background:#FFFBEA; }
   .callout-controversia summary{ cursor:pointer; font-weight:700; color:#7A5B00; font-size:.9rem; list-style:none; }
   .callout-controversia summary::-webkit-details-marker{ display:none; }
-  .callout-controversia > div{ margin-top:8px; font-size:.85rem; color:#5c4400; white-space:pre-wrap; }
+  .callout-controversia > div{ margin-top:8px; font-size:.85rem; color:#5c4400; white-space:pre-wrap; text-align: justify; }
 
   .alerta-silencio{
     background: var(--cor-erro-fundo); border:2px solid var(--cor-erro); border-radius: var(--raio);
-    padding:14px 16px; font-weight:600; color: var(--cor-erro); margin:14px 0;
+    padding:14px 16px; font-weight:600; color: var(--cor-erro); margin:14px 0; text-align: justify;
   }
   .escolha-simples{ display:flex; gap:16px; font-size:.85rem; margin-top:8px; }
   .escolha-simples label{ display:flex; align-items:center; gap:6px; font-weight:400; }
@@ -1110,7 +1152,7 @@
 
   .aviso-conteudo-pendente{
     border:1px dashed var(--cor-erro); background:#FFF7F7; color:#7A2020; border-radius: var(--raio);
-    padding:8px 10px; font-size:.8rem; margin-bottom:8px;
+    padding:8px 10px; font-size:.8rem; margin-bottom:8px; text-align: justify;
   }
 
   /* ---- Painel lateral: Dicas (sempre visível/expandida) + Kit de Incidentes ---- */
@@ -1121,14 +1163,20 @@
     border-left:3px solid var(--cor-destaque); border-radius:4px;
     padding:8px 10px; font-size:.8rem; margin-bottom:8px; color: var(--cor-primaria-escura);
   }
+  .dica-fixa > div{ text-align: justify; }
   .dica-fixa:last-child{ margin-bottom:0; }
   .dica-fixa .dica-icone{ flex-shrink:0; }
   .incidente-grupo{ margin-bottom:6px; }
   .incidente-grupo > summary{ cursor:pointer; font-weight:600; font-size:.82rem; color: var(--cor-primaria-escura); padding:4px 0; }
-  .incidente-item{ font-size:.78rem; margin: 6px 0 10px 4px; padding-left:8px; border-left:2px solid var(--cor-borda); }
+  /* Orientações de Implementação (2026-07-09): caixa própria por item (antes: borda só à esquerda,
+     visual de lista corrida). */
+  .incidente-item{
+    font-size:.78rem; margin: 8px 0; padding:8px 10px;
+    border:1px solid var(--cor-borda); border-radius:6px; background: var(--cor-fundo-alt, #F7F9FB);
+  }
   .incidente-item .situacao{ font-weight:600; color: var(--cor-primaria-escura); }
   .incidente-item .seq{ margin:4px 0 4px 16px; padding-left:14px; }
-  .incidente-item .formula{ font-style:italic; color: var(--cor-texto-suave); }
+  .incidente-item .formula{ font-style:italic; color: var(--cor-texto-suave); text-align: justify; }
   @media (max-width: 900px){
     .layout-app{ flex-direction:column; }
     aside#painel-lateral{ width:100%; }
@@ -1161,12 +1209,12 @@
   .item-checklist input{ width:auto; margin-top:3px; }
   .alerta-nulidade{
     background: var(--cor-erro-fundo); border:2px solid var(--cor-erro); border-radius: var(--raio);
-    padding:12px 14px; color: var(--cor-erro); font-size:.85rem;
+    padding:12px 14px; color: var(--cor-erro); font-size:.85rem; text-align: justify;
   }
-  .alerta-nulidade ul{ margin:6px 0 0 18px; padding:0; }
+  .alerta-nulidade ul{ margin:6px 0 0 18px; padding:0; text-align: left; }
   .aviso-ok{
     background:#E8F5E9; border:1px solid var(--cor-sucesso); color:#1B5E20; border-radius: var(--raio);
-    padding:10px 12px; font-size:.85rem;
+    padding:10px 12px; font-size:.85rem; text-align: justify;
   }
   #termo-texto{ min-height:260px; font-family: var(--rfb-font-mono); font-size:.8rem; white-space:pre-wrap; }
   .status-toggle{ display:flex; align-items:center; gap:8px; font-size:.85rem; margin-top:8px; }
@@ -1197,24 +1245,40 @@
   #area-impressao h3.impresso-secao::before{ content:""; display:inline-block; width:4px; height:14px; background: var(--rfb-gold-500); border-radius:1px; }
   #area-impressao .impresso-texto-fixo{
     white-space:pre-wrap; background: var(--rfb-navy-50); border-left:3px solid var(--rfb-navy-600); border-radius:4px;
-    padding:10px 12px; margin-bottom:10px; font-size:9.5pt; color: var(--rfb-text);
+    padding:10px 12px; margin-bottom:10px; font-size:9.5pt; color: var(--rfb-text); text-align: justify;
   }
   #area-impressao .impresso-pergunta{ display:flex; gap:10px; margin-bottom:12px; page-break-inside:avoid; }
   #area-impressao .impresso-pergunta .num{ font-weight:700; width:20px; flex-shrink:0; color: var(--rfb-navy-800); }
-  #area-impressao .impresso-pergunta .texto{ flex:2; font-size:10pt; }
+  #area-impressao .impresso-pergunta .texto{ flex:2; font-size:10pt; text-align: justify; }
   #area-impressao .impresso-pergunta .finalidade{ font-size:7.5pt; text-transform:uppercase; letter-spacing:.4px; color: var(--rfb-text-muted); margin-top:2px; }
   #area-impressao .impresso-pergunta .notas{ flex:1; border-left:1px dashed var(--rfb-navy-100); padding-left:10px; min-height:36px; color: var(--rfb-text-faint); font-size:8pt; }
   #area-impressao .impresso-alerta{
     background: var(--rfb-warning-bg); border-left:4px solid var(--rfb-gold-600); border-radius:4px; padding:12px 14px;
-    margin:14px 0; font-size:9.5pt; color:#6B5B10; font-weight:600; page-break-inside:avoid;
+    margin:14px 0; font-size:9.5pt; color:#6B5B10; font-weight:600; page-break-inside:avoid; text-align: justify;
   }
   #area-impressao .impresso-rodape{ margin-top:28px; border-top:1px solid var(--rfb-navy-100); padding-top:10px; }
   #area-impressao .impresso-rodape .disclaimer{ font-size:8pt; color: var(--rfb-text-muted); text-align:justify; margin-bottom:8px; }
   #area-impressao .impresso-rodape .linha-final{ display:flex; justify-content:space-between; gap:12px; font-size:7.5pt; color: var(--rfb-text-faint); text-transform:uppercase; letter-spacing:.3px; }
-  #area-impressao .cartao-mesa-grid{ column-count:2; column-gap:22px; font-size:8.5pt; margin-top:8px; }
-  #area-impressao .cartao-mesa-item{ break-inside:avoid; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--rfb-navy-50); }
-  #area-impressao .cartao-mesa-item .situacao{ font-weight:700; color: var(--rfb-navy-800); display:block; margin-bottom:2px; }
-  #area-impressao .impresso-termo{ white-space:pre-wrap; font-family: var(--rfb-font-mono); font-size:9.5pt; line-height:1.7; margin-top:14px; }
+  #area-impressao .cartao-mesa-grid{ column-count:2; column-gap:16px; font-size:8.5pt; margin-top:8px; }
+  /* Orientações de Implementação (2026-07-09): itens do Kit de Incidentes e do Cartão de Papéis do
+     Depoente deixam de ser lista corrida (borda só embaixo) e passam a caixa própria por item. */
+  #area-impressao .cartao-mesa-item{
+    break-inside:avoid; margin-bottom:12px; padding:10px 12px;
+    border:1px solid var(--rfb-navy-100); border-radius:6px; background: var(--rfb-navy-50);
+    text-align: justify;
+  }
+  #area-impressao .cartao-mesa-item .situacao{ font-weight:700; color: var(--rfb-navy-800); display:block; margin-bottom:4px; }
+  #area-impressao .cartao-papeis-grid{ margin-top:8px; }
+  #area-impressao .cartao-papel-item{
+    break-inside:avoid; page-break-inside:avoid; margin-bottom:14px; padding:12px 16px;
+    border:1px solid var(--rfb-navy-100); border-radius:6px; background: var(--rfb-navy-50);
+  }
+  #area-impressao .cartao-papel-item .nome-papel{
+    font-family: var(--rfb-font-display); font-weight:700; font-size:11pt; color: var(--rfb-navy-800);
+    display:block; margin-bottom:6px; text-transform:uppercase; letter-spacing:.3px;
+  }
+  #area-impressao .cartao-papel-item .fala-modelo{ white-space:pre-wrap; text-align: justify; }
+  #area-impressao .impresso-termo{ white-space:pre-wrap; font-family: var(--rfb-font-mono); font-size:9.5pt; line-height:1.7; margin-top:14px; text-align: justify; }
 </style>
 </head>
 <body>
@@ -1674,7 +1738,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.4.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.5.0</div>
 </footer>
 
 <script>
@@ -1702,11 +1766,49 @@ const CATALOGO = {
       requisitos: [],
       alertasNulidade: ["omissao_compromisso", "omissao_qualificacao"]
     },
+    // Orientações de Implementação (2026-07-09): 3 papéis novos, entre Testemunha e Acusado.
+    // descricaoRegime reproduz o texto do documento; adv_* e orientacoes_* (textosModelo) são
+    // adaptações em forma de fala direta ao depoente, no mesmo padrão de adv_testemunha/adv_acusado.
+    {
+      id: "declarante_informante",
+      nome: "Declarante/Informante",
+      descricaoRegime: "Não presta compromisso legal de dizer a verdade. Ouvido em razão de vínculo com o investigado ou de participação anterior no contexto apurado. Não responde por falso testemunho, mas apela-se à sua colaboração voluntária com a apuração.",
+      compromisso: false,
+      advertencias: ["adv_declarante"],
+      perguntasPraxe: [],
+      textoAbertura: "orientacoes_declarante",
+      requisitos: [],
+      alertasNulidade: ["omissao_advertencia_declarante"]
+    },
+    {
+      id: "situacao_indefinida",
+      nome: "Pessoa em Situação Indefinida",
+      descricaoRegime: "Autos indicam possível envolvimento da pessoa no contexto fático, sem elementos ainda para tratá-la como investigada. Não presta compromisso de testemunha e tem facultado o direito ao silêncio, por cautela e analogia à vedação à autoincriminação. Exige consulta prévia à defesa sobre o enquadramento adotado.",
+      compromisso: false,
+      direitoSilencio: true,
+      advertencias: ["adv_situacao_indefinida"],
+      perguntasPraxe: [],
+      textoAbertura: null,
+      requisitos: ["consulta_previa_defesa_enquadramento"],
+      alertasNulidade: ["omissao_consulta_defesa_enquadramento", "omissao_silencio_situacao_indefinida"]
+    },
+    {
+      id: "vitima",
+      nome: "Vítima",
+      descricaoRegime: "Não é testemunha e não presta compromisso legal de dizer a verdade, não respondendo por falso testemunho — mas sujeita-se à denunciação caluniosa. Documentação própria: Termo de Depoimento, Termo de Declarações ou Alegações do Ofendido, conforme o caso.",
+      compromisso: false,
+      advertencias: ["adv_vitima"],
+      perguntasPraxe: [],
+      textoAbertura: "orientacoes_vitima",
+      requisitos: [],
+      alertasNulidade: ["omissao_advertencia_vitima"]
+    },
     {
       id: "acusado",
       nome: "Investigado/Acusado",
       descricaoRegime: "Não presta compromisso. Tem direito constitucional ao silêncio, com advertência da Lei 13.869/2019 (art. 15, parágrafo único, I): se exercido o silêncio, a comissão não formula questionamentos. Defensor facultativo (Súmula Vinculante nº 5/STF). O interrogatório deve ser o último ato da instrução (art. 159), com antecedência mínima de 3 dias úteis na intimação.",
       compromisso: false,
+      direitoSilencio: true,
       advertencias: ["adv_acusado"],
       perguntasPraxe: [],
       textoAbertura: null,
@@ -1741,116 +1843,121 @@ const CATALOGO = {
   ],
 
   // ---- Banco de perguntas: gerais (aplicáveis a qualquer infração) + específicas por infração ----
+  // Orientações de Implementação (2026-07-09): as perguntas de apuração de fato (papeis: testemunha +
+  // acusado) foram estendidas aos 3 papéis novos (declarante_informante, situacao_indefinida, vitima),
+  // por serem perguntas genéricas de apuração aplicáveis a qualquer pessoa ouvida sobre os fatos.
+  // Perguntas restritas a um único papel (ex.: subjetivo/dolo — só "acusado") não foram alteradas,
+  // por serem específicas do exame de intenção do próprio investigado.
   perguntas: [
     // Bloco: Contexto funcional
-    { id: "q_ger_ctx_001", bloco: "contexto_funcional", texto: "Qual o seu cargo, sua lotação e suas principais atribuições atualmente? E à época dos fatos?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_ctx_002", bloco: "contexto_funcional", texto: "Descreva a rotina de trabalho do setor à época dos fatos: horários, divisão de tarefas, sistemas utilizados e forma de supervisão.", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_ctx_001", bloco: "contexto_funcional", texto: "Qual o seu cargo, sua lotação e suas principais atribuições atualmente? E à época dos fatos?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_ctx_002", bloco: "contexto_funcional", texto: "Descreva a rotina de trabalho do setor à época dos fatos: horários, divisão de tarefas, sistemas utilizados e forma de supervisão.", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
     { id: "q_ger_ctx_003", bloco: "contexto_funcional", texto: "Qual era a sua relação funcional com o(a) acusado(a): colega de equipe, chefia, subordinação? Há quanto tempo trabalhavam juntos?", finalidade: "contexto", papeis: ["testemunha"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_ctx_004", bloco: "contexto_funcional", texto: "Quem era a chefia imediata do setor à época e como se dava o acompanhamento das atividades?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_ctx_005", bloco: "contexto_funcional", texto: "Havia normas internas, ordens de serviço ou orientações específicas regulando a atividade relacionada aos fatos? Como eram divulgadas à equipe?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_ctx_004", bloco: "contexto_funcional", texto: "Quem era a chefia imediata do setor à época e como se dava o acompanhamento das atividades?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_ctx_005", bloco: "contexto_funcional", texto: "Havia normas internas, ordens de serviço ou orientações específicas regulando a atividade relacionada aos fatos? Como eram divulgadas à equipe?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // Bloco: Materialidade (geral)
-    { id: "q_ger_mat_001", bloco: "materialidade", texto: "Descreva, com o máximo de detalhes, o que o(a) senhor(a) presenciou ou tem conhecimento a respeito dos fatos apurados: o que ocorreu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_mat_002", bloco: "materialidade", texto: "Como o(a) senhor(a) tomou conhecimento desses fatos: presenciou diretamente, ouviu de alguém ou teve acesso a documentos? De quem ou de quê, especificamente?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_mat_003", bloco: "materialidade", texto: "Existem documentos, registros em sistema, mensagens ou outros elementos que confirmem o que o(a) senhor(a) relatou? Onde podem ser localizados?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_mat_004", bloco: "materialidade", texto: "O fato relatado ocorreu uma única vez ou se repetiu? Em caso de repetição, com que frequência e em que período?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_mat_005", bloco: "materialidade", texto: "Outras pessoas presenciaram os fatos ou têm conhecimento deles? Quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_mat_001", bloco: "materialidade", texto: "Descreva, com o máximo de detalhes, o que o(a) senhor(a) presenciou ou tem conhecimento a respeito dos fatos apurados: o que ocorreu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_mat_002", bloco: "materialidade", texto: "Como o(a) senhor(a) tomou conhecimento desses fatos: presenciou diretamente, ouviu de alguém ou teve acesso a documentos? De quem ou de quê, especificamente?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_mat_003", bloco: "materialidade", texto: "Existem documentos, registros em sistema, mensagens ou outros elementos que confirmem o que o(a) senhor(a) relatou? Onde podem ser localizados?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_mat_004", bloco: "materialidade", texto: "O fato relatado ocorreu uma única vez ou se repetiu? Em caso de repetição, com que frequência e em que período?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_mat_005", bloco: "materialidade", texto: "Outras pessoas presenciaram os fatos ou têm conhecimento deles? Quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // Bloco: Autoria e participação
-    { id: "q_ger_aut_001", bloco: "autoria_participacao", texto: "Quem praticou a conduta que o(a) senhor(a) descreveu? Como pode afirmar isso?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_aut_002", bloco: "autoria_participacao", texto: "Havia outras pessoas envolvidas, por ação, ordem, orientação ou ciência? Descreva a participação de cada uma.", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_aut_003", bloco: "autoria_participacao", texto: "A conduta foi praticada por iniciativa própria ou decorreu de determinação de alguém? De quem?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_aut_004", bloco: "autoria_participacao", texto: "Alguém da chefia ou da equipe tinha conhecimento dos fatos à época? Houve alguma providência?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_aut_005", bloco: "autoria_participacao", texto: "É possível que outra pessoa tivesse acesso aos meios utilizados (senha, sistema, documento, local)? Explique.", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_aut_001", bloco: "autoria_participacao", texto: "Quem praticou a conduta que o(a) senhor(a) descreveu? Como pode afirmar isso?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_aut_002", bloco: "autoria_participacao", texto: "Havia outras pessoas envolvidas, por ação, ordem, orientação ou ciência? Descreva a participação de cada uma.", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_aut_003", bloco: "autoria_participacao", texto: "A conduta foi praticada por iniciativa própria ou decorreu de determinação de alguém? De quem?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_aut_004", bloco: "autoria_participacao", texto: "Alguém da chefia ou da equipe tinha conhecimento dos fatos à época? Houve alguma providência?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_aut_005", bloco: "autoria_participacao", texto: "É possível que outra pessoa tivesse acesso aos meios utilizados (senha, sistema, documento, local)? Explique.", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // Bloco: Elemento subjetivo (geral)
-    { id: "q_ger_sub_001", bloco: "elemento_subjetivo", texto: "Na sua percepção, o(a) acusado(a) tinha conhecimento de que a conduta era irregular? O que sustenta essa percepção?", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_sub_002", bloco: "elemento_subjetivo", texto: "Houve alguma advertência, orientação ou alerta prévio ao(à) acusado(a) sobre a irregularidade da conduta? Por quem e de que forma?", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_sub_003", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) identifica alguma justificativa, dificuldade ou circunstância que possa explicar a conduta (sobrecarga, falha de sistema, desconhecimento, problema pessoal)?", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_sub_001", bloco: "elemento_subjetivo", texto: "Na sua percepção, o(a) acusado(a) tinha conhecimento de que a conduta era irregular? O que sustenta essa percepção?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_sub_002", bloco: "elemento_subjetivo", texto: "Houve alguma advertência, orientação ou alerta prévio ao(à) acusado(a) sobre a irregularidade da conduta? Por quem e de que forma?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_sub_003", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) identifica alguma justificativa, dificuldade ou circunstância que possa explicar a conduta (sobrecarga, falha de sistema, desconhecimento, problema pessoal)?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
     { id: "q_ger_sub_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) conhecia as normas que regem essa atividade? Recebeu treinamento ou orientação sobre elas?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["todas"], modulo: "nucleo" },
     { id: "q_ger_sub_005", bloco: "elemento_subjetivo", texto: "Qual foi a sua intenção ao agir dessa forma? O que o(a) levou a proceder assim?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["todas"], modulo: "nucleo" },
 
     // Bloco: Circunstâncias do art. 128
-    { id: "q_ger_circ_001", bloco: "circunstancias_art128", texto: "Que consequências os fatos produziram para o serviço, para o Erário, para contribuintes ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_circ_002", bloco: "circunstancias_art128", texto: "Houve alguma providência posterior para corrigir, reparar ou comunicar o ocorrido? Por iniciativa de quem?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_circ_003", bloco: "circunstancias_art128", texto: "Como o(a) senhor(a) descreveria a atuação profissional do(a) acusado(a) de modo geral, antes desses fatos?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_circ_001", bloco: "circunstancias_art128", texto: "Que consequências os fatos produziram para o serviço, para o Erário, para contribuintes ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_circ_002", bloco: "circunstancias_art128", texto: "Houve alguma providência posterior para corrigir, reparar ou comunicar o ocorrido? Por iniciativa de quem?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_circ_003", bloco: "circunstancias_art128", texto: "Como o(a) senhor(a) descreveria a atuação profissional do(a) acusado(a) de modo geral, antes desses fatos?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
     { id: "q_ger_circ_004", bloco: "circunstancias_art128", texto: "O(a) senhor(a) já respondeu a algum procedimento disciplinar anterior? Já recebeu elogios ou reconhecimentos funcionais?", finalidade: "circunstancia", papeis: ["acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_circ_005", bloco: "circunstancias_art128", texto: "Os fatos tiveram repercussão no ambiente de trabalho ou na imagem da instituição? De que forma?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_circ_005", bloco: "circunstancias_art128", texto: "Os fatos tiveram repercussão no ambiente de trabalho ou na imagem da instituição? De que forma?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // Bloco: Fechamento
-    { id: "q_ger_fec_001", bloco: "fechamento", texto: "Há algo que o(a) senhor(a) considere relevante e que não tenha sido perguntado?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_fec_002", bloco: "fechamento", texto: "Tem conhecimento de outras pessoas que possam esclarecer os fatos?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
-    { id: "q_ger_fec_003", bloco: "fechamento", texto: "Existem documentos ou registros que o(a) senhor(a) sugere que a comissão examine?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_fec_001", bloco: "fechamento", texto: "Há algo que o(a) senhor(a) considere relevante e que não tenha sido perguntado?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_fec_002", bloco: "fechamento", texto: "Tem conhecimento de outras pessoas que possam esclarecer os fatos?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
+    { id: "q_ger_fec_003", bloco: "fechamento", texto: "Existem documentos ou registros que o(a) senhor(a) sugere que a comissão examine?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // ---- Específicas: Desídia (inf_desidia) ----
-    { id: "q_inf_desidia_001", bloco: "materialidade", texto: "Quais tarefas ou processos deixaram de ser executados, foram executados com atraso ou apresentaram falhas? Cite exemplos concretos, com períodos.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_002", bloco: "materialidade", texto: "Existem registros de cobranças, notificações de pendências ou relatórios de produtividade relativos ao(à) acusado(a)? Onde?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_003", bloco: "materialidade", texto: "Como era a distribuição de trabalho no setor? A carga do(a) acusado(a) era compatível com a dos demais?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_004", bloco: "elemento_subjetivo", texto: "O(a) acusado(a) foi alertado(a) ou orientado(a) sobre as pendências? Como reagiu?", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
+    { id: "q_inf_desidia_001", bloco: "materialidade", texto: "Quais tarefas ou processos deixaram de ser executados, foram executados com atraso ou apresentaram falhas? Cite exemplos concretos, com períodos.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
+    { id: "q_inf_desidia_002", bloco: "materialidade", texto: "Existem registros de cobranças, notificações de pendências ou relatórios de produtividade relativos ao(à) acusado(a)? Onde?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
+    { id: "q_inf_desidia_003", bloco: "materialidade", texto: "Como era a distribuição de trabalho no setor? A carga do(a) acusado(a) era compatível com a dos demais?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
+    { id: "q_inf_desidia_004", bloco: "elemento_subjetivo", texto: "O(a) acusado(a) foi alertado(a) ou orientado(a) sobre as pendências? Como reagiu?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
     { id: "q_inf_desidia_005", bloco: "elemento_subjetivo", texto: "A que o(a) senhor(a) atribui as pendências apontadas: volume de trabalho, problemas de saúde, falta de treinamento, outra razão?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
 
     // ---- Específicas: Abandono de cargo (inf_abandono) ----
-    { id: "q_inf_abandono_001", bloco: "materialidade", texto: "Qual o período exato da ausência? Como foi registrado (folha de frequência, sistema de ponto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_002", bloco: "materialidade", texto: "A administração tentou contato com o(a) servidor(a) durante a ausência? Por quais meios e com que resultado?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_003", bloco: "elemento_subjetivo", texto: "O(a) servidor(a) apresentou, em algum momento, justificativa, atestado ou comunicação sobre a ausência?", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
+    { id: "q_inf_abandono_001", bloco: "materialidade", texto: "Qual o período exato da ausência? Como foi registrado (folha de frequência, sistema de ponto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
+    { id: "q_inf_abandono_002", bloco: "materialidade", texto: "A administração tentou contato com o(a) servidor(a) durante a ausência? Por quais meios e com que resultado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
+    { id: "q_inf_abandono_003", bloco: "elemento_subjetivo", texto: "O(a) servidor(a) apresentou, em algum momento, justificativa, atestado ou comunicação sobre a ausência?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
     { id: "q_inf_abandono_004", bloco: "elemento_subjetivo", texto: "Por que o(a) senhor(a) deixou de comparecer ao serviço nesse período? Houve tentativa de comunicar a situação à chefia?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_005", bloco: "circunstancias_art128", texto: "Há notícia de fato grave na vida pessoal do(a) servidor(a) no período (doença, problema familiar) que possa explicar a ausência?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
+    { id: "q_inf_abandono_005", bloco: "circunstancias_art128", texto: "Há notícia de fato grave na vida pessoal do(a) servidor(a) no período (doença, problema familiar) que possa explicar a ausência?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
 
     // ---- Específicas: Inassiduidade habitual (inf_inassiduidade) ----
-    { id: "q_inf_inassiduidade_001", bloco: "materialidade", texto: "Como era realizado o controle de frequência no setor? Havia possibilidade de compensação ou banco de horas?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_002", bloco: "materialidade", texto: "As faltas registradas foram comunicadas ao(à) servidor(a)? Houve manifestação dele(a)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_001", bloco: "materialidade", texto: "Como era realizado o controle de frequência no setor? Havia possibilidade de compensação ou banco de horas?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_002", bloco: "materialidade", texto: "As faltas registradas foram comunicadas ao(à) servidor(a)? Houve manifestação dele(a)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
     { id: "q_inf_inassiduidade_003", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) reconhece os registros de faltas apresentados? Deseja justificar algum dos períodos?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
     { id: "q_inf_inassiduidade_004", bloco: "elemento_subjetivo", texto: "Havia alguma situação de saúde, familiar ou funcional que impedisse o comparecimento regular? Foi comunicada e documentada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_005", bloco: "circunstancias_art128", texto: "As ausências causaram prejuízo mensurável ao serviço ou sobrecarga aos colegas? Descreva.", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_005", bloco: "circunstancias_art128", texto: "As ausências causaram prejuízo mensurável ao serviço ou sobrecarga aos colegas? Descreva.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
 
     // ---- Específicas: Valer-se do cargo para proveito pessoal (inf_proveito) ----
-    { id: "q_inf_proveito_001", bloco: "materialidade", texto: "Descreva a situação em que o cargo teria sido utilizado: qual ato, sistema, informação ou influência foi empregado e em benefício de quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_002", bloco: "materialidade", texto: "Havia motivação funcional legítima para o ato praticado (processo distribuído, ordem de serviço, atendimento formal)? Como isso pode ser verificado?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_003", bloco: "autoria_participacao", texto: "Quem detinha o acesso ou a competência utilizada? Outras pessoas poderiam ter praticado o ato com as mesmas credenciais?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
+    { id: "q_inf_proveito_001", bloco: "materialidade", texto: "Descreva a situação em que o cargo teria sido utilizado: qual ato, sistema, informação ou influência foi empregado e em benefício de quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
+    { id: "q_inf_proveito_002", bloco: "materialidade", texto: "Havia motivação funcional legítima para o ato praticado (processo distribuído, ordem de serviço, atendimento formal)? Como isso pode ser verificado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
+    { id: "q_inf_proveito_003", bloco: "autoria_participacao", texto: "Quem detinha o acesso ou a competência utilizada? Outras pessoas poderiam ter praticado o ato com as mesmas credenciais?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
     { id: "q_inf_proveito_004", bloco: "elemento_subjetivo", texto: "Qual a razão funcional da consulta/ato apontado? Havia demanda formal que o justificasse?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_005", bloco: "circunstancias_art128", texto: "Qual benefício foi obtido ou buscado, e qual o prejuízo, ainda que potencial, para a administração ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
+    { id: "q_inf_proveito_005", bloco: "circunstancias_art128", texto: "Qual benefício foi obtido ou buscado, e qual o prejuízo, ainda que potencial, para a administração ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
 
     // ---- Específicas: Recebimento de propina, comissão ou vantagem (inf_vantagem) ----
-    { id: "q_inf_vantagem_001", bloco: "materialidade", texto: "Descreva o que presenciou ou soube sobre oferta, promessa ou entrega de valores, presentes ou favores: quem ofereceu, quem recebeu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_002", bloco: "materialidade", texto: "Havia procedimento fiscal, aduaneiro ou administrativo de interesse da pessoa que teria oferecido a vantagem? Qual, e em que fase estava?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_003", bloco: "autoria_participacao", texto: "Houve intermediários na negociação ou na entrega? Quem?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_004", bloco: "elemento_subjetivo", texto: "Houve menção, explícita ou velada, a contrapartida funcional (acelerar, retardar, arquivar, não autuar)? Relate as palavras utilizadas, tanto quanto se recorde.", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_005", bloco: "circunstancias_art128", texto: "O(a) senhor(a) notou mudança no padrão de vida ou no comportamento funcional do(a) acusado(a) no período? Descreva objetivamente.", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_001", bloco: "materialidade", texto: "Descreva o que presenciou ou soube sobre oferta, promessa ou entrega de valores, presentes ou favores: quem ofereceu, quem recebeu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_002", bloco: "materialidade", texto: "Havia procedimento fiscal, aduaneiro ou administrativo de interesse da pessoa que teria oferecido a vantagem? Qual, e em que fase estava?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_003", bloco: "autoria_participacao", texto: "Houve intermediários na negociação ou na entrega? Quem?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_004", bloco: "elemento_subjetivo", texto: "Houve menção, explícita ou velada, a contrapartida funcional (acelerar, retardar, arquivar, não autuar)? Relate as palavras utilizadas, tanto quanto se recorde.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_005", bloco: "circunstancias_art128", texto: "O(a) senhor(a) notou mudança no padrão de vida ou no comportamento funcional do(a) acusado(a) no período? Descreva objetivamente.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
 
     // ---- Específicas: Gerência ou administração de sociedade privada (inf_gerencia) ----
-    { id: "q_inf_gerencia_001", bloco: "materialidade", texto: "Que atividades o(a) servidor(a) desempenhava na empresa: assinava documentos, contratava, atendia clientes, geria pagamentos? Com que frequência?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_002", bloco: "materialidade", texto: "Quem, de fato, administrava o negócio no dia a dia? Como o(a) senhor(a) sabe disso?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_003", bloco: "materialidade", texto: "A atuação na empresa ocorria durante o horário de expediente do cargo público? Como isso era perceptível?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_001", bloco: "materialidade", texto: "Que atividades o(a) servidor(a) desempenhava na empresa: assinava documentos, contratava, atendia clientes, geria pagamentos? Com que frequência?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_002", bloco: "materialidade", texto: "Quem, de fato, administrava o negócio no dia a dia? Como o(a) senhor(a) sabe disso?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_003", bloco: "materialidade", texto: "A atuação na empresa ocorria durante o horário de expediente do cargo público? Como isso era perceptível?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
     { id: "q_inf_gerencia_004", bloco: "elemento_subjetivo", texto: "Qual a sua participação formal e de fato na sociedade? O(a) senhor(a) pratica ou praticou atos de gestão? Quais?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_005", bloco: "circunstancias_art128", texto: "A atividade empresarial tinha alguma relação com as atribuições do cargo ou com contribuintes sob jurisdição da unidade? Qual?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_005", bloco: "circunstancias_art128", texto: "A atividade empresarial tinha alguma relação com as atribuições do cargo ou com contribuintes sob jurisdição da unidade? Qual?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
 
     // ---- Específicas: Violação de sigilo fiscal (inf_sigilo) ----
-    { id: "q_inf_sigilo_001", bloco: "materialidade", texto: "Que informação protegida foi acessada ou revelada? A quem ela se referia e a quem teria sido repassada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_002", bloco: "materialidade", texto: "Como o(a) senhor(a) soube que a informação chegou a terceiro? Há registro (mensagem, documento, testemunho direto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_003", bloco: "materialidade", texto: "Havia procedimento formal (processo, ordem de serviço, demanda de atendimento) que justificasse a consulta aos dados do contribuinte? Como verificar?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_001", bloco: "materialidade", texto: "Que informação protegida foi acessada ou revelada? A quem ela se referia e a quem teria sido repassada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_002", bloco: "materialidade", texto: "Como o(a) senhor(a) soube que a informação chegou a terceiro? Há registro (mensagem, documento, testemunho direto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_003", bloco: "materialidade", texto: "Havia procedimento formal (processo, ordem de serviço, demanda de atendimento) que justificasse a consulta aos dados do contribuinte? Como verificar?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
     { id: "q_inf_sigilo_004", bloco: "elemento_subjetivo", texto: "Qual a motivação funcional das consultas apontadas nos logs? O(a) senhor(a) conhecia a vedação de acesso sem motivação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_005", bloco: "circunstancias_art128", texto: "Que consequência a revelação produziu para o contribuinte titular dos dados ou para procedimento fiscal em curso?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_005", bloco: "circunstancias_art128", texto: "Que consequência a revelação produziu para o contribuinte titular dos dados ou para procedimento fiscal em curso?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
 
     // ---- Específicas: Atividades incompatíveis (inf_incompativel) ----
-    { id: "q_inf_incompativel_001", bloco: "materialidade", texto: "Que atividade paralela o(a) servidor(a) exercia? Descreva natureza, local, frequência e horários.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_002", bloco: "materialidade", texto: "A atividade coincidia com o horário de expediente? Como isso era perceptível (ausências, indisponibilidade, atendimentos externos)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_003", bloco: "materialidade", texto: "Houve prejuízo identificável ao serviço: tarefas atrasadas, indisponibilidade para plantões, queda de produção?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_001", bloco: "materialidade", texto: "Que atividade paralela o(a) servidor(a) exercia? Descreva natureza, local, frequência e horários.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_002", bloco: "materialidade", texto: "A atividade coincidia com o horário de expediente? Como isso era perceptível (ausências, indisponibilidade, atendimentos externos)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_003", bloco: "materialidade", texto: "Houve prejuízo identificável ao serviço: tarefas atrasadas, indisponibilidade para plantões, queda de produção?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
     { id: "q_inf_incompativel_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) considera que a atividade exercida conflita com as atribuições do cargo? Consultou a chefia ou a área competente sobre a compatibilidade?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_005", bloco: "circunstancias_art128", texto: "A atividade envolvia contribuintes, despachantes ou pessoas com interesse em procedimentos da unidade? Especifique.", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_005", bloco: "circunstancias_art128", texto: "A atividade envolvia contribuintes, despachantes ou pessoas com interesse em procedimentos da unidade? Especifique.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
 
     // ---- Específicas: Falta de urbanidade (inf_urbanidade) ----
-    { id: "q_inf_urbanidade_001", bloco: "materialidade", texto: "Reproduza, tanto quanto se recorde, as palavras, o tom e os gestos empregados no episódio. O que exatamente foi dito, e a quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_002", bloco: "materialidade", texto: "Como a pessoa destinatária reagiu? Havia outras pessoas presentes? O ambiente era de atendimento ao público?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_003", bloco: "materialidade", texto: "Esse tipo de tratamento foi episódio isolado ou já ocorrera antes, com a mesma pessoa ou com outras?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_004", bloco: "elemento_subjetivo", texto: "Havia situação prévia de tensão, provocação ou tumulto que antecedeu o episódio? Descreva.", finalidade: "subjetivo", papeis: ["testemunha", "acusado"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_005", bloco: "circunstancias_art128", texto: "O episódio gerou reclamação formal, repercussão no setor ou constrangimento a contribuintes presentes?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_001", bloco: "materialidade", texto: "Reproduza, tanto quanto se recorde, as palavras, o tom e os gestos empregados no episódio. O que exatamente foi dito, e a quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_002", bloco: "materialidade", texto: "Como a pessoa destinatária reagiu? Havia outras pessoas presentes? O ambiente era de atendimento ao público?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_003", bloco: "materialidade", texto: "Esse tipo de tratamento foi episódio isolado ou já ocorrera antes, com a mesma pessoa ou com outras?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_004", bloco: "elemento_subjetivo", texto: "Havia situação prévia de tensão, provocação ou tumulto que antecedeu o episódio? Descreva.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_005", bloco: "circunstancias_art128", texto: "O episódio gerou reclamação formal, repercussão no setor ou constrangimento a contribuintes presentes?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
 
     // ---- Específicas: Descumprimento de normas legais e regulamentares (inf_normas) ----
-    { id: "q_inf_normas_001", bloco: "materialidade", texto: "Qual procedimento previsto em norma deixou de ser observado? Descreva como a atividade deveria ter sido feita e como foi feita.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_002", bloco: "materialidade", texto: "A norma aplicável (IN, portaria, ordem de serviço) estava vigente e era conhecida no setor? Como era divulgada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_003", bloco: "materialidade", texto: "O descumprimento foi pontual ou recorrente? Há outros casos semelhantes no setor?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
+    { id: "q_inf_normas_001", bloco: "materialidade", texto: "Qual procedimento previsto em norma deixou de ser observado? Descreva como a atividade deveria ter sido feita e como foi feita.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
+    { id: "q_inf_normas_002", bloco: "materialidade", texto: "A norma aplicável (IN, portaria, ordem de serviço) estava vigente e era conhecida no setor? Como era divulgada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
+    { id: "q_inf_normas_003", bloco: "materialidade", texto: "O descumprimento foi pontual ou recorrente? Há outros casos semelhantes no setor?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
     { id: "q_inf_normas_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) conhecia a norma apontada? Recebeu orientação ou treinamento sobre ela? Por que o procedimento não foi seguido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
+    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
 
     // ---- Específicas: Enriquecimento ilícito (inf_enriquecimento_ilicito) ----
     // Atualização incremental 01: perguntas com campo "destinatario" (acusado | terceiro_interposto | testemunha_geral),
@@ -1867,17 +1974,43 @@ const CATALOGO = {
     { id: "q_inf_enriquecimento_010", bloco: "materialidade", texto: "Conte como foi a compra do [bem X]: como soube que estava à venda, quem negociou, qual o valor, como foi pago e de onde vieram os recursos.", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
     { id: "q_inf_enriquecimento_011", bloco: "materialidade", texto: "Quem utiliza o bem atualmente, quem paga os tributos e despesas dele e quem toma as decisões sobre ele (alugar, reformar, vender)?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
     { id: "q_inf_enriquecimento_012", bloco: "autoria_participacao", texto: "Qual foi a participação de [servidor acusado] na escolha, na negociação, no pagamento ou na administração desse bem?", finalidade: "autoria", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_013", bloco: "circunstancias_art128", texto: "O(a) senhor(a) observou, no período, mudança objetiva no padrão de vida do(a) acusado(a) — veículos, imóveis, viagens, despesas — que lhe tenha chamado a atenção? Relate apenas o que presenciou diretamente, indicando época e circunstâncias.", finalidade: "circunstancia", destinatario: "testemunha_geral", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" }
+    { id: "q_inf_enriquecimento_013", bloco: "circunstancias_art128", texto: "O(a) senhor(a) observou, no período, mudança objetiva no padrão de vida do(a) acusado(a) — veículos, imóveis, viagens, despesas — que lhe tenha chamado a atenção? Relate apenas o que presenciou diretamente, indicando época e circunstâncias.", finalidade: "circunstancia", destinatario: "testemunha_geral", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+
+    // Orientações de Implementação (2026-07-09): perguntas genéricas da categoria residual "Outras
+    // Infrações" (inf_outras) — minuta fornecida pelo usuário, reproduzida por bloco, sem vínculo com
+    // uma tipificação específica. Permanecem editáveis/removíveis como qualquer pergunta do sistema
+    // (nenhuma marcada como obrigatoria).
+    { id: "q_inf_outras_ctx_001", bloco: "contexto_funcional", texto: "Qual é a sua função/cargo e quais eram suas atribuições no período dos fatos apurados?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_ctx_002", bloco: "contexto_funcional", texto: "Havia alguma relação hierárquica ou funcional direta entre o senhor(a) e o(s) investigado(s)?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_mat_001", bloco: "materialidade", texto: "O senhor(a) tem conhecimento direto do fato apurado, ou tomou conhecimento por meio de terceiros?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_mat_002", bloco: "materialidade", texto: "Poderia descrever, com o maior detalhamento possível, o que efetivamente presenciou ou de que forma tomou conhecimento do ocorrido?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_mat_003", bloco: "materialidade", texto: "Existe algum documento, registro ou evidência que possa corroborar o que está sendo relatado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_aut_001", bloco: "autoria_participacao", texto: "O senhor(a) identifica quem praticou a conduta apurada? Como chegou a essa identificação?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_aut_002", bloco: "autoria_participacao", texto: "Havia outras pessoas presentes ou com conhecimento dos fatos, além do senhor(a)?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_sub_001", bloco: "elemento_subjetivo", texto: "Na sua percepção, a conduta relatada decorreu de uma ação deliberada ou de uma falha/omissão não intencional?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_sub_002", bloco: "elemento_subjetivo", texto: "Havia, a seu ver, alguma justificativa, contexto atenuante ou circunstância que tenha motivado a conduta?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_circ_001", bloco: "circunstancias_art128", texto: "Como avalia a natureza e a gravidade dos fatos relatados?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_circ_002", bloco: "circunstancias_art128", texto: "Havia circunstâncias atenuantes ou agravantes que o(a) senhor(a) considere relevantes (ex.: reincidência, dano causado, grau de responsabilidade)?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    { id: "q_inf_outras_circ_003", bloco: "circunstancias_art128", texto: "Os antecedentes funcionais do(s) investigado(s), até onde é do seu conhecimento, são compatíveis com o que está sendo apurado?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
   textosModelo: {
     adv_testemunha: "Alerto que, em face de sua condição de testemunha, o(a) senhor(a) tem o dever de contribuir com esta apuração e assume, desde já, o compromisso de dizer a verdade, sob pena de incidir no crime de falso testemunho, previsto no art. 342 do Código Penal. Fica ressalvado, contudo, o seu direito de não produzir prova contra si mesmo(a): o(a) senhor(a) não está obrigado(a) a responder a pergunta cuja resposta possa incriminá-lo(a). De acordo?",
     adv_acusado: "Registro que este ato foi previamente designado e que a notificação foi encaminhada ao(à) acusado(a) e ao(à) seu(sua) procurador(a), quando constituído(a), com antecedência mínima de 3 (três) dias úteis, nos termos do art. 41 da Lei nº 9.784/99. Informo ao(à) acusado(a) que, nos termos da Constituição Federal, o(a) senhor(a) não é obrigado(a) a participar deste ato e tem o direito de permanecer em silêncio diante dos questionamentos que lhe serão feitos, sem que o silêncio importe confissão ou seja interpretado em prejuízo da defesa. Informo, ainda, que, caso o(a) senhor(a) opte por exercer o direito ao silêncio, esta comissão não lhe dirigirá questionamentos, em observância ao art. 15, parágrafo único, inciso I, da Lei nº 13.869/2019. O acompanhamento por procurador é facultativo, nos termos da Súmula Vinculante nº 5 do STF. Sabendo disso, e sem sofrer qualquer tipo de coação, pergunto: é do seu interesse responder às perguntas que lhe serão formuladas?",
+    // Orientações de Implementação (2026-07-09) — adv_declarante/adv_situacao_indefinida/adv_vitima e
+    // orientacoes_declarante/orientacoes_vitima: adaptações em fala direta ao depoente, a partir da
+    // descricaoRegime de cada papel novo (mesmo padrão de adv_testemunha/adv_acusado acima). A fórmula
+    // de consulta à defesa em adv_situacao_indefinida ("Podemos proceder...") reproduz o texto do documento.
+    adv_declarante: "Informo que, em razão de sua condição de declarante/informante, o(a) senhor(a) não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho. Ainda assim, conto com a sua colaboração voluntária para o esclarecimento dos fatos apurados neste processo. De acordo?",
+    adv_situacao_indefinida: "Informo que os autos indicam a possibilidade de seu envolvimento no contexto fático apurado, sem que existam, até o momento, elementos suficientes para tratá-lo(a) como investigado(a). Por essa razão, o(a) senhor(a) não presta compromisso de testemunha e tem facultado, por cautela e por analogia à vedação à autoincriminação, o direito de permanecer em silêncio diante de qualquer questionamento, sem que isso lhe traga qualquer prejuízo. [À defesa:] Podemos proceder dessa forma? A Defesa teria alguma objeção?",
+    adv_vitima: "Informo que, em face de sua condição de vítima nestes autos, o(a) senhor(a) não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho, ficando contudo sujeito(a), como qualquer pessoa, à denunciação caluniosa em caso de imputação falsa. Peço que relate os fatos com a maior fidelidade possível.",
     acolhimento: "Bom dia/Boa tarde. Meu nome é {{presidente}}, presidente desta comissão. Sejam bem-vindos. Agradeço a disponibilidade de todos em colaborar com o nosso trabalho. Esperamos tomar o menor tempo possível e conduzir este ato com serenidade. Antes de iniciarmos, peço que cada um dos presentes informe seu nome completo, documento de identidade, CPF e, se for o caso, número de inscrição na OAB.",
     abertura_formal: "Hoje, {{data}}, às {{hora}}, em {{local}}, dou início a este ato processual. Registro que estamos reunidos por força do Processo Administrativo Disciplinar nº {{processo}}, instaurado pela Portaria {{portaria}}. Presentes os membros da comissão: {{presidente}} (presidente), {{vogais}} (vogais), atuando como secretário(a) {{secretario}}; e ainda [depoente/acusado/defensor, conforme o caso], todos já identificados. Este processo tem por objeto a apuração de supostas irregularidades no âmbito de {{orgao_local}}.",
     avisos_lgpd: "Antes de iniciarmos, deixo registrados os seguintes avisos:\n- O acesso aos registros deste ato e às informações dele decorrentes é restrito aos interessados neste procedimento, que tramita sob cláusula de acesso restrito para proteção da intimidade dos envolvidos e da elucidação dos fatos.\n- A utilização indevida de documentos, áudios e imagens decorrentes deste ato, em especial a veiculação irregular da imagem de qualquer dos presentes ou o tratamento inadequado de seus dados pessoais, poderá ensejar responsabilização, nos termos da legislação vigente.\n- Os termos e registros desta audiência serão armazenados nos autos do processo nº {{processo}} e poderão instrumentalizar outros procedimentos de responsabilização administrativa, podendo, nas hipóteses legais, ser compartilhados com órgãos responsáveis pela persecução administrativa, civil ou criminal.\n- Nos termos do art. 7º, inciso II, da Lei nº 13.709/2018 (LGPD), o tratamento de dados pessoais nesta hipótese decorre do cumprimento de obrigação legal desta unidade correcional e dispensa o consentimento dos titulares.\n- O(a) acusado(a) e seu(sua) procurador(a) terão acesso aos registros deste ato pelos meios processuais próprios e ficam advertidos quanto à responsabilização por utilização indevida.",
     orientacoes_testemunha: "Informo que o depoimento será prestado de forma oral. A comissão formulará suas perguntas e, ao final, será dada a palavra à defesa para os questionamentos que entender pertinentes, os quais serão dirigidos por meu intermédio. Deixo claro que nada está sendo apurado em relação ao(à) senhor(a). Peço apenas que procure ser o(a) mais claro(a) e preciso(a) possível e que nos informe, com transparência, se ao longo do depoimento surgir situação que gere dúvida ou constrangimento. Sua contribuição é muito importante para esta apuração.",
+    orientacoes_declarante: "Informo que o(a) senhor(a) foi convidado(a) a colaborar com esta apuração em razão de seu vínculo com o(a) investigado(a) ou de sua participação anterior no contexto ora apurado, na condição de declarante/informante. Não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho, mas conto com a sua colaboração voluntária, da forma mais completa e transparente possível, para o esclarecimento dos fatos.",
+    orientacoes_vitima: "Informo que o(a) senhor(a) é ouvido(a) nesta apuração na condição de vítima dos fatos investigados. Não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho, ficando contudo sujeito(a), como qualquer pessoa, à denunciação caluniosa em caso de imputação falsa e consciente. Este depoimento será formalizado no termo próprio (termo de depoimento, termo de declarações ou alegações da ofendida, conforme o caso).",
     fechamento: "Antes de encerrarmos: o(a) senhor(a) deseja acrescentar algo que considere relevante e que não tenha sido perguntado? Tem conhecimento de outras pessoas que possam contribuir com o esclarecimento dos fatos? [À defesa:] A defesa deseja formular reperguntas ou consignar algo em ata?",
     // Resolução da pendência dos blocos 6 e 12 (seções 2.6 e 2.7 do banco de conteúdo — a numeração do
     // termo de redução foi deslocada de 2.6 para 2.8, mantendo o mesmo conteúdo).
@@ -1950,14 +2083,50 @@ const CATALOGO = {
       formulaVerbal: "\"Tenho a sensação de que o(a) senhor(a) não está confortável neste momento. Sugiro um intervalo de cinco minutos para tomar água e respirar. Podemos proceder assim?\""
     },
     {
+      // Orientações de Implementação (2026-07-09): desmembrado — este card trata só de diligência;
+      // perícia passou a ter card próprio (inc_pericia, abaixo).
       id: "inc_diligencia", grupo: "Postura da defesa", cartaoMesa: true,
-      situacao: "Pedido-surpresa de perícia ou diligência",
+      situacao: "Pedido-surpresa de diligência",
       formulaVerbal: "\"Peço que justifique a necessidade e a utilidade do pedido para os pontos controvertidos. Apresente as razões por escrito e a comissão deliberará com brevidade.\""
     },
     {
       id: "inc_blindagem", grupo: "Táticas de desestabilização", cartaoMesa: true,
       situacao: "Blindagem contra desestabilização (informativo, sem fórmula fixa)",
       formulaVerbal: "Frases de efeito comuns: \"Você é formado em Direito?\", \"Vou denunciar a parcialidade dessa comissão!\", \"Vou abrir processo criminal contra vocês!\", \"Hoje sou eu, amanhã será você!\". Resposta única: manter tom equilibrado, não personalizar, registrar objetivamente em ata o necessário e prosseguir. Exceção crítica: diante de menção a autoagressão, suspender o ato, oferecer intervalo e acionar apoio médico/psicológico — o cuidado com a pessoa precede o rito."
+    },
+    // Orientações de Implementação (2026-07-09): 5 itens novos, ampliando o kit de 13 para 18.
+    {
+      id: "inc_pericia", grupo: "Postura da defesa", cartaoMesa: true,
+      situacao: "Pedido de perícia",
+      formulaVerbal: "\"Há uma lógica muito clara sobre a realização de perícia, Doutor: só avançamos para essa análise quando se trata de uma avaliação técnica muito específica e quando essa avaliação é essencial para o deslinde da controvérsia. Nesses pontos, em um ou dois dias, no máximo, deliberaremos sobre o seu pedido, com a maior boa vontade e com a lealdade de sempre.\""
+    },
+    {
+      id: "inc_perguntas_impertinentes", grupo: "Postura da defesa", cartaoMesa: true,
+      situacao: "Perguntas impertinentes, desnecessárias ou protelatórias da defesa",
+      sequencia: [
+        "Pense: será mesmo que sempre vale a pena indeferir?",
+        "Será que, por vezes, a defesa não busca exatamente esse indeferimento para alegar cerceamento de defesa?"
+      ],
+      formulaVerbal: "\"Eu faço questão de deixar claro, Doutor, que o nosso processo trata da conduta A e B. É isso que está em discussão aqui. A postura do investigado fora desses aspectos não está sendo questionada. Eu mesmo, de antemão, pela pouca convivência que tive com ele, já sei que se trata de um bom profissional e de um bom colega de trabalho.\""
+    },
+    {
+      id: "inc_pedido_esclarecimento", grupo: "Condução do ato", cartaoMesa: true,
+      situacao: "Pedido para fazer esclarecimento",
+      formulaVerbal: "\"Para que não percamos a espontaneidade do depoimento da testemunha, eu peço para aguardar o encerramento da oitiva (ou desse bloco de perguntas), que eu lhe passarei a palavra para que o senhor possa fazer qualquer esclarecimento, inclusive, se for o caso, a própria pergunta.\""
+    },
+    {
+      id: "inc_impugnacao_pergunta_comissao", grupo: "Postura da defesa", cartaoMesa: true,
+      situacao: "Impugnação de pergunta da comissão",
+      formulaVerbal: "\"Peço desculpas, Doutor, se o meu questionamento não foi feito da melhor forma. Tentarei reformular a pergunta. O que eu quero saber é: (...)\""
+    },
+    {
+      // Orientações de Implementação (2026-07-09): fórmula reconstituída a partir de fonte mista (o
+      // slide-resumo enviado + a Cena 2 do documento "Roteiros das Simulações de Oitiva e
+      // Interrogatório", de Marcos Salles Teixeira/CGU-CRG) — não é transcrição literal de um único
+      // trecho-fonte, ao contrário das demais fórmulas deste kit.
+      id: "inc_advogado_testemunha", grupo: "Condução do ato", cartaoMesa: true,
+      situacao: "Advogado da testemunha",
+      formulaVerbal: "\"Doutor(a), a testemunha não é acusada de nada neste processo. Seu(sua) advogado(a) particular pode acompanhar o ato para zelar pela regularidade e assessorá-la, mas não tem direito à palavra nem a formular perguntas durante esta oitiva. Eventuais manifestações ou objeções de V.Sa. vinculam apenas o(a) seu(sua) cliente, não o ato como um todo.\""
     }
   ],
 
@@ -1975,7 +2144,13 @@ const CATALOGO = {
     { id: "inf_normas", grupo: "deveres_116", nome: "Descumprimento do dever de observar as normas legais e regulamentares", dispositivo: "Art. 116, III, Lei 8.112/90", penaAbstrata: "advertência (art. 129); gradação conforme a gravidade", elementosTipicos: ["existência de norma legal ou regulamentar válida e vigente aplicável à atividade", "conduta comissiva ou omissiva em desacordo com a norma", "exigibilidade de conduta diversa", "ciência (real ou presumida) da norma"], observacoes: "Enquadramento subsidiário e de espectro amplo — exige indicação precisa da norma violada (portaria, IN, ordem de serviço, manual), sob pena de capitulação genérica (risco de nulidade da indiciação). A oitiva deve estabelecer: qual norma, como foi divulgada, qual conduta a contrariou.", modulo: "nucleo" },
     // Atualização incremental 01 (enriquecimento ilícito): campo renomeado de "pena" para "penaAbstrata"
     // (correção de nomenclatura do documento), no mesmo padrão das demais 10 entradas.
-    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" }
+    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" },
+    // Orientações de Implementação (2026-07-09): categoria residual/curinga — cobre condutas que não se
+    // enquadram em nenhuma das 11 categorias tipificadas acima. Ao contrário delas, não tem dispositivo/
+    // pena próprios (dependem do enquadramento que a comissão vier a dar ao caso concreto) e usa perguntas
+    // genéricas por bloco (q_inf_outras_*, abaixo), sinalizadas como sugestões de ponto de partida — nunca
+    // roteiro fechado, tal como as demais perguntas do sistema.
+    { id: "inf_outras", grupo: "outras", nome: "Outras Infrações", dispositivo: "A definir conforme o enquadramento (dispositivo) adotado pela comissão para o caso concreto", penaAbstrata: "A definir conforme o enquadramento adotado", elementosTipicos: ["conduta apurada que não se enquadra em nenhuma das categorias tipificadas deste catálogo"], observacoes: "Categoria residual: use quando a conduta apurada não corresponder a nenhuma das categorias tipificadas acima. As perguntas sugeridas para esta categoria são genéricas — cobrem contexto funcional, materialidade, autoria, dolo/culpa e as circunstâncias do art. 128 da Lei 8.112/90 — e devem ser adaptadas pela comissão ao enquadramento e aos fatos do caso concreto.", modulo: "nucleo" }
   ],
 
   // ---- Checklist (comum + acusado + videoconferência) ----
@@ -1997,7 +2172,11 @@ const CATALOGO = {
     // "chave == valor" já usado acima para papel/modalidade — ver itensChecklistAplicaveis()).
     { id: "chk_patrimonio_documentacao", texto: "Documentação patrimonial e financeira relacionada aos autos e organizada por item de discrepância (IRPF, extratos, matrículas, contratos)", condicao: "infracao == inf_enriquecimento_ilicito" },
     { id: "chk_patrimonio_oportunidade", texto: "Oportunidade formal de justificação da origem do acréscimo patrimonial incluída no roteiro do acusado (art. 9º, VII, Lei 8.429/92)", condicao: "infracao == inf_enriquecimento_ilicito" },
-    { id: "chk_patrimonio_terceiros",    texto: "Identificados eventuais terceiros interpostos (familiares) a serem ouvidos separadamente", condicao: "infracao == inf_enriquecimento_ilicito" }
+    { id: "chk_patrimonio_terceiros",    texto: "Identificados eventuais terceiros interpostos (familiares) a serem ouvidos separadamente", condicao: "infracao == inf_enriquecimento_ilicito" },
+    // Orientações de Implementação (2026-07-09): gate de nulidade específico do papel "Pessoa em
+    // Situação Indefinida" — exige confirmação de que a defesa foi consultada sobre o enquadramento
+    // antes de prosseguir com a oitiva sem compromisso e com direito ao silêncio facultado.
+    { id: "chk_consulta_defesa_enquadramento", texto: "Defesa consultada sobre o enquadramento como \"pessoa em situação indefinida\" adotado para esta oitiva, sem objeção registrada (ou objeção devidamente registrada e deliberada)", condicao: "papel == situacao_indefinida" }
   ],
 
   // ---- Dicas contextuais (Fabian Maia) — camada de coaching ----
@@ -2809,11 +2988,21 @@ function ligarNavegacaoWizard(){
    ===================================================================== */
 const BLOCOS_OCULTOS_SILENCIO = ["contexto_funcional", "materialidade", "autoria_participacao", "elemento_subjetivo", "circunstancias_art128", "palavra_defesa", "fechamento"];
 
+// Orientações de Implementação (2026-07-09): o direito ao silêncio deixou de ser exclusividade do
+// acusado — a "Pessoa em Situação Indefinida" também o tem, por cautela e analogia à vedação à
+// autoincriminação (CATALOGO.papeis[].direitoSilencio). O campo de estado `d.acusadoSilencio`
+// manteve o nome (evita nova migração de dado), mas agora representa "silêncio exercido" para
+// qualquer papel com direitoSilencio, não somente o acusado.
+function papelTemDireitoSilencio(papelId){
+  const p = CATALOGO.papeis.find(x => x.id === papelId);
+  return !!(p && p.direitoSilencio);
+}
+
 // Resolução da pendência dos blocos 6 e 12: centraliza a decisão de omitir um bloco inteiro do roteiro
 // (silêncio do acusado já existente + bloco 12 sem defensor constituído presente), reaproveitada nas
 // três telas que percorrem CATALOGO.blocos (Etapa 3, Etapa 4 e impressão).
 function blocoDeveSerOmitido(bloco, d){
-  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  const silencioExercido = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
   if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return true;
   if (bloco.id === "palavra_defesa" && !d.ato.defensorPresente) return true;
   return false;
@@ -2868,6 +3057,11 @@ function gerarRoteiroInicial(d){
     } else if (bloco.id === "qualificacao_compromisso"){
       let ordem = 1;
       if (papelObj){
+        // Texto de abertura específico do papel (ex.: orientacoes_testemunha) — existia no catálogo
+        // desde a Parte 2 mas nunca havia sido inserido no roteiro gerado; corrigido nesta revisão.
+        if (papelObj.textoAbertura && CATALOGO.textosModelo[papelObj.textoAbertura]){
+          itens.push({ origem: "catalogo", tipo: "texto_modelo", refId: papelObj.textoAbertura, texto: mergeTexto(CATALOGO.textosModelo[papelObj.textoAbertura], ctx), removivel: false, ordem: ordem++ });
+        }
         CATALOGO.perguntasPraxe.forEach(pq => {
           if (papelObj.perguntasPraxe.includes(pq.id)){
             itens.push({ origem: "catalogo", tipo: "pergunta", refId: pq.id, texto: pq.texto, finalidade: pq.finalidade, removivel: false, ordem: ordem++ });
@@ -2958,7 +3152,7 @@ function renderEtapa3(){
     html += "<div class=\"cartao aviso-pedagogico\"><strong>Nota sobre o terceiro interposto:</strong> " + escapeHtml(infracaoAtual.notaTerceiroInterposto) + "</div>";
   }
 
-  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  const silencioExercido = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
 
   CATALOGO.blocos.forEach(bloco => {
     if (blocoDeveSerOmitido(bloco, d)) return;
@@ -2969,9 +3163,9 @@ function renderEtapa3(){
 
     html += renderItensBloco(bloco, grupo);
 
-    if (bloco.id === "qualificacao_compromisso" && d.papel === "acusado"){
+    if (bloco.id === "qualificacao_compromisso" && papelTemDireitoSilencio(d.papel)){
       html += "<div class=\"escolha-simples\">" +
-        "<label><input type=\"radio\" name=\"acusado-silencio\" value=\"nao\"" + (!d.acusadoSilencio ? " checked" : "") + "> É do interesse do(a) acusado(a) responder às perguntas</label>" +
+        "<label><input type=\"radio\" name=\"acusado-silencio\" value=\"nao\"" + (!d.acusadoSilencio ? " checked" : "") + "> É do interesse do(a) depoente responder às perguntas</label>" +
         "<label><input type=\"radio\" name=\"acusado-silencio\" value=\"sim\"" + (d.acusadoSilencio ? " checked" : "") + "> Manifestou o exercício do direito ao silêncio</label>" +
         "</div>";
     }
@@ -3197,7 +3391,9 @@ function statusLabelEtapa4(s){ return statusLabel(s); }
 function itensChecklistAplicaveis(d){
   return CATALOGO.checklistItens.filter(c =>
     c.condicao === "sempre" ||
-    (c.condicao === "papel == acusado" && d.papel === "acusado") ||
+    // Generalização (Orientações de Implementação, 2026-07-09): qualquer condição no formato
+    // "papel == <id>" (não só "papel == acusado") passa a ser resolvida contra o papel do depoente.
+    (c.condicao === "papel == " + d.papel) ||
     (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia") ||
     // Atualização incremental 01: grupo condicional por infração (enriquecimento ilícito).
     (c.condicao === "infracao == inf_enriquecimento_ilicito" && d.infracao === "inf_enriquecimento_ilicito")
@@ -3205,7 +3401,7 @@ function itensChecklistAplicaveis(d){
 }
 
 function renderRoteiroLeitura(d){
-  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  const silencioExercido = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
   let html = "";
   let algumBloco = false;
 
@@ -3233,10 +3429,18 @@ function renderRoteiroLeitura(d){
   return algumBloco ? html : "<p class=\"vazio\">Roteiro ainda não gerado. Volte à Etapa 3.</p>";
 }
 
+// Orientações de Implementação (2026-07-09): modelo_termo (banco de conteúdo) só define as variantes
+// "OITIVA DE TESTEMUNHA" (compromisso) e "INTERROGATÓRIO" (silêncio do acusado). Para os 3 papéis novos,
+// sem modelo de termo próprio no banco de conteúdo, usa-se o rótulo genérico "OITIVA" — evita inventar
+// um título específico não previsto na fonte — e o parágrafo de qualificação é adaptado por papel
+// (compromisso / direito ao silêncio / colaboração voluntária sem compromisso), a partir da mesma
+// descricaoRegime já usada nas advertências do roteiro.
 function gerarTermoTexto(d){
   const ctx = contextoMerge(d);
-  const tipo = d.papel === "acusado" ? "INTERROGATÓRIO" : "OITIVA DE TESTEMUNHA";
-  const papelLabel = d.papel === "acusado" ? "investigado(a)/acusado(a)" : "testemunha";
+  const papelObj = CATALOGO.papeis.find(p => p.id === d.papel) || {};
+  const temSilencio = papelTemDireitoSilencio(d.papel);
+  const tipo = d.papel === "acusado" ? "INTERROGATÓRIO" : (d.papel === "testemunha" ? "OITIVA DE TESTEMUNHA" : "OITIVA");
+  const papelLabel = d.papel === "acusado" ? "investigado(a)/acusado(a)" : (papelObj.nome || d.papel).toLowerCase();
   const intimacao = d.papel === "acusado" ? "notificado(a)" : "intimado(a)";
 
   let texto = "TERMO DE " + tipo + "\n\n";
@@ -3255,13 +3459,27 @@ function gerarTermoTexto(d){
 
   texto += "\n\nIniciados os trabalhos, o presidente procedeu à qualificação civil e funcional do(a) depoente, conferindo os dados com documento oficial de identificação.";
 
-  if (d.papel === "testemunha"){
+  if (papelObj.compromisso){
     texto += " Inquirido(a) aos costumes, declarou não ser parente, amigo(a) íntimo(a) ou inimigo(a) de qualquer das partes, nem ter interesse na matéria. Advertido(a) das penas do crime de falso testemunho (art. 342 do Código Penal) e ressalvada a garantia contra a autoincriminação, prestou o compromisso legal de dizer a verdade.";
-  } else {
+  } else if (temSilencio && d.papel === "acusado"){
     texto += " Cientificado(a) do direito constitucional ao silêncio e de que seu exercício não importa confissão nem será interpretado em prejuízo da defesa, bem como da facultatividade do acompanhamento por procurador (Súmula Vinculante nº 5/STF), manifestou " +
       (d.acusadoSilencio
         ? "a opção pelo exercício do direito ao silêncio, razão pela qual a comissão não lhe dirigiu questionamentos (art. 15, parágrafo único, I, da Lei nº 13.869/2019)."
         : "interesse em responder às perguntas que lhe foram formuladas.");
+  } else if (temSilencio){
+    // Pessoa em Situação Indefinida: direito ao silêncio por cautela/analogia, não pelo mesmo fundamento
+    // constitucional do interrogatório do acusado.
+    texto += " Cientificado(a) de que, ante a possibilidade de seu envolvimento no contexto fático apurado, não lhe foi exigido o compromisso legal de dizer a verdade e foi-lhe facultado, por cautela e por analogia à vedação à autoincriminação, o direito de permanecer em silêncio diante dos questionamentos, manifestou " +
+      (d.acusadoSilencio
+        ? "a opção pelo exercício desse direito, razão pela qual a comissão não lhe dirigiu questionamentos."
+        : "interesse em responder às perguntas que lhe foram formuladas.") +
+      " Registra-se que a defesa foi previamente consultada sobre o enquadramento adotado para esta oitiva" +
+      (d.checklist && d.checklist.chk_consulta_defesa_enquadramento ? ", sem objeção." : " [registrar a manifestação da defesa quanto ao enquadramento].");
+  } else if (d.papel === "vitima"){
+    texto += " Registra-se que, em face de sua condição de vítima, não lhe foi exigido o compromisso legal de dizer a verdade, tendo sido advertido(a) de que responde pela denunciação caluniosa em caso de imputação falsa.";
+  } else {
+    // Declarante/Informante (e demais papéis futuros sem compromisso nem direito ao silêncio previsto).
+    texto += " Registra-se que, em face de sua condição de " + papelLabel + ", não lhe foi exigido o compromisso legal de dizer a verdade, tendo sido esclarecido(a) de que não responde pelo crime de falso testemunho, e contou-se com sua colaboração voluntária para a apuração.";
   }
 
   texto += "\n\n[Registro de incidentes, se houver: contradita, arguição de parcialidade, questões de ordem, protestos — com a deliberação da comissão.]";
@@ -3284,9 +3502,11 @@ function renderEtapa4(){
   }
 
   const itensChecklist = itensChecklistAplicaveis(d);
-  const pendentesAcusado = d.papel === "acusado"
-    ? CATALOGO.checklistItens.filter(c => c.condicao === "papel == acusado" && !d.checklist[c.id])
-    : [];
+  // Generalização (Orientações de Implementação, 2026-07-09): itens de nulidade específicos de papel
+  // (antes só "acusado") agora cobrem qualquer papel com condicao "papel == <id>" — inclui o novo gate
+  // de "Pessoa em Situação Indefinida" (consulta prévia à defesa sobre o enquadramento).
+  const itensNulidadePapel = CATALOGO.checklistItens.filter(c => c.condicao === "papel == " + d.papel);
+  const pendentesPapel = itensNulidadePapel.filter(c => !d.checklist[c.id]);
 
   let html = "";
 
@@ -3310,12 +3530,12 @@ function renderEtapa4(){
 
   html += "<div class=\"cartao\">";
   html += "<h3 style=\"margin-top:0;\">Alertas de nulidade</h3>";
-  if (d.papel === "acusado"){
-    html += pendentesAcusado.length
-      ? "<div class=\"alerta-nulidade\">Itens obrigatórios do checklist do(a) acusado(a) ainda não confirmados:<ul>" + pendentesAcusado.map(c => "<li>" + escapeHtml(c.texto) + "</li>").join("") + "</ul></div>"
-      : "<div class=\"aviso-ok\">Todos os itens obrigatórios do checklist do(a) acusado(a) estão confirmados.</div>";
+  if (itensNulidadePapel.length){
+    html += pendentesPapel.length
+      ? "<div class=\"alerta-nulidade\">Itens obrigatórios do checklist para o papel selecionado ainda não confirmados:<ul>" + pendentesPapel.map(c => "<li>" + escapeHtml(c.texto) + "</li>").join("") + "</ul></div>"
+      : "<div class=\"aviso-ok\">Todos os itens obrigatórios do checklist para o papel selecionado estão confirmados.</div>";
   } else {
-    html += "<p class=\"vazio\">Sem exigências específicas de nulidade para o papel de testemunha além do checklist comum acima.</p>";
+    html += "<p class=\"vazio\">Sem exigências específicas de nulidade para o papel selecionado além do checklist comum acima.</p>";
   }
   html += "</div>";
 
@@ -3355,12 +3575,14 @@ function ligarEventosEtapa4(container, d){
     });
   }
 
-  const ITENS_NULIDADE_ACUSADO = ["chk_intimacao_3dias", "chk_ultimo_ato", "chk_advertencias_acusado"];
   container.querySelectorAll("[data-checklist-item]").forEach(chk => {
     chk.addEventListener("change", () => {
       d.checklist[chk.dataset.checklistItem] = chk.checked;
       salvarLocalStorage();
-      if (ITENS_NULIDADE_ACUSADO.includes(chk.dataset.checklistItem)){
+      // Generalização: qualquer item de checklist condicionado a papel ("papel == <id>") — antes só os
+      // 3 do acusado — dispara nova renderização da Etapa 4 para atualizar o painel de nulidade.
+      const itemCatalogo = CATALOGO.checklistItens.find(c => c.id === chk.dataset.checklistItem);
+      if (itemCatalogo && itemCatalogo.condicao && itemCatalogo.condicao.indexOf("papel == ") === 0){
         renderEtapa4();
       }
     });
@@ -3445,7 +3667,7 @@ function htmlRodapeImpressao(referenciaDireita){
 }
 
 function montarAreaImpressaoRoteiro(d){
-  const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
+  const silencioExercido = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
   const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
   const infracaoObj = CATALOGO.infracoes.find(i => i.id === d.infracao);
   const vogaisPreenchidos = (d.ato.comissao.vogais || []).filter(v => v && v.nome && v.nome.trim());
@@ -3558,13 +3780,13 @@ function formatarMembro(m){
    ===================================================================== */
 function validarCatalogo(){
   console.info("Oitiva 360 — validação do CATALOGO:", {
-    infracoes: CATALOGO.infracoes.length + " (esperado: 11)",
+    infracoes: CATALOGO.infracoes.length + " (esperado: 12)",
     blocos: CATALOGO.blocos.length + " (esperado: 13)",
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
-    formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 13)",
+    formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 18)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 63)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
 }
