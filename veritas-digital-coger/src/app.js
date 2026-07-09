@@ -438,18 +438,18 @@ function stepIdentificacao(d) {
   return '' +
     dica('dica_fishing') +
     '<div class="vdc-grid-2" style="margin-top:14px;">' +
-      '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Título/descrição</label><input class="rfb-input" value="' + escapeHtml(d.titulo) + '" oninput="App.setDraft(\'titulo\', this.value)" placeholder="Ex.: Extrato bancário — conta XXXX, período 01/2023 a 12/2023"></div>' +
+      '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Título/descrição</label><input class="rfb-input" value="' + escapeHtml(d.titulo) + '" oninput="App.setDraftQuiet(\'titulo\', this.value)" placeholder="Ex.: Extrato bancário — conta XXXX, período 01/2023 a 12/2023"></div>' +
       '<div class="rfb-field"><label class="rfb-label">Categoria</label><select class="rfb-select" onchange="App.setDraft(\'categoria\', this.value)">' +
         '<option value="">Selecione…</option>' + Object.keys(CATEGORIAS).map(function (k) { return '<option value="' + k + '"' + (d.categoria === k ? ' selected' : '') + '>' + CATEGORIAS[k] + '</option>'; }).join("") + '</select></div>' +
-      '<div class="rfb-field"><label class="rfb-label">Nº/folha nos autos <span class="rfb-label__hint">opcional</span></label><input class="rfb-input" value="' + escapeHtml(d.folhaAutos) + '" oninput="App.setDraft(\'folhaAutos\', this.value)"></div>' +
-      '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Vinculado à matriz de apuração</label><input class="rfb-input" value="' + escapeHtml(d.vinculoMatriz) + '" oninput="App.setDraft(\'vinculoMatriz\', this.value)" placeholder="Fato/hipótese que este elemento sustenta"></div>' +
+      '<div class="rfb-field"><label class="rfb-label">Nº/folha nos autos <span class="rfb-label__hint">opcional</span></label><input class="rfb-input" value="' + escapeHtml(d.folhaAutos) + '" oninput="App.setDraftQuiet(\'folhaAutos\', this.value)"></div>' +
+      '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Vinculado à matriz de apuração</label><input class="rfb-input" value="' + escapeHtml(d.vinculoMatriz) + '" oninput="App.setDraftQuiet(\'vinculoMatriz\', this.value)" placeholder="Fato/hipótese que este elemento sustenta"></div>' +
       '<div class="rfb-field"><label class="rfb-label">Sigilo/classificação</label><select class="rfb-select" onchange="App.setDraft(\'sigilo\', this.value)">' +
         Object.keys(SIGILO).map(function (k) { return '<option value="' + k + '"' + (d.sigilo === k ? ' selected' : '') + '>' + SIGILO[k] + '</option>'; }).join("") + '</select></div>' +
     '</div>' +
     (d.categoria === 'comunicacao' ? '<div style="margin-top:14px;">' + dica('dica_privacidade_consentimento') + '</div>' : '') +
     '<div class="rfb-field" style="margin-top:16px;"><label class="rfb-label">Extrato ou conteúdo integral?</label>' + integralRadios + '</div>' +
     (!d.conteudoIntegral ? (
-      '<div class="rfb-field" style="margin-top:8px;"><label class="rfb-label">Justificativa <span class="rfb-label__hint">obrigatória</span></label><textarea class="rfb-textarea" rows="2" oninput="App.setDraft(\'justificativaExtrato\', this.value)">' + escapeHtml(d.justificativaExtrato) + '</textarea></div>' +
+      '<div class="rfb-field" style="margin-top:8px;"><label class="rfb-label">Justificativa <span class="rfb-label__hint">obrigatória</span></label><textarea class="rfb-textarea" rows="2" oninput="App.setDraftQuiet(\'justificativaExtrato\', this.value)">' + escapeHtml(d.justificativaExtrato) + '</textarea></div>' +
       '<div style="margin-top:10px;">' + dica('dica_integralidade') + '</div>'
     ) : "");
 }
@@ -520,7 +520,7 @@ function elementoFisicoBlocoHtml(d) {
     '</div>' : "");
 }
 function campoDraft(label, path, value, placeholder, type) {
-  return '<div class="rfb-field"><label class="rfb-label">' + label + '</label><input class="rfb-input" type="' + (type || "text") + '" value="' + escapeHtml(value || "") + '" oninput="App.setDraft(\'' + path + '\', this.value)"' + (placeholder ? ' placeholder="' + placeholder + '"' : '') + '></div>';
+  return '<div class="rfb-field"><label class="rfb-label">' + label + '</label><input class="rfb-input" type="' + (type || "text") + '" value="' + escapeHtml(value || "") + '" oninput="App.setDraftQuiet(\'' + path + '\', this.value)"' + (placeholder ? ' placeholder="' + placeholder + '"' : '') + '></div>';
 }
 function selectCampo(label, path, value, options) {
   return '<div class="rfb-field"><label class="rfb-label">' + label + '</label><select class="rfb-select" onchange="App.setDraft(\'' + path + '\', this.value)"><option value="">Selecione…</option>' +
@@ -544,7 +544,11 @@ function stepArquivos(d) {
       '<button class="rfb-btn rfb-btn--primary rfb-btn--sm" style="margin-top:8px;" onclick="App.adicionarArquivoDraft()">Calcular hash e adicionar</button>' +
       (d.proveniencia.tipo !== "" ? '<div style="margin-top:12px;">' + dica('dica_carimbo_local') + '</div>' : '') +
     '</div>' +
-    (d.arquivos.length === 0 ? '<div class="rfb-help--error" style="margin-top:8px;">É necessário ao menos um arquivo para salvar o item.</div>' : '');
+    (d.arquivos.length === 0
+      ? (d.proveniencia.elementoFisico.presente
+          ? '<div class="rfb-help" style="margin-top:8px;">Elemento físico marcado na Proveniência — arquivo digital é opcional aqui (ex.: foto do objeto lacrado).</div>'
+          : '<div class="rfb-help--error" style="margin-top:8px;">É necessário ao menos um arquivo para salvar o item.</div>')
+      : '');
 }
 function arquivoCardHtml(a, idx, itemId) {
   var resBadge = a.resultadoComparacao === "confere" ? '<span class="rfb-badge rfb-badge--success">Confere</span>' :
@@ -566,10 +570,10 @@ function stepLinhaDoTempoResumo(d) {
   var eventos = eventosMesclados(d);
   return '' +
     '<div class="vdc-grid-2">' +
-      '<div class="rfb-field"><label class="rfb-label">Responsável pelo registro na ferramenta</label><input class="rfb-input" value="' + escapeHtml(d.responsavelRegistro) + '" oninput="App.setDraft(\'responsavelRegistro\', this.value)"></div>' +
-      '<div class="rfb-field"><label class="rfb-label">Custodiante atual</label><input class="rfb-input" value="' + escapeHtml(d.custodianteAtual) + '" oninput="App.setDraft(\'custodianteAtual\', this.value)" placeholder="Quem responde pelo item agora"></div>' +
+      '<div class="rfb-field"><label class="rfb-label">Responsável pelo registro na ferramenta</label><input class="rfb-input" value="' + escapeHtml(d.responsavelRegistro) + '" oninput="App.setDraftQuiet(\'responsavelRegistro\', this.value)"></div>' +
+      '<div class="rfb-field"><label class="rfb-label">Custodiante atual</label><input class="rfb-input" value="' + escapeHtml(d.custodianteAtual) + '" oninput="App.setDraftQuiet(\'custodianteAtual\', this.value)" placeholder="Quem responde pelo item agora"></div>' +
     '</div>' +
-    '<div class="rfb-field" style="margin-top:10px;"><label class="rfb-label">Observações livres</label><textarea class="rfb-textarea" rows="2" oninput="App.setDraft(\'observacoes\', this.value)">' + escapeHtml(d.observacoes) + '</textarea></div>' +
+    '<div class="rfb-field" style="margin-top:10px;"><label class="rfb-label">Observações livres</label><textarea class="rfb-textarea" rows="2" oninput="App.setDraftQuiet(\'observacoes\', this.value)">' + escapeHtml(d.observacoes) + '</textarea></div>' +
     '<div class="rfb-divider"></div>' +
     '<div class="rfb-h3" style="margin-bottom:8px;">Prévia da linha do tempo (gerada ao salvar)</div>' +
     (eventos.length ? '<div class="vdc-timeline">' + eventos.map(timelineEventHtml).join("") + '</div>' : '<div class="rfb-body--muted rfb-body--small">Os eventos automáticos (identificação, cálculo de hash) serão gerados ao salvar o item.</div>');
@@ -939,6 +943,7 @@ window.App = {
   criarItem: function () { UI.draftItem = novoItemDraft(); UI.wizardStep = 1; UI.view = "itemWizard"; render(); },
   cancelarWizard: function () { UI.draftItem = null; UI.view = "processo"; render(); },
   setDraft: function (path, value) { set(UI.draftItem, path, value); render(); },
+  setDraftQuiet: function (path, value) { set(UI.draftItem, path, value); },
   irParaStep: function (n) { if (n < UI.wizardStep || App._validarStep(UI.wizardStep)) { UI.wizardStep = n; render(); } },
   avancarStep: function () { if (App._validarStep(UI.wizardStep)) { UI.wizardStep++; render(); } },
   _validarStep: function (step) {
@@ -952,7 +957,7 @@ window.App = {
       if (!d.proveniencia.tipo) { toast("Selecione o tipo de proveniência.", "danger"); return false; }
     }
     if (step === 3) {
-      if (d.arquivos.length === 0) { toast("Adicione ao menos um arquivo.", "danger"); return false; }
+      if (d.arquivos.length === 0 && !d.proveniencia.elementoFisico.presente) { toast("Adicione ao menos um arquivo (ou marque o elemento físico na Proveniência).", "danger"); return false; }
     }
     return true;
   },
