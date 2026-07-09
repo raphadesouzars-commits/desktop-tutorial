@@ -6,8 +6,9 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.3.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
-  pendências + coger-ui.css oficial + ajustes de UX/impressão solicitados pelo usuário)
+  Versão do arquivo: 1.4.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
+  identificado e impressão do Termo de Redução)
   Data: 2026-07-09
 
   Changelog:
@@ -69,6 +70,21 @@
     `#area-impressao` é reparentada para filha direta de `<body>` antes de `window.print()`
     (`prepararAreaImpressaoParaImpressao()`), tornando o isolamento robusto e sem página em
     branco extra.
+  - 1.4.0 (comissão em 3 campos, defensor identificado, impressão do Termo): identificação dos
+    membros da comissão (presidente, secretário e cada vogal, tanto na Tela do Processo quanto
+    na Etapa 1 do ato) passa a usar 3 campos — Nome, Cargo e Matrícula — em vez de um único
+    campo de texto; migração automática e retrocompatível de arquivos `.json` antigos (campo
+    string vira `{nome, cargo, matricula}`, com nome herdado e cargo/matrícula em branco).
+    Quando "Há defensor constituído presente?" é marcado na Etapa 1, abre-se uma caixa para
+    identificar o defensor (nome e nº de inscrição na OAB); esses dados passam a alimentar o
+    texto do termo de redução (bloco do acusado) e a composição impressa do roteiro, no lugar
+    dos placeholders `___`. Novo botão "Imprimir termo" na Etapa 4, com layout de impressão
+    próprio (`montarAreaImpressaoTermo`) seguindo o mesmo padrão institucional do roteiro/cartão
+    de mesa. Corrigido bug de regressão em `processoTemConteudo()` (o objeto de membro da
+    comissão é sempre "truthy" mesmo vazio; a checagem agora inspeciona o campo `nome`), que
+    fazia o diálogo de "processo já aberto" aparecer indevidamente em toda importação; e um
+    bug de CSS análogo ao do stepper (Parte 1.2.0) em que `.grade-2{ display:grid }` sobrepunha
+    o atributo `hidden` da caixa de identificação do defensor.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -952,10 +968,19 @@
   @media (max-width: 720px){ .grade-2, .grade-3{ grid-template-columns:1fr; } }
 
   .obrigatorio::after{ content:" *"; color: var(--cor-erro); }
+  .rotulo-campo{ font-weight:400 !important; font-size:.75rem !important; color: var(--cor-texto-suave) !important; margin-bottom:2px !important; }
 
   .lista-vogais{ display:flex; flex-direction:column; gap:6px; }
-  .linha-vogal{ display:flex; gap:6px; }
-  .linha-vogal input{ flex:1; }
+  .cabecalho-vogais{
+    display:grid; grid-template-columns: 2fr 1.6fr 1fr 26px; gap:6px;
+    font-size:.72rem; color: var(--cor-texto-suave); margin-bottom:2px;
+  }
+  .linha-vogal{ display:grid; grid-template-columns: 2fr 1.6fr 1fr 26px; gap:6px; align-items:center; }
+  .linha-vogal input{ min-width:0; }
+  @media (max-width: 720px){
+    .cabecalho-vogais{ display:none; }
+    .linha-vogal{ grid-template-columns:1fr; }
+  }
 
   .aviso-pedagogico{
     background: var(--cor-alerta-fundo);
@@ -1002,6 +1027,7 @@
 
   #stepper-depoente{ display:flex; gap:0; margin: 10px 0 18px; }
   #stepper-depoente[hidden]{ display:none; }
+  #cartao-defensor-identificacao[hidden]{ display:none; }
   #stepper-depoente .etapa{
     flex:1; text-align:center; padding:8px 4px; font-size:.75rem; color:var(--cor-texto-suave);
     border:none; border-bottom:3px solid var(--cor-borda); background:transparent; border-radius:0;
@@ -1188,6 +1214,7 @@
   #area-impressao .cartao-mesa-grid{ column-count:2; column-gap:22px; font-size:8.5pt; margin-top:8px; }
   #area-impressao .cartao-mesa-item{ break-inside:avoid; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--rfb-navy-50); }
   #area-impressao .cartao-mesa-item .situacao{ font-weight:700; color: var(--rfb-navy-800); display:block; margin-bottom:2px; }
+  #area-impressao .impresso-termo{ white-space:pre-wrap; font-family: var(--rfb-font-mono); font-size:9.5pt; line-height:1.7; margin-top:14px; }
 </style>
 </head>
 <body>
@@ -1329,14 +1356,38 @@
         <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Usado no merge da abertura formal (âmbito de {{orgao_local}}).</div>
         <input type="text" id="campo-orgao-local" data-campo-processo="orgaoLocal">
       </div>
-      <div class="grade-2">
-        <div class="campo">
-          <label for="campo-presidente">Presidente da comissão</label>
-          <input type="text" id="campo-presidente" data-campo-comissao="presidente">
+      <div class="campo">
+        <label>Presidente da comissão</label>
+        <div class="grade-3">
+          <div>
+            <label class="rotulo-campo" for="campo-presidente-nome">Nome</label>
+            <input type="text" id="campo-presidente-nome" data-campo-membro="presidente" data-campo-membro-sub="nome">
+          </div>
+          <div>
+            <label class="rotulo-campo" for="campo-presidente-cargo">Cargo</label>
+            <input type="text" id="campo-presidente-cargo" data-campo-membro="presidente" data-campo-membro-sub="cargo">
+          </div>
+          <div>
+            <label class="rotulo-campo" for="campo-presidente-matricula">Matrícula</label>
+            <input type="text" id="campo-presidente-matricula" data-campo-membro="presidente" data-campo-membro-sub="matricula">
+          </div>
         </div>
-        <div class="campo">
-          <label for="campo-secretario">Secretário(a)</label>
-          <input type="text" id="campo-secretario" data-campo-comissao="secretario">
+      </div>
+      <div class="campo">
+        <label>Secretário(a)</label>
+        <div class="grade-3">
+          <div>
+            <label class="rotulo-campo" for="campo-secretario-nome">Nome</label>
+            <input type="text" id="campo-secretario-nome" data-campo-membro="secretario" data-campo-membro-sub="nome">
+          </div>
+          <div>
+            <label class="rotulo-campo" for="campo-secretario-cargo">Cargo</label>
+            <input type="text" id="campo-secretario-cargo" data-campo-membro="secretario" data-campo-membro-sub="cargo">
+          </div>
+          <div>
+            <label class="rotulo-campo" for="campo-secretario-matricula">Matrícula</label>
+            <input type="text" id="campo-secretario-matricula" data-campo-membro="secretario" data-campo-membro-sub="matricula">
+          </div>
         </div>
       </div>
       <div class="campo">
@@ -1381,14 +1432,38 @@
             <input type="text" id="ato-portaria" data-campo-ato="portaria">
           </div>
         </div>
-        <div class="grade-2">
-          <div class="campo">
-            <label for="ato-presidente">Presidente da comissão</label>
-            <input type="text" id="ato-presidente" data-campo-ato-comissao="presidente">
+        <div class="campo">
+          <label>Presidente da comissão</label>
+          <div class="grade-3">
+            <div>
+              <label class="rotulo-campo" for="ato-presidente-nome">Nome</label>
+              <input type="text" id="ato-presidente-nome" data-campo-ato-membro="presidente" data-campo-ato-membro-sub="nome">
+            </div>
+            <div>
+              <label class="rotulo-campo" for="ato-presidente-cargo">Cargo</label>
+              <input type="text" id="ato-presidente-cargo" data-campo-ato-membro="presidente" data-campo-ato-membro-sub="cargo">
+            </div>
+            <div>
+              <label class="rotulo-campo" for="ato-presidente-matricula">Matrícula</label>
+              <input type="text" id="ato-presidente-matricula" data-campo-ato-membro="presidente" data-campo-ato-membro-sub="matricula">
+            </div>
           </div>
-          <div class="campo">
-            <label for="ato-secretario">Secretário(a)</label>
-            <input type="text" id="ato-secretario" data-campo-ato-comissao="secretario">
+        </div>
+        <div class="campo">
+          <label>Secretário(a)</label>
+          <div class="grade-3">
+            <div>
+              <label class="rotulo-campo" for="ato-secretario-nome">Nome</label>
+              <input type="text" id="ato-secretario-nome" data-campo-ato-membro="secretario" data-campo-ato-membro-sub="nome">
+            </div>
+            <div>
+              <label class="rotulo-campo" for="ato-secretario-cargo">Cargo</label>
+              <input type="text" id="ato-secretario-cargo" data-campo-ato-membro="secretario" data-campo-ato-membro-sub="cargo">
+            </div>
+            <div>
+              <label class="rotulo-campo" for="ato-secretario-matricula">Matrícula</label>
+              <input type="text" id="ato-secretario-matricula" data-campo-ato-membro="secretario" data-campo-ato-membro-sub="matricula">
+            </div>
           </div>
         </div>
         <div class="campo">
@@ -1431,6 +1506,16 @@
             Há defensor constituído presente?
           </label>
           <div style="font-size:.78rem;color:var(--cor-texto-suave);">Define se o bloco "Palavra à defesa / reperguntas" entra no roteiro.</div>
+        </div>
+        <div class="grade-2" id="cartao-defensor-identificacao" hidden>
+          <div class="campo">
+            <label for="ato-defensor-nome">Nome do defensor</label>
+            <input type="text" id="ato-defensor-nome" data-campo-defensor="nome">
+          </div>
+          <div class="campo">
+            <label for="ato-defensor-oab">Nº de inscrição na OAB</label>
+            <input type="text" id="ato-defensor-oab" data-campo-defensor="oab">
+          </div>
         </div>
       </div>
 
@@ -1589,7 +1674,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.3.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.4.0</div>
 </footer>
 
 <script>
@@ -1952,6 +2037,28 @@ function gerarId(){
 
 function agoraISO(){ return new Date().toISOString(); }
 
+// Membro da comissão: nome, cargo e matrícula (3 campos, a pedido do usuário).
+function membroVazio(){
+  return { nome: "", cargo: "", matricula: "" };
+}
+
+// Aceita tanto o formato novo ({nome,cargo,matricula}) quanto o antigo (string simples),
+// para não quebrar processos/arquivos .json exportados antes desta mudança.
+function normalizarMembro(m){
+  if (typeof m === "string") return { nome: m, cargo: "", matricula: "" };
+  if (!m || typeof m !== "object") return membroVazio();
+  return { nome: m.nome || "", cargo: m.cargo || "", matricula: m.matricula || "" };
+}
+
+function migrarComissao(comissao){
+  comissao = comissao || {};
+  return {
+    presidente: normalizarMembro(comissao.presidente),
+    vogais: (comissao.vogais || []).map(normalizarMembro),
+    secretario: normalizarMembro(comissao.secretario)
+  };
+}
+
 function processoVazio(){
   return {
     versaoFerramenta: VERSAO_FERRAMENTA,
@@ -1961,7 +2068,7 @@ function processoVazio(){
       numero: "",
       portaria: "",
       orgaoLocal: "",
-      comissao: { presidente: "", vogais: [], secretario: "" },
+      comissao: { presidente: membroVazio(), vogais: [], secretario: membroVazio() },
       criadoEm: agoraISO(),
       atualizadoEm: agoraISO()
     },
@@ -1977,7 +2084,14 @@ function processoTemConteudo(e){
   if (!e) return false;
   const p = e.processo || {};
   const m = e.matriz || {};
-  return !!(p.numero || p.portaria || p.comissao?.presidente || (p.comissao?.vogais||[]).length ||
+  // Membro da comissão (objeto {nome,cargo,matricula}) é sempre "truthy" mesmo vazio — o que
+  // importa é conteúdo, então checamos o campo "nome" de cada um, não o objeto em si.
+  const comissaoPreenchida = !!(
+    p.comissao?.presidente?.nome?.trim() ||
+    p.comissao?.secretario?.nome?.trim() ||
+    (p.comissao?.vogais || []).some(v => v?.nome?.trim())
+  );
+  return !!(p.numero || p.portaria || comissaoPreenchida ||
             m.conduta || m.investigado || m.elementosDisponiveis || m.hipotese ||
             (e.depoentes || []).length);
 }
@@ -1991,12 +2105,24 @@ function salvarLocalStorage(){
   }
 }
 
+// Migra a comissão do processo e a de cada ato de depoente já persistido para o formato
+// {nome,cargo,matricula} — cobre tanto o localStorage local quanto arquivos .json importados
+// salvos antes desta mudança.
+function migrarEstadoCarregado(e){
+  if (!e) return e;
+  if (e.processo) e.processo.comissao = migrarComissao(e.processo.comissao);
+  (e.depoentes || []).forEach(d => {
+    if (d.ato && d.ato.comissao) d.ato.comissao = migrarComissao(d.ato.comissao);
+  });
+  return e;
+}
+
 function carregarLocalStorage(){
   try{
     const bruto = localStorage.getItem(CHAVE_LS);
     if (bruto){
       const carregado = JSON.parse(bruto);
-      if (carregado && carregado.processo) estado = carregado;
+      if (carregado && carregado.processo) estado = migrarEstadoCarregado(carregado);
     }
   }catch(erro){
     console.error("Falha ao carregar do localStorage:", erro);
@@ -2049,41 +2175,54 @@ function renderCamposProcesso(){
   document.getElementById("campo-numero").value = estado.processo.numero || "";
   document.getElementById("campo-portaria").value = estado.processo.portaria || "";
   document.getElementById("campo-orgao-local").value = estado.processo.orgaoLocal || "";
-  document.getElementById("campo-presidente").value = estado.processo.comissao.presidente || "";
-  document.getElementById("campo-secretario").value = estado.processo.comissao.secretario || "";
+  document.getElementById("campo-presidente-nome").value = estado.processo.comissao.presidente.nome || "";
+  document.getElementById("campo-presidente-cargo").value = estado.processo.comissao.presidente.cargo || "";
+  document.getElementById("campo-presidente-matricula").value = estado.processo.comissao.presidente.matricula || "";
+  document.getElementById("campo-secretario-nome").value = estado.processo.comissao.secretario.nome || "";
+  document.getElementById("campo-secretario-cargo").value = estado.processo.comissao.secretario.cargo || "";
+  document.getElementById("campo-secretario-matricula").value = estado.processo.comissao.secretario.matricula || "";
 
   renderVogais();
 }
 
-function renderVogais(){
-  const wrap = document.getElementById("lista-vogais");
-  const vogais = estado.processo.comissao.vogais || [];
-  if (!vogais.length){
+// Lista de vogais (ou outros membros repetíveis): cada linha com 3 campos (nome/cargo/matrícula).
+// Reaproveitada pela Tela do Processo e pela Etapa 1 do wizard (mesmo formato de dados).
+function renderListaMembros(containerId, membros, aoAlterar){
+  const wrap = document.getElementById(containerId);
+  if (!membros.length){
     wrap.innerHTML = "<p class=\"vazio\" style=\"margin:0;\">Nenhum vogal adicionado.</p>";
     return;
   }
-  wrap.innerHTML = vogais.map((v, i) => (
-    "<div class=\"linha-vogal\">" +
-      "<input type=\"text\" value=\"" + escapeHtml(v) + "\" data-indice-vogal=\"" + i + "\" aria-label=\"Vogal " + (i+1) + "\">" +
-      "<button type=\"button\" class=\"secundario pequeno\" data-remover-vogal=\"" + i + "\" aria-label=\"Remover vogal " + (i+1) + "\">×</button>" +
-    "</div>"
-  )).join("");
+  wrap.innerHTML =
+    "<div class=\"cabecalho-vogais\"><span>Nome</span><span>Cargo</span><span>Matrícula</span><span></span></div>" +
+    membros.map((v, i) => (
+      "<div class=\"linha-vogal\">" +
+        "<input type=\"text\" value=\"" + escapeHtml(v.nome) + "\" placeholder=\"Nome\" data-indice-vogal=\"" + i + "\" data-sub-vogal=\"nome\" aria-label=\"Nome do vogal " + (i+1) + "\">" +
+        "<input type=\"text\" value=\"" + escapeHtml(v.cargo) + "\" placeholder=\"Cargo\" data-indice-vogal=\"" + i + "\" data-sub-vogal=\"cargo\" aria-label=\"Cargo do vogal " + (i+1) + "\">" +
+        "<input type=\"text\" value=\"" + escapeHtml(v.matricula) + "\" placeholder=\"Matrícula\" data-indice-vogal=\"" + i + "\" data-sub-vogal=\"matricula\" aria-label=\"Matrícula do vogal " + (i+1) + "\">" +
+        "<button type=\"button\" class=\"secundario pequeno\" data-remover-vogal=\"" + i + "\" aria-label=\"Remover vogal " + (i+1) + "\">×</button>" +
+      "</div>"
+    )).join("");
 
   wrap.querySelectorAll("[data-indice-vogal]").forEach(inp => {
     inp.addEventListener("input", () => {
       const i = Number(inp.dataset.indiceVogal);
-      estado.processo.comissao.vogais[i] = inp.value;
-      salvarLocalStorage();
+      membros[i][inp.dataset.subVogal] = inp.value;
+      aoAlterar();
     });
   });
   wrap.querySelectorAll("[data-remover-vogal]").forEach(btn => {
     btn.addEventListener("click", () => {
       const i = Number(btn.dataset.removerVogal);
-      estado.processo.comissao.vogais.splice(i, 1);
-      salvarLocalStorage();
-      renderVogais();
+      membros.splice(i, 1);
+      aoAlterar();
+      renderListaMembros(containerId, membros, aoAlterar);
     });
   });
+}
+
+function renderVogais(){
+  renderListaMembros("lista-vogais", estado.processo.comissao.vogais, salvarLocalStorage);
 }
 
 function statusLabel(s){
@@ -2174,16 +2313,16 @@ function ligarCamposProcesso(){
       salvarLocalStorage();
     });
   });
-  document.querySelectorAll("[data-campo-comissao]").forEach(campo => {
+  document.querySelectorAll("[data-campo-membro]").forEach(campo => {
     campo.addEventListener("input", () => {
-      estado.processo.comissao[campo.dataset.campoComissao] = campo.value;
+      estado.processo.comissao[campo.dataset.campoMembro][campo.dataset.campoMembroSub] = campo.value;
       salvarLocalStorage();
     });
   });
 }
 
 document.getElementById("btn-add-vogal").addEventListener("click", () => {
-  estado.processo.comissao.vogais.push("");
+  estado.processo.comissao.vogais.push(membroVazio());
   salvarLocalStorage();
   renderVogais();
 });
@@ -2315,7 +2454,7 @@ function aplicarImportacao(dados, comoNovo){
     dados.processo.criadoEm = agoraISO();
     (dados.depoentes || []).forEach(d => { d.id = gerarId(); });
   }
-  estado = dados;
+  estado = migrarEstadoCarregado(dados);
   estado.versaoFerramenta = VERSAO_FERRAMENTA;
   salvarLocalStorage();
   renderTudo();
@@ -2349,12 +2488,14 @@ function garantirEstruturaAto(d){
   if (d.ato.numero === undefined) d.ato.numero = estado.processo.numero;
   if (d.ato.portaria === undefined) d.ato.portaria = estado.processo.portaria;
   if (!d.ato.comissao) {
+    // Cópia profunda: cada membro é um objeto próprio, para editar o ato sem afetar o processo.
     d.ato.comissao = {
-      presidente: estado.processo.comissao.presidente,
-      vogais: (estado.processo.comissao.vogais || []).slice(),
-      secretario: estado.processo.comissao.secretario
+      presidente: { ...estado.processo.comissao.presidente },
+      vogais: (estado.processo.comissao.vogais || []).map(v => ({ ...v })),
+      secretario: { ...estado.processo.comissao.secretario }
     };
   }
+  d.ato.comissao = migrarComissao(d.ato.comissao); // aceita ato.comissao antigo (strings)
   d.ato.data = d.ato.data || "";
   d.ato.hora = d.ato.hora || "";
   d.ato.local = d.ato.local || "";
@@ -2362,6 +2503,7 @@ function garantirEstruturaAto(d){
   // Resolução da pendência dos blocos 6 e 12: define se o Bloco 12 (palavra à defesa/reperguntas) entra
   // no roteiro — omitido por completo quando não houver defensor constituído presente.
   if (d.ato.defensorPresente === undefined) d.ato.defensorPresente = false;
+  d.ato.defensor = d.ato.defensor || { nome: "", oab: "" };
   d.ato.estrategia = d.ato.estrategia || {};
   d.perfil = d.perfil || {};
   d.roteiro = d.roteiro || [];
@@ -2454,8 +2596,12 @@ function renderEtapa1(){
 
   document.getElementById("ato-numero").value = d.ato.numero || "";
   document.getElementById("ato-portaria").value = d.ato.portaria || "";
-  document.getElementById("ato-presidente").value = d.ato.comissao.presidente || "";
-  document.getElementById("ato-secretario").value = d.ato.comissao.secretario || "";
+  document.getElementById("ato-presidente-nome").value = d.ato.comissao.presidente.nome || "";
+  document.getElementById("ato-presidente-cargo").value = d.ato.comissao.presidente.cargo || "";
+  document.getElementById("ato-presidente-matricula").value = d.ato.comissao.presidente.matricula || "";
+  document.getElementById("ato-secretario-nome").value = d.ato.comissao.secretario.nome || "";
+  document.getElementById("ato-secretario-cargo").value = d.ato.comissao.secretario.cargo || "";
+  document.getElementById("ato-secretario-matricula").value = d.ato.comissao.secretario.matricula || "";
   document.getElementById("ato-data").value = d.ato.data || "";
   document.getElementById("ato-hora").value = d.ato.hora || "";
   document.getElementById("ato-local").value = d.ato.local || "";
@@ -2463,6 +2609,9 @@ function renderEtapa1(){
     r.checked = (r.value === d.ato.modalidade);
   });
   document.getElementById("ato-defensor-presente").checked = !!d.ato.defensorPresente;
+  document.getElementById("cartao-defensor-identificacao").hidden = !d.ato.defensorPresente;
+  document.getElementById("ato-defensor-nome").value = d.ato.defensor.nome || "";
+  document.getElementById("ato-defensor-oab").value = d.ato.defensor.oab || "";
   document.getElementById("ato-quem-pergunta").value = d.ato.estrategia.quemPergunta || "";
   document.getElementById("ato-quem-revisa").value = d.ato.estrategia.quemRevisa || "";
   document.getElementById("ato-formato-abertura").value = d.ato.estrategia.formatoAbertura || "";
@@ -2473,34 +2622,7 @@ function renderEtapa1(){
 }
 
 function renderVogaisAto(d){
-  const wrap = document.getElementById("lista-vogais-ato");
-  const vogais = d.ato.comissao.vogais || [];
-  if (!vogais.length){
-    wrap.innerHTML = "<p class=\"vazio\" style=\"margin:0;\">Nenhum vogal adicionado.</p>";
-    return;
-  }
-  wrap.innerHTML = vogais.map((v, i) => (
-    "<div class=\"linha-vogal\">" +
-      "<input type=\"text\" value=\"" + escapeHtml(v) + "\" data-indice-vogal-ato=\"" + i + "\" aria-label=\"Vogal " + (i+1) + "\">" +
-      "<button type=\"button\" class=\"secundario pequeno\" data-remover-vogal-ato=\"" + i + "\" aria-label=\"Remover vogal " + (i+1) + "\">×</button>" +
-    "</div>"
-  )).join("");
-
-  wrap.querySelectorAll("[data-indice-vogal-ato]").forEach(inp => {
-    inp.addEventListener("input", () => {
-      const dep = getDepoenteAtivo();
-      dep.ato.comissao.vogais[Number(inp.dataset.indiceVogalAto)] = inp.value;
-      salvarLocalStorage();
-    });
-  });
-  wrap.querySelectorAll("[data-remover-vogal-ato]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const dep = getDepoenteAtivo();
-      dep.ato.comissao.vogais.splice(Number(btn.dataset.removerVogalAto), 1);
-      salvarLocalStorage();
-      renderVogaisAto(dep);
-    });
-  });
+  renderListaMembros("lista-vogais-ato", d.ato.comissao.vogais, salvarLocalStorage);
 }
 
 function renderEtapa2(){
@@ -2577,11 +2699,11 @@ function ligarCamposWizardEtapa1(){
       salvarLocalStorage();
     });
   });
-  document.querySelectorAll("[data-campo-ato-comissao]").forEach(campo => {
+  document.querySelectorAll("[data-campo-ato-membro]").forEach(campo => {
     campo.addEventListener("input", () => {
       const d = getDepoenteAtivo();
       if (!d) return;
-      d.ato.comissao[campo.dataset.campoAtoComissao] = campo.value;
+      d.ato.comissao[campo.dataset.campoAtoMembro][campo.dataset.campoAtoMembroSub] = campo.value;
       salvarLocalStorage();
     });
   });
@@ -2599,6 +2721,15 @@ function ligarCamposWizardEtapa1(){
     if (!d) return;
     d.ato.defensorPresente = ev.target.checked;
     salvarLocalStorage();
+    document.getElementById("cartao-defensor-identificacao").hidden = !ev.target.checked;
+  });
+  document.querySelectorAll("[data-campo-defensor]").forEach(campo => {
+    campo.addEventListener("input", () => {
+      const d = getDepoenteAtivo();
+      if (!d) return;
+      d.ato.defensor[campo.dataset.campoDefensor] = campo.value;
+      salvarLocalStorage();
+    });
   });
   document.querySelectorAll("[data-campo-estrategia]").forEach(campo => {
     campo.addEventListener("input", () => {
@@ -2611,7 +2742,7 @@ function ligarCamposWizardEtapa1(){
   document.getElementById("btn-add-vogal-ato").addEventListener("click", () => {
     const d = getDepoenteAtivo();
     if (!d) return;
-    d.ato.comissao.vogais.push("");
+    d.ato.comissao.vogais.push(membroVazio());
     salvarLocalStorage();
     renderVogaisAto(d);
   });
@@ -2709,9 +2840,9 @@ function contextoMerge(d){
     nome: d.identificacao || "",
     processo: d.ato.numero || "",
     portaria: d.ato.portaria || "",
-    presidente: d.ato.comissao.presidente || "",
-    vogais: (d.ato.comissao.vogais || []).filter(v => v && v.trim()).join(", "),
-    secretario: d.ato.comissao.secretario || "",
+    presidente: (d.ato.comissao.presidente && d.ato.comissao.presidente.nome) || "",
+    vogais: (d.ato.comissao.vogais || []).map(v => v && v.nome).filter(n => n && n.trim()).join(", "),
+    secretario: (d.ato.comissao.secretario && d.ato.comissao.secretario.nome) || "",
     data: formatarDataBR(d.ato.data),
     hora: d.ato.hora || "",
     local: d.ato.local || "",
@@ -3114,7 +3245,12 @@ function gerarTermoTexto(d){
     ", composta por " + (ctx.presidente || "____") + " (presidente), " + (ctx.vogais || "____") + " (vogais), secretariada por " +
     (ctx.secretario || "____") + ", compareceu " + (ctx.nome || "____") + ", regularmente " + intimacao + " na condição de " + papelLabel + ".";
   if (d.papel === "acusado"){
-    texto += " Presente também seu defensor constituído, quando constituído, Dr(a). ___, OAB/__ nº ___.";
+    if (d.ato.defensorPresente && d.ato.defensor.nome && d.ato.defensor.nome.trim()){
+      texto += " Presente também seu defensor constituído, Dr(a). " + d.ato.defensor.nome +
+        (d.ato.defensor.oab && d.ato.defensor.oab.trim() ? ", OAB nº " + d.ato.defensor.oab : "") + ".";
+    } else {
+      texto += " Presente também seu defensor constituído, quando constituído, Dr(a). ___, OAB/__ nº ___.";
+    }
   }
 
   texto += "\n\nIniciados os trabalhos, o presidente procedeu à qualificação civil e funcional do(a) depoente, conferindo os dados com documento oficial de identificação.";
@@ -3189,6 +3325,7 @@ function renderEtapa4(){
   html += "<div class=\"acoes-topo\" style=\"margin-top:8px;\">" +
     "<button type=\"button\" class=\"secundario\" id=\"btn-copiar-termo\">Copiar termo</button>" +
     "<button type=\"button\" class=\"secundario\" id=\"btn-regenerar-termo\">Regenerar termo</button>" +
+    "<button type=\"button\" id=\"btn-imprimir-termo\">Imprimir termo</button>" +
     "</div>";
   html += "</div>";
 
@@ -3266,6 +3403,11 @@ function ligarEventosEtapa4(container, d){
     prepararAreaImpressaoParaImpressao();
     window.print();
   });
+  document.getElementById("btn-imprimir-termo").addEventListener("click", () => {
+    montarAreaImpressaoTermo(d);
+    prepararAreaImpressaoParaImpressao();
+    window.print();
+  });
 }
 
 // Reparenta #area-impressao para filha direta de <body>, independentemente de onde a marcação
@@ -3306,7 +3448,7 @@ function montarAreaImpressaoRoteiro(d){
   const silencioExercido = d.papel === "acusado" && d.acusadoSilencio;
   const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
   const infracaoObj = CATALOGO.infracoes.find(i => i.id === d.infracao);
-  const vogaisPreenchidos = (d.ato.comissao.vogais || []).filter(v => v && v.trim());
+  const vogaisPreenchidos = (d.ato.comissao.vogais || []).filter(v => v && v.nome && v.nome.trim());
   let numero = 0;
   let numeroSecao = 0;
   let html = "";
@@ -3333,9 +3475,10 @@ function montarAreaImpressaoRoteiro(d){
     "</div>" +
     "<div class=\"divisor\"></div>" +
     "<div class=\"rotulo\">Composição da comissão</div>" +
-    "Presidente: " + escapeHtml(d.ato.comissao.presidente || "—") +
-    (vogaisPreenchidos.length ? " · Vogais: " + escapeHtml(vogaisPreenchidos.join(", ")) : "") +
-    " · Secretário(a): " + escapeHtml(d.ato.comissao.secretario || "—") +
+    "Presidente: " + escapeHtml(formatarMembro(d.ato.comissao.presidente)) +
+    (vogaisPreenchidos.length ? " · Vogais: " + escapeHtml(vogaisPreenchidos.map(formatarMembro).join("; ")) : "") +
+    " · Secretário(a): " + escapeHtml(formatarMembro(d.ato.comissao.secretario)) +
+    (d.ato.defensorPresente && d.ato.defensor.nome ? "<div class=\"divisor\"></div><div class=\"rotulo\">Defensor constituído</div>Dr(a). " + escapeHtml(d.ato.defensor.nome) + (d.ato.defensor.oab ? " — OAB nº " + escapeHtml(d.ato.defensor.oab) : "") : "") +
   "</div>";
 
   CATALOGO.blocos.forEach(bloco => {
@@ -3379,6 +3522,35 @@ function montarAreaImpressaoCartaoMesa(){
   html += "</div>";
   html += htmlRodapeImpressao("Uso interno · Consulta rápida durante o ato");
   document.getElementById("area-impressao").innerHTML = html;
+}
+
+function montarAreaImpressaoTermo(d){
+  const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
+  let html = "";
+
+  html += htmlCabecalhoImpressao("Termo de Redução", "Ferramentas Coger · Oitiva 360");
+
+  html += "<div class=\"impresso-refs\">" +
+    "<span><b>Processo nº</b> " + escapeHtml(d.ato.numero || estado.processo.numero || "—") + "</span>" +
+    "<span><b>Depoente</b> " + escapeHtml(d.identificacao) + " (" + escapeHtml(papelNome) + ")</span>" +
+    "<span><b>Data</b> " + escapeHtml(formatarDataBR(d.ato.data) || "—") + "</span>" +
+  "</div>";
+
+  html += "<div class=\"impresso-termo\">" + escapeHtml(d.termoTexto || "") + "</div>";
+
+  html += htmlRodapeImpressao("Uso interno · Processo nº " + (d.ato.numero || estado.processo.numero || "—"));
+
+  document.getElementById("area-impressao").innerHTML = html;
+}
+
+// Formata um membro da comissão (nome — cargo (mat. matrícula)), no padrão do documento de
+// referência fornecido pelo usuário (ex.: "Presidente: abc — atrfb (mat. 123)").
+function formatarMembro(m){
+  if (!m || !m.nome || !m.nome.trim()) return "—";
+  let s = m.nome;
+  if (m.cargo && m.cargo.trim()) s += " — " + m.cargo;
+  if (m.matricula && m.matricula.trim()) s += " (mat. " + m.matricula + ")";
+  return s;
 }
 
 /* =====================================================================
