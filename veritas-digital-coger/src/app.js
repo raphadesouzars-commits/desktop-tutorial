@@ -81,15 +81,23 @@ var CATALOGO = {
     dica_fishing: "Mantenha o objeto da apuração determinado: fato, pessoa e meios de prova. Evite incorporar elementos coletados sem relação direta com a hipótese investigativa em curso.",
     dica_privacidade_consentimento: "Ao registrar mensagens ou gravações, observe as normas de privacidade aplicáveis e, quando pertinente, documente se houve consentimento na colaboração de quem forneceu o material.",
     dica_prejuizo: "Uma divergência ou lacuna formal na cadeia de custódia não gera nulidade automática. Registre o ocorrido com precisão e avalie se há prejuízo concreto e demonstrável para a acusação ou para a defesa — esse é o critério que prevalece, não a falha formal isolada em si.",
-    dica_pericia: "Se a autenticidade deste elemento for seriamente contestada, esta ferramenta não substitui perícia formal. Ela documenta a cadeia até este ponto; a partir daqui, avalie a necessidade de exame pericial."
+    dica_pericia: "Se a autenticidade deste elemento for seriamente contestada, esta ferramenta não substitui perícia formal. Ela documenta a cadeia até este ponto; a partir daqui, avalie a necessidade de exame pericial.",
+    dica_lacre_fisico: "Documentos físicos e dispositivos (HD, celular, mídia removível) não têm hash — a integridade deles se sustenta pelo lacre. Registre o nº do lacre, sua condição no recebimento/coleta e o local de guarda física; use \"Registrar evento &rarr; Conferência do lacre\" sempre que o objeto for reaberto ou transferido."
   }
 };
 
 var CATEGORIAS = {
   print_sistema: "Print de sistema", documento_financeiro: "Documento financeiro",
   comunicacao: "Comunicação (e-mail/mensagem)", foto_video: "Foto/vídeo",
-  laudo_pericia: "Laudo/perícia", oficio: "Ofício", decisao_judicial: "Decisão judicial", outro: "Outro"
+  laudo_pericia: "Laudo/perícia", oficio: "Ofício", decisao_judicial: "Decisão judicial",
+  documento_fisico: "Documento físico", dispositivo_fisico: "Dispositivo/mídia física (HD, celular, pendrive etc.)",
+  outro: "Outro"
 };
+var ELEMENTO_FISICO_TIPOS = {
+  documento_fisico: "Documento físico (papel)", hd_armazenamento: "HD/dispositivo de armazenamento",
+  celular_smartphone: "Celular/smartphone", midia_removivel: "Mídia removível (pendrive, CD/DVD)", outro: "Outro"
+};
+var CONDICAO_LACRE = { intacto: "Íntegro", rompido: "Rompido", nao_lacrado: "Não lacrado" };
 var SIGILO = { publico: "Público nos autos", acesso_restrito: "Acesso restrito", sigiloso: "Sigiloso" };
 var PROVENIENCIA_TIPOS = {
   gerado_internamente: "A) Gerado internamente",
@@ -112,6 +120,7 @@ var EVENTO_TIPOS = {
   enviado_pericia: { label: "Enviado para perícia formal", escopo: "arquivo" },
   conferencia_rodada: { label: "Conferência de integridade rodada", escopo: "item" },
   conferencia_arquivo: { label: "Conferência de integridade (arquivo)", escopo: "arquivo" },
+  conferencia_lacre: { label: "Conferência do lacre", escopo: "item" },
   status_alterado: { label: "Status alterado", escopo: "item" },
   item_descartado: { label: "Item descartado", escopo: "item" }
 };
@@ -132,7 +141,8 @@ function novoItemDraft() {
       processoJudicialOrigem: "", orgaoExpedidor: "", naturezaCompartilhamento: "", nomeOperacao: "",
       dataOficio: "", dataRecebimento: "", numeroOficio: "",
       quemColetou: "", contextoColeta: "", localSituacao: "",
-      sistemaOrigem: "", idDocumentoOrigem: "", processoOrigem: "", usuarioExtraiu: "", dataHoraExtracao: ""
+      sistemaOrigem: "", idDocumentoOrigem: "", processoOrigem: "", usuarioExtraiu: "", dataHoraExtracao: "",
+      elementoFisico: elementoFisicoVazio()
     },
     arquivos: [],
     responsavelRegistro: "", custodianteAtual: "", status: "ativo", resultadoAgregado: "nao_aplicavel",
@@ -141,6 +151,9 @@ function novoItemDraft() {
 }
 
 function membroVazio() { return { nome: "", cargo: "", matricula: "" }; }
+function elementoFisicoVazio() {
+  return { presente: false, tipo: "", numeroLacre: "", descricaoLacre: "", condicaoLacre: "intacto", localGuarda: "", responsavelGuarda: "" };
+}
 function novoDossie() {
   return {
     versaoFerramenta: "1.0", versaoEsquema: "2.0", hashDoDossie: "",
@@ -158,11 +171,19 @@ function migrarMembro(m) {
   return { nome: m.nome || "", cargo: m.cargo || "", matricula: m.matricula || "" };
 }
 function migrarDossie(d) {
-  if (!d || !d.processo || !d.processo.comissao) return d;
-  var c = d.processo.comissao;
-  c.presidente = migrarMembro(c.presidente);
-  c.secretario = migrarMembro(c.secretario);
-  c.vogais = (c.vogais || []).map(migrarMembro);
+  if (!d) return d;
+  if (d.processo) {
+    if (d.processo.secaoResponsavel === undefined) d.processo.secaoResponsavel = "";
+    if (d.processo.comissao) {
+      var c = d.processo.comissao;
+      c.presidente = migrarMembro(c.presidente);
+      c.secretario = migrarMembro(c.secretario);
+      c.vogais = (c.vogais || []).map(migrarMembro);
+    }
+  }
+  (d.itens || []).forEach(function (it) {
+    if (it.proveniencia && !it.proveniencia.elementoFisico) it.proveniencia.elementoFisico = elementoFisicoVazio();
+  });
   return d;
 }
 
@@ -213,7 +234,10 @@ function piorResultado(resultados) {
   return "nao_aplicavel";
 }
 function recalcularAgregadoItem(item) {
-  item.resultadoAgregado = piorResultado(item.arquivos.map(function (a) { return a.resultadoComparacao; }));
+  var resultados = item.arquivos.map(function (a) { return a.resultadoComparacao; });
+  var ef = item.proveniencia.elementoFisico;
+  if (ef && ef.presente && ef.condicaoLacre === "rompido") resultados.push("diverge");
+  item.resultadoAgregado = piorResultado(resultados);
 }
 function statusIconClasse(item) {
   if (item.status === "descartado") return "vdc-status-icon--none";
@@ -476,7 +500,24 @@ function stepProveniencia(d) {
       campoDraft("Data/hora da extração", "proveniencia.dataHoraExtracao", d.proveniencia.dataHoraExtracao, null, "datetime-local") +
     '</div>';
   }
-  return radios + extra;
+  return radios + extra + (d.proveniencia.tipo ? elementoFisicoBlocoHtml(d) : "");
+}
+function elementoFisicoBlocoHtml(d) {
+  var ef = d.proveniencia.elementoFisico;
+  return '<div class="rfb-divider"></div>' +
+    '<label class="rfb-check"><input type="checkbox" ' + (ef.presente ? "checked" : "") + ' onchange="App.setDraft(\'proveniencia.elementoFisico.presente\', this.checked)"> Este item inclui um elemento físico (documento físico, HD, celular, mídia removível etc.), além do(s) arquivo(s) digital(is)?</label>' +
+    (ef.presente ? '<div style="margin-top:12px;">' + dica('dica_lacre_fisico') +
+      '<div class="vdc-grid-3" style="margin-top:12px;">' +
+        selectCampo("Tipo de elemento físico", "proveniencia.elementoFisico.tipo", ef.tipo, ELEMENTO_FISICO_TIPOS) +
+        campoDraft("Nº do lacre", "proveniencia.elementoFisico.numeroLacre", ef.numeroLacre) +
+        selectCampo("Condição do lacre", "proveniencia.elementoFisico.condicaoLacre", ef.condicaoLacre, CONDICAO_LACRE) +
+      '</div>' +
+      '<div class="vdc-grid-2" style="margin-top:12px;">' +
+        campoDraft("Descrição do lacre (cor/característica)", "proveniencia.elementoFisico.descricaoLacre", ef.descricaoLacre) +
+        campoDraft("Local de guarda física", "proveniencia.elementoFisico.localGuarda", ef.localGuarda) +
+        campoDraft("Responsável pela guarda física", "proveniencia.elementoFisico.responsavelGuarda", ef.responsavelGuarda) +
+      '</div>' +
+    '</div>' : "");
 }
 function campoDraft(label, path, value, placeholder, type) {
   return '<div class="rfb-field"><label class="rfb-label">' + label + '</label><input class="rfb-input" type="' + (type || "text") + '" value="' + escapeHtml(value || "") + '" oninput="App.setDraft(\'' + path + '\', this.value)"' + (placeholder ? ' placeholder="' + placeholder + '"' : '') + '></div>';
@@ -546,7 +587,7 @@ function timelineEventHtml(e) {
   return '<div class="vdc-timeline-event"><div class="vdc-timeline-event__dot' + (e.escopo === "arquivo" ? " vdc-timeline-event__dot--arquivo" : "") + '"></div>' +
     '<div class="vdc-timeline-event__body">' +
       '<div class="vdc-timeline-event__title">' + tipo.label + (e.arquivoNome ? " — " + escapeHtml(e.arquivoNome) : "") + '</div>' +
-      '<div class="vdc-timeline-event__meta">' + fmtDT(e.dataHora) + (e.responsavel ? " · " + escapeHtml(e.responsavel) : "") + (e.resultado ? " · " + (RESULTADO[e.resultado] || e.resultado) : "") + '</div>' +
+      '<div class="vdc-timeline-event__meta">' + fmtDT(e.dataHora) + (e.responsavel ? " · " + escapeHtml(e.responsavel) : "") + (e.resultado ? " · " + (RESULTADO[e.resultado] || CONDICAO_LACRE[e.resultado] || e.resultado) : "") + '</div>' +
       (e.observacao ? '<div class="vdc-timeline-event__obs">' + escapeHtml(e.observacao) + '</div>' : '') +
     '</div></div>';
 }
@@ -627,7 +668,22 @@ function provenienciaResumoHtml(it) {
   } else if (p.tipo === "extraido_sistema_trilha") {
     rows = [["Sistema de origem", p.sistemaOrigem], ["ID do documento", p.idDocumentoOrigem], ["Processo de origem", p.processoOrigem], ["Usuário que extraiu", p.usuarioExtraiu], ["Data/hora da extração", p.dataHoraExtracao]];
   }
-  return '<div class="vdc-file-meta">' + rows.map(function (r) { return '<div><strong>' + r[0] + ':</strong> ' + escapeHtml(r[1] || "—") + '</div>'; }).join("") + '</div>';
+  var html = '<div class="vdc-file-meta">' + rows.map(function (r) { return '<div><strong>' + r[0] + ':</strong> ' + escapeHtml(r[1] || "—") + '</div>'; }).join("") + '</div>';
+  html += elementoFisicoResumoHtml(p.elementoFisico);
+  return html;
+}
+function elementoFisicoResumoHtml(ef) {
+  if (!ef || !ef.presente) return "";
+  var corCondicao = ef.condicaoLacre === "rompido" ? "danger" : (ef.condicaoLacre === "intacto" ? "success" : "neutral");
+  return '<div class="rfb-divider"></div>' +
+    '<div class="rfb-badge rfb-badge--' + corCondicao + '" style="margin-bottom:8px;">&#128274; Lacre ' + (CONDICAO_LACRE[ef.condicaoLacre] || "—") + '</div>' +
+    '<div class="vdc-file-meta">' +
+      '<div><strong>Tipo de elemento físico:</strong> ' + escapeHtml(ELEMENTO_FISICO_TIPOS[ef.tipo] || "—") + '</div>' +
+      '<div><strong>Nº do lacre:</strong> ' + escapeHtml(ef.numeroLacre || "—") + '</div>' +
+      '<div><strong>Descrição do lacre:</strong> ' + escapeHtml(ef.descricaoLacre || "—") + '</div>' +
+      '<div><strong>Local de guarda física:</strong> ' + escapeHtml(ef.localGuarda || "—") + '</div>' +
+      '<div><strong>Responsável pela guarda física:</strong> ' + escapeHtml(ef.responsavelGuarda || "—") + '</div>' +
+    '</div>';
 }
 
 /* ============================================================
@@ -649,8 +705,10 @@ var EVENTO_TIPO_OPTIONS = [
 function renderModalEvento() {
   var it = findItem(UI.modal.itemId);
   var c = UI.modal.campos;
+  var opcoesTipo = EVENTO_TIPO_OPTIONS.slice();
+  if (it.proveniencia.elementoFisico && it.proveniencia.elementoFisico.presente) opcoesTipo.push(["conferencia_lacre", "Conferência do lacre"]);
   var selectTipo = '<select class="rfb-select" id="evTipo" onchange="App.mudarTipoEvento(this.value)">' +
-    EVENTO_TIPO_OPTIONS.map(function (o) { return '<option value="' + o[0] + '"' + (c.tipo === o[0] ? " selected" : "") + '>' + o[1] + "</option>"; }).join("") + "</select>";
+    opcoesTipo.map(function (o) { return '<option value="' + o[0] + '"' + (c.tipo === o[0] ? " selected" : "") + '>' + o[1] + "</option>"; }).join("") + "</select>";
   return '<div class="vdc-modal-overlay" onclick="if(event.target===this) App.fecharModal()"><div class="vdc-modal">' +
     '<div class="vdc-modal__head"><span class="rfb-h3">Registrar evento</span><button class="vdc-close-btn" onclick="App.fecharModal()">&times;</button></div>' +
     '<div class="vdc-modal__body">' +
@@ -685,6 +743,9 @@ function buildEventoExtraFieldsHtml(it, c) {
         it.arquivos.map(function (a) { return '<option value="' + a.id + '">' + escapeHtml(a.descricao || a.nomeArquivo) + '</option>'; }).join("") + '</select></div>';
     }
     html += '<div class="rfb-field"><label class="rfb-label">Texto</label><textarea class="rfb-textarea" rows="2" id="evTexto"></textarea></div>';
+  } else if (c.tipo === "conferencia_lacre") {
+    html = '<div class="rfb-field"><label class="rfb-label">Condição do lacre nesta conferência</label><select class="rfb-select" id="evCondicaoLacre">' +
+      Object.keys(CONDICAO_LACRE).map(function (k) { return '<option value="' + k + '"' + (it.proveniencia.elementoFisico.condicaoLacre === k ? " selected" : "") + '>' + CONDICAO_LACRE[k] + "</option>"; }).join("") + '</select></div>';
   }
   return html;
 }
@@ -787,7 +848,10 @@ function viewRelatorio() {
       '<h3 class="impresso-secao">1. Itens (elementos de prova)</h3>' +
       '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th>Item</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Hash</th><th>Status</th><th>Fls.</th></tr></thead><tbody>' +
         d.itens.map(function (it) {
-          return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS[it.categoria] || "—") + '</td><td>' + (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") + '</td>' +
+          var ef = it.proveniencia.elementoFisico;
+          var provCel = (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") +
+            (ef && ef.presente ? '<br><span class="rfb-badge rfb-badge--' + (ef.condicaoLacre === "rompido" ? "danger" : "success") + '" style="margin-top:4px;">&#128274; Lacre ' + (ef.numeroLacre ? "nº " + escapeHtml(ef.numeroLacre) + " — " : "") + (CONDICAO_LACRE[ef.condicaoLacre] || "") + '</span>' : "");
+          return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS[it.categoria] || "—") + '</td><td>' + provCel + '</td>' +
             '<td>' + it.arquivos.length + '</td><td>' + itemHashCelulaHtml(it) + '</td><td>' + STATUS_ITEM[it.status] + '</td><td>' + escapeHtml(it.folhaAutos || "—") + '</td></tr>';
         }).join("") + '</tbody></table></div>' +
 
@@ -1010,6 +1074,11 @@ window.App = {
       } else {
         registrarEventoItem(it, "descricao_registrada", { responsavel: responsavel, observacao: texto || observacao });
       }
+    } else if (tipo === "conferencia_lacre") {
+      var condicaoLacre = document.getElementById("evCondicaoLacre").value;
+      it.proveniencia.elementoFisico.condicaoLacre = condicaoLacre;
+      registrarEventoItem(it, "conferencia_lacre", { responsavel: responsavel, resultado: condicaoLacre, observacao: observacao });
+      recalcularAgregadoItem(it);
     }
     UI.modal = null;
     persistir().then(render);
