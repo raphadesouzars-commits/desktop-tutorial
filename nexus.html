@@ -123,6 +123,23 @@ svg.map{display:block}
   justify-content:center;font-size:11px;font-weight:800;color:#fff;margin-top:1px}
 .check.ok .mk{background:#2e7d32}.check.no .mk{background:#c0c7d0}
 .checklist .btn{width:100%;justify-content:center;margin-top:8px}
+/* ordem narrativa dos fatos (arrasto) */
+.factorder{border-top:1px solid var(--borda);flex:0 0 auto;max-height:34%;display:flex;flex-direction:column}
+.factorder .fo-head{padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.factorder .fo-head h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
+.factorder .fo-head .chev{margin-left:auto;color:var(--ink-2);font-size:12px}
+.factorder .fo-hint{padding:0 14px 6px;font-size:11px;color:var(--ink-2);font-style:italic}
+.factorder .fo-list{overflow:auto;padding:0 10px 10px}
+.fo-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border:1px solid var(--borda);
+  border-radius:8px;margin-bottom:5px;background:var(--paper);font-size:12.5px}
+.fo-row[draggable=true]{cursor:grab}
+.fo-row.dragging{opacity:.4}
+.fo-row.over{border-color:var(--cor-fato);box-shadow:0 0 0 2px var(--cor-fato-bg)}
+.fo-row .handle{color:#b9c2ce;font-size:14px;line-height:1;cursor:grab;user-select:none}
+.fo-row .ord{font-weight:800;color:var(--cor-fato);min-width:18px;text-align:center}
+.fo-row .tit{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fo-row .fid{color:var(--ink-2);font-size:11px}
+.factorder .fo-empty{padding:0 14px 10px;font-size:12px;color:var(--ink-2)}
 
 /* ---------- FLOAT BTN (drawer trigger) ---------- */
 .fab{position:fixed;right:16px;bottom:16px;z-index:40;display:none}
@@ -234,7 +251,7 @@ svg.map.isolating .node.hl{opacity:1}
 <!-- ===================== TOPBAR ===================== -->
 <div class="topbar">
   <div class="brand-seal">RFB</div>
-  <div class="brand-txt"><b>CORREGEDORIA-GERAL — Coger/RFB</b><br>Receita Federal do Brasil</div>
+  <div class="brand-txt"><b>Corregedoria da Receita Federal do Brasil</b><br>Coger/RFB</div>
   <div class="tool-name">NEXUS · Nexo Fático-Probatório</div>
 </div>
 
@@ -296,6 +313,7 @@ svg.map.isolating .node.hl{opacity:1}
       <button class="btn ghost small" id="btnCollapse" title="Recolher painel">✕</button>
     </div>
     <div class="pend-list" id="pendList"></div>
+    <div class="factorder" id="factOrder"></div>
     <div class="checklist" id="checklist"></div>
   </aside>
 </div>
@@ -467,6 +485,8 @@ let doc = null;          // documento raiz
 let lens = 'todos';      // 'todos' | acusadoId
 let isolatedFato = null; // id do fato isolado por clique
 let searchTerm = '';
+let factOrderOpen = false;   // seção "ordem dos fatos" recolhida por padrão
+let dragFatoId = null;       // id do fato em arrasto na lista de ordem
 const revisadas = new Set(); // pendências marcadas "revisado ✓" (volátil)
 
 /* ------------------------------------------------------------------ *
@@ -491,8 +511,16 @@ function migra(d){
   const base=docVazio();
   d._seq=d._seq||{A:0,F:0,P:0,NU:0};
   if(!d.catalogoNormas||!d.catalogoNormas.length) d.catalogoNormas=base.catalogoNormas;
+  // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
+  (d.fatos||[]).forEach((f,i)=>{ if(typeof f.ordem!=='number') f.ordem=i+1; });
   return d;
 }
+// próximo inteiro de ordem narrativa (maior existente + 1)
+function proximaOrdem(){ return (doc.fatos||[]).reduce((m,f)=>Math.max(m, f.ordem||0), 0) + 1; }
+// fatos em ordem narrativa (cópia ordenada; NÃO altera doc.fatos nem o mapa)
+function fatosOrdenados(arr){ return (arr||doc.fatos).slice().sort((a,b)=>(a.ordem||0)-(b.ordem||0)); }
+// renumera ordem de forma compacta 1..N conforme a sequência visual atual
+function renumeraOrdem(seq){ seq.forEach((f,i)=>f.ordem=i+1); }
 function genId(prefix){
   doc._seq[prefix]=(doc._seq[prefix]||0)+1;
   return prefix+doc._seq[prefix];
@@ -638,6 +666,7 @@ function render(){
   renderLens();
   renderMap();
   renderPanel();
+  renderFactOrder();
   scheduleSave();
 }
 
@@ -1005,6 +1034,45 @@ function flash(node){
   },200);
 }
 
+/* ---------- ORDEM NARRATIVA DOS FATOS (arrasto; só afeta a minuta) ---------- */
+function renderFactOrder(){
+  const box=$('#factOrder'); if(!box) return; box.innerHTML='';
+  const n=(doc.fatos||[]).length;
+  const head=el('div',{class:'fo-head',onclick:()=>{factOrderOpen=!factOrderOpen;renderFactOrder();}},
+    el('h3',{},'Ordem dos fatos (minuta)'),
+    el('span',{class:'chev'}, (n?n+' · ':'')+(factOrderOpen?'▾':'▸')));
+  box.append(head);
+  if(!factOrderOpen) return;
+  box.append(el('div',{class:'fo-hint'},'Arraste para reordenar. Afeta apenas a sequência da minuta — não o mapa.'));
+  if(!n){ box.append(el('div',{class:'fo-empty'},'Nenhum fato cadastrado.')); return; }
+  const list=el('div',{class:'fo-list'});
+  fatosOrdenados().forEach(f=>{
+    const row=el('div',{class:'fo-row',draggable:'true','data-fid':f.id});
+    row.append(el('span',{class:'handle'},'⠿'),
+      el('span',{class:'ord'}, String(f.ordem||0)),
+      el('span',{class:'tit'}, f.titulo||'(fato sem título)'),
+      el('span',{class:'fid'}, f.id));
+    row.addEventListener('dragstart',e=>{ dragFatoId=f.id; row.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; });
+    row.addEventListener('dragend',()=>{ dragFatoId=null; $$('.fo-row',list).forEach(r=>r.classList.remove('dragging','over')); });
+    row.addEventListener('dragover',e=>{ e.preventDefault(); row.classList.add('over'); e.dataTransfer.dropEffect='move'; });
+    row.addEventListener('dragleave',()=>row.classList.remove('over'));
+    row.addEventListener('drop',e=>{ e.preventDefault(); row.classList.remove('over'); moverOrdemFato(dragFatoId, f.id); });
+    list.append(row);
+  });
+  box.append(list);
+}
+function moverOrdemFato(fromId, toId){
+  if(!fromId || fromId===toId) return;
+  const seq=fatosOrdenados();
+  const from=seq.findIndex(f=>f.id===fromId);
+  const to=seq.findIndex(f=>f.id===toId);
+  if(from<0||to<0) return;
+  const [moved]=seq.splice(from,1);
+  seq.splice(to,0,moved);
+  renumeraOrdem(seq);   // grava 1..N na nova sequência
+  render();
+}
+
 function renderChecklist(){
   const box=$('#checklist'); box.innerHTML='';
   box.append(el('h3',{},'Checklist de encerramento'));
@@ -1251,6 +1319,7 @@ function excluirProvaFlow(id){
 function abrirFormFato(id){
   const novo=!id;
   const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+    ordem:proximaOrdem(),
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''} : JSON.parse(JSON.stringify(doc.fatos.find(x=>x.id===id)));
@@ -1641,14 +1710,15 @@ function renderMinuta(ids){
   const membros=[c.presidente,...(c.membros||[])].filter(Boolean).join(', ');
   const partes=[];
   partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
-    <div class="inst">CORREGEDORIA-GERAL (Coger/RFB) — ${esc(p.unidade||'')}</div>
+    <div class="inst">CORREGEDORIA DA RECEITA FEDERAL DO BRASIL (Coger/RFB) — ${esc(p.unidade||'')}</div>
     <h1>Termo de Indiciação</h1>
     <p class="center">Processo Administrativo Disciplinar nº ${esc(p.numero)} — Rito ${esc(p.rito)}</p>
     <p class="center">Comissão designada pela Portaria nº ${esc(c.portariaInstauracao.numero||'—')}${c.portariaInstauracao.data?', de '+esc(c.portariaInstauracao.data):''}.</p>`);
 
   ids.forEach((id,idx)=>{
     const a=acusadoById(id);
-    const fatos=doc.fatos.filter(x=>(x.condutas||[]).some(cc=>cc.acusadoId===id));
+    // fatos imputados ao acusado, na ORDEM NARRATIVA definida no painel
+    const fatos=fatosOrdenados(doc.fatos.filter(x=>(x.condutas||[]).some(cc=>cc.acusadoId===id)));
     partes.push(`<div class="${idx>0?'cap':''}">`);
     partes.push(`<h2>${idx+1}. Do indiciado ${esc(a.nome)}</h2>`);
     // qualificação
@@ -1820,6 +1890,7 @@ function carregarExemplo(){
     condutas:[],
     enquadramentos:[{normaId:'N-116-III',elementoSubjetivo:'negligencia',fundamentacao:'A definir.'}]});
   doc.fatos.push(F1,F2,F3,F4);
+  doc.fatos.forEach((f,i)=>f.ordem=i+1); // ordem narrativa inicial
 
   lens='todos'; isolatedFato=null; revisadas.clear(); render();
 }
