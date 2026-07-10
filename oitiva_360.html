@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.3.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.4.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -16,7 +16,8 @@
   catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas + Rodada 5
   (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132 + Rodada 5 (lote 3/8):
   banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117 + Rodada 5
-  (lote 4/8): banco de perguntas do Grupo G — 7 normas da LAI, art. 32)
+  (lote 4/8): banco de perguntas do Grupo G — 7 normas da LAI, art. 32 + Rodada 5 (lote 5/8): banco
+  de perguntas do Grupo C — N-117-XVII)
   Data: 2026-07-10
 
   Changelog:
@@ -220,6 +221,10 @@
     direitos humanos). 38 perguntas novas (5 ou 6 por norma, conforme a extensão fática de cada
     tipo), todas com elemento subjetivo redigido para dolo (todas as 7 normas da LAI exigem dolo) e
     `revisao: "pendente"`.
+  - 2.4.0 (Rodada 5, lote 5/8 — Grupo C, 2026-07-10): banco de perguntas para a norma restante das
+    proibições médias do art. 117 — `N-117-XVII` (cometer a outro servidor atribuições estranhas ao
+    cargo, fora de emergência transitória). 5 perguntas novas; elemento subjetivo redigido em tom
+    neutro, conforme a seção 4.2, por exigir "ambos" (dolo ou culpa).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1833,7 +1838,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.3.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.4.0</div>
 </footer>
 
 <script>
@@ -2230,7 +2235,16 @@ const CATALOGO = {
     { id: "q_inf_lai_destruir_documentos_ddhh_003", bloco: "autoria_participacao", texto: "Quem tinha acesso ou guarda desses documentos no período dos fatos?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_lai_destruir_documentos_ddhh_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada em relação a esses documentos? Havia conhecimento do conteúdo deles relacionado a possíveis violações de direitos humanos por agentes do Estado?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_lai_destruir_documentos_ddhh_005", bloco: "circunstancias_art128", texto: "A destruição ou subtração desses documentos prejudicou alguma apuração, processo ou direito de terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_lai_destruir_documentos_ddhh_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_lai_destruir_documentos_ddhh_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+
+    // ---- Rodada 5, Grupo C — proibições médias restantes do art. 117 (2026-07-10) ----
+    // N-117-XVII exige "ambos" (dolo ou culpa) — pergunta de elemento subjetivo redigida em tom
+    // neutro, sem presumir intenção nem exigir prova de negligência (seção 4.2).
+    { id: "q_inf_atribuicao_estranha_001", bloco: "materialidade", texto: "Descreva a atribuição estranha ao cargo que teria sido cometida a outro servidor: qual a tarefa, para quem foi atribuída e em que período.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_atribuicao_estranha_002", bloco: "materialidade", texto: "Existe registro (ordem de serviço, e-mail, escala) que formalize essa atribuição?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_atribuicao_estranha_003", bloco: "autoria_participacao", texto: "Quem determinou essa atribuição? O servidor que a recebeu manifestou alguma objeção?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_atribuicao_estranha_004", bloco: "elemento_subjetivo", texto: "Havia alguma situação de emergência ou transitoriedade que justificasse essa atribuição fora do cargo do servidor? Como se deu a decisão de atribuí-la dessa forma?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_atribuicao_estranha_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre essa atribuição?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -4226,7 +4240,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 183 = 75 + 46 do Grupo F + 24 do Grupo D + 38 do Grupo G, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 188 = 75 + 46 F + 24 D + 38 G + 5 C, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
