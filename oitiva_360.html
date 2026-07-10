@@ -6,14 +6,15 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 1.7.2 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.0.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
   Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar +
   texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
-  bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado)
-  Data: 2026-07-09
+  bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 (lote 1/8):
+  catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas)
+  Data: 2026-07-10
 
   Changelog:
   - 0.1.0 (Parte 1): esqueleto do arquivo único; CATALOGO completo (papéis, blocos, perguntas
@@ -166,10 +167,36 @@
     interface. Corrigido: o botão permanece sempre habilitado e, na Etapa 4, o clique agora chama
     `fecharWizard()`, fechando o wizard e voltando à lista de depoentes (mesmo destino do botão
     "← Voltar à lista de depoentes").
+  - 2.0.0 (Rodada 5 — unificação de catálogo com o Nexo Coger, 2026-07-10, lote 1/8 — migração
+    estrutural): `CATALOGO.infracoes` substituído por cópia literal de `NORMAS_BASE`/
+    `RELACOES_DECL`/`buildCatalogo()` do Nexo Coger (arquivo `nexus_1.html` enviado pelo usuário) —
+    52 normas (45 da Lei 8.112/90, arts. 116/117/130 §1º/132, + 7 do art. 32 da Lei 12.527/2011,
+    LAI; o "45" do documento da rodada não contava a LAI), com os mesmos `id`, campo a campo, sem
+    reinterpretação. Nova constante `CATALOGO_VERSION = "1.0"` (mesmo valor do Nexo — sincronização
+    manual, sem integração em tempo real). As 11 infrações que o Oitiva mantinha isoladamente foram
+    migradas para o `normaId` correspondente (ex.: `inf_desidia` → `N-117-XV`), preservando as 63
+    perguntas específicas já escritas (50 comuns + 13 do tratamento especial do art. 132, IV) — só o
+    campo `infracoes` de cada pergunta mudou de valor, nenhuma pergunta perdida. `inf_outras`
+    (categoria residual do próprio Oitiva) fica de fora da unificação, por decisão do usuário — não
+    é uma norma do Nexo, só teve os nomes de campo uniformizados. Schema de cada norma trocou de
+    `nome`/`elementosTipicos`/`penaAbstrata`/`observacoes`/`grupo`/`modulo` (só as 11 antigas) para
+    `rotulo`/`descricaoTipo`/`gravidade`/`penaPrevista`/`elementoSubjetivoExigido`/
+    `notasEnquadramento`/`relacoes[]` (padrão do Nexo, todas as 52); `observacaoControversia` e
+    `notaTerceiroInterposto` (exclusivos do art. 132, IV) preservados sem alteração, conforme a
+    seção 5 do documento da rodada. Seletor de infração reagrupado em `<optgroup>` por origem
+    (Deveres art. 116 · Proibições art. 117 · Demissão art. 132 · Outras art. 130 · LAI · Outras
+    categorias), ordenado por inciso dentro de cada grupo, com campo de busca por rótulo/
+    dispositivo/id (`popularSelectInfracao()`) — inviável navegar 53 itens numa lista plana sem
+    busca. Nova função `resolverNormaPorId()`, preparação para a importação de pauta do Nexo da
+    Rodada 6 (não implementada nesta rodada), com teste unitário simples em `validarCatalogo()`.
+    Log completo da correspondência aplicada em `migracao-catalogo-log.md` (fora do HTML). Este é o
+    primeiro de 8 lotes da Rodada 5 — os demais adicionam bancos de perguntas para as ~41 normas
+    novas (antes cobertas só pelas 11 originais), em lotes por prioridade.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
-  v1.0, Julho/2026) para a identidade visual.
+  v1.0, Julho/2026) para a identidade visual; catálogo de infrações unificado com o Nexo Coger
+  (Rodada 5, `nexus_1.html`) como fonte canônica de infrações.
   Em caso de dúvida sobre conteúdo jurídico, esses documentos prevalecem sobre o código.
 -->
 <style>
@@ -1665,6 +1692,12 @@
 
       <div class="cartao">
         <h3 style="margin-top:0;">Categoria de infração</h3>
+        <!-- Rodada 5 (unificação com o Nexo Coger): 52 normas — busca por rótulo/dispositivo, já que uma
+             lista plana desse tamanho é inviável de navegar; ver popularSelectInfracao(). -->
+        <div class="campo">
+          <label for="dep-infracao-busca">Buscar infração</label>
+          <input type="text" id="dep-infracao-busca" placeholder="Buscar por rótulo ou dispositivo (ex.: “sigilo”, “art. 117, IX”)…">
+        </div>
         <div class="campo">
           <label class="obrigatorio" for="dep-infracao">Infração apurada</label>
           <select id="dep-infracao">
@@ -1770,7 +1803,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v1.7.2</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.0.0</div>
 </footer>
 
 <script>
@@ -1783,6 +1816,11 @@
    Em caso de divergência entre código e o documento de conteúdo,
    o documento de conteúdo prevalece.
    ===================================================================== */
+// Versão do catálogo de normas embutido (contrato de sincronização com o Nexo Coger — Rodada 5).
+// MANTER SINCRONIZADO MANUALMENTE com o catálogo do Nexo Coger a cada alteração de qualquer um dos
+// dois lados — não há integração em tempo real entre as ferramentas, é cópia sincronizada na build.
+const CATALOGO_VERSION = "1.0";
+
 const CATALOGO = {
   versaoCatalogo: "1.0",
 
@@ -1922,91 +1960,91 @@ const CATALOGO = {
     { id: "q_ger_fec_003", bloco: "fechamento", texto: "Existem documentos ou registros que o(a) senhor(a) sugere que a comissão examine?", finalidade: "contexto", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["todas"], modulo: "nucleo" },
 
     // ---- Específicas: Desídia (inf_desidia) ----
-    { id: "q_inf_desidia_001", bloco: "materialidade", texto: "Quais tarefas ou processos deixaram de ser executados, foram executados com atraso ou apresentaram falhas? Cite exemplos concretos, com períodos.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_002", bloco: "materialidade", texto: "Existem registros de cobranças, notificações de pendências ou relatórios de produtividade relativos ao(à) acusado(a)? Onde?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_003", bloco: "materialidade", texto: "Como era a distribuição de trabalho no setor? A carga do(a) acusado(a) era compatível com a dos demais?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_004", bloco: "elemento_subjetivo", texto: "O(a) acusado(a) foi alertado(a) ou orientado(a) sobre as pendências? Como reagiu?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_desidia"], modulo: "nucleo" },
-    { id: "q_inf_desidia_005", bloco: "elemento_subjetivo", texto: "A que o(a) senhor(a) atribui as pendências apontadas: volume de trabalho, problemas de saúde, falta de treinamento, outra razão?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_desidia"], modulo: "nucleo" },
+    { id: "q_inf_desidia_001", bloco: "materialidade", texto: "Quais tarefas ou processos deixaram de ser executados, foram executados com atraso ou apresentaram falhas? Cite exemplos concretos, com períodos.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XV"], modulo: "nucleo" },
+    { id: "q_inf_desidia_002", bloco: "materialidade", texto: "Existem registros de cobranças, notificações de pendências ou relatórios de produtividade relativos ao(à) acusado(a)? Onde?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XV"], modulo: "nucleo" },
+    { id: "q_inf_desidia_003", bloco: "materialidade", texto: "Como era a distribuição de trabalho no setor? A carga do(a) acusado(a) era compatível com a dos demais?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XV"], modulo: "nucleo" },
+    { id: "q_inf_desidia_004", bloco: "elemento_subjetivo", texto: "O(a) acusado(a) foi alertado(a) ou orientado(a) sobre as pendências? Como reagiu?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XV"], modulo: "nucleo" },
+    { id: "q_inf_desidia_005", bloco: "elemento_subjetivo", texto: "A que o(a) senhor(a) atribui as pendências apontadas: volume de trabalho, problemas de saúde, falta de treinamento, outra razão?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XV"], modulo: "nucleo" },
 
     // ---- Específicas: Abandono de cargo (inf_abandono) ----
-    { id: "q_inf_abandono_001", bloco: "materialidade", texto: "Qual o período exato da ausência? Como foi registrado (folha de frequência, sistema de ponto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_002", bloco: "materialidade", texto: "A administração tentou contato com o(a) servidor(a) durante a ausência? Por quais meios e com que resultado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_003", bloco: "elemento_subjetivo", texto: "O(a) servidor(a) apresentou, em algum momento, justificativa, atestado ou comunicação sobre a ausência?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_004", bloco: "elemento_subjetivo", texto: "Por que o(a) senhor(a) deixou de comparecer ao serviço nesse período? Houve tentativa de comunicar a situação à chefia?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_abandono"], modulo: "nucleo" },
-    { id: "q_inf_abandono_005", bloco: "circunstancias_art128", texto: "Há notícia de fato grave na vida pessoal do(a) servidor(a) no período (doença, problema familiar) que possa explicar a ausência?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_abandono"], modulo: "nucleo" },
+    { id: "q_inf_abandono_001", bloco: "materialidade", texto: "Qual o período exato da ausência? Como foi registrado (folha de frequência, sistema de ponto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-II"], modulo: "nucleo" },
+    { id: "q_inf_abandono_002", bloco: "materialidade", texto: "A administração tentou contato com o(a) servidor(a) durante a ausência? Por quais meios e com que resultado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-II"], modulo: "nucleo" },
+    { id: "q_inf_abandono_003", bloco: "elemento_subjetivo", texto: "O(a) servidor(a) apresentou, em algum momento, justificativa, atestado ou comunicação sobre a ausência?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-II"], modulo: "nucleo" },
+    { id: "q_inf_abandono_004", bloco: "elemento_subjetivo", texto: "Por que o(a) senhor(a) deixou de comparecer ao serviço nesse período? Houve tentativa de comunicar a situação à chefia?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-II"], modulo: "nucleo" },
+    { id: "q_inf_abandono_005", bloco: "circunstancias_art128", texto: "Há notícia de fato grave na vida pessoal do(a) servidor(a) no período (doença, problema familiar) que possa explicar a ausência?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-II"], modulo: "nucleo" },
 
     // ---- Específicas: Inassiduidade habitual (inf_inassiduidade) ----
-    { id: "q_inf_inassiduidade_001", bloco: "materialidade", texto: "Como era realizado o controle de frequência no setor? Havia possibilidade de compensação ou banco de horas?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_002", bloco: "materialidade", texto: "As faltas registradas foram comunicadas ao(à) servidor(a)? Houve manifestação dele(a)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_003", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) reconhece os registros de faltas apresentados? Deseja justificar algum dos períodos?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_004", bloco: "elemento_subjetivo", texto: "Havia alguma situação de saúde, familiar ou funcional que impedisse o comparecimento regular? Foi comunicada e documentada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
-    { id: "q_inf_inassiduidade_005", bloco: "circunstancias_art128", texto: "As ausências causaram prejuízo mensurável ao serviço ou sobrecarga aos colegas? Descreva.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_inassiduidade"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_001", bloco: "materialidade", texto: "Como era realizado o controle de frequência no setor? Havia possibilidade de compensação ou banco de horas?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-III"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_002", bloco: "materialidade", texto: "As faltas registradas foram comunicadas ao(à) servidor(a)? Houve manifestação dele(a)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-III"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_003", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) reconhece os registros de faltas apresentados? Deseja justificar algum dos períodos?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-III"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_004", bloco: "elemento_subjetivo", texto: "Havia alguma situação de saúde, familiar ou funcional que impedisse o comparecimento regular? Foi comunicada e documentada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-III"], modulo: "nucleo" },
+    { id: "q_inf_inassiduidade_005", bloco: "circunstancias_art128", texto: "As ausências causaram prejuízo mensurável ao serviço ou sobrecarga aos colegas? Descreva.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-III"], modulo: "nucleo" },
 
     // ---- Específicas: Valer-se do cargo para proveito pessoal (inf_proveito) ----
-    { id: "q_inf_proveito_001", bloco: "materialidade", texto: "Descreva a situação em que o cargo teria sido utilizado: qual ato, sistema, informação ou influência foi empregado e em benefício de quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_002", bloco: "materialidade", texto: "Havia motivação funcional legítima para o ato praticado (processo distribuído, ordem de serviço, atendimento formal)? Como isso pode ser verificado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_003", bloco: "autoria_participacao", texto: "Quem detinha o acesso ou a competência utilizada? Outras pessoas poderiam ter praticado o ato com as mesmas credenciais?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_004", bloco: "elemento_subjetivo", texto: "Qual a razão funcional da consulta/ato apontado? Havia demanda formal que o justificasse?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_proveito"], modulo: "nucleo" },
-    { id: "q_inf_proveito_005", bloco: "circunstancias_art128", texto: "Qual benefício foi obtido ou buscado, e qual o prejuízo, ainda que potencial, para a administração ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_proveito"], modulo: "nucleo" },
+    { id: "q_inf_proveito_001", bloco: "materialidade", texto: "Descreva a situação em que o cargo teria sido utilizado: qual ato, sistema, informação ou influência foi empregado e em benefício de quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-IX"], modulo: "nucleo" },
+    { id: "q_inf_proveito_002", bloco: "materialidade", texto: "Havia motivação funcional legítima para o ato praticado (processo distribuído, ordem de serviço, atendimento formal)? Como isso pode ser verificado?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-IX"], modulo: "nucleo" },
+    { id: "q_inf_proveito_003", bloco: "autoria_participacao", texto: "Quem detinha o acesso ou a competência utilizada? Outras pessoas poderiam ter praticado o ato com as mesmas credenciais?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-IX"], modulo: "nucleo" },
+    { id: "q_inf_proveito_004", bloco: "elemento_subjetivo", texto: "Qual a razão funcional da consulta/ato apontado? Havia demanda formal que o justificasse?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-IX"], modulo: "nucleo" },
+    { id: "q_inf_proveito_005", bloco: "circunstancias_art128", texto: "Qual benefício foi obtido ou buscado, e qual o prejuízo, ainda que potencial, para a administração ou para terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-IX"], modulo: "nucleo" },
 
     // ---- Específicas: Recebimento de propina, comissão ou vantagem (inf_vantagem) ----
-    { id: "q_inf_vantagem_001", bloco: "materialidade", texto: "Descreva o que presenciou ou soube sobre oferta, promessa ou entrega de valores, presentes ou favores: quem ofereceu, quem recebeu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_002", bloco: "materialidade", texto: "Havia procedimento fiscal, aduaneiro ou administrativo de interesse da pessoa que teria oferecido a vantagem? Qual, e em que fase estava?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_003", bloco: "autoria_participacao", texto: "Houve intermediários na negociação ou na entrega? Quem?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_004", bloco: "elemento_subjetivo", texto: "Houve menção, explícita ou velada, a contrapartida funcional (acelerar, retardar, arquivar, não autuar)? Relate as palavras utilizadas, tanto quanto se recorde.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
-    { id: "q_inf_vantagem_005", bloco: "circunstancias_art128", texto: "O(a) senhor(a) notou mudança no padrão de vida ou no comportamento funcional do(a) acusado(a) no período? Descreva objetivamente.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_vantagem"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_001", bloco: "materialidade", texto: "Descreva o que presenciou ou soube sobre oferta, promessa ou entrega de valores, presentes ou favores: quem ofereceu, quem recebeu, quando, onde e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XII"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_002", bloco: "materialidade", texto: "Havia procedimento fiscal, aduaneiro ou administrativo de interesse da pessoa que teria oferecido a vantagem? Qual, e em que fase estava?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XII"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_003", bloco: "autoria_participacao", texto: "Houve intermediários na negociação ou na entrega? Quem?", finalidade: "autoria", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XII"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_004", bloco: "elemento_subjetivo", texto: "Houve menção, explícita ou velada, a contrapartida funcional (acelerar, retardar, arquivar, não autuar)? Relate as palavras utilizadas, tanto quanto se recorde.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XII"], modulo: "nucleo" },
+    { id: "q_inf_vantagem_005", bloco: "circunstancias_art128", texto: "O(a) senhor(a) notou mudança no padrão de vida ou no comportamento funcional do(a) acusado(a) no período? Descreva objetivamente.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XII"], modulo: "nucleo" },
 
     // ---- Específicas: Gerência ou administração de sociedade privada (inf_gerencia) ----
-    { id: "q_inf_gerencia_001", bloco: "materialidade", texto: "Que atividades o(a) servidor(a) desempenhava na empresa: assinava documentos, contratava, atendia clientes, geria pagamentos? Com que frequência?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_002", bloco: "materialidade", texto: "Quem, de fato, administrava o negócio no dia a dia? Como o(a) senhor(a) sabe disso?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_003", bloco: "materialidade", texto: "A atuação na empresa ocorria durante o horário de expediente do cargo público? Como isso era perceptível?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_004", bloco: "elemento_subjetivo", texto: "Qual a sua participação formal e de fato na sociedade? O(a) senhor(a) pratica ou praticou atos de gestão? Quais?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
-    { id: "q_inf_gerencia_005", bloco: "circunstancias_art128", texto: "A atividade empresarial tinha alguma relação com as atribuições do cargo ou com contribuintes sob jurisdição da unidade? Qual?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_gerencia"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_001", bloco: "materialidade", texto: "Que atividades o(a) servidor(a) desempenhava na empresa: assinava documentos, contratava, atendia clientes, geria pagamentos? Com que frequência?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-X"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_002", bloco: "materialidade", texto: "Quem, de fato, administrava o negócio no dia a dia? Como o(a) senhor(a) sabe disso?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-X"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_003", bloco: "materialidade", texto: "A atuação na empresa ocorria durante o horário de expediente do cargo público? Como isso era perceptível?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-X"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_004", bloco: "elemento_subjetivo", texto: "Qual a sua participação formal e de fato na sociedade? O(a) senhor(a) pratica ou praticou atos de gestão? Quais?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-X"], modulo: "nucleo" },
+    { id: "q_inf_gerencia_005", bloco: "circunstancias_art128", texto: "A atividade empresarial tinha alguma relação com as atribuições do cargo ou com contribuintes sob jurisdição da unidade? Qual?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-X"], modulo: "nucleo" },
 
     // ---- Específicas: Violação de sigilo fiscal (inf_sigilo) ----
-    { id: "q_inf_sigilo_001", bloco: "materialidade", texto: "Que informação protegida foi acessada ou revelada? A quem ela se referia e a quem teria sido repassada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_002", bloco: "materialidade", texto: "Como o(a) senhor(a) soube que a informação chegou a terceiro? Há registro (mensagem, documento, testemunho direto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_003", bloco: "materialidade", texto: "Havia procedimento formal (processo, ordem de serviço, demanda de atendimento) que justificasse a consulta aos dados do contribuinte? Como verificar?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_004", bloco: "elemento_subjetivo", texto: "Qual a motivação funcional das consultas apontadas nos logs? O(a) senhor(a) conhecia a vedação de acesso sem motivação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
-    { id: "q_inf_sigilo_005", bloco: "circunstancias_art128", texto: "Que consequência a revelação produziu para o contribuinte titular dos dados ou para procedimento fiscal em curso?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_sigilo"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_001", bloco: "materialidade", texto: "Que informação protegida foi acessada ou revelada? A quem ela se referia e a quem teria sido repassada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-IX"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_002", bloco: "materialidade", texto: "Como o(a) senhor(a) soube que a informação chegou a terceiro? Há registro (mensagem, documento, testemunho direto)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-IX"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_003", bloco: "materialidade", texto: "Havia procedimento formal (processo, ordem de serviço, demanda de atendimento) que justificasse a consulta aos dados do contribuinte? Como verificar?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-IX"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_004", bloco: "elemento_subjetivo", texto: "Qual a motivação funcional das consultas apontadas nos logs? O(a) senhor(a) conhecia a vedação de acesso sem motivação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-IX"], modulo: "nucleo" },
+    { id: "q_inf_sigilo_005", bloco: "circunstancias_art128", texto: "Que consequência a revelação produziu para o contribuinte titular dos dados ou para procedimento fiscal em curso?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-132-IX"], modulo: "nucleo" },
 
     // ---- Específicas: Atividades incompatíveis (inf_incompativel) ----
-    { id: "q_inf_incompativel_001", bloco: "materialidade", texto: "Que atividade paralela o(a) servidor(a) exercia? Descreva natureza, local, frequência e horários.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_002", bloco: "materialidade", texto: "A atividade coincidia com o horário de expediente? Como isso era perceptível (ausências, indisponibilidade, atendimentos externos)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_003", bloco: "materialidade", texto: "Houve prejuízo identificável ao serviço: tarefas atrasadas, indisponibilidade para plantões, queda de produção?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) considera que a atividade exercida conflita com as atribuições do cargo? Consultou a chefia ou a área competente sobre a compatibilidade?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
-    { id: "q_inf_incompativel_005", bloco: "circunstancias_art128", texto: "A atividade envolvia contribuintes, despachantes ou pessoas com interesse em procedimentos da unidade? Especifique.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_incompativel"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_001", bloco: "materialidade", texto: "Que atividade paralela o(a) servidor(a) exercia? Descreva natureza, local, frequência e horários.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XVIII"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_002", bloco: "materialidade", texto: "A atividade coincidia com o horário de expediente? Como isso era perceptível (ausências, indisponibilidade, atendimentos externos)?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XVIII"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_003", bloco: "materialidade", texto: "Houve prejuízo identificável ao serviço: tarefas atrasadas, indisponibilidade para plantões, queda de produção?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XVIII"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) considera que a atividade exercida conflita com as atribuições do cargo? Consultou a chefia ou a área competente sobre a compatibilidade?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XVIII"], modulo: "nucleo" },
+    { id: "q_inf_incompativel_005", bloco: "circunstancias_art128", texto: "A atividade envolvia contribuintes, despachantes ou pessoas com interesse em procedimentos da unidade? Especifique.", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-117-XVIII"], modulo: "nucleo" },
 
     // ---- Específicas: Falta de urbanidade (inf_urbanidade) ----
-    { id: "q_inf_urbanidade_001", bloco: "materialidade", texto: "Reproduza, tanto quanto se recorde, as palavras, o tom e os gestos empregados no episódio. O que exatamente foi dito, e a quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_002", bloco: "materialidade", texto: "Como a pessoa destinatária reagiu? Havia outras pessoas presentes? O ambiente era de atendimento ao público?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_003", bloco: "materialidade", texto: "Esse tipo de tratamento foi episódio isolado ou já ocorrera antes, com a mesma pessoa ou com outras?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_004", bloco: "elemento_subjetivo", texto: "Havia situação prévia de tensão, provocação ou tumulto que antecedeu o episódio? Descreva.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
-    { id: "q_inf_urbanidade_005", bloco: "circunstancias_art128", texto: "O episódio gerou reclamação formal, repercussão no setor ou constrangimento a contribuintes presentes?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_urbanidade"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_001", bloco: "materialidade", texto: "Reproduza, tanto quanto se recorde, as palavras, o tom e os gestos empregados no episódio. O que exatamente foi dito, e a quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-XI"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_002", bloco: "materialidade", texto: "Como a pessoa destinatária reagiu? Havia outras pessoas presentes? O ambiente era de atendimento ao público?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-XI"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_003", bloco: "materialidade", texto: "Esse tipo de tratamento foi episódio isolado ou já ocorrera antes, com a mesma pessoa ou com outras?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-XI"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_004", bloco: "elemento_subjetivo", texto: "Havia situação prévia de tensão, provocação ou tumulto que antecedeu o episódio? Descreva.", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-XI"], modulo: "nucleo" },
+    { id: "q_inf_urbanidade_005", bloco: "circunstancias_art128", texto: "O episódio gerou reclamação formal, repercussão no setor ou constrangimento a contribuintes presentes?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-XI"], modulo: "nucleo" },
 
     // ---- Específicas: Descumprimento de normas legais e regulamentares (inf_normas) ----
-    { id: "q_inf_normas_001", bloco: "materialidade", texto: "Qual procedimento previsto em norma deixou de ser observado? Descreva como a atividade deveria ter sido feita e como foi feita.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_002", bloco: "materialidade", texto: "A norma aplicável (IN, portaria, ordem de serviço) estava vigente e era conhecida no setor? Como era divulgada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_003", bloco: "materialidade", texto: "O descumprimento foi pontual ou recorrente? Há outros casos semelhantes no setor?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) conhecia a norma apontada? Recebeu orientação ou treinamento sobre ela? Por que o procedimento não foi seguido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["inf_normas"], modulo: "nucleo" },
-    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_normas"], modulo: "nucleo" },
+    { id: "q_inf_normas_001", bloco: "materialidade", texto: "Qual procedimento previsto em norma deixou de ser observado? Descreva como a atividade deveria ter sido feita e como foi feita.", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-III"], modulo: "nucleo" },
+    { id: "q_inf_normas_002", bloco: "materialidade", texto: "A norma aplicável (IN, portaria, ordem de serviço) estava vigente e era conhecida no setor? Como era divulgada?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-III"], modulo: "nucleo" },
+    { id: "q_inf_normas_003", bloco: "materialidade", texto: "O descumprimento foi pontual ou recorrente? Há outros casos semelhantes no setor?", finalidade: "materialidade", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-III"], modulo: "nucleo" },
+    { id: "q_inf_normas_004", bloco: "elemento_subjetivo", texto: "O(a) senhor(a) conhecia a norma apontada? Recebeu orientação ou treinamento sobre ela? Por que o procedimento não foi seguido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-III"], modulo: "nucleo" },
+    { id: "q_inf_normas_005", bloco: "circunstancias_art128", texto: "O descumprimento gerou prejuízo, retrabalho ou risco a procedimento fiscal? Houve correção posterior?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["N-116-III"], modulo: "nucleo" },
 
     // ---- Específicas: Enriquecimento ilícito (inf_enriquecimento_ilicito) ----
     // Atualização incremental 01: perguntas com campo "destinatario" (acusado | terceiro_interposto | testemunha_geral),
     // em vez do filtro por "papeis" usado nas demais infrações (ver gerarRoteiroInicial).
-    { id: "q_inf_enriquecimento_001", bloco: "materialidade", texto: "Descreva, livremente e em ordem cronológica, a evolução do seu patrimônio no período apurado: bens adquiridos, valores, épocas e origem dos recursos de cada aquisição.", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_002", bloco: "materialidade", texto: "Em relação ao [bem X identificado nos autos]: quando e como surgiu a oportunidade da aquisição, com quem foi negociada, qual o valor efetivamente pago e de que forma (à vista, parcelado, espécie, transferência)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_003", bloco: "materialidade", texto: "Quais foram todas as suas fontes de renda no período (remuneração, aluguéis, atividades autorizadas, rendimentos de aplicações)? Elas constam das suas declarações de IRPF?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_004", bloco: "materialidade", texto: "Houve, no período, recebimento de empréstimos, doações, herança, venda de bens anteriores ou qualquer outro ingresso relevante? Existe documentação (contrato, escritura, registro, declaração do doador no IRPF dele)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_005", bloco: "materialidade", texto: "Há bens, contas, investimentos ou negócios registrados em nome de familiares ou terceiros dos quais o(a) senhor(a) tenha o uso, o proveito ou o controle de fato? Quem paga as despesas desses bens (tributos, condomínio, manutenção, reformas)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_006", bloco: "elemento_subjetivo", texto: "Por que a aquisição do [bem X] foi realizada em nome de [terceiro], e não em seu próprio nome? Quem escolheu o bem, negociou o preço e acompanhou a formalização?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_007", bloco: "materialidade", texto: "O(a) senhor(a) realizou, no período, pagamentos relevantes em espécie? Qual a origem física desses recursos e por que não transitaram por conta bancária?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_008", bloco: "elemento_subjetivo", texto: "Nos termos do art. 9º, VII, da Lei 8.429/92, é assegurada ao agente a demonstração da licitude da origem da evolução patrimonial. Deseja apresentar, neste ato ou em prazo a ser fixado, justificativa documentada para cada acréscimo identificado no relatório da sindicância patrimonial?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo", obrigatoria: true, nota: "Pergunta obrigatória — documenta a oportunidade formal de justificação." },
-    { id: "q_inf_enriquecimento_009", bloco: "materialidade", texto: "Qual era a sua ocupação e a sua renda mensal aproximada à época da aquisição do [bem X]? Essa renda consta de declarações de IRPF ou registros formais?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_010", bloco: "materialidade", texto: "Conte como foi a compra do [bem X]: como soube que estava à venda, quem negociou, qual o valor, como foi pago e de onde vieram os recursos.", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_011", bloco: "materialidade", texto: "Quem utiliza o bem atualmente, quem paga os tributos e despesas dele e quem toma as decisões sobre ele (alugar, reformar, vender)?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_012", bloco: "autoria_participacao", texto: "Qual foi a participação de [servidor acusado] na escolha, na negociação, no pagamento ou na administração desse bem?", finalidade: "autoria", destinatario: "terceiro_interposto", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
-    { id: "q_inf_enriquecimento_013", bloco: "circunstancias_art128", texto: "O(a) senhor(a) observou, no período, mudança objetiva no padrão de vida do(a) acusado(a) — veículos, imóveis, viagens, despesas — que lhe tenha chamado a atenção? Relate apenas o que presenciou diretamente, indicando época e circunstâncias.", finalidade: "circunstancia", destinatario: "testemunha_geral", infracoes: ["inf_enriquecimento_ilicito"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_001", bloco: "materialidade", texto: "Descreva, livremente e em ordem cronológica, a evolução do seu patrimônio no período apurado: bens adquiridos, valores, épocas e origem dos recursos de cada aquisição.", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_002", bloco: "materialidade", texto: "Em relação ao [bem X identificado nos autos]: quando e como surgiu a oportunidade da aquisição, com quem foi negociada, qual o valor efetivamente pago e de que forma (à vista, parcelado, espécie, transferência)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_003", bloco: "materialidade", texto: "Quais foram todas as suas fontes de renda no período (remuneração, aluguéis, atividades autorizadas, rendimentos de aplicações)? Elas constam das suas declarações de IRPF?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_004", bloco: "materialidade", texto: "Houve, no período, recebimento de empréstimos, doações, herança, venda de bens anteriores ou qualquer outro ingresso relevante? Existe documentação (contrato, escritura, registro, declaração do doador no IRPF dele)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_005", bloco: "materialidade", texto: "Há bens, contas, investimentos ou negócios registrados em nome de familiares ou terceiros dos quais o(a) senhor(a) tenha o uso, o proveito ou o controle de fato? Quem paga as despesas desses bens (tributos, condomínio, manutenção, reformas)?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_006", bloco: "elemento_subjetivo", texto: "Por que a aquisição do [bem X] foi realizada em nome de [terceiro], e não em seu próprio nome? Quem escolheu o bem, negociou o preço e acompanhou a formalização?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_007", bloco: "materialidade", texto: "O(a) senhor(a) realizou, no período, pagamentos relevantes em espécie? Qual a origem física desses recursos e por que não transitaram por conta bancária?", finalidade: "materialidade", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_008", bloco: "elemento_subjetivo", texto: "Nos termos do art. 9º, VII, da Lei 8.429/92, é assegurada ao agente a demonstração da licitude da origem da evolução patrimonial. Deseja apresentar, neste ato ou em prazo a ser fixado, justificativa documentada para cada acréscimo identificado no relatório da sindicância patrimonial?", finalidade: "subjetivo", destinatario: "acusado", infracoes: ["N-132-IV"], modulo: "nucleo", obrigatoria: true, nota: "Pergunta obrigatória — documenta a oportunidade formal de justificação." },
+    { id: "q_inf_enriquecimento_009", bloco: "materialidade", texto: "Qual era a sua ocupação e a sua renda mensal aproximada à época da aquisição do [bem X]? Essa renda consta de declarações de IRPF ou registros formais?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_010", bloco: "materialidade", texto: "Conte como foi a compra do [bem X]: como soube que estava à venda, quem negociou, qual o valor, como foi pago e de onde vieram os recursos.", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_011", bloco: "materialidade", texto: "Quem utiliza o bem atualmente, quem paga os tributos e despesas dele e quem toma as decisões sobre ele (alugar, reformar, vender)?", finalidade: "materialidade", destinatario: "terceiro_interposto", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_012", bloco: "autoria_participacao", texto: "Qual foi a participação de [servidor acusado] na escolha, na negociação, no pagamento ou na administração desse bem?", finalidade: "autoria", destinatario: "terceiro_interposto", infracoes: ["N-132-IV"], modulo: "nucleo" },
+    { id: "q_inf_enriquecimento_013", bloco: "circunstancias_art128", texto: "O(a) senhor(a) observou, no período, mudança objetiva no padrão de vida do(a) acusado(a) — veículos, imóveis, viagens, despesas — que lhe tenha chamado a atenção? Relate apenas o que presenciou diretamente, indicando época e circunstâncias.", finalidade: "circunstancia", destinatario: "testemunha_geral", infracoes: ["N-132-IV"], modulo: "nucleo" },
 
     // Orientações de Implementação (2026-07-09): perguntas genéricas da categoria residual "Outras
     // Infrações" (inf_outras) — minuta fornecida pelo usuário, reproduzida por bloco, sem vínculo com
@@ -2167,27 +2205,77 @@ const CATALOGO = {
     }
   ],
 
-  // ---- Taxonomia própria de infrações (10 do rol inicial — Fase 1) ----
+  // ---- Taxonomia de infrações — Rodada 5 (unificação de catálogo com o Nexo Coger, 2026-07-10) ----
+  // Bloco copiado literalmente de NORMAS_BASE/RELACOES_DECL/buildCatalogo() do Nexo Coger (arquivo
+  // nexus_1.html enviado pelo usuário em 2026-07-10), campo a campo, sem reinterpretação — substitui
+  // as 11 infrações que o Oitiva mantinha isoladamente até a v1.7.x. 52 normas (45 da Lei 8.112/90 —
+  // arts. 116, 117, 130 §1º e 132 — mais 7 do art. 32 da Lei nº 12.527/2011, LAI; o "45" do documento
+  // da rodada contava só o bloco da Lei 8.112/90, sem a LAI). MANTER SINCRONIZADO MANUALMENTE com o
+  // catálogo do Nexo Coger a cada alteração de qualquer um dos dois lados — não há integração em
+  // tempo real entre as ferramentas. inf_outras (abaixo, fora do catálogo do Nexo) é a única exceção.
   infracoes: [
-    { id: "inf_desidia", grupo: "proibicoes_117", nome: "Desídia", dispositivo: "Art. 117, XV, Lei 8.112/90", penaAbstrata: "demissão (art. 132, XIII)", elementosTipicos: ["conduta culposa (negligência, desatenção, desinteresse)", "habitualidade/reiteração (ato isolado não configura, em regra)", "descumprimento de atribuições do cargo", "ausência de justificativa razoável"], observacoes: "A prova central é o padrão: sequência de atrasos, pendências, retrabalhos e cobranças documentadas. Distinguir desídia (culpa) de insubordinação (dolo) e de mero baixo desempenho por causas alheias à vontade.", modulo: "nucleo" },
-    { id: "inf_abandono", grupo: "demissao_132", nome: "Abandono de cargo", dispositivo: "Art. 132, II c/c art. 138, Lei 8.112/90", penaAbstrata: "demissão", elementosTipicos: ["ausência intencional ao serviço por mais de 30 dias consecutivos", "animus abandonandi (intenção de abandonar)", "ausência de causa justificadora (doença, força maior)"], observacoes: "A materialidade é objetiva (frequência), mas o núcleo probatório é o elemento subjetivo: a jurisprudência exige a demonstração do ânimo de abandonar. Investigar tentativas de contato da administração e respostas do servidor.", modulo: "nucleo" },
-    { id: "inf_inassiduidade", grupo: "demissao_132", nome: "Inassiduidade habitual", dispositivo: "Art. 132, III c/c art. 139, Lei 8.112/90", penaAbstrata: "demissão", elementosTipicos: ["60 faltas interpoladas no período de 12 meses", "ausência de causa justificada", "ciência do servidor quanto aos registros"], observacoes: "Materialidade essencialmente documental (registros de frequência); a oitiva serve para esclarecer justificativas, ciência e contexto. Verificar se as faltas foram lançadas corretamente e se houve compensações autorizadas.", modulo: "nucleo" },
-    { id: "inf_proveito", grupo: "proibicoes_117", nome: "Valer-se do cargo para lograr proveito pessoal", dispositivo: "Art. 117, IX, Lei 8.112/90", penaAbstrata: "demissão (art. 132, XIII)", elementosTipicos: ["uso da condição funcional (poderes, informações, acesso a sistemas, influência)", "obtenção ou busca de proveito pessoal ou de terceiro", "nexo funcional entre o cargo e a vantagem", "desnecessária a efetiva obtenção do proveito"], observacoes: "No contexto RFB, atenção a consultas a sistemas fiscais/aduaneiros sem motivação funcional, interferência em procedimentos de interesse próprio ou de conhecidos, uso de informações privilegiadas. Trilhas de auditoria e logs são prova-chave.", modulo: "nucleo" },
-    { id: "inf_vantagem", grupo: "proibicoes_117", nome: "Recebimento de propina, comissão, presente ou vantagem", dispositivo: "Art. 117, XII, Lei 8.112/90", penaAbstrata: "demissão (art. 132, XIII); conexão frequente com corrupção (art. 132, XI) e com a esfera penal (art. 317, CP)", elementosTipicos: ["recebimento (ou aceitação de promessa) de vantagem de qualquer espécie", "em razão das atribuições do cargo", "de pessoa interessada, direta ou indiretamente, em ato funcional", "independe de efetiva prática ou omissão de ato de ofício"], observacoes: "Apuração frequentemente paralela a investigação criminal — atenção ao compartilhamento de provas (autorização judicial para dados protegidos) e a não contaminar a instrução. Sinais exteriores de riqueza e evolução patrimonial podem compor o conjunto probatório.", modulo: "nucleo" },
-    { id: "inf_gerencia", grupo: "proibicoes_117", nome: "Participação em gerência ou administração de sociedade privada", dispositivo: "Art. 117, X, Lei 8.112/90", penaAbstrata: "demissão (art. 132, XIII)", elementosTipicos: ["participação na gerência ou administração de sociedade privada, personificada ou não, ou exercício de comércio (exceto como acionista, cotista ou comanditário)", "habitualidade da atuação gestora", "contemporaneidade com o exercício do cargo"], observacoes: "A condição de mero sócio cotista é lícita — o ponto probatório é a prática de atos de gestão (assinatura pela empresa, contratação, movimentação financeira, atendimento a clientes, presença rotineira no estabelecimento). Contratos sociais, procurações, notas fiscais e perfis comerciais em redes sociais são provas úteis.", modulo: "nucleo" },
-    { id: "inf_sigilo", grupo: "demissao_132", nome: "Violação de sigilo fiscal", dispositivo: "Art. 132, IX c/c art. 116, VIII, Lei 8.112/90; art. 198 do CTN", penaAbstrata: "demissão", elementosTipicos: ["acesso a informação protegida por sigilo fiscal em razão do cargo", "revelação a terceiro não autorizado (ou acesso imotivado, conforme o enquadramento)", "ausência de hipótese legal de compartilhamento", "ciência do caráter sigiloso"], observacoes: "Infração característica do contexto RFB. Distinguir três situações com regimes distintos: (a) acesso imotivado sem repasse; (b) acesso com repasse a terceiro; (c) repasse mediante vantagem (conexão com art. 117, XII). Logs de sistemas, trilhas de auditoria e correlação temporal entre consulta e evento externo são o eixo probatório.", modulo: "nucleo" },
-    { id: "inf_incompativel", grupo: "proibicoes_117", nome: "Exercício de atividades incompatíveis com o cargo/função ou com o horário de trabalho", dispositivo: "Art. 117, XVIII, Lei 8.112/90", penaAbstrata: "suspensão (art. 130)", elementosTipicos: ["exercício de qualquer atividade (remunerada ou não) incompatível com o cargo/função ou com o horário de trabalho", "habitualidade", "prejuízo efetivo ou potencial ao desempenho funcional"], observacoes: "Duas vertentes autônomas: incompatibilidade material (conflito com as atribuições — ex.: consultoria tributária por auditor) e incompatibilidade de horário (atividade paralela durante o expediente). Não confundir com a acumulação ilegal de cargos públicos (art. 132, XII, rito próprio do art. 133).", modulo: "nucleo" },
-    { id: "inf_urbanidade", grupo: "deveres_116", nome: "Falta de urbanidade", dispositivo: "Art. 116, XI, Lei 8.112/90", penaAbstrata: "advertência (art. 129); suspensão em caso de reincidência", elementosTipicos: ["tratamento desrespeitoso, grosseiro ou ofensivo a colegas, superiores, subordinados ou público", "no exercício da função ou em razão dela", "aferição contextual (distinguir rispidez pontual em situação de tensão de padrão de tratamento)"], observacoes: "Infração leve mas frequente em denúncias de atendimento. A prova costuma ser testemunhal e, quando existente, registro audiovisual do atendimento. Atenção ao contexto bilateral (provocação, tumulto) — relevante para o art. 128, não para excluir o dever.", modulo: "nucleo" },
-    { id: "inf_normas", grupo: "deveres_116", nome: "Descumprimento do dever de observar as normas legais e regulamentares", dispositivo: "Art. 116, III, Lei 8.112/90", penaAbstrata: "advertência (art. 129); gradação conforme a gravidade", elementosTipicos: ["existência de norma legal ou regulamentar válida e vigente aplicável à atividade", "conduta comissiva ou omissiva em desacordo com a norma", "exigibilidade de conduta diversa", "ciência (real ou presumida) da norma"], observacoes: "Enquadramento subsidiário e de espectro amplo — exige indicação precisa da norma violada (portaria, IN, ordem de serviço, manual), sob pena de capitulação genérica (risco de nulidade da indiciação). A oitiva deve estabelecer: qual norma, como foi divulgada, qual conduta a contrariou.", modulo: "nucleo" },
-    // Atualização incremental 01 (enriquecimento ilícito): campo renomeado de "pena" para "penaAbstrata"
-    // (correção de nomenclatura do documento), no mesmo padrão das demais 10 entradas.
-    { id: "inf_enriquecimento_ilicito", grupo: "demissao_132", nome: "Enriquecimento ilícito (improbidade — sindicância patrimonial)", dispositivo: "Art. 132, IV, Lei 8.112/90 c/c art. 9º, VII, Lei 8.429/92 (redação da Lei 14.230/2021)", penaAbstrata: "demissão", elementosTipicos: ["evolução patrimonial a descoberto — bens, despesas ou estilo de vida incompatíveis com os rendimentos comprovados do servidor", "inversão do ônus da prova quanto à origem: comprovada a discrepância, cabe ao próprio agente demonstrar a licitude da origem do acréscimo (STJ, REsp 1.923.138-RJ, DJe 19/12/2022; ressalva expressa também no texto do art. 9º, VII, na redação da Lei 14.230/2021)", "indícios de ocultação patrimonial mediante interposição de terceiros (familiares, \"testas de ferro\")"], observacoes: "A oitiva nesses processos tem estrutura própria — não se reconstitui um fato presenciado, e sim se testam narrativas contra a trilha documental já constante dos autos (IRPF, extratos, matrículas, contratos). Três alvos probatórios distintos: (a) acusado — oferecer a oportunidade formal de justificar cada acréscimo e testar a consistência da justificativa (datas, valores, documentação, coerência entre versões); (b) terceiro interposto (familiar em cujo nome está o bem) — testar se a aquisição dele é genuína: capacidade financeira própria à época, narrativa espontânea e detalhada da compra, e posse de fato (quem usa, quem paga, quem decide); (c) testemunhas gerais — sinais exteriores objetivos de mudança de padrão de vida, sem espaço para impressões vagas. Regra de ouro da condução: perguntas cronológicas, específicas por bem e ancoradas em documento — pedir a narrativa livre primeiro (funil) e só depois confrontar com os autos. A comissão nunca precisa provar dolo específico ou ato de ofício (ver controvérsia acima), mas precisa documentar de forma inequívoca que a oportunidade de justificação foi dada.", observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\" — Fase 2).", modulo: "nucleo" },
-    // Orientações de Implementação (2026-07-09): categoria residual/curinga — cobre condutas que não se
-    // enquadram em nenhuma das 11 categorias tipificadas acima. Ao contrário delas, não tem dispositivo/
-    // pena próprios (dependem do enquadramento que a comissão vier a dar ao caso concreto) e usa perguntas
-    // genéricas por bloco (q_inf_outras_*, abaixo), sinalizadas como sugestões de ponto de partida — nunca
-    // roteiro fechado, tal como as demais perguntas do sistema.
-    { id: "inf_outras", grupo: "outras", nome: "Outras Infrações", dispositivo: "A definir conforme o enquadramento (dispositivo) adotado pela comissão para o caso concreto", penaAbstrata: "A definir conforme o enquadramento adotado", elementosTipicos: ["conduta apurada que não se enquadra em nenhuma das categorias tipificadas deste catálogo"], observacoes: "Categoria residual: use quando a conduta apurada não corresponder a nenhuma das categorias tipificadas acima. As perguntas sugeridas para esta categoria são genéricas — cobrem contexto funcional, materialidade, autoria, dolo/culpa e as circunstâncias do art. 128 da Lei 8.112/90 — e devem ser adaptadas pela comissão ao enquadramento e aos fatos do caso concreto.", modulo: "nucleo" }
+    { id: "N-116-I", dispositivo: "art. 116, I, Lei nº 8.112/90", rotulo: "Inassiduidade ao dever de exercer com zelo e dedicação", descricaoTipo: "exercer com zelo e dedicação as atribuições do cargo", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Configura-se com conduta única; independe de habitualidade.", relacoes: [] },
+    { id: "N-116-II", dispositivo: "art. 116, II, Lei nº 8.112/90", rotulo: "Deslealdade às instituições", descricaoTipo: "ser leal às instituições a que servir", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Lealdade é à instituição, não à chefia.", relacoes: [{ com: "N-132-VIII", tipo: "consuncao", nota: "Etapa prévia consumida pela aplicação irregular de dinheiro público (Manual 10.4.7)" }, { com: "N-117-IX", tipo: "consuncao", nota: "Etapa prévia consumida pelo valimento do cargo (Manual 10.4.7)" }] },
+    { id: "N-116-III", dispositivo: "art. 116, III, Lei nº 8.112/90", rotulo: "Inobservância de normas legais e regulamentares", descricaoTipo: "observar as normas legais e regulamentares", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "A indiciação DEVE apontar qual norma foi descumprida. Avaliar consunção por infração mais grave ou específica.", relacoes: [{ com: "N-117-IX", tipo: "alternatividade", nota: "Dolo (117, IX) x culpa (116, III): incompatíveis no mesmo fato (Manual 10.4.7)" }] },
+    { id: "N-116-IV", dispositivo: "art. 116, IV, Lei nº 8.112/90", rotulo: "Descumprimento de ordens superiores", descricaoTipo: "cumprir as ordens superiores, exceto quando manifestamente ilegais", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Exceto ordens manifestamente ilegais — a exceção integra o tipo.", relacoes: [{ com: "N-132-VI", tipo: "subsidiariedade", nota: "Insubordinação grave é a forma grave do descumprimento de ordem." }] },
+    { id: "N-116-V", dispositivo: "art. 116, V, Lei nº 8.112/90", rotulo: "Falta de presteza", descricaoTipo: "atender com presteza: a) ao público em geral, prestando as informações requeridas, ressalvadas as protegidas por sigilo; b) à expedição de certidões requeridas para defesa de direito ou esclarecimento de situações de interesse pessoal; c) às requisições para a defesa da Fazenda Pública", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-116-VI", dispositivo: "art. 116, VI, Lei nº 8.112/90", rotulo: "Omissão em levar irregularidades ao conhecimento da autoridade superior", descricaoTipo: "levar as irregularidades de que tiver ciência em razão do cargo ao conhecimento da autoridade superior ou, quando houver suspeita de envolvimento desta, ao conhecimento de outra autoridade competente para apuração", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Redação vigente (Lei nº 12.527/2011).", relacoes: [] },
+    { id: "N-116-VII", dispositivo: "art. 116, VII, Lei nº 8.112/90", rotulo: "Falta de zelo pela economia do material e conservação do patrimônio", descricaoTipo: "zelar pela economia do material e a conservação do patrimônio público", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-116-VIII", dispositivo: "art. 116, VIII, Lei nº 8.112/90", rotulo: "Violação do dever de guardar sigilo", descricaoTipo: "guardar sigilo sobre assunto da repartição", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [{ com: "N-132-IX", tipo: "subsidiariedade", nota: "Prevalece o art. 132, IX quando demonstrada a faceta mais grave (Manual 10.4.7)" }] },
+    { id: "N-116-IX", dispositivo: "art. 116, IX, Lei nº 8.112/90", rotulo: "Conduta incompatível com a moralidade administrativa", descricaoTipo: "manter conduta compatível com a moralidade administrativa", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-116-X", dispositivo: "art. 116, X, Lei nº 8.112/90", rotulo: "Falta de assiduidade e pontualidade", descricaoTipo: "ser assíduo e pontual ao serviço", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [{ com: "N-132-II", tipo: "subsidiariedade", nota: "A forma grave da ausência (abandono de cargo) prevalece sobre a falta de assiduidade." }, { com: "N-132-III", tipo: "subsidiariedade", nota: "A forma grave da ausência (inassiduidade habitual) prevalece sobre a falta de assiduidade." }] },
+    { id: "N-116-XI", dispositivo: "art. 116, XI, Lei nº 8.112/90", rotulo: "Falta de urbanidade", descricaoTipo: "tratar com urbanidade as pessoas", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-116-XII", dispositivo: "art. 116, XII, Lei nº 8.112/90", rotulo: "Omissão do dever de representar contra ilegalidade, omissão ou abuso de poder", descricaoTipo: "representar contra ilegalidade, omissão ou abuso de poder", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-I", dispositivo: "art. 117, I, Lei nº 8.112/90", rotulo: "Ausentar-se do serviço durante o expediente sem autorização do chefe imediato", descricaoTipo: "ausentar-se do serviço durante o expediente, sem prévia autorização do chefe imediato", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-II", dispositivo: "art. 117, II, Lei nº 8.112/90", rotulo: "Retirar documento ou objeto da repartição sem anuência da autoridade competente", descricaoTipo: "retirar, sem prévia anuência da autoridade competente, qualquer documento ou objeto da repartição", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-III", dispositivo: "art. 117, III, Lei nº 8.112/90", rotulo: "Recusar fé a documentos públicos", descricaoTipo: "recusar fé aos documentos públicos", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-IV", dispositivo: "art. 117, IV, Lei nº 8.112/90", rotulo: "Opor resistência injustificada ao andamento de documento, processo ou execução de serviço", descricaoTipo: "opor resistência injustificada ao andamento de documento e processo ou execução de serviço", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-V", dispositivo: "art. 117, V, Lei nº 8.112/90", rotulo: "Promover manifestação de apreço ou desapreço no recinto da repartição", descricaoTipo: "promover manifestação de apreço ou desapreço no recinto da repartição", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-VI", dispositivo: "art. 117, VI, Lei nº 8.112/90", rotulo: "Cometer a pessoa estranha à repartição atribuição de sua responsabilidade ou de subordinado", descricaoTipo: "cometer a pessoa estranha à repartição, fora dos casos previstos em lei, o desempenho de atribuição que seja de sua responsabilidade ou de seu subordinado", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-VII", dispositivo: "art. 117, VII, Lei nº 8.112/90", rotulo: "Coagir ou aliciar subordinados a filiação associativa, sindical ou partidária", descricaoTipo: "coagir ou aliciar subordinados no sentido de filiarem-se a associação profissional ou sindical, ou a partido político", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-VIII", dispositivo: "art. 117, VIII, Lei nº 8.112/90", rotulo: "Manter sob chefia imediata, em cargo/função de confiança, cônjuge, companheiro ou parente até 2º grau", descricaoTipo: "manter sob sua chefia imediata, em cargo ou função de confiança, cônjuge, companheiro ou parente até o segundo grau civil", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-XIX", dispositivo: "art. 117, XIX, Lei nº 8.112/90", rotulo: "Recusar-se a atualizar dados cadastrais quando solicitado", descricaoTipo: "recusar-se a atualizar seus dados cadastrais quando solicitado", gravidade: "leve", penaPrevista: "advertencia", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Incluído pela Lei nº 9.527/1997.", relacoes: [] },
+    { id: "N-117-XVII", dispositivo: "art. 117, XVII, Lei nº 8.112/90", rotulo: "Cometer a outro servidor atribuições estranhas ao cargo, fora de emergência transitória", descricaoTipo: "cometer a outro servidor atribuições estranhas ao cargo que ocupa, exceto em situações de emergência e transitórias", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-XVIII", dispositivo: "art. 117, XVIII, Lei nº 8.112/90", rotulo: "Exercer atividades incompatíveis com o cargo/função ou com o horário de trabalho", descricaoTipo: "exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "ambos", notasEnquadramento: "", relacoes: [] },
+    { id: "N-117-IX", dispositivo: "art. 117, IX, Lei nº 8.112/90", rotulo: "Valimento do cargo", descricaoTipo: "valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Exige consciência e vontade; sobreposição do interesse particular sobre o público. Conduta culposa pode configurar art. 116, III.", relacoes: [{ com: "N-116-II", tipo: "consuncao", nota: "Etapa prévia consumida pelo valimento do cargo (Manual 10.4.7)" }, { com: "N-116-III", tipo: "alternatividade", nota: "Dolo (117, IX) x culpa (116, III): incompatíveis no mesmo fato (Manual 10.4.7)" }, { com: "N-LAI-32-V", tipo: "especialidade", nota: "Migração possível para valimento do cargo (demissão)." }, { com: "N-LAI-32-VI", tipo: "especialidade", nota: "Migração possível para valimento do cargo (demissão)." }, { com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-X", dispositivo: "art. 117, X, Lei nº 8.112/90", rotulo: "Participar de gerência/administração de sociedade privada; exercer o comércio", descricaoTipo: "participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Ressalvas legais (acionista, cotista, comanditário) integram o tipo.", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XI", dispositivo: "art. 117, XI, Lei nº 8.112/90", rotulo: "Atuar como procurador ou intermediário junto a repartições públicas", descricaoTipo: "atuar, como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Ressalva: benefícios previdenciários/assistenciais de parentes até 2º grau e de cônjuge/companheiro.", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XII", dispositivo: "art. 117, XII, Lei nº 8.112/90", rotulo: "Receber propina, comissão, presente ou vantagem de qualquer espécie", descricaoTipo: "receber propina, comissão, presente ou vantagem de qualquer espécie, em razão de suas atribuições", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-132-XI", tipo: "especialidade", nota: "Corrupção (132, XI) é a forma especial/mais grave do recebimento de vantagem." }, { com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XIII", dispositivo: "art. 117, XIII, Lei nº 8.112/90", rotulo: "Aceitar comissão, emprego ou pensão de estado estrangeiro", descricaoTipo: "aceitar comissão, emprego ou pensão de estado estrangeiro", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XIV", dispositivo: "art. 117, XIV, Lei nº 8.112/90", rotulo: "Praticar usura sob qualquer de suas formas", descricaoTipo: "praticar usura sob qualquer de suas formas", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XV", dispositivo: "art. 117, XV, Lei nº 8.112/90", rotulo: "Proceder de forma desidiosa", descricaoTipo: "proceder de forma desidiosa", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "culpa", notasEnquadramento: "Desídia é infração de natureza CULPOSA (negligência habitual/reiterada). Relação alternatividade com enquadramentos dolosos sobre a mesma conduta.", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-117-XVI", dispositivo: "art. 117, XVI, Lei nº 8.112/90", rotulo: "Utilizar pessoal ou recursos materiais da repartição em atividades particulares", descricaoTipo: "utilizar pessoal ou recursos materiais da repartição em serviços ou atividades particulares", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-132-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-130-P1", dispositivo: "art. 130, §1º, Lei nº 8.112/90", rotulo: "Recusa injustificada a inspeção médica determinada por autoridade competente", descricaoTipo: "o servidor que, injustificadamente, recusar-se a ser submetido a inspeção médica determinada pela autoridade competente será punido com suspensão de até 15 dias, cessando os efeitos da penalidade uma vez cumprida a determinação", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Suspensão de até 15 dias, cessando os efeitos com o cumprimento da determinação.", relacoes: [] },
+    { id: "N-132-I", dispositivo: "art. 132, I, Lei nº 8.112/90", rotulo: "Crime contra a administração pública", descricaoTipo: "crime contra a administração pública", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "AGU GQ-124 (vinculante): exige sentença penal transitada em julgado. EVITAR este enquadramento; buscar capitulação administrativa autônoma.", relacoes: [] },
+    { id: "N-132-II", dispositivo: "art. 132, II, Lei nº 8.112/90", rotulo: "Abandono de cargo", descricaoTipo: "abandono de cargo", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Exige animus abandonandi: ausência intencional superior a 30 dias consecutivos (art. 138).", relacoes: [{ com: "N-116-X", tipo: "subsidiariedade", nota: "A forma grave da ausência (abandono de cargo) prevalece sobre a falta de assiduidade." }] },
+    { id: "N-132-III", dispositivo: "art. 132, III, Lei nº 8.112/90", rotulo: "Inassiduidade habitual", descricaoTipo: "inassiduidade habitual", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "ambos", notasEnquadramento: "60 faltas interpoladas em 12 meses, sem causa justificada (art. 139).", relacoes: [{ com: "N-116-X", tipo: "subsidiariedade", nota: "A forma grave da ausência (inassiduidade habitual) prevalece sobre a falta de assiduidade." }] },
+    { id: "N-132-IV", dispositivo: "art. 132, IV, Lei nº 8.112/90", rotulo: "Improbidade administrativa", descricaoTipo: "improbidade administrativa", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [], observacaoControversia: "É comum a defesa alegar, sobretudo após a Lei 14.230/2021, a necessidade de dolo específico ou de vinculação do enriquecimento a um ato de ofício determinado. Este enquadramento não exige nenhum dos dois: a jurisprudência do STJ é pacífica no sentido de que a evolução patrimonial a descoberto, por si, desloca para o agente o ônus de justificar a origem lícita dos recursos, independentemente de o Estado provar conduta ilícita específica ou o ato de ofício ao qual o enriquecimento estaria atrelado (entendimento reafirmado pelos Pareceres CNPAD/CGU/AGU nº 001/2022 e nº 001/2024, e mantido mesmo após a Lei 14.230/2021 — vide STF, Tema 1.199, sobre irretroatividade do novo regime aos casos em andamento). A comissão não deve se sentir compelida a provar o ato de ofício nem o dolo específico; o núcleo da instrução é a discrepância patrimonial e a oportunidade dada ao agente de justificá-la.", notaTerceiroInterposto: "O terceiro interposto é ouvido como testemunha (com compromisso), pois não é acusado no PAD; contudo, a ressalva da não autoincriminação (já constante do compromisso) tem aqui aplicação real — se a resposta puder revelar participação do próprio depoente em ocultação patrimonial, a recusa pontual é legítima e não configura falso testemunho. Havendo indícios de participação consciente, avaliar a oitiva sem compromisso (papel \"pessoa em situação indefinida\")." },
+    { id: "N-132-V", dispositivo: "art. 132, V, Lei nº 8.112/90", rotulo: "Incontinência pública e conduta escandalosa, na repartição", descricaoTipo: "incontinência pública e conduta escandalosa, na repartição", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [] },
+    { id: "N-132-VI", dispositivo: "art. 132, VI, Lei nº 8.112/90", rotulo: "Insubordinação grave em serviço", descricaoTipo: "insubordinação grave em serviço", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-116-IV", tipo: "subsidiariedade", nota: "Insubordinação grave é a forma grave do descumprimento de ordem." }, { com: "N-LAI-32-VI", tipo: "especialidade", nota: "Migração possível para insubordinação grave (demissão)." }] },
+    { id: "N-132-VII", dispositivo: "art. 132, VII, Lei nº 8.112/90", rotulo: "Ofensa física, em serviço, a servidor ou particular", descricaoTipo: "ofensa física, em serviço, a servidor ou a particular, salvo em legítima defesa própria ou de outrem", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Ressalva de legítima defesa própria ou de outrem integra o tipo (excludente).", relacoes: [] },
+    { id: "N-132-VIII", dispositivo: "art. 132, VIII, Lei nº 8.112/90", rotulo: "Aplicação irregular de dinheiros públicos", descricaoTipo: "aplicação irregular de dinheiros públicos", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-116-II", tipo: "consuncao", nota: "Etapa prévia consumida pela aplicação irregular de dinheiro público (Manual 10.4.7)" }] },
+    { id: "N-132-IX", dispositivo: "art. 132, IX, Lei nº 8.112/90", rotulo: "Revelação de segredo apropriado em razão do cargo", descricaoTipo: "revelação de segredo do qual se apropriou em razão do cargo", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-116-VIII", tipo: "subsidiariedade", nota: "Prevalece o art. 132, IX quando demonstrada a faceta mais grave (Manual 10.4.7)" }, { com: "N-LAI-32-IV", tipo: "especialidade", nota: "Migração possível para revelação de segredo (demissão) quando demonstrada a faceta mais grave." }] },
+    { id: "N-132-X", dispositivo: "art. 132, X, Lei nº 8.112/90", rotulo: "Lesão aos cofres públicos e dilapidação do patrimônio nacional", descricaoTipo: "lesão aos cofres públicos e dilapidação do patrimônio nacional", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [] },
+    { id: "N-132-XI", dispositivo: "art. 132, XI, Lei nº 8.112/90", rotulo: "Corrupção", descricaoTipo: "corrupção", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Relação especialidade/proximidade com o recebimento de vantagem (art. 117, XII).", relacoes: [{ com: "N-117-XII", tipo: "especialidade", nota: "Corrupção (132, XI) é a forma especial/mais grave do recebimento de vantagem." }] },
+    { id: "N-132-XII", dispositivo: "art. 132, XII, Lei nº 8.112/90", rotulo: "Acumulação ilegal de cargos, empregos ou funções públicas", descricaoTipo: "acumulação ilegal de cargos, empregos ou funções públicas", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Demissão condicionada à má-fé (art. 133, §6º: comprovada a boa-fé, exoneração).", relacoes: [] },
+    { id: "N-132-XIII", dispositivo: "art. 132, XIII c/c art. 117, IX-XVI, Lei nº 8.112/90", rotulo: "Transgressão das proibições graves do art. 117", descricaoTipo: "transgressão das proibições previstas no art. 117, incisos IX a XVI", gravidade: "grave", penaPrevista: "demissao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "", relacoes: [{ com: "N-117-IX", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-X", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XI", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XIII", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XIV", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XV", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }, { com: "N-117-XVI", tipo: "especialidade", nota: "O art. 132, XIII é o veículo de demissão das proibições graves do art. 117." }] },
+    { id: "N-LAI-32-I", dispositivo: "art. 32, I, Lei nº 12.527/2011", rotulo: "Recusar, retardar ou fornecer incorretamente informação requerida", descricaoTipo: "recusar-se a fornecer informação requerida nos termos desta Lei, retardar deliberadamente o seu fornecimento ou fornecê-la intencionalmente de forma incorreta, incompleta ou imprecisa", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pena mínima de suspensão (art. 32, §1º, II). Pode migrar para hipótese de demissão da Lei 8.112/90.", relacoes: [] },
+    { id: "N-LAI-32-II", dispositivo: "art. 32, II, Lei nº 12.527/2011", rotulo: "Utilizar indevidamente, subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar informação sob guarda", descricaoTipo: "utilizar indevidamente, bem como subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar, total ou parcialmente, informação que se encontre sob sua guarda ou a que tenha acesso ou conhecimento em razão do exercício das atribuições de cargo, emprego ou função pública", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pode configurar também art. 313-A do CP. Pena mínima de suspensão (art. 32, §1º, II).", relacoes: [] },
+    { id: "N-LAI-32-III", dispositivo: "art. 32, III, Lei nº 12.527/2011", rotulo: "Agir com dolo ou má-fé na análise de solicitação de acesso", descricaoTipo: "agir com dolo ou má-fé na análise das solicitações de acesso à informação", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pressupõe pedido formal de acesso; um único ato basta.", relacoes: [] },
+    { id: "N-LAI-32-IV", dispositivo: "art. 32, IV, Lei nº 12.527/2011", rotulo: "Divulgar/permitir divulgação ou acessar/permitir acesso indevido a informação sigilosa ou pessoal", descricaoTipo: "divulgar ou permitir a divulgação ou acessar ou permitir acesso indevido à informação sigilosa ou informação pessoal", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pena mínima de suspensão (art. 32, §1º, II).", relacoes: [{ com: "N-132-IX", tipo: "especialidade", nota: "Migração possível para revelação de segredo (demissão) quando demonstrada a faceta mais grave." }] },
+    { id: "N-LAI-32-V", dispositivo: "art. 32, V, Lei nº 12.527/2011", rotulo: "Impor sigilo para proveito pessoal/de terceiro ou ocultação de ato ilegal", descricaoTipo: "impor sigilo à informação para obter proveito pessoal ou de terceiro, ou para fins de ocultação de ato ilegal cometido por si ou por outrem", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pena mínima de suspensão (art. 32, §1º, II).", relacoes: [{ com: "N-117-IX", tipo: "especialidade", nota: "Migração possível para valimento do cargo (demissão)." }] },
+    { id: "N-LAI-32-VI", dispositivo: "art. 32, VI, Lei nº 12.527/2011", rotulo: "Ocultar da revisão de autoridade superior informação sigilosa", descricaoTipo: "ocultar da revisão de autoridade superior competente informação sigilosa para beneficiar a si ou a outrem, ou em prejuízo de terceiros", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Pena mínima de suspensão (art. 32, §1º, II).", relacoes: [{ com: "N-117-IX", tipo: "especialidade", nota: "Migração possível para valimento do cargo (demissão)." }, { com: "N-132-VI", tipo: "especialidade", nota: "Migração possível para insubordinação grave (demissão)." }] },
+    { id: "N-LAI-32-VII", dispositivo: "art. 32, VII, Lei nº 12.527/2011", rotulo: "Destruir ou subtrair documentos sobre possíveis violações de direitos humanos por agentes do Estado", descricaoTipo: "destruir ou subtrair, por qualquer meio, documentos concernentes a possíveis violações de direitos humanos por parte de agentes do Estado", gravidade: "media", penaPrevista: "suspensao", elementoSubjetivoExigido: "dolo", notasEnquadramento: "Forma qualificada do inciso II — potencialmente mais grave. Pena mínima de suspensão (art. 32, §1º, II).", relacoes: [] },
+    // Orientações de Implementação (2026-07-09) + Rodada 5 (unificação de catálogo, 2026-07-10):
+    // categoria residual/curinga do próprio Oitiva — NÃO faz parte do catálogo de 52 normas do Nexo
+    // Coger (fica de fora da unificação, por decisão do usuário). Cobre condutas que não se enquadram
+    // em nenhuma das normas do catálogo unificado. Convertida para os mesmos nomes de campo do Nexo
+    // (rotulo/dispositivo/descricaoTipo/gravidade/penaPrevista/elementoSubjetivoExigido/
+    // notasEnquadramento/relacoes) só para uniformizar a renderização — não tem id N-*, dispositivo,
+    // gravidade nem pena reais (dependem do enquadramento que a comissão vier a dar ao caso concreto).
+    // Perguntas genéricas por bloco (q_inf_outras_*) seguem sinalizadas como sugestões de ponto de
+    // partida — nunca roteiro fechado.
+    { id: "inf_outras", rotulo: "Outras Infrações", dispositivo: "A definir conforme o enquadramento adotado pela comissão para o caso concreto", descricaoTipo: "conduta apurada que não se enquadra em nenhuma das normas tipificadas deste catálogo", gravidade: "—", penaPrevista: "a definir conforme o enquadramento adotado", elementoSubjetivoExigido: "ambos", notasEnquadramento: "Categoria residual: use quando a conduta apurada não corresponder a nenhuma das normas do catálogo unificado. As perguntas sugeridas são genéricas — cobrem contexto funcional, materialidade, autoria, dolo/culpa e as circunstâncias do art. 128 da Lei 8.112/90 — e devem ser adaptadas pela comissão ao enquadramento e aos fatos do caso concreto.", relacoes: [] }
   ],
 
   // ---- Checklist (comum + acusado + videoconferência) ----
@@ -2207,9 +2295,9 @@ const CATALOGO = {
     { id: "chk_video_foco",           texto: "Foco total: sem WhatsApp Web ou conversas paralelas da comissão durante o ato", condicao: "modalidade == videoconferencia" },
     // Atualização incremental 01: grupo condicional por infração (reaproveita o mesmo padrão de condição
     // "chave == valor" já usado acima para papel/modalidade — ver itensChecklistAplicaveis()).
-    { id: "chk_patrimonio_documentacao", texto: "Documentação patrimonial e financeira relacionada aos autos e organizada por item de discrepância (IRPF, extratos, matrículas, contratos)", condicao: "infracao == inf_enriquecimento_ilicito" },
-    { id: "chk_patrimonio_oportunidade", texto: "Oportunidade formal de justificação da origem do acréscimo patrimonial incluída no roteiro do acusado (art. 9º, VII, Lei 8.429/92)", condicao: "infracao == inf_enriquecimento_ilicito" },
-    { id: "chk_patrimonio_terceiros",    texto: "Identificados eventuais terceiros interpostos (familiares) a serem ouvidos separadamente", condicao: "infracao == inf_enriquecimento_ilicito" },
+    { id: "chk_patrimonio_documentacao", texto: "Documentação patrimonial e financeira relacionada aos autos e organizada por item de discrepância (IRPF, extratos, matrículas, contratos)", condicao: "infracao == N-132-IV" },
+    { id: "chk_patrimonio_oportunidade", texto: "Oportunidade formal de justificação da origem do acréscimo patrimonial incluída no roteiro do acusado (art. 9º, VII, Lei 8.429/92)", condicao: "infracao == N-132-IV" },
+    { id: "chk_patrimonio_terceiros",    texto: "Identificados eventuais terceiros interpostos (familiares) a serem ouvidos separadamente", condicao: "infracao == N-132-IV" },
     // Orientações de Implementação (2026-07-09): gate de nulidade específico do papel "Pessoa em
     // Situação Indefinida" — exige confirmação de que a defesa foi consultada sobre o enquadramento
     // antes de prosseguir com a oitiva sem compromisso e com direito ao silêncio facultado.
@@ -2886,19 +2974,97 @@ function renderEtapa2(){
     });
   });
 
-  const selectInfracao = document.getElementById("dep-infracao");
-  selectInfracao.innerHTML = "<option value=\"\">Selecione…</option>" + CATALOGO.infracoes.map(i => (
-    "<option value=\"" + i.id + "\"" + (d.infracao === i.id ? " selected" : "") + ">" + escapeHtml(i.nome) + " — " + escapeHtml(i.dispositivo) + "</option>"
-  )).join("");
+  document.getElementById("dep-infracao-busca").value = "";
+  popularSelectInfracao("");
   renderInfracaoDetalhe(d.infracao);
   atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
 }
 
+// Rodada 5 (unificação de catálogo com o Nexo Coger): 52 normas agrupadas por origem (mesmo
+// agrupamento definido no Nexo — seção 3.5.3), ordenadas por inciso dentro de cada grupo, com busca
+// por rótulo/dispositivo/id. Reconstrói o <select> inteiro a cada busca (sem dependência de libs).
+const GRUPOS_INFRACAO_ORDEM = [
+  { prefixo: "N-116-", titulo: "Lei 8.112/90 — Deveres (art. 116)" },
+  { prefixo: "N-117-", titulo: "Lei 8.112/90 — Proibições (art. 117)" },
+  { prefixo: "N-132-", titulo: "Lei 8.112/90 — Demissão (art. 132)" },
+  { prefixo: "N-130-", titulo: "Lei 8.112/90 — Outras (art. 130)" },
+  { prefixo: "N-LAI-", titulo: "LAI (Lei nº 12.527/2011)" }
+];
+function grupoTituloDaInfracao(id){
+  const g = GRUPOS_INFRACAO_ORDEM.find(g => id.startsWith(g.prefixo));
+  return g ? g.titulo : "Outras categorias";
+}
+function romanoParaInt(r){
+  const valores = { I: 1, V: 5, X: 10, L: 50 };
+  let total = 0;
+  for (let i = 0; i < r.length; i++){
+    const atual = valores[r[i]];
+    const proximo = valores[r[i + 1]];
+    total += (proximo && atual < proximo) ? -atual : atual;
+  }
+  return total;
+}
+function incisoOrdemDaInfracao(id){
+  const m = id.match(/-([IVXL]+)$/);
+  return m ? romanoParaInt(m[1]) : 0;
+}
+function popularSelectInfracao(filtro){
+  const d = getDepoenteAtivo();
+  const valorAtual = d ? d.infracao : null;
+  const termo = (filtro || "").trim().toLowerCase();
+
+  const gruposMap = {};
+  CATALOGO.infracoes
+    .filter(i => !termo ||
+      i.rotulo.toLowerCase().includes(termo) ||
+      i.dispositivo.toLowerCase().includes(termo) ||
+      i.id.toLowerCase().includes(termo))
+    .forEach(i => {
+      const titulo = grupoTituloDaInfracao(i.id);
+      (gruposMap[titulo] = gruposMap[titulo] || []).push(i);
+    });
+
+  const ordemTitulos = GRUPOS_INFRACAO_ORDEM.map(g => g.titulo).concat(["Outras categorias"]);
+
+  let html = "<option value=\"\">Selecione…</option>";
+  ordemTitulos.forEach(titulo => {
+    const itens = gruposMap[titulo];
+    if (!itens || !itens.length) return;
+    itens.sort((a, b) => incisoOrdemDaInfracao(a.id) - incisoOrdemDaInfracao(b.id));
+    html += "<optgroup label=\"" + escapeHtml(titulo) + "\">";
+    html += itens.map(i => (
+      "<option value=\"" + i.id + "\"" + (valorAtual === i.id ? " selected" : "") + ">" + escapeHtml(i.rotulo) + " — " + escapeHtml(i.dispositivo) + "</option>"
+    )).join("");
+    html += "</optgroup>";
+  });
+  document.getElementById("dep-infracao").innerHTML = html;
+}
+
+// Rodada 5, seção 7 (preparação, não execução — a importação de pauta do Nexo é a Rodada 6): função
+// de suporte que a Rodada 6 vai usar para resolver um normaId vindo de uma pauta importada contra o
+// catálogo local. Se encontrada:false (catálogo local desatualizado em relação ao que gerou a pauta),
+// o comportamento esperado na Rodada 6 é cair para cadastro genérico sem pré-seleção, mostrando o
+// rótulo bruto vindo do arquivo importado — não há UI de importação nesta rodada para exercitar isso
+// de ponta a ponta, só a função e um teste unitário simples (ver validarCatalogo()).
+function resolverNormaPorId(normaId){
+  const norma = CATALOGO.infracoes.find(n => n.id === normaId);
+  if (norma) return { encontrada: true, norma };
+  return { encontrada: false, norma: null };
+}
+
+// Rodada 5: campos do Nexo Coger (descricaoTipo/gravidade/penaPrevista/elementoSubjetivoExigido/
+// notasEnquadramento), no lugar de elementosTipicos/penaAbstrata (schema antigo, só das 11 infrações
+// isoladas do Oitiva).
 function renderInfracaoDetalhe(infracaoId){
   const wrap = document.getElementById("infracao-detalhe");
   const inf = CATALOGO.infracoes.find(i => i.id === infracaoId);
   wrap.innerHTML = inf
-    ? "<div class=\"infracao-detalhe\"><strong>Elementos típicos:</strong> " + escapeHtml(inf.elementosTipicos.join("; ")) + "<br><strong>Pena em abstrato:</strong> " + escapeHtml(inf.penaAbstrata) + "</div>"
+    ? "<div class=\"infracao-detalhe\"><strong>Tipo:</strong> " + escapeHtml(inf.descricaoTipo) +
+      "<br><strong>Gravidade:</strong> " + escapeHtml(inf.gravidade) +
+      " · <strong>Pena prevista:</strong> " + escapeHtml(inf.penaPrevista) +
+      " · <strong>Elemento subjetivo:</strong> " + escapeHtml(inf.elementoSubjetivoExigido) +
+      (inf.notasEnquadramento ? "<br><strong>Notas de enquadramento:</strong> " + escapeHtml(inf.notasEnquadramento) : "") +
+      "</div>"
     : "";
 }
 
@@ -2906,7 +3072,7 @@ function renderInfracaoDetalhe(infracaoId){
 // da 11ª infração (enriquecimento ilícito / terceiro interposto) quando aplicáveis.
 function atualizarPainelDicasEtapa2(d){
   const ancoras = ["elementos_buscados", "perfil"];
-  if (d.infracao === "inf_enriquecimento_ilicito"){
+  if (d.infracao === "N-132-IV"){
     ancoras.push("infracao_enriquecimento");
     if (d.papel === "testemunha" && d.terceiroInterposto) ancoras.push("terceiro_interposto");
   }
@@ -2917,7 +3083,7 @@ function atualizarVisibilidadeTerceiroInterposto(){
   const d = getDepoenteAtivo();
   if (!d) return;
   const cartao = document.getElementById("cartao-terceiro-interposto");
-  const mostrar = d.infracao === "inf_enriquecimento_ilicito" && d.papel === "testemunha";
+  const mostrar = d.infracao === "N-132-IV" && d.papel === "testemunha";
   cartao.hidden = !mostrar;
   if (mostrar) document.getElementById("dep-terceiro-interposto").checked = !!d.terceiroInterposto;
   atualizarPainelDicasEtapa2(d);
@@ -3013,6 +3179,10 @@ function ligarCamposWizardEtapa2(){
     salvarLocalStorage();
     renderInfracaoDetalhe(d.infracao);
     atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
+  });
+  // Rodada 5: busca por rótulo/dispositivo/id — reconstrói o <select> agrupado a cada tecla.
+  document.getElementById("dep-infracao-busca").addEventListener("input", (ev) => {
+    popularSelectInfracao(ev.target.value);
   });
   // Atualização incremental 01 (enriquecimento ilícito):
   document.getElementById("dep-terceiro-interposto").addEventListener("change", (ev) => {
@@ -3454,7 +3624,8 @@ function itensChecklistAplicaveis(d){
     (c.condicao === "papel == " + d.papel) ||
     (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia") ||
     // Atualização incremental 01: grupo condicional por infração (enriquecimento ilícito).
-    (c.condicao === "infracao == inf_enriquecimento_ilicito" && d.infracao === "inf_enriquecimento_ilicito")
+    // Rodada 5: id migrado de inf_enriquecimento_ilicito para N-132-IV (catálogo unificado com o Nexo).
+    (c.condicao === "infracao == N-132-IV" && d.infracao === "N-132-IV")
   );
 }
 
@@ -3789,7 +3960,7 @@ function montarAreaImpressaoRoteiro(d){
     "<div class=\"linha\">" +
       "<div><div class=\"rotulo\">Depoente</div>" + escapeHtml(d.identificacao) + "</div>" +
       "<div><div class=\"rotulo\">Papel</div>" + escapeHtml(papelNome) + "</div>" +
-      (infracaoObj ? "<div><div class=\"rotulo\">Infração</div>" + escapeHtml(infracaoObj.nome) + "</div>" : "") +
+      (infracaoObj ? "<div><div class=\"rotulo\">Infração</div>" + escapeHtml(infracaoObj.rotulo) + " — " + escapeHtml(infracaoObj.dispositivo) + "</div>" : "") +
     "</div>" +
     "<div class=\"divisor\"></div>" +
     "<div class=\"rotulo\">Composição da comissão</div>" +
@@ -3876,14 +4047,22 @@ function formatarMembro(m){
    ===================================================================== */
 function validarCatalogo(){
   console.info("Oitiva 360 — validação do CATALOGO:", {
-    infracoes: CATALOGO.infracoes.length + " (esperado: 12)",
+    catalogoVersion: CATALOGO_VERSION + " (esperado: 1.0)",
+    infracoes: CATALOGO.infracoes.length + " (esperado: 53 = 52 normas do Nexo Coger + inf_outras)",
     blocos: CATALOGO.blocos.length + " (esperado: 13)",
     textosModelo: Object.keys(CATALOGO.textosModelo).length + " chaves",
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
+  });
+  // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
+  const testeEncontrada = resolverNormaPorId("N-132-IV");
+  const testeNaoEncontrada = resolverNormaPorId("N-000-INEXISTENTE");
+  console.info("Oitiva 360 — teste resolverNormaPorId():", {
+    "N-132-IV encontrada": testeEncontrada.encontrada === true && !!testeEncontrada.norma,
+    "id inexistente retorna encontrada:false": testeNaoEncontrada.encontrada === false && testeNaoEncontrada.norma === null
   });
 }
 
