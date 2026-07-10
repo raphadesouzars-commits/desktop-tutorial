@@ -6,20 +6,15 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.6.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.7.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
   Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar +
   texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
-  bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 (lote 1/8):
-  catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas + Rodada 5
-  (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132 + Rodada 5 (lote 3/8):
-  banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117 + Rodada 5
-  (lote 4/8): banco de perguntas do Grupo G — 7 normas da LAI, art. 32 + Rodada 5 (lote 5/8): banco
-  de perguntas do Grupo C — N-117-XVII + Rodada 5 (lote 6/8): banco de perguntas do Grupo A — 10
-  normas restantes dos deveres do art. 116 + Rodada 5 (lote 7/8): banco de perguntas do Grupo B — 9
-  normas restantes das proibições leves do art. 117)
+  bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 completa (lotes
+  1/8 a 8/8): catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11
+  isoladas, com banco de perguntas próprio para todas elas)
   Data: 2026-07-10
 
   Changelog:
@@ -236,6 +231,16 @@
     das proibições leves do art. 117 — `N-117-I` a `VIII` e `XIX`. 38 perguntas novas (4 ou 5 por
     norma). Todas exigem "ambos" (dolo ou culpa); elemento subjetivo em tom neutro, conforme a seção
     4.2. Com este lote, todas as 19 entradas do art. 117 já têm banco de perguntas próprio.
+  - 2.7.0 (Rodada 5, lote 8/8 — Grupo E, 2026-07-10, ÚLTIMO LOTE DA RODADA 5): banco de perguntas
+    para `N-130-P1` (recusa injustificada a se submeter a inspeção médica determinada pela
+    autoridade competente — art. 130, §1º, Lei 8.112/90; 4 perguntas) e `N-132-I` (crime contra a
+    administração pública — art. 132, I; 2 perguntas). N-132-I recebeu tratamento especial conforme
+    a seção 3.5: o Parecer AGU GQ-124 (vinculante) exige sentença penal transitada em julgado para
+    esse enquadramento, e a doutrina recomenda evitá-lo em favor de capitulação administrativa
+    autônoma; por isso o banco não contém nenhuma pergunta de mérito sobre o crime em si (matéria da
+    esfera penal, fora do PAD) — apenas 2 perguntas de natureza processual. 6 perguntas novas no
+    total. Com este lote, encerra-se a Rodada 5: todas as 52 normas do catálogo unificado com o Nexo
+    Coger têm banco de perguntas próprio (as 11 originais migradas + as 41 cobertas nos lotes 2 a 8).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1849,7 +1854,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.6.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.7.0</div>
 </footer>
 
 <script>
@@ -2365,7 +2370,21 @@ const CATALOGO = {
     { id: "q_inf_recusa_atualizar_cadastro_001", bloco: "materialidade", texto: "Descreva a solicitação de atualização de dados cadastrais: quando foi feita, por qual meio, e como foi a resposta.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIX"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_recusa_atualizar_cadastro_002", bloco: "materialidade", texto: "Existe registro da solicitação e da resposta (sistema, memorando, e-mail)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIX"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_recusa_atualizar_cadastro_003", bloco: "elemento_subjetivo", texto: "Havia alguma razão para a não atualização dos dados solicitados?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XIX"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_recusa_atualizar_cadastro_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIX"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_recusa_atualizar_cadastro_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIX"], modulo: "nucleo", revisao: "pendente" },
+
+    // ---- Rodada 5, Grupo E — art. 130 §1º (2026-07-10) ----
+    // Recusa objetiva, pouca variação factual — banco reduzido a 4 perguntas, conforme a seção 3.3.
+    { id: "q_inf_recusa_inspecao_medica_001", bloco: "materialidade", texto: "Descreva a determinação de inspeção médica: quem a determinou, em que data e para qual finalidade.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-130-P1"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_recusa_inspecao_medica_002", bloco: "materialidade", texto: "Como se deu a recusa? Foi expressa (declaração de não comparecimento) ou pelo não comparecimento à inspeção agendada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-130-P1"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_recusa_inspecao_medica_003", bloco: "elemento_subjetivo", texto: "Havia alguma razão para a recusa em se submeter à inspeção médica determinada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-130-P1"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_recusa_inspecao_medica_004", bloco: "fechamento", texto: "A determinação já foi cumprida posteriormente? Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-130-P1"], modulo: "nucleo", revisao: "pendente" },
+
+    // N-132-I — crime contra a administração pública. Seção 3.5: AGU GQ-124 (vinculante) exige
+    // sentença penal transitada em julgado; evitar este enquadramento, buscar capitulação
+    // administrativa autônoma. Por isso o banco NÃO traz perguntas de mérito sobre o crime em si
+    // (matéria da esfera penal, fora do PAD) — no máximo 2 perguntas, de natureza só processual.
+    { id: "q_inf_crime_administracao_001", bloco: "contexto_funcional", texto: "Há conhecimento de processo criminal em curso ou de sentença já proferida relacionada a este fato? Em caso positivo, qual o número do processo e em que fase se encontra?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_crime_administracao_002", bloco: "fechamento", texto: "Independentemente da esfera penal, há elementos deste fato que, na sua percepção, possam configurar uma infração administrativa autônoma (ex.: violação de dever funcional específico), a ser submetida à reconsideração do enquadramento pela comissão?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-I"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -4361,7 +4380,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 275 = 75 + 46 F + 24 D + 38 G + 5 C + 49 A + 38 B, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 281 = 75 + 46 F + 24 D + 38 G + 5 C + 49 A + 38 B + 6 E, Rodada 5 completa)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
