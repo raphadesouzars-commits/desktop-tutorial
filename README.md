@@ -60,8 +60,23 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
 
 - **Documento `.json`** completo (guarda e troca no ecossistema Coger).
 - **Minuta do termo de indiciação** — por acusado, em vista de impressão/PDF.
-- **Pauta de instrução** para o Oitiva 360 (fatos carentes de prova).
+- **Pauta de instrução** para o Oitiva 360 (fatos carentes de prova) — enriquecida
+  com contexto dos acusados e enquadramentos ativos por fato (`catalogoVersion`,
+  `acusadosContexto`, `acusadosVinculados`, `enquadramentosAtivos`).
 - **Impressão do mapa** em paisagem, com legenda dos estados.
+
+## Integração com o Oitiva 360 (aditiva e opcional)
+
+Preparação do lado do Nexo; nenhuma dependência do Oitiva existir. Tudo é
+opcional — a ferramenta funciona de forma idêntica para quem não usa.
+
+- **Importar prova(s) de retorno**: aceita um `.json` de qualquer origem que siga
+  o contrato (cada item = formato interno de `provas[]` + `fatoIds`). Validação
+  antes de aplicar (tipo válido, fatos existentes, aviso de processo divergente)
+  e **tela de revisão obrigatória** com preview e seleção por item — nada entra
+  silenciosamente. Sem deduplicação automática nesta versão.
+- **Badge "pauta enviada"**: rastro neutro no card do fato após exportar a pauta;
+  some sozinho quando o fato recebe prova e deixa de carecer de evidência.
 
 ## Manutenção
 

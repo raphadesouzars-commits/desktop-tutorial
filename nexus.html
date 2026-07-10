@@ -78,6 +78,19 @@ button{font-family:inherit;cursor:pointer}
 .popover .st.running{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
 .popover .est{font-style:italic;color:var(--ink-2)}
 .popover .disc{margin-top:6px;font-size:11px;color:var(--ink-2);border-top:1px dashed var(--borda);padding-top:6px}
+/* toast */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;background:var(--ink);
+  color:#fff;padding:10px 18px;border-radius:24px;font-size:13px;font-weight:600;box-shadow:0 8px 24px #0004;
+  opacity:0;transition:opacity .2s;pointer-events:none}
+.toast.show{opacity:1}
+/* revisão de importação de prova */
+.imp-item{border:1px solid var(--borda);border-radius:10px;padding:10px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.imp-item.err{border-color:var(--estado-critico);background:var(--estado-critico-bg)}
+.imp-item .imp-body{flex:1;font-size:12.5px}
+.imp-item .imp-tipo{font-weight:700}
+.imp-item .imp-meta{color:var(--ink-2);font-size:11.5px;margin-top:2px}
+.imp-item .imp-prev{font-style:italic;color:var(--ink-2);margin-top:4px}
+.imp-item .imp-errmsg{color:var(--estado-critico);font-weight:600;font-size:12px}
 
 /* ---------- LENS BAR ---------- */
 .lensbar{background:var(--paper);border-bottom:1px solid var(--borda);
@@ -321,6 +334,7 @@ svg.map.isolating .node.hl{opacity:1}
       <div class="lbl">Produtos</div>
       <button data-act="minuta">📄 Gerar minuta do termo de indiciação</button>
       <button data-act="pauta">🎯 Exportar pauta de instrução (Oitiva 360)</button>
+      <button data-act="importProva">📥 Importar prova(s) de retorno</button>
       <button data-act="printMap">🖨 Imprimir o mapa</button>
       <div class="sep"></div>
       <div class="lbl">Catálogo &amp; exemplo</div>
@@ -371,7 +385,9 @@ svg.map.isolating .node.hl{opacity:1}
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 <div class="printview" id="printview"></div>
 <div class="popover" id="popover"></div>
+<div class="toast" id="toast"></div>
 <input type="file" id="fileInput" accept="application/json,.json" style="display:none">
+<input type="file" id="fileInputProva" accept="application/json,.json" style="display:none">
 
 <script>
 /* =====================================================================
@@ -481,6 +497,11 @@ function buildCatalogo(){
   return cat;
 }
 
+/* Versão do catálogo de normas embutido (contrato de export de pauta — Rodada 4).
+ * ATENÇÃO: incremente esta constante SEMPRE que o catálogo de normas (NORMAS_BASE /
+ * RELACOES_DECL) for alterado, para que o lado do Oitiva 360 possa detectar divergência. */
+const CATALOGO_VERSION='1.0';
+
 /* ordem e rótulos dos grupos do <select> (seção 3.5.3) */
 function grupoDaNorma(id){
   if(id.startsWith('NU-')) return 6;
@@ -566,6 +587,7 @@ function migra(d){
     if(f.status!=='ativo'&&f.status!=='arquivado') f.status='ativo';
     if(typeof f.justificativaArquivamento!=='string') f.justificativaArquivamento='';
     if(typeof f.dataCiencia!=='string') f.dataCiencia=''; // ciência da autoridade (art. 142, §1º)
+    if(!f.pautaEnviada||typeof f.pautaEnviada!=='object') f.pautaEnviada={em:null}; // rastro de export de pauta (R4)
   });
   (d.provas||[]).forEach(pr=>{ if(typeof pr.codigoAnexo!=='string') pr.codigoAnexo=''; });
   return d;
@@ -1102,6 +1124,12 @@ function drawFatoCard(g,f,x,y,pends){
   if(pends.some(p=>p.codigo==='P8')){ badge(node,bx,20,'⚡','var(--estado-critico)','Alternatividade violada'); bx-=20; }
   if(arq){ badge(node,bx,20,'🗄','var(--ink-2)','Fato arquivado — não consta da minuta'); bx-=20; }
   if(cond.length){ badge(node,bx,40,'👤'+(cond.length>1?'×'+cond.length:''),'var(--ink-2)',cond.length+' acusado(s)'); }
+  // rastro informativo (neutro): pauta enviada, enquanto o fato ainda carece de prova
+  if(!arq && f.pautaEnviada && f.pautaEnviada.em && (est.exibido==='ausente'||est.exibido==='indicios')){
+    const dt=parseDate(f.pautaEnviada.em);
+    txt(node,CARD_W-12,68,'📤 pauta '+(dt?fmtDate(dt).slice(0,5):''),{size:10,fill:'var(--ink-2)',max:20,
+      title:'Pauta enviada em '+(dt?fmtDate(dt):f.pautaEnviada.em)}).setAttribute('text-anchor','end');
+  }
 
   node.addEventListener('click',ev=>{ ev.stopPropagation(); toggleIsolate(f.id); });
   node.addEventListener('dblclick',ev=>{ ev.stopPropagation(); abrirFormFato(f.id); });
@@ -1589,7 +1617,7 @@ function excluirProvaFlow(id){
 function abrirFormFato(id){
   const novo=!id;
   const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
-    ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'',
+    ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'', pautaEnviada:{em:null},
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''} : JSON.parse(JSON.stringify(doc.fatos.find(x=>x.id===id)));
@@ -1747,6 +1775,13 @@ function abrirFormFato(id){
       fieldText('Local',f.local,v=>f.local=v)),
     fieldText('Data de ciência da autoridade (art. 142, §1º)',f.dataCiencia,v=>f.dataCiencia=v,
       'Marco inicial da prescrição — NÃO é a data do fato, mas quando a autoridade competente teve ciência dele. Se vazio, o cálculo usa o fim do período como estimativa.','date'),
+    (f.pautaEnviada&&f.pautaEnviada.em)?(()=>{
+      const box=el('div',{class:'field'});
+      const dt=parseDate(f.pautaEnviada.em);
+      box.append(el('div',{class:'hint'},'📤 Pauta enviada em '+(dt?fmtDate(dt):f.pautaEnviada.em)+'. ',
+        el('a',{href:'#',style:'color:var(--estado-fragil);font-style:normal',onclick:(e)=>{e.preventDefault();f.pautaEnviada={em:null};box.remove();}},'limpar marca de pauta enviada')));
+      return box;
+    })():null,
     condBox, provBox, wizardBanner, enqBox, estBox, sitBox
   ];
   const foot=[
@@ -1972,10 +2007,23 @@ function recomputaSeq(){
 }
 
 function exportPauta(){
-  const pauta=doc.fatos.filter(f=>!fatoArquivado(f)&&(()=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})())
-    .map(f=>({fatoId:f.id,titulo:f.titulo,estado:estadoExibido(f).exibido,elementosBuscados:f.elementosBuscados||''}));
-  const out={origem:'nexus-coger',processo:doc.processo.numero||'',pauta};
+  const fatosPauta=doc.fatos.filter(f=>!fatoArquivado(f)&&(()=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})());
+  const pauta=fatosPauta.map(f=>({
+    fatoId:f.id, titulo:f.titulo||'', estado:estadoExibido(f).exibido, elementosBuscados:f.elementosBuscados||'',
+    acusadosVinculados:[...new Set((f.condutas||[]).map(c=>c.acusadoId).filter(Boolean))],
+    enquadramentosAtivos:enquadramentosAtivos(f).map(e=>{const n=normaById(e.normaId);
+      return {normaId:e.normaId, rotulo:n?n.rotulo:'', elementoSubjetivo:e.elementoSubjetivo};})
+  }));
+  const out={
+    origem:'nexus-coger', catalogoVersion:CATALOGO_VERSION, processo:doc.processo.numero||'',
+    exportadoEm:new Date().toISOString(),
+    acusadosContexto:doc.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
+    pauta
+  };
   const txt=JSON.stringify(out,null,2);
+  // grava o rastro "pauta enviada" em todos os fatos que entraram neste export
+  const agora=new Date().toISOString();
+  fatosPauta.forEach(f=>{ f.pautaEnviada={em:agora}; });
   const body=[
     el('div',{class:'banner info'},el('span',{},'🎯'),el('div',{},'Cole no campo "elementos buscados" ao cadastrar o próximo depoente no Oitiva 360.')),
     (()=>{const ta=el('textarea',{style:'min-height:280px;font-family:monospace;font-size:12px'});ta.value=txt;ta.readOnly=true;return ta;})()
@@ -1984,6 +2032,101 @@ function exportPauta(){
     el('button',{class:'btn',onclick:()=>baixar(`pauta-oitiva360-${new Date().toISOString().slice(0,10)}.json`,txt)},'Baixar .json'),
     el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
   openModal(modalShell('Pauta de instrução para o Oitiva 360','prova',body,foot));
+  render(); // reflete o badge "pauta enviada" nos cards
+}
+
+/* ------------------------------------------------------------------ *
+ * 15-bis. IMPORTAÇÃO DE PROVA DE RETORNO (Rodada 4)
+ * ------------------------------------------------------------------ */
+const TIPOS_PROVA_VALIDOS=['documental','pericial','testemunhal','declaracao_informante','interrogatorio','diligencia','emprestada','indiciaria'];
+function toast(msg){
+  const t=$('#toast'); if(!t) return; t.textContent=msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t=setTimeout(()=>t.classList.remove('show'),3600);
+}
+function importarProva(){ $('#fileInputProva').click(); }
+$('#fileInputProva').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d; try{ d=JSON.parse(rd.result); }catch(err){ alert('Falha ao ler o JSON: '+err.message); return; }
+    if(!d||!Array.isArray(d.provas)){ alert('Arquivo inválido: esperado um objeto com um array "provas".'); return; }
+    revisarImportacaoProva(d);
+  };
+  rd.readAsText(file); e.target.value='';
+});
+function revisarImportacaoProva(d){
+  const idsFato=new Set(doc.fatos.map(f=>f.id));
+  const itens=d.provas.map((it,i)=>{
+    const erros=[];
+    if(!it||typeof it!=='object'){ return {i, invalido:true, erros:['Item não é um objeto de prova.'], it:{}}; }
+    if(!TIPOS_PROVA_VALIDOS.includes(it.tipo)) erros.push('Tipo inválido: "'+esc(it.tipo)+'".');
+    const fatoIds=Array.isArray(it.fatoIds)?it.fatoIds:[];
+    if(!fatoIds.length) erros.push('Sem fatoIds — nenhum fato de destino.');
+    const desconhecidos=fatoIds.filter(fid=>!idsFato.has(fid));
+    if(desconhecidos.length) erros.push('Fato(s) inexistente(s) neste processo: '+desconhecidos.join(', ')+'.');
+    return {i, invalido:erros.length>0, erros, it, fatoIds};
+  });
+  const procDif = d.processo && doc.processo.numero && d.processo!==doc.processo.numero;
+  const validos=itens.filter(x=>!x.invalido);
+  const sel=new Set(validos.map(x=>x.i)); // todos marcados por padrão
+
+  const body=[];
+  body.push(el('div',{class:'banner info'},el('span',{},'📥'),el('div',{},
+    'Origem: ',el('b',{},esc((d.origem||'—'))),'. Revise antes de confirmar — nada é importado silenciosamente.')));
+  if(procDif) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},
+    'Este arquivo parece ser de outro processo (',el('b',{},esc(d.processo)),' ≠ ',el('b',{},esc(doc.processo.numero)),'). Confirma a importação mesmo assim?')));
+
+  itens.forEach(x=>{
+    if(x.invalido){
+      body.push(el('div',{class:'imp-item err'},
+        el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'},'Item '+(x.i+1)+' — não importável'),
+          el('div',{class:'imp-errmsg'}, x.erros.join(' ')))));
+    } else {
+      const it=x.it;
+      const cb=el('input',{type:'checkbox'}); cb.checked=true;
+      cb.addEventListener('change',()=>{ if(cb.checked) sel.add(x.i); else sel.delete(x.i); });
+      const prev=(Array.isArray(it.trechosSignificativos)&&it.trechosSignificativos[0]&&it.trechosSignificativos[0].citacao)||'';
+      body.push(el('div',{class:'imp-item'},
+        cb,
+        el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'}, (it.titulo||'(sem título)')+' · '+it.tipo),
+          el('div',{class:'imp-meta'}, 'Destino: '+x.fatoIds.map(fid=>fid+' — '+((doc.fatos.find(f=>f.id===fid)||{}).titulo||'')).join('; ')),
+          prev?el('div',{class:'imp-prev'},'“'+esc(prev.length>120?prev.slice(0,119)+'…':prev)+'”'):null)));
+    }
+  });
+  if(!validos.length) body.push(el('div',{class:'hint'},'Nenhum item válido para importar neste arquivo.'));
+
+  const foot=[
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>aplicarImportacaoProva(validos.filter(x=>sel.has(x.i)))},
+      'Importar selecionadas')
+  ];
+  openModal(modalShell('Revisão — importação de prova(s)','prova',body,foot));
+}
+function aplicarImportacaoProva(aprovadas){
+  if(!aprovadas.length){ closeModal(); toast('Nenhuma prova selecionada.'); return; }
+  const fatosAfetados=new Set();
+  aprovadas.forEach(x=>{
+    const it=x.it;
+    const nova={
+      id:genId('P'), tipo:it.tipo, titulo:it.titulo||'', descricao:it.descricao||'',
+      refAutos:{documento:(it.refAutos&&it.refAutos.documento)||'', folhas:(it.refAutos&&it.refAutos.folhas)||''},
+      hashVeritas:'', codigoAnexo:'',
+      trechosSignificativos:Array.isArray(it.trechosSignificativos)?it.trechosSignificativos.map(t=>({citacao:(t&&t.citacao)||'',ref:(t&&t.ref)||''})):[],
+      contraditorio:{acusadoIntimado:(it.contraditorio&&('acusadoIntimado' in it.contraditorio))?it.contraditorio.acusadoIntimado:null,
+                     refAutos:(it.contraditorio&&it.contraditorio.refAutos)||''},
+      detalhe:(it.detalhe&&typeof it.detalhe==='object')?it.detalhe:{}
+    };
+    doc.provas.push(nova);
+    x.fatoIds.forEach(fid=>{
+      const f=doc.fatos.find(y=>y.id===fid);
+      if(f){ f.provaIds=f.provaIds||[]; if(!f.provaIds.includes(nova.id)) f.provaIds.push(nova.id); fatosAfetados.add(fid); }
+    });
+  });
+  closeModal();
+  render(); // recalcula estadoProbatorio, pendências (P1/P3/P7) e o badge de pauta
+  toast(aprovadas.length+' prova(s) importada(s). '+fatosAfetados.size+' fato(s) atualizados.');
 }
 
 /* ------------------------------------------------------------------ *
@@ -2213,7 +2356,7 @@ function carregarExemplo(){
   doc.provas.push(P1,P2,P3);
 
   const mkFato=(o)=>Object.assign({id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
-    status:'ativo', justificativaArquivamento:'',
+    status:'ativo', justificativaArquivamento:'', pautaEnviada:{em:null},
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''},o);
@@ -2272,7 +2415,7 @@ function init(){
   $('#menu').addEventListener('click',e=>{
     const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
     toggleMenu(false);
-    ({exportJson,importJson,minuta:gerarMinutaFlow,pauta:exportPauta,printMap,
+    ({exportJson,importJson,minuta:gerarMinutaFlow,pauta:exportPauta,importProva:importarProva,printMap,
       novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
   });
   $('#tagProc').addEventListener('click',abrirFormProcesso);
