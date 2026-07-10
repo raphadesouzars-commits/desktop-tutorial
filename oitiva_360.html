@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.1.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.2.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -14,7 +14,8 @@
   texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
   bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 (lote 1/8):
   catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas + Rodada 5
-  (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132)
+  (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132 + Rodada 5 (lote 3/8):
+  banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117)
   Data: 2026-07-10
 
   Changelog:
@@ -203,6 +204,12 @@
     (seção 3.6) — aparece normalmente no roteiro, campo só de rastreio administrativo; indicador
     visual opcional (`🔍 revisão pendente`) implementado e testado, mas com
     `MOSTRAR_INDICADOR_REVISAO_PENDENTE = false` por padrão, como pede o documento.
+  - 2.2.0 (Rodada 5, lote 3/8 — Grupo D, 2026-07-10): banco de perguntas para as 4 normas restantes
+    das proibições graves do art. 117 — `N-117-XI` (atuar como procurador/intermediário junto a
+    repartições), `N-117-XIII` (aceitar comissão/emprego/pensão de estado estrangeiro), `N-117-XIV`
+    (praticar usura) e `N-117-XVI` (utilizar pessoal/recursos da repartição em atividade
+    particular). 24 perguntas novas (6 por norma), mesma estrutura e critérios do lote anterior
+    (elemento subjetivo redigido para dolo, `revisao: "pendente"`).
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1816,7 +1823,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.1.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.2.0</div>
 </footer>
 
 <script>
@@ -2138,7 +2145,36 @@ const CATALOGO = {
     { id: "q_inf_transgressao_117_001", bloco: "materialidade", texto: "Qual das condutas vedadas pelo art. 117 (incisos IX a XVI) está sendo apurada neste fato? Descreva com o máximo de detalhes o que ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_transgressao_117_002", bloco: "autoria_participacao", texto: "Quem praticou a conduta apontada? Havia outras pessoas com conhecimento ou participação no fato?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_transgressao_117_003", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada? Havia consciência de que se tratava de conduta vedada pela lei?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_transgressao_117_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre este fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_transgressao_117_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre este fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
+
+    // ---- Rodada 5, Grupo D — proibições graves restantes do art. 117 (2026-07-10) ----
+    { id: "q_inf_procurador_reparticao_001", bloco: "materialidade", texto: "Descreva a atuação como procurador(a) ou intermediário(a) junto à repartição pública apontada: em que processo ou requerimento, perante qual órgão, e em benefício de quem.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_procurador_reparticao_002", bloco: "materialidade", texto: "Existe procuração, requerimento ou outro documento formal que comprove a atuação apontada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_procurador_reparticao_003", bloco: "autoria_participacao", texto: "Quem solicitou essa atuação? Havia remuneração ou qualquer contrapartida envolvida?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_procurador_reparticao_004", bloco: "elemento_subjetivo", texto: "Havia consciência de que essa atuação não se enquadrava nas hipóteses legais permitidas (benefícios previdenciários/assistenciais de parentes até 2º grau, cônjuge ou companheiro)? O que motivou a atuação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_procurador_reparticao_005", bloco: "contexto_funcional", texto: "A atuação teve relação com as atribuições do cargo exercido na repartição? Foi praticada durante o horário de expediente?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_procurador_reparticao_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre essa atuação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XI"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_comissao_estado_estrangeiro_001", bloco: "materialidade", texto: "Descreva a comissão, emprego ou pensão de estado estrangeiro apontada: qual país, qual a natureza do vínculo e desde quando.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_comissao_estado_estrangeiro_002", bloco: "materialidade", texto: "Existe documento, contrato ou registro formal do vínculo com o estado estrangeiro?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_comissao_estado_estrangeiro_003", bloco: "autoria_participacao", texto: "Houve autorização prévia de autoridade brasileira competente para aceitar esse vínculo?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_comissao_estado_estrangeiro_004", bloco: "elemento_subjetivo", texto: "O que motivou a aceitação do vínculo? Havia conhecimento de que se tratava de hipótese vedada pela lei?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_comissao_estado_estrangeiro_005", bloco: "contexto_funcional", texto: "O vínculo era compatível com o exercício do cargo público e com o horário de trabalho na repartição?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_comissao_estado_estrangeiro_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse vínculo?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIII"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_usura_001", bloco: "materialidade", texto: "Descreva a operação apontada como usurária: valores emprestados, taxas cobradas e forma de cobrança.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_usura_002", bloco: "materialidade", texto: "Existem registros, comprovantes de pagamento, mensagens ou testemunhas que possam esclarecer a operação relatada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_usura_003", bloco: "autoria_participacao", texto: "Quem praticou a operação e quem foi o(a) tomador(a) dos recursos? Havia outras pessoas envolvidas na intermediação?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_usura_004", bloco: "elemento_subjetivo", texto: "O que motivou a prática dessa operação? Havia conhecimento de que as taxas cobradas excediam os limites legais?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_usura_005", bloco: "circunstancias_art128", texto: "Houve reiteração da prática com outras pessoas, ou tratou-se de episódio isolado? Qual o prejuízo causado ao(à) tomador(a) dos recursos?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_usura_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre essa operação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XIV"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_uso_particular_recursos_001", bloco: "materialidade", texto: "Descreva o uso de pessoal ou de recursos materiais da repartição em atividade particular: quais recursos ou quais servidores, e para qual finalidade.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_uso_particular_recursos_002", bloco: "materialidade", texto: "Existem registros (escalas, requisições, notas fiscais, mensagens) que demonstrem o uso apontado?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_uso_particular_recursos_003", bloco: "autoria_participacao", texto: "Quem determinou ou solicitou o uso desses recursos ou desse pessoal para fins particulares?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_uso_particular_recursos_004", bloco: "elemento_subjetivo", texto: "O que motivou o uso de recursos ou pessoal da repartição para essa finalidade particular? Havia ciência de que isso não era permitido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_uso_particular_recursos_005", bloco: "circunstancias_art128", texto: "Esse uso trouxe algum prejuízo às atividades normais da repartição ou implicou custo para a administração?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_uso_particular_recursos_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse uso?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -4134,7 +4170,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 121 = 75 + 46 do Grupo F, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 145 = 75 + 46 do Grupo F + 24 do Grupo D, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
