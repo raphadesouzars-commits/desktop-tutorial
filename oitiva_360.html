@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.4.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.5.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -17,7 +17,8 @@
   (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132 + Rodada 5 (lote 3/8):
   banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117 + Rodada 5
   (lote 4/8): banco de perguntas do Grupo G — 7 normas da LAI, art. 32 + Rodada 5 (lote 5/8): banco
-  de perguntas do Grupo C — N-117-XVII)
+  de perguntas do Grupo C — N-117-XVII + Rodada 5 (lote 6/8): banco de perguntas do Grupo A — 10
+  normas restantes dos deveres do art. 116)
   Data: 2026-07-10
 
   Changelog:
@@ -225,6 +226,11 @@
     proibições médias do art. 117 — `N-117-XVII` (cometer a outro servidor atribuições estranhas ao
     cargo, fora de emergência transitória). 5 perguntas novas; elemento subjetivo redigido em tom
     neutro, conforme a seção 4.2, por exigir "ambos" (dolo ou culpa).
+  - 2.5.0 (Rodada 5, lote 6/8 — Grupo A, 2026-07-10): banco de perguntas para as 10 normas restantes
+    dos deveres do art. 116 (exceto `III` e `XI`, já migradas na Rodada 5, lote 1) — `N-116-I`,
+    `II`, `IV`, `V`, `VI`, `VII`, `VIII`, `IX`, `X`, `XII`. 49 perguntas novas (4 ou 5 por norma —
+    são normas leves, de tipo objetivo em geral simples). Todas exigem "ambos" (dolo ou culpa);
+    elemento subjetivo redigido em tom neutro, conforme a seção 4.2.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1838,7 +1844,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.4.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.5.0</div>
 </footer>
 
 <script>
@@ -2244,7 +2250,69 @@ const CATALOGO = {
     { id: "q_inf_atribuicao_estranha_002", bloco: "materialidade", texto: "Existe registro (ordem de serviço, e-mail, escala) que formalize essa atribuição?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_atribuicao_estranha_003", bloco: "autoria_participacao", texto: "Quem determinou essa atribuição? O servidor que a recebeu manifestou alguma objeção?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_atribuicao_estranha_004", bloco: "elemento_subjetivo", texto: "Havia alguma situação de emergência ou transitoriedade que justificasse essa atribuição fora do cargo do servidor? Como se deu a decisão de atribuí-la dessa forma?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_atribuicao_estranha_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre essa atribuição?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_atribuicao_estranha_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre essa atribuição?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVII"], modulo: "nucleo", revisao: "pendente" },
+
+    // ---- Rodada 5, Grupo A — deveres restantes do art. 116 (2026-07-10) ----
+    // Todas as 10 normas exigem "ambos" (dolo ou culpa) — elemento subjetivo redigido em tom neutro,
+    // conforme a seção 4.2.
+    { id: "q_inf_zelo_dedicacao_001", bloco: "materialidade", texto: "Descreva o episódio em que o exercício das atribuições do cargo teria ocorrido sem o zelo e a dedicação esperados: o que ocorreu, quando e em que contexto.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_dedicacao_002", bloco: "autoria_participacao", texto: "Quem executava essa atribuição no momento do fato relatado? Havia supervisão direta?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_dedicacao_003", bloco: "elemento_subjetivo", texto: "Como avalia, em retrospecto, a forma como a atribuição foi executada nesse episódio? Havia algo que pudesse ter sido feito de outra forma?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_dedicacao_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-I"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_deslealdade_instituicoes_001", bloco: "materialidade", texto: "Descreva a conduta apontada como desleal à instituição: o que ocorreu, e de que forma isso se manifestou (declarações, atos, omissões).", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_deslealdade_instituicoes_002", bloco: "autoria_participacao", texto: "Havia outras pessoas presentes ou com conhecimento direto do episódio relatado?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_deslealdade_instituicoes_003", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada? Havia alguma circunstância que, na sua percepção, justificasse esse posicionamento em relação à instituição?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_deslealdade_instituicoes_004", bloco: "contexto_funcional", texto: "Essa conduta teve relação com alguma situação específica de trabalho, ou refletia uma posição mais ampla e reiterada?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_deslealdade_instituicoes_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-II"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_descumprimento_ordens_001", bloco: "materialidade", texto: "Descreva a ordem que teria sido descumprida: quem a emitiu, em que termos, e como o descumprimento se manifestou.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_descumprimento_ordens_002", bloco: "autoria_participacao", texto: "A ordem foi comunicada diretamente ao(à) senhor(a)? De que forma (verbal, escrita, sistema)?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_descumprimento_ordens_003", bloco: "elemento_subjetivo", texto: "Havia consciência de que se tratava de uma ordem legítima da chefia? Existe alguma razão que explique o não cumprimento?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_descumprimento_ordens_004", bloco: "contexto_funcional", texto: "A ordem era manifestamente ilegal ou incompatível com as atribuições do cargo, na sua avaliação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_descumprimento_ordens_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IV"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_falta_presteza_001", bloco: "materialidade", texto: "Descreva a situação em que a presteza no atendimento (ao público, na expedição de certidões ou em requisições para a Fazenda Pública) não teria sido observada: o que foi solicitado e como foi respondido.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_falta_presteza_002", bloco: "materialidade", texto: "Existe registro do pedido e da resposta (protocolo, sistema, e-mail) que permita apurar o prazo e a forma do atendimento?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_falta_presteza_003", bloco: "autoria_participacao", texto: "Quem era responsável por atender a essa solicitação?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_falta_presteza_004", bloco: "elemento_subjetivo", texto: "Havia alguma razão — sobrecarga, falha de sistema, desconhecimento do prazo — que explique a demora ou a falta de atendimento?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_falta_presteza_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre esse atendimento?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-V"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_omissao_irregularidade_superior_001", bloco: "materialidade", texto: "Descreva a irregularidade da qual o(a) senhor(a) teria tido ciência em razão do cargo, e que não teria sido levada ao conhecimento da autoridade competente.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_irregularidade_superior_002", bloco: "materialidade", texto: "Em que momento e de que forma o(a) senhor(a) tomou conhecimento dessa irregularidade?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_irregularidade_superior_003", bloco: "autoria_participacao", texto: "Havia dúvida sobre a quem comunicar, especialmente se houvesse suspeita de envolvimento da própria autoridade imediata?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_irregularidade_superior_004", bloco: "elemento_subjetivo", texto: "O que motivou a não comunicação dessa irregularidade à autoridade superior?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_irregularidade_superior_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VI"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_zelo_patrimonio_001", bloco: "materialidade", texto: "Descreva o fato apontado como falta de zelo com material ou patrimônio público: qual bem ou material, e de que forma o dano ou desperdício ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_patrimonio_002", bloco: "materialidade", texto: "Existe registro do dano, extravio ou desperdício (termo de ocorrência, laudo, inventário)?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_patrimonio_003", bloco: "autoria_participacao", texto: "Quem tinha a guarda ou a responsabilidade sobre esse bem ou material?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_patrimonio_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada? Havia alguma orientação sobre o cuidado devido com esse bem ou material que não foi observada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_zelo_patrimonio_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VII"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_sigilo_leve_001", bloco: "materialidade", texto: "Descreva o assunto da repartição apontado como revelado indevidamente: do que se tratava, e a quem foi revelado.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_sigilo_leve_002", bloco: "materialidade", texto: "Existe algum registro ou indício (mensagem, testemunho) da revelação apontada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_sigilo_leve_003", bloco: "autoria_participacao", texto: "O(a) senhor(a) tinha acesso a esse assunto em razão do cargo? Havia outras pessoas com o mesmo acesso?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_sigilo_leve_004", bloco: "elemento_subjetivo", texto: "O que motivou a revelação desse assunto? Havia consciência de que se tratava de informação restrita à repartição?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_sigilo_leve_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-VIII"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_moralidade_administrativa_001", bloco: "materialidade", texto: "Descreva a conduta apontada como incompatível com a moralidade administrativa: o que ocorreu, quando e em que contexto.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IX"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_moralidade_administrativa_002", bloco: "autoria_participacao", texto: "Havia outras pessoas com conhecimento direto do episódio relatado?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IX"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_moralidade_administrativa_003", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-IX"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_moralidade_administrativa_004", bloco: "circunstancias_art128", texto: "Essa conduta teve repercussão no ambiente de trabalho ou perante terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IX"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_moralidade_administrativa_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-IX"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_assiduidade_pontualidade_001", bloco: "materialidade", texto: "Descreva o padrão de assiduidade e pontualidade apontado como irregular: com que frequência ocorriam atrasos ou ausências, e em que período.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_assiduidade_pontualidade_002", bloco: "materialidade", texto: "Como era realizado o controle de frequência no setor? Existe registro dos atrasos ou ausências apontados?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_assiduidade_pontualidade_003", bloco: "autoria_participacao", texto: "O(a) senhor(a) foi comunicado(a) ou orientado(a) sobre essas ocorrências? Houve alguma manifestação a respeito?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_assiduidade_pontualidade_004", bloco: "elemento_subjetivo", texto: "Havia alguma razão — pessoal, de saúde, de deslocamento — que explique os atrasos ou ausências apontados?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_assiduidade_pontualidade_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-X"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_omissao_representar_001", bloco: "materialidade", texto: "Descreva a ilegalidade, omissão ou abuso de poder do qual o(a) senhor(a) teria tido conhecimento, e sobre o qual não teria sido apresentada representação formal.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_representar_002", bloco: "materialidade", texto: "Em que momento e de que forma o(a) senhor(a) tomou conhecimento desse fato?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-116-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_representar_003", bloco: "autoria_participacao", texto: "Existia, na época, algum canal formal (ouvidoria, corregedoria, representação) ao qual o fato poderia ter sido levado?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-116-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_representar_004", bloco: "elemento_subjetivo", texto: "O que motivou a não apresentação de representação formal sobre esse fato?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-116-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_omissao_representar_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-116-XII"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -4240,7 +4308,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 188 = 75 + 46 F + 24 D + 38 G + 5 C, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 237 = 75 + 46 F + 24 D + 38 G + 5 C + 49 A, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
