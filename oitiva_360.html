@@ -6,14 +6,15 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.0.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.1.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
   Infrações" + Cartão de Papéis do Depoente removido e nº do processo obrigatório para exportar +
   texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
   bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 (lote 1/8):
-  catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas)
+  catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas + Rodada 5
+  (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132)
   Data: 2026-07-10
 
   Changelog:
@@ -192,6 +193,16 @@
     Log completo da correspondência aplicada em `migracao-catalogo-log.md` (fora do HTML). Este é o
     primeiro de 8 lotes da Rodada 5 — os demais adicionam bancos de perguntas para as ~41 normas
     novas (antes cobertas só pelas 11 originais), em lotes por prioridade.
+  - 2.1.0 (Rodada 5, lote 2/8 — Grupo F, 2026-07-10): banco de perguntas para as 8 normas restantes
+    do art. 132 ainda sem cobertura específica — `N-132-V`, `VI`, `VII`, `VIII`, `X`, `XI`, `XII`,
+    `XIII` (o documento da rodada listava só 5; as 3 que faltavam — `VIII`, `X`, `XIII` — também
+    estão no catálogo real do Nexo e foram incluídas). 46 perguntas novas (6 por norma, exceto
+    `N-132-XIII`, com 4 — é o "veículo" de demissão das proibições graves do art. 117, sem conteúdo
+    fático independente, então o banco não duplica o da infração-base). Elemento subjetivo redigido
+    conforme a seção 4.2 (as 8 exigem dolo). Toda pergunta nova nasce com `revisao: "pendente"`
+    (seção 3.6) — aparece normalmente no roteiro, campo só de rastreio administrativo; indicador
+    visual opcional (`🔍 revisão pendente`) implementado e testado, mas com
+    `MOSTRAR_INDICADOR_REVISAO_PENDENTE = false` por padrão, como pede o documento.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1197,6 +1208,8 @@
   .badge-finalidade.fin-contexto{ background:#EDEDED; color:#444; }
   select.select-finalidade{ width:auto; font-size:.7rem; padding:2px 6px; }
   .badge-lock{ font-size:.7rem; color: var(--cor-texto-suave); white-space:nowrap; }
+  /* Rodada 5, seção 3.6: sinal discreto e opcional (padrão desligado) de pergunta ainda não revisada. */
+  .badge-revisao-pendente{ font-size:.7rem; color: var(--cor-texto-suave); white-space:nowrap; opacity:.75; }
   .nota-pergunta{ cursor:help; font-size:.8rem; }
 
   /* ---- Atualização incremental 01: painel de controvérsia (enriquecimento ilícito) ---- */
@@ -1803,7 +1816,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.0.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.1.0</div>
 </footer>
 
 <script>
@@ -1820,6 +1833,10 @@
 // MANTER SINCRONIZADO MANUALMENTE com o catálogo do Nexo Coger a cada alteração de qualquer um dos
 // dois lados — não há integração em tempo real entre as ferramentas, é cópia sincronizada na build.
 const CATALOGO_VERSION = "1.0";
+
+// Rodada 5, seção 3.6: sinal visual discreto, configurável, padrão desligado, para perguntas novas
+// ainda com revisao: "pendente" (rastreio administrativo — nunca bloqueia o uso da pergunta).
+const MOSTRAR_INDICADOR_REVISAO_PENDENTE = false;
 
 const CATALOGO = {
   versaoCatalogo: "1.0",
@@ -2061,7 +2078,67 @@ const CATALOGO = {
     { id: "q_inf_outras_sub_002", bloco: "elemento_subjetivo", texto: "Havia, a seu ver, alguma justificativa, contexto atenuante ou circunstância que tenha motivado a conduta?", finalidade: "subjetivo", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
     { id: "q_inf_outras_circ_001", bloco: "circunstancias_art128", texto: "Como avalia a natureza e a gravidade dos fatos relatados?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
     { id: "q_inf_outras_circ_002", bloco: "circunstancias_art128", texto: "Havia circunstâncias atenuantes ou agravantes que o(a) senhor(a) considere relevantes (ex.: reincidência, dano causado, grau de responsabilidade)?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
-    { id: "q_inf_outras_circ_003", bloco: "circunstancias_art128", texto: "Os antecedentes funcionais do(s) investigado(s), até onde é do seu conhecimento, são compatíveis com o que está sendo apurado?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" }
+    { id: "q_inf_outras_circ_003", bloco: "circunstancias_art128", texto: "Os antecedentes funcionais do(s) investigado(s), até onde é do seu conhecimento, são compatíveis com o que está sendo apurado?", finalidade: "circunstancia", papeis: ["testemunha", "acusado", "declarante_informante", "situacao_indefinida", "vitima"], infracoes: ["inf_outras"], modulo: "nucleo" },
+    // ---- Rodada 5, Grupo F — normas restantes do art. 132 (2026-07-10) ----
+    // Perguntas novas, nascem com revisao: "pendente" (seção 3.6) — aparecem normalmente no
+    // roteiro; o campo é só de rastreio administrativo, não trava o uso. Elemento subjetivo
+    // redigido conforme elementoSubjetivoExigido de cada norma (seção 4.2) — todas as 8 exigem dolo.
+    { id: "q_inf_incontinencia_001", bloco: "materialidade", texto: "Descreva com o máximo de detalhes o episódio apontado: o que ocorreu, em que local da repartição, em que data e horário, e quem estava presente.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_incontinencia_002", bloco: "materialidade", texto: "Havia outras pessoas — colegas, chefia, público externo — que presenciaram diretamente o ocorrido? Quem?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_incontinencia_003", bloco: "autoria_participacao", texto: "O(a) senhor(a) reconhece a autoria da conduta relatada? Houve mais alguém envolvido no episódio?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_incontinencia_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada? Havia consciência, no momento, de que aquele comportamento não era compatível com o ambiente de trabalho?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_incontinencia_005", bloco: "circunstancias_art128", texto: "A conduta causou repercussão perceptível no ambiente de trabalho ou perante o público presente? De que forma?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_incontinencia_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre este episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-V"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_insubordinacao_001", bloco: "materialidade", texto: "Descreva a ordem ou determinação que teria sido descumprida: quem a emitiu, em que termos, e de que forma o descumprimento se manifestou.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_insubordinacao_002", bloco: "autoria_participacao", texto: "A ordem foi dada diretamente ao(à) senhor(a), por escrito ou verbalmente? Havia outras pessoas presentes nesse momento?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_insubordinacao_003", bloco: "elemento_subjetivo", texto: "Havia consciência de que se tratava de uma ordem legítima da chefia? O que motivou a recusa ou o descumprimento?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_insubordinacao_004", bloco: "contexto_funcional", texto: "Existia alguma razão funcional, técnica ou de outra natureza que, na sua avaliação, justificasse não cumprir a determinação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_insubordinacao_005", bloco: "circunstancias_art128", texto: "O episódio comprometeu a execução de algum serviço ou rotina da repartição? De que forma?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_insubordinacao_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) considere relevante sobre este episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VI"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_ofensa_fisica_001", bloco: "materialidade", texto: "Descreva o que ocorreu: como se deu a ofensa física, em que local e momento, e quais foram as consequências imediatas.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_ofensa_fisica_002", bloco: "autoria_participacao", texto: "Quem foi o(a) autor(a) da ofensa e quem foi a vítima? Havia testemunhas presentes?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_ofensa_fisica_003", bloco: "elemento_subjetivo", texto: "O que motivou a reação? Havia, na sua percepção, alguma situação que colocasse em risco a integridade própria ou de terceiros no momento do episódio (legítima defesa)?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_ofensa_fisica_004", bloco: "contexto_funcional", texto: "O episódio ocorreu durante o exercício de atribuições funcionais? Havia alguma discussão ou desentendimento anterior entre as partes?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_ofensa_fisica_005", bloco: "circunstancias_art128", texto: "Houve lesão física constatada? Foi registrado boletim de ocorrência, atendimento médico ou outro registro do episódio?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_ofensa_fisica_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre este episódio?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VII"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_aplicacao_irregular_001", bloco: "materialidade", texto: "Descreva a aplicação de recursos públicos apontada como irregular: qual o valor, a rubrica orçamentária envolvida e a finalidade a que se destinava.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_aplicacao_irregular_002", bloco: "materialidade", texto: "Existe documentação da aplicação (empenho, nota de pagamento, prestação de contas) que possa esclarecer o destino efetivo dos recursos?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_aplicacao_irregular_003", bloco: "autoria_participacao", texto: "Quem autorizou, ordenou ou executou a aplicação dos recursos? Havia mais de uma pessoa envolvida na decisão?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_aplicacao_irregular_004", bloco: "elemento_subjetivo", texto: "Qual a motivação para aplicar os recursos na forma questionada? Havia orientação normativa sobre a destinação correta que não foi observada, propositalmente?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_aplicacao_irregular_005", bloco: "circunstancias_art128", texto: "Qual o impacto da aplicação irregular para o serviço, para o órgão ou para terceiros beneficiários da despesa originalmente prevista?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_aplicacao_irregular_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) considere relevante sobre a aplicação desses recursos?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-VIII"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lesao_cofres_001", bloco: "materialidade", texto: "Descreva o fato apontado como lesivo aos cofres públicos ou ao patrimônio: em que consistiu, qual o bem ou valor envolvido e a extensão do prejuízo estimado.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lesao_cofres_002", bloco: "materialidade", texto: "Existem registros contábeis, patrimoniais ou de auditoria que documentem a lesão ou a dilapidação apontada?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lesao_cofres_003", bloco: "autoria_participacao", texto: "Quem tinha acesso, controle ou responsabilidade sobre o bem ou valor no período dos fatos?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lesao_cofres_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta que resultou no prejuízo apontado? Havia ciência de que a conduta causaria dano aos cofres públicos ou ao patrimônio?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lesao_cofres_005", bloco: "circunstancias_art128", texto: "Houve alguma medida de ressarcimento, reparação ou comunicação do fato após sua ocorrência? Por iniciativa de quem?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lesao_cofres_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre este fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-X"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_corrupcao_001", bloco: "materialidade", texto: "Descreva o que presenciou ou tem conhecimento sobre a oferta, promessa ou recebimento de vantagem indevida: quem ofereceu, quem recebeu, quando e de que forma.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_corrupcao_002", bloco: "materialidade", texto: "Havia algum ato de ofício — praticar, deixar de praticar ou retardar ato funcional — vinculado à vantagem oferecida ou recebida?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_corrupcao_003", bloco: "autoria_participacao", texto: "Houve intermediários na negociação ou na entrega da vantagem? Quem?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_corrupcao_004", bloco: "elemento_subjetivo", texto: "Havia consciência de que o recebimento (ou a oferta) estava vinculado à prática de um ato funcional? O que motivou a aceitação ou a solicitação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_corrupcao_005", bloco: "circunstancias_art128", texto: "Houve alguma mudança perceptível de comportamento, padrão de vida ou tratamento diferenciado a partir do episódio relatado?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_corrupcao_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) considere relevante sobre este fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XI"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_acumulacao_ilegal_001", bloco: "materialidade", texto: "Descreva os cargos, empregos ou funções públicas que estariam sendo acumulados: órgãos, cargas horárias e período de exercício simultâneo.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_acumulacao_ilegal_002", bloco: "materialidade", texto: "Existe registro formal (portaria de nomeação, contrato, ficha funcional) de cada um dos vínculos apontados como acumulados?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_acumulacao_ilegal_003", bloco: "autoria_participacao", texto: "O(a) senhor(a) declarou os vínculos junto aos órgãos envolvidos? Houve algum pedido de opção ou desligamento de um dos cargos?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_acumulacao_ilegal_004", bloco: "elemento_subjetivo", texto: "Havia conhecimento de que a acumulação não se enquadrava nas hipóteses constitucionais permitidas? Houve orientação prévia sobre a incompatibilidade que não foi observada?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_acumulacao_ilegal_005", bloco: "circunstancias_art128", texto: "Havia compatibilidade de horários entre os cargos acumulados? Houve prejuízo às atribuições de algum deles?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_acumulacao_ilegal_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre os vínculos funcionais mencionados?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XII"], modulo: "nucleo", revisao: "pendente" },
+
+    // N-132-XIII é veículo de demissão das proibições graves do art. 117 (IX-XVI) — não tem conteúdo
+    // fático independente (ver relacoes[] da norma); banco reduzido a 4 perguntas de enquadramento/
+    // encaminhamento, sem duplicar o mini-banco específico da infração-base do art. 117 já aplicável.
+    { id: "q_inf_transgressao_117_001", bloco: "materialidade", texto: "Qual das condutas vedadas pelo art. 117 (incisos IX a XVI) está sendo apurada neste fato? Descreva com o máximo de detalhes o que ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_transgressao_117_002", bloco: "autoria_participacao", texto: "Quem praticou a conduta apontada? Havia outras pessoas com conhecimento ou participação no fato?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_transgressao_117_003", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada? Havia consciência de que se tratava de conduta vedada pela lei?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_transgressao_117_004", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre este fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-XIII"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -3325,7 +3402,7 @@ function gerarRoteiroInicial(d){
           }
           return q.papeis.includes(d.papel);
         })
-        .map((q, i) => ({ origem: "catalogo", tipo: "pergunta", refId: q.id, texto: q.texto, finalidade: q.finalidade, removivel: !q.obrigatoria, nota: q.nota, ordem: i + 1 }));
+        .map((q, i) => ({ origem: "catalogo", tipo: "pergunta", refId: q.id, texto: q.texto, finalidade: q.finalidade, removivel: !q.obrigatoria, nota: q.nota, ordem: i + 1, revisao: q.revisao }));
     }
 
     return { blocoId: bloco.id, itens };
@@ -3441,6 +3518,9 @@ function renderItensBloco(bloco, grupo){
       }
       if (item.nota){
         html += "<span class=\"nota-pergunta\" title=\"" + escapeHtml(item.nota) + "\">ℹ️</span>";
+      }
+      if (MOSTRAR_INDICADOR_REVISAO_PENDENTE && item.revisao === "pendente"){
+        html += "<span class=\"badge-revisao-pendente\" title=\"Pergunta nova da Rodada 5 — ainda não revisada/aprovada; aparece normalmente no roteiro.\">🔍 revisão pendente</span>";
       }
       html += "</div>";
       if (bloqueado){
@@ -4054,7 +4134,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 75, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 121 = 75 + 46 do Grupo F, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
