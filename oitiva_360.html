@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.2.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 2.3.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -15,7 +15,8 @@
   bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 (lote 1/8):
   catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11 isoladas + Rodada 5
   (lote 2/8): banco de perguntas do Grupo F — 8 normas restantes do art. 132 + Rodada 5 (lote 3/8):
-  banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117)
+  banco de perguntas do Grupo D — 4 normas restantes das proibições graves do art. 117 + Rodada 5
+  (lote 4/8): banco de perguntas do Grupo G — 7 normas da LAI, art. 32)
   Data: 2026-07-10
 
   Changelog:
@@ -210,6 +211,15 @@
     (praticar usura) e `N-117-XVI` (utilizar pessoal/recursos da repartição em atividade
     particular). 24 perguntas novas (6 por norma), mesma estrutura e critérios do lote anterior
     (elemento subjetivo redigido para dolo, `revisao: "pendente"`).
+  - 2.3.0 (Rodada 5, lote 4/8 — Grupo G, 2026-07-10): banco de perguntas para as 7 normas do art. 32
+    da Lei nº 12.527/2011 (LAI) — `N-LAI-32-I` a `N-LAI-32-VII` (recusar/retardar/fornecer
+    incorretamente informação; utilizar indevidamente/subtrair/destruir/alterar/ocultar informação
+    sob guarda; agir com dolo/má-fé na análise de acesso; divulgar/acessar indevidamente informação
+    sigilosa ou pessoal; impor sigilo para proveito pessoal/ocultação de ilegalidade; ocultar
+    informação sigilosa de revisão superior; destruir/subtrair documentos sobre violações de
+    direitos humanos). 38 perguntas novas (5 ou 6 por norma, conforme a extensão fática de cada
+    tipo), todas com elemento subjetivo redigido para dolo (todas as 7 normas da LAI exigem dolo) e
+    `revisao: "pendente"`.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -1823,7 +1833,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.2.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.3.0</div>
 </footer>
 
 <script>
@@ -2174,7 +2184,53 @@ const CATALOGO = {
     { id: "q_inf_uso_particular_recursos_003", bloco: "autoria_participacao", texto: "Quem determinou ou solicitou o uso desses recursos ou desse pessoal para fins particulares?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_uso_particular_recursos_004", bloco: "elemento_subjetivo", texto: "O que motivou o uso de recursos ou pessoal da repartição para essa finalidade particular? Havia ciência de que isso não era permitido?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
     { id: "q_inf_uso_particular_recursos_005", bloco: "circunstancias_art128", texto: "Esse uso trouxe algum prejuízo às atividades normais da repartição ou implicou custo para a administração?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_uso_particular_recursos_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse uso?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_uso_particular_recursos_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse uso?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-117-XVI"], modulo: "nucleo", revisao: "pendente" },
+
+    // ---- Rodada 5, Grupo G — LAI, art. 32, Lei nº 12.527/2011 (2026-07-10) ----
+    { id: "q_inf_lai_recusa_informacao_001", bloco: "materialidade", texto: "Descreva o pedido de acesso à informação apontado: quem solicitou, quando, e qual informação foi requerida.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_recusa_informacao_002", bloco: "materialidade", texto: "Como o pedido foi respondido? Houve recusa expressa, demora no atendimento ou fornecimento de dado incorreto, incompleto ou impreciso?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_recusa_informacao_003", bloco: "autoria_participacao", texto: "Quem era o(a) responsável por analisar e responder a esse pedido de acesso?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_recusa_informacao_004", bloco: "elemento_subjetivo", texto: "O que motivou a forma como o pedido foi respondido? Havia consciência de que a informação deveria ter sido fornecida de outra forma ou em outro prazo?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-I"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_recusa_informacao_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre esse pedido de acesso?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-I"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_ocultar_informacao_001", bloco: "materialidade", texto: "Descreva a informação apontada como indevidamente utilizada, subtraída, destruída, inutilizada, desfigurada, alterada ou ocultada: do que se tratava e como isso ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_informacao_002", bloco: "materialidade", texto: "Existe registro (log de sistema, cópia anterior, protocolo) que permita comparar o estado original da informação com o estado apontado como alterado?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_informacao_003", bloco: "autoria_participacao", texto: "Quem tinha acesso ou guarda dessa informação em razão do cargo, emprego ou função?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_informacao_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada em relação a essa informação? Havia conhecimento de que a informação estava sob sua guarda em razão da função?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_informacao_005", bloco: "circunstancias_art128", texto: "Essa conduta prejudicou algum interessado, processo ou apuração que dependesse dessa informação?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_informacao_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre essa informação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-II"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_dolo_analise_001", bloco: "materialidade", texto: "Descreva a solicitação de acesso à informação analisada e a decisão tomada sobre ela: deferimento, indeferimento ou classificação.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-III"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_dolo_analise_002", bloco: "autoria_participacao", texto: "Quem foi o(a) responsável pela análise e pela decisão sobre essa solicitação?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-III"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_dolo_analise_003", bloco: "elemento_subjetivo", texto: "Qual foi o critério ou fundamento utilizado para a decisão tomada? Havia algum interesse pessoal ou de terceiro que possa ter influenciado essa análise?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-III"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_dolo_analise_004", bloco: "contexto_funcional", texto: "Havia orientação normativa ou precedente que deveria ter orientado a análise dessa solicitação de forma diferente?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-III"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_dolo_analise_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre a análise dessa solicitação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-III"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_acesso_indevido_001", bloco: "materialidade", texto: "Descreva a informação sigilosa ou pessoal apontada como divulgada ou acessada indevidamente: do que se tratava, e como o acesso ou a divulgação ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_acesso_indevido_002", bloco: "materialidade", texto: "Existem logs de sistema, registros de acesso ou outros elementos que demonstrem quem acessou ou divulgou essa informação?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_acesso_indevido_003", bloco: "autoria_participacao", texto: "Quem tinha acesso legítimo a essa informação em razão do cargo? Havia outras pessoas com acesso ao mesmo dado?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_acesso_indevido_004", bloco: "elemento_subjetivo", texto: "Havia motivação funcional para o acesso realizado? O que motivou a divulgação ou o compartilhamento da informação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_acesso_indevido_005", bloco: "circunstancias_art128", texto: "A divulgação ou o acesso indevido causou algum prejuízo identificável ao titular da informação ou a terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_acesso_indevido_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-IV"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_sigilo_indevido_001", bloco: "materialidade", texto: "Descreva a informação apontada como indevidamente classificada como sigilosa: qual o teor, quem determinou a classificação e com que justificativa formal.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_sigilo_indevido_002", bloco: "autoria_participacao", texto: "Quem tinha competência para classificar essa informação como sigilosa? O procedimento formal de classificação foi seguido?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_sigilo_indevido_003", bloco: "elemento_subjetivo", texto: "Qual foi a real motivação para classificar essa informação como sigilosa? Havia algum proveito pessoal, de terceiro, ou intenção de ocultar algum ato irregular por trás dessa classificação?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_sigilo_indevido_004", bloco: "contexto_funcional", texto: "Havia fundamento legal legítimo (proteção de dados pessoais, segurança, sigilo fiscal etc.) que justificasse a classificação, independentemente da motivação apontada?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-V"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_sigilo_indevido_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de acrescentar sobre essa classificação?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-V"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_ocultar_autoridade_001", bloco: "materialidade", texto: "Descreva a informação sigilosa apontada como ocultada da revisão da autoridade superior: qual o teor e em que momento a revisão deveria ter ocorrido.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_autoridade_002", bloco: "autoria_participacao", texto: "Quem era responsável por submeter essa informação à revisão da autoridade superior? Essa submissão ocorreu normalmente, ou houve alguma omissão?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_autoridade_003", bloco: "elemento_subjetivo", texto: "O que motivou a não submissão dessa informação à revisão da autoridade superior? A quem essa ocultação beneficiou, ou a quem prejudicou?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_autoridade_004", bloco: "circunstancias_art128", texto: "Essa informação veio a ser revisada posteriormente, por outra via? Com que resultado?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VI"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_ocultar_autoridade_005", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de esclarecer sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VI"], modulo: "nucleo", revisao: "pendente" },
+
+    { id: "q_inf_lai_destruir_documentos_ddhh_001", bloco: "materialidade", texto: "Descreva os documentos apontados como destruídos ou subtraídos: do que tratavam, e como a destruição ou subtração ocorreu.", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_destruir_documentos_ddhh_002", bloco: "materialidade", texto: "Existe registro anterior (protocolo, cópia, sistema de gestão documental) que comprove a existência desses documentos antes do fato apontado?", finalidade: "materialidade", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_destruir_documentos_ddhh_003", bloco: "autoria_participacao", texto: "Quem tinha acesso ou guarda desses documentos no período dos fatos?", finalidade: "autoria", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_destruir_documentos_ddhh_004", bloco: "elemento_subjetivo", texto: "O que motivou a conduta relatada em relação a esses documentos? Havia conhecimento do conteúdo deles relacionado a possíveis violações de direitos humanos por agentes do Estado?", finalidade: "subjetivo", papeis: ["acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_destruir_documentos_ddhh_005", bloco: "circunstancias_art128", texto: "A destruição ou subtração desses documentos prejudicou alguma apuração, processo ou direito de terceiros?", finalidade: "circunstancia", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" },
+    { id: "q_inf_lai_destruir_documentos_ddhh_006", bloco: "fechamento", texto: "Há algo mais que o(a) senhor(a) gostaria de relatar sobre esse fato?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-LAI-32-VII"], modulo: "nucleo", revisao: "pendente" }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -4170,7 +4226,7 @@ function validarCatalogo(){
     dicas: CATALOGO.dicas.length + " (esperado: 15)",
     formulasIncidentes: CATALOGO.formulasIncidentes.length + " (esperado: 17)",
     perguntasGerais: CATALOGO.perguntas.filter(p => p.infracoes.includes("todas")).length + " (esperado: 28)",
-    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 145 = 75 + 46 do Grupo F + 24 do Grupo D, cresce a cada lote da Rodada 5)",
+    perguntasEspecificas: CATALOGO.perguntas.filter(p => !p.infracoes.includes("todas")).length + " (esperado: 183 = 75 + 46 do Grupo F + 24 do Grupo D + 38 do Grupo G, cresce a cada lote da Rodada 5)",
     perguntasPraxe: CATALOGO.perguntasPraxe.length + " (esperado: 5)"
   });
   // Rodada 5, seção 7: teste unitário simples de resolverNormaPorId().
