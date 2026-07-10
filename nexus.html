@@ -60,6 +60,24 @@ button{font-family:inherit;cursor:pointer}
   border-radius:20px;padding:3px 10px;font-weight:600}
 .hero .proc .tag.editable{cursor:pointer}
 .hero .proc .tag.editable:hover{border-color:var(--topbar)}
+/* caixa de prescrição — em estado neutro é indistinguível de um metadado (mesmo peso do nº) */
+.hero .proc .presc{cursor:pointer;color:var(--ink-2)}
+.hero .proc .presc:hover{border-color:#b9c2ce}
+.hero .proc .presc.alerta{background:var(--estado-critico-bg);border-color:var(--estado-critico);
+  color:var(--estado-critico);font-weight:700}
+.popover{position:fixed;z-index:70;background:var(--paper);border:1px solid var(--borda);
+  border-radius:12px;box-shadow:0 12px 40px #0003;width:min(420px,92vw);padding:12px 14px;font-size:12.5px;display:none}
+.popover.open{display:block}
+.popover h4{margin:0 0 8px;font-size:13px}
+.popover table{width:100%;border-collapse:collapse;margin-bottom:8px}
+.popover td{padding:3px 6px;border-bottom:1px solid var(--borda);vertical-align:top}
+.popover .ac{font-weight:700}
+.popover .st{font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;white-space:nowrap}
+.popover .st.alerta{background:var(--estado-critico-bg);color:var(--estado-critico)}
+.popover .st.info,.popover .st.neutro{background:#eef1f5;color:var(--ink-2)}
+.popover .st.running{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
+.popover .est{font-style:italic;color:var(--ink-2)}
+.popover .disc{margin-top:6px;font-size:11px;color:var(--ink-2);border-top:1px dashed var(--borda);padding-top:6px}
 
 /* ---------- LENS BAR ---------- */
 .lensbar{background:var(--paper);border-bottom:1px solid var(--borda);
@@ -140,6 +158,24 @@ svg.map{display:block}
 .fo-row .tit{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fo-row .fid{color:var(--ink-2);font-size:11px}
 .factorder .fo-empty{padding:0 14px 10px;font-size:12px;color:var(--ink-2)}
+/* seção "Prazos" (colapsada por padrão) */
+.prazos-sec{border-top:1px solid var(--borda);flex:0 0 auto}
+.prazos-sec .pz-head{padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.prazos-sec .pz-head h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
+.prazos-sec .pz-dot{width:11px;height:11px;border-radius:50%;background:var(--estado-ok)}
+.prazos-sec .pz-dot.verde{background:#2e7d32}.prazos-sec .pz-dot.ambar{background:var(--estado-fragil)}
+.prazos-sec .pz-dot.vermelho{background:var(--estado-critico)}
+.prazos-sec .pz-chev{margin-left:auto;color:var(--ink-2);font-size:12px}
+.prazos-sec .pz-body{padding:0 14px 12px;font-size:12px}
+.prazos-sec .pz-row{margin:6px 0;color:var(--ink-2)}
+.prazos-sec .pz-bar{height:7px;border-radius:5px;background:#eef1f5;overflow:hidden;margin:4px 0}
+.prazos-sec .pz-bar > i{display:block;height:100%;background:#2e7d32}
+.prazos-sec .pz-bar.ambar > i{background:var(--estado-fragil)}
+.prazos-sec .pz-bar.vermelho > i{background:var(--estado-critico)}
+.prazos-sec .pz-link{color:var(--estado-fragil);cursor:pointer;text-decoration:underline;font-weight:600}
+.prazos-sec .pz-cit{border-top:1px dashed var(--borda);margin-top:8px;padding-top:8px}
+.prazos-sec .pz-cit .row2{gap:6px}
+.prazos-sec .pz-cit label{font-size:11px}
 
 /* ---------- FLOAT BTN (drawer trigger) ---------- */
 .fab{position:fixed;right:16px;bottom:16px;z-index:40;display:none}
@@ -263,6 +299,7 @@ svg.map.isolating .node.hl{opacity:1}
     <span class="tag editable" id="tagProc" title="Editar dados do processo">nº —</span>
     <span class="tag editable" id="tagTipo">—</span>
     <span class="tag editable" id="tagFase">—</span>
+    <span class="tag presc" id="prescBox" title="Prescrição (art. 142) — clique para detalhamento por acusado">Prescrição: —</span>
   </div>
 </div>
 
@@ -315,6 +352,7 @@ svg.map.isolating .node.hl{opacity:1}
     <div class="pend-list" id="pendList"></div>
     <div class="factorder" id="factOrder"></div>
     <div class="checklist" id="checklist"></div>
+    <div class="prazos-sec" id="prazosSec"></div>
   </aside>
 </div>
 
@@ -332,6 +370,7 @@ svg.map.isolating .node.hl{opacity:1}
 <!-- generic modal + print view -->
 <div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
 <div class="printview" id="printview"></div>
+<div class="popover" id="popover"></div>
 <input type="file" id="fileInput" accept="application/json,.json" style="display:none">
 
 <script>
@@ -474,10 +513,13 @@ function docVazio(){
     processo:{
       numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB',
       comissao:{presidente:'', membros:['',''], portariaInstauracao:{numero:'',data:''}},
-      objetoApuracao:'', faseAtual:'instrucao'
+      objetoApuracao:'', faseAtual:'instrucao',
+      prescricao:{ regimeInterrupcaoAtivo:null },
+      prazos:{ prazoConclusaoDias:60, prorrogacoes:[] },
+      citacao:{ data:'', meio:'pessoal', prazoDefesaDias:10 }
     },
     acusados:[], fatos:[], provas:[], catalogoNormas:buildCatalogo(),
-    _seq:{A:0,F:0,P:0,NU:0}
+    _seq:{A:0,F:0,P:0,NU:0}, _minutaGerada:false
   };
 }
 
@@ -486,6 +528,7 @@ let lens = 'todos';      // 'todos' | acusadoId
 let isolatedFato = null; // id do fato isolado por clique
 let searchTerm = '';
 let factOrderOpen = false;   // seção "ordem dos fatos" recolhida por padrão
+let prazosSecOpen = false;   // seção "Prazos" recolhida por padrão
 let dragFatoId = null;       // id do fato em arrasto na lista de ordem
 const revisadas = new Set(); // pendências marcadas "revisado ✓" (volátil)
 
@@ -510,13 +553,21 @@ function migra(d){
   // garante campos novos em rascunhos antigos
   const base=docVazio();
   d._seq=d._seq||{A:0,F:0,P:0,NU:0};
+  if(typeof d._minutaGerada!=='boolean') d._minutaGerada=false;
   if(!d.catalogoNormas||!d.catalogoNormas.length) d.catalogoNormas=base.catalogoNormas;
+  // blocos de prescrição / prazos / citação (v1.2)
+  const p=d.processo||(d.processo={});
+  if(!p.prescricao) p.prescricao={regimeInterrupcaoAtivo:null};
+  if(!p.prazos) p.prazos={prazoConclusaoDias:(p.rito==='sumario'?30:60), prorrogacoes:[]};
+  if(!p.citacao) p.citacao={data:'',meio:'pessoal',prazoDefesaDias:10};
   // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
   (d.fatos||[]).forEach((f,i)=>{
     if(typeof f.ordem!=='number') f.ordem=i+1;
     if(f.status!=='ativo'&&f.status!=='arquivado') f.status='ativo';
     if(typeof f.justificativaArquivamento!=='string') f.justificativaArquivamento='';
+    if(typeof f.dataCiencia!=='string') f.dataCiencia=''; // ciência da autoridade (art. 142, §1º)
   });
+  (d.provas||[]).forEach(pr=>{ if(typeof pr.codigoAnexo!=='string') pr.codigoAnexo=''; });
   return d;
 }
 // próximo inteiro de ordem narrativa (maior existente + 1)
@@ -529,6 +580,79 @@ function fatoArquivado(f){ return f.status==='arquivado'; }
 function fatosAtivosOrdenados(){ return fatosOrdenados(doc.fatos.filter(f=>!fatoArquivado(f))); }
 // renumera ordem de forma compacta 1..N conforme a sequência visual atual
 function renumeraOrdem(seq){ seq.forEach((f,i)=>f.ordem=i+1); }
+
+/* ------------------------------------------------------------------ *
+ * 3-bis. DATAS, PRESCRIÇÃO (art. 142) e PRAZOS (art. 152/161)
+ * ------------------------------------------------------------------ */
+function parseDate(s){ if(!s) return null; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s); return m?new Date(+m[1],+m[2]-1,+m[3]):null; }
+function fmtDate(d){ if(!d) return '—'; const p=n=>String(n).padStart(2,'0'); return `${p(d.getDate())}/${p(d.getMonth()+1)}/${d.getFullYear()}`; }
+function hoje(){ const d=new Date(); return new Date(d.getFullYear(),d.getMonth(),d.getDate()); }
+function addAnos(d,n){ return new Date(d.getFullYear()+n,d.getMonth(),d.getDate()); }
+function addDias(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function diffDias(a,b){ return Math.round((b-a)/86400000); }
+// dias úteis (seg–sex) entre duas datas, em magnitude; NÃO considera feriados nacionais (v1)
+function diasUteisEntre(s1,s2){
+  const A=parseDate(s1), B=parseDate(s2); if(!A||!B) return null;
+  let lo=A<=B?A:B, hi=A<=B?B:A, n=0, cur=new Date(lo); cur.setDate(cur.getDate()+1);
+  while(cur<=hi){ const wd=cur.getDay(); if(wd!==0&&wd!==6) n++; cur.setDate(cur.getDate()+1); }
+  return n;
+}
+const RANK_GRAV={leve:1,media:2,grave:3};
+const PRAZO_PRESC={grave:d=>addAnos(d,5), media:d=>addAnos(d,2), leve:d=>addDias(d,180)};
+const LABEL_PRESC={grave:'5 anos',media:'2 anos',leve:'180 dias'};
+
+// fatos ATIVOS com conduta daquele acusado
+function fatosDoAcusado(acId){ return doc.fatos.filter(f=>!fatoArquivado(f)&&(f.condutas||[]).some(c=>c.acusadoId===acId)); }
+
+// cálculo de prescrição por acusado (art. 142; art. 127 PN CGU 27/2022). Nunca projeta pós-instauração.
+function prescricaoAcusado(ac){
+  const fatos=fatosDoAcusado(ac.id);
+  // gravidade de referência: mais grave entre enquadramentos ativos
+  let rank=0;
+  fatos.forEach(f=>enquadramentosAtivos(f).forEach(e=>{const n=normaById(e.normaId); if(n) rank=Math.max(rank, RANK_GRAV[n.gravidade]||0);}));
+  if(!rank) return {acId:ac.id, nome:ac.nome, status:'none', gravidade:null, termoFinal:null};
+  const gravidade=['','leve','media','grave'][rank];
+  // termo inicial: menor data (dataCiencia, ou periodo.fim estimado) entre os fatos
+  let melhor=null, estimado=false;
+  fatos.forEach(f=>{
+    const usaCiencia=!!(f.dataCiencia&&parseDate(f.dataCiencia));
+    const ds=usaCiencia?f.dataCiencia:(f.periodo&&f.periodo.fim);
+    const d=parseDate(ds); if(!d) return;
+    if(!melhor||d<melhor){ melhor=d; estimado=!usaCiencia; }
+  });
+  if(!melhor) return {acId:ac.id, nome:ac.nome, status:'none', gravidade, termoFinal:null};
+  const termoInicial=melhor;
+  const termoFinal=PRAZO_PRESC[gravidade](termoInicial);
+  const dInst=parseDate(doc.processo.comissao.portariaInstauracao.data);
+  let status, nota='', interrompida=false, dataInterrupcao=null;
+  if(dInst && dInst<=termoFinal){ interrompida=true; dataInterrupcao=dInst; status='neutro'; }
+  else if(dInst && dInst>termoFinal){ status='alerta'; nota='Prazo pode ter se esgotado antes da instauração (art. 127, caput, PN CGU 27/2022).'; }
+  else if(!dInst && hoje()>termoFinal){ status='alerta'; nota='Prazo pode ter se esgotado sem registro de instauração (art. 127, caput, PN CGU 27/2022).'; }
+  else { status='running'; } // ainda correndo, sem instauração; termoFinal é o limite
+  // art. 127, §único: refinamento do ALERTA conforme o interrogatório
+  if(status==='alerta'){
+    const st=ac.interrogatorio&&ac.interrogatorio.status;
+    if(st==='realizado'||st==='silencio_formalizado'){
+      status='info'; nota='art. 127, §ún., II — o processo prossegue até o julgamento independentemente do prazo.';
+    } else {
+      nota='art. 127, §ún., I — cabe à comissão relatar; a autoridade instauradora pode decidir pelo arquivamento.';
+    }
+  }
+  return {acId:ac.id, nome:ac.nome, gravidade, prazoLabel:LABEL_PRESC[gravidade],
+    termoInicial, estimado, termoFinal, interrompida, dataInterrupcao, status, nota};
+}
+function prescricaoTodos(){ return doc.acusados.map(prescricaoAcusado); }
+// resumo para a caixa: alerta geral + data "pior caso"
+function prescricaoResumo(){
+  const rs=prescricaoTodos().filter(r=>r.status!=='none');
+  const alerta=rs.some(r=>r.status==='alerta');
+  const emRisco=rs.filter(r=>r.termoFinal&&(r.status==='alerta'||r.status==='running'));
+  let dataPior=null;
+  emRisco.forEach(r=>{ if(!dataPior||r.termoFinal<dataPior) dataPior=r.termoFinal; });
+  const soInterrompidas=rs.length>0 && !emRisco.length && rs.some(r=>r.interrompida);
+  return {rs, alerta, dataPior, soInterrompidas, temCalculo:rs.length>0};
+}
+
 function genId(prefix){
   doc._seq[prefix]=(doc._seq[prefix]||0)+1;
   return prefix+doc._seq[prefix];
@@ -638,6 +762,16 @@ function computePendencias(){
     if(provaTemP6b(p))
       push('P6b','fragil','prova',p.id,'Acusado não intimado da produção desta prova (art. 119, §4º, PN CGU 27/2022)');
   });
+
+  // P6c — antecedência mínima da intimação para o interrogatório (art. 41, Lei 9.784/99)
+  doc.acusados.forEach(a=>{
+    const nd=a.notificacaoPrevia&&a.notificacaoPrevia.data, id=a.interrogatorio&&a.interrogatorio.data;
+    if(nd&&id){
+      const du=diasUteisEntre(nd,id);
+      if(du!=null && du<3)
+        push('P6c','fragil','acusado',a.id,'Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784/99)');
+    }
+  });
   return P;
 }
 
@@ -677,6 +811,8 @@ function render(){
   renderMap();
   renderPanel();
   renderFactOrder();
+  renderPrazosPanel();
+  renderPrescricao();
   scheduleSave();
 }
 
@@ -688,6 +824,55 @@ function renderHero(){
   const faseLbl={instrucao:'Instrução',indiciacao_em_elaboracao:'Indiciação em elaboração',encerrado:'Encerrado'}[p.faseAtual]||p.faseAtual;
   $('#tagFase').textContent='Fase: '+faseLbl;
 }
+
+/* ---------- CAIXA DE PRESCRIÇÃO (art. 142) ---------- */
+function renderPrescricao(){
+  const box=$('#prescBox'); if(!box) return;
+  const r=prescricaoResumo();
+  box.classList.toggle('alerta', r.alerta);
+  if(!r.temCalculo){ box.textContent='Prescrição: —'; box.title='Sem enquadramento ativo — prazo prescricional ainda não calculável.'; return; }
+  if(r.alerta && r.dataPior){ box.textContent='⚠ Prescrição (pior caso): '+fmtDate(r.dataPior); }
+  else if(r.dataPior){ box.textContent='Prescrição (pior caso): '+fmtDate(r.dataPior); }
+  else if(r.soInterrompidas){ box.textContent='Prescrição: interrompida'; }
+  else { box.textContent='Prescrição: —'; }
+  box.title='Prescrição (art. 142) — clique para detalhamento por acusado';
+}
+function abrirPopoverPrescricao(){
+  const pop=$('#popover'); pop.innerHTML='';
+  pop.append(el('h4',{},'Prescrição por acusado (art. 142, Lei nº 8.112/90)'));
+  const rs=prescricaoTodos();
+  if(!doc.acusados.length){ pop.append(el('div',{class:'est'},'Nenhum acusado cadastrado.')); }
+  else{
+    const tb=el('table',{});
+    rs.forEach(r=>{
+      const a=acusadoById(r.acId);
+      let detalhe;
+      if(r.status==='none'){ detalhe=el('span',{class:'est'},'sem enquadramento ativo — não calculável'); }
+      else{
+        const linhas=[];
+        linhas.push('Gravidade de referência: '+({leve:'leve',media:'média',grave:'grave'}[r.gravidade])+' → prazo '+r.prazoLabel);
+        linhas.push('Termo inicial: '+fmtDate(r.termoInicial)+(r.estimado?' (estimado — sem data de ciência)':''));
+        linhas.push('Termo final: '+fmtDate(r.termoFinal));
+        if(r.interrompida) linhas.push('Interrompida em '+fmtDate(r.dataInterrupcao)+' (art. 142, §3º).');
+        else if(r.status==='running') linhas.push('Ainda em curso — instauração ainda não interrompeu o prazo.');
+        else if(r.status==='alerta'||r.status==='info') linhas.push('Sem interrupção válida antes do termo final.');
+        detalhe=el('div',{}, ...linhas.map((t,i)=>el('div',{class:i===1&&r.estimado?'est':''},t)), r.nota?el('div',{class:'disc'},r.nota):null);
+      }
+      const stLbl={neutro:'interrompida',info:'prossegue',running:'em curso',alerta:'ALERTA',none:'—'}[r.status];
+      tb.append(el('tr',{},
+        el('td',{class:'ac'}, (a&&a.nome)||r.acId, el('div',{}, el('span',{class:'st '+r.status}, stLbl))),
+        el('td',{}, detalhe)));
+    });
+    pop.append(tb);
+  }
+  pop.append(el('div',{class:'disc'},'Cálculo informativo baseado no art. 142 da Lei nº 8.112/90. Não substitui a análise jurídica da comissão, especialmente quanto à cessação da interrupção e a hipóteses de prescrição intercorrente.'));
+  // posiciona sob a caixa
+  const box=$('#prescBox').getBoundingClientRect();
+  pop.style.left=Math.max(8, Math.min(box.left, window.innerWidth-440))+'px';
+  pop.style.top=(box.bottom+6)+'px';
+  pop.classList.add('open');
+}
+function fecharPopover(){ const p=$('#popover'); if(p) p.classList.remove('open'); }
 
 function renderLens(){
   const box=$('#lensChips'); box.innerHTML='';
@@ -977,7 +1162,10 @@ function hoverHighlight(id,on){
   if(isolatedFato) return;
   $$('.edge',svg).forEach(e=>{ e.style.opacity = on ? (e.dataset.fato===id?'1':'0.15') : ''; });
 }
-document.addEventListener('click',()=>{ if(isolatedFato){ isolatedFato=null; aplicaIsolamento(); } });
+document.addEventListener('click',(e)=>{
+  if(isolatedFato){ isolatedFato=null; aplicaIsolamento(); }
+  const pop=$('#popover'); if(pop&&pop.classList.contains('open')&&!pop.contains(e.target)) fecharPopover();
+});
 
 /* ------------------------------------------------------------------ *
  * 7. PAINEL DE PENDÊNCIAS + CHECKLIST
@@ -1005,8 +1193,11 @@ function renderPanel(){
         const key=p.codigo+':'+p.alvoId;
         const alvoLbl=p.alvoTipo==='fato'
           ? p.alvoId+' — '+(doc.fatos.find(f=>f.id===p.alvoId)||{}).titulo
-          : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
+          : p.alvoTipo==='acusado'
+            ? p.alvoId+' — '+((acusadoById(p.alvoId)||{}).nome||'')
+            : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
         const item=el('div',{class:'pend lvl-'+p.nivel+(revisadas.has(key)?' revisado':''),
+          title:(p.codigo==='P6c'?'O cálculo de dias úteis considera apenas sábados e domingos — não considera feriados nacionais (v1).':''),
           onclick:()=>focarNo(p)});
         item.append(el('div',{},el('span',{class:'code'},p.codigo), p.mensagem));
         item.append(el('div',{class:'alvo'},alvoLbl));
@@ -1025,13 +1216,9 @@ function renderPanel(){
 }
 
 function focarNo(p){
+  if(p.alvoTipo==='acusado'){ abrirFormAcusado(p.alvoId); return; } // P6c → abre o card do acusado
   const svg=$('#map');
   const nodes=$$('.node',svg);
-  let target=null;
-  nodes.forEach(n=>{ if(n.dataset.fato===p.alvoId) target=n; });
-  if(!target){ // provas não têm data-fato; localizar por índice
-    // re-render garante presença; buscamos por posição via título simples: destacar todos e piscar o alvo por transform
-  }
   isolatedFato=null; aplicaIsolamento();
   // encontra o nó correspondente (fato por data-fato; prova/norma: por ordem)
   let node=null;
@@ -1095,6 +1282,66 @@ function moverOrdemFato(fromId, toId){
   render();
 }
 
+/* ---------- SEÇÃO "PRAZOS" (informativa; nunca bloqueia a minuta) ---------- */
+function prazoConclusaoInfo(){
+  const dInst=parseDate(doc.processo.comissao.portariaInstauracao.data);
+  const pr=doc.processo.prazos||{prazoConclusaoDias:60,prorrogacoes:[]};
+  const total=(pr.prazoConclusaoDias||0)+(pr.prorrogacoes||[]).reduce((s,x)=>s+(x.dias||0),0);
+  if(!dInst) return {temData:false,total};
+  const dec=diffDias(dInst,hoje()), restante=total-dec;
+  let cor='verde'; if(dec>total) cor='vermelho'; else if(restante<=15) cor='ambar';
+  return {temData:true,total,dec,restante,cor,frac:Math.max(0,Math.min(1,total?dec/total:0))};
+}
+function renderPrazosPanel(){
+  const box=$('#prazosSec'); if(!box) return; box.innerHTML='';
+  const info=prazoConclusaoInfo();
+  const p6c=PENDENCIAS.some(x=>x.codigo==='P6c');
+  let dot = !info.temData ? '' : info.cor;
+  if(p6c && dot==='verde') dot='ambar';
+  box.append(el('div',{class:'pz-head',onclick:()=>{prazosSecOpen=!prazosSecOpen;renderPrazosPanel();}},
+    el('span',{class:'pz-dot '+dot}), el('h3',{},'Prazos'),
+    el('span',{class:'pz-chev'}, prazosSecOpen?'▾':'▸')));
+  if(!prazosSecOpen) return;
+  const body=el('div',{class:'pz-body'});
+  if(!info.temData){
+    body.append(el('div',{class:'pz-row'},'Instauração não datada — informe a data da portaria para acompanhar o prazo de conclusão.'));
+  } else {
+    body.append(el('div',{class:'pz-row'}, `Conclusão: ${info.dec} de ${info.total} dias`+
+      (info.dec>info.total?` — excedido em ${info.dec-info.total} dia(s)`:` — restam ${info.restante}`)));
+    const bar=el('div',{class:'pz-bar '+info.cor}); bar.append(el('i',{style:'width:'+(info.frac*100).toFixed(0)+'%'}));
+    body.append(bar);
+  }
+  if(p6c){
+    const alvo=PENDENCIAS.find(x=>x.codigo==='P6c');
+    body.append(el('div',{class:'pz-row'},'⚠ Antecedência de intimação insuficiente: ',
+      el('span',{class:'pz-link',onclick:()=>abrirFormAcusado(alvo.alvoId)}, (acusadoById(alvo.alvoId)||{}).nome||alvo.alvoId)));
+  }
+  // bloco de citação/defesa só aparece após a 1ª geração da minuta
+  if(doc._minutaGerada){
+    const c=doc.processo.citacao;
+    const upd=()=>{ scheduleSave(); renderPrazosPanel(); };
+    const cit=el('div',{class:'pz-cit'});
+    cit.append(el('div',{style:'font-weight:700;margin-bottom:4px'},'Citação e defesa escrita (art. 161)'));
+    cit.append(el('div',{class:'row2'},
+      el('div',{}, el('label',{},'Data da citação'),
+        el('input',{type:'date',value:c.data||'',onchange:e=>{c.data=e.target.value;upd();}})),
+      el('div',{}, el('label',{},'Meio'),
+        (()=>{const s=el('select',{onchange:e=>{c.meio=e.target.value;
+          if(c.meio==='edital'&&c.prazoDefesaDias===10)c.prazoDefesaDias=15;
+          if(c.meio==='pessoal'&&c.prazoDefesaDias===15)c.prazoDefesaDias=10; upd();}});
+          [['pessoal','Pessoal'],['edital','Edital']].forEach(([v,t])=>{const o=el('option',{value:v},t);if(v===c.meio)o.selected=true;s.append(o);});
+          return s;})())));
+    cit.append(el('div',{class:'row2'},
+      el('div',{}, el('label',{},'Prazo de defesa (dias)'),
+        el('input',{type:'text',value:String(c.prazoDefesaDias||''),onchange:e=>{c.prazoDefesaDias=parseInt(e.target.value,10)||0;upd();}})),
+      el('div',{})));
+    const termo=parseDate(c.data)?fmtDate(addDias(parseDate(c.data),c.prazoDefesaDias||0)):'—';
+    cit.append(el('div',{class:'pz-row'},'Termo final da defesa escrita: '+termo));
+    body.append(cit);
+  }
+  box.append(body);
+}
+
 function renderChecklist(){
   const box=$('#checklist'); box.innerHTML='';
   box.append(el('h3',{},'Checklist de encerramento'));
@@ -1129,7 +1376,7 @@ function renderChecklist(){
 function openModal(node){ const m=$('#modal'); m.innerHTML=''; m.append(node); $('#overlay').classList.add('open'); }
 function closeModal(){ $('#overlay').classList.remove('open'); }
 $('#overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeModal(); });
-document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); if($('#printview').classList.contains('open'))closePrint(); }});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); fecharPopover(); if($('#printview').classList.contains('open'))closePrint(); }});
 
 function modalShell(titulo,cat,bodyKids,footKids){
   const catDot=cat?el('span',{class:'cat-dot',style:`background:var(--cor-${cat})`}):null;
@@ -1221,7 +1468,7 @@ function excluirAcusado(id){
 function abrirFormProva(id, onSaveNew){
   const novo=!id;
   const p = novo ? {id:genId('P'),tipo:'documental',titulo:'',descricao:'',
-    refAutos:{documento:'',folhas:''},hashVeritas:'',trechosSignificativos:[],
+    refAutos:{documento:'',folhas:''},hashVeritas:'',codigoAnexo:'',trechosSignificativos:[],
     contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{}} : JSON.parse(JSON.stringify(provaById(id)));
 
   const detBox=el('div',{class:'block'});
@@ -1301,6 +1548,7 @@ function abrirFormProva(id, onSaveNew){
     el('div',{class:'row2'},
       fieldText('Documento (ref. autos)',p.refAutos.documento,v=>p.refAutos.documento=v),
       fieldText('Folhas',p.refAutos.folhas,v=>p.refAutos.folhas=v)),
+    fieldText('Código do anexo (opcional)',p.codigoAnexo,v=>p.codigoAnexo=v,'Ex.: "Anexo 3", "Doc. 12". Se vazio, a minuta gera "Prova nº N" automaticamente no índice.'),
     fieldText('🔗 Hash Veritas Digital - Coger',p.hashVeritas,v=>p.hashVeritas=v,'Referência manual ao hash do item no Veritas (sem integração automática).'),
     detBox,
     trechosBox,
@@ -1340,7 +1588,7 @@ function excluirProvaFlow(id){
  * ------------------------------------------------------------------ */
 function abrirFormFato(id){
   const novo=!id;
-  const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+  const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
     ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'',
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
@@ -1497,6 +1745,8 @@ function abrirFormFato(id){
       fieldText('Início do período',f.periodo.inicio,v=>f.periodo.inicio=v,null,'date'),
       fieldText('Fim do período',f.periodo.fim,v=>f.periodo.fim=v,null,'date'),
       fieldText('Local',f.local,v=>f.local=v)),
+    fieldText('Data de ciência da autoridade (art. 142, §1º)',f.dataCiencia,v=>f.dataCiencia=v,
+      'Marco inicial da prescrição — NÃO é a data do fato, mas quando a autoridade competente teve ciência dele. Se vazio, o cálculo usa o fim do período como estimativa.','date'),
     condBox, provBox, wizardBanner, enqBox, estBox, sitBox
   ];
   const foot=[
@@ -1631,12 +1881,43 @@ function abrirFormNorma(){
  * ------------------------------------------------------------------ */
 function abrirFormProcesso(){
   const p=JSON.parse(JSON.stringify(doc.processo));
+  p.prazos=p.prazos||{prazoConclusaoDias:(p.rito==='sumario'?30:60),prorrogacoes:[]};
+  p.comissao.portariaInstauracao=p.comissao.portariaInstauracao||{numero:'',data:''};
+
+  const prazosBox=el('div',{class:'block'});
+  function renderPrazosBox(){
+    prazosBox.innerHTML='';
+    prazosBox.append(el('div',{class:'block-title'},'Prazos processuais'));
+    prazosBox.append(fieldText('Prazo de conclusão (dias)', String(p.prazos.prazoConclusaoDias),
+      v=>{p.prazos.prazoConclusaoDias=parseInt(v,10)||0;renderPrazosBox.total&&renderPrazosBox.total();},
+      'Rito ordinário: 60 dias (art. 152, Lei 8.112/90). Rito sumário: 30 dias. Editável.'));
+    const wrap=el('div',{});
+    (p.prazos.prorrogacoes||[]).forEach((pr,i)=>{
+      wrap.append(el('div',{class:'subrow'},
+        el('div',{}, el('label',{style:'font-size:11px'},'Dias'),
+          el('input',{type:'text',value:String(pr.dias||''),oninput:e=>{pr.dias=parseInt(e.target.value,10)||0;}})),
+        el('div',{}, el('label',{style:'font-size:11px'},'Data'),
+          el('input',{type:'date',value:pr.data||'',oninput:e=>pr.data=e.target.value})),
+        el('div',{}, el('label',{style:'font-size:11px'},'Portaria'),
+          el('input',{type:'text',value:pr.portaria||'',oninput:e=>pr.portaria=e.target.value})),
+        el('button',{class:'btn ghost small danger',onclick:()=>{p.prazos.prorrogacoes.splice(i,1);renderPrazosBox();}},'✕')));
+    });
+    prazosBox.append(wrap,
+      el('button',{class:'btn small',onclick:()=>{p.prazos.prorrogacoes.push({dias:60,data:'',portaria:''});renderPrazosBox();}},'+ prorrogação'));
+    const total=(p.prazos.prazoConclusaoDias||0)+(p.prazos.prorrogacoes||[]).reduce((s,x)=>s+(x.dias||0),0);
+    prazosBox.append(el('div',{class:'hint'},'Prazo total com prorrogações: '+total+' dias.'));
+  }
+  renderPrazosBox();
+
   const body=[
     el('div',{class:'row2'},
       fieldText('Número do processo',p.numero,v=>p.numero=v),
       fieldSelect('Tipo',p.tipo,[['PAD','PAD'],['sindicancia_acusatoria','Sindicância acusatória']],v=>p.tipo=v)),
     el('div',{class:'row2'},
-      fieldSelect('Rito',p.rito,[['ordinario','Ordinário'],['sumario','Sumário']],v=>p.rito=v),
+      fieldSelect('Rito',p.rito,[['ordinario','Ordinário'],['sumario','Sumário']],v=>{
+        const oldDef=p.rito==='sumario'?30:60; p.rito=v; const newDef=v==='sumario'?30:60;
+        if(p.prazos.prazoConclusaoDias===oldDef){ p.prazos.prazoConclusaoDias=newDef; renderPrazosBox(); }
+      }),
       fieldSelect('Fase atual',p.faseAtual,[['instrucao','Instrução'],['indiciacao_em_elaboracao','Indiciação em elaboração'],['encerrado','Encerrado']],v=>p.faseAtual=v)),
     fieldText('Unidade',p.unidade,v=>p.unidade=v),
     fieldArea('Objeto da apuração',p.objetoApuracao,v=>p.objetoApuracao=v),
@@ -1646,7 +1927,8 @@ function abrirFormProcesso(){
       fieldText('Membro 2',p.comissao.membros[1],v=>p.comissao.membros[1]=v),
       el('div',{class:'row2'},
         fieldText('Portaria de instauração — nº',p.comissao.portariaInstauracao.numero,v=>p.comissao.portariaInstauracao.numero=v),
-        fieldText('Data',p.comissao.portariaInstauracao.data,v=>p.comissao.portariaInstauracao.data=v,null,'date'))),
+        fieldText('Data (marco de interrupção da prescrição, art. 142, §3º)',p.comissao.portariaInstauracao.data,v=>p.comissao.portariaInstauracao.data=v,null,'date'))),
+    prazosBox,
   ];
   const foot=[el('button',{class:'btn',onclick:closeModal},'Cancelar'),
     el('button',{class:'btn primary',onclick:()=>{ doc.processo=p; closeModal(); render(); }},'Salvar')];
@@ -1782,14 +2064,24 @@ function renderMinuta(ids){
       partes.push(`<p><b>Fato ${i+1} (${esc(ft.titulo)}).</b> ${esc(ft.descricao)}${ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)?` Período: ${esc(ft.periodo.inicio||'?')} a ${esc(ft.periodo.fim||'?')}.`:''}${ft.local?` Local: ${esc(ft.local)}.`:''}</p>`);
       partes.push(`<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ${esc(cond.modalidade==='omissiva'?'omissiva':'comissiva')}, ${esc(cond.descricaoConduta||'')}</p>`);
     });
-    // provas
+    // provas — com índice numerado por capítulo (Item 5). Numeração derivada, não persistida.
+    const provaIndex=[], provaNum={};
+    const registra=(pr,fatoId)=>{
+      if(!(pr.id in provaNum)){
+        const num=provaIndex.length+1;
+        provaNum[pr.id]=num;
+        provaIndex.push({prova:pr, num, ref:((pr.codigoAnexo||'').trim()||('Prova nº '+num)), fatos:[]});
+      }
+      const e=provaIndex[provaNum[pr.id]-1]; if(!e.fatos.includes(fatoId)) e.fatos.push(fatoId);
+    };
     partes.push('<h3>Das provas</h3>');
     fatos.forEach((ft,i)=>{
       const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
       if(!provas.length){ partes.push(`<p>Fato ${i+1}: (sem prova vinculada).</p>`); return; }
+      provas.forEach(pr=>registra(pr,ft.id));
       let s=`<p>Fato ${i+1} — sustenta-se em: `;
       s+=provas.map(pr=>{
-        let r=`${esc(pr.titulo)} (${esc(pr.tipo)}`;
+        let r=`(${esc(provaIndex[provaNum[pr.id]-1].ref)}) ${esc(pr.titulo)} (${esc(pr.tipo)}`;
         if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r+=`, ${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}`;
         r+=')';
         return r;
@@ -1814,6 +2106,19 @@ function renderMinuta(ids){
         partes.push(`<p><i>Prevalece o ${esc(prev?prev.dispositivo:'')} por ${esc(ft.multiplicidade.principioAplicado)}. Afasta-se: ${afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ')}. ${esc(ft.multiplicidade.justificativa||'')}</i></p>`);
       }
     });
+    // índice de provas citadas (por capítulo)
+    if(provaIndex.length){
+      partes.push('<h3>Índice de Provas Citadas</h3>');
+      const posFato={}; fatos.forEach((ft,i)=>posFato[ft.id]=i+1); // "Fato N" local ao capítulo
+      partes.push('<table class="qual"><tr><td><b>Ref.</b></td><td><b>Tipo</b></td><td><b>Autos</b></td><td><b>Fatos</b></td></tr>'+
+        provaIndex.map(e=>{
+          const pr=e.prova;
+          const ref=pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)
+            ? `${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}` : '—';
+          const fs=e.fatos.map(fid=>'Fato '+(posFato[fid]||'?')).join(', ');
+          return `<tr><td><b>${esc(e.ref)}</b><br><span style="font-size:11px;color:#555">${esc(pr.titulo)}</span></td><td>${esc(pr.tipo)}</td><td>${ref}</td><td>${esc(fs)}</td></tr>`;
+        }).join('')+'</table>');
+    }
     partes.push('</div>');
   });
   // fecho
@@ -1824,6 +2129,8 @@ function renderMinuta(ids){
     <p class="center">___________________________________<br>${esc(c.presidente||'Presidente da Comissão')} — Presidente</p>
     ${(c.membros||[]).filter(Boolean).map(m=>`<p class="center">___________________________________<br>${esc(m)} — Membro</p>`).join('')}`);
 
+  // marca a 1ª geração da minuta → habilita o bloco de citação/defesa no painel de Prazos
+  if(!doc._minutaGerada){ doc._minutaGerada=true; prazosSecOpen=true; render(); }
   openPrint(partes.join('\n'),'Minuta do termo de indiciação');
 }
 function rotES(v){ return {dolo_direto:'dolo direto',dolo_eventual:'dolo eventual',negligencia:'negligência',imprudencia:'imprudência',impericia:'imperícia'}[v]||v; }
@@ -1905,7 +2212,7 @@ function carregarExemplo(){
     contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{deponente:'Testemunha X',compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}}};
   doc.provas.push(P1,P2,P3);
 
-  const mkFato=(o)=>Object.assign({id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+  const mkFato=(o)=>Object.assign({id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
     status:'ativo', justificativaArquivamento:'',
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
@@ -1938,6 +2245,7 @@ function carregarExemplo(){
     enquadramentos:[{normaId:'N-116-III',elementoSubjetivo:'negligencia',fundamentacao:'A definir.'}]});
   doc.fatos.push(F1,F2,F3,F4);
   doc.fatos.forEach((f,i)=>f.ordem=i+1); // ordem narrativa inicial
+  migra(doc); // normaliza campos novos (dataCiencia, codigoAnexo, …) para dados de exemplo completos
 
   lens='todos'; isolatedFato=null; revisadas.clear(); render();
 }
@@ -1970,6 +2278,8 @@ function init(){
   $('#tagProc').addEventListener('click',abrirFormProcesso);
   $('#tagTipo').addEventListener('click',abrirFormProcesso);
   $('#tagFase').addEventListener('click',abrirFormProcesso);
+  $('#prescBox').addEventListener('click',e=>{ e.stopPropagation();
+    if($('#popover').classList.contains('open')) fecharPopover(); else abrirPopoverPrescricao(); });
   $('#search').addEventListener('input',e=>{searchTerm=e.target.value.trim();renderMap();});
   $('#btnCollapse').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));
   $('#fab').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));

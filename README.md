@@ -39,6 +39,18 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
   no mapa esmaecido como memória da decisão.
 - **Ordem narrativa dos fatos**: campo `ordem` editável por arrasto no painel,
   usado apenas na sequência da minuta (não afeta o mapa).
+- **Caixa de prescrição** (art. 142): cálculo informativo por acusado
+  (gravidade → prazo, termo inicial pela ciência da autoridade, interrupção
+  pela portaria de instauração, hipóteses do art. 127 da PN CGU 27/2022).
+  Elemento discreto ao lado do nº do processo — só ganha cor em alerta real;
+  popover com o detalhamento por acusado. Nunca projeta contagem pós-instauração.
+- **Trilha de prazos**: prazo de conclusão (art. 152) com prorrogações, prazo de
+  citação/defesa escrita (art. 161, §§1º-2º) e pendência **P6c** (intimação do
+  interrogatório com menos de 3 dias úteis — art. 41, Lei 9.784/99). Seção
+  "Prazos" colapsada no painel; informativa, não bloqueia a minuta.
+- **Índice de provas na minuta**: numeração automática das provas por capítulo,
+  citações prefixadas no texto e tabela "Índice de Provas Citadas" (campo
+  opcional `codigoAnexo` por prova).
 - **Persistência**: rascunho automático em `localStorage` (chave
   `nexus-coger:draft`) e export/import de `.json` como guarda oficial.
 
