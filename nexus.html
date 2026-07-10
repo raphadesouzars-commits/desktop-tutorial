@@ -1,0 +1,1863 @@
+<meta charset="utf-8">
+<title>NEXUS — Sistema de Verificação de Nexo Fático-Probatório · Coger/RFB</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* ============================================================= *
+ * NEXUS — coger-ui tokens (seção 6.1) + estilos da ferramenta
+ * Arquivo único, 100% offline. Nenhuma dependência externa.
+ * ============================================================= */
+:root{
+  /* categorias (matiz) — canal 1: identidade */
+  --cor-fato:#E8604C; --cor-fato-bg:#FDEEEA;
+  --cor-prova:#1FA08E; --cor-prova-bg:#E6F5F2;
+  --cor-norma:#6C4CE8; --cor-norma-bg:#EFEAFD;
+  /* estados (criticidade) — canal 2 */
+  --estado-critico:#C62828; --estado-critico-bg:#FDECEA;
+  --estado-fragil:#B7791F;  --estado-fragil-bg:#FDF6E3;
+  --estado-pendente:#1565C0; --estado-pendente-bg:#E7F0FB;
+  --estado-ok:#9AA3AD;
+  /* neutros institucionais */
+  --ink:#1F2A37; --ink-2:#4B5563; --paper:#FFFFFF; --canvas-bg:#F7F8FA;
+  --borda:#D8DEE6; --raio:10px;
+  --fonte:"Segoe UI",system-ui,-apple-system,sans-serif;
+  --topbar:#0B2E4F; --topbar-2:#12406B;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:var(--fonte);color:var(--ink);background:var(--canvas-bg);
+  display:flex;flex-direction:column;height:100vh;overflow:hidden}
+button{font-family:inherit;cursor:pointer}
+.btn{border:1px solid var(--borda);background:var(--paper);color:var(--ink);
+  border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;display:inline-flex;
+  align-items:center;gap:6px;line-height:1}
+.btn:hover{border-color:#b9c2ce;background:#fbfcfd}
+.btn.primary{background:var(--topbar);color:#fff;border-color:var(--topbar)}
+.btn.primary:hover{background:var(--topbar-2)}
+.btn.primary:disabled{background:#9aa3ad;border-color:#9aa3ad;cursor:not-allowed;opacity:.8}
+.btn.ghost{background:transparent;border-color:transparent}
+.btn.small{padding:4px 8px;font-size:12px}
+.btn.danger{color:var(--estado-critico);border-color:#e7b7b3}
+.btn.danger:hover{background:var(--estado-critico-bg)}
+
+/* ---------- TOPBAR ---------- */
+.topbar{background:linear-gradient(90deg,var(--topbar),var(--topbar-2));color:#fff;
+  display:flex;align-items:center;gap:12px;padding:8px 16px;flex:0 0 auto}
+.topbar .brand-seal{width:30px;height:30px;border-radius:50%;background:#fff2;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;
+  border:1.5px solid #ffffff55}
+.topbar .brand-txt{font-size:12px;line-height:1.2;opacity:.92}
+.topbar .brand-txt b{font-size:13px;letter-spacing:.3px}
+.topbar .tool-name{margin-left:auto;font-weight:700;font-size:13px;
+  background:#ffffff1f;padding:5px 12px;border-radius:20px;border:1px solid #ffffff33}
+
+/* ---------- HERO ---------- */
+.hero{background:var(--paper);border-bottom:1px solid var(--borda);
+  padding:10px 18px;display:flex;align-items:baseline;gap:14px;flex:0 0 auto;flex-wrap:wrap}
+.hero h1{margin:0;font-size:17px;color:var(--topbar)}
+.hero .sub{font-size:12.5px;color:var(--ink-2)}
+.hero .proc{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12px}
+.hero .proc .tag{background:var(--canvas-bg);border:1px solid var(--borda);
+  border-radius:20px;padding:3px 10px;font-weight:600}
+.hero .proc .tag.editable{cursor:pointer}
+.hero .proc .tag.editable:hover{border-color:var(--topbar)}
+
+/* ---------- LENS BAR ---------- */
+.lensbar{background:var(--paper);border-bottom:1px solid var(--borda);
+  padding:7px 16px;display:flex;align-items:center;gap:8px;flex:0 0 auto;flex-wrap:wrap}
+.chip{border:1px solid var(--borda);background:var(--paper);border-radius:20px;
+  padding:5px 11px;font-size:12.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
+.chip:hover{border-color:#b9c2ce}
+.chip.active{background:var(--topbar);color:#fff;border-color:var(--topbar)}
+.chip .ava{width:18px;height:18px;border-radius:50%;background:#e2e7ee;color:#33415a;
+  font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.chip.active .ava{background:#ffffff33;color:#fff}
+.lensbar .spacer{flex:1}
+.lensbar input.search{border:1px solid var(--borda);border-radius:8px;padding:6px 10px;
+  font-size:13px;min-width:180px}
+
+/* ---------- MAIN ---------- */
+.main{flex:1 1 auto;display:flex;min-height:0}
+.canvas-wrap{flex:1 1 auto;min-width:0;position:relative;overflow:auto;background:var(--canvas-bg)}
+.col-headers{position:sticky;top:0;z-index:5;display:grid;
+  grid-template-columns:1fr 1fr 1fr;pointer-events:none}
+.col-h{margin:8px;padding:6px 12px;border-radius:8px;font-weight:700;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.5px;color:#fff;text-align:center}
+.col-h.fato{background:var(--cor-fato)} .col-h.prova{background:var(--cor-prova)}
+.col-h.norma{background:var(--cor-norma)}
+svg.map{display:block}
+.empty-state{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:40px;text-align:center;color:var(--ink-2);font-size:14px;line-height:1.6;pointer-events:none}
+.empty-state div{max-width:440px}
+
+/* ---------- SIDE PANEL ---------- */
+.panel{flex:0 0 340px;background:var(--paper);border-left:1px solid var(--borda);
+  display:flex;flex-direction:column;min-height:0;transition:margin-right .2s}
+.panel.collapsed{margin-right:-340px}
+.panel-head{padding:10px 14px;border-bottom:1px solid var(--borda);display:flex;
+  align-items:center;gap:8px}
+.panel-head h2{margin:0;font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
+.counters{display:flex;gap:6px;margin-left:auto}
+.counter{font-size:12px;font-weight:800;padding:2px 8px;border-radius:20px;display:inline-flex;gap:4px;align-items:center}
+.counter.c{background:var(--estado-critico-bg);color:var(--estado-critico)}
+.counter.f{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
+.counter.p{background:var(--estado-pendente-bg);color:var(--estado-pendente)}
+.pend-list{overflow:auto;flex:1 1 auto;padding:8px}
+.pend-group-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--ink-2);margin:10px 6px 4px}
+.pend{border:1px solid var(--borda);border-left-width:4px;border-radius:8px;padding:8px 10px;
+  margin-bottom:6px;font-size:12.5px;cursor:pointer;background:var(--paper)}
+.pend:hover{background:#fbfcfd}
+.pend.lvl-critico{border-left-color:var(--estado-critico)}
+.pend.lvl-fragil{border-left-color:var(--estado-fragil)}
+.pend.lvl-pendente{border-left-color:var(--estado-pendente)}
+.pend.revisado{opacity:.5}
+.pend .code{font-weight:800;margin-right:6px}
+.pend .alvo{color:var(--ink-2);font-size:11.5px;margin-top:3px}
+.pend .rev-btn{margin-top:4px}
+.selo-ok{margin:14px;padding:12px;border:1px dashed #66bb6a;border-radius:10px;
+  color:#2e7d32;background:#edf7ee;font-size:13px;font-weight:600;text-align:center}
+.checklist{border-top:1px solid var(--borda);padding:10px 14px;flex:0 0 auto}
+.checklist h3{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
+.check{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-bottom:6px;line-height:1.35}
+.check .mk{width:16px;height:16px;border-radius:4px;flex:0 0 auto;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:800;color:#fff;margin-top:1px}
+.check.ok .mk{background:#2e7d32}.check.no .mk{background:#c0c7d0}
+.checklist .btn{width:100%;justify-content:center;margin-top:8px}
+
+/* ---------- FLOAT BTN (drawer trigger) ---------- */
+.fab{position:fixed;right:16px;bottom:16px;z-index:40;display:none}
+@media(max-width:1100px){
+  .panel{position:fixed;right:0;top:0;bottom:0;z-index:45;box-shadow:-8px 0 24px #0002}
+  .fab{display:inline-flex}
+}
+
+/* ---------- FOOTER ---------- */
+.footer{flex:0 0 auto;background:var(--paper);border-top:1px solid var(--borda);
+  padding:5px 16px;font-size:11px;color:var(--ink-2);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.footer .warn{color:var(--estado-fragil);font-weight:600}
+.footer .spacer{flex:1}
+
+/* ---------- MENU (export dropdown) ---------- */
+.menu-wrap{position:relative}
+.menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--paper);border:1px solid var(--borda);
+  border-radius:10px;box-shadow:0 8px 24px #0002;min-width:230px;z-index:30;padding:5px;display:none}
+.menu.open{display:block}
+.menu button{display:flex;width:100%;text-align:left;background:none;border:none;padding:8px 10px;
+  border-radius:7px;font-size:13px;color:var(--ink);gap:8px;align-items:center}
+.menu button:hover{background:var(--canvas-bg)}
+.menu .sep{height:1px;background:var(--borda);margin:4px 0}
+.menu .lbl{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2);padding:6px 10px 2px;font-weight:700}
+
+/* ---------- MODAL ---------- */
+.overlay{position:fixed;inset:0;background:#0b1b2c66;z-index:60;display:none;
+  align-items:flex-start;justify-content:center;overflow:auto;padding:24px}
+.overlay.open{display:flex}
+.modal{background:var(--paper);border-radius:14px;box-shadow:0 20px 60px #0004;
+  width:min(720px,100%);margin:auto;overflow:hidden}
+.modal.wide{width:min(920px,100%)}
+.modal-head{padding:14px 18px;border-bottom:1px solid var(--borda);display:flex;align-items:center;gap:10px}
+.modal-head h2{margin:0;font-size:16px}
+.modal-head .cat-dot{width:12px;height:12px;border-radius:3px}
+.modal-head .x{margin-left:auto}
+.modal-body{padding:16px 18px;max-height:70vh;overflow:auto}
+.modal-foot{padding:12px 18px;border-top:1px solid var(--borda);display:flex;gap:8px;justify-content:flex-end;align-items:center}
+.field{margin-bottom:13px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:4px}
+.field .hint{font-size:11px;color:var(--ink-2);font-weight:400;margin-top:3px;font-style:italic}
+.field input[type=text],.field input[type=date],.field textarea,.field select{
+  width:100%;border:1px solid var(--borda);border-radius:8px;padding:8px 10px;font-size:13px;
+  font-family:inherit;color:var(--ink)}
+.field textarea{resize:vertical;min-height:64px}
+.field .count{font-size:11px;color:var(--ink-2);text-align:right}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.block{border:1px solid var(--borda);border-radius:10px;padding:12px;margin-bottom:13px}
+.block > .block-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.radios{display:flex;gap:14px;flex-wrap:wrap}
+.radios label{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;cursor:pointer}
+.inline-warn{background:var(--estado-fragil-bg);border:1px solid #e8cf8a;color:#8a5d0d;
+  border-radius:8px;padding:7px 10px;font-size:12px;margin-top:6px;display:none}
+.inline-warn.show{display:block}
+.subrow{display:grid;grid-template-columns:auto 1fr auto auto;gap:8px;align-items:start;
+  padding:8px;border:1px solid var(--borda);border-radius:8px;margin-bottom:8px;background:#fbfcfd}
+.multiselect{border:1px solid var(--borda);border-radius:8px;padding:6px;max-height:150px;overflow:auto}
+.ms-item{display:flex;gap:8px;align-items:center;padding:4px 6px;border-radius:6px;font-size:12.5px}
+.ms-item:hover{background:var(--canvas-bg)}
+.pill{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:20px;white-space:nowrap}
+.pill.leve{background:#e8f0fe;color:#1a56c4} .pill.media{background:var(--estado-fragil-bg);color:#8a5d0d}
+.pill.grave{background:var(--estado-critico-bg);color:var(--estado-critico)}
+.banner{border-radius:10px;padding:10px 12px;font-size:12.5px;margin-bottom:12px;display:flex;gap:10px;align-items:flex-start}
+.banner.info{background:var(--estado-pendente-bg);color:#0d47a1;border:1px solid #b6d4f2}
+.banner.warn{background:var(--estado-fragil-bg);color:#8a5d0d;border:1px solid #e8cf8a}
+.suggest{background:#eef6ff;border:1px dashed #7aa7d8;border-radius:8px;padding:8px 10px;
+  font-size:12.5px;color:#0d47a1;margin:8px 0}
+.err-msg{color:var(--estado-critico);font-size:12px;font-weight:600;margin-right:auto}
+
+/* ---------- PRINT VIEW OVERLAY (minuta / mapa) ---------- */
+.printview{position:fixed;inset:0;background:var(--paper);z-index:80;overflow:auto;display:none}
+.printview.open{display:block}
+.printview .pv-toolbar{position:sticky;top:0;background:var(--topbar);color:#fff;padding:10px 16px;
+  display:flex;gap:8px;align-items:center}
+.printview .pv-toolbar .btn{border-color:#ffffff55}
+.pv-doc{max-width:820px;margin:24px auto;padding:0 40px 60px;font-size:14px;line-height:1.6;color:#111}
+.pv-doc h1{font-size:16px;text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.pv-doc h2{font-size:14px;border-bottom:1px solid #999;padding-bottom:3px;margin-top:26px;text-transform:uppercase}
+.pv-doc h3{font-size:13px;margin-top:18px}
+.pv-doc .center{text-align:center}
+.pv-doc .cap{page-break-before:always}
+.pv-doc p{text-align:justify;margin:8px 0}
+.pv-doc .quote{margin:6px 0 6px 24px;font-style:italic;color:#333}
+.pv-doc .inst{text-align:center;font-weight:700;margin-bottom:2px}
+.pv-doc table.qual{width:100%;border-collapse:collapse;margin:8px 0}
+.pv-doc table.qual td{border:1px solid #bbb;padding:5px 8px;font-size:13px}
+
+/* ---------- MAP CARD (SVG-driven) hover helpers ---------- */
+svg.map .node{cursor:pointer}
+svg.map .node:focus{outline:none}
+svg.map .edge{transition:opacity .12s}
+svg.map.isolating .edge{opacity:.12}
+svg.map.isolating .edge.hl{opacity:1}
+svg.map.isolating .node{opacity:.18}
+svg.map.isolating .node.hl{opacity:1}
+
+@media print{
+  body{height:auto;overflow:visible;display:block}
+  .topbar,.hero,.lensbar,.panel,.footer,.fab,.col-headers{display:none!important}
+  .printview.open{position:static}
+  .printview .pv-toolbar{display:none!important}
+  .pv-doc{margin:0;max-width:none}
+  @page{margin:18mm}
+}
+</style>
+
+<!-- ===================== TOPBAR ===================== -->
+<div class="topbar">
+  <div class="brand-seal">RFB</div>
+  <div class="brand-txt"><b>CORREGEDORIA-GERAL — Coger/RFB</b><br>Receita Federal do Brasil</div>
+  <div class="tool-name">NEXUS · Nexo Fático-Probatório</div>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<div class="hero">
+  <h1>NEXUS</h1>
+  <div class="sub">Sistema de Verificação de Nexo Fático-Probatório · Mapa Fato → Prova → Norma + Assistente de Indiciação</div>
+  <div class="proc">
+    <span class="tag editable" id="tagProc" title="Editar dados do processo">nº —</span>
+    <span class="tag editable" id="tagTipo">—</span>
+    <span class="tag editable" id="tagFase">—</span>
+  </div>
+</div>
+
+<!-- ===================== LENS BAR ===================== -->
+<div class="lensbar">
+  <div id="lensChips" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
+  <button class="chip" id="btnAddAcusado">+ acusado</button>
+  <div class="spacer"></div>
+  <input class="search" id="search" placeholder="buscar fato, prova, norma…" autocomplete="off">
+  <button class="btn" id="btnAddFato">+ Fato</button>
+  <button class="btn" id="btnAddProva">+ Prova</button>
+  <div class="menu-wrap">
+    <button class="btn" id="btnMenu">exportar ▾</button>
+    <div class="menu" id="menu">
+      <div class="lbl">Guarda &amp; troca</div>
+      <button data-act="exportJson">⬇ Exportar .json (documento completo)</button>
+      <button data-act="importJson">⬆ Importar .json</button>
+      <div class="sep"></div>
+      <div class="lbl">Produtos</div>
+      <button data-act="minuta">📄 Gerar minuta do termo de indiciação</button>
+      <button data-act="pauta">🎯 Exportar pauta de instrução (Oitiva 360)</button>
+      <button data-act="printMap">🖨 Imprimir o mapa</button>
+      <div class="sep"></div>
+      <div class="lbl">Catálogo &amp; exemplo</div>
+      <button data-act="novaNorma">＋ Nova norma (residual)</button>
+      <button data-act="exemplo">🧪 Carregar exemplo</button>
+      <button data-act="limpar">🗑 Limpar tudo</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MAIN ===================== -->
+<div class="main">
+  <div class="canvas-wrap" id="canvasWrap">
+    <div class="col-headers">
+      <div class="col-h fato">Fatos</div>
+      <div class="col-h prova">Provas</div>
+      <div class="col-h norma">Normas</div>
+    </div>
+    <svg class="map" id="map" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div class="empty-state" id="emptyState"><div>Comece cadastrando os acusados e o primeiro fato. O mapa mostrará as conexões — e as lacunas — conforme você constrói a instrução.</div></div>
+  </div>
+
+  <aside class="panel" id="panel">
+    <div class="panel-head">
+      <h2>Pendências</h2>
+      <div class="counters" id="counters"></div>
+      <button class="btn ghost small" id="btnCollapse" title="Recolher painel">✕</button>
+    </div>
+    <div class="pend-list" id="pendList"></div>
+    <div class="checklist" id="checklist"></div>
+  </aside>
+</div>
+
+<button class="btn primary fab" id="fab">Pendências <span id="fabCount"></span></button>
+
+<!-- ===================== FOOTER ===================== -->
+<div class="footer">
+  <span class="warn">⚠ Rascunho salvo automaticamente neste navegador. Exporte o arquivo .json para guarda oficial.</span>
+  <span class="spacer"></span>
+  <span>NEXUS v1.0</span>
+  <span>·</span>
+  <span>Manual PAD CGU 2025 (cap. 10) · Lei nº 8.112/90 (arts. 155 e 161) · PN CGU 27/2022 (arts. 119–121, 127)</span>
+</div>
+
+<!-- generic modal + print view -->
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="printview" id="printview"></div>
+<input type="file" id="fileInput" accept="application/json,.json" style="display:none">
+
+<script>
+/* =====================================================================
+ * NEXUS — Sistema de Verificação de Nexo Fático-Probatório · Coger/RFB
+ * Vanilla JS (ES6+). Sem frameworks, sem build. 100% offline.
+ * ===================================================================== */
+'use strict';
+
+/* ------------------------------------------------------------------ *
+ * 1. CATÁLOGO DE NORMAS (seção 3.5) — nasce completo, embutido.
+ *    Base + relações declaradas uma vez e espelhadas nos dois sentidos.
+ * ------------------------------------------------------------------ */
+const NORMAS_BASE = [
+  // ---- Grupo Deveres art. 116 (leve / advertência / ambos, salvo nota) ----
+  ['N-116-I','art. 116, I, Lei nº 8.112/90','Inassiduidade ao dever de exercer com zelo e dedicação','exercer com zelo e dedicação as atribuições do cargo','leve','advertencia','ambos','Configura-se com conduta única; independe de habitualidade.'],
+  ['N-116-II','art. 116, II, Lei nº 8.112/90','Deslealdade às instituições','ser leal às instituições a que servir','leve','advertencia','ambos','Lealdade é à instituição, não à chefia.'],
+  ['N-116-III','art. 116, III, Lei nº 8.112/90','Inobservância de normas legais e regulamentares','observar as normas legais e regulamentares','leve','advertencia','ambos','A indiciação DEVE apontar qual norma foi descumprida. Avaliar consunção por infração mais grave ou específica.'],
+  ['N-116-IV','art. 116, IV, Lei nº 8.112/90','Descumprimento de ordens superiores','cumprir as ordens superiores, exceto quando manifestamente ilegais','leve','advertencia','ambos','Exceto ordens manifestamente ilegais — a exceção integra o tipo.'],
+  ['N-116-V','art. 116, V, Lei nº 8.112/90','Falta de presteza','atender com presteza: a) ao público em geral, prestando as informações requeridas, ressalvadas as protegidas por sigilo; b) à expedição de certidões requeridas para defesa de direito ou esclarecimento de situações de interesse pessoal; c) às requisições para a defesa da Fazenda Pública','leve','advertencia','ambos',''],
+  ['N-116-VI','art. 116, VI, Lei nº 8.112/90','Omissão em levar irregularidades ao conhecimento da autoridade superior','levar as irregularidades de que tiver ciência em razão do cargo ao conhecimento da autoridade superior ou, quando houver suspeita de envolvimento desta, ao conhecimento de outra autoridade competente para apuração','leve','advertencia','ambos','Redação vigente (Lei nº 12.527/2011).'],
+  ['N-116-VII','art. 116, VII, Lei nº 8.112/90','Falta de zelo pela economia do material e conservação do patrimônio','zelar pela economia do material e a conservação do patrimônio público','leve','advertencia','ambos',''],
+  ['N-116-VIII','art. 116, VIII, Lei nº 8.112/90','Violação do dever de guardar sigilo','guardar sigilo sobre assunto da repartição','leve','advertencia','ambos',''],
+  ['N-116-IX','art. 116, IX, Lei nº 8.112/90','Conduta incompatível com a moralidade administrativa','manter conduta compatível com a moralidade administrativa','leve','advertencia','ambos',''],
+  ['N-116-X','art. 116, X, Lei nº 8.112/90','Falta de assiduidade e pontualidade','ser assíduo e pontual ao serviço','leve','advertencia','ambos',''],
+  ['N-116-XI','art. 116, XI, Lei nº 8.112/90','Falta de urbanidade','tratar com urbanidade as pessoas','leve','advertencia','ambos',''],
+  ['N-116-XII','art. 116, XII, Lei nº 8.112/90','Omissão do dever de representar contra ilegalidade, omissão ou abuso de poder','representar contra ilegalidade, omissão ou abuso de poder','leve','advertencia','ambos',''],
+  // ---- Grupo Proibições leves art. 117 I–VIII, XIX (advertência / ambos) ----
+  ['N-117-I','art. 117, I, Lei nº 8.112/90','Ausentar-se do serviço durante o expediente sem autorização do chefe imediato','ausentar-se do serviço durante o expediente, sem prévia autorização do chefe imediato','leve','advertencia','ambos',''],
+  ['N-117-II','art. 117, II, Lei nº 8.112/90','Retirar documento ou objeto da repartição sem anuência da autoridade competente','retirar, sem prévia anuência da autoridade competente, qualquer documento ou objeto da repartição','leve','advertencia','ambos',''],
+  ['N-117-III','art. 117, III, Lei nº 8.112/90','Recusar fé a documentos públicos','recusar fé aos documentos públicos','leve','advertencia','ambos',''],
+  ['N-117-IV','art. 117, IV, Lei nº 8.112/90','Opor resistência injustificada ao andamento de documento, processo ou execução de serviço','opor resistência injustificada ao andamento de documento e processo ou execução de serviço','leve','advertencia','ambos',''],
+  ['N-117-V','art. 117, V, Lei nº 8.112/90','Promover manifestação de apreço ou desapreço no recinto da repartição','promover manifestação de apreço ou desapreço no recinto da repartição','leve','advertencia','ambos',''],
+  ['N-117-VI','art. 117, VI, Lei nº 8.112/90','Cometer a pessoa estranha à repartição atribuição de sua responsabilidade ou de subordinado','cometer a pessoa estranha à repartição, fora dos casos previstos em lei, o desempenho de atribuição que seja de sua responsabilidade ou de seu subordinado','leve','advertencia','ambos',''],
+  ['N-117-VII','art. 117, VII, Lei nº 8.112/90','Coagir ou aliciar subordinados a filiação associativa, sindical ou partidária','coagir ou aliciar subordinados no sentido de filiarem-se a associação profissional ou sindical, ou a partido político','leve','advertencia','ambos',''],
+  ['N-117-VIII','art. 117, VIII, Lei nº 8.112/90','Manter sob chefia imediata, em cargo/função de confiança, cônjuge, companheiro ou parente até 2º grau','manter sob sua chefia imediata, em cargo ou função de confiança, cônjuge, companheiro ou parente até o segundo grau civil','leve','advertencia','ambos',''],
+  ['N-117-XIX','art. 117, XIX, Lei nº 8.112/90','Recusar-se a atualizar dados cadastrais quando solicitado','recusar-se a atualizar seus dados cadastrais quando solicitado','leve','advertencia','ambos','Incluído pela Lei nº 9.527/1997.'],
+  // ---- Grupo Proibições médias art. 117 XVII–XVIII (suspensão / ambos) ----
+  ['N-117-XVII','art. 117, XVII, Lei nº 8.112/90','Cometer a outro servidor atribuições estranhas ao cargo, fora de emergência transitória','cometer a outro servidor atribuições estranhas ao cargo que ocupa, exceto em situações de emergência e transitórias','media','suspensao','ambos',''],
+  ['N-117-XVIII','art. 117, XVIII, Lei nº 8.112/90','Exercer atividades incompatíveis com o cargo/função ou com o horário de trabalho','exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho','media','suspensao','ambos',''],
+  // ---- Grupo Proibições graves art. 117 IX–XVI (demissão via art. 132, XIII) ----
+  ['N-117-IX','art. 117, IX, Lei nº 8.112/90','Valimento do cargo','valer-se do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública','grave','demissao','dolo','Exige consciência e vontade; sobreposição do interesse particular sobre o público. Conduta culposa pode configurar art. 116, III.'],
+  ['N-117-X','art. 117, X, Lei nº 8.112/90','Participar de gerência/administração de sociedade privada; exercer o comércio','participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário','grave','demissao','dolo','Ressalvas legais (acionista, cotista, comanditário) integram o tipo.'],
+  ['N-117-XI','art. 117, XI, Lei nº 8.112/90','Atuar como procurador ou intermediário junto a repartições públicas','atuar, como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro','grave','demissao','dolo','Ressalva: benefícios previdenciários/assistenciais de parentes até 2º grau e de cônjuge/companheiro.'],
+  ['N-117-XII','art. 117, XII, Lei nº 8.112/90','Receber propina, comissão, presente ou vantagem de qualquer espécie','receber propina, comissão, presente ou vantagem de qualquer espécie, em razão de suas atribuições','grave','demissao','dolo',''],
+  ['N-117-XIII','art. 117, XIII, Lei nº 8.112/90','Aceitar comissão, emprego ou pensão de estado estrangeiro','aceitar comissão, emprego ou pensão de estado estrangeiro','grave','demissao','dolo',''],
+  ['N-117-XIV','art. 117, XIV, Lei nº 8.112/90','Praticar usura sob qualquer de suas formas','praticar usura sob qualquer de suas formas','grave','demissao','dolo',''],
+  ['N-117-XV','art. 117, XV, Lei nº 8.112/90','Proceder de forma desidiosa','proceder de forma desidiosa','grave','demissao','culpa','Desídia é infração de natureza CULPOSA (negligência habitual/reiterada). Relação alternatividade com enquadramentos dolosos sobre a mesma conduta.'],
+  ['N-117-XVI','art. 117, XVI, Lei nº 8.112/90','Utilizar pessoal ou recursos materiais da repartição em atividades particulares','utilizar pessoal ou recursos materiais da repartição em serviços ou atividades particulares','grave','demissao','dolo',''],
+  // ---- Grupo art. 130, §1º (suspensão) ----
+  ['N-130-P1','art. 130, §1º, Lei nº 8.112/90','Recusa injustificada a inspeção médica determinada por autoridade competente','o servidor que, injustificadamente, recusar-se a ser submetido a inspeção médica determinada pela autoridade competente será punido com suspensão de até 15 dias, cessando os efeitos da penalidade uma vez cumprida a determinação','media','suspensao','dolo','Suspensão de até 15 dias, cessando os efeitos com o cumprimento da determinação.'],
+  // ---- Grupo art. 132 (demissão / grave) ----
+  ['N-132-I','art. 132, I, Lei nº 8.112/90','Crime contra a administração pública','crime contra a administração pública','grave','demissao','dolo','AGU GQ-124 (vinculante): exige sentença penal transitada em julgado. EVITAR este enquadramento; buscar capitulação administrativa autônoma.'],
+  ['N-132-II','art. 132, II, Lei nº 8.112/90','Abandono de cargo','abandono de cargo','grave','demissao','dolo','Exige animus abandonandi: ausência intencional superior a 30 dias consecutivos (art. 138).'],
+  ['N-132-III','art. 132, III, Lei nº 8.112/90','Inassiduidade habitual','inassiduidade habitual','grave','demissao','ambos','60 faltas interpoladas em 12 meses, sem causa justificada (art. 139).'],
+  ['N-132-IV','art. 132, IV, Lei nº 8.112/90','Improbidade administrativa','improbidade administrativa','grave','demissao','dolo',''],
+  ['N-132-V','art. 132, V, Lei nº 8.112/90','Incontinência pública e conduta escandalosa, na repartição','incontinência pública e conduta escandalosa, na repartição','grave','demissao','dolo',''],
+  ['N-132-VI','art. 132, VI, Lei nº 8.112/90','Insubordinação grave em serviço','insubordinação grave em serviço','grave','demissao','dolo',''],
+  ['N-132-VII','art. 132, VII, Lei nº 8.112/90','Ofensa física, em serviço, a servidor ou particular','ofensa física, em serviço, a servidor ou a particular, salvo em legítima defesa própria ou de outrem','grave','demissao','dolo','Ressalva de legítima defesa própria ou de outrem integra o tipo (excludente).'],
+  ['N-132-VIII','art. 132, VIII, Lei nº 8.112/90','Aplicação irregular de dinheiros públicos','aplicação irregular de dinheiros públicos','grave','demissao','dolo',''],
+  ['N-132-IX','art. 132, IX, Lei nº 8.112/90','Revelação de segredo apropriado em razão do cargo','revelação de segredo do qual se apropriou em razão do cargo','grave','demissao','dolo',''],
+  ['N-132-X','art. 132, X, Lei nº 8.112/90','Lesão aos cofres públicos e dilapidação do patrimônio nacional','lesão aos cofres públicos e dilapidação do patrimônio nacional','grave','demissao','dolo',''],
+  ['N-132-XI','art. 132, XI, Lei nº 8.112/90','Corrupção','corrupção','grave','demissao','dolo','Relação especialidade/proximidade com o recebimento de vantagem (art. 117, XII).'],
+  ['N-132-XII','art. 132, XII, Lei nº 8.112/90','Acumulação ilegal de cargos, empregos ou funções públicas','acumulação ilegal de cargos, empregos ou funções públicas','grave','demissao','dolo','Demissão condicionada à má-fé (art. 133, §6º: comprovada a boa-fé, exoneração).'],
+  ['N-132-XIII','art. 132, XIII c/c art. 117, IX-XVI, Lei nº 8.112/90','Transgressão das proibições graves do art. 117','transgressão das proibições previstas no art. 117, incisos IX a XVI','grave','demissao','dolo',''],
+  // ---- Grupo LAI art. 32 (média / suspensão) ----
+  ['N-LAI-32-I','art. 32, I, Lei nº 12.527/2011','Recusar, retardar ou fornecer incorretamente informação requerida','recusar-se a fornecer informação requerida nos termos desta Lei, retardar deliberadamente o seu fornecimento ou fornecê-la intencionalmente de forma incorreta, incompleta ou imprecisa','media','suspensao','dolo','Pena mínima de suspensão (art. 32, §1º, II). Pode migrar para hipótese de demissão da Lei 8.112/90.'],
+  ['N-LAI-32-II','art. 32, II, Lei nº 12.527/2011','Utilizar indevidamente, subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar informação sob guarda','utilizar indevidamente, bem como subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar, total ou parcialmente, informação que se encontre sob sua guarda ou a que tenha acesso ou conhecimento em razão do exercício das atribuições de cargo, emprego ou função pública','media','suspensao','dolo','Pode configurar também art. 313-A do CP. Pena mínima de suspensão (art. 32, §1º, II).'],
+  ['N-LAI-32-III','art. 32, III, Lei nº 12.527/2011','Agir com dolo ou má-fé na análise de solicitação de acesso','agir com dolo ou má-fé na análise das solicitações de acesso à informação','media','suspensao','dolo','Pressupõe pedido formal de acesso; um único ato basta.'],
+  ['N-LAI-32-IV','art. 32, IV, Lei nº 12.527/2011','Divulgar/permitir divulgação ou acessar/permitir acesso indevido a informação sigilosa ou pessoal','divulgar ou permitir a divulgação ou acessar ou permitir acesso indevido à informação sigilosa ou informação pessoal','media','suspensao','dolo','Pena mínima de suspensão (art. 32, §1º, II).'],
+  ['N-LAI-32-V','art. 32, V, Lei nº 12.527/2011','Impor sigilo para proveito pessoal/de terceiro ou ocultação de ato ilegal','impor sigilo à informação para obter proveito pessoal ou de terceiro, ou para fins de ocultação de ato ilegal cometido por si ou por outrem','media','suspensao','dolo','Pena mínima de suspensão (art. 32, §1º, II).'],
+  ['N-LAI-32-VI','art. 32, VI, Lei nº 12.527/2011','Ocultar da revisão de autoridade superior informação sigilosa','ocultar da revisão de autoridade superior competente informação sigilosa para beneficiar a si ou a outrem, ou em prejuízo de terceiros','media','suspensao','dolo','Pena mínima de suspensão (art. 32, §1º, II).'],
+  ['N-LAI-32-VII','art. 32, VII, Lei nº 12.527/2011','Destruir ou subtrair documentos sobre possíveis violações de direitos humanos por agentes do Estado','destruir ou subtrair, por qualquer meio, documentos concernentes a possíveis violações de direitos humanos por parte de agentes do Estado','media','suspensao','dolo','Forma qualificada do inciso II — potencialmente mais grave. Pena mínima de suspensão (art. 32, §1º, II).'],
+];
+
+// Relações declaradas uma única vez; espelhadas nos dois sentidos ao montar.
+const RELACOES_DECL = [
+  ['N-116-II','N-132-VIII','consuncao','Etapa prévia consumida pela aplicação irregular de dinheiro público (Manual 10.4.7)'],
+  ['N-116-II','N-117-IX','consuncao','Etapa prévia consumida pelo valimento do cargo (Manual 10.4.7)'],
+  ['N-116-VIII','N-132-IX','subsidiariedade','Prevalece o art. 132, IX quando demonstrada a faceta mais grave (Manual 10.4.7)'],
+  ['N-117-IX','N-116-III','alternatividade','Dolo (117, IX) x culpa (116, III): incompatíveis no mesmo fato (Manual 10.4.7)'],
+  ['N-116-X','N-132-II','subsidiariedade','A forma grave da ausência (abandono de cargo) prevalece sobre a falta de assiduidade.'],
+  ['N-116-X','N-132-III','subsidiariedade','A forma grave da ausência (inassiduidade habitual) prevalece sobre a falta de assiduidade.'],
+  ['N-116-IV','N-132-VI','subsidiariedade','Insubordinação grave é a forma grave do descumprimento de ordem.'],
+  ['N-117-XII','N-132-XI','especialidade','Corrupção (132, XI) é a forma especial/mais grave do recebimento de vantagem.'],
+  ['N-LAI-32-IV','N-132-IX','especialidade','Migração possível para revelação de segredo (demissão) quando demonstrada a faceta mais grave.'],
+  ['N-LAI-32-V','N-117-IX','especialidade','Migração possível para valimento do cargo (demissão).'],
+  ['N-LAI-32-VI','N-117-IX','especialidade','Migração possível para valimento do cargo (demissão).'],
+  ['N-LAI-32-VI','N-132-VI','especialidade','Migração possível para insubordinação grave (demissão).'],
+];
+// art. 132, XIII ↔ cada proibição grave do art. 117 (IX a XVI) — especialidade.
+['N-117-IX','N-117-X','N-117-XI','N-117-XII','N-117-XIII','N-117-XIV','N-117-XV','N-117-XVI']
+  .forEach(id=>RELACOES_DECL.push([id,'N-132-XIII','especialidade','O art. 132, XIII é o veículo de demissão das proibições graves do art. 117.']));
+
+function buildCatalogo(){
+  const cat = NORMAS_BASE.map(a=>({
+    id:a[0], dispositivo:a[1], rotulo:a[2], descricaoTipo:a[3],
+    gravidade:a[4], penaPrevista:a[5], elementoSubjetivoExigido:a[6],
+    notasEnquadramento:a[7], relacoes:[]
+  }));
+  const byId = Object.fromEntries(cat.map(n=>[n.id,n]));
+  const addRel=(from,to,tipo,nota)=>{
+    if(!byId[from]||!byId[to]) return;
+    if(byId[from].relacoes.some(r=>r.com===to&&r.tipo===tipo)) return;
+    byId[from].relacoes.push({com:to,tipo,nota});
+  };
+  RELACOES_DECL.forEach(([a,b,tipo,nota])=>{ addRel(a,b,tipo,nota); addRel(b,a,tipo,nota); });
+  return cat;
+}
+
+/* ordem e rótulos dos grupos do <select> (seção 3.5.3) */
+function grupoDaNorma(id){
+  if(id.startsWith('NU-')) return 6;
+  if(id.startsWith('N-116-')) return 0;
+  if(id.startsWith('N-117-')) return 1;
+  if(id.startsWith('N-132-')) return 2;
+  if(id.startsWith('N-130-')) return 3;
+  if(id.startsWith('N-LAI-')) return 4;
+  return 6;
+}
+const GRUPOS=[
+  'Lei 8.112/90 — Deveres (art. 116)',
+  'Lei 8.112/90 — Proibições (art. 117)',
+  'Lei 8.112/90 — Demissão (art. 132)',
+  'Outras (art. 130)',
+  'LAI (Lei 12.527/2011)',
+  '',
+  'Criadas pelo usuário'
+];
+
+/* ------------------------------------------------------------------ *
+ * 2. ESTADO / MODELO DE DADOS
+ * ------------------------------------------------------------------ */
+const LS_KEY='nexus-coger:draft';
+const SCHEMA='1.0';
+
+function docVazio(){
+  return {
+    schemaVersion:SCHEMA, ferramenta:'nexus-coger', exportadoEm:null,
+    processo:{
+      numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB',
+      comissao:{presidente:'', membros:['',''], portariaInstauracao:{numero:'',data:''}},
+      objetoApuracao:'', faseAtual:'instrucao'
+    },
+    acusados:[], fatos:[], provas:[], catalogoNormas:buildCatalogo(),
+    _seq:{A:0,F:0,P:0,NU:0}
+  };
+}
+
+let doc = null;          // documento raiz
+let lens = 'todos';      // 'todos' | acusadoId
+let isolatedFato = null; // id do fato isolado por clique
+let searchTerm = '';
+const revisadas = new Set(); // pendências marcadas "revisado ✓" (volátil)
+
+/* ------------------------------------------------------------------ *
+ * 3. PERSISTÊNCIA (localStorage, debounce 1s)
+ * ------------------------------------------------------------------ */
+let saveTimer=null;
+function scheduleSave(){
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{
+    try{ localStorage.setItem(LS_KEY, JSON.stringify(doc)); }catch(e){}
+  },1000);
+}
+function loadDraft(){
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){ const d=JSON.parse(raw); if(d&&d.ferramenta==='nexus-coger'){ return migra(d); } }
+  }catch(e){}
+  return null;
+}
+function migra(d){
+  // garante campos novos em rascunhos antigos
+  const base=docVazio();
+  d._seq=d._seq||{A:0,F:0,P:0,NU:0};
+  if(!d.catalogoNormas||!d.catalogoNormas.length) d.catalogoNormas=base.catalogoNormas;
+  return d;
+}
+function genId(prefix){
+  doc._seq[prefix]=(doc._seq[prefix]||0)+1;
+  return prefix+doc._seq[prefix];
+}
+
+/* ------------------------------------------------------------------ *
+ * 4. DERIVAÇÕES — força probatória, estado, pendências
+ * ------------------------------------------------------------------ */
+const FORCA_DIRETA=new Set(['documental','pericial','interrogatorio','diligencia']);
+// testemunhal e emprestada dependem de condição (avaliadas em provaEhDireta)
+
+function provaById(id){ return doc.provas.find(p=>p.id===id); }
+function normaById(id){ return doc.catalogoNormas.find(n=>n.id===id); }
+function acusadoById(id){ return doc.acusados.find(a=>a.id===id); }
+
+function provaTemP6a(p){
+  if(p.tipo!=='emprestada') return false;
+  const d=p.detalhe||{};
+  if(d.certidaoJuntada===false) return true;
+  if(d.origemJudicial===true && d.autorizacaoJudicial!=='juntada') return true;
+  return false;
+}
+function provaTemP6b(p){ return p.contraditorio && p.contraditorio.acusadoIntimado===false; }
+
+// força DIRETA de uma prova (sem considerar pendências formais)
+function provaEhDireta(p){
+  if(FORCA_DIRETA.has(p.tipo)) return true;
+  if(p.tipo==='emprestada'){
+    const d=p.detalhe||{};
+    const regular = d.certidaoJuntada===true && (!d.origemJudicial || d.autorizacaoJudicial==='juntada');
+    return regular;
+  }
+  if(p.tipo==='testemunhal'){
+    const c=(p.detalhe&&p.detalhe.contradita)||{};
+    return !(c.acolhida===true); // compromissada sem contradita acolhida = direta
+  }
+  return false; // indiciaria, declaracao_informante
+}
+function provaEhIndireta(p){ return !provaEhDireta(p); }
+
+function calcEstadoProbatorio(f){
+  const provas=(f.provaIds||[]).map(provaById).filter(Boolean);
+  if(!provas.length) return 'ausente';
+  const temDiretaLimpa = provas.some(p=>provaEhDireta(p) && !provaTemP6a(p) && !provaTemP6b(p));
+  if(temDiretaLimpa) return 'suficiente';
+  const algumaDireta = provas.some(p=>provaEhDireta(p));
+  // direta mas com pendência formal, ou só indiretas → indícios
+  return algumaDireta ? 'indicios' : 'indicios';
+}
+function estadoExibido(f){
+  const calc=calcEstadoProbatorio(f);
+  const ov=f.estadoProbatorio&&f.estadoProbatorio.override;
+  return {calc, exibido: ov||calc, override:ov, just:(f.estadoProbatorio&&f.estadoProbatorio.justificativaOverride)||''};
+}
+function enquadramentosAtivos(f){ return (f.enquadramentos||[]).filter(e=>!e.afastado); }
+
+/* recomputa TODAS as pendências (não persistidas) */
+function computePendencias(){
+  const P=[];
+  const push=(codigo,nivel,alvoTipo,alvoId,mensagem)=>P.push({codigo,nivel,alvoTipo,alvoId,mensagem});
+  const fase=doc.processo.faseAtual;
+
+  doc.fatos.forEach(f=>{
+    const ativos=enquadramentosAtivos(f);
+    const est=estadoExibido(f);
+    // P1
+    const semProva=!(f.provaIds&&f.provaIds.length);
+    const overrideJust = f.estadoProbatorio&&f.estadoProbatorio.override&&(f.estadoProbatorio.justificativaOverride||'').trim();
+    if(semProva && !overrideJust)
+      push('P1','critico','fato',f.id,'Fato sem prova vinculada — alegação sem evidência');
+    // P2
+    if(ativos.length===0){
+      const nivel = fase!=='instrucao' ? 'critico':'fragil';
+      push('P2',nivel,'fato',f.id,'Fato sem enquadramento legal');
+    }
+    // P5
+    const semConduta=!(f.condutas&&f.condutas.length) || f.condutas.some(c=>!(c.descricaoConduta||'').trim() || !c.acusadoId);
+    if(semConduta)
+      push('P5','critico','fato',f.id,'Conduta não individualizada — risco de indiciação genérica (nulidade)');
+    // P4
+    if(ativos.length>1 && (!f.multiplicidade||f.multiplicidade.classificacao==='nao_classificada'))
+      push('P4','pendente','fato',f.id,'Multiplicidade de enquadramentos não classificada: concurso formal ou conflito aparente?');
+    // P7
+    const provas=(f.provaIds||[]).map(provaById).filter(Boolean);
+    if(provas.length && provas.every(p=>p.tipo==='indiciaria'||p.tipo==='declaracao_informante'))
+      push('P7','fragil','fato',f.id,'Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo');
+    // P8
+    const cls=f.multiplicidade&&f.multiplicidade.classificacao;
+    if(ativos.length>1 && cls!=='conflito_aparente'){
+      const exig=ativos.map(e=>{const n=normaById(e.normaId);return n?n.elementoSubjetivoExigido:null;});
+      if(exig.includes('dolo') && exig.includes('culpa'))
+        push('P8','critico','fato',f.id,'Alternatividade violada: enquadramentos doloso e culposo simultâneos no mesmo fato');
+    }
+  });
+
+  doc.provas.forEach(p=>{
+    const referenciada=doc.fatos.some(f=>(f.provaIds||[]).includes(p.id));
+    // P3
+    if(!referenciada)
+      push('P3','fragil','prova',p.id,'Prova órfã — não sustenta nenhum fato do mapa');
+    // P6a
+    if(provaTemP6a(p))
+      push('P6a','fragil','prova',p.id,'Prova emprestada com pendência formal (certidão/autorização)');
+    // P6b
+    if(provaTemP6b(p))
+      push('P6b','fragil','prova',p.id,'Acusado não intimado da produção desta prova (art. 119, §4º, PN CGU 27/2022)');
+  });
+  return P;
+}
+
+/* ------------------------------------------------------------------ *
+ * 5. UTILITÁRIOS DE UI
+ * ------------------------------------------------------------------ */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+function el(tag,attrs={},...kids){
+  const e=document.createElement(tag);
+  for(const k in attrs){
+    if(k==='class') e.className=attrs[k];
+    else if(k==='html') e.innerHTML=attrs[k];
+    else if(k.startsWith('on')&&typeof attrs[k]==='function') e.addEventListener(k.slice(2),attrs[k]);
+    else if(attrs[k]!=null) e.setAttribute(k,attrs[k]);
+  }
+  kids.flat().forEach(k=>{ if(k!=null) e.append(k.nodeType?k:document.createTextNode(k)); });
+  return e;
+}
+function svgEl(tag,attrs={}){
+  const e=document.createElementNS('http://www.w3.org/2000/svg',tag);
+  for(const k in attrs) if(attrs[k]!=null) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function iniciais(nome){ return (nome||'?').trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase()||'?'; }
+function nomeAcusado(id){ const a=acusadoById(id); return a?(a.nome||id):id; }
+
+/* ------------------------------------------------------------------ *
+ * 6. RENDER PRINCIPAL
+ * ------------------------------------------------------------------ */
+let PENDENCIAS=[];
+function render(){
+  PENDENCIAS=computePendencias();
+  renderHero();
+  renderLens();
+  renderMap();
+  renderPanel();
+  scheduleSave();
+}
+
+function renderHero(){
+  const p=doc.processo;
+  $('#tagProc').textContent='nº '+(p.numero||'—');
+  const tipoLbl=p.tipo==='PAD'?'PAD':'Sindicância acusatória';
+  $('#tagTipo').textContent=tipoLbl+' · '+(p.rito||'');
+  const faseLbl={instrucao:'Instrução',indiciacao_em_elaboracao:'Indiciação em elaboração',encerrado:'Encerrado'}[p.faseAtual]||p.faseAtual;
+  $('#tagFase').textContent='Fase: '+faseLbl;
+}
+
+function renderLens(){
+  const box=$('#lensChips'); box.innerHTML='';
+  const mk=(id,label,ava)=>{
+    const c=el('button',{class:'chip'+(lens===id?' active':''),onclick:()=>{lens=id;isolatedFato=null;render();}});
+    if(ava) c.append(el('span',{class:'ava'},ava));
+    c.append(label); return c;
+  };
+  box.append(mk('todos','Todos'));
+  doc.acusados.forEach(a=>box.append(mk(a.id, a.nome||a.id, iniciais(a.nome))));
+}
+
+/* ---------- MAPA SVG ---------- */
+const COL={fato:40, prova:0, norma:0}; // x calculado no render conforme largura
+const CARD_W=300, CARD_H=76, GAP_Y=18, TOP=16;
+
+function fatosVisiveis(){
+  let fs=doc.fatos.slice();
+  if(lens!=='todos') fs=fs.filter(f=>(f.condutas||[]).some(c=>c.acusadoId===lens));
+  if(searchTerm){
+    const t=searchTerm.toLowerCase();
+    fs=fs.filter(f=>((f.titulo||'')+' '+(f.descricao||'')).toLowerCase().includes(t));
+  }
+  return fs;
+}
+function renderMap(){
+  const svg=$('#map'); svg.innerHTML='';
+  const wrap=$('#canvasWrap');
+  const hasData=doc.fatos.length||doc.provas.length;
+  $('#emptyState').style.display=hasData?'none':'flex';
+  if(!hasData){ svg.setAttribute('width',0); svg.setAttribute('height',0); return; }
+
+  const totalW=Math.max(wrap.clientWidth, 980);
+  const colW=totalW/3;
+  const xF=colW*0.5-CARD_W/2, xP=colW*1.5-CARD_W/2, xN=colW*2.5-CARD_W/2;
+
+  const fs=fatosVisiveis();
+  const fSearch=searchTerm.toLowerCase();
+
+  // provas visíveis: referenciadas por fatos visíveis + (em 'todos') órfãs
+  const provaRef=new Set(); fs.forEach(f=>(f.provaIds||[]).forEach(id=>provaRef.add(id)));
+  let provasVis=doc.provas.filter(p=>provaRef.has(p.id));
+  if(lens==='todos'){
+    doc.provas.forEach(p=>{ if(!doc.fatos.some(f=>(f.provaIds||[]).includes(p.id))) provasVis.push(p); });
+    provasVis=[...new Set(provasVis)];
+  }
+  if(searchTerm) provasVis=provasVis.filter(p=>provaRef.has(p.id)||((p.titulo||'')+(p.descricao||'')).toLowerCase().includes(fSearch));
+
+  // normas visíveis: enquadradas (inclui afastadas) em fatos visíveis
+  const normaRef=[]; const seenN=new Set();
+  fs.forEach(f=>(f.enquadramentos||[]).forEach(e=>{ if(!seenN.has(e.normaId)){seenN.add(e.normaId);normaRef.push(e.normaId);} }));
+
+  // posições Y
+  const posF={},posP={},posN={};
+  fs.forEach((f,i)=>posF[f.id]=TOP+i*(CARD_H+GAP_Y));
+  provasVis.forEach((p,i)=>posP[p.id]=TOP+i*(CARD_H+GAP_Y));
+  normaRef.forEach((id,i)=>posN[id]=TOP+i*(CARD_H+GAP_Y));
+
+  const orfas=new Set(doc.provas.filter(p=>!doc.fatos.some(f=>(f.provaIds||[]).includes(p.id))).map(p=>p.id));
+
+  const rows=Math.max(fs.length, provasVis.length, normaRef.length, 1);
+  const height=TOP+rows*(CARD_H+GAP_Y)+40;
+  svg.setAttribute('width',totalW); svg.setAttribute('height',height);
+  svg.setAttribute('viewBox',`0 0 ${totalW} ${height}`);
+
+  // defs
+  const defs=svgEl('defs');
+  defs.innerHTML=`<marker id="xend" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+    <path d="M2,2 L10,10 M10,2 L2,10" stroke="var(--estado-critico)" stroke-width="2" fill="none"/></marker>`;
+  svg.append(defs);
+
+  const gEdges=svgEl('g',{class:'edges'});
+  const gNodes=svgEl('g',{class:'nodes'});
+  svg.append(gEdges,gNodes);
+
+  const pendByFato=id=>PENDENCIAS.filter(p=>p.alvoTipo==='fato'&&p.alvoId===id);
+  const pendByProva=id=>PENDENCIAS.filter(p=>p.alvoTipo==='prova'&&p.alvoId===id);
+
+  // ---- ARESTAS ----
+  function bezier(x1,y1,x2,y2){
+    const mx=(x1+x2)/2;
+    return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
+  }
+  fs.forEach(f=>{
+    const fy=posF[f.id]+CARD_H/2, fxr=xF+CARD_W;
+    // fato → prova
+    (f.provaIds||[]).forEach(pid=>{
+      if(posP[pid]==null) return;
+      const p=provaById(pid); if(!p) return;
+      const direta=provaEhDireta(p)&&!provaTemP6a(p)&&!provaTemP6b(p);
+      const path=svgEl('path',{d:bezier(fxr,fy,xP,posP[pid]+CARD_H/2),
+        class:'edge','data-fato':f.id,fill:'none',
+        stroke:direta?'var(--ink-2)':'#9AA3AD',
+        'stroke-width':direta?2.5:1.5,
+        'stroke-dasharray':direta?'':'6 5'});
+      gEdges.append(path);
+    });
+    // lacuna P1 (sem prova)
+    if(pendByFato(f.id).some(x=>x.codigo==='P1')){
+      const midX=xF+CARD_W+(xP-(xF+CARD_W))/2;
+      gEdges.append(svgEl('path',{d:bezier(fxr,fy,midX,fy),class:'edge','data-fato':f.id,fill:'none',
+        stroke:'var(--estado-critico)','stroke-width':2,'stroke-dasharray':'6 4','marker-end':'url(#xend)'}));
+    }
+    // fato → norma
+    (f.enquadramentos||[]).forEach(e=>{
+      if(posN[e.normaId]==null) return;
+      const afast=!!e.afastado;
+      gEdges.append(svgEl('path',{d:bezier(fxr,fy,xN,posN[e.normaId]+CARD_H/2),
+        class:'edge','data-fato':f.id,fill:'none',
+        stroke:'var(--cor-norma)','stroke-width':afast?1.5:2,
+        'stroke-dasharray':afast?'5 4':'', opacity:afast?0.4:0.85}));
+    });
+    // lacuna P2 (sem enquadramento ativo)
+    if(pendByFato(f.id).some(x=>x.codigo==='P2')){
+      const midX=xF+CARD_W+(xN-(xF+CARD_W))/2;
+      gEdges.append(svgEl('path',{d:bezier(fxr,fy,midX,fy),class:'edge','data-fato':f.id,fill:'none',
+        stroke:'var(--estado-critico)','stroke-width':2,'stroke-dasharray':'6 4','marker-end':'url(#xend)'}));
+    }
+    // badge P4/P8 sobre o vão fato→norma
+    const pf=pendByFato(f.id);
+    if(pf.some(x=>x.codigo==='P4')||pf.some(x=>x.codigo==='P8')){
+      const bx=xF+CARD_W+(xN-(xF+CARD_W))/2, by=fy-2;
+      const isP8=pf.some(x=>x.codigo==='P8');
+      const c=svgEl('circle',{cx:bx,cy:by,r:11,fill:isP8?'var(--estado-critico)':'var(--estado-pendente)'});
+      const t=svgEl('text',{x:bx,y:by+4,'text-anchor':'middle','font-size':12,fill:'#fff','font-weight':'bold'});
+      t.textContent=isP8?'⚡':'?';
+      const tit=svgEl('title'); tit.textContent=isP8?'P8 — alternatividade violada':'P4 — multiplicidade não classificada';
+      const gb=svgEl('g',{class:'edge','data-fato':f.id}); gb.append(c,t,tit); gEdges.append(gb);
+    }
+  });
+
+  // ---- NÓS ----
+  fs.forEach(f=>drawFatoCard(gNodes,f,xF,posF[f.id],pendByFato(f.id)));
+  provasVis.forEach(p=>{
+    let x=xP; if(orfas.has(p.id)) x+=24; // desalinhamento deliberado (P3)
+    drawProvaCard(gNodes,p,x,posP[p.id],pendByProva(p.id));
+  });
+  normaRef.forEach(id=>{
+    const afast=fs.every(f=>(f.enquadramentos||[]).filter(e=>e.normaId===id).every(e=>e.afastado)) &&
+                fs.some(f=>(f.enquadramentos||[]).some(e=>e.normaId===id));
+    drawNormaCard(gNodes,normaById(id),xN,posN[id],afast);
+  });
+
+  // aplicar isolamento
+  aplicaIsolamento();
+}
+
+function nivelMaisSevero(pends){
+  if(pends.some(p=>p.nivel==='critico')) return 'critico';
+  if(pends.some(p=>p.nivel==='fragil')) return 'fragil';
+  if(pends.some(p=>p.nivel==='pendente')) return 'pendente';
+  return null;
+}
+function cardBase(g,x,y,cat,sev){
+  const node=svgEl('g',{class:'node',tabindex:0,transform:`translate(${x},${y})`});
+  const rect=svgEl('rect',{x:0,y:0,width:CARD_W,height:CARD_H,rx:10,fill:'var(--paper)',
+    stroke:'var(--borda)','stroke-width':1});
+  if(sev==='critico'){ rect.setAttribute('stroke','var(--estado-critico)'); rect.setAttribute('stroke-width',2.5); node.style.filter='drop-shadow(0 3px 6px #0002)'; }
+  else if(sev==='fragil'){ rect.setAttribute('stroke','var(--estado-fragil)'); rect.setAttribute('stroke-width',2); rect.setAttribute('stroke-dasharray','7 4'); }
+  node.append(rect);
+  // barra lateral de categoria (identidade sempre presente)
+  const barCor={fato:'var(--cor-fato)',prova:'var(--cor-prova)',norma:'var(--cor-norma)'}[cat];
+  node.append(svgEl('rect',{x:0,y:0,width:5,height:CARD_H,rx:2,fill:barCor}));
+  g.append(node);
+  return node;
+}
+function txt(node,x,y,s,opts={}){
+  const t=svgEl('text',{x,y,'font-size':opts.size||13,fill:opts.fill||'var(--ink)',
+    'font-weight':opts.weight||'normal','font-family':'var(--fonte)'});
+  t.textContent=truncate(s,opts.max||40);
+  if(opts.title){ const ti=svgEl('title'); ti.textContent=opts.title; t.append(ti); }
+  node.append(t); return t;
+}
+function truncate(s,n){ s=s||''; return s.length>n?s.slice(0,n-1)+'…':s; }
+
+function badge(node,x,y,glyph,color,title){
+  const g=svgEl('g',{transform:`translate(${x},${y})`});
+  const t=svgEl('text',{x:0,y:0,'font-size':14,fill:color||'var(--ink-2)','text-anchor':'middle'});
+  t.textContent=glyph;
+  const ti=svgEl('title'); ti.textContent=title; t.append(ti);
+  g.append(t); node.append(g);
+}
+
+function drawFatoCard(g,f,x,y,pends){
+  const sev=nivelMaisSevero(pends);
+  const node=cardBase(g,x,y,'fato',sev);
+  node.dataset.fato=f.id;
+  // semáforo estado probatório
+  const est=estadoExibido(f);
+  const corSem={suficiente:'#4CAF50',indicios:'#E0A800',ausente:'var(--estado-critico)'}[est.exibido]||'#9AA3AD';
+  const disc=svgEl('circle',{cx:20,cy:24,r:6,fill:corSem});
+  const dt=svgEl('title');
+  dt.textContent = est.override
+    ? `calculado: ${est.calc} — sobrescrito pela comissão: ${est.override}. Justificativa: ${est.just}`
+    : `estado probatório: ${est.exibido}`;
+  disc.append(dt); node.append(disc);
+  txt(node,34,28,f.titulo||'(fato sem título)',{weight:'bold',max:30,title:f.titulo});
+  // linha secundária: chips de acusados OU estado textual
+  const rotEstado={suficiente:'suficiente',indicios:'indícios — in dubio pro societate',ausente:'ausente'}[est.exibido];
+  txt(node,34,46,rotEstado,{size:11,fill:'var(--ink-2)'});
+  // chips de acusados
+  const cond=f.condutas||[];
+  if(cond.length){
+    let cx=34;
+    cond.slice(0,4).forEach(c=>{
+      const ini=iniciais(nomeAcusado(c.acusadoId));
+      const cg=svgEl('g',{transform:`translate(${cx},56)`});
+      cg.append(svgEl('rect',{x:0,y:0,width:22,height:15,rx:7,fill:'#eef1f5'}));
+      const ct=svgEl('text',{x:11,y:11,'font-size':9,'text-anchor':'middle',fill:'#33415a','font-weight':'bold'});
+      ct.textContent=ini; const cti=svgEl('title'); cti.textContent=nomeAcusado(c.acusadoId); ct.append(cti);
+      cg.append(ct); node.append(cg); cx+=26;
+    });
+  }
+  // badges canto sup. direito
+  let bx=CARD_W-16;
+  if(sev==='critico'){ badge(node,bx,20,'⛔','var(--estado-critico)','Pendência crítica'); bx-=20; }
+  else if(sev==='fragil'){ badge(node,bx,20,'⚠','var(--estado-fragil)','Pendência frágil'); bx-=20; }
+  if(pends.some(p=>p.codigo==='P4')){ badge(node,bx,20,'?','var(--estado-pendente)','Decisão de multiplicidade pendente'); bx-=20; }
+  if(pends.some(p=>p.codigo==='P8')){ badge(node,bx,20,'⚡','var(--estado-critico)','Alternatividade violada'); bx-=20; }
+  if(cond.length){ badge(node,bx,40,'👤'+(cond.length>1?'×'+cond.length:''),'var(--ink-2)',cond.length+' acusado(s)'); }
+
+  node.addEventListener('click',ev=>{ ev.stopPropagation(); toggleIsolate(f.id); });
+  node.addEventListener('dblclick',ev=>{ ev.stopPropagation(); abrirFormFato(f.id); });
+  node.addEventListener('keydown',ev=>{ if(ev.key==='Enter'){ev.preventDefault();abrirFormFato(f.id);} });
+  node.addEventListener('mouseenter',()=>hoverHighlight(f.id,true));
+  node.addEventListener('mouseleave',()=>hoverHighlight(f.id,false));
+}
+
+function drawProvaCard(g,p,x,y,pends){
+  const sev=nivelMaisSevero(pends);
+  const node=cardBase(g,x,y,'prova',sev);
+  txt(node,14,26,p.titulo||'(prova sem título)',{weight:'bold',max:32,title:p.titulo});
+  const tipoLbl={documental:'Documental',pericial:'Pericial',testemunhal:'Testemunhal',
+    declaracao_informante:'Declaração de informante',interrogatorio:'Interrogatório',
+    diligencia:'Diligência',emprestada:'Prova emprestada',indiciaria:'Prova indiciária'}[p.tipo]||p.tipo;
+  const ref=p.refAutos&&(p.refAutos.documento||p.refAutos.folhas)?
+    `${p.refAutos.documento||''}${p.refAutos.folhas?' fls. '+p.refAutos.folhas:''}`:'sem ref. autos';
+  txt(node,14,45,tipoLbl+' · '+ref,{size:11,fill:'var(--ink-2)',max:38});
+  let bx=CARD_W-16;
+  if(sev==='fragil'){ badge(node,bx,20,'⚠','var(--estado-fragil)','Pendência frágil'); bx-=20; }
+  if((p.hashVeritas||'').trim()){ badge(node,bx,20,'🔗','var(--cor-prova)','Hash Veritas preenchido'); bx-=20; }
+  if((p.trechosSignificativos||[]).some(t=>(t.citacao||'').trim())){ badge(node,bx,42,'§','var(--ink-2)','Trechos significativos presentes'); }
+  node.addEventListener('click',ev=>ev.stopPropagation());
+  node.addEventListener('dblclick',ev=>{ ev.stopPropagation(); abrirFormProva(p.id); });
+  node.addEventListener('keydown',ev=>{ if(ev.key==='Enter'){ev.preventDefault();abrirFormProva(p.id);} });
+}
+
+function drawNormaCard(g,n,x,y,afastada){
+  if(!n) return;
+  const node=cardBase(g,x,y,'norma',null);
+  if(afastada) node.style.opacity=0.45;
+  const t=txt(node,14,26,n.rotulo,{weight:'bold',max:34,title:n.rotulo});
+  if(afastada) t.setAttribute('text-decoration','line-through');
+  txt(node,14,45,n.dispositivo,{size:11,fill:'var(--ink-2)',max:40});
+  // pílula de pena
+  const penaLbl={advertencia:'advertência',suspensao:'suspensão',demissao:'demissão'}[n.penaPrevista]||n.penaPrevista;
+  const corP={leve:'#1a56c4',media:'#8a5d0d',grave:'var(--estado-critico)'}[n.gravidade];
+  const bgP={leve:'#e8f0fe',media:'var(--estado-fragil-bg)',grave:'var(--estado-critico-bg)'}[n.gravidade];
+  const pw=penaLbl.length*6+16;
+  node.append(svgEl('rect',{x:CARD_W-pw-12,y:56,width:pw,height:15,rx:7,fill:bgP}));
+  const pt=svgEl('text',{x:CARD_W-pw/2-12,y:67,'font-size':9,'text-anchor':'middle',fill:corP,'font-weight':'bold'});
+  pt.textContent=penaLbl; node.append(pt);
+  if(afastada) badge(node,CARD_W-16,20,'⊘','var(--ink-2)','Enquadramento afastado (conflito aparente resolvido)');
+  node.addEventListener('click',ev=>ev.stopPropagation());
+}
+
+/* isolamento e hover */
+function toggleIsolate(id){ isolatedFato = isolatedFato===id?null:id; aplicaIsolamento(); }
+function aplicaIsolamento(){
+  const svg=$('#map');
+  if(!isolatedFato){ svg.classList.remove('isolating'); return; }
+  svg.classList.add('isolating');
+  $$('.edge',svg).forEach(e=>e.classList.toggle('hl', e.dataset.fato===isolatedFato));
+  $$('.node',svg).forEach(n=>n.classList.toggle('hl', n.dataset.fato===isolatedFato));
+}
+function hoverHighlight(id,on){
+  const svg=$('#map');
+  if(isolatedFato) return;
+  $$('.edge',svg).forEach(e=>{ e.style.opacity = on ? (e.dataset.fato===id?'1':'0.15') : ''; });
+}
+document.addEventListener('click',()=>{ if(isolatedFato){ isolatedFato=null; aplicaIsolamento(); } });
+
+/* ------------------------------------------------------------------ *
+ * 7. PAINEL DE PENDÊNCIAS + CHECKLIST
+ * ------------------------------------------------------------------ */
+function renderPanel(){
+  const crit=PENDENCIAS.filter(p=>p.nivel==='critico');
+  const frag=PENDENCIAS.filter(p=>p.nivel==='fragil');
+  const pend=PENDENCIAS.filter(p=>p.nivel==='pendente');
+  $('#counters').innerHTML='';
+  $('#counters').append(
+    el('span',{class:'counter c'},'🔴 '+crit.length),
+    el('span',{class:'counter f'},'🟡 '+frag.length),
+    el('span',{class:'counter p'},'🔵 '+pend.length));
+  $('#fabCount').textContent=`(${crit.length+frag.length+pend.length})`;
+
+  const list=$('#pendList'); list.innerHTML='';
+  if(!PENDENCIAS.length){
+    list.append(el('div',{class:'selo-ok'},'✓ instrução íntegra'));
+  }else{
+    const grupos=[['crítico',crit],['frágil',frag],['pendente',pend]];
+    grupos.forEach(([nome,arr])=>{
+      if(!arr.length) return;
+      list.append(el('div',{class:'pend-group-title'},nome+' ('+arr.length+')'));
+      arr.forEach(p=>{
+        const key=p.codigo+':'+p.alvoId;
+        const alvoLbl=p.alvoTipo==='fato'
+          ? p.alvoId+' — '+(doc.fatos.find(f=>f.id===p.alvoId)||{}).titulo
+          : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
+        const item=el('div',{class:'pend lvl-'+p.nivel+(revisadas.has(key)?' revisado':''),
+          onclick:()=>focarNo(p)});
+        item.append(el('div',{},el('span',{class:'code'},p.codigo), p.mensagem));
+        item.append(el('div',{class:'alvo'},alvoLbl));
+        if(p.nivel==='fragil'){
+          item.append(el('button',{class:'btn ghost small rev-btn',onclick:(e)=>{
+            e.stopPropagation();
+            if(revisadas.has(key)) revisadas.delete(key); else revisadas.add(key);
+            renderPanel();
+          }}, revisadas.has(key)?'✓ revisado':'marcar revisado'));
+        }
+        list.append(item);
+      });
+    });
+  }
+  renderChecklist();
+}
+
+function focarNo(p){
+  const svg=$('#map');
+  const nodes=$$('.node',svg);
+  let target=null;
+  nodes.forEach(n=>{ if(n.dataset.fato===p.alvoId) target=n; });
+  if(!target){ // provas não têm data-fato; localizar por índice
+    // re-render garante presença; buscamos por posição via título simples: destacar todos e piscar o alvo por transform
+  }
+  isolatedFato=null; aplicaIsolamento();
+  // encontra o nó correspondente (fato por data-fato; prova/norma: por ordem)
+  let node=null;
+  if(p.alvoTipo==='fato') node=nodes.find(n=>n.dataset.fato===p.alvoId);
+  if(node){
+    const wrap=$('#canvasWrap');
+    const m=/translate\(([\d.]+),([\d.]+)\)/.exec(node.getAttribute('transform'))||[];
+    if(m[2]) wrap.scrollTo({top:Math.max(0,+m[2]-wrap.clientHeight/2+CARD_H),behavior:'smooth'});
+    flash(node);
+  }
+}
+function flash(node){
+  const r=node.querySelector('rect');
+  const orig=r.getAttribute('stroke'), ow=r.getAttribute('stroke-width');
+  let n=0; const iv=setInterval(()=>{
+    r.setAttribute('stroke', n%2? 'var(--estado-pendente)':orig);
+    r.setAttribute('stroke-width', n%2?4:ow);
+    if(++n>4){ clearInterval(iv); r.setAttribute('stroke',orig); r.setAttribute('stroke-width',ow); }
+  },200);
+}
+
+function renderChecklist(){
+  const box=$('#checklist'); box.innerHTML='';
+  box.append(el('h3',{},'Checklist de encerramento'));
+  const ac=doc.acusados;
+  const c1 = ac.length>0 && ac.every(a=>a.notificacaoPrevia&&a.notificacaoPrevia.realizada);
+  const c2 = ac.length>0 && ac.every(a=>a.interrogatorio&&['realizado','silencio_formalizado'].includes(a.interrogatorio.status)&&a.interrogatorio.aposTodasAsProvas===true);
+  const criticas=PENDENCIAS.filter(p=>['P1','P2','P5','P8'].includes(p.codigo)&&p.nivel==='critico');
+  const c3 = criticas.length===0;
+  const frags=PENDENCIAS.filter(p=>p.nivel==='fragil');
+  const c4 = frags.length>0 ? frags.every(p=>revisadas.has(p.codigo+':'+p.alvoId)) : true;
+  const c5 = PENDENCIAS.filter(p=>p.codigo==='P4').length===0;
+  const items=[
+    [c1,'Notificação prévia registrada para todos os acusados'],
+    [c2,'Interrogatório realizado/silêncio formalizado para todos, após todas as provas'],
+    [c3,'Zero pendências críticas (P1, P2, P5, P8)'],
+    [c4,'Pendências frágeis todas marcadas como revisadas'],
+    [c5,'Multiplicidades classificadas (zero P4)'],
+  ];
+  items.forEach(([ok,txt])=>{
+    box.append(el('div',{class:'check '+(ok?'ok':'no')},
+      el('span',{class:'mk'},ok?'✓':''), el('span',{},txt)));
+  });
+  const temCritica=PENDENCIAS.some(p=>p.nivel==='critico');
+  const btn=el('button',{class:'btn primary',onclick:()=>gerarMinutaFlow()},'Gerar minuta do termo de indiciação');
+  if(temCritica){ btn.disabled=true; btn.title='Há pendências críticas que impedem a indiciação. Veja o painel.'; }
+  box.append(btn);
+}
+
+/* ------------------------------------------------------------------ *
+ * 8. MODAIS GENÉRICOS
+ * ------------------------------------------------------------------ */
+function openModal(node){ const m=$('#modal'); m.innerHTML=''; m.append(node); $('#overlay').classList.add('open'); }
+function closeModal(){ $('#overlay').classList.remove('open'); }
+$('#overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); if($('#printview').classList.contains('open'))closePrint(); }});
+
+function modalShell(titulo,cat,bodyKids,footKids){
+  const catDot=cat?el('span',{class:'cat-dot',style:`background:var(--cor-${cat})`}):null;
+  return el('div',{class:'modal '+(cat==='fato'?'wide':'')},
+    el('div',{class:'modal-head'}, catDot, el('h2',{},titulo),
+      el('button',{class:'btn ghost x',onclick:closeModal},'✕')),
+    el('div',{class:'modal-body'}, ...bodyKids),
+    el('div',{class:'modal-foot'}, ...footKids));
+}
+function fieldText(label,val,oninput,hint,type='text'){
+  const inp=el('input',{type,value:val||'',oninput:e=>oninput(e.target.value)});
+  return el('div',{class:'field'}, el('label',{},label), inp, hint?el('div',{class:'hint'},hint):null);
+}
+function fieldArea(label,val,oninput,hint,max){
+  const ta=el('textarea',{oninput:e=>{oninput(e.target.value); if(max)cnt.textContent=e.target.value.length+' car.';}});
+  ta.value=val||'';
+  const cnt=el('div',{class:'count'},(val||'').length+' car.');
+  return el('div',{class:'field'}, el('label',{},label), ta, hint?el('div',{class:'hint'},hint):null, max?cnt:null);
+}
+function fieldSelect(label,val,opts,onchange){
+  const sel=el('select',{onchange:e=>onchange(e.target.value)});
+  opts.forEach(([v,t])=>{ const o=el('option',{value:v},t); if(v===val)o.selected=true; sel.append(o); });
+  return el('div',{class:'field'}, el('label',{},label), sel);
+}
+
+/* ------------------------------------------------------------------ *
+ * 9. FORMULÁRIO DE ACUSADO
+ * ------------------------------------------------------------------ */
+function abrirFormAcusado(id){
+  const novo=!id;
+  const a = novo ? {id:genId('A'),nome:'',matricula:'',cargo:'',lotacao:'',qualificacaoComplementar:'',
+    notificacaoPrevia:{realizada:false,data:'',refAutos:''},
+    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null}} : JSON.parse(JSON.stringify(acusadoById(id)));
+  const body=[
+    el('div',{class:'row2'}, fieldText('Nome',a.nome,v=>a.nome=v), fieldText('Matrícula (SIAPE)',a.matricula,v=>a.matricula=v)),
+    el('div',{class:'row2'}, fieldText('Cargo',a.cargo,v=>a.cargo=v), fieldText('Lotação',a.lotacao,v=>a.lotacao=v)),
+    fieldArea('Qualificação complementar',a.qualificacaoComplementar,v=>a.qualificacaoComplementar=v),
+    el('div',{class:'block'},
+      el('div',{class:'block-title'},'Notificação prévia'),
+      el('div',{class:'row3'},
+        el('div',{class:'field'}, el('label',{},'Realizada?'),
+          el('div',{class:'radios'},
+            radio('notif',a.notificacaoPrevia.realizada,true,'Sim',v=>a.notificacaoPrevia.realizada=v),
+            radio('notif',a.notificacaoPrevia.realizada,false,'Não',v=>a.notificacaoPrevia.realizada=v))),
+        fieldText('Data',a.notificacaoPrevia.data,v=>a.notificacaoPrevia.data=v,null,'date'),
+        fieldText('Ref. autos',a.notificacaoPrevia.refAutos,v=>a.notificacaoPrevia.refAutos=v))),
+    el('div',{class:'block'},
+      el('div',{class:'block-title'},'Interrogatório'),
+      el('div',{class:'row2'},
+        fieldSelect('Status',a.interrogatorio.status,[['pendente','Pendente'],['realizado','Realizado'],
+          ['silencio_formalizado','Silêncio formalizado'],['cancelado','Cancelado']],v=>a.interrogatorio.status=v),
+        fieldText('Data',a.interrogatorio.data,v=>a.interrogatorio.data=v,null,'date')),
+      el('div',{class:'row2'},
+        fieldText('Ref. autos',a.interrogatorio.refAutos,v=>a.interrogatorio.refAutos=v),
+        el('div',{class:'field'}, el('label',{},'Realizado após todas as provas?'),
+          el('div',{class:'radios'},
+            radio('apos',a.interrogatorio.aposTodasAsProvas,true,'Sim',v=>a.interrogatorio.aposTodasAsProvas=v),
+            radio('apos',a.interrogatorio.aposTodasAsProvas,false,'Não',v=>a.interrogatorio.aposTodasAsProvas=v))))),
+  ];
+  const foot=[
+    novo?null:el('button',{class:'btn danger',onclick:()=>{ if(confirm('Excluir este acusado? As condutas vinculadas a ele nos fatos serão removidas.')){ excluirAcusado(id); closeModal(); }}},'Excluir'),
+    el('span',{class:'err-msg',id:'accErr'}),
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!(a.nome||'').trim()){ $('#accErr').textContent='Informe o nome do acusado.'; return; }
+      const i=doc.acusados.findIndex(x=>x.id===a.id);
+      if(i>=0) doc.acusados[i]=a; else doc.acusados.push(a);
+      closeModal(); render();
+    }},'Salvar')
+  ];
+  openModal(modalShell(novo?'Novo acusado':'Editar acusado',null,body,foot));
+}
+function radio(name,cur,val,label,onset){
+  const r=el('input',{type:'radio',name:name+Math.random().toString(36).slice(2,6)});
+  r.checked = cur===val;
+  r.addEventListener('change',()=>{ if(r.checked) onset(val); });
+  return el('label',{}, r, label);
+}
+function excluirAcusado(id){
+  doc.acusados=doc.acusados.filter(a=>a.id!==id);
+  doc.fatos.forEach(f=>f.condutas=(f.condutas||[]).filter(c=>c.acusadoId!==id));
+  if(lens===id) lens='todos';
+  render();
+}
+
+/* ------------------------------------------------------------------ *
+ * 10. FORMULÁRIO DE PROVA
+ * ------------------------------------------------------------------ */
+function abrirFormProva(id, onSaveNew){
+  const novo=!id;
+  const p = novo ? {id:genId('P'),tipo:'documental',titulo:'',descricao:'',
+    refAutos:{documento:'',folhas:''},hashVeritas:'',trechosSignificativos:[],
+    contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{}} : JSON.parse(JSON.stringify(provaById(id)));
+
+  const detBox=el('div',{class:'block'});
+  function renderDetalhe(){
+    detBox.innerHTML=''; detBox.append(el('div',{class:'block-title'},'Detalhes do tipo'));
+    const d=p.detalhe;
+    if(p.tipo==='testemunhal'||p.tipo==='declaracao_informante'){
+      if(d.deponente===undefined) Object.assign(d,{deponente:'',compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}});
+      detBox.append(
+        fieldText('Deponente',d.deponente,v=>d.deponente=v),
+        el('div',{class:'field'}, el('label',{},'Compromissada?'),
+          el('div',{class:'radios'}, radio('comp',d.compromissada,true,'Sim',v=>d.compromissada=v),
+            radio('comp',d.compromissada,false,'Não',v=>d.compromissada=v))),
+        el('div',{class:'row3'},
+          el('div',{class:'field'}, el('label',{},'Houve contradita?'),
+            el('div',{class:'radios'}, radio('cd',d.contradita.houve,true,'Sim',v=>d.contradita.houve=v),
+              radio('cd',d.contradita.houve,false,'Não',v=>d.contradita.houve=v))),
+          el('div',{class:'field'}, el('label',{},'Acolhida?'),
+            el('div',{class:'radios'}, radio('ca',d.contradita.acolhida,true,'Sim',v=>d.contradita.acolhida=v),
+              radio('ca',d.contradita.acolhida,false,'Não',v=>d.contradita.acolhida=v))),
+          fieldText('Ref. autos',d.contradita.refAutos,v=>d.contradita.refAutos=v)));
+    } else if(p.tipo==='emprestada'){
+      if(d.processoOrigem===undefined) Object.assign(d,{processoOrigem:'',certidaoJuntada:false,origemJudicial:false,autorizacaoJudicial:'nao_aplicavel'});
+      detBox.append(
+        fieldText('Processo de origem',d.processoOrigem,v=>d.processoOrigem=v),
+        el('div',{class:'row2'},
+          el('div',{class:'field'}, el('label',{},'Certidão de juntada?'),
+            el('div',{class:'radios'}, radio('cj',d.certidaoJuntada,true,'Sim',v=>{d.certidaoJuntada=v;}),
+              radio('cj',d.certidaoJuntada,false,'Não',v=>{d.certidaoJuntada=v;}))),
+          el('div',{class:'field'}, el('label',{},'Origem judicial?'),
+            el('div',{class:'radios'}, radio('oj',d.origemJudicial,true,'Sim',v=>d.origemJudicial=v),
+              radio('oj',d.origemJudicial,false,'Não',v=>d.origemJudicial=v)))),
+        fieldSelect('Autorização judicial',d.autorizacaoJudicial,
+          [['nao_aplicavel','Não aplicável'],['pendente','Pendente'],['juntada','Juntada']],v=>d.autorizacaoJudicial=v));
+    } else if(p.tipo==='indiciaria'){
+      if(d.fatoSecundarioProvado===undefined) Object.assign(d,{fatoSecundarioProvado:'',raciocinioIndutivo:''});
+      detBox.append(
+        fieldArea('Fato secundário provado',d.fatoSecundarioProvado,v=>d.fatoSecundarioProvado=v),
+        fieldArea('Raciocínio indutivo',d.raciocinioIndutivo,v=>d.raciocinioIndutivo=v,'Explicite a inferência: do fato provado, o que se conclui e por quê.'));
+    } else if(p.tipo==='pericial'){
+      if(d.perito===undefined) Object.assign(d,{perito:'',quesitos:true});
+      detBox.append(fieldText('Perito',d.perito,v=>d.perito=v),
+        el('div',{class:'field'}, el('label',{},'Quesitos formulados?'),
+          el('div',{class:'radios'}, radio('q',d.quesitos,true,'Sim',v=>d.quesitos=v),
+            radio('q',d.quesitos,false,'Não',v=>d.quesitos=v))));
+    } else {
+      detBox.append(el('div',{class:'hint'},'Este tipo de prova não possui campos adicionais.'));
+    }
+  }
+  renderDetalhe();
+
+  // trechos significativos
+  const trechosBox=el('div',{class:'block'});
+  function renderTrechos(){
+    trechosBox.innerHTML=''; trechosBox.append(el('div',{class:'block-title'},'Trechos significativos'));
+    p.trechosSignificativos.forEach((t,i)=>{
+      trechosBox.append(el('div',{class:'subrow'},
+        el('div',{}, el('label',{style:'font-size:11px'},'Citação'),
+          (()=>{const ta=el('textarea',{style:'min-height:44px',oninput:e=>t.citacao=e.target.value});ta.value=t.citacao||'';return ta;})()),
+        el('div',{}, el('label',{style:'font-size:11px'},'Ref.'),
+          el('input',{type:'text',value:t.ref||'',oninput:e=>t.ref=e.target.value})),
+        el('span',{}),
+        el('button',{class:'btn ghost small danger',onclick:()=>{p.trechosSignificativos.splice(i,1);renderTrechos();}},'✕')));
+    });
+    trechosBox.append(el('button',{class:'btn small',onclick:()=>{p.trechosSignificativos.push({citacao:'',ref:''});renderTrechos();}},'+ trecho'));
+  }
+  renderTrechos();
+
+  const body=[
+    fieldSelect('Tipo de prova',p.tipo,[
+      ['documental','Documental'],['pericial','Pericial'],['testemunhal','Testemunhal'],
+      ['declaracao_informante','Declaração de informante'],['interrogatorio','Interrogatório'],
+      ['diligencia','Diligência'],['emprestada','Prova emprestada'],['indiciaria','Prova indiciária']
+    ],v=>{p.tipo=v;p.detalhe={};renderDetalhe();}),
+    fieldText('Título',p.titulo,v=>p.titulo=v),
+    fieldArea('Descrição',p.descricao,v=>p.descricao=v),
+    el('div',{class:'row2'},
+      fieldText('Documento (ref. autos)',p.refAutos.documento,v=>p.refAutos.documento=v),
+      fieldText('Folhas',p.refAutos.folhas,v=>p.refAutos.folhas=v)),
+    fieldText('🔗 Hash Veritas Digital - Coger',p.hashVeritas,v=>p.hashVeritas=v,'Referência manual ao hash do item no Veritas (sem integração automática).'),
+    detBox,
+    trechosBox,
+    el('div',{class:'field'}, el('label',{},'Contraditório — acusado intimado da produção?'),
+      el('div',{class:'radios'},
+        radio('ci',p.contraditorio.acusadoIntimado,true,'Intimado',v=>p.contraditorio.acusadoIntimado=v),
+        radio('ci',p.contraditorio.acusadoIntimado,false,'Não intimado',v=>p.contraditorio.acusadoIntimado=v),
+        radio('ci',p.contraditorio.acusadoIntimado,null,'Não avaliado',v=>p.contraditorio.acusadoIntimado=v))),
+  ];
+  const foot=[
+    novo?null:el('button',{class:'btn danger',onclick:()=>excluirProvaFlow(id)},'Excluir'),
+    el('span',{class:'err-msg',id:'provErr'}),
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!(p.titulo||'').trim()){ $('#provErr').textContent='Informe o título da prova.'; return; }
+      const i=doc.provas.findIndex(x=>x.id===p.id);
+      if(i>=0) doc.provas[i]=p; else doc.provas.push(p);
+      closeModal(); render();
+      if(novo && onSaveNew) onSaveNew(p.id);
+    }},'Salvar')
+  ];
+  openModal(modalShell(novo?'Nova prova':'Editar prova','prova',body,foot));
+}
+function excluirProvaFlow(id){
+  const fatosAfetados=doc.fatos.filter(f=>(f.provaIds||[]).includes(id));
+  const msg=fatosAfetados.length
+    ? `Esta prova sustenta ${fatosAfetados.length} fato(s): ${fatosAfetados.map(f=>f.id).join(', ')}. Excluí-la pode disparar a pendência P1 (fato sem prova). Confirmar exclusão?`
+    : 'Excluir esta prova órfã?';
+  if(!confirm(msg)) return;
+  doc.provas=doc.provas.filter(p=>p.id!==id);
+  doc.fatos.forEach(f=>f.provaIds=(f.provaIds||[]).filter(x=>x!==id));
+  closeModal(); render();
+}
+
+/* ------------------------------------------------------------------ *
+ * 11. FORMULÁRIO DE FATO (+ enquadramentos + wizard)
+ * ------------------------------------------------------------------ */
+function abrirFormFato(id){
+  const novo=!id;
+  const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+    condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
+    enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
+    elementosBuscados:''} : JSON.parse(JSON.stringify(doc.fatos.find(x=>x.id===id)));
+
+  // --- bloco condutas ---
+  const condBox=el('div',{class:'block'});
+  function renderCond(){
+    condBox.innerHTML=''; condBox.append(el('div',{class:'block-title'},'Condutas individualizadas (uma por acusado)'));
+    if(!doc.acusados.length) condBox.append(el('div',{class:'hint'},'Cadastre acusados primeiro (+ acusado).'));
+    f.condutas.forEach((c,i)=>{
+      condBox.append(el('div',{class:'subrow'},
+        (()=>{const s=el('select',{onchange:e=>c.acusadoId=e.target.value});
+          el('option',{value:''},'—');
+          doc.acusados.forEach(a=>{const o=el('option',{value:a.id},a.nome||a.id);if(a.id===c.acusadoId)o.selected=true;s.append(o);});
+          return s;})(),
+        (()=>{const ta=el('textarea',{style:'min-height:44px',placeholder:'conduta individualizada',oninput:e=>c.descricaoConduta=e.target.value});ta.value=c.descricaoConduta||'';return ta;})(),
+        (()=>{const s=el('select',{onchange:e=>c.modalidade=e.target.value});
+          [['comissiva','Comissiva'],['omissiva','Omissiva']].forEach(([v,t])=>{const o=el('option',{value:v},t);if(v===c.modalidade)o.selected=true;s.append(o);});
+          return s;})(),
+        el('button',{class:'btn ghost small danger',onclick:()=>{f.condutas.splice(i,1);renderCond();}},'✕')));
+    });
+    condBox.append(el('button',{class:'btn small',onclick:()=>{f.condutas.push({acusadoId:'',descricaoConduta:'',modalidade:'comissiva'});renderCond();}},'+ conduta'));
+  }
+  renderCond();
+
+  // --- bloco provas ---
+  const provBox=el('div',{class:'block'});
+  function renderProv(){
+    provBox.innerHTML=''; provBox.append(el('div',{class:'block-title'},'Provas vinculadas'));
+    const ms=el('div',{class:'multiselect'});
+    if(!doc.provas.length) ms.append(el('div',{class:'hint'},'Nenhuma prova cadastrada ainda.'));
+    doc.provas.forEach(p=>{
+      const cb=el('input',{type:'checkbox'}); cb.checked=f.provaIds.includes(p.id);
+      cb.addEventListener('change',()=>{ if(cb.checked){if(!f.provaIds.includes(p.id))f.provaIds.push(p.id);} else f.provaIds=f.provaIds.filter(x=>x!==p.id); });
+      ms.append(el('label',{class:'ms-item'}, cb, `${p.id} · ${p.titulo||'(sem título)'} — ${p.tipo}`));
+    });
+    provBox.append(ms, el('button',{class:'btn small',onclick:()=>abrirFormProva(null,(pid)=>{f.provaIds.push(pid);
+      // reabrir fato preservando edições exige regravar; simplificação: salva fato atual e reabre
+    })},'+ criar prova daqui'));
+  }
+  renderProv();
+
+  // --- bloco enquadramentos ---
+  const enqBox=el('div',{class:'block'});
+  const wizardBanner=el('div',{});
+  function renderEnq(){
+    enqBox.innerHTML=''; enqBox.append(el('div',{class:'block-title'},'Enquadramentos legais'));
+    (f.enquadramentos||[]).forEach((e,i)=>{
+      const n=normaById(e.normaId);
+      const item=el('div',{class:'block',style:'margin-bottom:8px;'+(e.afastado?'opacity:.55':'')});
+      // select de norma agrupado
+      const sel=el('select',{onchange:ev=>{e.normaId=ev.target.value;renderEnq();}});
+      GRUPOS.forEach((gLabel,gi)=>{
+        if(!gLabel) return;
+        const ns=doc.catalogoNormas.filter(x=>grupoDaNorma(x.id)===gi);
+        if(!ns.length) return;
+        const og=el('optgroup',{label:gLabel});
+        ns.forEach(x=>{const o=el('option',{value:x.id},`${x.dispositivo} — ${x.rotulo}`);if(x.id===e.normaId)o.selected=true;og.append(o);});
+        sel.append(og);
+      });
+      const pillG = n?el('span',{class:'pill '+n.gravidade}, n.gravidade+' · '+({advertencia:'advertência',suspensao:'suspensão',demissao:'demissão'}[n.penaPrevista]||n.penaPrevista)):null;
+      item.append(el('div',{class:'field'}, el('label',{},'Norma '+(e.afastado?'(AFASTADA — '+(e.principioAfastamento||'')+')':'')), sel, pillG?el('div',{style:'margin-top:6px'},pillG):null));
+      // radio elemento subjetivo
+      const warn=el('div',{class:'inline-warn'});
+      const esWrap=el('div',{class:'field'}, el('label',{},'Elemento subjetivo *'),
+        el('div',{class:'radios'},
+          ...[['dolo_direto','Dolo direto'],['dolo_eventual','Dolo eventual'],['negligencia','Negligência'],['imprudencia','Imprudência'],['impericia','Imperícia']]
+            .map(([v,t])=>{const r=el('input',{type:'radio'});r.checked=e.elementoSubjetivo===v;
+              r.addEventListener('change',()=>{if(r.checked){e.elementoSubjetivo=v;checkES();}});
+              return el('label',{}, r, t);})), warn);
+      function checkES(){
+        warn.classList.remove('show'); if(!n||!e.elementoSubjetivo) return;
+        const ehDolo=e.elementoSubjetivo.startsWith('dolo');
+        const exig=n.elementoSubjetivoExigido;
+        if(exig==='dolo'&&!ehDolo){ warn.textContent='⚠ '+n.dispositivo+' exige DOLO. '+(n.notasEnquadramento||''); warn.classList.add('show'); }
+        else if(exig==='culpa'&&ehDolo){ warn.textContent='⚠ '+n.dispositivo+' é de natureza CULPOSA. '+(n.notasEnquadramento||''); warn.classList.add('show'); }
+      }
+      item.append(esWrap); checkES();
+      item.append(fieldArea('Fundamentação',e.fundamentacao,v=>e.fundamentacao=v));
+      if(n&&n.notasEnquadramento) item.append(el('div',{class:'hint'},'Nota: '+n.notasEnquadramento));
+      item.append(el('button',{class:'btn ghost small danger',onclick:()=>{f.enquadramentos.splice(i,1);syncMultip();renderEnq();}},'✕ remover enquadramento'));
+      enqBox.append(item);
+    });
+    enqBox.append(el('button',{class:'btn small',onclick:()=>{
+      f.enquadramentos.push({normaId:doc.catalogoNormas[0].id,elementoSubjetivo:'',fundamentacao:''});
+      syncMultip(); renderEnq();
+    }},'+ enquadramento'));
+    renderWizardBanner();
+  }
+  function syncMultip(){
+    const ativos=f.enquadramentos.filter(e=>!e.afastado);
+    if(ativos.length<2 && f.multiplicidade){ f.multiplicidade.classificacao='nao_classificada'; f.multiplicidade.principioAplicado=null; f.multiplicidade.normaPrevalente=null; }
+  }
+  function renderWizardBanner(){
+    wizardBanner.innerHTML='';
+    const ativos=f.enquadramentos.filter(e=>!e.afastado);
+    if(ativos.length>1){
+      const cls=f.multiplicidade.classificacao;
+      const lbl={nao_classificada:'não classificada',concurso_formal:'concurso formal',conflito_aparente:'conflito aparente'}[cls];
+      wizardBanner.append(el('div',{class:'banner '+(cls==='nao_classificada'?'warn':'info')},
+        el('span',{},'⚖'),
+        el('div',{},el('b',{},'Multiplicidade de enquadramentos: '),
+          cls==='nao_classificada'?'este fato tem 2+ enquadramentos ativos. Classifique: concurso formal ou conflito aparente?':'classificação atual: '+lbl+'.',
+          el('div',{style:'margin-top:6px'}, el('button',{class:'btn small primary',onclick:()=>abrirWizard(f,renderEnq)},cls==='nao_classificada'?'Abrir wizard de multiplicidade':'Reabrir wizard')))));
+    }
+  }
+  renderEnq();
+
+  // --- estado probatório override ---
+  const estBox=el('div',{class:'block'});
+  function renderEst(){
+    estBox.innerHTML='';
+    const calc=calcEstadoProbatorio(f);
+    f.estadoProbatorio.calculado=calc;
+    estBox.append(el('div',{class:'block-title'},'Estado probatório'),
+      el('div',{class:'hint'},'Calculado automaticamente: '+calc));
+    const sel=el('select',{onchange:e=>{f.estadoProbatorio.override=e.target.value||null;renderEst();}});
+    [['','(usar calculado: '+calc+')'],['suficiente','Sobrescrever: suficiente'],['indicios','Sobrescrever: indícios'],['ausente','Sobrescrever: ausente']]
+      .forEach(([v,t])=>{const o=el('option',{value:v},t);if((f.estadoProbatorio.override||'')===v)o.selected=true;sel.append(o);});
+    estBox.append(el('div',{class:'field'}, el('label',{},'Override da comissão'), sel));
+    if(f.estadoProbatorio.override){
+      estBox.append(fieldArea('Justificativa do override (obrigatória)',f.estadoProbatorio.justificativaOverride,v=>f.estadoProbatorio.justificativaOverride=v));
+    }
+    // elementos buscados quando estado != suficiente
+    const exib=f.estadoProbatorio.override||calc;
+    if(exib!=='suficiente')
+      estBox.append(fieldArea('Elementos buscados (alimenta a pauta do Oitiva 360)',f.elementosBuscados,v=>f.elementosBuscados=v,'O que falta provar? Vira "elementos buscados" da próxima oitiva.'));
+  }
+  renderEst();
+
+  const body=[
+    fieldText('Título',f.titulo,v=>f.titulo=v),
+    fieldArea('Descrição pormenorizada',f.descricao,v=>f.descricao=v,'delineamento fático claro e individualizado — STJ, MS 13.110/DF',true),
+    el('div',{class:'row3'},
+      fieldText('Início do período',f.periodo.inicio,v=>f.periodo.inicio=v,null,'date'),
+      fieldText('Fim do período',f.periodo.fim,v=>f.periodo.fim=v,null,'date'),
+      fieldText('Local',f.local,v=>f.local=v)),
+    condBox, provBox, wizardBanner, enqBox, estBox
+  ];
+  const foot=[
+    novo?null:el('button',{class:'btn danger',onclick:()=>{ if(confirm('Excluir este fato?')){ doc.fatos=doc.fatos.filter(x=>x.id!==id); closeModal(); render(); }}},'Excluir'),
+    el('span',{class:'err-msg',id:'fatoErr'}),
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!(f.titulo||'').trim()){ $('#fatoErr').textContent='Informe o título do fato.'; return; }
+      if(f.estadoProbatorio.override && !(f.estadoProbatorio.justificativaOverride||'').trim()){
+        $('#fatoErr').textContent='O override do estado probatório exige justificativa.'; return; }
+      for(const e of f.enquadramentos){ if(!e.elementoSubjetivo){ $('#fatoErr').textContent='Todo enquadramento exige o elemento subjetivo.'; return; } }
+      const i=doc.fatos.findIndex(x=>x.id===f.id);
+      if(i>=0) doc.fatos[i]=f; else doc.fatos.push(f);
+      closeModal(); render();
+    }},'Salvar')
+  ];
+  openModal(modalShell(novo?'Novo fato':'Editar fato — '+f.id,'fato',body,foot));
+}
+
+/* ------------------------------------------------------------------ *
+ * 12. WIZARD DE MULTIPLICIDADE
+ * ------------------------------------------------------------------ */
+function abrirWizard(f, onDone){
+  const ativos=f.enquadramentos.filter(e=>!e.afastado);
+  const m=f.multiplicidade;
+  const step=el('div',{});
+  function passo1(){
+    step.innerHTML='';
+    step.append(
+      el('div',{class:'banner info'}, el('span',{},'⚖'), el('div',{},el('b',{},'Passo 1 — '),'Uma única conduta violou mais de uma hipótese legal?')),
+      el('button',{class:'btn primary',style:'display:block;width:100%;margin-bottom:8px;justify-content:flex-start',
+        onclick:()=>{ m.classificacao='concurso_formal'; m.principioAplicado=null; m.normaPrevalente=null;
+          f.enquadramentos.forEach(e=>{delete e.afastado;delete e.principioAfastamento;});
+          finish(); }},
+        'Sim, e as infrações coexistem → concurso formal'),
+      el('div',{class:'hint',style:'margin:-4px 0 12px'},'Todos os enquadramentos constarão da indiciação; a diferenciação repercute na pena (Manual 10.4.6).'),
+      el('button',{class:'btn',style:'display:block;width:100%;justify-content:flex-start',
+        onclick:passo2},'Não — só uma hipótese deve prevalecer → conflito aparente'));
+  }
+  const PRINC={
+    alternatividade:'Alternatividade — tipos mutuamente excludentes (ex.: dolo × culpa sobre o mesmo fato).',
+    consuncao:'Consunção — a infração mais ampla absorve a etapa prévia/meio.',
+    subsidiariedade:'Subsidiariedade — a norma primária afasta a subsidiária (soldado de reserva).',
+    especialidade:'Especialidade — a norma especial prevalece sobre a geral.'
+  };
+  function passo2(){
+    step.innerHTML='';
+    // sugestões a partir das relações do catálogo
+    const ids=ativos.map(e=>e.normaId);
+    const sugestoes=[];
+    ids.forEach(a=>{ const na=normaById(a); if(!na)return;
+      (na.relacoes||[]).forEach(r=>{ if(ids.includes(r.com) && !sugestoes.some(s=>s.par===r.com+a)){
+        sugestoes.push({par:a+r.com, txt:`O Manual aponta ${r.tipo} entre ${na.dispositivo} e ${(normaById(r.com)||{}).dispositivo}: ${r.nota}`, tipo:r.tipo}); }});
+    });
+    let escolhaPrinc=m.principioAplicado||'';
+    let escolhaPrev=m.normaPrevalente||'';
+    const box=el('div',{});
+    step.append(el('div',{class:'banner info'}, el('span',{},'⚖'), el('div',{},el('b',{},'Passo 2 — '),'Qual princípio resolve o conflito? A escolha é sempre da comissão.')));
+    sugestoes.forEach(s=>step.append(el('div',{class:'suggest'},'💡 '+s.txt)));
+    const radios=el('div',{class:'field'}, el('label',{},'Princípio aplicado'));
+    Object.entries(PRINC).forEach(([v,t])=>{
+      const r=el('input',{type:'radio',name:'princ'}); r.checked=escolhaPrinc===v;
+      r.addEventListener('change',()=>{if(r.checked)escolhaPrinc=v;});
+      radios.append(el('label',{style:'display:block;margin:5px 0'}, r, ' ', el('b',{},v), ' — '+t.split('—')[1]));
+    });
+    step.append(radios);
+    const selPrev=el('select',{onchange:e=>escolhaPrev=e.target.value});
+    el('option',{value:''},'—');
+    selPrev.append(el('option',{value:''},'— norma que prevalece —'));
+    ativos.forEach(e=>{const n=normaById(e.normaId);const o=el('option',{value:e.normaId},n?n.dispositivo+' — '+n.rotulo:e.normaId);if(e.normaId===escolhaPrev)o.selected=true;selPrev.append(o);});
+    step.append(el('div',{class:'field'}, el('label',{},'Norma prevalente'), selPrev));
+    const just=el('textarea',{}); just.value=m.justificativa||'';
+    step.append(el('div',{class:'field'}, el('label',{},'Justificativa (obrigatória)'), just));
+    const err=el('div',{class:'err-msg'});
+    step.append(el('div',{style:'display:flex;gap:8px;align-items:center'}, err,
+      el('button',{class:'btn',onclick:passo1},'‹ voltar'),
+      el('button',{class:'btn primary',onclick:()=>{
+        if(!escolhaPrinc){err.textContent='Escolha o princípio.';return;}
+        if(!escolhaPrev){err.textContent='Escolha a norma prevalente.';return;}
+        if(!just.value.trim()){err.textContent='Justificativa é obrigatória.';return;}
+        m.classificacao='conflito_aparente'; m.principioAplicado=escolhaPrinc; m.normaPrevalente=escolhaPrev; m.justificativa=just.value.trim();
+        f.enquadramentos.forEach(e=>{
+          if(e.normaId===escolhaPrev){ delete e.afastado; delete e.principioAfastamento; }
+          else { e.afastado=true; e.principioAfastamento=escolhaPrinc; }
+        });
+        finish();
+      }},'Concluir')));
+  }
+  function finish(){
+    // persiste a decisão: o formulário de fato opera sobre uma cópia; grava-a no doc
+    const i=doc.fatos.findIndex(x=>x.id===f.id);
+    if(i>=0) doc.fatos[i]=f; else doc.fatos.push(f);
+    closeModal(); if(onDone)onDone(); render();
+  }
+  passo1();
+  openModal(modalShell('Wizard de multiplicidade — '+f.id,'norma',[step],[el('button',{class:'btn',onclick:closeModal},'Fechar')]));
+}
+
+/* ------------------------------------------------------------------ *
+ * 13. FORMULÁRIO NOVA NORMA (residual)
+ * ------------------------------------------------------------------ */
+function abrirFormNorma(){
+  const n={id:genId('NU'),dispositivo:'',rotulo:'',descricaoTipo:'',gravidade:'leve',penaPrevista:'advertencia',elementoSubjetivoExigido:'ambos',notasEnquadramento:'',relacoes:[]};
+  n.id='NU-'+n.id.replace('NU','');
+  const body=[
+    el('div',{class:'banner info'},el('span',{},'ℹ'),el('div',{},'Use apenas para casos residuais (estatutos especiais, normas supervenientes). Normas de fábrica já cobrem Lei 8.112/90 e LAI.')),
+    fieldText('Dispositivo',n.dispositivo,v=>n.dispositivo=v,'ex.: art. X, Lei nº ...'),
+    fieldText('Rótulo',n.rotulo,v=>n.rotulo=v),
+    fieldArea('Descrição do tipo',n.descricaoTipo,v=>n.descricaoTipo=v),
+    el('div',{class:'row3'},
+      fieldSelect('Gravidade',n.gravidade,[['leve','Leve'],['media','Média'],['grave','Grave']],v=>n.gravidade=v),
+      fieldSelect('Pena prevista',n.penaPrevista,[['advertencia','Advertência'],['suspensao','Suspensão'],['demissao','Demissão']],v=>n.penaPrevista=v),
+      fieldSelect('Elemento subjetivo exigido',n.elementoSubjetivoExigido,[['dolo','Dolo'],['culpa','Culpa'],['ambos','Ambos']],v=>n.elementoSubjetivoExigido=v)),
+    fieldArea('Notas de enquadramento',n.notasEnquadramento,v=>n.notasEnquadramento=v),
+  ];
+  const foot=[el('span',{class:'err-msg',id:'nErr'}),
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!(n.dispositivo||'').trim()||!(n.rotulo||'').trim()){ $('#nErr').textContent='Dispositivo e rótulo são obrigatórios.'; return; }
+      doc.catalogoNormas.push(n); closeModal(); render();
+    }},'Salvar norma')];
+  openModal(modalShell('Nova norma (residual)','norma',body,foot));
+}
+
+/* ------------------------------------------------------------------ *
+ * 14. EDIÇÃO DO PROCESSO
+ * ------------------------------------------------------------------ */
+function abrirFormProcesso(){
+  const p=JSON.parse(JSON.stringify(doc.processo));
+  const body=[
+    el('div',{class:'row2'},
+      fieldText('Número do processo',p.numero,v=>p.numero=v),
+      fieldSelect('Tipo',p.tipo,[['PAD','PAD'],['sindicancia_acusatoria','Sindicância acusatória']],v=>p.tipo=v)),
+    el('div',{class:'row2'},
+      fieldSelect('Rito',p.rito,[['ordinario','Ordinário'],['sumario','Sumário']],v=>p.rito=v),
+      fieldSelect('Fase atual',p.faseAtual,[['instrucao','Instrução'],['indiciacao_em_elaboracao','Indiciação em elaboração'],['encerrado','Encerrado']],v=>p.faseAtual=v)),
+    fieldText('Unidade',p.unidade,v=>p.unidade=v),
+    fieldArea('Objeto da apuração',p.objetoApuracao,v=>p.objetoApuracao=v),
+    el('div',{class:'block'}, el('div',{class:'block-title'},'Comissão'),
+      fieldText('Presidente',p.comissao.presidente,v=>p.comissao.presidente=v),
+      fieldText('Membro 1',p.comissao.membros[0],v=>p.comissao.membros[0]=v),
+      fieldText('Membro 2',p.comissao.membros[1],v=>p.comissao.membros[1]=v),
+      el('div',{class:'row2'},
+        fieldText('Portaria de instauração — nº',p.comissao.portariaInstauracao.numero,v=>p.comissao.portariaInstauracao.numero=v),
+        fieldText('Data',p.comissao.portariaInstauracao.data,v=>p.comissao.portariaInstauracao.data=v,null,'date'))),
+  ];
+  const foot=[el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{ doc.processo=p; closeModal(); render(); }},'Salvar')];
+  openModal(modalShell('Dados do processo',null,body,foot));
+}
+
+/* ------------------------------------------------------------------ *
+ * 15. EXPORTAÇÕES
+ * ------------------------------------------------------------------ */
+function baixar(nome,conteudo,mime='application/json'){
+  const blob=new Blob([conteudo],{type:mime});
+  const a=el('a',{href:URL.createObjectURL(blob),download:nome}); document.body.append(a); a.click(); a.remove();
+}
+function exportJson(){
+  const out=JSON.parse(JSON.stringify(doc)); out.exportadoEm=new Date().toISOString();
+  delete out._seq; // seq é interno; recalculado no import via maiores IDs
+  out._seq=doc._seq;
+  const nome=`nexus-${(doc.processo.numero||'sem-numero').replace(/[^\w.-]/g,'_')}-${new Date().toISOString().slice(0,10)}.json`;
+  baixar(nome, JSON.stringify(out,null,2));
+}
+function importJson(){ $('#fileInput').click(); }
+$('#fileInput').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    try{
+      const d=JSON.parse(rd.result);
+      if(d.ferramenta!=='nexus-coger'&&d.ferramenta!=='nexo-coger'){ alert('Arquivo não reconhecido: campo "ferramenta" ausente ou inválido. Esperado "nexus-coger".'); return; }
+      if(d.schemaVersion!==SCHEMA){ if(!confirm('schemaVersion diferente ('+d.schemaVersion+'). Tentar importar mesmo assim?')) return; }
+      const temDados=doc.fatos.length||doc.provas.length||doc.acusados.length;
+      if(temDados && !confirm('Isto substituirá o rascunho atual. Continuar?')) return;
+      doc=migra(d); if(!doc._seq) recomputaSeq();
+      lens='todos'; isolatedFato=null; revisadas.clear(); render();
+    }catch(err){ alert('Falha ao ler o JSON: '+err.message); }
+  };
+  rd.readAsText(file); e.target.value='';
+});
+function recomputaSeq(){
+  const mx=(pref)=>Math.max(0,...[...doc.acusados,...doc.fatos,...doc.provas].map(x=>x.id).filter(id=>id&&id[0]===pref).map(id=>+id.slice(1)||0));
+  doc._seq={A:mx('A'),F:mx('F'),P:mx('P'),NU:0};
+}
+
+function exportPauta(){
+  const pauta=doc.fatos.filter(f=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})
+    .map(f=>({fatoId:f.id,titulo:f.titulo,estado:estadoExibido(f).exibido,elementosBuscados:f.elementosBuscados||''}));
+  const out={origem:'nexus-coger',processo:doc.processo.numero||'',pauta};
+  const txt=JSON.stringify(out,null,2);
+  const body=[
+    el('div',{class:'banner info'},el('span',{},'🎯'),el('div',{},'Cole no campo "elementos buscados" ao cadastrar o próximo depoente no Oitiva 360.')),
+    (()=>{const ta=el('textarea',{style:'min-height:280px;font-family:monospace;font-size:12px'});ta.value=txt;ta.readOnly=true;return ta;})()
+  ];
+  const foot=[el('button',{class:'btn',onclick:()=>{navigator.clipboard&&navigator.clipboard.writeText(txt);}},'Copiar'),
+    el('button',{class:'btn',onclick:()=>baixar(`pauta-oitiva360-${new Date().toISOString().slice(0,10)}.json`,txt)},'Baixar .json'),
+    el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
+  openModal(modalShell('Pauta de instrução para o Oitiva 360','prova',body,foot));
+}
+
+/* ------------------------------------------------------------------ *
+ * 16. MINUTA DO TERMO DE INDICIAÇÃO
+ * ------------------------------------------------------------------ */
+function gerarMinutaFlow(){
+  const criticas=PENDENCIAS.filter(p=>p.nivel==='critico');
+  if(criticas.length){ alert('Há pendências críticas que impedem a indiciação. Veja o painel.'); return; }
+  // seletor de acusados
+  const sel={};
+  const body=[
+    el('div',{class:'hint'},'Selecione os indiciados (um capítulo por indiciado):'),
+    ...doc.acusados.map(a=>{const cb=el('input',{type:'checkbox'});cb.checked=true;sel[a.id]=true;
+      cb.addEventListener('change',()=>sel[a.id]=cb.checked);
+      return el('label',{class:'ms-item'},cb,`${a.id} — ${a.nome||'(sem nome)'}`);})
+  ];
+  const fragil=PENDENCIAS.filter(p=>p.nivel==='fragil');
+  if(fragil.length){
+    body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},
+      el('b',{},'Pendências frágeis ainda abertas: '),fragil.map(p=>p.codigo).join(', ')+'. A minuta pode ser gerada, mas revise-as.')));
+  }
+  const foot=[el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      const ids=doc.acusados.filter(a=>sel[a.id]).map(a=>a.id);
+      if(!ids.length){ alert('Selecione ao menos um indiciado.'); return; }
+      const faltas=validaMinuta(ids);
+      if(faltas.length){ alert('Campos essenciais em branco impedem a geração:\n\n'+faltas.join('\n')); return; }
+      closeModal(); renderMinuta(ids);
+    }},'Gerar minuta')];
+  openModal(modalShell('Gerar minuta do termo de indiciação',null,body,foot));
+}
+function validaMinuta(ids){
+  const f=[];
+  if(!doc.processo.numero) f.push('• Número do processo (dados do processo).');
+  if(!doc.processo.comissao.presidente) f.push('• Presidente da comissão.');
+  ids.forEach(id=>{
+    const a=acusadoById(id);
+    if(!a.nome) f.push('• Nome do indiciado '+id+'.');
+    if(!a.cargo) f.push('• Cargo do indiciado '+(a.nome||id)+'.');
+    const fatos=doc.fatos.filter(x=>(x.condutas||[]).some(c=>c.acusadoId===id));
+    if(!fatos.length) f.push('• '+(a.nome||id)+' não possui fato imputado.');
+    fatos.forEach(ft=>{
+      if(!ft.descricao) f.push('• Descrição do fato '+ft.id+'.');
+      if(!enquadramentosAtivos(ft).length) f.push('• Enquadramento do fato '+ft.id+'.');
+    });
+  });
+  return f;
+}
+function renderMinuta(ids){
+  const p=doc.processo, c=p.comissao;
+  const membros=[c.presidente,...(c.membros||[])].filter(Boolean).join(', ');
+  const partes=[];
+  partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
+    <div class="inst">CORREGEDORIA-GERAL (Coger/RFB) — ${esc(p.unidade||'')}</div>
+    <h1>Termo de Indiciação</h1>
+    <p class="center">Processo Administrativo Disciplinar nº ${esc(p.numero)} — Rito ${esc(p.rito)}</p>
+    <p class="center">Comissão designada pela Portaria nº ${esc(c.portariaInstauracao.numero||'—')}${c.portariaInstauracao.data?', de '+esc(c.portariaInstauracao.data):''}.</p>`);
+
+  ids.forEach((id,idx)=>{
+    const a=acusadoById(id);
+    const fatos=doc.fatos.filter(x=>(x.condutas||[]).some(cc=>cc.acusadoId===id));
+    partes.push(`<div class="${idx>0?'cap':''}">`);
+    partes.push(`<h2>${idx+1}. Do indiciado ${esc(a.nome)}</h2>`);
+    // qualificação
+    partes.push(`<table class="qual">
+      <tr><td><b>Nome</b></td><td>${esc(a.nome)}</td></tr>
+      <tr><td><b>Matrícula</b></td><td>${esc(a.matricula||'—')}</td></tr>
+      <tr><td><b>Cargo</b></td><td>${esc(a.cargo||'—')}</td></tr>
+      <tr><td><b>Lotação</b></td><td>${esc(a.lotacao||'—')}</td></tr>
+      ${a.qualificacaoComplementar?`<tr><td><b>Qualificação</b></td><td>${esc(a.qualificacaoComplementar)}</td></tr>`:''}
+    </table>`);
+    // fatos e condutas
+    partes.push('<h3>Dos fatos e das condutas</h3>');
+    fatos.forEach((ft,i)=>{
+      const cond=(ft.condutas||[]).find(cc=>cc.acusadoId===id)||{};
+      partes.push(`<p><b>Fato ${i+1} (${esc(ft.titulo)}).</b> ${esc(ft.descricao)}${ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)?` Período: ${esc(ft.periodo.inicio||'?')} a ${esc(ft.periodo.fim||'?')}.`:''}${ft.local?` Local: ${esc(ft.local)}.`:''}</p>`);
+      partes.push(`<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ${esc(cond.modalidade==='omissiva'?'omissiva':'comissiva')}, ${esc(cond.descricaoConduta||'')}</p>`);
+    });
+    // provas
+    partes.push('<h3>Das provas</h3>');
+    fatos.forEach((ft,i)=>{
+      const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
+      if(!provas.length){ partes.push(`<p>Fato ${i+1}: (sem prova vinculada).</p>`); return; }
+      let s=`<p>Fato ${i+1} — sustenta-se em: `;
+      s+=provas.map(pr=>{
+        let r=`${esc(pr.titulo)} (${esc(pr.tipo)}`;
+        if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r+=`, ${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}`;
+        r+=')';
+        return r;
+      }).join('; ')+'.</p>';
+      partes.push(s);
+      provas.forEach(pr=>(pr.trechosSignificativos||[]).forEach(t=>{ if((t.citacao||'').trim())
+        partes.push(`<div class="quote">"${esc(t.citacao)}"${t.ref?' ('+esc(t.ref)+')':''}</div>`); }));
+    });
+    // enquadramento
+    partes.push('<h3>Do enquadramento legal</h3>');
+    fatos.forEach((ft,i)=>{
+      const ativos=enquadramentosAtivos(ft);
+      const afastados=(ft.enquadramentos||[]).filter(e=>e.afastado);
+      ativos.forEach(e=>{
+        const n=normaById(e.normaId);
+        partes.push(`<p>Fato ${i+1}: a conduta amolda-se ao <b>${esc(n.dispositivo)}</b> (${esc(n.rotulo)}), a título de <b>${esc(rotES(e.elementoSubjetivo))}</b>. ${esc(e.fundamentacao||'')}</p>`);
+      });
+      if(ft.multiplicidade&&ft.multiplicidade.classificacao==='concurso_formal'&&ativos.length>1)
+        partes.push(`<p><i>Reconhece-se concurso formal entre os dispositivos acima, cuja repercussão se dará na dosimetria da pena.</i></p>`);
+      if(ft.multiplicidade&&ft.multiplicidade.classificacao==='conflito_aparente'&&afastados.length){
+        const prev=normaById(ft.multiplicidade.normaPrevalente);
+        partes.push(`<p><i>Prevalece o ${esc(prev?prev.dispositivo:'')} por ${esc(ft.multiplicidade.principioAplicado)}. Afasta-se: ${afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ')}. ${esc(ft.multiplicidade.justificativa||'')}</i></p>`);
+      }
+    });
+    partes.push('</div>');
+  });
+  // fecho
+  partes.push(`<h2>Do encerramento</h2>
+    <p>Ressalva-se que o enquadramento ora proposto poderá ser adequado por ocasião do Relatório Final, à luz da defesa, uma vez que o indiciado se defende dos fatos e não da sua capitulação.</p>
+    <p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do(s) indiciado(s) para, no prazo legal, apresentar defesa escrita.</p>
+    <p class="center" style="margin-top:36px">${esc(p.unidade||'')}, ${new Date().toLocaleDateString('pt-BR')}.</p>
+    <p class="center">___________________________________<br>${esc(c.presidente||'Presidente da Comissão')} — Presidente</p>
+    ${(c.membros||[]).filter(Boolean).map(m=>`<p class="center">___________________________________<br>${esc(m)} — Membro</p>`).join('')}`);
+
+  openPrint(partes.join('\n'),'Minuta do termo de indiciação');
+}
+function rotES(v){ return {dolo_direto:'dolo direto',dolo_eventual:'dolo eventual',negligencia:'negligência',imprudencia:'imprudência',impericia:'imperícia'}[v]||v; }
+
+/* ---------- PRINT VIEW ---------- */
+function openPrint(html,titulo){
+  const pv=$('#printview');
+  pv.innerHTML='';
+  pv.append(el('div',{class:'pv-toolbar'},
+    el('b',{style:'flex:1'},titulo),
+    el('button',{class:'btn',onclick:()=>window.print()},'🖨 Imprimir / PDF'),
+    el('button',{class:'btn',onclick:closePrint},'✕ Fechar')));
+  pv.append(el('div',{class:'pv-doc',html}));
+  pv.classList.add('open');
+}
+function closePrint(){ $('#printview').classList.remove('open'); }
+
+/* ---------- IMPRESSÃO DO MAPA ---------- */
+function printMap(){
+  const svg=$('#map');
+  isolatedFato=null; aplicaIsolamento();
+  const clone=svg.cloneNode(true);
+  const legenda=`<div style="margin-top:16px;font-size:11px;border-top:1px solid #999;padding-top:8px">
+    <b>Legenda —</b> <span style="color:#4B5563">━ prova direta</span> ·
+    <span style="color:#9AA3AD">┄ prova indireta</span> ·
+    <span style="color:#6C4CE8">━ enquadramento ativo</span> ·
+    <span style="color:#C62828">┄✕ lacuna (P1/P2)</span> ·
+    <span style="color:#C62828">borda cheia = crítico</span> ·
+    <span style="color:#B7791F">borda tracejada = frágil</span> ·
+    <span style="color:#1565C0">? = decisão pendente</span>
+  </div>`;
+  const head=`<div class="inst">Coger/RFB — NEXUS · Mapa de Nexo Fático-Probatório</div>
+    <p class="center">Processo nº ${esc(doc.processo.numero||'—')} · ${new Date().toLocaleDateString('pt-BR')}</p>
+    <div class="center" style="display:flex;gap:20px;justify-content:center;font-size:11px;font-weight:700;margin-bottom:8px">
+      <span style="color:#E8604C">■ FATOS</span><span style="color:#1FA08E">■ PROVAS</span><span style="color:#6C4CE8">■ NORMAS</span></div>`;
+  const pv=$('#printview'); pv.innerHTML='';
+  pv.append(el('div',{class:'pv-toolbar'}, el('b',{style:'flex:1'},'Mapa (impressão paisagem)'),
+    el('button',{class:'btn',onclick:()=>window.print()},'🖨 Imprimir'),
+    el('button',{class:'btn',onclick:closePrint},'✕ Fechar')));
+  const docDiv=el('div',{class:'pv-doc',style:'max-width:none',html:head});
+  const holder=el('div',{style:'overflow:auto'}); holder.append(clone); docDiv.append(holder);
+  docDiv.insertAdjacentHTML('beforeend',legenda);
+  pv.append(docDiv);
+  // orientação paisagem para o mapa
+  let st=$('#mapPrintStyle'); if(!st){ st=el('style',{id:'mapPrintStyle'}); document.head.append(st); }
+  st.textContent='@media print{ @page{ size:landscape } }';
+  pv.classList.add('open');
+}
+
+/* ------------------------------------------------------------------ *
+ * 17. CENÁRIO-SEMENTE (critério de aceite 12.1)
+ * ------------------------------------------------------------------ */
+function carregarExemplo(){
+  if((doc.fatos.length||doc.provas.length||doc.acusados.length) && !confirm('Isto substituirá o conteúdo atual pelo exemplo. Continuar?')) return;
+  doc=docVazio();
+  doc.processo.numero='10000.000000/2026-00';
+  doc.processo.objetoApuracao='Apuração de possível valimento do cargo e desídia na unidade.';
+  doc.processo.comissao.presidente='AFRFB Fulano de Tal';
+  doc.processo.comissao.membros=['AFRFB Sicrano','ATRFB Beltrano'];
+  doc.processo.comissao.portariaInstauracao={numero:'123/2026',data:'2026-02-01'};
+
+  const A1={id:genId('A'),nome:'João da Silva',matricula:'1111111',cargo:'Auditor-Fiscal',lotacao:'Defis',
+    qualificacaoComplementar:'',notificacaoPrevia:{realizada:true,data:'2026-02-10',refAutos:'fls. 20'},
+    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null}};
+  const A2={id:genId('A'),nome:'Maria Souza',matricula:'2222222',cargo:'Analista-Tributário',lotacao:'Corat',
+    qualificacaoComplementar:'',notificacaoPrevia:{realizada:false,data:'',refAutos:''},
+    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null}};
+  doc.acusados.push(A1,A2);
+
+  // provas
+  const P1={id:genId('P'),tipo:'documental',titulo:'Extrato de processo fiscal',descricao:'Documento comprobatório.',
+    refAutos:{documento:'Doc. 5',folhas:'30-45'},hashVeritas:'a1b2c3',trechosSignificativos:[{citacao:'consta o despacho de fls. 33',ref:'fls. 33'}],
+    contraditorio:{acusadoIntimado:true,refAutos:'fls. 46'},detalhe:{}};
+  const P2={id:genId('P'),tipo:'emprestada',titulo:'Cópia de autos de outro PAD',descricao:'Prova emprestada de processo correlato.',
+    refAutos:{documento:'Doc. 9',folhas:'1-10'},hashVeritas:'',trechosSignificativos:[],
+    contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{processoOrigem:'10000.111111/2025-11',certidaoJuntada:false,origemJudicial:false,autorizacaoJudicial:'nao_aplicavel'}};
+  const P3={id:genId('P'),tipo:'testemunhal',titulo:'Depoimento não vinculado',descricao:'Prova ainda não amarrada a nenhum fato.',
+    refAutos:{documento:'Doc. 12',folhas:'50'},hashVeritas:'',trechosSignificativos:[],
+    contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{deponente:'Testemunha X',compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}}};
+  doc.provas.push(P1,P2,P3);
+
+  const mkFato=(o)=>Object.assign({id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+    condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
+    enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
+    elementosBuscados:''},o);
+
+  // IMPORTANTE: criar na ordem F1..F4 para que os IDs batam com a narrativa do aceite (12.1).
+  // F1 completo e íntegro
+  const F1=mkFato({titulo:'Valimento do cargo em benefício próprio',descricao:'O servidor valeu-se do cargo para obter proveito pessoal, conforme documentado.',
+    periodo:{inicio:'2025-06-01',fim:'2025-07-01'},local:'Defis',
+    condutas:[{acusadoId:A1.id,descricaoConduta:'utilizou a posição funcional para favorecer contribuinte específico',modalidade:'comissiva'}],
+    provaIds:[P1.id],
+    enquadramentos:[{normaId:'N-117-IX',elementoSubjetivo:'dolo_direto',fundamentacao:'Consciência e vontade de sobrepor o interesse particular ao público.'}]});
+  // F2 sem prova → P1 + linha-fantasma
+  const F2=mkFato({titulo:'Pagamento sem cobertura contratual',descricao:'Alegação de pagamento irregular ainda sem prova vinculada.',
+    condutas:[{acusadoId:A1.id,descricaoConduta:'autorizou pagamento sem respaldo contratual',modalidade:'comissiva'}],
+    provaIds:[],
+    enquadramentos:[{normaId:'N-116-III',elementoSubjetivo:'negligencia',fundamentacao:'A instruir.'}],
+    elementosBuscados:'Nota de empenho, contrato e atesto correspondentes.'});
+  // F3 duas normas dolo×culpa não classificadas → P4 + P8; prova P2 (emprestada → P6a)
+  const F3=mkFato({titulo:'Desídia concomitante a valimento',descricao:'Fato com dois enquadramentos de naturezas subjetivas incompatíveis, ainda não classificados.',
+    condutas:[{acusadoId:A2.id,descricaoConduta:'deixou reiteradamente de cumprir prazos enquanto se valia da função',modalidade:'omissiva'}],
+    provaIds:[P2.id],
+    enquadramentos:[
+      {normaId:'N-117-IX',elementoSubjetivo:'dolo_direto',fundamentacao:'Aparente valimento doloso.'},
+      {normaId:'N-117-XV',elementoSubjetivo:'negligencia',fundamentacao:'Aparente desídia culposa.'}]});
+  // F4 sem conduta → P5 (usa P1 compartilhada e tem enquadramento p/ não disparar P1/P2)
+  const F4=mkFato({titulo:'Fato sem conduta individualizada',descricao:'Fato descrito, porém sem individualização da conduta de qualquer acusado.',
+    provaIds:[P1.id],
+    condutas:[],
+    enquadramentos:[{normaId:'N-116-III',elementoSubjetivo:'negligencia',fundamentacao:'A definir.'}]});
+  doc.fatos.push(F1,F2,F3,F4);
+
+  lens='todos'; isolatedFato=null; revisadas.clear(); render();
+}
+
+/* ------------------------------------------------------------------ *
+ * 18. WIRING DE UI
+ * ------------------------------------------------------------------ */
+function limparTudo(){
+  if(!confirm('Limpar TODO o conteúdo (acusados, fatos, provas)? O catálogo de normas de fábrica é mantido. Esta ação não afeta arquivos .json já exportados.')) return;
+  doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); render();
+}
+function toggleMenu(open){ const m=$('#menu'); m.classList.toggle('open', open==null?!m.classList.contains('open'):open); }
+
+document.addEventListener('DOMContentLoaded',init);
+function init(){
+  doc = loadDraft() || docVazio();
+  if(!doc._seq || doc._seq.A===undefined) recomputaSeq();
+
+  $('#btnAddAcusado').addEventListener('click',()=>abrirFormAcusado(null));
+  $('#btnAddFato').addEventListener('click',()=>abrirFormFato(null));
+  $('#btnAddProva').addEventListener('click',()=>abrirFormProva(null));
+  $('#btnMenu').addEventListener('click',e=>{e.stopPropagation();toggleMenu();});
+  document.addEventListener('click',()=>toggleMenu(false));
+  $('#menu').addEventListener('click',e=>{
+    const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
+    toggleMenu(false);
+    ({exportJson,importJson,minuta:gerarMinutaFlow,pauta:exportPauta,printMap,
+      novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
+  });
+  $('#tagProc').addEventListener('click',abrirFormProcesso);
+  $('#tagTipo').addEventListener('click',abrirFormProcesso);
+  $('#tagFase').addEventListener('click',abrirFormProcesso);
+  $('#search').addEventListener('input',e=>{searchTerm=e.target.value.trim();renderMap();});
+  $('#btnCollapse').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));
+  $('#fab').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));
+  window.addEventListener('resize',()=>renderMap());
+
+  render();
+}
+
+</script>
