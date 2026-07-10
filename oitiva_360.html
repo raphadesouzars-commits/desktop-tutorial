@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 2.7.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 3.0.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -14,7 +14,10 @@
   texto de ajuda removido de Órgão/lotação e tabela de membros da comissão ao final do termo +
   bug corrigido: botão "Concluído" da Etapa 4 estava sempre desabilitado + Rodada 5 completa (lotes
   1/8 a 8/8): catálogo de infrações unificado com o Nexo Coger — 52 normas no lugar das 11
-  isoladas, com banco de perguntas próprio para todas elas)
+  isoladas, com banco de perguntas próprio para todas elas + Rodada 6: integração com o Nexo Coger
+  via arquivo .json manual — importação de pauta, checklist por depoente, vínculo sugerido com
+  acusado, pré-seleção de perguntas por normaId, aviso de qualificação processual, exportação de
+  prova de retorno)
   Data: 2026-07-10
 
   Changelog:
@@ -241,11 +244,34 @@
     esfera penal, fora do PAD) — apenas 2 perguntas de natureza processual. 6 perguntas novas no
     total. Com este lote, encerra-se a Rodada 5: todas as 52 normas do catálogo unificado com o Nexo
     Coger têm banco de perguntas próprio (as 11 originais migradas + as 41 cobertas nos lotes 2 a 8).
+  - 3.0.0 (Rodada 6, 2026-07-10): integração com o Nexo Coger, sempre por arquivo `.json` manual —
+    nenhuma sincronização automática, nenhuma dependência em tempo de execução (princípio "vínculo por
+    sugestão, nunca por fusão automática"; sem `pautaImportada`, a ferramenta funciona exatamente como
+    antes desta rodada). Novo bloco `estado.pautaImportada` (processo) e campos `referenciaAcusadoNexo`/
+    `pautaSelecionada`/`pautaConclusao` (depoente). (1) Importação de pauta: botão na tela do processo,
+    valida `origem == "nexo-coger"`, avisa (não bloqueia) se `catalogoVersion` divergir do
+    `CATALOGO_VERSION` local, resolve cada `normaId` via `resolverNormaPorId()` (Rodada 5), reimportar
+    atualiza por `fatoId` sem duplicar e preserva itens já `"abordado"`. (2) Checklist "Pauta do Nexo"
+    na Etapa 2 do depoente, com checkbox "abordar nesta oitiva". (3) Sugestão de vínculo com acusado do
+    Nexo por nome aproximado (ignora acento/caixa), nunca automática — sempre exige confirmação; seletor
+    manual sempre disponível. (4) Pré-seleção de perguntas: o roteiro passa a incluir também o banco da(s)
+    norma(s) resolvida(s) dos itens de pauta marcados, além do banco da infração principal da Etapa 2.
+    (5) Aviso de qualificação: compara o acusado vinculado ao depoente com os `acusadosVinculados` do
+    item marcado, cruzando com o papel da sessão (tabela da seção 5.1) — nunca aplica nada sozinho, só
+    sinaliza; reaparece na tela de exportação. (6) Ao marcar a oitiva como realizada, cada item marcado
+    vira `"abordado"` ou `"sem_resposta"` (com nota opcional), conforme controle explícito da comissão na
+    Etapa 4; indicador de contagem pendente/abordado/sem resposta na tela do processo. (7) Exportação de
+    prova de retorno: botão visível só quando algum item foi abordado nesta sessão, tela de revisão com
+    tipo de prova sugerido (editável, seção 6.3), trechos significativos (nunca a transcrição inteira),
+    referência nos autos e contradita — nada é exportado sem essa revisão. Testado com 83 checagens
+    automatizadas (Playwright) cobrindo os 9 critérios de aceite da seção 7 e ausência de regressão nos
+    fluxos anteriores à rodada — zero erros de console.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
   v1.0, Julho/2026) para a identidade visual; catálogo de infrações unificado com o Nexo Coger
-  (Rodada 5, `nexus_1.html`) como fonte canônica de infrações.
+  (Rodada 5, `nexus_1.html`) como fonte canônica de infrações; documento da Rodada 6 para o formato
+  exato de `pauta`/`prova` trocado com o Nexo Coger (seções 2.1 e 6.1, não alteráveis por este lado).
   Em caso de dúvida sobre conteúdo jurídico, esses documentos prevalecem sobre o código.
 -->
 <style>
@@ -1182,6 +1208,18 @@
   dialog::backdrop{ background: rgba(15,36,56,.55); }
   dialog .corpo-dialogo{ padding:18px 20px; }
   dialog .rodape-dialogo{ display:flex; justify-content:flex-end; gap:8px; padding:12px 20px; border-top:1px solid var(--cor-borda); }
+  /* Rodada 6: tela de revisão de exportação de prova precisa de mais espaço que os diálogos simples. */
+  #dialogo-exportar-prova{ max-width: 760px; }
+  #lista-exportar-prova{ max-height: 55vh; overflow-y:auto; }
+  .item-prova-nexo{ border:1px solid var(--cor-borda); border-radius:8px; padding:12px; margin-bottom:12px; }
+  .item-prova-nexo h4{ margin:0 0 8px; font-size:.9rem; }
+  .item-pauta-nexo{ border:1px solid var(--cor-borda); border-radius:8px; padding:10px 12px; margin-bottom:10px; font-size:.85rem; }
+  .item-pauta-nexo .titulo-item-pauta{ font-weight:700; }
+  .badge-norma-nao-reconhecida{ font-size:.7rem; color: var(--cor-texto-suave); background:#E4E7EB; border-radius:4px; padding:1px 6px; white-space:nowrap; }
+  .badge-checklist-status{ font-size:.7rem; border-radius:4px; padding:1px 6px; white-space:nowrap; }
+  .badge-checklist-status.pendente{ background:#E4E7EB; color:#3A4552; }
+  .badge-checklist-status.abordado{ background:#D9EAD9; color:#1B5E20; }
+  .badge-checklist-status.sem_resposta{ background:#FCE4E4; color:#8A1F1F; }
 
   #stepper-depoente{ display:flex; gap:0; margin: 10px 0 18px; }
   #stepper-depoente[hidden]{ display:none; }
@@ -1579,6 +1617,17 @@
       <div id="aviso-matriz-incompleta"></div>
     </div>
 
+    <!-- Rodada 6 — Integração com o Nexo Coger: importação de pauta (seção 2). Aditivo: sem
+         pautaImportada, esta seção é irrelevante para o fluxo (fica só o botão de importar). -->
+    <div class="cartao">
+      <h2>Pauta do Nexo Coger <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(opcional)</span></h2>
+      <div id="resumo-pauta-nexo"></div>
+      <div class="acoes-topo">
+        <button type="button" class="secundario" id="btn-importar-pauta">Importar pauta do Nexo</button>
+      </div>
+      <input type="file" id="input-importar-pauta" accept="application/json,.json" hidden>
+    </div>
+
   </section>
 
   <!-- ============================= WIZARD DO DEPOENTE (etapas 1-2 — Parte 2; 3-4 stub) ============================= -->
@@ -1729,6 +1778,15 @@
           <label class="obrigatorio" for="dep-identificacao">Identificação</label>
           <input type="text" id="dep-identificacao">
         </div>
+        <!-- Rodada 6, seção 3.3: sugestão de vínculo com acusado do Nexo, por aproximação de nome
+             (nunca automática — sempre exige confirmação humana). -->
+        <div id="sugestao-vinculo-nexo"></div>
+        <div class="campo" id="campo-vinculo-manual-nexo" hidden>
+          <label for="dep-vinculo-acusado-nexo">Vincular a acusado do Nexo <span style="font-weight:400;font-size:.75rem;color:var(--cor-texto-suave)">(opcional)</span></label>
+          <select id="dep-vinculo-acusado-nexo">
+            <option value="">Nenhum vínculo</option>
+          </select>
+        </div>
         <div class="campo">
           <label class="obrigatorio" for="dep-elementos-buscados">Elementos buscados com este depoente</label>
           <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Por que ouvir ESTA pessoa? O que ela pode trazer?</div>
@@ -1739,6 +1797,17 @@
       <div class="cartao">
         <h3 style="margin-top:0;">Papel do depoente</h3>
         <div class="papel-opcoes" id="papel-opcoes"></div>
+      </div>
+
+      <!-- Rodada 6, seção 3.1: checklist de itens da pauta do Nexo, endereçáveis a este depoente.
+           Só aparece se o processo tiver recebido uma pauta importada (pautaImportada). -->
+      <div class="cartao" id="cartao-pauta-nexo" hidden>
+        <h3 style="margin-top:0;">Pauta do Nexo</h3>
+        <label style="display:flex;gap:8px;align-items:flex-start;font-size:.85rem;font-weight:400;margin-bottom:8px;">
+          <input type="checkbox" id="chk-pauta-mostrar-todos" style="width:auto;margin-top:3px;">
+          Mostrar também itens já abordados por outro depoente
+        </label>
+        <div id="lista-pauta-depoente"></div>
       </div>
 
       <div class="cartao">
@@ -1850,11 +1919,25 @@
   </div>
 </dialog>
 
+<!-- Rodada 6, seção 6.5: tela de revisão antes de exportar prova(s) de retorno para o Nexo — nada
+     sai sem revisão visível, tudo editável antes de gerar o arquivo. -->
+<dialog id="dialogo-exportar-prova">
+  <div class="corpo-dialogo">
+    <h3 style="margin-top:0;">Exportar prova(s) para o Nexo</h3>
+    <p style="font-size:.85rem;color:var(--cor-texto-suave);">Revise cada item antes de exportar. Nada é enviado automaticamente — o arquivo só é gerado ao confirmar.</p>
+    <div id="lista-exportar-prova"></div>
+  </div>
+  <div class="rodape-dialogo">
+    <button type="button" class="secundario" id="btn-cancelar-exportar-prova">Cancelar</button>
+    <button type="button" id="btn-confirmar-exportar-prova">Exportar arquivo</button>
+  </div>
+</dialog>
+
 <div id="area-impressao" hidden></div>
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v2.7.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v3.0.0</div>
 </footer>
 
 <script>
@@ -2700,7 +2783,10 @@ function processoVazio(){
       atualizadoEm: agoraISO()
     },
     matriz: { conduta: "", investigado: "", elementosDisponiveis: "", hipotese: "" },
-    depoentes: []
+    depoentes: [],
+    // Rodada 6 (integração com o Nexo Coger, seção 2.2): null enquanto nenhuma pauta foi importada —
+    // toda a UI desta rodada fica oculta nesse caso (não-objetivo: nenhum resquício visual).
+    pautaImportada: null
   };
 }
 
@@ -2740,7 +2826,13 @@ function migrarEstadoCarregado(e){
   if (e.processo) e.processo.comissao = migrarComissao(e.processo.comissao);
   (e.depoentes || []).forEach(d => {
     if (d.ato && d.ato.comissao) d.ato.comissao = migrarComissao(d.ato.comissao);
+    // Rodada 6: depoentes salvos antes desta rodada não têm esses campos — default seguro.
+    if (d.referenciaAcusadoNexo === undefined) d.referenciaAcusadoNexo = null;
+    if (!Array.isArray(d.pautaSelecionada)) d.pautaSelecionada = [];
+    if (!d.pautaConclusao) d.pautaConclusao = {};
   });
+  // Rodada 6: processos salvos antes desta rodada não têm pautaImportada — default seguro.
+  if (e.pautaImportada === undefined) e.pautaImportada = null;
   return e;
 }
 
@@ -2934,6 +3026,7 @@ function renderTudo(){
   renderCamposProcesso();
   renderListaDepoentes();
   renderLembreteElementosBuscados();
+  renderResumoPautaNexo(); // Rodada 6
 }
 
 /* =====================================================================
@@ -3021,7 +3114,11 @@ document.getElementById("btn-confirmar-add-depoente").addEventListener("click", 
     status: "rascunho",
     ato: { data: "", hora: "", local: "", modalidade: "presencial", estrategia: {} },
     roteiro: [],
-    checklist: {}
+    checklist: {},
+    // Rodada 6 (integração com o Nexo Coger):
+    referenciaAcusadoNexo: null, // { acusadoId, nome, confirmadoPeloUsuario } — nunca automático
+    pautaSelecionada: [], // fatoIds marcados "abordar nesta oitiva" (seção 3.1)
+    pautaConclusao: {} // fatoId -> { respondida, nota } — preenchido na Etapa 4 (seção 3.4)
   });
   salvarLocalStorage();
   renderListaDepoentes();
@@ -3119,6 +3216,323 @@ document.getElementById("btn-abrir-como-novo").addEventListener("click", () => {
 });
 
 /* =====================================================================
+   RODADA 6 — Integração com o Nexo Coger
+   Princípio: vínculo por sugestão, nunca por fusão automática. Tudo aditivo — sem pautaImportada,
+   a ferramenta funciona exatamente como antes desta rodada (não-objetivo 8, seção 8).
+   ===================================================================== */
+
+// Comparação de nomes ignorando acentuação e caixa (seção 3.3 — sugestão de vínculo).
+function normalizarParaComparacao(s){
+  return String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+}
+
+// Uma norma de um item de pauta é considerada "resolvida" se ao menos um dos enquadramentosAtivos
+// bate com o catálogo local (resolverNormaPorId(), Rodada 5, seção 7). Calculado sempre ao vivo — nunca
+// armazenado — para refletir o catálogo local atual, mesmo que ele mude depois da importação da pauta.
+function normasResolvidasDoItemPauta(item){
+  return (item.enquadramentosAtivos || [])
+    .map(e => resolverNormaPorId(e.normaId))
+    .filter(r => r.encontrada)
+    .map(r => r.norma.id);
+}
+function itemPautaTemNormaResolvida(item){
+  return normasResolvidasDoItemPauta(item).length > 0;
+}
+
+function contagemStatusPauta(){
+  const itens = (estado.pautaImportada && estado.pautaImportada.itens) || [];
+  return {
+    pendente: itens.filter(i => i.statusChecklist === "pendente").length,
+    abordado: itens.filter(i => i.statusChecklist === "abordado").length,
+    sem_resposta: itens.filter(i => i.statusChecklist === "sem_resposta").length
+  };
+}
+
+function formatarDataHoraBR(iso){
+  if (!iso) return "—";
+  const dt = new Date(iso);
+  if (isNaN(dt.getTime())) return iso;
+  return dt.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+}
+
+/* ---- 2.3: fluxo de importação da pauta ---- */
+document.getElementById("btn-importar-pauta").addEventListener("click", () => {
+  document.getElementById("input-importar-pauta").click();
+});
+
+document.getElementById("input-importar-pauta").addEventListener("change", (ev) => {
+  const arquivo = ev.target.files[0];
+  if (!arquivo) return;
+  const leitor = new FileReader();
+  leitor.onload = () => {
+    let dados;
+    try{
+      dados = JSON.parse(leitor.result);
+    }catch(erro){
+      alert("Arquivo inválido: não foi possível interpretar o JSON.");
+      ev.target.value = "";
+      return;
+    }
+    ev.target.value = "";
+
+    // Seção 2.3.2: validar origem — rejeitar com mensagem clara se não for do Nexo Coger.
+    if (!dados || dados.origem !== "nexo-coger" || !Array.isArray(dados.pauta)){
+      alert("Arquivo inválido: este arquivo não é uma pauta exportada pelo Nexo Coger (campo \"origem\" deveria ser \"nexo-coger\" e \"pauta\" deveria ser uma lista).");
+      return;
+    }
+
+    // Seção 2.3.3: catalogoVersion divergente — aviso não bloqueante.
+    if (dados.catalogoVersion && dados.catalogoVersion !== CATALOGO_VERSION){
+      const prosseguir = confirm(
+        "A pauta foi gerada com uma versão diferente do catálogo de normas (pauta: " + dados.catalogoVersion +
+        ", local: " + CATALOGO_VERSION + "). A pré-seleção de perguntas pode não funcionar para normas " +
+        "adicionadas depois dessa versão. Deseja continuar?"
+      );
+      if (!prosseguir) return;
+    }
+
+    aplicarImportacaoPauta(dados);
+  };
+  leitor.readAsText(arquivo, "UTF-8");
+});
+
+// Seção 2.3.4-2.3.5: reimportar atualiza itens existentes por fatoId e adiciona novos, sem duplicar;
+// itens já "abordado" mantêm esse status mesmo que outros campos do item mudem no Nexo.
+function aplicarImportacaoPauta(dados){
+  const itensExistentes = (estado.pautaImportada && estado.pautaImportada.itens) || [];
+  const porFatoId = {};
+  itensExistentes.forEach(i => { porFatoId[i.fatoId] = i; });
+
+  (dados.pauta || []).forEach(itemNovo => {
+    const existente = porFatoId[itemNovo.fatoId];
+    const statusChecklist = (existente && existente.statusChecklist === "abordado")
+      ? "abordado"
+      : (existente ? existente.statusChecklist : "pendente");
+    porFatoId[itemNovo.fatoId] = {
+      fatoId: itemNovo.fatoId,
+      titulo: itemNovo.titulo || "",
+      estadoNoNexo: itemNovo.estado || "",
+      elementosBuscados: itemNovo.elementosBuscados || "",
+      acusadosVinculados: itemNovo.acusadosVinculados || [],
+      enquadramentosAtivos: itemNovo.enquadramentosAtivos || [],
+      statusChecklist: statusChecklist,
+      notaSemResposta: existente ? (existente.notaSemResposta || "") : ""
+    };
+  });
+
+  estado.pautaImportada = {
+    origem: "nexo-coger",
+    catalogoVersionOrigem: dados.catalogoVersion || "",
+    processoOrigem: dados.processo || "",
+    importadaEm: agoraISO(),
+    acusadosContexto: dados.acusadosContexto || [],
+    itens: Object.values(porFatoId)
+  };
+  salvarLocalStorage();
+  renderResumoPautaNexo();
+}
+
+function renderResumoPautaNexo(){
+  const wrap = document.getElementById("resumo-pauta-nexo");
+  if (!wrap) return;
+  const p = estado.pautaImportada;
+  if (!p){
+    wrap.innerHTML = "<p class=\"vazio\">Nenhuma pauta do Nexo importada para este processo ainda. Ao importar, uma seção \"Pauta do Nexo\" passa a aparecer no cadastro de cada depoente.</p>";
+    return;
+  }
+  const c = contagemStatusPauta();
+  wrap.innerHTML =
+    "<div style=\"font-size:.85rem;line-height:1.6;\">" +
+      "<div><strong>Processo de origem (Nexo):</strong> " + escapeHtml(p.processoOrigem || "—") + "</div>" +
+      "<div><strong>Importada em:</strong> " + formatarDataHoraBR(p.importadaEm) + "</div>" +
+      "<div><strong>Itens da pauta:</strong> " + p.itens.length +
+        " · <span class=\"badge-checklist-status pendente\">pendentes: " + c.pendente + "</span>" +
+        " <span class=\"badge-checklist-status abordado\">abordados: " + c.abordado + "</span>" +
+        " <span class=\"badge-checklist-status sem_resposta\">sem resposta: " + c.sem_resposta + "</span>" +
+      "</div>" +
+    "</div>";
+}
+
+/* ---- 3.1 a 3.3: checklist por depoente + vínculo com acusado do Nexo ---- */
+const _vinculoRecusas = {}; // depoenteId -> acusadoId recusado nesta sessão (transitório, não persistido)
+
+function acusadoSugeridoPorNome(identificacao){
+  const p = estado.pautaImportada;
+  if (!p || !Array.isArray(p.acusadosContexto)) return null;
+  const alvo = normalizarParaComparacao(identificacao);
+  if (!alvo) return null;
+  return p.acusadosContexto.find(a => normalizarParaComparacao(a.nome) === alvo) || null;
+}
+
+// Seção 3.2/3.3: sugestão de vínculo (nunca automática) + seletor manual, sempre disponível.
+function renderVinculoNexo(d){
+  const wrapSugestao = document.getElementById("sugestao-vinculo-nexo");
+  const wrapManual = document.getElementById("campo-vinculo-manual-nexo");
+  const selectManual = document.getElementById("dep-vinculo-acusado-nexo");
+  const p = estado.pautaImportada;
+
+  if (!p || !Array.isArray(p.acusadosContexto) || !p.acusadosContexto.length){
+    wrapSugestao.innerHTML = "";
+    wrapManual.hidden = true;
+    return;
+  }
+
+  wrapManual.hidden = false;
+  selectManual.innerHTML = "<option value=\"\">Nenhum vínculo</option>" +
+    p.acusadosContexto.map(a => (
+      "<option value=\"" + escapeHtml(a.acusadoId) + "\"" + (d.referenciaAcusadoNexo && d.referenciaAcusadoNexo.acusadoId === a.acusadoId ? " selected" : "") + ">" +
+      escapeHtml(a.nome || a.acusadoId) + " (" + escapeHtml(a.acusadoId) + ")</option>"
+    )).join("");
+
+  const sugestao = acusadoSugeridoPorNome(d.identificacao);
+  const jaVinculado = !!(d.referenciaAcusadoNexo && d.referenciaAcusadoNexo.acusadoId);
+  const recusado = _vinculoRecusas[d.id];
+  if (sugestao && !jaVinculado && recusado !== sugestao.acusadoId){
+    wrapSugestao.innerHTML =
+      "<div class=\"aviso-pedagogico\">Este depoente pode ser o acusado <strong>" + escapeHtml(sugestao.nome || sugestao.acusadoId) +
+      "</strong> (" + escapeHtml(sugestao.acusadoId) + ") neste processo — confirmar vínculo? " +
+      "<button type=\"button\" class=\"secundario pequeno\" id=\"btn-confirmar-vinculo-nexo\" style=\"margin-left:8px;\">Confirmar</button> " +
+      "<button type=\"button\" class=\"secundario pequeno\" id=\"btn-recusar-vinculo-nexo\">Não é a mesma pessoa</button>" +
+      "</div>";
+    document.getElementById("btn-confirmar-vinculo-nexo").addEventListener("click", () => {
+      d.referenciaAcusadoNexo = { acusadoId: sugestao.acusadoId, nome: sugestao.nome || "", confirmadoPeloUsuario: true };
+      salvarLocalStorage();
+      renderVinculoNexo(d);
+      renderPautaEtapa2(d);
+    });
+    document.getElementById("btn-recusar-vinculo-nexo").addEventListener("click", () => {
+      _vinculoRecusas[d.id] = sugestao.acusadoId;
+      renderVinculoNexo(d);
+    });
+  } else {
+    wrapSugestao.innerHTML = "";
+  }
+}
+
+// Seção 5.1: compara o vínculo confirmado do depoente com os acusadosVinculados do item de pauta,
+// cruzando com o papel da sessão — tabela literal da seção 5.1 do documento da Rodada 6. Nunca
+// aplica nada sozinho; só sinaliza. Chamado ao renderizar o checklist (o "momento em que um item é
+// marcado", seção 5.1) e de novo na tela de exportação (seção 5.2/6.5).
+function avaliarQualificacaoPauta(d, item){
+  const vinculo = d.referenciaAcusadoNexo;
+  if (!vinculo || !vinculo.confirmadoPeloUsuario || !vinculo.acusadoId) return null;
+  const vinculadoAoFato = (item.acusadosVinculados || []).includes(vinculo.acusadoId);
+  if (vinculadoAoFato && d.papel === "acusado"){
+    return {
+      tipo: "esperado",
+      mensagem: "✅ Esperado — este é o interrogatório do próprio acusado sobre a própria conduta. Sugestão automática (não forçada): tipo de prova \"interrogatório\" ao exportar."
+    };
+  }
+  if (vinculadoAoFato && (d.papel === "testemunha" || d.papel === "declarante_informante")){
+    return {
+      tipo: "atencao_papel",
+      mensagem: "⚠️ Este depoente é acusado deste mesmo fato no Nexo — considere se o papel da sessão não deveria ser \"acusado\" (interrogatório)."
+    };
+  }
+  if (!vinculadoAoFato && d.papel === "testemunha"){
+    return {
+      tipo: "principal",
+      mensagem: "🟡 Este depoente é acusado no mesmo processo (quanto a outro fato), mas está testemunhando aqui sobre conduta de outro acusado. Testemunha compromissada pode não ser o enquadramento adequado — avalie depoimento sem compromisso (declaração de informante)."
+    };
+  }
+  return null;
+}
+
+// Seção 3.4: aplica, para cada item marcado "abordar nesta oitiva", o statusChecklist definido pela
+// comissão na Etapa 4 (checkbox "Resposta registrada" — seção 3.4 do documento). Chamado só quando a
+// oitiva é de fato marcada como realizada (nunca antes — statusChecklist nunca é calculado sozinho).
+function atualizarChecklistPautaAoConcluir(d){
+  if (!estado.pautaImportada || !d.pautaSelecionada || !d.pautaSelecionada.length) return;
+  d.pautaConclusao = d.pautaConclusao || {};
+  d.pautaSelecionada.forEach(fatoId => {
+    const item = estado.pautaImportada.itens.find(i => i.fatoId === fatoId);
+    if (!item) return;
+    const conclusao = d.pautaConclusao[fatoId] || { respondida: true, nota: "" };
+    if (conclusao.respondida === false){
+      item.statusChecklist = "sem_resposta";
+      item.notaSemResposta = conclusao.nota || "";
+    } else {
+      item.statusChecklist = "abordado";
+      item.notaSemResposta = "";
+    }
+  });
+}
+
+// Seção 6.2: itens da pauta que este depoente marcou e que já estão "abordado" — condição de
+// visibilidade do botão de exportação de prova.
+function itensPautaAbordadosNestaSessao(d){
+  if (!estado.pautaImportada || !d.pautaSelecionada) return [];
+  return d.pautaSelecionada
+    .map(fatoId => estado.pautaImportada.itens.find(i => i.fatoId === fatoId))
+    .filter(item => item && item.statusChecklist === "abordado");
+}
+
+function itensPautaVisiveisParaDepoente(mostrarTodos){
+  const p = estado.pautaImportada;
+  if (!p) return [];
+  return p.itens.filter(i => mostrarTodos || i.statusChecklist !== "abordado");
+}
+
+function rotuloEnquadramentosPauta(item){
+  return (item.enquadramentosAtivos || []).map(e => {
+    const r = resolverNormaPorId(e.normaId);
+    return r.encontrada ? (r.norma.rotulo + " (" + r.norma.dispositivo + ")") : (e.rotulo || e.normaId);
+  }).join("; ");
+}
+
+// Seção 3.1: checklist de itens da pauta endereçáveis a este depoente.
+function renderPautaEtapa2(d){
+  const cartao = document.getElementById("cartao-pauta-nexo");
+  const p = estado.pautaImportada;
+  if (!p || !p.itens.length){
+    cartao.hidden = true;
+    return;
+  }
+  cartao.hidden = false;
+  const mostrarTodos = document.getElementById("chk-pauta-mostrar-todos").checked;
+  const itens = itensPautaVisiveisParaDepoente(mostrarTodos);
+  const wrap = document.getElementById("lista-pauta-depoente");
+  if (!itens.length){
+    wrap.innerHTML = "<p class=\"vazio\">Nenhum item da pauta pendente para exibir.</p>";
+    return;
+  }
+  wrap.innerHTML = itens.map(item => {
+    const marcado = d.pautaSelecionada.includes(item.fatoId);
+    const semNormaReconhecida = (item.enquadramentosAtivos || []).length > 0 && normasResolvidasDoItemPauta(item).length === 0;
+    const qualificacao = marcado ? avaliarQualificacaoPauta(d, item) : null;
+    return (
+      "<div class=\"item-pauta-nexo\">" +
+        "<label style=\"display:flex;gap:8px;align-items:flex-start;font-weight:400;\">" +
+          "<input type=\"checkbox\" data-pauta-item=\"" + escapeHtml(item.fatoId) + "\"" + (marcado ? " checked" : "") + " style=\"width:auto;margin-top:3px;\"> " +
+          "<span>abordar nesta oitiva</span>" +
+        "</label>" +
+        "<div style=\"margin-top:4px;\">" +
+          "<span class=\"titulo-item-pauta\">" + escapeHtml(item.titulo || item.fatoId) + "</span> " +
+          "<span class=\"badge-checklist-status " + item.statusChecklist + "\">" + item.statusChecklist.replace("_", " ") + "</span> " +
+          (semNormaReconhecida ? "<span class=\"badge-norma-nao-reconhecida\">norma não reconhecida localmente</span>" : "") +
+          "<br><span style=\"font-size:.78rem;color:var(--cor-texto-suave);\">Enquadramento (Nexo): " + escapeHtml(rotuloEnquadramentosPauta(item) || "—") + "</span>" +
+          "<br><span style=\"font-size:.78rem;color:var(--cor-texto-suave);\">Elementos buscados (Nexo): " + escapeHtml(item.elementosBuscados || "—") + "</span>" +
+        "</div>" +
+        (qualificacao ? "<div class=\"aviso-pedagogico\" style=\"margin-top:8px;\">" + escapeHtml(qualificacao.mensagem) + "</div>" : "") +
+      "</div>"
+    );
+  }).join("");
+
+  wrap.querySelectorAll("[data-pauta-item]").forEach(chk => {
+    chk.addEventListener("change", () => {
+      const fatoId = chk.dataset.pautaItem;
+      if (chk.checked){
+        if (!d.pautaSelecionada.includes(fatoId)) d.pautaSelecionada.push(fatoId);
+      } else {
+        d.pautaSelecionada = d.pautaSelecionada.filter(f => f !== fatoId);
+      }
+      salvarLocalStorage();
+      renderPautaEtapa2(d);
+    });
+  });
+}
+
+/* =====================================================================
    WIZARD DO DEPOENTE — Etapas 1 (Dados do Ato) e 2 (Depoente)
    ===================================================================== */
 let depoenteAtivoId = null;
@@ -3158,6 +3572,10 @@ function garantirEstruturaAto(d){
   // para depoentes/arquivos .json anteriores a esta atualização (sem quebrar a importação de arquivos antigos).
   if (d.terceiroInterposto === undefined) d.terceiroInterposto = false;
   if (d.controversiaRecolhida === undefined) d.controversiaRecolhida = false;
+  // Rodada 6: idem, para depoentes criados antes desta rodada.
+  if (d.referenciaAcusadoNexo === undefined) d.referenciaAcusadoNexo = null;
+  if (!Array.isArray(d.pautaSelecionada)) d.pautaSelecionada = [];
+  if (!d.pautaConclusao) d.pautaConclusao = {};
 }
 
 function abrirWizard(depoenteId){
@@ -3294,6 +3712,7 @@ function renderEtapa2(){
       dep.papel = r.value;
       salvarLocalStorage();
       atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
+      renderPautaEtapa2(dep); // Rodada 6: o aviso de qualificação (seção 5) depende do papel
     });
   });
 
@@ -3301,6 +3720,8 @@ function renderEtapa2(){
   popularSelectInfracao("");
   renderInfracaoDetalhe(d.infracao);
   atualizarVisibilidadeTerceiroInterposto(); // Atualização incremental 01
+  renderVinculoNexo(d); // Rodada 6, seção 3.2/3.3
+  renderPautaEtapa2(d); // Rodada 6, seção 3.1
 }
 
 // Rodada 5 (unificação de catálogo com o Nexo Coger): 52 normas agrupadas por origem (mesmo
@@ -3476,6 +3897,26 @@ function ligarCamposWizardEtapa2(){
     if (!d) return;
     d.identificacao = ev.target.value;
     salvarLocalStorage();
+    renderVinculoNexo(d); // Rodada 6, seção 3.3: reavalia sugestão de vínculo a cada tecla
+  });
+  document.getElementById("dep-vinculo-acusado-nexo").addEventListener("change", (ev) => {
+    const d = getDepoenteAtivo();
+    if (!d) return;
+    const acusadoId = ev.target.value;
+    if (!acusadoId){
+      d.referenciaAcusadoNexo = null;
+    } else {
+      const p = estado.pautaImportada;
+      const a = (p && p.acusadosContexto || []).find(x => x.acusadoId === acusadoId);
+      d.referenciaAcusadoNexo = { acusadoId: acusadoId, nome: (a && a.nome) || "", confirmadoPeloUsuario: true };
+    }
+    salvarLocalStorage();
+    renderVinculoNexo(d);
+    renderPautaEtapa2(d);
+  });
+  document.getElementById("chk-pauta-mostrar-todos").addEventListener("change", () => {
+    const d = getDepoenteAtivo();
+    if (d) renderPautaEtapa2(d);
   });
   document.getElementById("dep-elementos-buscados").addEventListener("input", (ev) => {
     const d = getDepoenteAtivo();
@@ -3590,9 +4031,26 @@ function contextoMerge(d){
   };
 }
 
+// Rodada 6, seção 4: normas resolvidas dos itens da pauta marcados "abordar nesta oitiva" para este
+// depoente — usadas para pré-selecionar o mini-banco de perguntas daquelas normas no roteiro, além
+// da infração principal já selecionada na Etapa 2. Itens cuja norma não foi resolvida (seção 2.3.4)
+// simplesmente não contribuem nenhuma pergunta extra — o item continua no checklist normalmente.
+function normasPautaResolvidasParaDepoente(d){
+  const p = estado.pautaImportada;
+  if (!p || !d.pautaSelecionada || !d.pautaSelecionada.length) return [];
+  const normas = new Set();
+  d.pautaSelecionada.forEach(fatoId => {
+    const item = p.itens.find(i => i.fatoId === fatoId);
+    if (!item) return;
+    normasResolvidasDoItemPauta(item).forEach(n => normas.add(n));
+  });
+  return Array.from(normas);
+}
+
 function gerarRoteiroInicial(d){
   const ctx = contextoMerge(d);
   const papelObj = CATALOGO.papeis.find(p => p.id === d.papel);
+  const normasPauta = normasPautaResolvidasParaDepoente(d); // Rodada 6, seção 4
   return CATALOGO.blocos.map(bloco => {
     let itens = [];
 
@@ -3636,7 +4094,11 @@ function gerarRoteiroInicial(d){
 
     } else if (bloco.tipo === "perguntas"){
       itens = CATALOGO.perguntas
-        .filter(q => q.bloco === bloco.id && (q.infracoes.includes("todas") || q.infracoes.includes(d.infracao)))
+        .filter(q => q.bloco === bloco.id && (
+          q.infracoes.includes("todas") ||
+          q.infracoes.includes(d.infracao) ||
+          normasPauta.some(nId => q.infracoes.includes(nId)) // Rodada 6, seção 4: pré-seleção pela pauta
+        ))
         .filter(q => {
           // Atualização incremental 01: perguntas com "destinatario" (ex.: inf_enriquecimento_ilicito) usam essa
           // nova regra de seleção; o filtro por "papeis" das demais 10 infrações permanece inalterado abaixo.
@@ -3655,10 +4117,16 @@ function gerarRoteiroInicial(d){
   });
 }
 
+// Rodada 6: assinatura estável da seleção de pauta, para detectar quando o roteiro ficou
+// desatualizado em relação a ela (mesmo princípio já usado para papel/infração/terceiroInterposto).
+function assinaturaPautaSelecionada(d){
+  return (d.pautaSelecionada || []).slice().sort().join(",");
+}
+
 function garantirRoteiroGerado(d){
   if (!d.roteiro || !d.roteiro.length){
     d.roteiro = gerarRoteiroInicial(d);
-    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto };
+    d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto, pautaSelecionada: assinaturaPautaSelecionada(d) };
     if (d.status === "rascunho") d.status = "roteiro_pronto";
     salvarLocalStorage();
   }
@@ -3677,7 +4145,8 @@ function renderEtapa3(){
   const desatualizado = d.roteiroGeradoPara && (
     d.roteiroGeradoPara.papel !== d.papel ||
     d.roteiroGeradoPara.infracao !== d.infracao ||
-    !!d.roteiroGeradoPara.terceiroInterposto !== !!d.terceiroInterposto // Atualização incremental 01
+    !!d.roteiroGeradoPara.terceiroInterposto !== !!d.terceiroInterposto || // Atualização incremental 01
+    (d.roteiroGeradoPara.pautaSelecionada || "") !== assinaturaPautaSelecionada(d) // Rodada 6
   );
 
   let html = "";
@@ -3685,9 +4154,28 @@ function renderEtapa3(){
   html += "<div class=\"cartao lembrete-fixo\"><strong>Elementos buscados com este depoente:</strong> " + escapeHtml(d.elementosBuscados || "—") + "</div>";
 
   if (desatualizado){
-    html += "<div class=\"cartao aviso-pedagogico\">O papel, a categoria de infração ou a marcação de terceiro interposto foram alterados na Etapa 2 desde a última geração do roteiro. " +
+    html += "<div class=\"cartao aviso-pedagogico\">O papel, a categoria de infração, a marcação de terceiro interposto ou os itens da pauta do Nexo marcados foram alterados na Etapa 2 desde a última geração do roteiro. " +
       "As perguntas sugeridas atuais podem não corresponder mais à seleção. " +
       "<button type=\"button\" class=\"secundario pequeno\" id=\"btn-regenerar-roteiro\" style=\"margin-left:8px;\">Regenerar roteiro</button></div>";
+  }
+
+  // Rodada 6, seção 3.1: nota de contexto com o elementosBuscados de cada item da pauta marcado
+  // "abordar nesta oitiva" — a pré-seleção de perguntas em si (seção 4) já acontece dentro dos blocos
+  // via normasPautaResolvidasParaDepoente(), esta nota só orienta quem conduz o ato.
+  if (estado.pautaImportada && d.pautaSelecionada && d.pautaSelecionada.length){
+    const itensPauta = d.pautaSelecionada
+      .map(fatoId => estado.pautaImportada.itens.find(i => i.fatoId === fatoId))
+      .filter(Boolean);
+    if (itensPauta.length){
+      html += "<div class=\"cartao\"><h3 style=\"margin-top:0;\">Itens da pauta do Nexo nesta oitiva</h3>" +
+        itensPauta.map(item => (
+          "<div style=\"font-size:.85rem;margin-bottom:6px;\"><strong>" + escapeHtml(item.titulo || item.fatoId) + "</strong> — " +
+          escapeHtml(item.elementosBuscados || "—") +
+          (itemPautaTemNormaResolvida(item) ? "" : " <span class=\"badge-norma-nao-reconhecida\">norma não reconhecida — sem pré-seleção de perguntas</span>") +
+          "</div>"
+        )).join("") +
+        "</div>";
+    }
   }
 
   // Atualização incremental 01: painel de controvérsia — acima dos blocos de perguntas, não dispensável,
@@ -3895,7 +4383,7 @@ function ligarEventosEtapa3(container){
       if (!confirm("Isso substituirá as perguntas atuais do roteiro (inclusive as adicionadas manualmente) pelas sugestões do banco para o papel e infração atuais. Deseja continuar?")) return;
       const d = getDepoenteAtivo();
       d.roteiro = gerarRoteiroInicial(d);
-      d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto };
+      d.roteiroGeradoPara = { papel: d.papel, infracao: d.infracao, terceiroInterposto: !!d.terceiroInterposto, pautaSelecionada: assinaturaPautaSelecionada(d) };
       salvarLocalStorage();
       renderEtapa3();
     });
@@ -4109,6 +4597,36 @@ function renderEtapa4(){
   html += "<div class=\"status-toggle\"><label><input type=\"checkbox\" id=\"chk-oitiva-realizada\"" + (d.status === "oitiva_realizada" ? " checked" : "") + "> Marcar oitiva como realizada</label></div>";
   html += "</div>";
 
+  // Rodada 6, seção 3.4/6.2: itens da pauta do Nexo marcados nesta sessão, com controle de
+  // "resposta registrada" — é isso que decide statusChecklist ao concluir, e o que habilita o
+  // botão de exportação de prova.
+  if (estado.pautaImportada && d.pautaSelecionada && d.pautaSelecionada.length){
+    d.pautaConclusao = d.pautaConclusao || {};
+    const itensSessao = d.pautaSelecionada
+      .map(fatoId => estado.pautaImportada.itens.find(i => i.fatoId === fatoId))
+      .filter(Boolean);
+    if (itensSessao.length){
+      html += "<div class=\"cartao\" id=\"cartao-pauta-conclusao\">";
+      html += "<h3 style=\"margin-top:0;\">Pauta do Nexo — itens abordados nesta sessão</h3>";
+      html += itensSessao.map(item => {
+        const conclusao = d.pautaConclusao[item.fatoId] || { respondida: true, nota: "" };
+        return (
+          "<div class=\"item-pauta-nexo\">" +
+            "<div class=\"titulo-item-pauta\">" + escapeHtml(item.titulo || item.fatoId) + "</div>" +
+            "<label style=\"display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:.85rem;margin-top:4px;\">" +
+              "<input type=\"checkbox\" data-pauta-conclusao-respondida=\"" + escapeHtml(item.fatoId) + "\"" + (conclusao.respondida !== false ? " checked" : "") + " style=\"width:auto;margin-top:3px;\"> " +
+              "Resposta registrada nesta oitiva" +
+            "</label>" +
+            (conclusao.respondida === false
+              ? "<textarea data-pauta-conclusao-nota=\"" + escapeHtml(item.fatoId) + "\" placeholder=\"Por que não foi possível abordar (opcional)\" style=\"margin-top:6px;\">" + escapeHtml(conclusao.nota || "") + "</textarea>"
+              : "") +
+          "</div>"
+        );
+      }).join("");
+      html += "</div>";
+    }
+  }
+
   html += "<div class=\"cartao\">";
   html += "<h3 style=\"margin-top:0;\">Visualização do roteiro completo</h3>";
   html += renderRoteiroLeitura(d);
@@ -4150,6 +4668,14 @@ function renderEtapa4(){
     "</div>";
   html += "</div>";
 
+  // Rodada 6, seção 6.2: só visível se ao menos um item da pauta foi abordado nesta sessão.
+  if (itensPautaAbordadosNestaSessao(d).length){
+    html += "<div class=\"cartao\">";
+    html += "<h3 style=\"margin-top:0;\">Nexo Coger</h3>";
+    html += "<div class=\"acoes-topo\"><button type=\"button\" id=\"btn-exportar-prova-nexo\">Exportar prova(s) para o Nexo</button></div>";
+    html += "</div>";
+  }
+
   const container = document.getElementById("wizard-etapa-4");
   container.innerHTML = html;
   ligarEventosEtapa4(container, d);
@@ -4163,9 +4689,39 @@ function ligarEventosEtapa4(container, d){
   if (chkOitiva){
     chkOitiva.addEventListener("change", () => {
       d.status = chkOitiva.checked ? "oitiva_realizada" : "roteiro_pronto";
+      // Rodada 6, seção 3.4: só ao concluir a oitiva (marcar como realizada) o statusChecklist dos
+      // itens de pauta abordados é atualizado — nunca antes, nunca calculado sozinho.
+      if (chkOitiva.checked) atualizarChecklistPautaAoConcluir(d);
+      salvarLocalStorage();
+      renderEtapa4();
+      renderResumoPautaNexo();
+    });
+  }
+
+  // Rodada 6, seção 3.4: controles de conclusão por item de pauta (resposta registrada / nota).
+  container.querySelectorAll("[data-pauta-conclusao-respondida]").forEach(chk => {
+    chk.addEventListener("change", () => {
+      const fatoId = chk.dataset.pautaConclusaoRespondida;
+      d.pautaConclusao = d.pautaConclusao || {};
+      const atual = d.pautaConclusao[fatoId] || { respondida: true, nota: "" };
+      d.pautaConclusao[fatoId] = { respondida: chk.checked, nota: atual.nota || "" };
       salvarLocalStorage();
       renderEtapa4();
     });
+  });
+  container.querySelectorAll("[data-pauta-conclusao-nota]").forEach(txt => {
+    txt.addEventListener("input", () => {
+      const fatoId = txt.dataset.pautaConclusaoNota;
+      d.pautaConclusao = d.pautaConclusao || {};
+      const atual = d.pautaConclusao[fatoId] || { respondida: false, nota: "" };
+      d.pautaConclusao[fatoId] = { respondida: atual.respondida, nota: txt.value };
+      salvarLocalStorage();
+    });
+  });
+
+  const btnExportarProva = document.getElementById("btn-exportar-prova-nexo");
+  if (btnExportarProva){
+    btnExportarProva.addEventListener("click", () => abrirDialogoExportarProva(d));
   }
 
   container.querySelectorAll("[data-checklist-item]").forEach(chk => {
@@ -4224,6 +4780,183 @@ function ligarEventosEtapa4(container, d){
     window.print();
   });
 }
+
+/* =====================================================================
+   RODADA 6, seção 6 — Export de prova de retorno para o Nexo.
+   Seção 6.5: nada sai sem revisão visível — a tela lista, edita e permite desmarcar cada item
+   antes de gerar o arquivo. Formato de saída definido na Rodada 4 do Nexo (seção 6.1, não alterar).
+   ===================================================================== */
+let _exportProvaDraft = null; // { [fatoId]: { incluir, tipo, compromissada, titulo, descricao, trechos, refDocumento, refFolhas, contraditaHouve, contraditaAcolhida, contraditaRefAutos } }
+
+// Seção 6.3: regra automática de sugestão de tipo/compromissada — sempre editável, nunca aplicada
+// sem tela de revisão.
+function tipoSugeridoParaItem(d){
+  if (d.papel === "declarante_informante") return { tipo: "declaracao_informante", compromissada: false };
+  if (d.papel === "acusado") return { tipo: "interrogatorio", compromissada: false };
+  if (d.papel === "vitima") return { tipo: "testemunhal", compromissada: true };
+  return { tipo: "testemunhal", compromissada: true }; // testemunha (e situação indefinida, por padrão)
+}
+
+function abrirDialogoExportarProva(d){
+  const itens = itensPautaAbordadosNestaSessao(d);
+  if (!itens.length) return;
+
+  _exportProvaDraft = {};
+  itens.forEach(item => {
+    const sugestao = tipoSugeridoParaItem(d);
+    _exportProvaDraft[item.fatoId] = {
+      incluir: true,
+      tipo: sugestao.tipo,
+      compromissada: sugestao.compromissada,
+      titulo: item.titulo || item.fatoId,
+      descricao: "",
+      trechos: "",
+      refDocumento: "",
+      refFolhas: "",
+      contraditaHouve: false,
+      contraditaAcolhida: "",
+      contraditaRefAutos: ""
+    };
+  });
+
+  renderDialogoExportarProva(d, itens);
+  document.getElementById("dialogo-exportar-prova").showModal();
+}
+
+function renderDialogoExportarProva(d, itens){
+  const wrap = document.getElementById("lista-exportar-prova");
+  wrap.innerHTML = itens.map(item => {
+    const draft = _exportProvaDraft[item.fatoId];
+    const qualificacao = avaliarQualificacaoPauta(d, item); // seção 5.2: reaparece na exportação
+    return (
+      "<div class=\"item-prova-nexo\" data-item-prova=\"" + escapeHtml(item.fatoId) + "\">" +
+        "<h4><label style=\"font-weight:700;\"><input type=\"checkbox\" data-prova-incluir=\"" + escapeHtml(item.fatoId) + "\"" + (draft.incluir ? " checked" : "") + " style=\"width:auto;\"> " + escapeHtml(item.titulo || item.fatoId) + "</label></h4>" +
+        (qualificacao ? "<div class=\"aviso-pedagogico\" style=\"margin-bottom:8px;\">" + escapeHtml(qualificacao.mensagem) + "</div>" : "") +
+        "<div class=\"campo\"><label>Tipo de prova</label>" +
+          "<select data-prova-tipo=\"" + escapeHtml(item.fatoId) + "\">" +
+            ["testemunhal", "declaracao_informante", "interrogatorio"].map(t => (
+              "<option value=\"" + t + "\"" + (draft.tipo === t ? " selected" : "") + ">" + rotuloTipoProva(t) + "</option>"
+            )).join("") +
+          "</select>" +
+        "</div>" +
+        "<div class=\"campo\"><label>Trechos significativos <span style=\"font-weight:400;font-size:.75rem;color:var(--cor-texto-suave);\">(um por linha — nunca a transcrição inteira)</span></label>" +
+          "<textarea data-prova-trechos=\"" + escapeHtml(item.fatoId) + "\">" + escapeHtml(draft.trechos) + "</textarea>" +
+        "</div>" +
+        "<div class=\"grade-2\">" +
+          "<div class=\"campo\"><label>Referência nos autos — documento</label><input type=\"text\" data-prova-ref-documento=\"" + escapeHtml(item.fatoId) + "\" value=\"" + escapeHtml(draft.refDocumento) + "\"></div>" +
+          "<div class=\"campo\"><label>Referência nos autos — folhas</label><input type=\"text\" data-prova-ref-folhas=\"" + escapeHtml(item.fatoId) + "\" value=\"" + escapeHtml(draft.refFolhas) + "\"></div>" +
+        "</div>" +
+        (draft.tipo === "testemunhal"
+          ? "<label style=\"display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:.85rem;\"><input type=\"checkbox\" data-prova-contradita-houve=\"" + escapeHtml(item.fatoId) + "\"" + (draft.contraditaHouve ? " checked" : "") + " style=\"width:auto;margin-top:3px;\"> Houve contradita nesta sessão</label>" +
+            (draft.contraditaHouve
+              ? "<div class=\"grade-2\" style=\"margin-top:6px;\">" +
+                  "<div class=\"campo\"><label>Contradita acolhida?</label><select data-prova-contradita-acolhida=\"" + escapeHtml(item.fatoId) + "\">" +
+                    "<option value=\"\"" + (draft.contraditaAcolhida === "" ? " selected" : "") + ">Não definido</option>" +
+                    "<option value=\"sim\"" + (draft.contraditaAcolhida === "sim" ? " selected" : "") + ">Sim</option>" +
+                    "<option value=\"nao\"" + (draft.contraditaAcolhida === "nao" ? " selected" : "") + ">Não</option>" +
+                  "</select></div>" +
+                  "<div class=\"campo\"><label>Referência nos autos da contradita</label><input type=\"text\" data-prova-contradita-ref=\"" + escapeHtml(item.fatoId) + "\" value=\"" + escapeHtml(draft.contraditaRefAutos) + "\"></div>" +
+                "</div>"
+              : "")
+          : "") +
+      "</div>"
+    );
+  }).join("");
+
+  ligarEventosDialogoExportarProva(d, itens);
+}
+
+function rotuloTipoProva(t){
+  return { testemunhal: "Testemunhal", declaracao_informante: "Declaração de informante", interrogatorio: "Interrogatório" }[t] || t;
+}
+
+function ligarEventosDialogoExportarProva(d, itens){
+  const wrap = document.getElementById("lista-exportar-prova");
+  wrap.querySelectorAll("[data-prova-incluir]").forEach(chk => {
+    chk.addEventListener("change", () => { _exportProvaDraft[chk.dataset.provaIncluir].incluir = chk.checked; });
+  });
+  wrap.querySelectorAll("[data-prova-tipo]").forEach(sel => {
+    sel.addEventListener("change", () => {
+      _exportProvaDraft[sel.dataset.provaTipo].tipo = sel.value;
+      renderDialogoExportarProva(d, itens); // reflete/oculta o bloco de contradita conforme o tipo
+    });
+  });
+  wrap.querySelectorAll("[data-prova-trechos]").forEach(txt => {
+    txt.addEventListener("input", () => { _exportProvaDraft[txt.dataset.provaTrechos].trechos = txt.value; });
+  });
+  wrap.querySelectorAll("[data-prova-ref-documento]").forEach(txt => {
+    txt.addEventListener("input", () => { _exportProvaDraft[txt.dataset.provaRefDocumento].refDocumento = txt.value; });
+  });
+  wrap.querySelectorAll("[data-prova-ref-folhas]").forEach(txt => {
+    txt.addEventListener("input", () => { _exportProvaDraft[txt.dataset.provaRefFolhas].refFolhas = txt.value; });
+  });
+  wrap.querySelectorAll("[data-prova-contradita-houve]").forEach(chk => {
+    chk.addEventListener("change", () => {
+      _exportProvaDraft[chk.dataset.provaContraditaHouve].contraditaHouve = chk.checked;
+      renderDialogoExportarProva(d, itens);
+    });
+  });
+  wrap.querySelectorAll("[data-prova-contradita-acolhida]").forEach(sel => {
+    sel.addEventListener("change", () => { _exportProvaDraft[sel.dataset.provaContraditaAcolhida].contraditaAcolhida = sel.value; });
+  });
+  wrap.querySelectorAll("[data-prova-contradita-ref]").forEach(txt => {
+    txt.addEventListener("input", () => { _exportProvaDraft[txt.dataset.provaContraditaRef].contraditaRefAutos = txt.value; });
+  });
+}
+
+document.getElementById("btn-cancelar-exportar-prova").addEventListener("click", () => {
+  _exportProvaDraft = null;
+  document.getElementById("dialogo-exportar-prova").close();
+});
+
+document.getElementById("btn-confirmar-exportar-prova").addEventListener("click", () => {
+  const d = getDepoenteAtivo();
+  if (!d || !_exportProvaDraft) return;
+
+  // Seção 6.4: monta um objeto de prova por item incluído.
+  const provas = Object.keys(_exportProvaDraft)
+    .filter(fatoId => _exportProvaDraft[fatoId].incluir)
+    .map(fatoId => {
+      const draft = _exportProvaDraft[fatoId];
+      const trechos = draft.trechos.split("\n").map(l => l.trim()).filter(Boolean).map(l => ({ citacao: l, ref: "" }));
+      return {
+        fatoIds: [fatoId],
+        tipo: draft.tipo,
+        titulo: draft.titulo,
+        descricao: draft.descricao || "",
+        refAutos: { documento: draft.refDocumento || "", folhas: draft.refFolhas || "" },
+        trechosSignificativos: trechos,
+        detalhe: {
+          deponente: d.identificacao || "",
+          compromissada: draft.compromissada,
+          contradita: draft.tipo === "testemunhal"
+            ? { houve: !!draft.contraditaHouve, acolhida: draft.contraditaHouve ? (draft.contraditaAcolhida === "sim" ? true : (draft.contraditaAcolhida === "nao" ? false : null)) : null, refAutos: draft.contraditaHouve ? (draft.contraditaRefAutos || "") : "" }
+            : { houve: false, acolhida: null, refAutos: "" }
+        }
+      };
+    });
+
+  if (!provas.length){
+    alert("Nenhum item selecionado para exportação.");
+    return;
+  }
+
+  const conteudo = JSON.stringify({ origem: "oitiva-360", processo: estado.processo.numero || "", provas: provas }, null, 2);
+  const blob = new Blob([conteudo], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const numero = (estado.processo.numero || "sem-numero").replace(/[^\w\-]+/g, "_");
+  const data = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = "oitiva360_prova_" + numero + "_" + data + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  _exportProvaDraft = null;
+  document.getElementById("dialogo-exportar-prova").close();
+});
 
 // Reparenta #area-impressao para filha direta de <body>, independentemente de onde a marcação
 // da página a tenha posicionado (ex.: dentro de .rfb-canvas), para que o CSS de impressão possa
