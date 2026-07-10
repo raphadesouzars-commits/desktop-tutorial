@@ -512,13 +512,21 @@ function migra(d){
   d._seq=d._seq||{A:0,F:0,P:0,NU:0};
   if(!d.catalogoNormas||!d.catalogoNormas.length) d.catalogoNormas=base.catalogoNormas;
   // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
-  (d.fatos||[]).forEach((f,i)=>{ if(typeof f.ordem!=='number') f.ordem=i+1; });
+  (d.fatos||[]).forEach((f,i)=>{
+    if(typeof f.ordem!=='number') f.ordem=i+1;
+    if(f.status!=='ativo'&&f.status!=='arquivado') f.status='ativo';
+    if(typeof f.justificativaArquivamento!=='string') f.justificativaArquivamento='';
+  });
   return d;
 }
 // próximo inteiro de ordem narrativa (maior existente + 1)
 function proximaOrdem(){ return (doc.fatos||[]).reduce((m,f)=>Math.max(m, f.ordem||0), 0) + 1; }
 // fatos em ordem narrativa (cópia ordenada; NÃO altera doc.fatos nem o mapa)
 function fatosOrdenados(arr){ return (arr||doc.fatos).slice().sort((a,b)=>(a.ordem||0)-(b.ordem||0)); }
+// fato arquivado pela comissão (apurado, mas decidiu-se não indiciar)
+function fatoArquivado(f){ return f.status==='arquivado'; }
+// fatos ATIVOS em ordem narrativa (base da minuta e do painel de ordem)
+function fatosAtivosOrdenados(){ return fatosOrdenados(doc.fatos.filter(f=>!fatoArquivado(f))); }
 // renumera ordem de forma compacta 1..N conforme a sequência visual atual
 function renumeraOrdem(seq){ seq.forEach((f,i)=>f.ordem=i+1); }
 function genId(prefix){
@@ -584,6 +592,8 @@ function computePendencias(){
   const fase=doc.processo.faseAtual;
 
   doc.fatos.forEach(f=>{
+    // fato arquivado: apurado e conscientemente não indiciado — não gera pendência.
+    if(fatoArquivado(f)) return;
     const ativos=enquadramentosAtivos(f);
     const est=estadoExibido(f);
     // P1
@@ -763,6 +773,7 @@ function renderMap(){
   }
   fs.forEach(f=>{
     const fy=posF[f.id]+CARD_H/2, fxr=xF+CARD_W;
+    const arqOp=fatoArquivado(f)?0.3:null; // arestas de fato arquivado esmaecidas
     // fato → prova
     (f.provaIds||[]).forEach(pid=>{
       if(posP[pid]==null) return;
@@ -772,7 +783,7 @@ function renderMap(){
         class:'edge','data-fato':f.id,fill:'none',
         stroke:direta?'var(--ink-2)':'#9AA3AD',
         'stroke-width':direta?2.5:1.5,
-        'stroke-dasharray':direta?'':'6 5'});
+        'stroke-dasharray':direta?'':'6 5', opacity:arqOp});
       gEdges.append(path);
     });
     // lacuna P1 (sem prova)
@@ -788,7 +799,7 @@ function renderMap(){
       gEdges.append(svgEl('path',{d:bezier(fxr,fy,xN,posN[e.normaId]+CARD_H/2),
         class:'edge','data-fato':f.id,fill:'none',
         stroke:'var(--cor-norma)','stroke-width':afast?1.5:2,
-        'stroke-dasharray':afast?'5 4':'', opacity:afast?0.4:0.85}));
+        'stroke-dasharray':afast?'5 4':'', opacity:arqOp!=null?arqOp:(afast?0.4:0.85)}));
     });
     // lacuna P2 (sem enquadramento ativo)
     if(pendByFato(f.id).some(x=>x.codigo==='P2')){
@@ -862,22 +873,29 @@ function badge(node,x,y,glyph,color,title){
 }
 
 function drawFatoCard(g,f,x,y,pends){
+  const arq=fatoArquivado(f);
   const sev=nivelMaisSevero(pends);
   const node=cardBase(g,x,y,'fato',sev);
   node.dataset.fato=f.id;
+  if(arq) node.style.opacity=0.5; // memória da decisão: fato apurado e não indiciado
   // semáforo estado probatório
   const est=estadoExibido(f);
-  const corSem={suficiente:'#4CAF50',indicios:'#E0A800',ausente:'var(--estado-critico)'}[est.exibido]||'#9AA3AD';
+  const corSem = arq ? '#9AA3AD' : ({suficiente:'#4CAF50',indicios:'#E0A800',ausente:'var(--estado-critico)'}[est.exibido]||'#9AA3AD');
   const disc=svgEl('circle',{cx:20,cy:24,r:6,fill:corSem});
   const dt=svgEl('title');
-  dt.textContent = est.override
-    ? `calculado: ${est.calc} — sobrescrito pela comissão: ${est.override}. Justificativa: ${est.just}`
-    : `estado probatório: ${est.exibido}`;
+  dt.textContent = arq
+    ? `Fato arquivado pela comissão — não consta da minuta. Justificativa: ${f.justificativaArquivamento||'(não informada)'}`
+    : (est.override
+        ? `calculado: ${est.calc} — sobrescrito pela comissão: ${est.override}. Justificativa: ${est.just}`
+        : `estado probatório: ${est.exibido}`);
   disc.append(dt); node.append(disc);
-  txt(node,34,28,f.titulo||'(fato sem título)',{weight:'bold',max:30,title:f.titulo});
-  // linha secundária: chips de acusados OU estado textual
-  const rotEstado={suficiente:'suficiente',indicios:'indícios — in dubio pro societate',ausente:'ausente'}[est.exibido];
-  txt(node,34,46,rotEstado,{size:11,fill:'var(--ink-2)'});
+  const tit=txt(node,34,28,f.titulo||'(fato sem título)',{weight:'bold',max:30,title:f.titulo});
+  if(arq) tit.setAttribute('text-decoration','line-through');
+  // linha secundária: estado probatório OU marca de arquivamento
+  const rotEstado = arq
+    ? 'arquivado — não indiciado'
+    : {suficiente:'suficiente',indicios:'indícios — in dubio pro societate',ausente:'ausente'}[est.exibido];
+  txt(node,34,46,rotEstado,{size:11,fill:'var(--ink-2)',max:38,title:arq?(f.justificativaArquivamento||''):''});
   // chips de acusados
   const cond=f.condutas||[];
   if(cond.length){
@@ -897,6 +915,7 @@ function drawFatoCard(g,f,x,y,pends){
   else if(sev==='fragil'){ badge(node,bx,20,'⚠','var(--estado-fragil)','Pendência frágil'); bx-=20; }
   if(pends.some(p=>p.codigo==='P4')){ badge(node,bx,20,'?','var(--estado-pendente)','Decisão de multiplicidade pendente'); bx-=20; }
   if(pends.some(p=>p.codigo==='P8')){ badge(node,bx,20,'⚡','var(--estado-critico)','Alternatividade violada'); bx-=20; }
+  if(arq){ badge(node,bx,20,'🗄','var(--ink-2)','Fato arquivado — não consta da minuta'); bx-=20; }
   if(cond.length){ badge(node,bx,40,'👤'+(cond.length>1?'×'+cond.length:''),'var(--ink-2)',cond.length+' acusado(s)'); }
 
   node.addEventListener('click',ev=>{ ev.stopPropagation(); toggleIsolate(f.id); });
@@ -1037,16 +1056,19 @@ function flash(node){
 /* ---------- ORDEM NARRATIVA DOS FATOS (arrasto; só afeta a minuta) ---------- */
 function renderFactOrder(){
   const box=$('#factOrder'); if(!box) return; box.innerHTML='';
-  const n=(doc.fatos||[]).length;
+  const ativos=fatosAtivosOrdenados();
+  const arquivados=doc.fatos.filter(fatoArquivado).length;
+  const n=ativos.length;
   const head=el('div',{class:'fo-head',onclick:()=>{factOrderOpen=!factOrderOpen;renderFactOrder();}},
     el('h3',{},'Ordem dos fatos (minuta)'),
     el('span',{class:'chev'}, (n?n+' · ':'')+(factOrderOpen?'▾':'▸')));
   box.append(head);
   if(!factOrderOpen) return;
-  box.append(el('div',{class:'fo-hint'},'Arraste para reordenar. Afeta apenas a sequência da minuta — não o mapa.'));
-  if(!n){ box.append(el('div',{class:'fo-empty'},'Nenhum fato cadastrado.')); return; }
+  box.append(el('div',{class:'fo-hint'},'Arraste para reordenar. Afeta apenas a sequência da minuta — não o mapa.'
+    + (arquivados?` ${arquivados} fato(s) arquivado(s) não constam da minuta.`:'')));
+  if(!n){ box.append(el('div',{class:'fo-empty'}, arquivados?'Nenhum fato ativo — todos arquivados.':'Nenhum fato cadastrado.')); return; }
   const list=el('div',{class:'fo-list'});
-  fatosOrdenados().forEach(f=>{
+  ativos.forEach(f=>{
     const row=el('div',{class:'fo-row',draggable:'true','data-fid':f.id});
     row.append(el('span',{class:'handle'},'⠿'),
       el('span',{class:'ord'}, String(f.ordem||0)),
@@ -1063,13 +1085,13 @@ function renderFactOrder(){
 }
 function moverOrdemFato(fromId, toId){
   if(!fromId || fromId===toId) return;
-  const seq=fatosOrdenados();
+  const seq=fatosAtivosOrdenados();
   const from=seq.findIndex(f=>f.id===fromId);
   const to=seq.findIndex(f=>f.id===toId);
   if(from<0||to<0) return;
   const [moved]=seq.splice(from,1);
   seq.splice(to,0,moved);
-  renumeraOrdem(seq);   // grava 1..N na nova sequência
+  renumeraOrdem(seq);   // grava 1..N na nova sequência (só ativos)
   render();
 }
 
@@ -1319,7 +1341,7 @@ function excluirProvaFlow(id){
 function abrirFormFato(id){
   const novo=!id;
   const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
-    ordem:proximaOrdem(),
+    ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'',
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''} : JSON.parse(JSON.stringify(doc.fatos.find(x=>x.id===id)));
@@ -1450,6 +1472,24 @@ function abrirFormFato(id){
   }
   renderEst();
 
+  // --- situação do fato (ativo / arquivado) ---
+  const sitBox=el('div',{class:'block'});
+  function renderSit(){
+    sitBox.innerHTML='';
+    sitBox.append(el('div',{class:'block-title'},'Situação do fato'));
+    sitBox.append(el('div',{class:'field'}, el('label',{},'Disposição da comissão'),
+      el('div',{class:'radios'},
+        radio('sit',f.status,'ativo','Ativo — será indiciado',v=>{f.status=v;renderSit();}),
+        radio('sit',f.status,'arquivado','Arquivado — apurado, não indiciado',v=>{f.status=v;renderSit();}))));
+    if(f.status==='arquivado'){
+      sitBox.append(el('div',{class:'banner info'},el('span',{},'🗄'),el('div',{},
+        'Fato arquivado não gera pendências e não entra na minuta; permanece no mapa como memória da decisão (ex.: princípio da insignificância; instrução não confirmou o fato contra o acusado).')));
+      sitBox.append(fieldArea('Justificativa do arquivamento (obrigatória)',f.justificativaArquivamento,
+        v=>f.justificativaArquivamento=v,'Motivação jurídica: por que a comissão decidiu não indiciar este fato.'));
+    }
+  }
+  renderSit();
+
   const body=[
     fieldText('Título',f.titulo,v=>f.titulo=v),
     fieldArea('Descrição pormenorizada',f.descricao,v=>f.descricao=v,'delineamento fático claro e individualizado — STJ, MS 13.110/DF',true),
@@ -1457,7 +1497,7 @@ function abrirFormFato(id){
       fieldText('Início do período',f.periodo.inicio,v=>f.periodo.inicio=v,null,'date'),
       fieldText('Fim do período',f.periodo.fim,v=>f.periodo.fim=v,null,'date'),
       fieldText('Local',f.local,v=>f.local=v)),
-    condBox, provBox, wizardBanner, enqBox, estBox
+    condBox, provBox, wizardBanner, enqBox, estBox, sitBox
   ];
   const foot=[
     novo?null:el('button',{class:'btn danger',onclick:()=>{ if(confirm('Excluir este fato?')){ doc.fatos=doc.fatos.filter(x=>x.id!==id); closeModal(); render(); }}},'Excluir'),
@@ -1465,9 +1505,14 @@ function abrirFormFato(id){
     el('button',{class:'btn',onclick:closeModal},'Cancelar'),
     el('button',{class:'btn primary',onclick:()=>{
       if(!(f.titulo||'').trim()){ $('#fatoErr').textContent='Informe o título do fato.'; return; }
-      if(f.estadoProbatorio.override && !(f.estadoProbatorio.justificativaOverride||'').trim()){
-        $('#fatoErr').textContent='O override do estado probatório exige justificativa.'; return; }
-      for(const e of f.enquadramentos){ if(!e.elementoSubjetivo){ $('#fatoErr').textContent='Todo enquadramento exige o elemento subjetivo.'; return; } }
+      if(f.status==='arquivado'){
+        // fato arquivado só exige a motivação do arquivamento — não precisa estar completo
+        if(!(f.justificativaArquivamento||'').trim()){ $('#fatoErr').textContent='O arquivamento exige justificativa.'; return; }
+      } else {
+        if(f.estadoProbatorio.override && !(f.estadoProbatorio.justificativaOverride||'').trim()){
+          $('#fatoErr').textContent='O override do estado probatório exige justificativa.'; return; }
+        for(const e of f.enquadramentos){ if(!e.elementoSubjetivo){ $('#fatoErr').textContent='Todo enquadramento exige o elemento subjetivo.'; return; } }
+      }
       const i=doc.fatos.findIndex(x=>x.id===f.id);
       if(i>=0) doc.fatos[i]=f; else doc.fatos.push(f);
       closeModal(); render();
@@ -1645,7 +1690,7 @@ function recomputaSeq(){
 }
 
 function exportPauta(){
-  const pauta=doc.fatos.filter(f=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})
+  const pauta=doc.fatos.filter(f=>!fatoArquivado(f)&&(()=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})())
     .map(f=>({fatoId:f.id,titulo:f.titulo,estado:estadoExibido(f).exibido,elementosBuscados:f.elementosBuscados||''}));
   const out={origem:'nexus-coger',processo:doc.processo.numero||'',pauta};
   const txt=JSON.stringify(out,null,2);
@@ -1696,8 +1741,8 @@ function validaMinuta(ids){
     const a=acusadoById(id);
     if(!a.nome) f.push('• Nome do indiciado '+id+'.');
     if(!a.cargo) f.push('• Cargo do indiciado '+(a.nome||id)+'.');
-    const fatos=doc.fatos.filter(x=>(x.condutas||[]).some(c=>c.acusadoId===id));
-    if(!fatos.length) f.push('• '+(a.nome||id)+' não possui fato imputado.');
+    const fatos=doc.fatos.filter(x=>!fatoArquivado(x)&&(x.condutas||[]).some(c=>c.acusadoId===id));
+    if(!fatos.length) f.push('• '+(a.nome||id)+' não possui fato ativo imputado (todos arquivados?).');
     fatos.forEach(ft=>{
       if(!ft.descricao) f.push('• Descrição do fato '+ft.id+'.');
       if(!enquadramentosAtivos(ft).length) f.push('• Enquadramento do fato '+ft.id+'.');
@@ -1717,8 +1762,9 @@ function renderMinuta(ids){
 
   ids.forEach((id,idx)=>{
     const a=acusadoById(id);
-    // fatos imputados ao acusado, na ORDEM NARRATIVA definida no painel
-    const fatos=fatosOrdenados(doc.fatos.filter(x=>(x.condutas||[]).some(cc=>cc.acusadoId===id)));
+    // fatos ATIVOS imputados ao acusado, na ORDEM NARRATIVA definida no painel
+    // (arquivados são ignorados: apurados, mas a comissão decidiu não indiciar)
+    const fatos=fatosOrdenados(doc.fatos.filter(x=>!fatoArquivado(x)&&(x.condutas||[]).some(cc=>cc.acusadoId===id)));
     partes.push(`<div class="${idx>0?'cap':''}">`);
     partes.push(`<h2>${idx+1}. Do indiciado ${esc(a.nome)}</h2>`);
     // qualificação
@@ -1860,6 +1906,7 @@ function carregarExemplo(){
   doc.provas.push(P1,P2,P3);
 
   const mkFato=(o)=>Object.assign({id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',
+    status:'ativo', justificativaArquivamento:'',
     condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''},o);

@@ -32,6 +32,13 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
   dois sentidos. Normas residuais podem ser criadas (prefixo `NU-`).
 - **Wizard de multiplicidade** (concurso formal × conflito aparente: consunção,
   subsidiariedade, especialidade, alternatividade).
+- **Fato ativo × arquivado**: a comissão pode arquivar um fato apurado que
+  decidiu não indiciar (p. ex. princípio da insignificância, ou fato não
+  confirmado contra aquele acusado), com justificativa obrigatória. O fato
+  arquivado não gera pendência, não entra na minuta nem na pauta, e permanece
+  no mapa esmaecido como memória da decisão.
+- **Ordem narrativa dos fatos**: campo `ordem` editável por arrasto no painel,
+  usado apenas na sequência da minuta (não afeta o mapa).
 - **Persistência**: rascunho automático em `localStorage` (chave
   `nexus-coger:draft`) e export/import de `.json` como guarda oficial.
 
