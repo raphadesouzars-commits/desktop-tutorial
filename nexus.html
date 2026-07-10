@@ -190,8 +190,9 @@ svg.map{display:block}
 .prazos-sec .pz-cit .row2{gap:6px}
 .prazos-sec .pz-cit label{font-size:11px}
 
-/* ---------- FLOAT BTN (drawer trigger) ---------- */
+/* ---------- FLOAT BTN (drawer trigger / reabrir painel) ---------- */
 .fab{position:fixed;right:16px;bottom:16px;z-index:40;display:none}
+.fab.show{display:inline-flex}   /* aparece quando o painel está recolhido (qualquer largura) */
 @media(max-width:1100px){
   .panel{position:fixed;right:0;top:0;bottom:0;z-index:45;box-shadow:-8px 0 24px #0002}
   .fab{display:inline-flex}
@@ -502,6 +503,35 @@ function buildCatalogo(){
  * RELACOES_DECL) for alterado, para que o lado do Oitiva 360 possa detectar divergência. */
 const CATALOGO_VERSION='1.0';
 
+/* Procedimentos correcionais da PN CGU nº 27/2022 (art. 4º e seguintes):
+ * investigativos e acusatórios. Valores 'PAD' e 'sindicancia_acusatoria' preservados
+ * para retrocompatibilidade com documentos já salvos. */
+const TIPOS_PROCESSO=[
+  ['__inv','— Investigativos —'],
+  ['investigacao_preliminar','Investigação Preliminar (IP)'],
+  ['sindicancia_investigativa','Sindicância Investigativa (SINVE)'],
+  ['sindicancia_patrimonial','Sindicância Patrimonial (SINPA)'],
+  ['__acu','— Acusatórios —'],
+  ['sindicancia_acusatoria','Sindicância Acusatória (SINAC)'],
+  ['PAD','Processo Administrativo Disciplinar (PAD)']
+];
+const TIPO_LABELS=Object.fromEntries(TIPOS_PROCESSO.filter(o=>!o[0].startsWith('__')));
+const TIPO_SIGLA={investigacao_preliminar:'IP',sindicancia_investigativa:'SINVE',sindicancia_patrimonial:'SINPA',
+  sindicancia_acusatoria:'SINAC',PAD:'PAD'};
+const TIPOS_INVESTIGATIVOS=new Set(['investigacao_preliminar','sindicancia_investigativa','sindicancia_patrimonial']);
+const FASES_PROCESSO=[
+  ['instauracao','Instauração'],
+  ['instrucao','Instrução'],
+  ['indiciacao_em_elaboracao','Indiciação em elaboração'],
+  ['defesa_escrita','Defesa escrita'],
+  ['relatorio','Relatório final'],
+  ['julgamento','Julgamento'],
+  ['encerrado','Encerrado']
+];
+const FASE_LABELS=Object.fromEntries(FASES_PROCESSO);
+// fases em que a ausência de enquadramento (P2) passa a ser crítica (da indiciação em diante)
+const FASES_INDICIACAO_ADIANTE=new Set(['indiciacao_em_elaboracao','defesa_escrita','relatorio','julgamento','encerrado']);
+
 /* ordem e rótulos dos grupos do <select> (seção 3.5.3) */
 function grupoDaNorma(id){
   if(id.startsWith('NU-')) return 6;
@@ -533,7 +563,11 @@ function docVazio(){
     schemaVersion:SCHEMA, ferramenta:'nexus-coger', exportadoEm:null,
     processo:{
       numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB',
-      comissao:{presidente:'', membros:['',''], portariaInstauracao:{numero:'',data:''}},
+      comissao:{
+        presidente:{nome:'',cargo:'',matricula:''},
+        membros:[{nome:'',cargo:'',matricula:''},{nome:'',cargo:'',matricula:''}],
+        portariaInstauracao:{numero:'',data:''}
+      },
       objetoApuracao:'', faseAtual:'instrucao',
       prescricao:{ regimeInterrupcaoAtivo:null },
       prazos:{ prazoConclusaoDias:60, prorrogacoes:[] },
@@ -590,6 +624,13 @@ function migra(d){
     if(!f.pautaEnviada||typeof f.pautaEnviada!=='object') f.pautaEnviada={em:null}; // rastro de export de pauta (R4)
   });
   (d.provas||[]).forEach(pr=>{ if(typeof pr.codigoAnexo!=='string') pr.codigoAnexo=''; });
+  // comissão: membros passam de string para objeto {nome,cargo,matricula} (retrocompat)
+  const membroObj=m=> (m&&typeof m==='object') ? {nome:m.nome||'',cargo:m.cargo||'',matricula:m.matricula||''}
+                                               : {nome:(typeof m==='string'?m:''),cargo:'',matricula:''};
+  const co=p.comissao||(p.comissao={});
+  co.presidente=membroObj(co.presidente);
+  co.membros=Array.isArray(co.membros)?co.membros.map(membroObj):[{nome:'',cargo:'',matricula:''},{nome:'',cargo:'',matricula:''}];
+  co.portariaInstauracao=co.portariaInstauracao||{numero:'',data:''};
   return d;
 }
 // próximo inteiro de ordem narrativa (maior existente + 1)
@@ -747,9 +788,9 @@ function computePendencias(){
     const overrideJust = f.estadoProbatorio&&f.estadoProbatorio.override&&(f.estadoProbatorio.justificativaOverride||'').trim();
     if(semProva && !overrideJust)
       push('P1','critico','fato',f.id,'Fato sem prova vinculada — alegação sem evidência');
-    // P2
+    // P2 — crítico apenas da indiciação em diante; frágil nas fases investigativas/instrução
     if(ativos.length===0){
-      const nivel = fase!=='instrucao' ? 'critico':'fragil';
+      const nivel = FASES_INDICIACAO_ADIANTE.has(fase) ? 'critico':'fragil';
       push('P2',nivel,'fato',f.id,'Fato sem enquadramento legal');
     }
     // P5
@@ -841,10 +882,12 @@ function render(){
 function renderHero(){
   const p=doc.processo;
   $('#tagProc').textContent='nº '+(p.numero||'—');
-  const tipoLbl=p.tipo==='PAD'?'PAD':'Sindicância acusatória';
-  $('#tagTipo').textContent=tipoLbl+' · '+(p.rito||'');
-  const faseLbl={instrucao:'Instrução',indiciacao_em_elaboracao:'Indiciação em elaboração',encerrado:'Encerrado'}[p.faseAtual]||p.faseAtual;
-  $('#tagFase').textContent='Fase: '+faseLbl;
+  const sigla=TIPO_SIGLA[p.tipo]||p.tipo;
+  // rito só é pertinente aos procedimentos acusatórios (PAD/sindicância acusatória)
+  const mostraRito = !TIPOS_INVESTIGATIVOS.has(p.tipo) && p.rito;
+  $('#tagTipo').textContent=sigla+(mostraRito?' · '+p.rito:'');
+  $('#tagTipo').title=(TIPO_LABELS[p.tipo]||p.tipo);
+  $('#tagFase').textContent='Fase: '+(FASE_LABELS[p.faseAtual]||p.faseAtual);
 }
 
 /* ---------- CAIXA DE PRESCRIÇÃO (art. 142) ---------- */
@@ -1917,7 +1960,39 @@ function abrirFormNorma(){
 function abrirFormProcesso(){
   const p=JSON.parse(JSON.stringify(doc.processo));
   p.prazos=p.prazos||{prazoConclusaoDias:(p.rito==='sumario'?30:60),prorrogacoes:[]};
+  p.comissao=p.comissao||{};
   p.comissao.portariaInstauracao=p.comissao.portariaInstauracao||{numero:'',data:''};
+  // normaliza presidente/membros para objetos {nome,cargo,matricula}
+  const memObj=m=> (m&&typeof m==='object')?{nome:m.nome||'',cargo:m.cargo||'',matricula:m.matricula||''}:{nome:(typeof m==='string'?m:''),cargo:'',matricula:''};
+  p.comissao.presidente=memObj(p.comissao.presidente);
+  p.comissao.membros=Array.isArray(p.comissao.membros)&&p.comissao.membros.length?p.comissao.membros.map(memObj):[{nome:'',cargo:'',matricula:''},{nome:'',cargo:'',matricula:''}];
+
+  // bloco Comissão: presidente + membros (cada um com nome, cargo, matrícula)
+  const comissaoBox=el('div',{class:'block'});
+  function trioMembro(m){
+    return el('div',{class:'row3'},
+      fieldText('Nome',m.nome,v=>m.nome=v),
+      fieldText('Cargo',m.cargo,v=>m.cargo=v),
+      fieldText('Matrícula',m.matricula,v=>m.matricula=v));
+  }
+  function renderComissao(){
+    comissaoBox.innerHTML='';
+    comissaoBox.append(el('div',{class:'block-title'},'Comissão'));
+    comissaoBox.append(el('div',{style:'font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:4px'},'Presidente'),
+      trioMembro(p.comissao.presidente));
+    p.comissao.membros.forEach((m,i)=>{
+      const head=el('div',{style:'display:flex;align-items:center;margin:8px 0 4px'},
+        el('div',{style:'font-size:12px;font-weight:700;color:var(--ink-2);flex:1'},'Membro '+(i+1)),
+        el('button',{class:'btn ghost small danger',onclick:()=>{p.comissao.membros.splice(i,1);renderComissao();}},'✕'));
+      comissaoBox.append(head, trioMembro(m));
+    });
+    comissaoBox.append(el('button',{class:'btn small',style:'margin-top:8px',
+      onclick:()=>{p.comissao.membros.push({nome:'',cargo:'',matricula:''});renderComissao();}},'+ membro'));
+    comissaoBox.append(el('div',{class:'row2',style:'margin-top:10px'},
+      fieldText('Portaria de instauração — nº',p.comissao.portariaInstauracao.numero,v=>p.comissao.portariaInstauracao.numero=v),
+      fieldText('Data (marco de interrupção da prescrição, art. 142, §3º)',p.comissao.portariaInstauracao.data,v=>p.comissao.portariaInstauracao.data=v,null,'date')));
+  }
+  renderComissao();
 
   const prazosBox=el('div',{class:'block'});
   function renderPrazosBox(){
@@ -1947,22 +2022,23 @@ function abrirFormProcesso(){
   const body=[
     el('div',{class:'row2'},
       fieldText('Número do processo',p.numero,v=>p.numero=v),
-      fieldSelect('Tipo',p.tipo,[['PAD','PAD'],['sindicancia_acusatoria','Sindicância acusatória']],v=>p.tipo=v)),
+      (()=>{ // tipo (PN CGU 27) — agrupado em investigativos / acusatórios
+        const sel=el('select',{onchange:e=>p.tipo=e.target.value}); let og=null;
+        TIPOS_PROCESSO.forEach(([v,t])=>{
+          if(v.startsWith('__')){ og=el('optgroup',{label:t.replace(/—/g,'').trim()}); sel.append(og); return; }
+          const o=el('option',{value:v},t); if(v===p.tipo)o.selected=true; (og||sel).append(o);
+        });
+        return el('div',{class:'field'}, el('label',{},'Tipo (PN CGU 27)'), sel);
+      })()),
     el('div',{class:'row2'},
       fieldSelect('Rito',p.rito,[['ordinario','Ordinário'],['sumario','Sumário']],v=>{
         const oldDef=p.rito==='sumario'?30:60; p.rito=v; const newDef=v==='sumario'?30:60;
         if(p.prazos.prazoConclusaoDias===oldDef){ p.prazos.prazoConclusaoDias=newDef; renderPrazosBox(); }
       }),
-      fieldSelect('Fase atual',p.faseAtual,[['instrucao','Instrução'],['indiciacao_em_elaboracao','Indiciação em elaboração'],['encerrado','Encerrado']],v=>p.faseAtual=v)),
+      fieldSelect('Fase atual',p.faseAtual,FASES_PROCESSO,v=>p.faseAtual=v)),
     fieldText('Unidade',p.unidade,v=>p.unidade=v),
     fieldArea('Objeto da apuração',p.objetoApuracao,v=>p.objetoApuracao=v),
-    el('div',{class:'block'}, el('div',{class:'block-title'},'Comissão'),
-      fieldText('Presidente',p.comissao.presidente,v=>p.comissao.presidente=v),
-      fieldText('Membro 1',p.comissao.membros[0],v=>p.comissao.membros[0]=v),
-      fieldText('Membro 2',p.comissao.membros[1],v=>p.comissao.membros[1]=v),
-      el('div',{class:'row2'},
-        fieldText('Portaria de instauração — nº',p.comissao.portariaInstauracao.numero,v=>p.comissao.portariaInstauracao.numero=v),
-        fieldText('Data (marco de interrupção da prescrição, art. 142, §3º)',p.comissao.portariaInstauracao.data,v=>p.comissao.portariaInstauracao.data=v,null,'date'))),
+    comissaoBox,
     prazosBox,
   ];
   const foot=[el('button',{class:'btn',onclick:closeModal},'Cancelar'),
@@ -2161,7 +2237,7 @@ function gerarMinutaFlow(){
 function validaMinuta(ids){
   const f=[];
   if(!doc.processo.numero) f.push('• Número do processo (dados do processo).');
-  if(!doc.processo.comissao.presidente) f.push('• Presidente da comissão.');
+  if(!(doc.processo.comissao.presidente&&doc.processo.comissao.presidente.nome)) f.push('• Nome do presidente da comissão.');
   ids.forEach(id=>{
     const a=acusadoById(id);
     if(!a.nome) f.push('• Nome do indiciado '+id+'.');
@@ -2177,7 +2253,7 @@ function validaMinuta(ids){
 }
 function renderMinuta(ids){
   const p=doc.processo, c=p.comissao;
-  const membros=[c.presidente,...(c.membros||[])].filter(Boolean).join(', ');
+  const assinatura=(m,papel,fallback)=>`<p class="center">___________________________________<br>${esc((m&&m.nome)||fallback)} — ${papel}${m&&m.cargo?'<br><span style="font-size:12px">'+esc(m.cargo)+(m.matricula?' · Matrícula '+esc(m.matricula):'')+'</span>':''}</p>`;
   const partes=[];
   partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
     <div class="inst">CORREGEDORIA DA RECEITA FEDERAL DO BRASIL (Coger/RFB) — ${esc(p.unidade||'')}</div>
@@ -2269,8 +2345,8 @@ function renderMinuta(ids){
     <p>Ressalva-se que o enquadramento ora proposto poderá ser adequado por ocasião do Relatório Final, à luz da defesa, uma vez que o indiciado se defende dos fatos e não da sua capitulação.</p>
     <p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do(s) indiciado(s) para, no prazo legal, apresentar defesa escrita.</p>
     <p class="center" style="margin-top:36px">${esc(p.unidade||'')}, ${new Date().toLocaleDateString('pt-BR')}.</p>
-    <p class="center">___________________________________<br>${esc(c.presidente||'Presidente da Comissão')} — Presidente</p>
-    ${(c.membros||[]).filter(Boolean).map(m=>`<p class="center">___________________________________<br>${esc(m)} — Membro</p>`).join('')}`);
+    ${assinatura(c.presidente,'Presidente','Presidente da Comissão')}
+    ${(c.membros||[]).filter(m=>m&&m.nome).map(m=>assinatura(m,'Membro','')).join('')}`);
 
   // marca a 1ª geração da minuta → habilita o bloco de citação/defesa no painel de Prazos
   if(!doc._minutaGerada){ doc._minutaGerada=true; prazosSecOpen=true; render(); }
@@ -2331,8 +2407,10 @@ function carregarExemplo(){
   doc=docVazio();
   doc.processo.numero='10000.000000/2026-00';
   doc.processo.objetoApuracao='Apuração de possível valimento do cargo e desídia na unidade.';
-  doc.processo.comissao.presidente='AFRFB Fulano de Tal';
-  doc.processo.comissao.membros=['AFRFB Sicrano','ATRFB Beltrano'];
+  doc.processo.comissao.presidente={nome:'Fulano de Tal',cargo:'Auditor-Fiscal da RFB',matricula:'1234567'};
+  doc.processo.comissao.membros=[
+    {nome:'Sicrano de Souza',cargo:'Auditor-Fiscal da RFB',matricula:'2345678'},
+    {nome:'Beltrano de Lima',cargo:'Analista-Tributário da RFB',matricula:'3456789'}];
   doc.processo.comissao.portariaInstauracao={numero:'123/2026',data:'2026-02-01'};
 
   const A1={id:genId('A'),nome:'João da Silva',matricula:'1111111',cargo:'Auditor-Fiscal',lotacao:'Defis',
@@ -2401,6 +2479,8 @@ function limparTudo(){
   doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); render();
 }
 function toggleMenu(open){ const m=$('#menu'); m.classList.toggle('open', open==null?!m.classList.contains('open'):open); }
+// mostra o botão flutuante de reabrir quando o painel está recolhido (em qualquer largura)
+function updateFab(){ const p=$('#panel'), f=$('#fab'); if(p&&f) f.classList.toggle('show', p.classList.contains('collapsed')); }
 
 document.addEventListener('DOMContentLoaded',init);
 function init(){
@@ -2424,8 +2504,10 @@ function init(){
   $('#prescBox').addEventListener('click',e=>{ e.stopPropagation();
     if($('#popover').classList.contains('open')) fecharPopover(); else abrirPopoverPrescricao(); });
   $('#search').addEventListener('input',e=>{searchTerm=e.target.value.trim();renderMap();});
-  $('#btnCollapse').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));
-  $('#fab').addEventListener('click',()=>$('#panel').classList.toggle('collapsed'));
+  const togglePanel=()=>{ $('#panel').classList.toggle('collapsed'); updateFab(); };
+  $('#btnCollapse').addEventListener('click',togglePanel);
+  $('#fab').addEventListener('click',togglePanel);
+  updateFab();
   window.addEventListener('resize',()=>renderMap());
 
   render();
