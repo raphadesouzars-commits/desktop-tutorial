@@ -1,0 +1,225 @@
+{
+  "schema_version": "1.0.0",
+  "atualizado_em": "2026-07-11",
+  "papeis_pessoa": [
+    {
+      "id": "PAPEL.ACUSADO",
+      "label": "Investigado/Acusado",
+      "descricao": "Servidor submetido a apuração disciplinar; objeto do processo. Não presta compromisso. Tem direito constitucional ao silêncio, com advertência da Lei 13.869/2019 (art. 15, parágrafo único, I): se exercido o silêncio, a comissão não formula questionamentos. Defensor facultativo (Súmula Vinculante nº 5/STF). O interrogatório deve ser o último ato da instrução (art. 159), com antecedência mínima de 3 dias úteis na intimação.",
+      "compromisso": false,
+      "direito_silencio": true,
+      "origem_permitida": ["nexo-coger", "oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PAPEL.VITIMA",
+      "label": "Vítima",
+      "descricao": "Não é testemunha e não presta compromisso legal de dizer a verdade, não respondendo por falso testemunho — mas sujeita-se à denunciação caluniosa. Documentação própria: Termo de Depoimento, Termo de Declarações ou Alegações do Ofendido, conforme o caso.",
+      "compromisso": false,
+      "origem_permitida": ["oitiva-360"],
+      "status": "ativo",
+      "nota": "Definição única do catálogo; corrige bug do Oitiva 360 em que tipoSugeridoParaItem() marcava prova de vítima como compromissada:true, contradizendo compromisso:false. Nexo Coger não tinha nenhum papel de vítima antes desta rodada."
+    },
+    {
+      "id": "PAPEL.TESTEMUNHA",
+      "label": "Testemunha",
+      "descricao": "Presta compromisso legal de dizer a verdade (art. 342, CP). Responde a perguntas de praxe sobre parentesco, amizade/inimizade, interesse e impedimento. Tem o dever de depor, ressalvado o direito de não produzir prova contra si mesma.",
+      "compromisso": true,
+      "origem_permitida": ["oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PAPEL.DECLARANTE_INFORMANTE",
+      "label": "Declarante/Informante",
+      "descricao": "Não presta compromisso legal de dizer a verdade. Ouvido em razão de vínculo com o investigado ou de participação anterior no contexto apurado. Não responde por falso testemunho, mas apela-se à sua colaboração voluntária com a apuração.",
+      "compromisso": false,
+      "origem_permitida": ["oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PAPEL.PESSOA_SITUACAO_INDEFINIDA",
+      "label": "Pessoa em Situação Indefinida",
+      "descricao": "Autos indicam possível envolvimento da pessoa no contexto fático, sem elementos ainda para tratá-la como investigada. Não presta compromisso de testemunha e tem facultado o direito ao silêncio, por cautela e analogia à vedação à autoincriminação. Exige consulta prévia à defesa sobre o enquadramento adotado.",
+      "compromisso": false,
+      "direito_silencio": true,
+      "origem_permitida": ["oitiva-360"],
+      "status": "ativo",
+      "nota": "Ausente no Nexo Coger antes desta rodada; item novo criado a partir da definição do Oitiva 360 (Orientações de Implementação, 2026-07-09)."
+    }
+  ],
+  "tipos_prova": [
+    {
+      "id": "PROVA.DOCUMENTAL",
+      "label": "Documental",
+      "descricao": "Prova considerada direta por padrão na matriz de força probatória do Nexo Coger.",
+      "origem_permitida": ["nexo-coger", "veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.PERICIAL",
+      "label": "Pericial",
+      "descricao": "Prova considerada direta por padrão na matriz de força probatória do Nexo Coger. Corresponde a 'Laudo/perícia' no Veritas.",
+      "origem_permitida": ["nexo-coger", "veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.TESTEMUNHAL",
+      "label": "Testemunhal",
+      "descricao": "Depoimento colhido em oitiva ou interrogatório, com compromisso legal. Direta apenas condicionalmente. Campos: deponente, compromissada, contradita.",
+      "origem_permitida": ["nexo-coger", "oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DECLARACAO_INFORMANTE",
+      "label": "Declaração de informante",
+      "descricao": "Depoimento sem compromisso legal, não considerado prova direta.",
+      "origem_permitida": ["nexo-coger", "oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.INTERROGATORIO",
+      "label": "Interrogatório",
+      "descricao": "Depoimento do acusado, sem compromisso e com direito ao silêncio; prova direta por padrão.",
+      "origem_permitida": ["nexo-coger", "oitiva-360"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DILIGENCIA",
+      "label": "Diligência",
+      "descricao": "Prova direta por padrão, produzida por ato de diligência da comissão.",
+      "origem_permitida": ["nexo-coger"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.EMPRESTADA",
+      "label": "Prova emprestada",
+      "descricao": "Prova oriunda de outro processo. Direta apenas se certidão juntada e origem judicial regular (processoOrigem, certidaoJuntada, origemJudicial, autorizacaoJudicial).",
+      "origem_permitida": ["nexo-coger"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.INDICIARIA",
+      "label": "Prova indiciária",
+      "descricao": "Nunca é considerada prova direta na matriz de força probatória do Nexo Coger.",
+      "origem_permitida": ["nexo-coger"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.PRINT_SISTEMA",
+      "label": "Print de sistema",
+      "descricao": "Subcategoria de evidência digital do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DOCUMENTO_FINANCEIRO",
+      "label": "Documento financeiro",
+      "descricao": "Subcategoria de evidência do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.COMUNICACAO",
+      "label": "Comunicação (e-mail/mensagem)",
+      "descricao": "Subcategoria de evidência do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.FOTO_VIDEO",
+      "label": "Foto/vídeo",
+      "descricao": "Subcategoria de evidência do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.OFICIO",
+      "label": "Ofício",
+      "descricao": "Subcategoria de evidência do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DECISAO_JUDICIAL",
+      "label": "Decisão judicial",
+      "descricao": "Subcategoria de evidência do Veritas, sem equivalente 1:1 no vocabulário do Nexo Coger.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DOCUMENTO_FISICO",
+      "label": "Documento físico",
+      "descricao": "Subcategoria de evidência do Veritas; integridade sustentada por lacre, sem hash.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.DISPOSITIVO_FISICO",
+      "label": "Dispositivo/mídia física",
+      "descricao": "HD, celular, pendrive etc. Subcategoria de evidência do Veritas; integridade sustentada por lacre, sem hash.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.OUTRO",
+      "label": "Outro",
+      "descricao": "Categoria residual de evidência do Veritas sem tipo mais específico.",
+      "origem_permitida": ["veritas"],
+      "status": "ativo"
+    }
+  ],
+  "normas": [
+    { "id": "NORMA.L8112.ART116_I", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, I", "descricao": "Inassiduidade ao dever de exercer com zelo e dedicação.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_II", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, II", "descricao": "Deslealdade às instituições.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_III", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, III", "descricao": "Inobservância de normas legais e regulamentares.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_IV", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, IV", "descricao": "Descumprimento de ordens superiores, exceto quando manifestamente ilegais.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_V", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, V", "descricao": "Falta de presteza ao público, à expedição de certidões ou às requisições para defesa da Fazenda Pública.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_VI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, VI", "descricao": "Omissão em levar irregularidades ao conhecimento da autoridade superior.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_VII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, VII", "descricao": "Falta de zelo pela economia do material e conservação do patrimônio.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_VIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, VIII", "descricao": "Violação do dever de guardar sigilo sobre assunto da repartição.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_IX", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, IX", "descricao": "Conduta incompatível com a moralidade administrativa.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_X", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, X", "descricao": "Falta de assiduidade e pontualidade.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_XI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, XI", "descricao": "Falta de urbanidade.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART116_XII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 116, XII", "descricao": "Omissão do dever de representar contra ilegalidade, omissão ou abuso de poder.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_I", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, I", "descricao": "Ausentar-se do serviço durante o expediente sem autorização do chefe imediato.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_II", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, II", "descricao": "Retirar documento ou objeto da repartição sem anuência da autoridade competente.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_III", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, III", "descricao": "Recusar fé a documentos públicos.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_IV", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, IV", "descricao": "Opor resistência injustificada ao andamento de documento, processo ou execução de serviço.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_V", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, V", "descricao": "Promover manifestação de apreço ou desapreço no recinto da repartição.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_VI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, VI", "descricao": "Cometer a pessoa estranha à repartição atribuição de sua responsabilidade ou de subordinado.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_VII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, VII", "descricao": "Coagir ou aliciar subordinados a filiação associativa, sindical ou partidária.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_VIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, VIII", "descricao": "Manter sob chefia imediata, em cargo/função de confiança, cônjuge, companheiro ou parente até 2º grau.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XIX", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XIX", "descricao": "Recusar-se a atualizar dados cadastrais quando solicitado.", "gravidade": "leve", "penalidade": "advertencia", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XVII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XVII", "descricao": "Cometer a outro servidor atribuições estranhas ao cargo, fora de emergência transitória.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XVIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XVIII", "descricao": "Exercer atividades incompatíveis com o cargo/função ou com o horário de trabalho.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_IX", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, IX", "descricao": "Valimento do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_X", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, X", "descricao": "Participar de gerência/administração de sociedade privada; exercer o comércio.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XI", "descricao": "Atuar como procurador ou intermediário junto a repartições públicas.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XII", "descricao": "Receber propina, comissão, presente ou vantagem de qualquer espécie.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XIII", "descricao": "Aceitar comissão, emprego ou pensão de estado estrangeiro.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XIV", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XIV", "descricao": "Praticar usura sob qualquer de suas formas.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XV", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XV", "descricao": "Proceder de forma desidiosa.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART117_XVI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 117, XVI", "descricao": "Utilizar pessoal ou recursos materiais da repartição em atividades particulares.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART130_P1", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 130, §1º", "descricao": "Recusa injustificada a inspeção médica determinada por autoridade competente.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_I", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, I", "descricao": "Crime contra a administração pública.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_II", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, II", "descricao": "Abandono de cargo.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_III", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, III", "descricao": "Inassiduidade habitual.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_IV", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, IV", "descricao": "Improbidade administrativa.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_V", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, V", "descricao": "Incontinência pública e conduta escandalosa, na repartição.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_VI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, VI", "descricao": "Insubordinação grave em serviço.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_VII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, VII", "descricao": "Ofensa física, em serviço, a servidor ou particular, salvo em legítima defesa própria ou de outrem.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_VIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, VIII", "descricao": "Aplicação irregular de dinheiros públicos.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_IX", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, IX", "descricao": "Revelação de segredo apropriado em razão do cargo.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_X", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, X", "descricao": "Lesão aos cofres públicos e dilapidação do patrimônio nacional.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_XI", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, XI", "descricao": "Corrupção.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_XII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, XII", "descricao": "Acumulação ilegal de cargos, empregos ou funções públicas.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.L8112.ART132_XIII", "lei": "Lei nº 8.112, de 1990", "dispositivo": "art. 132, XIII c/c art. 117, IX-XVI", "descricao": "Transgressão das proibições graves do art. 117, incisos IX a XVI.", "gravidade": "grave", "penalidade": "demissao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_I", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, I", "descricao": "Recusar, retardar ou fornecer incorretamente informação requerida.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_II", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, II", "descricao": "Utilizar indevidamente, subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar informação sob guarda.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_III", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, III", "descricao": "Agir com dolo ou má-fé na análise de solicitação de acesso à informação.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_IV", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, IV", "descricao": "Divulgar/permitir divulgação ou acessar/permitir acesso indevido a informação sigilosa ou pessoal.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_V", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, V", "descricao": "Impor sigilo para proveito pessoal/de terceiro ou ocultação de ato ilegal.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_VI", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, VI", "descricao": "Ocultar da revisão de autoridade superior informação sigilosa.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" },
+    { "id": "NORMA.LAI.ART32_VII", "lei": "Lei nº 12.527, de 2011", "dispositivo": "art. 32, VII", "descricao": "Destruir ou subtrair documentos sobre possíveis violações de direitos humanos por agentes do Estado.", "gravidade": "media", "penalidade": "suspensao", "status": "ativo" }
+  ]
+}
