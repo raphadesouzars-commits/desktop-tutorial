@@ -51,9 +51,11 @@ button{font-family:inherit;cursor:pointer}
   background:#ffffff1f;padding:5px 12px;border-radius:20px;border:1px solid #ffffff33}
 
 /* ---------- HERO ---------- */
+/* altura e título ~30% maiores (só o Nexo Coger; não propagar ao coger-ui.css).
+ * base: padding vertical 10px→13px; título 17px→22px (17 × 1.3 ≈ 22). */
 .hero{background:var(--paper);border-bottom:1px solid var(--borda);
-  padding:10px 18px;display:flex;align-items:baseline;gap:14px;flex:0 0 auto;flex-wrap:wrap}
-.hero h1{margin:0;font-size:17px;color:var(--topbar)}
+  padding:13px 18px;display:flex;align-items:baseline;gap:14px;flex:0 0 auto;flex-wrap:wrap}
+.hero h1{margin:0;font-size:22px;color:var(--topbar)}
 .hero .sub{font-size:12.5px;color:var(--ink-2)}
 .hero .proc{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:12px}
 .hero .proc .tag{background:var(--canvas-bg);border:1px solid var(--borda);
@@ -555,12 +557,15 @@ const GRUPOS=[
 /* ------------------------------------------------------------------ *
  * 2. ESTADO / MODELO DE DADOS
  * ------------------------------------------------------------------ */
-const LS_KEY='nexus-coger:draft';
+const LS_KEY='nexo-coger:draft';
+const LS_KEY_LEGADO='nexus-coger:draft';   // rascunho de versões anteriores
 const SCHEMA='1.0';
+const FERRAMENTA='nexo-coger';             // contrato de integração (Oitiva 360)
+const FERRAMENTA_LEGADO='nexus-coger';     // aceito na leitura/importação por retrocompat
 
 function docVazio(){
   return {
-    schemaVersion:SCHEMA, ferramenta:'nexus-coger', exportadoEm:null,
+    schemaVersion:SCHEMA, ferramenta:FERRAMENTA, exportadoEm:null,
     processo:{
       numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB',
       comissao:{
@@ -599,8 +604,9 @@ function scheduleSave(){
 }
 function loadDraft(){
   try{
-    const raw=localStorage.getItem(LS_KEY);
-    if(raw){ const d=JSON.parse(raw); if(d&&d.ferramenta==='nexus-coger'){ return migra(d); } }
+    // lê a chave atual e, na ausência, a chave legada (rascunho de versões anteriores)
+    const raw=localStorage.getItem(LS_KEY)||localStorage.getItem(LS_KEY_LEGADO);
+    if(raw){ const d=JSON.parse(raw); if(d&&(d.ferramenta===FERRAMENTA||d.ferramenta===FERRAMENTA_LEGADO)){ return migra(d); } }
   }catch(e){}
   return null;
 }
@@ -2067,7 +2073,7 @@ $('#fileInput').addEventListener('change',e=>{
   rd.onload=()=>{
     try{
       const d=JSON.parse(rd.result);
-      if(d.ferramenta!=='nexus-coger'&&d.ferramenta!=='nexo-coger'){ alert('Arquivo não reconhecido: campo "ferramenta" ausente ou inválido. Esperado "nexus-coger".'); return; }
+      if(d.ferramenta!==FERRAMENTA&&d.ferramenta!==FERRAMENTA_LEGADO){ alert('Arquivo não reconhecido: campo "ferramenta" ausente ou inválido. Esperado "nexo-coger".'); return; }
       if(d.schemaVersion!==SCHEMA){ if(!confirm('schemaVersion diferente ('+d.schemaVersion+'). Tentar importar mesmo assim?')) return; }
       const temDados=doc.fatos.length||doc.provas.length||doc.acusados.length;
       if(temDados && !confirm('Isto substituirá o rascunho atual. Continuar?')) return;
@@ -2091,7 +2097,7 @@ function exportPauta(){
       return {normaId:e.normaId, rotulo:n?n.rotulo:'', elementoSubjetivo:e.elementoSubjetivo};})
   }));
   const out={
-    origem:'nexus-coger', catalogoVersion:CATALOGO_VERSION, processo:doc.processo.numero||'',
+    origem:FERRAMENTA, catalogoVersion:CATALOGO_VERSION, processo:doc.processo.numero||'',
     exportadoEm:new Date().toISOString(),
     acusadosContexto:doc.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
     pauta
