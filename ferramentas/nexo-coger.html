@@ -2489,9 +2489,17 @@ function abrirFormProva(id, onSaveNew){
     detBox.innerHTML=''; detBox.append(el('div',{class:'block-title'},'Detalhes do tipo'));
     const d=p.detalhe;
     if(p.tipo==='testemunhal'||p.tipo==='declaracao_informante'){
-      if(d.deponente===undefined) Object.assign(d,{deponente:'',compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}});
+      if(d.deponente===undefined) Object.assign(d,{deponente:'',papelId:(p.tipo==='declaracao_informante'?'PAPEL.DECLARANTE_INFORMANTE':'PAPEL.TESTEMUNHA'),compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}});
+      // Rodada 2 — Bug 2: até aqui o depoente só tinha nome livre + booleano "compromissada", sem
+      // nenhum campo de papel — por isso PAPEL.PESSOA_SITUACAO_INDEFINIDA (e os demais papéis) não
+      // apareciam em ponto algum do Nexo Coger. Lista lida de CATALOGO_COGER.papeis_pessoa, não
+      // hardcoded, para que qualquer papel novo do catálogo apareça aqui automaticamente.
+      if(d.papelId===undefined) d.papelId=(p.tipo==='declaracao_informante'?'PAPEL.DECLARANTE_INFORMANTE':'PAPEL.TESTEMUNHA');
       detBox.append(
         fieldText('Deponente',d.deponente,v=>d.deponente=v),
+        fieldSelect('Papel do depoente',d.papelId,
+          CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo').map(x=>[x.id,x.label]),
+          v=>{ d.papelId=v; const pc=CATALOGO_COGER.papeis_pessoa.find(x=>x.id===v); if(pc) d.compromissada=!!pc.compromisso; renderDetalhe(); }),
         el('div',{class:'field'}, el('label',{},'Compromissada?'),
           el('div',{class:'radios'}, radio('comp',d.compromissada,true,'Sim',v=>d.compromissada=v),
             radio('comp',d.compromissada,false,'Não',v=>d.compromissada=v))),

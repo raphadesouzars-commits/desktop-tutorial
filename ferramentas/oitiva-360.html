@@ -5490,12 +5490,33 @@ function ligarEventosEtapa4(container, d){
    ===================================================================== */
 let _exportProvaDraft = null; // { [fatoId]: { incluir, tipo, compromissada, titulo, descricao, trechos, refDocumento, refFolhas, contraditaHouve, contraditaAcolhida, contraditaRefAutos } }
 
+// Rodada 2 — Bug 1 (Rodada 6, seção 6.3): PAPEL_SLUG_PARA_ID_CATALOGO resolve o slug interno
+// (d.papel) para o ID do catálogo canônico, para que tipoSugeridoParaItem() nunca mais hardcode
+// um "compromissada" divergente do compromisso:false já definido em PAPEL.VITIMA.
+const PAPEL_SLUG_PARA_ID_CATALOGO = {
+  acusado: "PAPEL.ACUSADO",
+  vitima: "PAPEL.VITIMA",
+  testemunha: "PAPEL.TESTEMUNHA",
+  declarante_informante: "PAPEL.DECLARANTE_INFORMANTE",
+  situacao_indefinida: "PAPEL.PESSOA_SITUACAO_INDEFINIDA"
+};
+
+function papelCatalogoPorSlug(slug){
+  const id = PAPEL_SLUG_PARA_ID_CATALOGO[slug];
+  return id ? CATALOGO_COGER.papeis_pessoa.find(p => p.id === id) : null;
+}
+
 // Seção 6.3: regra automática de sugestão de tipo/compromissada — sempre editável, nunca aplicada
 // sem tela de revisão.
 function tipoSugeridoParaItem(d){
   if (d.papel === "declarante_informante") return { tipo: "declaracao_informante", compromissada: false };
   if (d.papel === "acusado") return { tipo: "interrogatorio", compromissada: false };
-  if (d.papel === "vitima") return { tipo: "testemunhal", compromissada: true };
+  if (d.papel === "vitima") {
+    // Bug 1 (Rodada 2): antes retornava compromissada:true, hardcoded, contradizendo
+    // PAPEL.VITIMA.compromisso === false no catálogo canônico. Agora lê do catálogo por ID.
+    const papelCatalogo = papelCatalogoPorSlug("vitima");
+    return { tipo: "testemunhal", compromissada: !!(papelCatalogo && papelCatalogo.compromisso) };
+  }
   return { tipo: "testemunhal", compromissada: true }; // testemunha (e situação indefinida, por padrão)
 }
 
