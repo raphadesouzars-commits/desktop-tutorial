@@ -1,6 +1,36 @@
 # Changelog — Catálogo Canônico
 
-`catalogo-canonico.json` — `schema_version: 1.0.0`, `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `5906e98f`.
+`catalogo-canonico.json` — `schema_version: 1.1.0` (estendida na Rodada 5, era `1.0.0`), `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `744bb790` (era `5906e98f`).
+
+## Rodada 5 — Contrato Oitiva 360 → Veritas: termo de oitiva (fechada)
+
+### 5.1 — Diagnóstico
+
+`gerarTermoTexto()` já existia no `oitiva-360.html` e já montava cabeçalho, qualificação civil/funcional e o parágrafo de compromisso/silêncio/colaboração por papel — mas a seção de inquirição era o texto fixo literal `"[transcrição das perguntas e respostas]"`. `d.roteiro` (o banco de perguntas selecionadas para a sessão) nunca teve campo de resposta: é um roteiro do que perguntar, não um transcript do que foi respondido. Não existiam também "responsável pela condução" nem "observações gerais" como campos do depoente — por isso, seguindo a spec, ficaram de fora desta rodada (campo `termo.responsavel` exportado vazio).
+
+### Extensão do catálogo
+
+`PROVA.TERMO_OITIVA` adicionada a `tipos_prova` no `catalogo-canonico.json` (`origem_permitida: ["oitiva-360", "veritas"]`), com bump de `schema_version` para `1.1.0` (adição não-quebra de vocabulário) e reembutida (mesmo hash `744bb790`) nos três HTMLs.
+
+### Contrato implementado
+
+`oitiva-360.html`:
+- `d.respostasRoteiro` (chave estável `blocoId::refId::ordem`) guarda a resposta de cada pergunta do roteiro, editável na nova seção "Respostas registradas" da Etapa 4.
+- `gerarTermoTexto()` agora monta a transcrição real, numerada, na ordem do roteiro (`perguntasRespostasOrdenadas()`), ou uma nota de "direito ao silêncio exercido" quando aplicável — nunca mais o placeholder fixo.
+- `exportarTermoParaVeritas()`: regenera o termo a partir do estado corrente (garante que o texto exportado sempre reflete as respostas mais recentes), calcula SHA-256 sobre esse texto exato via Web Crypto (`sha256HexOitiva`, mesmo algoritmo do Veritas), e monta o envelope (`schema_version`, `catalogo_schema_version`, `pauta_id` — deduzido dos `pautaIdOrigem` dos itens de pauta selecionados pelo depoente, Rodada 4 —, `rodada_id` gerado e persistido em `d.rodadaId`, `deponente.papel` por ID via `PAPEL_SLUG_PARA_ID_CATALOGO`, Rodada 2 —, `termo`, `hash_origem`).
+
+`veritas.html`:
+- `App.importarTermoOitiva()`: valida `origem`/`termo.conteudo`/`hash_origem`, recalcula o hash sobre o texto recebido e **bloqueia a importação com `alert()` claro (mostrando hash esperado vs. calculado) se divergir** — nenhum item é criado nesse caso. Se o hash confere, cria um novo item com `categoria: "termo_oitiva"` (rótulo "Termo de oitiva", nova entrada em `CATEGORIAS`), `proveniencia.tipo: "gerado_internamente"` (mesma lógica de proveniência interna já usada para itens gerados dentro da suíte), `id` novo gerado por `uid()` no momento da importação, e guarda o envelope completo em `item.termoOitiva` (conteúdo, `pautaId`, `rodadaId`, `deponente`, `hashOrigem`) para rastreabilidade da Rodada 6. Aviso não bloqueante (mesmo padrão das Rodadas 3/4) se `catalogo_schema_version` divergir mas o hash conferir.
+- `CATEGORIA_VERITAS_PARA_PROVA_ID.termo_oitiva = "PROVA.TERMO_OITIVA"` também adicionado, para que um termo já importado seja corretamente re-rotulado se algum dia reexportado ao Nexo (`exportarProvasParaNexo()`, Rodada 3).
+
+### Teste de ponta a ponta (Playwright, os dois HTMLs reais)
+
+1. Depoente criado no Oitiva 360 (papel testemunha) → roteiro gerado com 33 perguntas → todas as 33 respondidas com texto identificável pela ordem → termo exportado contém as 33 respostas na mesma ordem em que foram registradas (verificado por posição no texto, não só por presença).
+2. Envelope exportado: `catalogo_schema_version: "1.1.0"`, `deponente.papel: "PAPEL.TESTEMUNHA"`, `rodada_id` presente, `hash_origem` com prefixo `sha256:`.
+3. Importado no Veritas sem erro: 1 prova criada, categoria "Termo de oitiva", proveniência "Gerado internamente", `id_prova` novo e diferente do `rodada_id` de origem.
+4. Mesmo arquivo com 1 caractere alterado no `termo.conteudo` → Veritas **rejeitou a importação** com alerta mostrando hash esperado e hash calculado — zero itens criados.
+
+Todos os quatro critérios de aceite da Rodada 5 confirmados na prática.
 
 ## Rodada 4 — Contrato Nexo Coger → Oitiva 360 (pauta de instrução, fechada)
 

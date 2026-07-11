@@ -982,17 +982,17 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
 
 <script>
 /* ============================================================
- * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1)
+ * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1; estendido na Rodada 5)
  * Fonte de verdade: catalogo-canonico.json (raiz do projeto).
- * schema_version: 1.0.0
- * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 5906e98f
+ * schema_version: 1.1.0
+ * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 744bb790
  * Copia embutida gerada nesta rodada; NAO editar diretamente aqui —
  * editar catalogo-canonico.json e regenerar as tres copias embutidas.
- * A logica interna de cada sistema ainda NAO consome estes IDs
+ * A logica interna de cada sistema ainda NAO consome todos os IDs
  * (migracao de uso prevista para as Rodadas 2-6).
  * ============================================================ */
 const CATALOGO_COGER = {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "atualizado_em": "2026-07-11",
   "papeis_pessoa": [
     {
@@ -1206,6 +1206,16 @@ const CATALOGO_COGER = {
       "label": "Outro",
       "descricao": "Categoria residual de evidência do Veritas sem tipo mais específico.",
       "origem_permitida": [
+        "veritas"
+      ],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.TERMO_OITIVA",
+      "label": "Termo de oitiva",
+      "descricao": "Termo estruturado (identificação do depoente, perguntas e respostas na ordem em que foram feitas) gerado pelo Oitiva 360 ao final de uma rodada de oitiva e importado no Veritas com proveniência interna. Criado na Rodada 5 do contrato Oitiva 360 → Veritas.",
+      "origem_permitida": [
+        "oitiva-360",
         "veritas"
       ],
       "status": "ativo"
@@ -1683,6 +1693,7 @@ const CATALOGO_COGER = {
   ]
 };
 
+
 (function () {
 "use strict";
 
@@ -1776,6 +1787,7 @@ var CATEGORIAS = {
   comunicacao: "Comunicação (e-mail/mensagem)", foto_video: "Foto/vídeo",
   laudo_pericia: "Laudo/perícia", oficio: "Ofício", decisao_judicial: "Decisão judicial",
   documento_fisico: "Documento físico", dispositivo_fisico: "Dispositivo/mídia física (HD, celular, pendrive etc.)",
+  termo_oitiva: "Termo de oitiva", // Rodada 5 — categoria criada só pela importação do Oitiva 360
   outro: "Outro"
 };
 var ELEMENTO_FISICO_TIPOS = {
@@ -1824,6 +1836,7 @@ var CATEGORIA_VERITAS_PARA_PROVA_ID = {
   decisao_judicial: "PROVA.DECISAO_JUDICIAL",
   documento_fisico: "PROVA.DOCUMENTO_FISICO",
   dispositivo_fisico: "PROVA.DISPOSITIVO_FISICO",
+  termo_oitiva: "PROVA.TERMO_OITIVA",
   outro: "PROVA.OUTRO"
 };
 
@@ -2048,6 +2061,7 @@ function viewProcesso() {
         '<label class="rfb-btn rfb-btn--secondary rfb-btn--sm" style="cursor:pointer;">Importar<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarArquivo(event)"></label>' +
         '<button class="rfb-btn rfb-btn--secondary rfb-btn--sm" onclick="App.exportarDossie()">Exportar .json</button>' +
         '<button class="rfb-btn rfb-btn--secondary rfb-btn--sm" onclick="App.exportarProvasParaNexo()" title="Exporta só as provas, com tipo_prova pelo id do catálogo canônico">Exportar provas &rarr; Nexo Coger</button>' +
+        '<label class="rfb-btn rfb-btn--secondary rfb-btn--sm" style="cursor:pointer;" title="Cria uma prova de proveniência interna a partir de um termo exportado pelo Oitiva 360, com verificação de hash">Importar termo (Oitiva 360)<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarTermoOitiva(event)"></label>' +
         '<button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.abrirModal(\'reiniciar\', {})">Reiniciar</button>' +
       '</div>' +
     '</div><div class="rfb-card__body">' +
@@ -2693,6 +2707,68 @@ window.App = {
       document.body.appendChild(a); a.click(); a.remove();
       toast("Provas exportadas para o Nexo Coger.", "success");
     });
+  },
+
+  // Rodada 5 — Contrato Oitiva 360 -> Veritas: importa o termo de oitiva como prova de proveniência
+  // interna. Recalcula o hash sobre o texto recebido e compara a hash_origem — divergência BLOQUEIA a
+  // importação (mensagem clara, nunca falha silenciosa). id_prova novo é gerado aqui, no momento da
+  // importação, para ser referenciado pela Rodada 6.
+  importarTermoOitiva: function (evt) {
+    var file = evt.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = async function () {
+      var dados;
+      try { dados = JSON.parse(reader.result); } catch (e) { toast("Arquivo .json inválido.", "danger"); evt.target.value = ""; return; }
+      if (!dados || dados.origem !== "oitiva-360" || !dados.termo || typeof dados.termo.conteudo !== "string" || !dados.hash_origem) {
+        alert("Arquivo inválido: este arquivo não é um termo exportado pelo Oitiva 360 (esperado \"origem\":\"oitiva-360\", \"termo.conteudo\" e \"hash_origem\").");
+        evt.target.value = "";
+        return;
+      }
+      var hashCalculado = "sha256:" + (await sha256Hex(dados.termo.conteudo));
+      if (hashCalculado !== dados.hash_origem) {
+        alert("Importação bloqueada: o hash do termo não confere.\n\nEsperado (hash_origem): " + dados.hash_origem +
+          "\nCalculado sobre o texto recebido: " + hashCalculado +
+          "\n\nO conteúdo do termo pode ter sido alterado após a exportação do Oitiva 360. Nada foi importado.");
+        evt.target.value = "";
+        return;
+      }
+      if (dados.catalogo_schema_version && dados.catalogo_schema_version !== CATALOGO_COGER.schema_version) {
+        var prosseguir = confirm(
+          "Este termo foi exportado com catalogo_schema_version " + dados.catalogo_schema_version +
+          ", diferente da versão do catálogo em uso neste Veritas (" + CATALOGO_COGER.schema_version +
+          "). O hash já foi conferido e confere — o aviso é só sobre o vocabulário do catálogo. Deseja continuar?"
+        );
+        if (!prosseguir) { evt.target.value = ""; return; }
+      }
+      if (!DB.dossie) App.criarDossie();
+      var item = novoItemDraft();
+      item.id = uid();
+      item.titulo = "Termo de oitiva — " + ((dados.deponente && dados.deponente.nome) || "depoente não identificado");
+      item.categoria = "termo_oitiva";
+      item.sigilo = "acesso_restrito";
+      item.status = "ativo";
+      item.observacoes = "Importado do Oitiva 360. rodada_id: " + (dados.rodada_id || "—") + (dados.pauta_id ? " · pauta_id: " + dados.pauta_id : "");
+      item.proveniencia.tipo = "gerado_internamente"; // nasce dentro da própria suíte Coger, não é documento externo anexado
+      item.termoOitiva = {
+        conteudo: dados.termo.conteudo,
+        geradoEm: dados.termo.gerado_em || "",
+        responsavel: dados.termo.responsavel || "",
+        pautaId: dados.pauta_id || "",
+        rodadaId: dados.rodada_id || "",
+        deponente: dados.deponente || null,
+        hashOrigem: dados.hash_origem,
+        hashConferido: true
+      };
+      registrarEventoItem(item, "item_identificado", { responsavel: "", observacao: "Termo de oitiva importado do Oitiva 360 — hash conferido." });
+      DB.dossie.itens.push(item);
+      persistir().then(function () {
+        render();
+        toast("Termo importado — prova " + item.id + " criada (hash conferido).", "success");
+      });
+      evt.target.value = "";
+    };
+    reader.readAsText(file);
   },
 
   setProcesso: function (path, value) { set(DB.dossie.processo, path, value); persistir().then(updateTopbar); },

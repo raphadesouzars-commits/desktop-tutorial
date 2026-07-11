@@ -1942,17 +1942,17 @@
 
 <script>
 /* ============================================================
- * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1)
+ * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1; estendido na Rodada 5)
  * Fonte de verdade: catalogo-canonico.json (raiz do projeto).
- * schema_version: 1.0.0
- * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 5906e98f
+ * schema_version: 1.1.0
+ * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 744bb790
  * Copia embutida gerada nesta rodada; NAO editar diretamente aqui —
  * editar catalogo-canonico.json e regenerar as tres copias embutidas.
- * A logica interna de cada sistema ainda NAO consome estes IDs
+ * A logica interna de cada sistema ainda NAO consome todos os IDs
  * (migracao de uso prevista para as Rodadas 2-6).
  * ============================================================ */
 const CATALOGO_COGER = {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "atualizado_em": "2026-07-11",
   "papeis_pessoa": [
     {
@@ -2166,6 +2166,16 @@ const CATALOGO_COGER = {
       "label": "Outro",
       "descricao": "Categoria residual de evidência do Veritas sem tipo mais específico.",
       "origem_permitida": [
+        "veritas"
+      ],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.TERMO_OITIVA",
+      "label": "Termo de oitiva",
+      "descricao": "Termo estruturado (identificação do depoente, perguntas e respostas na ordem em que foram feitas) gerado pelo Oitiva 360 ao final de uma rodada de oitiva e importado no Veritas com proveniência interna. Criado na Rodada 5 do contrato Oitiva 360 → Veritas.",
+      "origem_permitida": [
+        "oitiva-360",
         "veritas"
       ],
       "status": "ativo"
@@ -2642,6 +2652,7 @@ const CATALOGO_COGER = {
     }
   ]
 };
+
 
 (function(){
 "use strict";
@@ -3532,6 +3543,8 @@ function migrarEstadoCarregado(e){
     if (d.referenciaAcusadoNexo === undefined) d.referenciaAcusadoNexo = null;
     if (!Array.isArray(d.pautaSelecionada)) d.pautaSelecionada = [];
     if (!d.pautaConclusao) d.pautaConclusao = {};
+    // Rodada 5: depoentes salvos antes desta rodada não têm respostas registradas — default seguro.
+    if (!d.respostasRoteiro) d.respostasRoteiro = {};
   });
   // Rodada 6: processos salvos antes desta rodada não têm pautaImportada — default seguro.
   if (e.pautaImportada === undefined) e.pautaImportada = null;
@@ -4310,6 +4323,7 @@ function garantirEstruturaAto(d){
   if (d.referenciaAcusadoNexo === undefined) d.referenciaAcusadoNexo = null;
   if (!Array.isArray(d.pautaSelecionada)) d.pautaSelecionada = [];
   if (!d.pautaConclusao) d.pautaConclusao = {};
+  if (!d.respostasRoteiro) d.respostasRoteiro = {}; // Rodada 5: resposta registrada por item de pergunta do roteiro
 }
 
 function abrirWizard(depoenteId){
@@ -5249,6 +5263,40 @@ function formatarColunasMembrosTermo(d){
   return tabela;
 }
 
+/* =====================================================================
+   RODADA 5 — Termo estruturado com respostas reais + exportação para o Veritas
+   Até aqui d.roteiro só guardava o roteiro de perguntas a fazer (banco de perguntas), sem nenhum
+   campo para a resposta efetivamente dada — gerarTermoTexto() usava o texto fixo literal
+   "[transcrição das perguntas e respostas]". d.respostasRoteiro guarda a resposta de cada pergunta,
+   por chave estável (blocoId+refId+ordem), preenchida na Etapa 4.
+   ===================================================================== */
+function chaveItemRoteiro(blocoId, item){
+  return blocoId + "::" + item.refId + "::" + item.ordem;
+}
+// Perguntas do roteiro, na ordem em que aparecem (mesma ordem de renderRoteiroLeitura/impressão),
+// cada uma com a resposta registrada (ou vazio, se ainda não respondida).
+function perguntasRespostasOrdenadas(d){
+  const lista = [];
+  CATALOGO.blocos.forEach(bloco => {
+    if (blocoDeveSerOmitido(bloco, d)) return;
+    const grupo = d.roteiro.find(r => r.blocoId === bloco.id) || { itens: [] };
+    grupo.itens.forEach(item => {
+      if (item.tipo !== "pergunta") return;
+      const chave = chaveItemRoteiro(bloco.id, item);
+      lista.push({ chave, texto: item.texto, resposta: (d.respostasRoteiro && d.respostasRoteiro[chave]) || "" });
+    });
+  });
+  return lista;
+}
+function bufToHexOitiva(buf){
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+async function sha256HexOitiva(texto){
+  const buf = new TextEncoder().encode(texto);
+  const digest = await crypto.subtle.digest("SHA-256", buf);
+  return bufToHexOitiva(digest);
+}
+
 function gerarTermoTexto(d){
   const ctx = contextoMerge(d);
   const papelObj = CATALOGO.papeis.find(p => p.id === d.papel) || {};
@@ -5297,11 +5345,72 @@ function gerarTermoTexto(d){
   }
 
   texto += "\n\n[Registro de incidentes, se houver: contradita, arguição de parcialidade, questões de ordem, protestos — com a deliberação da comissão.]";
-  texto += "\n\nPassou-se à inquirição pela comissão:\n[transcrição das perguntas e respostas]";
+  // Rodada 5: transcrição real de perguntas e respostas, na ordem do roteiro — antes era o texto fixo
+  // "[transcrição das perguntas e respostas]"; agora reflete d.respostasRoteiro.
+  texto += "\n\nPassou-se à inquirição pela comissão:\n";
+  if (temSilencio && d.acusadoSilencio){
+    texto += "[Direito ao silêncio exercido — nenhuma pergunta foi dirigida ao(à) depoente.]";
+  } else {
+    const qa = perguntasRespostasOrdenadas(d);
+    texto += qa.length
+      ? qa.map((item, i) => (i + 1) + ". P: " + item.texto + "\n   R: " + (item.resposta.trim() || "[sem resposta registrada]")).join("\n\n")
+      : "[Nenhuma pergunta do roteiro foi registrada.]";
+  }
   texto += "\n\nDada a palavra à defesa, [formulou as seguintes reperguntas | nada requereu].";
   texto += "\n\nNada mais havendo, encerrou-se o presente termo, que, lido e achado conforme, vai assinado por todos os presentes.";
   texto += "\n\n" + formatarColunasMembrosTermo(d);
   return texto;
+}
+
+// Rodada 5 (contrato Oitiva 360 -> Veritas): regenera o termo a partir do estado atual (papel,
+// silêncio, respostas registradas) — garante que o texto exportado e hasheado sempre reflete as
+// respostas mais recentes, mesmo que a Etapa 4 não tenha sido reaberta desde a última edição.
+// Substitui o textarea/cache em tela, igual ao botão "Regenerar termo", só que sem diálogo de
+// confirmação: exportar é, por definição, fechar a versão corrente do termo.
+async function exportarTermoParaVeritas(d){
+  const statusEl = document.getElementById("status-exportar-termo-veritas");
+  const textoFinal = gerarTermoTexto(d);
+  d.termoTexto = textoFinal;
+  const termoTextareaEl = document.getElementById("termo-texto");
+  if (termoTextareaEl) termoTextareaEl.value = textoFinal;
+
+  if (statusEl) statusEl.textContent = "Calculando hash…";
+  const hashHex = await sha256HexOitiva(textoFinal);
+
+  if (!d.rodadaId) d.rodadaId = gerarId();
+  salvarLocalStorage();
+
+  const pautaIdsDoDepoente = Array.from(new Set(
+    (d.pautaSelecionada || []).map(fatoId => {
+      const item = estado.pautaImportada && estado.pautaImportada.itens.find(i => i.fatoId === fatoId);
+      return item && item.pautaIdOrigem;
+    }).filter(Boolean)
+  ));
+
+  const envelope = {
+    schema_version: "1.0.0",
+    catalogo_schema_version: CATALOGO_COGER.schema_version,
+    origem: "oitiva-360",
+    pauta_id: pautaIdsDoDepoente.join(","),
+    rodada_id: d.rodadaId,
+    deponente: { nome: d.identificacao || "", papel: PAPEL_SLUG_PARA_ID_CATALOGO[d.papel] || d.papel },
+    termo: { conteudo: textoFinal, gerado_em: new Date().toISOString(), responsavel: "" },
+    hash_origem: "sha256:" + hashHex
+  };
+
+  const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const nomeSlug = (d.identificacao || "depoente").replace(/[^\w\-]+/g, "_");
+  const dataStr = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = "veritas-termo-" + nomeSlug + "-" + dataStr + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  if (statusEl) statusEl.textContent = "Termo exportado — hash_origem: sha256:" + hashHex.slice(0, 16) + "…";
 }
 
 function renderEtapa4(){
@@ -5366,6 +5475,26 @@ function renderEtapa4(){
   html += renderRoteiroLeitura(d);
   html += "</div>";
 
+  // Rodada 5: captura da resposta efetivamente dada a cada pergunta do roteiro, na ordem — é isso
+  // que alimenta a transcrição real do Termo de redução abaixo (antes era um placeholder fixo).
+  const silencioExercidoQA = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Respostas registradas</h3>";
+  if (silencioExercidoQA){
+    html += "<p class=\"vazio\">Direito ao silêncio exercido — nenhuma pergunta foi dirigida ao(à) depoente nesta sessão.</p>";
+  } else {
+    const qaEdicao = perguntasRespostasOrdenadas(d);
+    html += qaEdicao.length
+      ? qaEdicao.map(item => (
+          "<div class=\"item-pauta-nexo\">" +
+            "<div class=\"titulo-item-pauta\">" + escapeHtml(item.texto) + "</div>" +
+            "<textarea data-resposta-roteiro=\"" + escapeHtml(item.chave) + "\" placeholder=\"Resposta dada pelo(a) depoente\" style=\"margin-top:6px;\">" + escapeHtml(item.resposta) + "</textarea>" +
+          "</div>"
+        )).join("")
+      : "<p class=\"vazio\">Roteiro ainda não gerado ou sem perguntas. Volte à Etapa 3.</p>";
+  }
+  html += "</div>";
+
   html += "<div class=\"cartao\">";
   html += "<h3 style=\"margin-top:0;\">Checklist pré-oitiva</h3>";
   html += itensChecklist.map(c => (
@@ -5409,6 +5538,14 @@ function renderEtapa4(){
     html += "<div class=\"acoes-topo\"><button type=\"button\" id=\"btn-exportar-prova-nexo\">Exportar prova(s) para o Nexo</button></div>";
     html += "</div>";
   }
+
+  // Rodada 5: exporta o termo (texto atual, inclusive edições manuais) como prova de custódia interna
+  // para o Veritas, com hash SHA-256 calculado sobre o texto exato antes do envio.
+  html += "<div class=\"cartao\">";
+  html += "<h3 style=\"margin-top:0;\">Veritas Digital</h3>";
+  html += "<div class=\"acoes-topo\"><button type=\"button\" id=\"btn-exportar-termo-veritas\">Exportar termo para o Veritas</button></div>";
+  html += "<div id=\"status-exportar-termo-veritas\" class=\"vazio\" style=\"margin-top:6px;\"></div>";
+  html += "</div>";
 
   const container = document.getElementById("wizard-etapa-4");
   container.innerHTML = html;
@@ -5456,6 +5593,21 @@ function ligarEventosEtapa4(container, d){
   const btnExportarProva = document.getElementById("btn-exportar-prova-nexo");
   if (btnExportarProva){
     btnExportarProva.addEventListener("click", () => abrirDialogoExportarProva(d));
+  }
+
+  // Rodada 5: cada textarea de resposta grava em d.respostasRoteiro pela chave estável do item, e
+  // marca o termo como desatualizado (o termo só reflete a resposta na próxima regeneração/exportação).
+  container.querySelectorAll("[data-resposta-roteiro]").forEach(txt => {
+    txt.addEventListener("input", () => {
+      d.respostasRoteiro = d.respostasRoteiro || {};
+      d.respostasRoteiro[txt.dataset.respostaRoteiro] = txt.value;
+      salvarLocalStorage();
+    });
+  });
+
+  const btnExportarTermoVeritas = document.getElementById("btn-exportar-termo-veritas");
+  if (btnExportarTermoVeritas){
+    btnExportarTermoVeritas.addEventListener("click", () => exportarTermoParaVeritas(d));
   }
 
   container.querySelectorAll("[data-checklist-item]").forEach(chk => {

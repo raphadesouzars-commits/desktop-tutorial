@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "1.1.0",
   "atualizado_em": "2026-07-11",
   "papeis_pessoa": [
     {
@@ -165,6 +165,13 @@
       "label": "Outro",
       "descricao": "Categoria residual de evidência do Veritas sem tipo mais específico.",
       "origem_permitida": ["veritas"],
+      "status": "ativo"
+    },
+    {
+      "id": "PROVA.TERMO_OITIVA",
+      "label": "Termo de oitiva",
+      "descricao": "Termo estruturado (identificação do depoente, perguntas e respostas na ordem em que foram feitas) gerado pelo Oitiva 360 ao final de uma rodada de oitiva e importado no Veritas com proveniência interna. Criado na Rodada 5 do contrato Oitiva 360 → Veritas.",
+      "origem_permitida": ["oitiva-360", "veritas"],
       "status": "ativo"
     }
   ],
