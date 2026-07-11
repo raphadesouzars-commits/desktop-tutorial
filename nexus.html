@@ -2592,7 +2592,9 @@ function printMap(){
     <div class="center" style="display:flex;gap:20px;justify-content:center;font-size:11px;font-weight:700;margin-bottom:8px">
       <span style="color:#E8604C">■ FATOS</span><span style="color:#1FA08E">■ PROVAS</span><span style="color:#6C4CE8">■ NORMAS</span></div>`;
   const pv=$('#printview'); pv.innerHTML='';
-  pv.append(el('div',{class:'pv-toolbar'}, el('b',{style:'flex:1'},'Mapa (impressão paisagem)'),
+  pv.append(el('div',{class:'pv-toolbar'},
+    el('button',{class:'btn',onclick:closePrint},'← Voltar ao Home'),
+    el('b',{style:'flex:1;text-align:center'},'Mapa (impressão paisagem)'),
     el('button',{class:'btn',onclick:()=>window.print()},'🖨 Imprimir'),
     el('button',{class:'btn',onclick:closePrint},'✕ Fechar')));
   const docDiv=el('div',{class:'pv-doc',style:'max-width:none',html:head});
