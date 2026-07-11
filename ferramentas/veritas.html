@@ -1810,6 +1810,23 @@ var EVENTO_TIPOS = {
   item_descartado: { label: "Item descartado", escopo: "item" }
 };
 
+// Rodada 3 — Contrato Veritas -> Nexo Coger: mapa fixo de CATEGORIAS (chave interna do Veritas)
+// para o id de tipos_prova do catálogo canônico (CATALOGO_COGER). laudo_pericia converge para
+// PROVA.PERICIAL, que já existe no Nexo Coger; as demais são subcategorias novas registradas na
+// Rodada 1, sem equivalente 1:1 no Nexo.
+var CATEGORIA_VERITAS_PARA_PROVA_ID = {
+  print_sistema: "PROVA.PRINT_SISTEMA",
+  documento_financeiro: "PROVA.DOCUMENTO_FINANCEIRO",
+  comunicacao: "PROVA.COMUNICACAO",
+  foto_video: "PROVA.FOTO_VIDEO",
+  laudo_pericia: "PROVA.PERICIAL",
+  oficio: "PROVA.OFICIO",
+  decisao_judicial: "PROVA.DECISAO_JUDICIAL",
+  documento_fisico: "PROVA.DOCUMENTO_FISICO",
+  dispositivo_fisico: "PROVA.DISPOSITIVO_FISICO",
+  outro: "PROVA.OUTRO"
+};
+
 /* ============================================================
    Estado
    ============================================================ */
@@ -2030,6 +2047,7 @@ function viewProcesso() {
       '<div class="vdc-actions no-print">' +
         '<label class="rfb-btn rfb-btn--secondary rfb-btn--sm" style="cursor:pointer;">Importar<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarArquivo(event)"></label>' +
         '<button class="rfb-btn rfb-btn--secondary rfb-btn--sm" onclick="App.exportarDossie()">Exportar .json</button>' +
+        '<button class="rfb-btn rfb-btn--secondary rfb-btn--sm" onclick="App.exportarProvasParaNexo()" title="Exporta só as provas, com tipo_prova pelo id do catálogo canônico">Exportar provas &rarr; Nexo Coger</button>' +
         '<button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.abrirModal(\'reiniciar\', {})">Reiniciar</button>' +
       '</div>' +
     '</div><div class="rfb-card__body">' +
@@ -2637,6 +2655,43 @@ window.App = {
       a.download = "dossie-" + (DB.dossie.processo.numero || "veritas-digital-coger").replace(/[^\w.-]+/g, "_") + ".json";
       document.body.appendChild(a); a.click(); a.remove();
       toast("Dossiê exportado.", "success");
+    });
+  },
+
+  // Rodada 3 — Contrato Veritas -> Nexo Coger: exporta só as provas (não o dossiê inteiro), com
+  // tipo_prova resolvido para o id do catálogo canônico. Mantém os campos de proveniência/cadeia de
+  // custódia exatamente como já existem no item do Veritas — esta rodada não os altera.
+  exportarProvasParaNexo: function () {
+    persistir().then(function () {
+      var d = DB.dossie;
+      var contrato = {
+        schema_version: "1.0",
+        catalogo_schema_version: CATALOGO_COGER.schema_version,
+        exportado_em: nowIso(),
+        origem: "veritas",
+        origem_instancia: d.processo.id,
+        provas: d.itens.map(function (it) {
+          return {
+            id_prova: it.id,
+            titulo: it.titulo,
+            tipo_prova: CATEGORIA_VERITAS_PARA_PROVA_ID[it.categoria] || null,
+            descricao: it.observacoes || "",
+            sigilo: it.sigilo,
+            status: it.status,
+            proveniencia: it.proveniencia,
+            arquivos: it.arquivos.map(function (a) {
+              return { nomeArquivo: a.nomeArquivo, descricao: a.descricao, hashLocal: a.hashLocal, hashDeclarado: a.hashDeclarado };
+            }),
+            cadeia_custodia: it.linhaDoTempoItem
+          };
+        })
+      };
+      var blob = new Blob([JSON.stringify(contrato, null, 2)], { type: "application/json" });
+      var a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "nexo-coger-provas-" + (d.processo.numero || "veritas-digital-coger").replace(/[^\w.-]+/g, "_") + ".json";
+      document.body.appendChild(a); a.click(); a.remove();
+      toast("Provas exportadas para o Nexo Coger.", "success");
     });
   },
 

@@ -544,6 +544,7 @@ svg.map.isolating .node.hl{opacity:1}
       <button data-act="intimacao">📨 Gerar termo de intimação</button>
       <button data-act="pauta">🎯 Exportar pauta de instrução (Oitiva 360)</button>
       <button data-act="importProva">📥 Importar prova(s) de retorno</button>
+      <button data-act="importProvaVeritas">📥 Importar provas do Veritas</button>
       <button data-act="printMap">🖨 Imprimir o mapa</button>
       <div class="sep"></div>
       <div class="lbl">Catálogo &amp; exemplo</div>
@@ -597,6 +598,7 @@ svg.map.isolating .node.hl{opacity:1}
 <div class="toast" id="toast"></div>
 <input type="file" id="fileInput" accept="application/json,.json" style="display:none">
 <input type="file" id="fileInputProva" accept="application/json,.json" style="display:none">
+<input type="file" id="fileInputVeritas" accept="application/json,.json" style="display:none">
 
 <script>
 /* ============================================================
@@ -1477,10 +1479,8 @@ const GRUPOS=[
  * 2. ESTADO / MODELO DE DADOS
  * ------------------------------------------------------------------ */
 const LS_KEY='nexo-coger:draft';
-const LS_KEY_LEGADO='nexus-coger:draft';   // rascunho de versões anteriores
 const SCHEMA='1.0';
 const FERRAMENTA='nexo-coger';             // contrato de integração (Oitiva 360)
-const FERRAMENTA_LEGADO='nexus-coger';     // aceito na leitura/importação por retrocompat
 
 function docVazio(){
   return {
@@ -1523,9 +1523,8 @@ function scheduleSave(){
 }
 function loadDraft(){
   try{
-    // lê a chave atual e, na ausência, a chave legada (rascunho de versões anteriores)
-    const raw=localStorage.getItem(LS_KEY)||localStorage.getItem(LS_KEY_LEGADO);
-    if(raw){ const d=JSON.parse(raw); if(d&&(d.ferramenta===FERRAMENTA||d.ferramenta===FERRAMENTA_LEGADO)){ return migra(d); } }
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){ const d=JSON.parse(raw); if(d&&d.ferramenta===FERRAMENTA){ return migra(d); } }
   }catch(e){}
   return null;
 }
@@ -2127,6 +2126,7 @@ function drawProvaCard(g,p,x,y,pends){
   let bx=CARD_W-16;
   if(sev==='fragil'){ badge(node,bx,20,'⚠','var(--estado-fragil)','Pendência frágil'); bx-=20; }
   if((p.hashVeritas||'').trim()){ badge(node,bx,20,'🔗','var(--cor-prova)','Hash Veritas preenchido'); bx-=20; }
+  if(p.origemVeritas){ badge(node,bx,20,'🌐','var(--cor-prova)','Importada do Veritas — '+(p.origemVeritas.tipoProvaOrigemLabel||p.origemVeritas.tipoProvaOrigemId)); bx-=20; }
   if((p.trechosSignificativos||[]).some(t=>(t.citacao||'').trim())){ badge(node,bx,42,'§','var(--ink-2)','Trechos significativos presentes'); }
   node.addEventListener('click',ev=>ev.stopPropagation());
   node.addEventListener('dblclick',ev=>{ ev.stopPropagation(); abrirFormProva(p.id); });
@@ -3009,7 +3009,7 @@ function exportJson(){
   const out=JSON.parse(JSON.stringify(doc)); out.exportadoEm=new Date().toISOString();
   delete out._seq; // seq é interno; recalculado no import via maiores IDs
   out._seq=doc._seq;
-  const nome=`nexus-${(doc.processo.numero||'sem-numero').replace(/[^\w.-]/g,'_')}-${new Date().toISOString().slice(0,10)}.json`;
+  const nome=`nexo-coger-${(doc.processo.numero||'sem-numero').replace(/[^\w.-]/g,'_')}-${new Date().toISOString().slice(0,10)}.json`;
   baixar(nome, JSON.stringify(out,null,2));
 }
 function importJson(){ $('#fileInput').click(); }
@@ -3019,7 +3019,7 @@ $('#fileInput').addEventListener('change',e=>{
   rd.onload=()=>{
     try{
       const d=JSON.parse(rd.result);
-      if(d.ferramenta!==FERRAMENTA&&d.ferramenta!==FERRAMENTA_LEGADO){ alert('Arquivo não reconhecido: campo "ferramenta" ausente ou inválido. Esperado "nexo-coger".'); return; }
+      if(d.ferramenta!==FERRAMENTA){ alert('Arquivo não reconhecido: campo "ferramenta" ausente ou inválido. Esperado "nexo-coger".'); return; }
       if(d.schemaVersion!==SCHEMA){ if(!confirm('schemaVersion diferente ('+d.schemaVersion+'). Tentar importar mesmo assim?')) return; }
       const temDados=doc.fatos.length||doc.provas.length||doc.acusados.length;
       if(temDados && !confirm('Isto substituirá o rascunho atual. Continuar?')) return;
@@ -3155,6 +3155,110 @@ function aplicarImportacaoProva(aprovadas){
   closeModal();
   render(); // recalcula estadoProbatorio, pendências (P1/P3/P7) e o badge de pauta
   toast(aprovadas.length+' prova(s) importada(s). '+fatosAfetados.size+' fato(s) atualizados.');
+}
+
+/* ------------------------------------------------------------------ *
+ * 15-ter. IMPORTAÇÃO DE PROVAS DO VERITAS (Rodada 3 — contrato por catálogo canônico)
+ * Contrato diferente do de retorno do Oitiva 360 (acima): aqui tipo_prova vem como id do
+ * catálogo canônico (ex. "PROVA.PRINT_SISTEMA"), não como slug interno do Nexo. Cada id é
+ * resolvido (a) para um dos TIPOS_PROVA_VALIDOS, que decide qual formulário de detalhe abrir, e
+ * (b) para o rótulo em português do próprio catálogo, mostrado na tela — nunca o id cru.
+ * ------------------------------------------------------------------ */
+const PROVA_ID_PARA_TIPO_NEXO={
+  'PROVA.DOCUMENTAL':'documental','PROVA.PERICIAL':'pericial','PROVA.TESTEMUNHAL':'testemunhal',
+  'PROVA.DECLARACAO_INFORMANTE':'declaracao_informante','PROVA.INTERROGATORIO':'interrogatorio',
+  'PROVA.DILIGENCIA':'diligencia','PROVA.EMPRESTADA':'emprestada','PROVA.INDICIARIA':'indiciaria',
+  // subcategorias do Veritas sem tipo próprio no Nexo Coger — recaem em documental, a mais próxima
+  'PROVA.PRINT_SISTEMA':'documental','PROVA.DOCUMENTO_FINANCEIRO':'documental','PROVA.COMUNICACAO':'documental',
+  'PROVA.FOTO_VIDEO':'documental','PROVA.OFICIO':'documental','PROVA.DECISAO_JUDICIAL':'documental',
+  'PROVA.DOCUMENTO_FISICO':'documental','PROVA.DISPOSITIVO_FISICO':'documental','PROVA.OUTRO':'documental'
+};
+function rotuloTipoProvaCatalogo(id){
+  const item=(CATALOGO_COGER.tipos_prova||[]).find(x=>x.id===id);
+  return item?item.label:null;
+}
+function importarProvasVeritas(){ $('#fileInputVeritas').click(); }
+$('#fileInputVeritas').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d; try{ d=JSON.parse(rd.result); }catch(err){ alert('Falha ao ler o JSON: '+err.message); return; }
+    if(!d||!Array.isArray(d.provas)){ alert('Arquivo inválido: esperado um objeto com um array "provas" (contrato Veritas → Nexo Coger).'); return; }
+    revisarImportacaoVeritas(d);
+  };
+  rd.readAsText(file); e.target.value='';
+});
+function revisarImportacaoVeritas(d){
+  const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
+  const itens=d.provas.map((it,i)=>{
+    const erros=[];
+    if(!it||typeof it!=='object') return {i, invalido:true, erros:['Item não é um objeto de prova.'], it:{}};
+    const rotulo=rotuloTipoProvaCatalogo(it.tipo_prova);
+    if(!rotulo) erros.push('tipo_prova desconhecido no catálogo: "'+esc(it.tipo_prova)+'".');
+    return {i, invalido:erros.length>0, erros, it, rotulo, tipoNexo:PROVA_ID_PARA_TIPO_NEXO[it.tipo_prova]||'documental'};
+  });
+  const validos=itens.filter(x=>!x.invalido);
+  const sel=new Set(validos.map(x=>x.i));
+
+  const body=[];
+  body.push(el('div',{class:'banner info'},el('span',{},'📥'),el('div',{},
+    'Origem: ',el('b',{},esc(d.origem||'—')),' · instância ',el('b',{},esc(d.origem_instancia||'—')),
+    '. Revise antes de confirmar — nada é importado silenciosamente.')));
+  // Critério de aceite: versão de catálogo divergente gera aviso visível, nunca falha silenciosa.
+  if(catalogoDivergente) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},
+    'Este arquivo foi exportado com catalogo_schema_version ',el('b',{},esc(d.catalogo_schema_version)),
+    ', diferente da versão do catálogo em uso neste Nexo Coger (',el('b',{},esc(CATALOGO_COGER.schema_version)),
+    '). Os rótulos abaixo podem não corresponder exatamente. Confira cada item antes de importar.')));
+
+  itens.forEach(x=>{
+    if(x.invalido){
+      body.push(el('div',{class:'imp-item err'},
+        el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'},'Item '+(x.i+1)+' — não importável'),
+          el('div',{class:'imp-errmsg'}, x.erros.join(' ')))));
+    } else {
+      const it=x.it;
+      const cb=el('input',{type:'checkbox'}); cb.checked=true;
+      cb.addEventListener('change',()=>{ if(cb.checked) sel.add(x.i); else sel.delete(x.i); });
+      body.push(el('div',{class:'imp-item'},
+        cb,
+        el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'}, (it.titulo||'(sem título)')+' · '+x.rotulo),
+          el('div',{class:'imp-meta'}, 'Sigilo: '+(it.sigilo||'—')+' · Status: '+(it.status||'—')+' · Arquivos: '+((it.arquivos||[]).length)),
+          it.descricao?el('div',{class:'imp-prev'},'“'+esc(it.descricao.length>120?it.descricao.slice(0,119)+'…':it.descricao)+'”'):null)));
+    }
+  });
+  if(!validos.length) body.push(el('div',{class:'hint'},'Nenhum item válido para importar neste arquivo.'));
+
+  const foot=[
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>aplicarImportacaoVeritas(validos.filter(x=>sel.has(x.i)),d)},
+      'Importar selecionadas')
+  ];
+  openModal(modalShell('Revisão — importação de provas do Veritas','prova',body,foot));
+}
+function aplicarImportacaoVeritas(aprovadas,d){
+  if(!aprovadas.length){ closeModal(); toast('Nenhuma prova selecionada.'); return; }
+  aprovadas.forEach(x=>{
+    const it=x.it;
+    const nova={
+      id:genId('P'), tipo:x.tipoNexo, titulo:it.titulo||'', descricao:it.descricao||'',
+      refAutos:{documento:'',folhas:''}, hashVeritas:(it.proveniencia&&it.proveniencia.hashDeclaradoPacote)||'',
+      codigoAnexo:'', trechosSignificativos:[],
+      contraditorio:{acusadoIntimado:null,refAutos:''},
+      detalhe:{},
+      origemVeritas:{
+        idProvaOrigem:it.id_prova||'', origemInstancia:d.origem_instancia||'',
+        tipoProvaOrigemId:it.tipo_prova||'', tipoProvaOrigemLabel:x.rotulo,
+        sigilo:it.sigilo||'', status:it.status||'',
+        proveniencia:it.proveniencia||null, arquivos:it.arquivos||[], cadeiaCustodia:it.cadeia_custodia||[]
+      }
+    };
+    doc.provas.push(nova);
+  });
+  closeModal();
+  render();
+  toast(aprovadas.length+' prova(s) do Veritas importada(s).');
 }
 
 /* ------------------------------------------------------------------ *
@@ -3655,7 +3759,8 @@ function init(){
   $('#menu').addEventListener('click',e=>{
     const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
     toggleMenu(false);
-    ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:exportPauta,importProva:importarProva,printMap,
+    ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:exportPauta,importProva:importarProva,
+      importProvaVeritas:importarProvasVeritas,printMap,
       novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
   });
   $('#tagProc').addEventListener('click',abrirFormProcesso);

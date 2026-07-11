@@ -2,6 +2,60 @@
 
 `catalogo-canonico.json` — `schema_version: 1.0.0`, `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `5906e98f`.
 
+## Rodada 3 — Contrato Veritas → Nexo Coger (fechada)
+
+### 3.1 — Padronização do nome `nexo-coger`
+
+Ocorrências de `nexus-coger` encontradas e corrigidas, todas em `nexo-coger.html` (nenhuma em `veritas.html`):
+- `LS_KEY_LEGADO='nexus-coger:draft'` e `FERRAMENTA_LEGADO='nexus-coger'` — removidos por inteiro. A spec desta rodada autoriza explicitamente redesenhar sem camada de retrocompatibilidade ("não há arquivos em produção a preservar"), então a checagem de leitura/importação (`loadDraft()`, handler de `#fileInput`) passou a aceitar só `FERRAMENTA==='nexo-coger'`.
+- Nome de arquivo de download em `exportJson()`: prefixo `nexus-` (não continha `-coger`, mas era a mesma raiz do nome legado) trocado para `nexo-coger-`, alinhando com a decisão "nome de arquivo sugerido no download" da spec.
+- Confirmado por busca (case-insensitive) zero ocorrências remanescentes de `nexus-coger`/`nexuscoger`/`NEXUS_COGER` em ambos os arquivos.
+
+### 3.2 — Estruturas originais encontradas (antes do redesenho)
+
+**Exportação do Veritas (diagnóstico):** não existia nenhuma função de exportação dedicada ao Nexo Coger. `App.exportarDossie()` (a única exportação existente) baixa o `DB.dossie` inteiro — processo, comissão, todos os itens com todos os campos internos — no próprio formato de rascunho do Veritas (`versaoEsquema`, `hashDoDossie`). Não há conceito de "provas" isoladas nem de contrato com outro sistema.
+
+**Importação no Nexo Coger (diagnóstico):** também não existia importação específica do Veritas. O único elo entre os dois sistemas era o campo `hashVeritas` no formulário de prova (`abrirFormProva`), texto livre preenchido manualmente pelo usuário, explicitamente documentado no próprio rótulo como "sem integração automática". O import existente de arquivo (`#fileInput`) só aceita o formato interno do próprio Nexo Coger (`d.ferramenta==='nexo-coger'`); e a "Importação de prova de retorno" (`importarProva`/`#fileInputProva`, Rodada 4) é um contrato à parte, do Oitiva 360, com `tipo` em slug interno do Nexo (`documental`, `testemunhal` etc.) e `fatoIds` — não tem relação com o Veritas.
+
+Conclusão do diagnóstico: a Rodada 3 não estava ajustando um contrato desalinhado — estava criando o contrato Veritas → Nexo do zero, como a própria spec previa como possibilidade.
+
+### Contrato redesenhado e implementado
+
+Novo formato de exportação (`veritas.html`, `App.exportarProvasParaNexo()`, botão "Exportar provas → Nexo Coger"):
+```json
+{
+  "schema_version": "1.0",
+  "catalogo_schema_version": "1.0.0",
+  "exportado_em": "2026-07-11T22:18:21.354Z",
+  "origem": "veritas",
+  "origem_instancia": "<processo.id do dossiê Veritas>",
+  "provas": [{
+    "id_prova": "...", "titulo": "...", "tipo_prova": "PROVA.PRINT_SISTEMA",
+    "descricao": "...", "sigilo": "...", "status": "...",
+    "proveniencia": { /* exatamente os mesmos campos já existentes no item do Veritas */ },
+    "arquivos": [{ "nomeArquivo": "...", "descricao": "...", "hashLocal": "...", "hashDeclarado": "..." }],
+    "cadeia_custodia": [ /* linhaDoTempoItem do Veritas, sem alteração de formato */ ]
+  }]
+}
+```
+- `tipo_prova` resolvido via novo mapa fixo `CATEGORIA_VERITAS_PARA_PROVA_ID` (uma entrada por chave de `CATEGORIAS`) — nunca texto livre.
+- Campos de cadeia de custódia (`proveniencia`, `arquivos`, `cadeia_custodia`) preservados tal como já existiam no Veritas, conforme escopo da rodada.
+- Nome de arquivo de download: `nexo-coger-provas-<numero-do-processo>.json`.
+
+Nova importação (`nexo-coger.html`, `importarProvasVeritas()`, botão "Importar provas do Veritas", modal de revisão — nada é importado silenciosamente, mesmo padrão já usado na importação de retorno do Oitiva):
+- `tipo_prova` (id do catálogo) resolvido para rótulo em português via `CATALOGO_COGER.tipos_prova` — a tela mostra "Print de sistema", nunca `PROVA.PRINT_SISTEMA` cru.
+- `tipo_prova` também mapeado para um dos 8 `TIPOS_PROVA_VALIDOS` internos do Nexo via novo `PROVA_ID_PARA_TIPO_NEXO` (as 9 subcategorias exclusivas do Veritas caem em `documental`, a mais próxima; os 8 tipos nativos mapeiam 1:1); o rótulo de origem mais específico fica preservado em `p.origemVeritas.tipoProvaOrigemLabel` e aparece como badge 🌐 no card da prova no mapa.
+- `catalogo_schema_version` do arquivo comparado com `CATALOGO_COGER.schema_version` do Nexo: se diferente, um banner de aviso visível (não bloqueante, mas impossível de não ver) é exibido no topo do modal de revisão antes de qualquer importação — nunca falha silenciosa.
+- Proveniência e cadeia de custódia completas do Veritas ficam guardadas em `p.origemVeritas` para rastreabilidade, sem alterar o restante da lógica interna do Nexo Coger.
+
+### Teste de ponta a ponta (Playwright, os dois HTMLs reais no navegador)
+
+1. Item criado no Veritas (categoria `print_sistema`) → exportado → arquivo real gerado com `tipo_prova: "PROVA.PRINT_SISTEMA"`, `catalogo_schema_version: "1.0.0"`, proveniência e 1 evento de cadeia de custódia preservados.
+2. Arquivo importado no Nexo Coger → modal mostra "Print de sistema" (não o id cru) → após confirmar, `doc.provas` recebe a prova com `tipo: "documental"` e `origemVeritas.tipoProvaOrigemLabel === "Print de sistema"`.
+3. Mesmo arquivo com `catalogo_schema_version` alterada para `"0.9.0"` → modal exibe aviso visível: *"Este arquivo foi exportado com catalogo_schema_version 0.9.0, diferente da versão do catálogo em uso neste Nexo Coger (1.0.0)."*
+
+Os três critérios de aceite da Rodada 3 foram confirmados nesse teste real (não apenas leitura de código).
+
 ## Rodada 2 — Correção dos bugs conhecidos (fechada)
 
 Os dois bugs registrados na Rodada 1 foram diagnosticados e corrigidos, consumindo o catálogo canônico por ID nos dois pontos afetados.
