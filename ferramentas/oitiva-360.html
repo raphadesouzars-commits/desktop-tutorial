@@ -3977,18 +3977,23 @@ document.getElementById("input-importar-pauta").addEventListener("change", (ev) 
     }
     ev.target.value = "";
 
-    // Seção 2.3.2: validar origem — rejeitar com mensagem clara se não for do Nexo Coger.
-    if (!dados || dados.origem !== "nexo-coger" || !Array.isArray(dados.pauta)){
-      alert("Arquivo inválido: este arquivo não é uma pauta exportada pelo Nexo Coger (campo \"origem\" deveria ser \"nexo-coger\" e \"pauta\" deveria ser uma lista).");
+    // Rodada 4 (contrato Nexo Coger -> Oitiva 360, por depoente): validar origem e formato —
+    // rejeitar com mensagem clara se não for do Nexo Coger ou não trouxer pauta_id/pontos_instrucao.
+    if (!dados || dados.origem !== "nexo-coger" || !Array.isArray(dados.pontos_instrucao)){
+      alert("Arquivo inválido: este arquivo não é uma pauta exportada pelo Nexo Coger (campo \"origem\" deveria ser \"nexo-coger\" e \"pontos_instrucao\" deveria ser uma lista).");
+      return;
+    }
+    if (!dados.pauta_id){
+      alert("Arquivo inválido: a pauta não traz \"pauta_id\".");
       return;
     }
 
-    // Seção 2.3.3: catalogoVersion divergente — aviso não bloqueante.
-    if (dados.catalogoVersion && dados.catalogoVersion !== CATALOGO_VERSION){
+    // catalogo_schema_version divergente — aviso visível, não bloqueante (mesmo padrão da Rodada 3).
+    if (dados.catalogo_schema_version && dados.catalogo_schema_version !== CATALOGO_COGER.schema_version){
       const prosseguir = confirm(
-        "A pauta foi gerada com uma versão diferente do catálogo de normas (pauta: " + dados.catalogoVersion +
-        ", local: " + CATALOGO_VERSION + "). A pré-seleção de perguntas pode não funcionar para normas " +
-        "adicionadas depois dessa versão. Deseja continuar?"
+        "Esta pauta (" + dados.pauta_id + ") foi gerada com catalogo_schema_version " + dados.catalogo_schema_version +
+        ", diferente da versão do catálogo em uso neste Oitiva 360 (" + CATALOGO_COGER.schema_version + "). " +
+        "A resolução de normas relacionadas pode não corresponder exatamente. Deseja continuar?"
       );
       if (!prosseguir) return;
     }
@@ -3998,36 +4003,58 @@ document.getElementById("input-importar-pauta").addEventListener("change", (ev) 
   leitor.readAsText(arquivo, "UTF-8");
 });
 
-// Seção 2.3.4-2.3.5: reimportar atualiza itens existentes por fatoId e adiciona novos, sem duplicar;
-// itens já "abordado" mantêm esse status mesmo que outros campos do item mudem no Nexo.
+// Converte um id de norma do catálogo canônico (ex. "NORMA.L8112.ART132_IV") de volta para o
+// normaId interno (ex. "N-132-IV") usado por CATALOGO.infracoes/resolverNormaPorId — inverso exato
+// de normaInternaParaCanonica() no nexo-coger.html.
+function normaCanonicaParaInterna(id){
+  if (!id) return null;
+  if (id.indexOf("NORMA.LAI.ART") === 0) return "N-LAI-" + id.slice("NORMA.LAI.ART".length).replace("_", "-");
+  if (id.indexOf("NORMA.L8112.ART") === 0) return "N-" + id.slice("NORMA.L8112.ART".length).replace("_", "-");
+  return null;
+}
+
+// Seção 2.3.4-2.3.5 (adaptada na Rodada 4): reimportar atualiza itens existentes por fatoId e
+// adiciona novos, sem duplicar; itens já "abordado" mantêm esse status mesmo que outros campos do
+// item mudem no Nexo. idPontoOrigem/pautaIdOrigem/tipoLacuna/confirmadoPeloUsuario são guardados por
+// item para rastreabilidade (Rodada 6 vai referenciar pauta_id) e para distinguir pontos "manual" dos
+// sugeridos automaticamente — não precisam aparecer na UI, mas o dado fica presente.
 function aplicarImportacaoPauta(dados){
   const itensExistentes = (estado.pautaImportada && estado.pautaImportada.itens) || [];
   const porFatoId = {};
   itensExistentes.forEach(i => { porFatoId[i.fatoId] = i; });
 
-  (dados.pauta || []).forEach(itemNovo => {
-    const existente = porFatoId[itemNovo.fatoId];
+  (dados.pontos_instrucao || []).forEach(pt => {
+    if (!pt || !pt.fato_referencia) return;
+    const existente = porFatoId[pt.fato_referencia];
     const statusChecklist = (existente && existente.statusChecklist === "abordado")
       ? "abordado"
       : (existente ? existente.statusChecklist : "pendente");
-    porFatoId[itemNovo.fatoId] = {
-      fatoId: itemNovo.fatoId,
-      titulo: itemNovo.titulo || "",
-      estadoNoNexo: itemNovo.estado || "",
-      elementosBuscados: itemNovo.elementosBuscados || "",
-      acusadosVinculados: itemNovo.acusadosVinculados || [],
-      enquadramentosAtivos: itemNovo.enquadramentosAtivos || [],
+    porFatoId[pt.fato_referencia] = {
+      fatoId: pt.fato_referencia,
+      titulo: pt.fato_titulo || (existente ? existente.titulo : "") || "",
+      estadoNoNexo: existente ? existente.estadoNoNexo : "",
+      elementosBuscados: pt.pergunta_sugerida || "",
+      acusadosVinculados: pt.acusados_vinculados || (existente ? existente.acusadosVinculados : []) || [],
+      enquadramentosAtivos: (pt.normas_relacionadas || []).map(id => ({
+        normaId: normaCanonicaParaInterna(id) || id, rotulo: "", elementoSubjetivo: null
+      })),
       statusChecklist: statusChecklist,
-      notaSemResposta: existente ? (existente.notaSemResposta || "") : ""
+      notaSemResposta: existente ? (existente.notaSemResposta || "") : "",
+      idPontoOrigem: pt.id_ponto || "",
+      pautaIdOrigem: dados.pauta_id || "",
+      tipoLacuna: pt.tipo_lacuna || "",
+      confirmadoPeloUsuario: pt.confirmado_pelo_usuario !== false
     };
   });
 
   estado.pautaImportada = {
     origem: "nexo-coger",
-    catalogoVersionOrigem: dados.catalogoVersion || "",
+    catalogoSchemaVersionOrigem: dados.catalogo_schema_version || "",
+    pautaIdUltimaImportacao: dados.pauta_id || "",
+    depoenteOrigem: dados.depoente || null,
     processoOrigem: dados.processo || "",
     importadaEm: agoraISO(),
-    acusadosContexto: dados.acusadosContexto || [],
+    acusadosContexto: dados.acusados_contexto || (estado.pautaImportada ? estado.pautaImportada.acusadosContexto : []) || [],
     itens: Object.values(porFatoId)
   };
   salvarLocalStorage();
@@ -4043,9 +4070,14 @@ function renderResumoPautaNexo(){
     return;
   }
   const c = contagemStatusPauta();
+  const papelObjOrigem = (p.depoenteOrigem && p.depoenteOrigem.papel)
+    ? CATALOGO_COGER.papeis_pessoa.find(x => x.id === p.depoenteOrigem.papel) : null;
   wrap.innerHTML =
     "<div style=\"font-size:.85rem;line-height:1.6;\">" +
       "<div><strong>Processo de origem (Nexo):</strong> " + escapeHtml(p.processoOrigem || "—") + "</div>" +
+      (p.pautaIdUltimaImportacao ? "<div><strong>Última pauta importada:</strong> " + escapeHtml(p.pautaIdUltimaImportacao) +
+        (p.depoenteOrigem && p.depoenteOrigem.nome ? " — destinada a " + escapeHtml(p.depoenteOrigem.nome) +
+          " (" + escapeHtml(papelObjOrigem ? papelObjOrigem.label : (p.depoenteOrigem.papel || "—")) + ")" : "") + "</div>" : "") +
       "<div><strong>Importada em:</strong> " + formatarDataHoraBR(p.importadaEm) + "</div>" +
       "<div><strong>Itens da pauta:</strong> " + p.itens.length +
         " · <span class=\"badge-checklist-status pendente\">pendentes: " + c.pendente + "</span>" +

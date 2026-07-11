@@ -542,7 +542,7 @@ svg.map.isolating .node.hl{opacity:1}
       <div class="lbl">Produtos</div>
       <button data-act="minuta">📄 Gerar minuta do termo de indiciação</button>
       <button data-act="intimacao">📨 Gerar termo de intimação</button>
-      <button data-act="pauta">🎯 Exportar pauta de instrução (Oitiva 360)</button>
+      <button data-act="pauta">🎯 Pauta de instrução por depoente (Oitiva 360)</button>
       <button data-act="importProva">📥 Importar prova(s) de retorno</button>
       <button data-act="importProvaVeritas">📥 Importar provas do Veritas</button>
       <button data-act="printMap">🖨 Imprimir o mapa</button>
@@ -1498,7 +1498,7 @@ function docVazio(){
       citacao:{ data:'', meio:'pessoal', prazoDefesaDias:10 }
     },
     acusados:[], fatos:[], provas:[], catalogoNormas:buildCatalogo(),
-    _seq:{A:0,F:0,P:0,NU:0}, _minutaGerada:false
+    _seq:{A:0,F:0,P:0,NU:0,PAUTA:0}, _minutaGerada:false
   };
 }
 
@@ -1531,7 +1531,8 @@ function loadDraft(){
 function migra(d){
   // garante campos novos em rascunhos antigos
   const base=docVazio();
-  d._seq=d._seq||{A:0,F:0,P:0,NU:0};
+  d._seq=d._seq||{A:0,F:0,P:0,NU:0,PAUTA:0};
+  if(typeof d._seq.PAUTA!=='number') d._seq.PAUTA=0;
   if(typeof d._minutaGerada!=='boolean') d._minutaGerada=false;
   if(!d.catalogoNormas||!d.catalogoNormas.length) d.catalogoNormas=base.catalogoNormas;
   // blocos de prescrição / prazos / citação (v1.2)
@@ -3034,33 +3035,145 @@ function recomputaSeq(){
   doc._seq={A:mx('A'),F:mx('F'),P:mx('P'),NU:0};
 }
 
-function exportPauta(){
-  const fatosPauta=doc.fatos.filter(f=>!fatoArquivado(f)&&(()=>{const e=estadoExibido(f);return e.exibido==='ausente'||e.exibido==='indicios';})());
-  const pauta=fatosPauta.map(f=>({
-    fatoId:f.id, titulo:f.titulo||'', estado:estadoExibido(f).exibido, elementosBuscados:f.elementosBuscados||'',
-    acusadosVinculados:[...new Set((f.condutas||[]).map(c=>c.acusadoId).filter(Boolean))],
-    enquadramentosAtivos:enquadramentosAtivos(f).map(e=>{const n=normaById(e.normaId);
-      return {normaId:e.normaId, rotulo:n?n.rotulo:'', elementoSubjetivo:e.elementoSubjetivo};})
-  }));
-  const out={
-    origem:FERRAMENTA, catalogoVersion:CATALOGO_VERSION, processo:doc.processo.numero||'',
-    exportadoEm:new Date().toISOString(),
-    acusadosContexto:doc.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
-    pauta
-  };
-  const txt=JSON.stringify(out,null,2);
-  // grava o rastro "pauta enviada" em todos os fatos que entraram neste export
-  const agora=new Date().toISOString();
-  fatosPauta.forEach(f=>{ f.pautaEnviada={em:agora}; });
-  const body=[
-    el('div',{class:'banner info'},el('span',{},'🎯'),el('div',{},'Cole no campo "elementos buscados" ao cadastrar o próximo depoente no Oitiva 360.')),
-    (()=>{const ta=el('textarea',{style:'min-height:280px;font-family:monospace;font-size:12px'});ta.value=txt;ta.readOnly=true;return ta;})()
+/* ------------------------------------------------------------------ *
+ * 15-quater. PAUTA DE INSTRUÇÃO POR DEPOENTE (Rodada 4 — contrato Nexo Coger → Oitiva 360)
+ * Reaproveita PENDENCIAS (P1 "sem prova", P7 "sustentação exclusivamente indiciária") como fonte
+ * das sugestões automáticas de lacuna — não é uma heurística nova, é a mesma já usada no painel de
+ * pendências, só reformatada como ponto de instrução. Nada entra na pauta sem confirmação explícita
+ * nesta tela: sugestões começam marcadas mas são editáveis/removíveis, e pontos manuais só existem
+ * se o usuário os adicionar.
+ * ------------------------------------------------------------------ */
+// Converte um normaId interno (ex. "N-132-IV", "N-130-P1", "N-LAI-32-I") para o id do catálogo
+// canônico (ex. "NORMA.L8112.ART132_IV") — mesma numeração, dois formatos por historicidade.
+function normaInternaParaCanonica(id){
+  if(!id) return null;
+  let canonico=null;
+  if(id.startsWith('N-LAI-')){
+    const resto=id.slice('N-LAI-'.length), i=resto.indexOf('-');
+    if(i>0) canonico='NORMA.LAI.ART'+resto.slice(0,i)+'_'+resto.slice(i+1);
+  } else if(id.startsWith('N-')){
+    const resto=id.slice(2), i=resto.indexOf('-');
+    if(i>0) canonico='NORMA.L8112.ART'+resto.slice(0,i)+'_'+resto.slice(i+1);
+  }
+  // só retorna se o id calculado realmente existir no catálogo embutido — nunca inventa referência.
+  return (canonico && CATALOGO_COGER.normas.some(n=>n.id===canonico)) ? canonico : null;
+}
+function analisarLacunasPauta(){
+  const pontos=[];
+  doc.fatos.forEach(f=>{
+    if(fatoArquivado(f)) return;
+    const normasRelacionadas=enquadramentosAtivos(f).map(e=>normaInternaParaCanonica(e.normaId)).filter(Boolean);
+    const acusadosVinculados=[...new Set((f.condutas||[]).map(c=>c.acusadoId).filter(Boolean))];
+    const base={fatoId:f.id, tituloFato:f.titulo||'(fato sem título)', normasRelacionadas, acusadosVinculados};
+    const semProva=!(f.provaIds&&f.provaIds.length);
+    if(semProva){
+      pontos.push(Object.assign({},base,{tipoLacuna:'sem_prova',
+        perguntaSugerida:'Não há prova vinculada a este fato — indagar o depoente sobre: '+base.tituloFato+'.'}));
+      return; // sem prova já é a lacuna mais forte deste fato; não soma prova_fragil também
+    }
+    const provas=(f.provaIds||[]).map(provaById).filter(Boolean);
+    if(provas.length && provas.every(p=>p.tipo==='indiciaria'||p.tipo==='declaracao_informante')){
+      pontos.push(Object.assign({},base,{tipoLacuna:'prova_fragil',
+        perguntaSugerida:'A prova vinculada a este fato é apenas indiciária/informal — aprofundar o questionamento sobre: '+base.tituloFato+'.'}));
+    }
+  });
+  return pontos;
+}
+function abrirRevisaoPauta(){
+  const sugestoes=analisarLacunasPauta().map((p,i)=>Object.assign({sel:true},p,{i}));
+  const manuais=[]; // {fatoId, pergunta}
+  const depoente={nome:'', papelId:'PAPEL.TESTEMUNHA'};
+  const bodyBox=el('div',{});
+  function renderCorpo(){
+    bodyBox.innerHTML='';
+    const rotuloLacuna={sem_prova:'Sem prova',prova_fragil:'Prova frágil'};
+    bodyBox.append(el('div',{class:'block-title'},'Sugestões automáticas ('+sugestoes.length+')'));
+    if(!sugestoes.length) bodyBox.append(el('div',{class:'hint'},'Nenhuma lacuna detectada automaticamente (sem fatos sem prova ou com sustentação só indiciária).'));
+    sugestoes.forEach(s=>{
+      const cb=el('input',{type:'checkbox'}); cb.checked=s.sel;
+      cb.addEventListener('change',()=>s.sel=cb.checked);
+      const ta=el('textarea',{style:'min-height:50px;width:100%;',oninput:e=>s.perguntaSugerida=e.target.value});
+      ta.value=s.perguntaSugerida;
+      bodyBox.append(el('div',{class:'imp-item'}, cb,
+        el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'}, s.tituloFato+' · '+(rotuloLacuna[s.tipoLacuna]||s.tipoLacuna)),
+          ta)));
+    });
+    bodyBox.append(el('div',{class:'block-title'},'Pontos manuais ('+manuais.length+')'));
+    manuais.forEach((m,mi)=>{
+      const selFato=fieldSelect('Fato', m.fatoId,
+        doc.fatos.filter(f=>!fatoArquivado(f)).map(f=>[f.id, f.titulo||f.id]),
+        v=>m.fatoId=v);
+      const ta=el('textarea',{style:'min-height:50px;width:100%;',oninput:e=>m.pergunta=e.target.value});
+      ta.value=m.pergunta;
+      const btnDel=el('button',{class:'btn ghost',onclick:()=>{manuais.splice(mi,1);renderCorpo();}},'Remover');
+      bodyBox.append(el('div',{class:'imp-item'}, selFato, el('div',{class:'imp-body'},ta,btnDel)));
+    });
+    bodyBox.append(el('button',{class:'btn',onclick:()=>{
+      const primeiro=doc.fatos.find(f=>!fatoArquivado(f));
+      manuais.push({fatoId:primeiro?primeiro.id:'', pergunta:''}); renderCorpo();
+    }},'+ Adicionar ponto manual'));
+    bodyBox.append(el('div',{class:'block-title'},'Depoente'));
+    bodyBox.append(fieldText('Nome',depoente.nome,v=>depoente.nome=v));
+    bodyBox.append(fieldSelect('Papel (catálogo canônico)',depoente.papelId,
+      CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo').map(x=>[x.id,x.label]),
+      v=>depoente.papelId=v));
+  }
+  renderCorpo();
+  const foot=[
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!depoente.nome.trim()){ alert('Informe o nome do depoente.'); return; }
+      const confirmados=sugestoes.filter(s=>s.sel).map(s=>({
+        fatoId:s.fatoId, tituloFato:s.tituloFato, tipoLacuna:s.tipoLacuna,
+        normasRelacionadas:s.normasRelacionadas, acusadosVinculados:s.acusadosVinculados,
+        perguntaSugerida:s.perguntaSugerida
+      })).concat(manuais.filter(m=>m.fatoId&&m.pergunta.trim()).map(m=>{
+        const f=doc.fatos.find(x=>x.id===m.fatoId);
+        return {fatoId:m.fatoId, tituloFato:f?f.titulo||'':'',
+          tipoLacuna:'manual', normasRelacionadas:f?enquadramentosAtivos(f).map(e=>normaInternaParaCanonica(e.normaId)).filter(Boolean):[],
+          acusadosVinculados:f?[...new Set((f.condutas||[]).map(c=>c.acusadoId).filter(Boolean))]:[],
+          perguntaSugerida:m.pergunta};
+      }));
+      if(!confirmados.length){ alert('Nenhum ponto de instrução confirmado — nada a exportar.'); return; }
+      gerarPautaPorDepoente(confirmados, depoente);
+      closeModal();
+    }},'Gerar pauta (.json)')
   ];
-  const foot=[el('button',{class:'btn',onclick:()=>{navigator.clipboard&&navigator.clipboard.writeText(txt);}},'Copiar'),
-    el('button',{class:'btn',onclick:()=>baixar(`pauta-oitiva360-${new Date().toISOString().slice(0,10)}.json`,txt)},'Baixar .json'),
-    el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
-  openModal(modalShell('Pauta de instrução para o Oitiva 360','prova',body,foot));
+  openModal(modalShell('Revisão de lacunas — pauta de instrução','prova',[bodyBox],foot));
+}
+function gerarPautaPorDepoente(pontos, depoente){
+  doc._seq.PAUTA=(doc._seq.PAUTA||0)+1;
+  const dataStr=new Date().toISOString().slice(0,10);
+  const pautaId='PAUTA.'+dataStr+'.'+String(doc._seq.PAUTA).padStart(3,'0');
+  const out={
+    schema_version:'1.0.0',
+    catalogo_schema_version:CATALOGO_COGER.schema_version,
+    pauta_id:pautaId,
+    exportado_em:new Date().toISOString(),
+    origem:FERRAMENTA,
+    processo:doc.processo.numero||'',
+    depoente:{nome:depoente.nome, papel:depoente.papelId},
+    acusados_contexto:doc.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
+    pontos_instrucao:pontos.map((p,i)=>({
+      id_ponto:pautaId+'.P'+String(i+1).padStart(2,'0'),
+      fato_referencia:p.fatoId,
+      fato_titulo:p.tituloFato||'',
+      normas_relacionadas:p.normasRelacionadas||[],
+      acusados_vinculados:p.acusadosVinculados||[],
+      tipo_lacuna:p.tipoLacuna,
+      pergunta_sugerida:p.perguntaSugerida||'',
+      confirmado_pelo_usuario:true
+    }))
+  };
+  // grava o rastro "pauta enviada" nos fatos que entraram neste export (mesmo padrão já existente)
+  const agora=new Date().toISOString();
+  pontos.forEach(p=>{ const f=doc.fatos.find(x=>x.id===p.fatoId); if(f) f.pautaEnviada={em:agora}; });
+  scheduleSave();
+  const nomeArq='nexo-coger-pauta-'+(depoente.nome||'depoente').replace(/[^\w.-]+/g,'_')+'-'+dataStr+'.json';
+  baixar(nomeArq, JSON.stringify(out,null,2));
   render(); // reflete o badge "pauta enviada" nos cards
+  toast('Pauta '+pautaId+' gerada para '+depoente.nome+'.');
 }
 
 /* ------------------------------------------------------------------ *
@@ -3759,7 +3872,7 @@ function init(){
   $('#menu').addEventListener('click',e=>{
     const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
     toggleMenu(false);
-    ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:exportPauta,importProva:importarProva,
+    ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:abrirRevisaoPauta,importProva:importarProva,
       importProvaVeritas:importarProvasVeritas,printMap,
       novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
   });

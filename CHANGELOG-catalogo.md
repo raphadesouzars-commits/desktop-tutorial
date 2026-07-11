@@ -2,6 +2,40 @@
 
 `catalogo-canonico.json` — `schema_version: 1.0.0`, `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `5906e98f`.
 
+## Rodada 4 — Contrato Nexo Coger → Oitiva 360 (pauta de instrução, fechada)
+
+### 4.1 — Diagnóstico
+
+Diferente da Rodada 3 (onde não existia contrato algum), aqui **já existia uma integração parcial construída na própria "Rodada 6" interna do Oitiva 360** (numeração própria do changelog de cada ferramenta, sem relação com as Rodadas 1–8 deste projeto):
+
+- **`nexo-coger.html`** já tinha `exportPauta()`: exportava **todos** os fatos não arquivados com estado `ausente`/`indicios` — sem tela de revisão, sem confirmação item a item, sem `pauta_id`, sem referência a depoente (pauta única "geral" do processo, não por pessoa). Usava `catalogoVersion`/`CATALOGO_VERSION` (constante `"1.0"` própria, não relacionada ao `catalogo-canonico.json` da Rodada 1) e `normaId` no formato interno (`N-132-IV`), não no formato canônico do catálogo.
+- **`nexo-coger.html` já tinha a estrutura de lacuna pedida em 4.2**, embutida no sistema de pendências (`computePendencias()`): `P1` ("Fato sem prova vinculada", crítico) e `P7` ("Sustentação exclusivamente indiciária/informal", frágil) já eram exatamente os dois critérios de lacuna pedidos (`sem_prova` e `prova_fragil`). Não existia nenhuma marcação de "provas em contradição" a nível de fato — por isso, seguindo a spec, **essa terceira categoria não foi criada nesta rodada**.
+- **`oitiva-360.html` já tinha a rotina de importação completa** (`aplicarImportacaoPauta`, seção 2.3 da "Rodada 6" própria do Oitiva): populava `estado.pautaImportada.itens` (pool único compartilhado, chaveado por `fatoId`), do qual cada depoente seleciona os itens relevantes via `d.pautaSelecionada` — ou seja, a resolução "por depoente" já acontecia no momento do uso dentro do Oitiva, não no momento da exportação. Toda a lógica de checklist, roteiro de perguntas pré-selecionadas por norma e badge "pauta enviada" já dependia dessa estrutura.
+
+Decisão de adaptação: como a spec exige explicitamente `pauta_id`, `depoente` e confirmação item a item na exportação — e a arquitetura existente do Oitiva (pool compartilhado + seleção por depoente no uso) é sólida e não deveria ser descartada — a Rodada 4 **manteve o pool compartilhado do Oitiva intacto** e **adicionou** `pauta_id`, `depoente` de destino (armazenado como metadado/rastro, sem restringir a seleção a só aquele depoente) e os campos de rastreabilidade (`idPontoOrigem`, `pautaIdOrigem`, `tipoLacuna`, `confirmadoPeloUsuario`) em cada item importado.
+
+### Contrato final implementado
+
+`nexo-coger.html`:
+- Nova tela de revisão de lacunas (`abrirRevisaoPauta()`, botão "🎯 Pauta de instrução por depoente"): lista as sugestões automáticas (P1→`sem_prova`, P7→`prova_fragil`) com checkbox marcado por padrão e pergunta editável, permite adicionar pontos manuais (fato + pergunta livre, `tipo_lacuna:"manual"`) e exige nome + papel (ID do catálogo) do depoente antes de gerar. **Só os itens marcados entram no export** — nenhum ponto sai sem confirmação explícita, mesmo os sugeridos automaticamente.
+- Nova `gerarPautaPorDepoente()`: gera `pauta_id` único via contador persistido `doc._seq.PAUTA` (formato `PAUTA.<data>.<seq 3 dígitos>`, testado: duas exportações no mesmo dia geram `PAUTA.2026-07-11.001` e `...002`), `schema_version`/`catalogo_schema_version` (= `CATALOGO_COGER.schema_version`), `depoente:{nome, papel}` com papel por ID do catálogo, e `pontos_instrucao[]` com `normas_relacionadas` convertidas para IDs canônicos via nova `normaInternaParaCanonica()` (conversão determinística `N-132-IV` ↔ `NORMA.L8112.ART132_IV`, validada contra o catálogo embutido antes de usar). Mantém `acusados_contexto` (fora da estrutura ilustrativa da spec, mas necessário — ver abaixo) e `acusados_vinculados` por ponto, preservando a função de sugestão de vínculo já existente no Oitiva.
+
+`oitiva-360.html`:
+- `aplicarImportacaoPauta()` adaptada para ler `pontos_instrucao`/`pauta_id`/`catalogo_schema_version` em vez do formato antigo (`pauta`/`catalogoVersion`), com aviso visível (não bloqueante) quando `catalogo_schema_version` diverge — mesmo padrão da Rodada 3.
+- Nova `normaCanonicaParaInterna()` (inverso exato da função do Nexo) resolve `normas_relacionadas` de volta para o `normaId` interno usado por `resolverNormaPorId()`/pré-seleção de perguntas — testado: `NORMA.L8112.ART116_III` importado resultou em `enquadramentosAtivos[0].normaId === "N-116-III"`, preservando a pré-seleção de perguntas por norma que já existia.
+- Cada item de `estado.pautaImportada.itens` ganhou `idPontoOrigem`, `pautaIdOrigem`, `tipoLacuna`, `confirmadoPeloUsuario` — presentes no dado mesmo sem estar em destaque na UI, conforme o critério de aceite ("não precisa ser visível ao usuário final, mas o dado precisa estar presente").
+- `renderResumoPautaNexo()` agora mostra o `pauta_id` da última importação e o depoente de destino (nome + rótulo do papel resolvido do catálogo, nunca o ID cru) — testado: banner mostra "Última pauta importada: PAUTA.2026-07-11.001 — destinada a Maria Testemunha da Silva (Testemunha)".
+
+**Por que `acusados_contexto` ficou fora da estrutura ilustrativa da spec:** é o que alimenta `acusadoSugeridoPorNome()`/`renderVinculoNexo()`, a sugestão (não automática) de vínculo entre o depoente e um acusado do Nexo já existente no Oitiva — sem esse campo, essa funcionalidade quebraria para pautas importadas pelo novo contrato.
+
+### Teste de ponta a ponta (Playwright, os dois HTMLs reais)
+
+1. Exemplo pré-carregado no Nexo (`carregarExemplo()`) → `analisarLacunasPauta()` detecta 1 lacuna real (`sem_prova`) → tela de revisão aberta, depoente preenchido ("Maria Testemunha da Silva", `PAPEL.TESTEMUNHA`) → pauta gerada com `pauta_id: "PAUTA.2026-07-11.001"`, `normas_relacionadas: ["NORMA.L8112.ART116_III"]`, `confirmado_pelo_usuario: true`.
+2. Segunda exportação no mesmo teste gerou `PAUTA.2026-07-11.002` — `pauta_id` confirmado único a cada exportação.
+3. Arquivo importado no Oitiva 360 sem erro → resumo mostra o `pauta_id` e "destinada a Maria Testemunha da Silva (Testemunha)" → item interno tem `enquadramentosAtivos[0].normaId === "N-116-III"` (convertido corretamente de volta do formato canônico) e carrega `pautaIdOrigem`/`tipoLacuna`/`confirmadoPeloUsuario` para rastreabilidade futura.
+
+Um bug foi pego pelo próprio teste antes do commit: `gerarPautaPorDepoente()` chamava uma função de persistência (`salvarLocalStorage`) que não existe no Nexo Coger — o nome real é `scheduleSave()`. Corrigido antes de fechar a rodada.
+
 ## Rodada 3 — Contrato Veritas → Nexo Coger (fechada)
 
 ### 3.1 — Padronização do nome `nexo-coger`
