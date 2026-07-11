@@ -397,7 +397,8 @@ svg.map{display:block}
 /* ---------- MENU (export dropdown) ---------- */
 .menu-wrap{position:relative}
 .menu{position:absolute;top:calc(100% + 4px);right:0;background:var(--paper);border:1px solid var(--borda);
-  border-radius:10px;box-shadow:0 8px 24px #0002;min-width:230px;z-index:30;padding:5px;display:none}
+  border-radius:10px;box-shadow:0 8px 24px #0002;min-width:230px;z-index:30;padding:5px;display:none;
+  max-height:calc(100vh - 120px);overflow-y:auto}
 .menu.open{display:block}
 .menu button{display:flex;width:100%;text-align:left;background:none;border:none;padding:8px 10px;
   border-radius:7px;font-size:13px;color:var(--ink);gap:8px;align-items:center}
@@ -2683,7 +2684,14 @@ function limparTudo(){
   if(!confirm('Limpar TODO o conteúdo (acusados, fatos, provas)? O catálogo de normas de fábrica é mantido. Esta ação não afeta arquivos .json já exportados.')) return;
   doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); render();
 }
-function toggleMenu(open){ const m=$('#menu'); m.classList.toggle('open', open==null?!m.classList.contains('open'):open); }
+function toggleMenu(open){
+  const m=$('#menu'); m.classList.toggle('open', open==null?!m.classList.contains('open'):open);
+  if(m.classList.contains('open')){
+    // limita a altura ao espaço disponível abaixo do botão, para rolar quando não couber
+    const r=m.getBoundingClientRect();
+    m.style.maxHeight=Math.max(160, window.innerHeight-r.top-12)+'px';
+  }
+}
 // mostra o botão flutuante de reabrir quando o painel está recolhido (em qualquer largura)
 function updateFab(){ const p=$('#panel'), f=$('#fab'); if(p&&f) f.classList.toggle('show', p.classList.contains('collapsed')); }
 
