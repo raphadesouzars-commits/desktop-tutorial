@@ -3,7 +3,8 @@
 Ferramenta de apoio à decisão para comissões de PAD e sindicância acusatória da
 Corregedoria da Receita Federal do Brasil (Coger/RFB). Constrói o **mapa visual
 Fato → Prova → Norma**, revela lacunas de instrução em tempo real e gera a
-**minuta do termo de indiciação** (um capítulo por acusado) e a **pauta de
+**Indiciação** (um documento por indiciado), os **termos de intimação/notificação**
+(esclarecimento de fato, manifestação sobre prova, interrogatório) e a **pauta de
 retroalimentação** para o Oitiva 360.
 
 Fundamentação: Manual de PAD CGU 2025 (cap. 10), Lei nº 8.112/90 (arts. 155 e
@@ -43,6 +44,9 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
   no mapa esmaecido como memória da decisão.
 - **Ordem narrativa dos fatos**: campo `ordem` editável por arrasto no painel,
   usado apenas na sequência da minuta (não afeta o mapa).
+- **Dados complementares do acusado** (situação funcional, telefone(s), e-mail(s))
+  e **cidade do processo**: usados no cabeçalho da Indiciação e dos termos de
+  intimação/notificação.
 - **Caixa de prescrição** (art. 142): cálculo informativo por acusado
   (gravidade → prazo, termo inicial pela ciência da autoridade, interrupção
   pela portaria de instauração, hipóteses do art. 127 da PN CGU 27/2022).
@@ -55,6 +59,22 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
 - **Índice de provas na minuta**: numeração automática das provas por capítulo,
   citações prefixadas no texto e tabela "Índice de Provas Citadas" (campo
   opcional `codigoAnexo` por prova).
+- **Indiciação no modelo oficial da Coger**: um documento **completo e independente
+  por indiciado** (não mais capítulos de uma única minuta) — título "Indiciação",
+  qualificação, fatos/condutas, provas, enquadramento, tabela-síntese "Fatos ×
+  Provas × Enquadramentos" (agrupada por fato, com mesclagem de linhas), seção
+  "Das alegações da defesa não acatadas" (campo editável por acusado, com bloco
+  também editável na própria tela de impressão) e bloco de assinatura em 3
+  colunas — Vogal / Presidente / Vogal, rótulo "Assinatura digital". Data de
+  assinatura editável no momento da geração. Com 2+ indiciados selecionados, uma
+  tela intermediária "Termos gerados" permite abrir cada documento individualmente.
+- **Termos de intimação/notificação**: gera esclarecimento de fato, manifestação
+  sobre prova (contraditório) ou interrogatório, um documento por destinatário.
+  A fundamentação legal e os blocos de texto variam automaticamente conforme a
+  situação funcional do acusado (ativo/licenciado-afastado/inativo/ex-servidor)
+  e, no interrogatório, conforme o momento (prévio/final, art. 158). Numeração
+  manual (nº + sufixo CI/CS sugerido a partir do tipo de processo cadastrado) e
+  prazo de resposta editáveis. Mesmo bloco de assinatura em 3 colunas da indiciação.
 - **Persistência**: rascunho automático em `localStorage` (chave
   `nexus-coger:draft`) e export/import de `.json` como guarda oficial.
 
@@ -63,7 +83,9 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
 ## Exportações
 
 - **Documento `.json`** completo (guarda e troca no ecossistema Coger).
-- **Minuta do termo de indiciação** — por acusado, em vista de impressão/PDF.
+- **Indiciação** — um documento por indiciado, em vista de impressão/PDF.
+- **Termos de intimação/notificação** — esclarecimento de fato, manifestação
+  sobre prova ou interrogatório, um documento por destinatário.
 - **Pauta de instrução** para o Oitiva 360 (fatos carentes de prova) — enriquecida
   com contexto dos acusados e enquadramentos ativos por fato (`catalogoVersion`,
   `acusadosContexto`, `acusadosVinculados`, `enquadramentosAtivos`).

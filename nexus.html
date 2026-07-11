@@ -468,7 +468,12 @@ svg.map{display:block}
 .pv-doc .quote{margin:6px 0 6px 24px;font-style:italic;color:#333}
 .pv-doc .inst{text-align:center;font-weight:700;margin-bottom:2px}
 .pv-doc table.qual{width:100%;border-collapse:collapse;margin:8px 0}
-.pv-doc table.qual td{border:1px solid #bbb;padding:5px 8px;font-size:13px}
+.pv-doc table.qual td{border:1px solid #bbb;padding:5px 8px;font-size:13px;vertical-align:top}
+.pv-doc .editable-block{border:1px dashed #999;border-radius:4px;padding:8px 10px;min-height:20px;margin:6px 0}
+.pv-doc .editable-block:empty::before{content:'Clique para preencher.';color:#999}
+.pv-doc .editable-inline{border:1px dashed #999;border-radius:3px;padding:1px 6px;display:inline-block;min-width:50px}
+.pv-doc .editable-inline:empty::before{content:'hh:mm';color:#999}
+@media print{ .pv-doc .editable-block,.pv-doc .editable-inline{border:none;padding:0} }
 
 /* ---------- MAP CARD (SVG-driven) hover helpers ---------- */
 svg.map .node{cursor:pointer}
@@ -536,6 +541,7 @@ svg.map.isolating .node.hl{opacity:1}
       <div class="sep"></div>
       <div class="lbl">Produtos</div>
       <button data-act="minuta">📄 Gerar minuta do termo de indiciação</button>
+      <button data-act="intimacao">📨 Gerar termo de intimação</button>
       <button data-act="pauta">🎯 Exportar pauta de instrução (Oitiva 360)</button>
       <button data-act="importProva">📥 Importar prova(s) de retorno</button>
       <button data-act="printMap">🖨 Imprimir o mapa</button>
@@ -734,6 +740,17 @@ const FASE_LABELS=Object.fromEntries(FASES_PROCESSO);
 // fases em que a ausência de enquadramento (P2) passa a ser crítica (da indiciação em diante)
 const FASES_INDICIACAO_ADIANTE=new Set(['indiciacao_em_elaboracao','defesa_escrita','relatorio','julgamento','encerrado']);
 
+// situação funcional do acusado — decide a fundamentação legal dos termos de intimação/notificação
+const SITUACOES_FUNCIONAIS=[
+  ['ativo','Ativo (não licenciado/afastado)'],
+  ['licenciado_afastado','Licenciado/afastado'],
+  ['inativo','Inativo (aposentado)'],
+  ['ex_servidor','Ex-servidor']
+];
+const SITUACAO_FUNCIONAL_LABEL=Object.fromEntries(SITUACOES_FUNCIONAIS);
+// situações em que a fundamentação soma a Lei nº 9.784/99 (arts. 4º, IV, e 39) à Lei nº 8.112/90
+const SITUACOES_FORA_ATIVO=new Set(['licenciado_afastado','inativo','ex_servidor']);
+
 /* ordem e rótulos dos grupos do <select> (seção 3.5.3) */
 function grupoDaNorma(id){
   if(id.startsWith('NU-')) return 6;
@@ -767,7 +784,7 @@ function docVazio(){
   return {
     schemaVersion:SCHEMA, ferramenta:FERRAMENTA, exportadoEm:null,
     processo:{
-      numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB',
+      numero:'', tipo:'PAD', rito:'ordinario', unidade:'Coger/RFB', cidade:'',
       comissao:{
         presidente:{nome:'',cargo:'',matricula:''},
         membros:[{nome:'',cargo:'',matricula:''},{nome:'',cargo:'',matricula:''}],
@@ -821,6 +838,14 @@ function migra(d){
   if(!p.prescricao) p.prescricao={regimeInterrupcaoAtivo:null};
   if(!p.prazos) p.prazos={prazoConclusaoDias:(p.rito==='sumario'?30:60), prorrogacoes:[]};
   if(!p.citacao) p.citacao={data:'',meio:'pessoal',prazoDefesaDias:10};
+  if(typeof p.cidade!=='string') p.cidade='';
+  // dados de acusado exigidos pelos termos de intimação/notificação
+  (d.acusados||[]).forEach(a=>{
+    if(!SITUACOES_FUNCIONAIS.some(x=>x[0]===a.situacaoFuncional)) a.situacaoFuncional='ativo';
+    if(typeof a.telefone!=='string') a.telefone='';
+    if(typeof a.email!=='string') a.email='';
+    if(typeof a.alegacoesDefesaNaoAcatadas!=='string') a.alegacoesDefesaNaoAcatadas='';
+  });
   // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
   (d.fatos||[]).forEach((f,i)=>{
     if(typeof f.ordem!=='number') f.ordem=i+1;
@@ -1685,12 +1710,21 @@ function fieldSelect(label,val,opts,onchange){
 function abrirFormAcusado(id){
   const novo=!id;
   const a = novo ? {id:genId('A'),nome:'',matricula:'',cargo:'',lotacao:'',qualificacaoComplementar:'',
+    situacaoFuncional:'ativo',telefone:'',email:'',alegacoesDefesaNaoAcatadas:'',
     notificacaoPrevia:{realizada:false,data:'',refAutos:''},
     interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null}} : JSON.parse(JSON.stringify(acusadoById(id)));
   const body=[
     el('div',{class:'row2'}, fieldText('Nome',a.nome,v=>a.nome=v), fieldText('Matrícula (SIAPE)',a.matricula,v=>a.matricula=v)),
     el('div',{class:'row2'}, fieldText('Cargo',a.cargo,v=>a.cargo=v), fieldText('Lotação',a.lotacao,v=>a.lotacao=v)),
     fieldArea('Qualificação complementar',a.qualificacaoComplementar,v=>a.qualificacaoComplementar=v),
+    el('div',{class:'block'},
+      el('div',{class:'block-title'},'Contato e situação funcional'),
+      el('div',{class:'row3'},
+        fieldSelect('Situação funcional',a.situacaoFuncional,SITUACOES_FUNCIONAIS,v=>a.situacaoFuncional=v),
+        fieldText('Telefone(s) móvel(is)',a.telefone,v=>a.telefone=v,'Usado em "Contatos:" nos termos de intimação.'),
+        fieldText('E-mail(s)',a.email,v=>a.email=v))),
+    fieldArea('Alegações da defesa não acatadas',a.alegacoesDefesaNaoAcatadas,v=>a.alegacoesDefesaNaoAcatadas=v,
+      'Preenchida antes da impressão final da indiciação. Também pode ser ajustada na própria tela de impressão.'),
     el('div',{class:'block'},
       el('div',{class:'block-title'},'Notificação prévia'),
       el('div',{class:'row3'},
@@ -2242,7 +2276,9 @@ function abrirFormProcesso(){
         if(p.prazos.prazoConclusaoDias===oldDef){ p.prazos.prazoConclusaoDias=newDef; renderPrazosBox(); }
       }),
       fieldSelect('Fase atual',p.faseAtual,FASES_PROCESSO,v=>p.faseAtual=v)),
-    fieldText('Unidade',p.unidade,v=>p.unidade=v),
+    el('div',{class:'row2'},
+      fieldText('Unidade',p.unidade,v=>p.unidade=v),
+      fieldText('Cidade',p.cidade,v=>p.cidade=v,'Usada no cabeçalho dos documentos gerados (indiciação e intimações).')),
     fieldArea('Objeto da apuração',p.objetoApuracao,v=>p.objetoApuracao=v),
     comissaoBox,
     prazosBox,
@@ -2419,11 +2455,13 @@ function gerarMinutaFlow(){
   if(criticas.length){ alert('Há pendências críticas que impedem a indiciação. Veja o painel.'); return; }
   // seletor de acusados
   const sel={};
+  let dataDoc=new Date().toISOString().slice(0,10);
   const body=[
-    el('div',{class:'hint'},'Selecione os indiciados (um capítulo por indiciado):'),
+    el('div',{class:'hint'},'Selecione os indiciados (um documento por indiciado):'),
     ...doc.acusados.map(a=>{const cb=el('input',{type:'checkbox'});cb.checked=true;sel[a.id]=true;
       cb.addEventListener('change',()=>sel[a.id]=cb.checked);
-      return el('label',{class:'ms-item'},cb,`${a.id} — ${a.nome||'(sem nome)'}`);})
+      return el('label',{class:'ms-item'},cb,`${a.id} — ${a.nome||'(sem nome)'}`);}),
+    fieldText('Data do documento',dataDoc,v=>dataDoc=v,'Usada no fecho e nas assinaturas. Sugestão inicial: hoje.','date')
   ];
   const fragil=PENDENCIAS.filter(p=>p.nivel==='fragil');
   if(fragil.length){
@@ -2436,9 +2474,26 @@ function gerarMinutaFlow(){
       if(!ids.length){ alert('Selecione ao menos um indiciado.'); return; }
       const faltas=validaMinuta(ids);
       if(faltas.length){ alert('Campos essenciais em branco impedem a geração:\n\n'+faltas.join('\n')); return; }
-      closeModal(); renderMinuta(ids);
+      if(!doc._minutaGerada){ doc._minutaGerada=true; prazosSecOpen=true; }
+      closeModal(); render();
+      if(ids.length===1) renderIndiciacao(ids[0],dataDoc);
+      else abrirListaIndiciacoes(ids,dataDoc);
     }},'Gerar minuta')];
   openModal(modalShell('Gerar minuta do termo de indiciação',null,body,foot));
+}
+// tela intermediária: 1 item por indiciado, cada um abre sua própria visualização de impressão
+function abrirListaIndiciacoes(ids,dataDoc){
+  const body=[
+    el('div',{class:'hint'},'Um Termo de Indiciação por indiciado. Abra cada um individualmente para visualizar ou imprimir.'),
+    ...ids.map(id=>{
+      const a=acusadoById(id);
+      return el('div',{class:'ms-item',style:'display:flex;align-items:center;gap:8px'},
+        el('div',{style:'flex:1'},a.nome||id),
+        el('button',{class:'btn small',onclick:()=>renderIndiciacao(id,dataDoc)},'Visualizar / Imprimir'));
+    })
+  ];
+  const foot=[el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
+  openModal(modalShell('Termos gerados — Indiciação',null,body,foot));
 }
 function validaMinuta(ids){
   const f=[];
@@ -2457,108 +2512,288 @@ function validaMinuta(ids){
   });
   return f;
 }
-function renderMinuta(ids){
-  const p=doc.processo, c=p.comissao;
-  const assinatura=(m,papel,fallback)=>`<p class="center">___________________________________<br>${esc((m&&m.nome)||fallback)} — ${papel}${m&&m.cargo?'<br><span style="font-size:12px">'+esc(m.cargo)+(m.matricula?' · Matrícula '+esc(m.matricula):'')+'</span>':''}</p>`;
+// bloco de assinatura em 3 colunas (Vogal | Presidente | Vogal), rótulo "Assinatura digital".
+// reaproveitado pela indiciação e pelos termos de intimação — comissões da Coger sempre têm 3 membros.
+function blocoAssinatura3(c){
+  const membros=(c.membros||[]).filter(m=>m&&m.nome);
+  const col=(m,papel)=>`<td style="width:33%;text-align:center;vertical-align:top;padding:0 10px">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#666;margin-bottom:26px">Assinatura digital</div>
+      <div>___________________________________</div>
+      <div>${esc((m&&m.nome)||papel)}</div>
+      ${m&&m.cargo?`<div style="font-size:12px">${esc(m.cargo)}</div>`:''}
+      <div style="font-size:12px;font-weight:700">${papel}${m&&m.matricula?' · Matrícula '+esc(m.matricula):''}</div>
+    </td>`;
+  return `<table style="width:100%;margin-top:36px;border:none" class="sig3"><tr>
+    ${col(membros[0],'Vogal')}
+    ${col(c.presidente,'Presidente')}
+    ${col(membros[1],'Vogal')}
+  </tr></table>`;
+}
+// tabela "Fatos de que se acusa × Provas × Fls. × Enquadramentos" (item 4 da especificação)
+function tabelaFatoProvaEnquadramento(fatos){
+  const linhas=[];
+  fatos.forEach((ft,i)=>{
+    const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
+    const enqTxt=enquadramentosAtivos(ft).map(e=>{const n=normaById(e.normaId); return n?esc(n.dispositivo):'';}).filter(Boolean).join('<br>')||'—';
+    const fatoTxt=`Fato ${i+1} — ${esc(ft.titulo||'')}`;
+    const rows=provas.length?provas:[null];
+    rows.forEach((pr,j)=>{
+      const provaTxt=pr?esc(pr.titulo)+(pr.codigoAnexo?' ('+esc(pr.codigoAnexo)+')':''):'(sem prova vinculada)';
+      const fls=pr&&pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)
+        ? `${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}` : '—';
+      linhas.push({fatoTxt:j===0?fatoTxt:null, rowspan:rows.length, provaTxt, fls, enqTxt:j===0?enqTxt:null});
+    });
+  });
+  return '<table class="qual fp"><tr><td><b>Fatos de que se acusa</b></td><td><b>Provas acerca dos fatos</b></td><td><b>Fls. dos autos</b></td><td><b>Enquadramentos</b></td></tr>'+
+    linhas.map(l=>`<tr>${l.fatoTxt!=null?`<td rowspan="${l.rowspan}">${l.fatoTxt}</td>`:''}<td>${l.provaTxt}</td><td>${l.fls}</td>${l.enqTxt!=null?`<td rowspan="${l.rowspan}">${l.enqTxt}</td>`:''}</tr>`).join('')+
+    '</table>';
+}
+// documento completo e independente de UM indiciado (item 1 da especificação)
+function renderIndiciacao(id,dataDoc){
+  const p=doc.processo, c=p.comissao, a=acusadoById(id);
+  // fatos ATIVOS imputados ao acusado, na ORDEM NARRATIVA definida no painel
+  // (arquivados são ignorados: apurados, mas a comissão decidiu não indiciar)
+  const fatos=fatosOrdenados(doc.fatos.filter(x=>!fatoArquivado(x)&&(x.condutas||[]).some(cc=>cc.acusadoId===id)));
   const partes=[];
   partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
     <div class="inst">CORREGEDORIA DA RECEITA FEDERAL DO BRASIL (Coger/RFB) — ${esc(p.unidade||'')}</div>
-    <h1>Termo de Indiciação</h1>
+    <h1>Indiciação</h1>
     <p class="center">Processo Administrativo Disciplinar nº ${esc(p.numero)} — Rito ${esc(p.rito)}</p>
-    <p class="center">Comissão designada pela Portaria nº ${esc(c.portariaInstauracao.numero||'—')}${c.portariaInstauracao.data?', de '+esc(c.portariaInstauracao.data):''}.</p>`);
-
-  ids.forEach((id,idx)=>{
-    const a=acusadoById(id);
-    // fatos ATIVOS imputados ao acusado, na ORDEM NARRATIVA definida no painel
-    // (arquivados são ignorados: apurados, mas a comissão decidiu não indiciar)
-    const fatos=fatosOrdenados(doc.fatos.filter(x=>!fatoArquivado(x)&&(x.condutas||[]).some(cc=>cc.acusadoId===id)));
-    partes.push(`<div class="${idx>0?'cap':''}">`);
-    partes.push(`<h2>${idx+1}. Do indiciado ${esc(a.nome)}</h2>`);
-    // qualificação
-    partes.push(`<table class="qual">
-      <tr><td><b>Nome</b></td><td>${esc(a.nome)}</td></tr>
-      <tr><td><b>Matrícula</b></td><td>${esc(a.matricula||'—')}</td></tr>
-      <tr><td><b>Cargo</b></td><td>${esc(a.cargo||'—')}</td></tr>
-      <tr><td><b>Lotação</b></td><td>${esc(a.lotacao||'—')}</td></tr>
-      ${a.qualificacaoComplementar?`<tr><td><b>Qualificação</b></td><td>${esc(a.qualificacaoComplementar)}</td></tr>`:''}
-    </table>`);
-    // fatos e condutas
-    partes.push('<h3>Dos fatos e das condutas</h3>');
-    fatos.forEach((ft,i)=>{
-      const cond=(ft.condutas||[]).find(cc=>cc.acusadoId===id)||{};
-      partes.push(`<p><b>Fato ${i+1} (${esc(ft.titulo)}).</b> ${esc(ft.descricao)}${ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)?` Período: ${esc(ft.periodo.inicio||'?')} a ${esc(ft.periodo.fim||'?')}.`:''}${ft.local?` Local: ${esc(ft.local)}.`:''}</p>`);
-      partes.push(`<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ${esc(cond.modalidade==='omissiva'?'omissiva':'comissiva')}, ${esc(cond.descricaoConduta||'')}</p>`);
-    });
-    // provas — com índice numerado por capítulo (Item 5). Numeração derivada, não persistida.
-    const provaIndex=[], provaNum={};
-    const registra=(pr,fatoId)=>{
-      if(!(pr.id in provaNum)){
-        const num=provaIndex.length+1;
-        provaNum[pr.id]=num;
-        provaIndex.push({prova:pr, num, ref:((pr.codigoAnexo||'').trim()||('Prova nº '+num)), fatos:[]});
-      }
-      const e=provaIndex[provaNum[pr.id]-1]; if(!e.fatos.includes(fatoId)) e.fatos.push(fatoId);
-    };
-    partes.push('<h3>Das provas</h3>');
-    fatos.forEach((ft,i)=>{
-      const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
-      if(!provas.length){ partes.push(`<p>Fato ${i+1}: (sem prova vinculada).</p>`); return; }
-      provas.forEach(pr=>registra(pr,ft.id));
-      let s=`<p>Fato ${i+1} — sustenta-se em: `;
-      s+=provas.map(pr=>{
-        let r=`(${esc(provaIndex[provaNum[pr.id]-1].ref)}) ${esc(pr.titulo)} (${esc(pr.tipo)}`;
-        if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r+=`, ${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}`;
-        r+=')';
-        return r;
-      }).join('; ')+'.</p>';
-      partes.push(s);
-      provas.forEach(pr=>(pr.trechosSignificativos||[]).forEach(t=>{ if((t.citacao||'').trim())
-        partes.push(`<div class="quote">"${esc(t.citacao)}"${t.ref?' ('+esc(t.ref)+')':''}</div>`); }));
-    });
-    // enquadramento
-    partes.push('<h3>Do enquadramento legal</h3>');
-    fatos.forEach((ft,i)=>{
-      const ativos=enquadramentosAtivos(ft);
-      const afastados=(ft.enquadramentos||[]).filter(e=>e.afastado);
-      ativos.forEach(e=>{
-        const n=normaById(e.normaId);
-        partes.push(`<p>Fato ${i+1}: a conduta amolda-se ao <b>${esc(n.dispositivo)}</b> (${esc(n.rotulo)}), a título de <b>${esc(rotES(e.elementoSubjetivo))}</b>. ${esc(e.fundamentacao||'')}</p>`);
-      });
-      if(ft.multiplicidade&&ft.multiplicidade.classificacao==='concurso_formal'&&ativos.length>1)
-        partes.push(`<p><i>Reconhece-se concurso formal entre os dispositivos acima, cuja repercussão se dará na dosimetria da pena.</i></p>`);
-      if(ft.multiplicidade&&ft.multiplicidade.classificacao==='conflito_aparente'&&afastados.length){
-        const prev=normaById(ft.multiplicidade.normaPrevalente);
-        partes.push(`<p><i>Prevalece o ${esc(prev?prev.dispositivo:'')} por ${esc(ft.multiplicidade.principioAplicado)}. Afasta-se: ${afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ')}. ${esc(ft.multiplicidade.justificativa||'')}</i></p>`);
-      }
-    });
-    // índice de provas citadas (por capítulo)
-    if(provaIndex.length){
-      partes.push('<h3>Índice de Provas Citadas</h3>');
-      const posFato={}; fatos.forEach((ft,i)=>posFato[ft.id]=i+1); // "Fato N" local ao capítulo
-      partes.push('<table class="qual"><tr><td><b>Ref.</b></td><td><b>Tipo</b></td><td><b>Autos</b></td><td><b>Fatos</b></td></tr>'+
-        provaIndex.map(e=>{
-          const pr=e.prova;
-          const ref=pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)
-            ? `${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}` : '—';
-          const fs=e.fatos.map(fid=>'Fato '+(posFato[fid]||'?')).join(', ');
-          return `<tr><td><b>${esc(e.ref)}</b><br><span style="font-size:11px;color:#555">${esc(pr.titulo)}</span></td><td>${esc(pr.tipo)}</td><td>${ref}</td><td>${esc(fs)}</td></tr>`;
-        }).join('')+'</table>');
-    }
-    partes.push('</div>');
+    <p class="center">Comissão designada pela Portaria nº ${esc(c.portariaInstauracao.numero||'—')}${c.portariaInstauracao.data?', de '+esc(c.portariaInstauracao.data):''}.</p>
+    <p class="center">Servidor: ${esc(a.nome)}, ${esc(a.cargo||'—')}, matrícula ${esc(a.matricula||'—')}</p>`);
+  // qualificação
+  partes.push(`<table class="qual">
+    <tr><td><b>Nome</b></td><td>${esc(a.nome)}</td></tr>
+    <tr><td><b>Matrícula</b></td><td>${esc(a.matricula||'—')}</td></tr>
+    <tr><td><b>Cargo</b></td><td>${esc(a.cargo||'—')}</td></tr>
+    <tr><td><b>Lotação</b></td><td>${esc(a.lotacao||'—')}</td></tr>
+    ${a.qualificacaoComplementar?`<tr><td><b>Qualificação</b></td><td>${esc(a.qualificacaoComplementar)}</td></tr>`:''}
+  </table>`);
+  // fatos e condutas
+  partes.push('<h2>Dos fatos e das condutas</h2>');
+  fatos.forEach((ft,i)=>{
+    const cond=(ft.condutas||[]).find(cc=>cc.acusadoId===id)||{};
+    partes.push(`<p><b>Fato ${i+1} (${esc(ft.titulo)}).</b> ${esc(ft.descricao)}${ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)?` Período: ${esc(ft.periodo.inicio||'?')} a ${esc(ft.periodo.fim||'?')}.`:''}${ft.local?` Local: ${esc(ft.local)}.`:''}</p>`);
+    partes.push(`<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ${esc(cond.modalidade==='omissiva'?'omissiva':'comissiva')}, ${esc(cond.descricaoConduta||'')}</p>`);
   });
+  // provas — com índice numerado (item 5, herdado). Numeração derivada, não persistida.
+  const provaIndex=[], provaNum={};
+  const registra=(pr,fatoId)=>{
+    if(!(pr.id in provaNum)){
+      const num=provaIndex.length+1;
+      provaNum[pr.id]=num;
+      provaIndex.push({prova:pr, num, ref:((pr.codigoAnexo||'').trim()||('Prova nº '+num)), fatos:[]});
+    }
+    const e=provaIndex[provaNum[pr.id]-1]; if(!e.fatos.includes(fatoId)) e.fatos.push(fatoId);
+  };
+  partes.push('<h2>Das provas</h2>');
+  fatos.forEach((ft,i)=>{
+    const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
+    if(!provas.length){ partes.push(`<p>Fato ${i+1}: (sem prova vinculada).</p>`); return; }
+    provas.forEach(pr=>registra(pr,ft.id));
+    let s=`<p>Fato ${i+1} — sustenta-se em: `;
+    s+=provas.map(pr=>{
+      let r=`(${esc(provaIndex[provaNum[pr.id]-1].ref)}) ${esc(pr.titulo)} (${esc(pr.tipo)}`;
+      if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r+=`, ${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}`;
+      r+=')';
+      return r;
+    }).join('; ')+'.</p>';
+    partes.push(s);
+    provas.forEach(pr=>(pr.trechosSignificativos||[]).forEach(t=>{ if((t.citacao||'').trim())
+      partes.push(`<div class="quote">"${esc(t.citacao)}"${t.ref?' ('+esc(t.ref)+')':''}</div>`); }));
+  });
+  // enquadramento
+  partes.push('<h2>Do enquadramento legal</h2>');
+  fatos.forEach((ft,i)=>{
+    const ativos=enquadramentosAtivos(ft);
+    const afastados=(ft.enquadramentos||[]).filter(e=>e.afastado);
+    ativos.forEach(e=>{
+      const n=normaById(e.normaId);
+      partes.push(`<p>Fato ${i+1}: a conduta amolda-se ao <b>${esc(n.dispositivo)}</b> (${esc(n.rotulo)}), a título de <b>${esc(rotES(e.elementoSubjetivo))}</b>. ${esc(e.fundamentacao||'')}</p>`);
+    });
+    if(ft.multiplicidade&&ft.multiplicidade.classificacao==='concurso_formal'&&ativos.length>1)
+      partes.push(`<p><i>Reconhece-se concurso formal entre os dispositivos acima, cuja repercussão se dará na dosimetria da pena.</i></p>`);
+    if(ft.multiplicidade&&ft.multiplicidade.classificacao==='conflito_aparente'&&afastados.length){
+      const prev=normaById(ft.multiplicidade.normaPrevalente);
+      partes.push(`<p><i>Prevalece o ${esc(prev?prev.dispositivo:'')} por ${esc(ft.multiplicidade.principioAplicado)}. Afasta-se: ${afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ')}. ${esc(ft.multiplicidade.justificativa||'')}</i></p>`);
+    }
+  });
+  // síntese fato × prova × enquadramento (item 4 — substitui o antigo "Índice de Provas Citadas" por prova)
+  partes.push('<h2>Síntese dos fatos, provas e enquadramentos</h2>');
+  partes.push(tabelaFatoProvaEnquadramento(fatos));
+  // alegações da defesa não acatadas (item 5)
+  partes.push('<h2>Das alegações da defesa não acatadas</h2>');
+  const alegacoes=(a.alegacoesDefesaNaoAcatadas||'').trim();
+  partes.push(`<div class="editable-block" contenteditable="true">${alegacoes
+    ? esc(alegacoes).replace(/\n/g,'<br>')
+    : '[Inserir alegações da defesa não acatadas durante a instrução, se houver, e a motivação de sua rejeição]'}</div>`);
   // fecho
+  const dt=parseDate(dataDoc);
+  const dataFmt=dt?fmtDate(dt):(dataDoc||new Date().toLocaleDateString('pt-BR'));
   partes.push(`<h2>Do encerramento</h2>
     <p>Ressalva-se que o enquadramento ora proposto poderá ser adequado por ocasião do Relatório Final, à luz da defesa, uma vez que o indiciado se defende dos fatos e não da sua capitulação.</p>
-    <p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do(s) indiciado(s) para, no prazo legal, apresentar defesa escrita.</p>
-    <p class="center" style="margin-top:36px">${esc(p.unidade||'')}, ${new Date().toLocaleDateString('pt-BR')}.</p>
-    ${assinatura(c.presidente,'Presidente','Presidente da Comissão')}
-    ${(c.membros||[]).filter(m=>m&&m.nome).map(m=>assinatura(m,'Membro','')).join('')}`);
+    <p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do indiciado para, no prazo legal, apresentar defesa escrita.</p>
+    <p class="center" style="margin-top:36px">${esc(p.cidade||p.unidade||'')}, ${esc(dataFmt)}.</p>
+    ${blocoAssinatura3(c)}`);
 
-  // marca a 1ª geração da minuta → habilita o bloco de citação/defesa no painel de Prazos
-  if(!doc._minutaGerada){ doc._minutaGerada=true; prazosSecOpen=true; render(); }
-  openPrint(partes.join('\n'),'Minuta do termo de indiciação');
+  openPrint(partes.join('\n'),'Indiciação — '+(a.nome||id));
 }
 function rotES(v){ return {dolo_direto:'dolo direto',dolo_eventual:'dolo eventual',negligencia:'negligência',imprudencia:'imprudência',impericia:'imperícia'}[v]||v; }
+
+/* ------------------------------------------------------------------ *
+ * 16-bis. TERMOS DE INTIMAÇÃO/NOTIFICAÇÃO
+ *   (Esclarecimento de fato · Manifestação sobre prova · Interrogatório)
+ * ------------------------------------------------------------------ */
+// acusados com fato(s) vinculado(s) a uma prova, via f.provaIds (a prova em si não referencia acusado)
+function acusadosVinculadosProva(prId){
+  const ids=new Set();
+  doc.fatos.forEach(f=>{ if((f.provaIds||[]).includes(prId)) (f.condutas||[]).forEach(c=>{ if(c.acusadoId) ids.add(c.acusadoId); }); });
+  return [...ids];
+}
+function fundamentacaoEsclarecimento(a){
+  return a.situacaoFuncional==='ativo'
+    ? 'com base no inciso II do art. 116 da Lei nº 8.112, de 11 de dezembro de 1990, e no inciso IV do art. 4º, no art. 24 e no art. 39, todos da Lei nº 9.784, de 29 de janeiro de 1999,'
+    : 'com base no inciso IV do art. 4º, no art. 24 e no art. 39, todos da Lei nº 9.784, de 29 de janeiro de 1999,';
+}
+function corpoEsclarecimentoManifestacao(st,a){
+  const fund=fundamentacaoEsclarecimento(a);
+  const texto=(st.texto||'').trim();
+  return `<p>Na condição de presidente da comissão designada pela Portaria nº ${esc(doc.processo.comissao.portariaInstauracao.numero||'—')}, INTIMO Vossa Senhoria, ${fund} a apresentar, responder, esclarecer ou informar o que segue:</p>
+    <div class="editable-block" contenteditable="true">${texto?esc(texto).replace(/\n/g,'<br>'):''}</div>
+    <p>no prazo de ${esc(String(st.prazoDias||5))} dias a contar do recebimento desta intimação, na sala de reuniões da comissão.</p>`;
+}
+function corpoInterrogatorio(st,a){
+  const foraAtivo=SITUACOES_FORA_ATIVO.has(a.situacaoFuncional);
+  let fund='com base nos arts. 157 e 159 da Lei nº 8.112, de 11 de dezembro de 1990,';
+  if(foraAtivo) fund+=' bem como no inciso IV do art. 4º e no art. 39, ambos da Lei nº 9.784, de 29 de janeiro de 1999,';
+  const acao = st.momento==='previo'
+    ? 'a fim de ser preliminarmente interrogado, sem prejuízo do direito a um interrogatório final, conforme o art. 158 da Lei nº 8.112, de 11 de dezembro de 1990,'
+    : 'a fim de ser interrogado,';
+  const dt=parseDate(st.dataDoc);
+  const dataFmt=dt?fmtDate(dt):(st.dataDoc||'____/____/____');
+  let corpo=`<p>Na condição de presidente da comissão designada pela Portaria nº ${esc(doc.processo.comissao.portariaInstauracao.numero||'—')}, INTIMO Vossa Senhoria, ${fund} a comparecer por videoconferência ${acao} às <span class="editable-inline" contenteditable="true"></span> do dia ${esc(dataFmt)}.</p>
+    <p>2. A sessão será realizada por meio da plataforma Microsoft Teams, cujo link de acesso será encaminhado com antecedência aos contatos informados nestes autos.</p>
+    <p>3. É indispensável a utilização de câmera e microfone ativos durante toda a sessão, para fins de identificação e registro do ato.</p>
+    <p>4. O(a) interrogado(a) deverá estar em ambiente reservado, isento de interferências de terceiros, no horário designado.</p>
+    <p>5. Eventuais dificuldades técnicas de acesso deverão ser comunicadas à comissão, pelos contatos informados no cabeçalho, com a maior antecedência possível.</p>
+    <p>6. O não comparecimento injustificado poderá ensejar as consequências previstas na legislação de regência.</p>
+    <p>7. É facultado ao interrogado fazer-se acompanhar de advogado ou defensor dativo, sem prejuízo do andamento do ato na sua ausência, nos termos da Súmula Vinculante nº 5 do STF.</p>
+    <p>8. Em caso de dúvida sobre o procedimento, a comissão permanece à disposição pelos contatos informados no cabeçalho.</p>`;
+  corpo+= foraAtivo
+    ? `<p>9. Em razão da situação funcional do(a) interrogado(a), segue anexa, em arquivo criptografado, cópia dos autos do processo, fls. <span class="editable-inline" contenteditable="true"></span>.</p>`
+    : `<p>9. O acesso aos autos do processo poderá ser feito diretamente pelo sistema e-Processo.</p>`;
+  return corpo;
+}
+function gerarIntimacaoFlow(){
+  const st={ tipo:'esclarecimento_fato', alvoId:null, dest:{}, prazoDias:5, texto:'',
+    dataDoc:new Date().toISOString().slice(0,10), numero:'',
+    sufixo: doc.processo.tipo==='PAD'?'CI':'CS', momento:'final' };
+
+  const alvoBox=el('div',{}), destBox=el('div',{}), condBox=el('div',{}), prazoBox=el('div',{});
+
+  function destinatariosDisponiveis(){
+    if(st.tipo==='interrogatorio') return doc.acusados;
+    if(!st.alvoId) return [];
+    if(st.tipo==='esclarecimento_fato'){
+      const f=doc.fatos.find(x=>x.id===st.alvoId); if(!f) return [];
+      return [...new Set((f.condutas||[]).map(c=>c.acusadoId).filter(Boolean))].map(acusadoById).filter(Boolean);
+    }
+    return acusadosVinculadosProva(st.alvoId).map(acusadoById).filter(Boolean);
+  }
+  function renderDest(){
+    destBox.innerHTML=''; st.dest={};
+    const disp=destinatariosDisponiveis();
+    if(!disp.length){ destBox.append(el('div',{class:'hint'},'Nenhum destinatário disponível para este alvo.')); return; }
+    destBox.append(el('div',{class:'block-title'},'Destinatário(s)'));
+    disp.forEach(a=>{ st.dest[a.id]=true;
+      const cb=el('input',{type:'checkbox'}); cb.checked=true;
+      cb.addEventListener('change',()=>st.dest[a.id]=cb.checked);
+      destBox.append(el('label',{class:'ms-item'},cb,a.nome||a.id));
+    });
+  }
+  function renderAlvo(){
+    alvoBox.innerHTML='';
+    if(st.tipo==='interrogatorio'){ st.alvoId=null; renderDest(); return; }
+    const label=st.tipo==='esclarecimento_fato'?'Fato':'Prova';
+    const opts = st.tipo==='esclarecimento_fato'
+      ? fatosAtivosOrdenados().map(f=>[f.id,(f.titulo||f.id)])
+      : doc.provas.map(pr=>[pr.id,(pr.titulo||pr.id)+(provaTemP6b(pr)?' ⚠ P6b — acusado não intimado':'')]);
+    if(!opts.length){ alvoBox.append(el('div',{class:'hint'},'Nenhum '+label.toLowerCase()+' disponível.')); st.alvoId=null; renderDest(); return; }
+    if(!opts.some(o=>o[0]===st.alvoId)) st.alvoId=opts[0][0];
+    alvoBox.append(fieldSelect(label,st.alvoId,opts,v=>{st.alvoId=v; renderDest();}));
+    renderDest();
+  }
+  function renderCond(){
+    condBox.innerHTML='';
+    if(st.tipo==='interrogatorio') condBox.append(fieldSelect('Momento do interrogatório',st.momento,
+      [['final','Final (padrão)'],['previo','Prévio']],v=>st.momento=v));
+  }
+  function renderPrazo(){
+    prazoBox.innerHTML='';
+    if(st.tipo!=='interrogatorio') prazoBox.append(fieldText('Prazo de resposta (dias)',String(st.prazoDias),
+      v=>st.prazoDias=parseInt(v,10)||5,'Padrão do modelo oficial: 5 dias.'));
+  }
+  const tipoSel=fieldSelect('Tipo de intimação',st.tipo,[
+    ['esclarecimento_fato','Esclarecimento de fato'],
+    ['manifestacao_prova','Manifestação sobre prova (contraditório)'],
+    ['interrogatorio','Interrogatório']
+  ],v=>{ st.tipo=v; renderAlvo(); renderCond(); renderPrazo(); });
+  renderAlvo(); renderCond(); renderPrazo();
+
+  const body=[
+    tipoSel, alvoBox, destBox, condBox,
+    el('div',{class:'row2'},
+      fieldText('Nº da intimação',st.numero,v=>st.numero=v,'Numeração manual, ex.: 12/2026.'),
+      fieldSelect('Sufixo do colegiado',st.sufixo,[['CI','CI — Comissão de Inquérito'],['CS','CS — Comissão Sindicante']],v=>st.sufixo=v)),
+    prazoBox,
+    fieldArea('Texto complementar (o que apresentar/esclarecer/informar)',st.texto,v=>st.texto=v),
+    fieldText('Data do documento',st.dataDoc,v=>st.dataDoc=v,null,'date')
+  ];
+  const foot=[el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(st.tipo!=='interrogatorio' && !st.alvoId){ alert('Selecione o alvo.'); return; }
+      const ids=Object.keys(st.dest).filter(k=>st.dest[k]);
+      if(!ids.length){ alert('Selecione ao menos um destinatário.'); return; }
+      closeModal();
+      if(ids.length===1) renderIntimacao(st,ids[0]);
+      else abrirListaIntimacoes(st,ids);
+    }},'Gerar termo de intimação')];
+  openModal(modalShell('Gerar termo de intimação/notificação',null,body,foot));
+}
+function abrirListaIntimacoes(st,ids){
+  const body=[
+    el('div',{class:'hint'},'Uma intimação por destinatário. Abra cada uma individualmente para visualizar ou imprimir.'),
+    ...ids.map(id=>{
+      const a=acusadoById(id);
+      return el('div',{class:'ms-item',style:'display:flex;align-items:center;gap:8px'},
+        el('div',{style:'flex:1'},(a&&a.nome)||id),
+        el('button',{class:'btn small',onclick:()=>renderIntimacao(st,id)},'Visualizar / Imprimir'));
+    })
+  ];
+  const foot=[el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
+  openModal(modalShell('Termos gerados — Intimação',null,body,foot));
+}
+function renderIntimacao(st,acId){
+  const p=doc.processo, c=p.comissao, a=acusadoById(acId);
+  const dt=parseDate(st.dataDoc);
+  const dataFmt=dt?fmtDate(dt):(st.dataDoc||new Date().toLocaleDateString('pt-BR'));
+  const numeroFmt='Intimação nº '+esc(st.numero||'____/____')+'-'+esc(st.sufixo);
+  const referencia=st.tipo==='interrogatorio'?'Interrogatório.':(st.tipo==='manifestacao_prova'?'Manifestação sobre prova.':'Esclarecimento de fato.');
+  const contatos=[a.telefone,a.email].filter(x=>(x||'').trim()).join(' · ')||'—';
+
+  const partes=[];
+  partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
+    <div class="inst">CORREGEDORIA DA RECEITA FEDERAL DO BRASIL (Coger/RFB) — ${esc(p.unidade||'')}</div>
+    <p class="center">${esc(p.cidade||p.unidade||'')}, ${esc(dataFmt)}.</p>
+    <p class="center"><b>${numeroFmt}</b></p>
+    <p class="center">Processo nº ${esc(p.numero||'—')}</p>
+    <p class="center">Servidor: ${esc(a.nome)} · Contatos: ${esc(contatos)}</p>
+    <p class="center">Referência: ${esc(referencia)}</p>`);
+  partes.push('<p>Senhor(a),</p>');
+  partes.push(st.tipo==='interrogatorio' ? corpoInterrogatorio(st,a) : corpoEsclarecimentoManifestacao(st,a));
+  partes.push(blocoAssinatura3(c));
+  openPrint(partes.join('\n'),'Intimação — '+(a.nome||acId));
+}
 
 /* ---------- PRINT VIEW ---------- */
 function openPrint(html,titulo){
@@ -2710,7 +2945,7 @@ function init(){
   $('#menu').addEventListener('click',e=>{
     const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
     toggleMenu(false);
-    ({exportJson,importJson,minuta:gerarMinutaFlow,pauta:exportPauta,importProva:importarProva,printMap,
+    ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:exportPauta,importProva:importarProva,printMap,
       novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
   });
   $('#tagProc').addEventListener('click',abrirFormProcesso);
