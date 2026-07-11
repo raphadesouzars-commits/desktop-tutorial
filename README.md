@@ -22,6 +22,10 @@ com 2 acusados e 4 fatos que demonstra as pendências P1, P3, P4, P5, P6a e P8.
 - **Arquivo único, 100% offline.** CSS, JS, catálogo de normas e ícones estão
   todos embutidos. Nenhuma requisição de rede é feita — nenhum dado sai do
   navegador.
+- **Identidade visual do ecossistema (coger-ui.css oficial).** O design system
+  Cogerui v1.0 — fontes Barlow Condensed / Inter / JetBrains Mono (base64) e os
+  tokens `--rfb-*` — está embutido; os componentes do Nexo consomem esses tokens
+  via aliases, preservando apenas os matizes de categoria (Fato/Prova/Norma).
 - **Mapa em SVG** de três colunas (Fatos, Provas, Normas) com estados visuais
   em dois canais (matiz = categoria; forma/cor = criticidade), acessível e
   imprimível.
