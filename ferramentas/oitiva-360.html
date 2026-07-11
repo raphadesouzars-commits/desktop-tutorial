@@ -5413,6 +5413,69 @@ async function exportarTermoParaVeritas(d){
   if (statusEl) statusEl.textContent = "Termo exportado — hash_origem: sha256:" + hashHex.slice(0, 16) + "…";
 }
 
+/* =====================================================================
+   RODADA 6 do contrato entre ferramentas — Retorno da prova (contexto do acusado no Nexo Coger)
+   Contrato distinto do botão "Exportar prova(s) para o Nexo" (evidência direta, já existente): aqui
+   o Oitiva devolve, por ponto de instrução respondido, uma referência ao id_prova já criado no
+   Veritas (Rodada 5) — sem duplicar o conteúdo do termo, sem gerar indiciação no Nexo (que só
+   populariza o "contexto do acusado", uma estrutura à parte da matriz fato-prova-norma).
+   ===================================================================== */
+function exportarRetornoContextoAcusado(d){
+  const statusEl = document.getElementById("status-exportar-retorno-nexo");
+  const itens = itensPautaAbordadosNestaSessao(d);
+  if (!itens.length) return;
+
+  const idProva = prompt(
+    "Informe o id_prova gerado pelo Veritas ao importar o termo desta sessão (Rodada 5) — é o identificador " +
+    "que vincula este retorno à prova já criada lá:", ""
+  );
+  if (!idProva || !idProva.trim()){
+    if (statusEl) statusEl.textContent = "Exportação cancelada: id_prova é obrigatório.";
+    return;
+  }
+
+  if (!d.rodadaId) d.rodadaId = gerarId();
+  salvarLocalStorage();
+
+  const retornos = itens.map(item => {
+    const conclusao = (d.pautaConclusao && d.pautaConclusao[item.fatoId]) || {};
+    const acusadoAlt = (conclusao.acusadoAlternativo || "").trim();
+    return {
+      id_prova: idProva.trim(),
+      pauta_id: item.pautaIdOrigem || "",
+      rodada_id: d.rodadaId,
+      id_ponto: item.idPontoOrigem || "",
+      // Seção 6.1: vazio/ausente = "padrao" (acusado do processo corrente), sem nenhuma ação extra
+      // do usuário no caso comum — só vira "manual" quando o campo opcional foi preenchido.
+      acusado_vinculo: acusadoAlt ? "manual" : "padrao",
+      acusado_alternativo: acusadoAlt || null,
+      fato_referencia: item.fatoId,
+      resumo_resposta: conclusao.resumoResposta || ""
+    };
+  });
+
+  const envelope = {
+    schema_version: "1.0.0",
+    catalogo_schema_version: CATALOGO_COGER.schema_version,
+    origem: "oitiva-360",
+    retornos: retornos
+  };
+
+  const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const nomeSlug = (d.identificacao || "depoente").replace(/[^\w\-]+/g, "_");
+  const dataStr = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = "nexo-coger-retorno-" + nomeSlug + "-" + dataStr + ".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+
+  if (statusEl) statusEl.textContent = retornos.length + " retorno(s) exportado(s) para o Nexo Coger.";
+}
+
 function renderEtapa4(){
   const d = getDepoenteAtivo();
   if (!d) return;
@@ -5462,7 +5525,11 @@ function renderEtapa4(){
             "</label>" +
             (conclusao.respondida === false
               ? "<textarea data-pauta-conclusao-nota=\"" + escapeHtml(item.fatoId) + "\" placeholder=\"Por que não foi possível abordar (opcional)\" style=\"margin-top:6px;\">" + escapeHtml(conclusao.nota || "") + "</textarea>"
-              : "") +
+              // Rodada 6 (contrato Oitiva 360 -> Nexo Coger, seção 6.1/6.3): resumo da resposta e
+              // vínculo opcional com acusado alternativo — só preenchido no caso raro de outro
+              // acusado envolvido; vazio = vínculo "padrao" (acusado do processo corrente).
+              : "<textarea data-pauta-conclusao-resumo=\"" + escapeHtml(item.fatoId) + "\" placeholder=\"Resumo da resposta (para o contexto do acusado no Nexo Coger)\" style=\"margin-top:6px;\">" + escapeHtml(conclusao.resumoResposta || "") + "</textarea>" +
+                "<input type=\"text\" data-pauta-conclusao-acusado-alt=\"" + escapeHtml(item.fatoId) + "\" placeholder=\"Acusado alternativo (opcional — deixe em branco para o padrão do processo)\" style=\"margin-top:4px;\" value=\"" + escapeHtml(conclusao.acusadoAlternativo || "") + "\">") +
           "</div>"
         );
       }).join("");
@@ -5535,7 +5602,14 @@ function renderEtapa4(){
   if (itensPautaAbordadosNestaSessao(d).length){
     html += "<div class=\"cartao\">";
     html += "<h3 style=\"margin-top:0;\">Nexo Coger</h3>";
-    html += "<div class=\"acoes-topo\"><button type=\"button\" id=\"btn-exportar-prova-nexo\">Exportar prova(s) para o Nexo</button></div>";
+    html += "<div class=\"acoes-topo\">" +
+      "<button type=\"button\" id=\"btn-exportar-prova-nexo\">Exportar prova(s) para o Nexo</button> " +
+      // Rodada 6 do contrato entre ferramentas (distinta da "Rodada 6" interna do Oitiva acima):
+      // retorna ao Nexo o CONTEXTO do acusado (referenciando o id_prova já criado no Veritas na
+      // Rodada 5) — não é a mesma prova evidenciária do botão acima, é um contrato novo e paralelo.
+      "<button type=\"button\" id=\"btn-exportar-retorno-nexo\">Exportar retorno (contexto do acusado)</button>" +
+      "</div>";
+    html += "<div id=\"status-exportar-retorno-nexo\" class=\"vazio\" style=\"margin-top:6px;\"></div>";
     html += "</div>";
   }
 
@@ -5575,7 +5649,7 @@ function ligarEventosEtapa4(container, d){
       const fatoId = chk.dataset.pautaConclusaoRespondida;
       d.pautaConclusao = d.pautaConclusao || {};
       const atual = d.pautaConclusao[fatoId] || { respondida: true, nota: "" };
-      d.pautaConclusao[fatoId] = { respondida: chk.checked, nota: atual.nota || "" };
+      d.pautaConclusao[fatoId] = Object.assign({}, atual, { respondida: chk.checked });
       salvarLocalStorage();
       renderEtapa4();
     });
@@ -5585,7 +5659,26 @@ function ligarEventosEtapa4(container, d){
       const fatoId = txt.dataset.pautaConclusaoNota;
       d.pautaConclusao = d.pautaConclusao || {};
       const atual = d.pautaConclusao[fatoId] || { respondida: false, nota: "" };
-      d.pautaConclusao[fatoId] = { respondida: atual.respondida, nota: txt.value };
+      d.pautaConclusao[fatoId] = Object.assign({}, atual, { nota: txt.value });
+      salvarLocalStorage();
+    });
+  });
+  // Rodada 6: resumo da resposta + vínculo opcional de acusado alternativo, por item de pauta abordado.
+  container.querySelectorAll("[data-pauta-conclusao-resumo]").forEach(txt => {
+    txt.addEventListener("input", () => {
+      const fatoId = txt.dataset.pautaConclusaoResumo;
+      d.pautaConclusao = d.pautaConclusao || {};
+      const atual = d.pautaConclusao[fatoId] || { respondida: true, nota: "" };
+      d.pautaConclusao[fatoId] = Object.assign({}, atual, { resumoResposta: txt.value });
+      salvarLocalStorage();
+    });
+  });
+  container.querySelectorAll("[data-pauta-conclusao-acusado-alt]").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const fatoId = inp.dataset.pautaConclusaoAcusadoAlt;
+      d.pautaConclusao = d.pautaConclusao || {};
+      const atual = d.pautaConclusao[fatoId] || { respondida: true, nota: "" };
+      d.pautaConclusao[fatoId] = Object.assign({}, atual, { acusadoAlternativo: inp.value });
       salvarLocalStorage();
     });
   });
@@ -5604,6 +5697,11 @@ function ligarEventosEtapa4(container, d){
       salvarLocalStorage();
     });
   });
+
+  const btnExportarRetornoNexo = document.getElementById("btn-exportar-retorno-nexo");
+  if (btnExportarRetornoNexo){
+    btnExportarRetornoNexo.addEventListener("click", () => exportarRetornoContextoAcusado(d));
+  }
 
   const btnExportarTermoVeritas = document.getElementById("btn-exportar-termo-veritas");
   if (btnExportarTermoVeritas){

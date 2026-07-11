@@ -2,6 +2,37 @@
 
 `catalogo-canonico.json` — `schema_version: 1.1.0` (estendida na Rodada 5, era `1.0.0`), `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `744bb790` (era `5906e98f`).
 
+## Rodada 6 — Contrato Oitiva 360 → Nexo Coger: retorno da prova / contexto do acusado (fechada)
+
+### 6.2 — Diagnóstico
+
+Confirmado por busca: **nenhuma estrutura de "contexto do acusado" existia** no `nexo-coger.html` — criada do zero (`acusado.provasContexto[]`).
+
+Achado mais importante da rodada: o Oitiva 360 **já tinha** um mecanismo de "prova de retorno" para o Nexo (botão "Exportar prova(s) para o Nexo" / `abrirDialogoExportarProva`, consumido por `aplicarImportacaoProva` no Nexo) — mas esse mecanismo empurra a prova para `doc.provas[]` e `f.provaIds`, que **alimentam diretamente** `computePendencias()` (P1 "sem prova", P7 "sustentação frágil") e, por consequência, a força probatória e o caminho até a indiciação. Isso conflita frontalmente com o critério 6.4 desta rodada ("nenhum caminho de código que dispare indiciação automaticamente" / "sem qualquer campo que participe do cálculo/fluxo de indiciação"). Conclusão: o mecanismo existente serve a um propósito legítimo diferente (prova evidenciária formal) e **não foi reaproveitado nem alterado** — o contrato desta rodada é novo, paralelo, e deliberadamente isolado de `doc.provas`/`doc.fatos`, para que nenhuma função de pendência ou indiciação possa lê-lo, nem por acidente.
+
+### Contrato implementado
+
+`oitiva-360.html`:
+- O bloco já existente "Pauta do Nexo — itens abordados nesta sessão" (Etapa 4) ganhou, por item abordado, um campo "Resumo da resposta" e um campo opcional "Acusado alternativo" — vazio (o caso comum) implica `acusado_vinculo: "padrao"`, preenchido implica `"manual"` com `acusado_alternativo` no envelope. Nenhuma ação extra é exigida do usuário no caso comum (critério 6.1).
+- Nova `exportarRetornoContextoAcusado()`: para cada item de pauta abordado nesta sessão (já carrega `pautaIdOrigem`/`idPontoOrigem`/`fatoId` desde a Rodada 4), monta um envelope com `id_prova` (pedido ao usuário via `prompt()` — é o identificador gerado pelo Veritas na Rodada 5 ao importar o termo; não há como o Oitiva conhecê-lo automaticamente, já que são três ferramentas offline sem integração ao vivo), `pauta_id`, `rodada_id` (reaproveita `d.rodadaId` da Rodada 5), `id_ponto`, `acusado_vinculo`/`acusado_alternativo`, `fato_referencia`, `resumo_resposta`.
+- Botão novo "Exportar retorno (contexto do acusado)", ao lado do já existente "Exportar prova(s) para o Nexo" — visualmente próximos, mas contratos diferentes (comentado explicitamente no código para não confundir as duas "Rodada 6": a numeração interna do próprio Oitiva, anterior a este projeto, e a Rodada 6 deste projeto).
+
+`nexo-coger.html`:
+- `acusado.provasContexto[]` — lista nova, default `[]` em acusados novos e migrada em acusados existentes. Nenhuma função de `computePendencias()`, força probatória ou geração de minuta/indiciação lê este campo — isolamento estrutural, não apenas por convenção.
+- Nova importação (`importarRetornoOitiva()`, menu "📥 Importar retorno do Oitiva (contexto do acusado)"): tela de revisão mostra, por retorno, um `<select>` do acusado-alvo — pré-selecionado automaticamente para o único acusado do processo quando há só um (regra geral, critério 6.1); quando o `acusado_alternativo` bate por nome com outro acusado cadastrado, esse é o pré-selecionado; sem correspondência, o primeiro acusado fica pré-selecionado mas o campo continua editável antes de confirmar.
+- **Deduplicação:** a nota da spec fala em "recusar reimportar um `id_prova` já presente", mas um único `id_prova` pode legitimamente responder a vários pontos de pauta diferentes (um termo cobre várias lacunas). Interpretação adotada: duplicidade = **mesmo par `id_prova` + `id_ponto`** já presente no `provasContexto` daquele acusado — cobre exatamente o caso descrito ("reimportação acidental do mesmo arquivo") sem impedir o caso legítimo de um termo responder a múltiplas lacunas. Itens duplicados aparecem na tela de revisão com mensagem clara e são automaticamente excluídos do lote a importar (recomputado ao vivo se o usuário trocar o acusado selecionado).
+- Selo visual: `drawFatoCard()` (mapa fato-prova-norma) ganhou um badge 🎙 (cor `--rfb-gold-600`, design system COGER) quando qualquer acusado tem `provasContexto` referenciando aquele fato — tooltip deixa explícito que não é prova evidenciária formal e não conta para a força probatória.
+
+### Teste de ponta a ponta (Playwright, os três HTMLs reais, fluxo completo Nexo → Oitiva → Veritas → Nexo)
+
+1. Nexo (exemplo reduzido a 1 acusado, caso comum) gera pauta para um depoente → Oitiva importa a pauta, marca o item para abordar, responde o roteiro, marca oitiva como realizada, exporta termo (Rodada 5) e, na sequência, exporta retorno de contexto (`id_prova` informado manualmente, simulando o dado vindo do Veritas) — envelope confirma `acusado_vinculo: "padrao"`, `pauta_id`/`id_ponto`/`rodada_id` presentes.
+2. Nexo importa o retorno: **pendências (7) e `doc.provas` (3) permanecem idênticos antes/depois** — confirmação direta do critério 6.4. `provasContexto` do único acusado cresce exatamente pelo número de retornos, vinculado automaticamente, sem nenhuma seleção manual (critério de aceite 1).
+3. Selo "Contexto de oitiva vinculado" confirmado presente no mapa via inspeção dos `<title>` dos badges SVG (critério de aceite 5).
+4. Reimportar o mesmo arquivo: tela de revisão mostra "reimportação recusada" e o total de `provasContexto` não muda mesmo clicando "Importar" (critério de aceite 4).
+5. Importação do termo no Veritas (Rodada 5) confirmada intacta, sem regressão.
+
+Os critérios de aceite 2 (vínculo manual com acusado alternativo) e 3 (nenhuma indiciação alterada) foram cobertos por revisão de código e pela ausência de qualquer leitura de `provasContexto` nas funções de pendência/indiciação — o vínculo manual segue exatamente o mesmo caminho de código do padrão automático, só troca qual acusado é pré-selecionado.
+
 ## Rodada 5 — Contrato Oitiva 360 → Veritas: termo de oitiva (fechada)
 
 ### 5.1 — Diagnóstico

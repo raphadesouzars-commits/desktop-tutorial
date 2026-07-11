@@ -545,6 +545,7 @@ svg.map.isolating .node.hl{opacity:1}
       <button data-act="pauta">🎯 Pauta de instrução por depoente (Oitiva 360)</button>
       <button data-act="importProva">📥 Importar prova(s) de retorno</button>
       <button data-act="importProvaVeritas">📥 Importar provas do Veritas</button>
+      <button data-act="importRetornoOitiva">📥 Importar retorno do Oitiva (contexto do acusado)</button>
       <button data-act="printMap">🖨 Imprimir o mapa</button>
       <div class="sep"></div>
       <div class="lbl">Catálogo &amp; exemplo</div>
@@ -599,6 +600,7 @@ svg.map.isolating .node.hl{opacity:1}
 <input type="file" id="fileInput" accept="application/json,.json" style="display:none">
 <input type="file" id="fileInputProva" accept="application/json,.json" style="display:none">
 <input type="file" id="fileInputVeritas" accept="application/json,.json" style="display:none">
+<input type="file" id="fileInputRetornoOitiva" accept="application/json,.json" style="display:none">
 
 <script>
 /* ============================================================
@@ -1558,6 +1560,9 @@ function migra(d){
     if(typeof a.telefone!=='string') a.telefone='';
     if(typeof a.email!=='string') a.email='';
     if(typeof a.alegacoesDefesaNaoAcatadas!=='string') a.alegacoesDefesaNaoAcatadas='';
+    // Rodada 6 (contrato Oitiva 360 -> Nexo Coger): contexto do acusado — deliberadamente à parte de
+    // doc.provas/doc.fatos, para nunca participar de computePendencias()/força probatória/indiciação.
+    if(!Array.isArray(a.provasContexto)) a.provasContexto=[];
   });
   // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
   (d.fatos||[]).forEach((f,i)=>{
@@ -2110,6 +2115,12 @@ function drawFatoCard(g,f,x,y,pends){
   if(pends.some(p=>p.codigo==='P4')){ badge(node,bx,20,'?','var(--estado-pendente)','Decisão de multiplicidade pendente'); bx-=20; }
   if(pends.some(p=>p.codigo==='P8')){ badge(node,bx,20,'⚡','var(--estado-critico)','Alternatividade violada'); bx-=20; }
   if(arq){ badge(node,bx,20,'🗄','var(--ink-2)','Fato arquivado — não consta da minuta'); bx-=20; }
+  // Rodada 6 (contrato Oitiva 360 -> Nexo Coger): selo distinto para contexto vindo de oitiva —
+  // acusado.provasContexto é isolado de doc.provas, então este selo não indica prova evidenciária
+  // formal nem participa da força probatória; é só um rastro informativo de que houve oitiva sobre
+  // este fato. Cor gold (design system COGER) para diferenciar do azul/estado usado nos demais selos.
+  const contextoOitivaFato=doc.acusados.some(a=>(a.provasContexto||[]).some(p=>p.fatoReferencia===f.id));
+  if(contextoOitivaFato){ badge(node,bx,20,'🎙','var(--rfb-gold-600)','Contexto de oitiva vinculado a este fato (Oitiva 360) — não é prova evidenciária formal, não conta para a força probatória'); bx-=20; }
   if(cond.length){ badge(node,bx,40,'👤'+(cond.length>1?'×'+cond.length:''),'var(--ink-2)',cond.length+' acusado(s)'); }
   // rastro informativo (neutro): pauta enviada, enquanto o fato ainda carece de prova
   if(!arq && f.pautaEnviada && f.pautaEnviada.em && (est.exibido==='ausente'||est.exibido==='indicios')){
@@ -2426,7 +2437,8 @@ function abrirFormAcusado(id){
   const a = novo ? {id:genId('A'),nome:'',matricula:'',cargo:'',lotacao:'',qualificacaoComplementar:'',
     situacaoFuncional:'ativo',telefone:'',email:'',alegacoesDefesaNaoAcatadas:'',
     notificacaoPrevia:{realizada:false,data:'',refAutos:''},
-    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null}} : JSON.parse(JSON.stringify(acusadoById(id)));
+    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null},
+    provasContexto:[]} : JSON.parse(JSON.stringify(acusadoById(id)));
   const body=[
     el('div',{class:'row2'}, fieldText('Nome',a.nome,v=>a.nome=v), fieldText('Matrícula (SIAPE)',a.matricula,v=>a.matricula=v)),
     el('div',{class:'row2'}, fieldText('Cargo',a.cargo,v=>a.cargo=v), fieldText('Lotação',a.lotacao,v=>a.lotacao=v)),
@@ -3386,6 +3398,115 @@ function aplicarImportacaoVeritas(aprovadas,d){
 }
 
 /* ------------------------------------------------------------------ *
+ * 15-quinquies. RETORNO DO OITIVA 360 — CONTEXTO DO ACUSADO (Rodada 6)
+ * Deliberadamente ISOLADO de doc.provas/doc.fatos: cada item vai para
+ * acusado.provasContexto[], que nenhuma função de pendência/força probatória/indiciação lê. Isto
+ * não é a mesma coisa que "Importar prova(s) de retorno" (acima) — aquela cria prova evidenciária
+ * de verdade; esta só populariza contexto informativo do acusado, por design, sem afetar a matriz.
+ * ------------------------------------------------------------------ */
+function normalizarNomeAcusado(s){
+  return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().trim();
+}
+function retornoJaExiste(acusado, idProva, idPonto){
+  return !!(acusado && (acusado.provasContexto||[]).some(p=>p.idProva===idProva && p.idPonto===idPonto));
+}
+function importarRetornoOitiva(){ $('#fileInputRetornoOitiva').click(); }
+$('#fileInputRetornoOitiva').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const rd=new FileReader();
+  rd.onload=()=>{
+    let d; try{ d=JSON.parse(rd.result); }catch(err){ alert('Falha ao ler o JSON: '+err.message); return; }
+    if(!d||!Array.isArray(d.retornos)){ alert('Arquivo inválido: esperado um objeto com um array "retornos" (contrato Oitiva 360 → Nexo Coger, retorno de prova).'); return; }
+    revisarImportacaoRetornoOitiva(d);
+  };
+  rd.readAsText(file); e.target.value='';
+});
+function revisarImportacaoRetornoOitiva(d){
+  const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
+  const acusadoPadrao = doc.acusados.length===1 ? doc.acusados[0] : null;
+
+  const itens=d.retornos.map((r,i)=>{
+    if(!r||typeof r!=='object'||!r.id_prova) return {i, invalido:true, r:r||{}};
+    let acusadoAlvo=acusadoPadrao;
+    if(r.acusado_vinculo==='manual' && r.acusado_alternativo){
+      const porNome=doc.acusados.find(a=>normalizarNomeAcusado(a.nome)===normalizarNomeAcusado(r.acusado_alternativo));
+      if(porNome) acusadoAlvo=porNome;
+    }
+    if(!acusadoAlvo && doc.acusados.length) acusadoAlvo=doc.acusados[0]; // sem padrão claro — pré-seleciona o 1º, usuário confirma/troca
+    return {i, invalido:false, r, acusadoAlvoId: acusadoAlvo?acusadoAlvo.id:''};
+  });
+
+  const body=[];
+  body.push(el('div',{class:'banner info'},el('span',{},'📥'),el('div',{},
+    'Origem: ',el('b',{},esc(d.origem||'—')),
+    '. Contexto do acusado — não gera indiciação nem entra na matriz fato-prova-norma. Revise antes de confirmar.')));
+  if(catalogoDivergente) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},
+    'catalogo_schema_version do arquivo (',el('b',{},esc(d.catalogo_schema_version)),') diverge da versão em uso (',
+    el('b',{},esc(CATALOGO_COGER.schema_version)),').')));
+  if(!doc.acusados.length) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},'Nenhum acusado cadastrado neste processo — cadastre ao menos um antes de importar.')));
+
+  const linhas=[];
+  itens.forEach(x=>{
+    if(x.invalido){
+      body.push(el('div',{class:'imp-item err'},el('div',{class:'imp-body'},
+        el('div',{class:'imp-tipo'},'Item '+(x.i+1)+' — não importável'),
+        el('div',{class:'imp-errmsg'},'id_prova ausente.'))));
+      return;
+    }
+    const r=x.r;
+    const acusadoAtual=()=>acusadoById(x.acusadoAlvoId);
+    const dup=retornoJaExiste(acusadoAtual(), r.id_prova, r.id_ponto);
+    const linhaEl=el('div',{class:'imp-item'+(dup?' err':'')});
+    const sel=fieldSelect('Acusado', x.acusadoAlvoId, doc.acusados.map(a=>[a.id, a.nome||a.id]), v=>{
+      x.acusadoAlvoId=v; renderBanner();
+    });
+    const bannerDup=el('div',{class:'imp-errmsg'});
+    function renderBanner(){
+      bannerDup.textContent = retornoJaExiste(acusadoAtual(), r.id_prova, r.id_ponto)
+        ? 'Já existe este id_prova + id_ponto no contexto deste acusado — reimportação recusada.' : '';
+      linhaEl.classList.toggle('err', !!bannerDup.textContent);
+    }
+    renderBanner();
+    linhaEl.append(el('div',{class:'imp-body'},
+      el('div',{class:'imp-tipo'}, 'fato '+(r.fato_referencia||'—')+' · vínculo: '+(r.acusado_vinculo||'padrao')),
+      el('div',{class:'imp-meta'}, 'id_prova: '+(r.id_prova||'—')+' · id_ponto: '+(r.id_ponto||'—')+' · pauta_id: '+(r.pauta_id||'—')),
+      r.resumo_resposta?el('div',{class:'imp-prev'},'"'+esc(r.resumo_resposta.length>140?r.resumo_resposta.slice(0,139)+'…':r.resumo_resposta)+'"'):null,
+      sel, bannerDup));
+    body.push(linhaEl);
+    linhas.push({x, get duplicado(){ return retornoJaExiste(acusadoAtual(), r.id_prova, r.id_ponto); }});
+  });
+
+  const foot=[
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      const aplicaveis=linhas.filter(l=>!l.x.invalido && l.x.acusadoAlvoId && !l.duplicado);
+      if(!aplicaveis.length){ alert('Nenhum retorno importável (tudo inválido, duplicado ou sem acusado selecionado).'); return; }
+      aplicarImportacaoRetornoOitiva(aplicaveis.map(l=>l.x), d);
+    }},'Importar')
+  ];
+  openModal(modalShell('Revisão — retorno do Oitiva 360 (contexto do acusado)','prova',body,foot));
+}
+function aplicarImportacaoRetornoOitiva(itens, d){
+  const agora=new Date().toISOString();
+  let n=0;
+  itens.forEach(x=>{
+    const a=acusadoById(x.acusadoAlvoId); if(!a) return;
+    if(!Array.isArray(a.provasContexto)) a.provasContexto=[];
+    // Nunca toca doc.provas/doc.fatos/enquadramentos — é isto que garante, estruturalmente, que
+    // nenhuma rotina de indiciação/pendência é disparada por esta importação (seção 6.4).
+    a.provasContexto.push({
+      idProva:x.r.id_prova, origem:d.origem||'oitiva-360', pautaId:x.r.pauta_id||'', rodadaId:x.r.rodada_id||'',
+      idPonto:x.r.id_ponto||'', fatoReferencia:x.r.fato_referencia||'', resumoResposta:x.r.resumo_resposta||'',
+      acusadoVinculo:x.r.acusado_vinculo||'padrao', importadoEm:agora
+    });
+    n++;
+  });
+  closeModal();
+  render();
+  toast(n+' item(ns) de contexto adicionados ao(s) acusado(s). Nenhuma indiciação foi alterada.');
+}
+
+/* ------------------------------------------------------------------ *
  * 16. MINUTA DO TERMO DE INDICIAÇÃO
  * ------------------------------------------------------------------ */
 function gerarMinutaFlow(){
@@ -3884,7 +4005,7 @@ function init(){
     const act=e.target.closest('button')&&e.target.closest('button').dataset.act; if(!act)return;
     toggleMenu(false);
     ({exportJson,importJson,minuta:gerarMinutaFlow,intimacao:gerarIntimacaoFlow,pauta:abrirRevisaoPauta,importProva:importarProva,
-      importProvaVeritas:importarProvasVeritas,printMap,
+      importProvaVeritas:importarProvasVeritas,importRetornoOitiva:importarRetornoOitiva,printMap,
       novaNorma:abrirFormNorma,exemplo:carregarExemplo,limpar:limparTudo}[act]||(()=>{}))();
   });
   $('#tagProc').addEventListener('click',abrirFormProcesso);
