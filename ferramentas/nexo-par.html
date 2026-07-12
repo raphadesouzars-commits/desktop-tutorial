@@ -3757,6 +3757,44 @@ function abrirRevisaoPauta(){
 }
 // Rodada 7, seção 7.1: núcleo puro do contrato de pauta (Rodada 4) — recebe dados, devolve dados,
 // nunca toca doc/localStorage/DOM. Testável isoladamente via Node (test-fluxo-integrado.js).
+/* ------------------------------------------------------------------ *
+ * Rodada PAR-5 — POLÍTICA ÚNICA DE VALIDAÇÃO DE DOMÍNIO (validação cruzada)
+ * Tabela de referência (idêntica nas quatro ferramentas — NÃO divergir em manutenções):
+ * | Situação                                              | Comportamento                                                |
+ * |-------------------------------------------------------|--------------------------------------------------------------|
+ * | dominio do envelope IGUAL ao domínio do receptor      | Importa normalmente                                          |
+ * | dominio do envelope DIFERENTE do domínio do receptor  | RECUSA com mensagem clara (encontrado/esperado/ferramenta)  |
+ * | envelope SEM o campo dominio (arquivo pré-Rodadas PAR)| Legado PAD: aceito em receptor PAD; RECUSADO em receptor PAR |
+ * Receptor deste arquivo: DOMINIO_FERRAMENTA (abaixo). A recusa é ATÔMICA: nada entra na
+ * tela de revisão nem no estado — a validação roda ANTES de montar o modal de revisão.
+ * No PAR não existe acervo legado a preservar: o fork nasceu depois do campo domínio existir.
+ * ------------------------------------------------------------------ */
+const DOMINIO_FERRAMENTA='par'; // Nexo PAR: domínio fixo PAR (Lei nº 12.846/2013 — LAC), forçado em migra()/docVazio().
+// Rótulo por extenso do domínio — mesmo helper usado em veritas.html/oitiva-360.html, para que a
+// frase "Domínio encontrado/esperado" seja idêntica nas quatro ferramentas (Rodada PAR-5, seção 5.5).
+function rotuloDominioExtenso(d){
+  if(d==='par') return 'PAR (Lei 12.846/2013)';
+  if(d==='pad') return 'PAD (Lei 8.112/1990)';
+  return 'não indicado (arquivo legado, anterior às rodadas PAR)';
+}
+function mensagemRecusaDominio(encontrado){
+  if(!encontrado){
+    // Envelope sem o campo dominio (legado, pré-Rodadas PAR): recusado — no PAR não há acervo legado.
+    return 'Este arquivo não indica domínio (formato anterior às Rodadas PAR) e não pode ser importado no Nexo PAR, '
+      + 'que trabalha exclusivamente com processos PAR (Lei nº 12.846/2013 — LAC). No PAR não existe acervo legado a preservar. '
+      + 'Domínio encontrado: '+rotuloDominioExtenso(encontrado)+'. Domínio esperado: '+rotuloDominioExtenso('par')+'. Nenhum dado foi alterado.';
+  }
+  // Domínio explícito diferente de "par" (ex.: "pad").
+  return 'Este arquivo foi exportado de um processo PAD (Lei nº 8.112/1990). '
+    + 'Este é o Nexo PAR, que trabalha com processos PAR (Lei nº 12.846/2013 — LAC) — importe-o no Nexo Coger. '
+    + 'Domínio encontrado: '+rotuloDominioExtenso(encontrado)+'. Domínio esperado: '+rotuloDominioExtenso('par')+'. Nenhum dado foi alterado.';
+}
+function validarDominioEnvelope(env){
+  const enc = (env && env.dominio) ? String(env.dominio) : null;
+  // Receptor PAR: aceita APENAS "par"; recusa "pad" E recusa ausente (legado).
+  if(enc==='par') return {ok:true};
+  return {ok:false, msg:mensagemRecusaDominio(enc)};
+}
 function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId, exportadoEm){
   return {
     schema_version:'1.0.0',
@@ -3764,6 +3802,7 @@ function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId
     pauta_id:pautaId,
     exportado_em:exportadoEm,
     origem:FERRAMENTA,
+    dominio:DOMINIO_FERRAMENTA, // Rodada PAR-5 (5.2): emissor de pauta declara o domínio ("par")
     processo:docRef.processo.numero||'',
     depoente:{nome:depoente.nome, papel:depoente.papelId},
     acusados_contexto:docRef.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
@@ -3955,6 +3994,8 @@ function mapearProvaVeritasParaNexo(it, tipoNexo, rotulo, origemInstancia, gerar
   };
 }
 function revisarImportacaoVeritas(d){
+  const vd=validarDominioEnvelope(d); // Rodada PAR-5 (5.1) — recusa atômica antes de montar a revisão
+  if(!vd.ok){ alert(vd.msg); return; }
   const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
   const itens=d.provas.map((it,i)=>{
     const erros=[];
@@ -4044,6 +4085,10 @@ $('#fileInputRetornoOitiva').addEventListener('change',e=>{
   rd.readAsText(file); e.target.value='';
 });
 function revisarImportacaoRetornoOitiva(d){
+  const vd=validarDominioEnvelope(d); // Rodada PAR-5 (5.4) — recusa atômica antes de montar a revisão
+  if(!vd.ok){ alert(vd.msg); return; }
+  // Vínculo padrão do retorno: doc.acusados[0] É o ENTE PRIVADO do processo PAR (PAR-3: array
+  // doc.acusados[] mantido como identificador estável, a.nome espelha a razão social). Correto.
   const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
   const acusadoPadrao = doc.acusados.length===1 ? doc.acusados[0] : null;
 

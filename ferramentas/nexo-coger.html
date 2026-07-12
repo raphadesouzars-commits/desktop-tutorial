@@ -3632,6 +3632,37 @@ function abrirRevisaoPauta(){
 }
 // Rodada 7, seção 7.1: núcleo puro do contrato de pauta (Rodada 4) — recebe dados, devolve dados,
 // nunca toca doc/localStorage/DOM. Testável isoladamente via Node (test-fluxo-integrado.js).
+/* ------------------------------------------------------------------ *
+ * Rodada PAR-5 — POLÍTICA ÚNICA DE VALIDAÇÃO DE DOMÍNIO (validação cruzada)
+ * Tabela de referência (idêntica nas quatro ferramentas — NÃO divergir em manutenções):
+ * | Situação                                              | Comportamento                                                |
+ * |-------------------------------------------------------|--------------------------------------------------------------|
+ * | dominio do envelope IGUAL ao domínio do receptor      | Importa normalmente                                          |
+ * | dominio do envelope DIFERENTE do domínio do receptor  | RECUSA com mensagem clara (encontrado/esperado/ferramenta)  |
+ * | envelope SEM o campo dominio (arquivo pré-Rodadas PAR)| Legado PAD: aceito em receptor PAD; RECUSADO em receptor PAR |
+ * Receptor deste arquivo: DOMINIO_FERRAMENTA (abaixo). A recusa é ATÔMICA: nada entra na
+ * tela de revisão nem no estado — a validação roda ANTES de montar o modal de revisão.
+ * ------------------------------------------------------------------ */
+const DOMINIO_FERRAMENTA='pad'; // Nexo Coger: domínio fixo PAD (Lei nº 8.112/1990). Emite implicitamente PAD.
+// Rótulo por extenso do domínio — mesmo helper usado em veritas.html/oitiva-360.html, para que a
+// frase "Domínio encontrado/esperado" seja idêntica nas quatro ferramentas (Rodada PAR-5, seção 5.5).
+function rotuloDominioExtenso(d){
+  if(d==='par') return 'PAR (Lei 12.846/2013)';
+  if(d==='pad') return 'PAD (Lei 8.112/1990)';
+  return 'não indicado (arquivo legado, anterior às rodadas PAR)';
+}
+function mensagemRecusaDominio(encontrado){
+  // Nexo Coger só recusa domínio explicitamente diferente de "pad" (ex.: "par") — o legado (ausente) é aceito.
+  return 'Este arquivo foi exportado de um processo PAR (Lei nº 12.846/2013 — LAC). '
+    + 'Este é o Nexo Coger, que trabalha com processos PAD (Lei nº 8.112/1990) — importe-o no Nexo PAR. '
+    + 'Domínio encontrado: '+rotuloDominioExtenso(encontrado)+'. Domínio esperado: '+rotuloDominioExtenso('pad')+'. Nenhum dado foi alterado.';
+}
+function validarDominioEnvelope(env){
+  const enc = (env && env.dominio) ? String(env.dominio) : null;
+  // Receptor PAD: aceita "pad" ou ausente (legado); recusa qualquer outro (ex.: "par").
+  if(enc===null || enc==='pad') return {ok:true};
+  return {ok:false, msg:mensagemRecusaDominio(enc)};
+}
 function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId, exportadoEm){
   return {
     schema_version:'1.0.0',
@@ -3639,6 +3670,7 @@ function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId
     pauta_id:pautaId,
     exportado_em:exportadoEm,
     origem:FERRAMENTA,
+    dominio:DOMINIO_FERRAMENTA, // Rodada PAR-5 (5.2): emissor de pauta declara o domínio ("pad")
     processo:docRef.processo.numero||'',
     depoente:{nome:depoente.nome, papel:depoente.papelId},
     acusados_contexto:docRef.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
@@ -3830,6 +3862,8 @@ function mapearProvaVeritasParaNexo(it, tipoNexo, rotulo, origemInstancia, gerar
   };
 }
 function revisarImportacaoVeritas(d){
+  const vd=validarDominioEnvelope(d); // Rodada PAR-5 (5.1) — recusa atômica antes de montar a revisão
+  if(!vd.ok){ alert(vd.msg); return; }
   const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
   const itens=d.provas.map((it,i)=>{
     const erros=[];
@@ -3919,6 +3953,8 @@ $('#fileInputRetornoOitiva').addEventListener('change',e=>{
   rd.readAsText(file); e.target.value='';
 });
 function revisarImportacaoRetornoOitiva(d){
+  const vd=validarDominioEnvelope(d); // Rodada PAR-5 (5.4) — recusa atômica antes de montar a revisão
+  if(!vd.ok){ alert(vd.msg); return; }
   const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
   const acusadoPadrao = doc.acusados.length===1 ? doc.acusados[0] : null;
 

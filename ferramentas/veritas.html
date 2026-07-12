@@ -2132,6 +2132,21 @@ function dominioDoProcesso(tipoProcesso) {
   if (TIPOS_QUE_LEVAM_A_PAD.has(tipoProcesso)) return 'pad';
   return undefined;
 }
+// Rodada PAR-5 (seção 5.5) — mensagem-base ÚNICA de recusa por domínio incompatível, usada em TODOS
+// os pontos de recusa por domínio nesta suíte (Veritas, Oitiva 360, Nexo Coger, Nexo PAR). Estrutura
+// fixa da frase: "Domínio encontrado: <X>. Domínio esperado: <Y>. <ação/ferramenta correta>. Nenhum
+// dado foi alterado." — adapta-se só o rótulo do domínio e o texto da ferramenta/ação correta.
+function rotuloDominioExtenso(d) {
+  if (d === 'par') return 'PAR (Lei 12.846/2013)';
+  if (d === 'pad') return 'PAD (Lei 8.112/1990)';
+  return 'não indicado (arquivo legado, anterior às rodadas PAR)';
+}
+function mensagemRecusaDominio(encontrado, esperado, ferramentaCorreta) {
+  return 'Domínio encontrado: ' + rotuloDominioExtenso(encontrado) + '. ' +
+    'Domínio esperado: ' + rotuloDominioExtenso(esperado) + '. ' +
+    (ferramentaCorreta ? ferramentaCorreta + ' ' : '') +
+    'Nenhum dado foi alterado.';
+}
 // Monta as <option>/<optgroup> do select "Tipo de processo" a partir de TIPOS_PROCESSO
 // (mesmo agrupamento Investigativos/Acusatórios usado no nexo-coger.html).
 function tiposProcessoOptionsHtml(valorSelecionado) {
@@ -3044,6 +3059,31 @@ async function avaliarImportacaoTermo(dossie, dados, catalogoCoger){
   if (!dados || dados.origem !== "oitiva-360" || !dados.termo || typeof dados.termo.conteudo !== "string" || !dados.hash_origem){
     return { ok: false, motivo: "formato_invalido" };
   }
+  // ---------------------------------------------------------------------------------------------
+  // Rodada PAR-5 (seção 5.3) — VALIDAÇÃO DE DOMÍNIO, executada ANTES da verificação de hash (recusar
+  // cedo, antes do trabalho caro do SHA-256). Política única de validação (mesma tabela nas 4
+  // ferramentas da suíte — Veritas, Oitiva 360, Nexo Coger, Nexo PAR):
+  //   | Envelope IGUAL ao domínio do receptor        -> importa normalmente
+  //   | Envelope DIFERENTE do domínio do receptor    -> RECUSA (mensagem clara, nada é alterado)
+  //   | Envelope SEM `dominio` (arquivo legado)       -> aceito em receptor PAD; recusado em PAR
+  //   | Receptor SEM domínio definido (agnóstico)     -> aceita qualquer domínio (Veritas genérico)
+  // O Veritas é agnóstico por natureza (PAR-2): só valida quando o dossiê corrente TEM tipo/domínio
+  // definido. Sem tipo definido -> aceita qualquer termo, sem restrição (ferramenta genérica).
+  var domDossie = (dossie && dossie.processo &&
+    (dossie.processo.dominio || dominioDoProcesso(dossie.processo.tipoProcesso))) || undefined;
+  if (domDossie) {
+    var domEnvelope = dados.dominio;
+    if (domEnvelope === "pad" || domEnvelope === "par") {
+      if (domEnvelope !== domDossie) {
+        return { ok: false, motivo: "dominio_incompativel", dominioEnvelope: domEnvelope, dominioDossie: domDossie };
+      }
+    } else {
+      // Envelope legado (sem `dominio`): tratado como PAD. Aceito em dossiê PAD; recusado em PAR.
+      if (domDossie === "par") {
+        return { ok: false, motivo: "dominio_legado_par", dominioDossie: domDossie };
+      }
+    }
+  }
   var hashCalculado = "sha256:" + (await sha256Hex(dados.termo.conteudo));
   if (hashCalculado !== dados.hash_origem){
     return { ok: false, motivo: "hash_divergente", hashCalculado: hashCalculado };
@@ -3197,6 +3237,19 @@ window.App = {
         } else if (avaliacao.motivo === "duplicado"){
           alert("Importação recusada: já existe uma prova neste dossiê com o mesmo hash_origem (" + dados.hash_origem +
             "). Este termo já foi importado antes — reimportação não cria uma segunda prova.");
+        } else if (avaliacao.motivo === "dominio_incompativel"){
+          // Rodada PAR-5 (5.3/5.5): termo de domínio diferente do dossiê — recusa atômica (nenhuma
+          // prova criada). Mensagem no padrão-base único de recusa por domínio.
+          alert("Importação recusada — domínio incompatível.\n\n" +
+            mensagemRecusaDominio(avaliacao.dominioEnvelope, avaliacao.dominioDossie,
+              avaliacao.dominioDossie === "par"
+                ? "Este termo é de um processo PAD — importe-o em um dossiê Veritas configurado como PAD."
+                : "Este termo é de um processo PAR (Lei 12.846/2013) — importe-o em um dossiê Veritas configurado como PAR."));
+        } else if (avaliacao.motivo === "dominio_legado_par"){
+          // Envelope legado (sem domínio) chegando num dossiê PAR: recusado (no PAR não há acervo legado).
+          alert("Importação recusada — arquivo legado, sem indicação de domínio, incompatível com processo PAR.\n\n" +
+            mensagemRecusaDominio(undefined, avaliacao.dominioDossie,
+              "Termos legados (anteriores às rodadas PAR) só podem ser importados em dossiês PAD."));
         }
         evt.target.value = "";
         return;

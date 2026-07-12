@@ -3976,6 +3976,20 @@ function dominioTravadoPorPauta(){
   const pd = estado.pautaImportada && estado.pautaImportada.dominio;
   return (pd === "pad" || pd === "par") && dominioProcesso() === pd;
 }
+// Rodada PAR-5 (seção 5.5) — mensagem-base ÚNICA de recusa por domínio incompatível, mesma estrutura
+// de frase usada nas 4 ferramentas da suíte (Veritas, Oitiva 360, Nexo Coger, Nexo PAR):
+// "Domínio encontrado: <X>. Domínio esperado: <Y>. <ação/ferramenta correta>. Nenhum dado foi alterado."
+function rotuloDominioExtenso(d){
+  if (d === "par") return "PAR (Lei 12.846/2013)";
+  if (d === "pad") return "PAD (Lei 8.112/1990)";
+  return "não indicado (arquivo legado, anterior às rodadas PAR)";
+}
+function mensagemRecusaDominio(encontrado, esperado, acaoCorreta){
+  return "Domínio encontrado: " + rotuloDominioExtenso(encontrado) + ". " +
+    "Domínio esperado: " + rotuloDominioExtenso(esperado) + ". " +
+    (acaoCorreta ? acaoCorreta + " " : "") +
+    "Nenhum dado foi alterado.";
+}
 // Filtro de lista por domínio: item ("comum" ou sem domínio) sempre visível; caso contrário, só quando
 // bate com o domínio do processo. Usado por papéis e blocos.
 function itemVisivelNoDominio(dominioItem, dominioProc){
@@ -4584,13 +4598,44 @@ function mesclarPautaImportada(pautaImportadaAtual, dados, agoraIsoStr){
   };
 }
 function aplicarImportacaoPauta(dados){
+  // ---------------------------------------------------------------------------------------------
+  // Rodada PAR-5 (seção 5.2) — VALIDAÇÃO DE DOMÍNIO na importação de pauta, ANTES de qualquer mutação
+  // de estado (recusa atômica: ou entra tudo, ou nada). Política única de validação (mesma tabela nas
+  // 4 ferramentas — Veritas, Oitiva 360, Nexo Coger, Nexo PAR):
+  //   | Pauta com domínio IGUAL ao do processo       -> importa normalmente
+  //   | Pauta com domínio, processo SEM domínio      -> deriva/trava o domínio pela pauta (cascata PAR-4)
+  //   | Pauta com domínio DIFERENTE do manual        -> pede confirmação; recusa CANCELA a importação
+  //   | Pauta SEM `dominio` (arquivo antigo)         -> não trava nada, importa (retrocompat)
+  // Fecha o caso deixado em aberto na PAR-4: se o usuário NÃO confirmar a troca de domínio no conflito,
+  // a importação inteira é recusada (nenhum item de pauta entra), não só o domínio antigo é mantido.
+  const domPauta = dados && dados.dominio;
+  if (domPauta === "pad" || domPauta === "par"){
+    const domManual = dominioProcessoDefinido();
+    if (domManual && domManual !== domPauta){
+      const trocar = confirm(
+        "Conflito de domínio na importação da pauta.\n\n" +
+        "A pauta importada é de domínio " + rotuloDominioExtenso(domPauta) + ", mas este processo está " +
+        "configurado como " + rotuloDominioExtenso(domManual) + ".\n\n" +
+        "Confirmar TROCA o domínio do processo para " + domPauta.toUpperCase() + " (o seletor manual fica " +
+        "travado enquanto a pauta estiver vinculada) e importa a pauta.\n" +
+        "Cancelar RECUSA a importação inteira — nenhum item de pauta será importado.\n\n" +
+        "Deseja trocar o domínio e importar a pauta?"
+      );
+      if (!trocar){
+        // Recusa atômica: estado.pautaImportada e estado.matriz permanecem intactos.
+        alert("Importação recusada — troca de domínio não confirmada.\n\n" +
+          mensagemRecusaDominio(domPauta, domManual,
+            "Para importar esta pauta, configure o processo no domínio " + domPauta.toUpperCase() +
+            " (ou importe-a em um processo já nesse domínio)."));
+        return;
+      }
+    }
+  }
   const jaExistiaEssaPauta = !!(estado.pautaImportada && estado.pautaImportada.pautaIdUltimaImportacao === dados.pauta_id);
   estado.pautaImportada = mesclarPautaImportada(estado.pautaImportada, dados, agoraISO());
-  // Rodada PAR-4 (item 4.1) — derivação do domínio pela pauta. Se a pauta importada traz `dominio`
-  // (pad|par), ele passa a governar o processo e o seletor manual fica travado (dominioTravadoPorPauta).
-  // Conflito com um domínio manual diferente: avisa e pede confirmação; recusa mantém o manual e a pauta
-  // fica sem travar. Pauta sem o campo (arquivos antigos) não trava nada. Nenhuma recusa de importação
-  // por domínio nesta rodada (escopo da PAR-5) — só derivação e aviso.
+  // Rodada PAR-4 (item 4.1) — derivação/trava do domínio pela pauta. Na PAR-5 o conflito com domínio
+  // manual divergente já foi confirmado acima (recusa cancela a importação antes de chegar aqui), então
+  // aqui a derivação apenas aplica o domínio da pauta. Pauta sem o campo (arquivos antigos) não trava nada.
   derivarDominioDaPauta(dados);
   salvarLocalStorage();
   renderResumoPautaNexo();
@@ -4611,12 +4656,10 @@ function derivarDominioDaPauta(dados){
     return;
   }
   if (estado.pautaImportada) estado.pautaImportada.dominio = domPauta;
-  const domManual = dominioProcessoDefinido();
-  if (domManual && domManual !== domPauta){
-    alert("A pauta importada indica domínio \"" + domPauta.toUpperCase() + "\", diferente do domínio \"" +
-      domManual.toUpperCase() + "\" selecionado manualmente neste processo. O domínio passará a ser o da pauta (" +
-      domPauta.toUpperCase() + ") e o seletor manual ficará travado enquanto a pauta estiver vinculada.");
-  }
+  // Rodada PAR-5 (5.2): o conflito com domínio manual divergente já foi tratado por confirm() em
+  // aplicarImportacaoPauta() (a recusa cancela a importação inteira antes de chegar aqui). Portanto,
+  // se o fluxo alcançou este ponto com conflito, a troca já foi confirmada pelo usuário — aplica-se
+  // o domínio da pauta sem novo aviso (evita diálogo duplicado).
   estado.matriz.dominio = domPauta;
 }
 

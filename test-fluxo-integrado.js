@@ -121,11 +121,15 @@ const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'pad-fict
 (async () => {
   console.log('=== Rodada 7 — teste de fluxo integrado ponta a ponta ===\n');
 
-  console.log('--- Carregando as três ferramentas (Node vm, sem browser) ---');
+  console.log('--- Carregando as ferramentas (Node vm, sem browser) ---');
   const Nexo = carregarFerramenta('nexo-coger.html');
   const Veritas = carregarFerramenta('veritas.html');
   const Oitiva = carregarFerramenta('oitiva-360.html');
+  // Rodada PAR-5 (5.6): o Nexo PAR é carregado no MESMO padrão de stub/contexto do Nexo Coger
+  // (são estruturalmente parecidos — fork da PAR-3), para exercitar sua validarDominioEnvelope.
+  const NexoPar = carregarFerramenta('nexo-par.html');
   checar('setup', 'nexo-coger.html carregado', typeof Nexo.docVazio === 'function');
+  checar('validacao_dominio', 'nexo-par.html carregado (PAR-5)', typeof NexoPar.docVazio === 'function' && typeof NexoPar.validarDominioEnvelope === 'function');
   checar('setup', 'veritas.html carregado (VeritasPuro exposto)', typeof Veritas.VeritasPuro === 'object' && Veritas.VeritasPuro !== null);
   checar('setup', 'oitiva-360.html carregado (OitivaPuro exposto)', typeof Oitiva.OitivaPuro === 'object' && Oitiva.OitivaPuro !== null);
   console.log('');
@@ -357,6 +361,81 @@ const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'pad-fict
   const avaliacaoVersaoDivergente = await Veritas.VeritasPuro.avaliarImportacaoTermo(Veritas.VeritasPuro.novoDossie(), termoVersaoDivergente, Nexo.getCatalogoCoger());
   checar('falha_controlada', 'termo com catalogo_schema_version divergente gera aviso (catalogoDivergente=true) mas não bloqueia (hash confere)',
     avaliacaoVersaoDivergente.ok === true && avaliacaoVersaoDivergente.catalogoDivergente === true);
+
+  // =========================================================================
+  // Rodada PAR-5 (seção 5.6) — Validação cruzada de domínio nos contratos
+  // Os 7 casos exigidos pela spec. Testam diretamente as funções reais expostas por
+  // cada ferramenta (validarDominioEnvelope nos dois Nexos; avaliarImportacaoTermo +
+  // dominioDoProcesso no Veritas via VeritasPuro).
+  // =========================================================================
+  console.log('\n--- Rodada PAR-5 (5.6): validação cruzada de domínio ---');
+
+  // Placar das 7 etapas originais (Rodada 7): todas as verificações que NÃO pertencem a este grupo
+  // de validação de domínio — devem continuar 43/43 (caso 7).
+
+  const parFixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'par-ficticio-001.json'), 'utf8'));
+  checar('validacao_dominio', 'fixture par-ficticio-001.json carregado (dominio par)', parFixture._dominio === 'par' && parFixture.processo.dominio === 'par');
+
+  // --- Caso 1: envelope dominio:"par" no Nexo Coger -> RECUSADO ---
+  const c1 = Nexo.validarDominioEnvelope({ dominio: 'par' });
+  checar('validacao_dominio', 'caso 1: envelope PAR no Nexo Coger é RECUSADO', c1.ok === false, JSON.stringify(c1));
+  checar('validacao_dominio', 'caso 1: mensagem indica domínio encontrado (PAR) e sugere o Nexo PAR',
+    !!c1.msg && /encontrado: PAR/i.test(c1.msg) && /Nexo PAR/.test(c1.msg), 'msg: ' + (c1 && c1.msg));
+
+  // --- Caso 2: envelope dominio:"pad" no Nexo PAR -> RECUSADO ---
+  const c2 = NexoPar.validarDominioEnvelope({ dominio: 'pad' });
+  checar('validacao_dominio', 'caso 2: envelope PAD no Nexo PAR é RECUSADO', c2.ok === false, JSON.stringify(c2));
+  checar('validacao_dominio', 'caso 2: mensagem indica domínio encontrado (PAD) e sugere o Nexo Coger',
+    !!c2.msg && /encontrado: PAD/i.test(c2.msg) && /Nexo Coger/.test(c2.msg), 'msg: ' + (c2 && c2.msg));
+
+  // --- Caso 3: envelope SEM campo dominio no Nexo Coger -> ACEITO (legado PAD) ---
+  const c3 = Nexo.validarDominioEnvelope({});
+  checar('validacao_dominio', 'caso 3: envelope sem domínio no Nexo Coger é ACEITO como legado', c3.ok === true, JSON.stringify(c3));
+
+  // --- Caso 4: envelope SEM campo dominio no Nexo PAR -> RECUSADO com mensagem de legado ---
+  const c4 = NexoPar.validarDominioEnvelope({});
+  checar('validacao_dominio', 'caso 4: envelope sem domínio no Nexo PAR é RECUSADO', c4.ok === false, JSON.stringify(c4));
+  checar('validacao_dominio', 'caso 4: mensagem é a específica de arquivo legado/PAD (não a de domínio "pad")',
+    !!c4.msg && /anterior às Rodadas PAR|acervo legado/i.test(c4.msg) && c4.msg !== (c2 && c2.msg),
+    'msg: ' + (c4 && c4.msg));
+
+  // --- Casos 5 e 6: termo PAR importado no Veritas ---
+  // Envelope de termo PAR real (formato válido + hash coerente), no mesmo espírito do passo 5.
+  const conteudoTermoPar = 'Termo de oitiva fictício (domínio PAR) — ' + parFixture.depoente.respostaPadrao;
+  const hashTermoPar = 'sha256:' + (await Veritas.VeritasPuro.sha256Hex(conteudoTermoPar));
+  const envelopeTermoPar = {
+    origem: 'oitiva-360',
+    dominio: 'par',
+    hash_origem: hashTermoPar,
+    catalogo_schema_version: Nexo.getCatalogoCoger().schema_version,
+    termo: { conteudo: conteudoTermoPar, gerado_em: new Date().toISOString(), responsavel: '' },
+    deponente: { nome: parFixture.depoente.identificacao },
+    rodada_id: 'RODADA-PAR-TEST',
+    pauta_id: 'PAUTA.2026-07-12.001'
+  };
+
+  // --- Caso 5: dossiê Veritas SEM tipo definido -> ACEITO (agnosticismo preservado) ---
+  const dossieSemTipo = Veritas.VeritasPuro.novoDossie(); // processo.tipoProcesso === ""
+  checar('validacao_dominio', 'caso 5 (pré): dossiê sem tipo -> dominioDoProcesso indefinido',
+    Veritas.VeritasPuro.dominioDoProcesso(dossieSemTipo.processo.tipoProcesso) === undefined);
+  const c5 = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieSemTipo, envelopeTermoPar, Nexo.getCatalogoCoger());
+  checar('validacao_dominio', 'caso 5: termo PAR em dossiê sem tipo é ACEITO (Veritas agnóstico)', c5.ok === true, JSON.stringify(c5));
+
+  // --- Caso 6: dossiê Veritas marcado PAD -> RECUSADO ---
+  const dossiePad = Veritas.VeritasPuro.novoDossie();
+  dossiePad.processo.tipoProcesso = 'PAD';
+  checar('validacao_dominio', 'caso 6 (pré): dossiê tipo PAD -> dominioDoProcesso === "pad"',
+    Veritas.VeritasPuro.dominioDoProcesso(dossiePad.processo.tipoProcesso) === 'pad');
+  const c6 = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossiePad, envelopeTermoPar, Nexo.getCatalogoCoger());
+  checar('validacao_dominio', 'caso 6: termo PAR em dossiê PAD é RECUSADO (dominio_incompativel)',
+    c6.ok === false && c6.motivo === 'dominio_incompativel', JSON.stringify(c6));
+
+  // --- Caso 7: fluxo PAD original (7 etapas) continua passando INALTERADO ---
+  const etapasOriginais = relatorio.filter(r => r.grupo !== 'validacao_dominio');
+  const falhasNoOriginal = etapasOriginais.filter(r => !r.ok).length;
+  checar('validacao_dominio', 'caso 7: placar das 7 etapas PAD originais inalterado (43 verificações, 0 falhas)',
+    etapasOriginais.length === 43 && falhasNoOriginal === 0,
+    'originais=' + etapasOriginais.length + ' falhas=' + falhasNoOriginal);
 
   // =========================================================================
   // Relatório final
