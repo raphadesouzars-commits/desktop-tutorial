@@ -1516,6 +1516,12 @@ function docVazio(){
 }
 
 let doc = null;          // documento raiz
+// Rodada 7 (seção 7.1): accessors para test-fluxo-integrado.js — `doc`/`CATALOGO_COGER` são `let`/
+// `const` de topo de script (não-módulo): funções aqui são visíveis de fora via vm.runInContext,
+// mas bindings let/const não. Estas duas funções são a única ponte necessária.
+function getDoc(){ return doc; }
+function setDoc(novoDoc){ doc = novoDoc; }
+function getCatalogoCoger(){ return CATALOGO_COGER; }
 let lens = 'todos';      // 'todos' | acusadoId
 let isolatedFato = null; // id do fato isolado por clique
 let searchTerm = '';
@@ -3165,19 +3171,18 @@ function abrirRevisaoPauta(){
   ];
   openModal(modalShell('Revisão de lacunas — pauta de instrução','prova',[bodyBox],foot));
 }
-function gerarPautaPorDepoente(pontos, depoente){
-  doc._seq.PAUTA=(doc._seq.PAUTA||0)+1;
-  const dataStr=new Date().toISOString().slice(0,10);
-  const pautaId='PAUTA.'+dataStr+'.'+String(doc._seq.PAUTA).padStart(3,'0');
-  const out={
+// Rodada 7, seção 7.1: núcleo puro do contrato de pauta (Rodada 4) — recebe dados, devolve dados,
+// nunca toca doc/localStorage/DOM. Testável isoladamente via Node (test-fluxo-integrado.js).
+function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId, exportadoEm){
+  return {
     schema_version:'1.0.0',
-    catalogo_schema_version:CATALOGO_COGER.schema_version,
+    catalogo_schema_version:catalogoCoger.schema_version,
     pauta_id:pautaId,
-    exportado_em:new Date().toISOString(),
+    exportado_em:exportadoEm,
     origem:FERRAMENTA,
-    processo:doc.processo.numero||'',
+    processo:docRef.processo.numero||'',
     depoente:{nome:depoente.nome, papel:depoente.papelId},
-    acusados_contexto:doc.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
+    acusados_contexto:docRef.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
     pontos_instrucao:pontos.map((p,i)=>({
       id_ponto:pautaId+'.P'+String(i+1).padStart(2,'0'),
       fato_referencia:p.fatoId,
@@ -3189,6 +3194,15 @@ function gerarPautaPorDepoente(pontos, depoente){
       confirmado_pelo_usuario:true
     }))
   };
+}
+function proximoPautaId(docRef, dataStr){
+  docRef._seq.PAUTA=(docRef._seq.PAUTA||0)+1;
+  return 'PAUTA.'+dataStr+'.'+String(docRef._seq.PAUTA).padStart(3,'0');
+}
+function gerarPautaPorDepoente(pontos, depoente){
+  const dataStr=new Date().toISOString().slice(0,10);
+  const pautaId=proximoPautaId(doc, dataStr);
+  const out=construirContratoPauta(pontos, depoente, doc, CATALOGO_COGER, pautaId, new Date().toISOString());
   // grava o rastro "pauta enviada" nos fatos que entraram neste export (mesmo padrão já existente)
   const agora=new Date().toISOString();
   pontos.forEach(p=>{ const f=doc.fatos.find(x=>x.id===p.fatoId); if(f) f.pautaEnviada={em:agora}; });
@@ -3196,7 +3210,7 @@ function gerarPautaPorDepoente(pontos, depoente){
   const nomeArq='nexo-coger-pauta-'+(depoente.nome||'depoente').replace(/[^\w.-]+/g,'_')+'-'+dataStr+'.json';
   baixar(nomeArq, JSON.stringify(out,null,2));
   render(); // reflete o badge "pauta enviada" nos cards
-  toast('Pauta '+pautaId+' gerada para '+depoente.nome+'.');
+  toast('Pauta '+out.pauta_id+' gerada para '+depoente.nome+'.');
 }
 
 /* ------------------------------------------------------------------ *
@@ -3313,6 +3327,8 @@ function rotuloTipoProvaCatalogo(id){
   const item=(CATALOGO_COGER.tipos_prova||[]).find(x=>x.id===id);
   return item?item.label:null;
 }
+// Rodada 7: accessor de função (não const) — visível de fora via vm.runInContext (ver getDoc()).
+function tipoNexoParaProvaId(id){ return PROVA_ID_PARA_TIPO_NEXO[id]||'documental'; }
 function importarProvasVeritas(){ $('#fileInputVeritas').click(); }
 $('#fileInputVeritas').addEventListener('change',e=>{
   const file=e.target.files[0]; if(!file) return;
@@ -3324,6 +3340,28 @@ $('#fileInputVeritas').addEventListener('change',e=>{
   };
   rd.readAsText(file); e.target.value='';
 });
+// Rodada 7: dedup pura de importação de prova do Veritas — chave é o id_prova de origem (cada prova
+// do Veritas só pode ser importada uma vez no Nexo; ao contrário do retorno de oitiva, aqui não há
+// um segundo eixo tipo id_ponto, então a chave é só o id_prova mesmo).
+function provaVeritasJaImportada(docRef, idProvaOrigem){
+  return !!(idProvaOrigem && docRef.provas.some(p=>p.origemVeritas && p.origemVeritas.idProvaOrigem===idProvaOrigem));
+}
+// Núcleo puro: monta o objeto de prova do Nexo a partir de um item do contrato do Veritas.
+function mapearProvaVeritasParaNexo(it, tipoNexo, rotulo, origemInstancia, gerarIdProva){
+  return {
+    id:gerarIdProva(), tipo:tipoNexo, titulo:it.titulo||'', descricao:it.descricao||'',
+    refAutos:{documento:'',folhas:''}, hashVeritas:(it.proveniencia&&it.proveniencia.hashDeclaradoPacote)||'',
+    codigoAnexo:'', trechosSignificativos:[],
+    contraditorio:{acusadoIntimado:null,refAutos:''},
+    detalhe:{},
+    origemVeritas:{
+      idProvaOrigem:it.id_prova||'', origemInstancia:origemInstancia||'',
+      tipoProvaOrigemId:it.tipo_prova||'', tipoProvaOrigemLabel:rotulo,
+      sigilo:it.sigilo||'', status:it.status||'',
+      proveniencia:it.proveniencia||null, arquivos:it.arquivos||[], cadeiaCustodia:it.cadeia_custodia||[]
+    }
+  };
+}
 function revisarImportacaoVeritas(d){
   const catalogoDivergente = d.catalogo_schema_version && d.catalogo_schema_version!==CATALOGO_COGER.schema_version;
   const itens=d.provas.map((it,i)=>{
@@ -3331,6 +3369,8 @@ function revisarImportacaoVeritas(d){
     if(!it||typeof it!=='object') return {i, invalido:true, erros:['Item não é um objeto de prova.'], it:{}};
     const rotulo=rotuloTipoProvaCatalogo(it.tipo_prova);
     if(!rotulo) erros.push('tipo_prova desconhecido no catálogo: "'+esc(it.tipo_prova)+'".');
+    const duplicado=provaVeritasJaImportada(doc, it.id_prova);
+    if(duplicado) erros.push('Este id_prova ('+esc(it.id_prova)+') já foi importado anteriormente — reimportação recusada.');
     return {i, invalido:erros.length>0, erros, it, rotulo, tipoNexo:PROVA_ID_PARA_TIPO_NEXO[it.tipo_prova]||'documental'};
   });
   const validos=itens.filter(x=>!x.invalido);
@@ -3374,27 +3414,17 @@ function revisarImportacaoVeritas(d){
   openModal(modalShell('Revisão — importação de provas do Veritas','prova',body,foot));
 }
 function aplicarImportacaoVeritas(aprovadas,d){
-  if(!aprovadas.length){ closeModal(); toast('Nenhuma prova selecionada.'); return; }
-  aprovadas.forEach(x=>{
-    const it=x.it;
-    const nova={
-      id:genId('P'), tipo:x.tipoNexo, titulo:it.titulo||'', descricao:it.descricao||'',
-      refAutos:{documento:'',folhas:''}, hashVeritas:(it.proveniencia&&it.proveniencia.hashDeclaradoPacote)||'',
-      codigoAnexo:'', trechosSignificativos:[],
-      contraditorio:{acusadoIntimado:null,refAutos:''},
-      detalhe:{},
-      origemVeritas:{
-        idProvaOrigem:it.id_prova||'', origemInstancia:d.origem_instancia||'',
-        tipoProvaOrigemId:it.tipo_prova||'', tipoProvaOrigemLabel:x.rotulo,
-        sigilo:it.sigilo||'', status:it.status||'',
-        proveniencia:it.proveniencia||null, arquivos:it.arquivos||[], cadeiaCustodia:it.cadeia_custodia||[]
-      }
-    };
+  // Rodada 7: revalida dedup no momento de aplicar (defesa em profundidade — a tela de revisão já
+  // exclui duplicados, mas reaplicar a checagem aqui evita corrida entre abrir a revisão e confirmar).
+  const semDuplicata=aprovadas.filter(x=>!provaVeritasJaImportada(doc, x.it.id_prova));
+  if(!semDuplicata.length){ closeModal(); toast('Nenhuma prova nova selecionada (tudo já importado antes).'); return; }
+  semDuplicata.forEach(x=>{
+    const nova=mapearProvaVeritasParaNexo(x.it, x.tipoNexo, x.rotulo, d.origem_instancia, ()=>genId('P'));
     doc.provas.push(nova);
   });
   closeModal();
   render();
-  toast(aprovadas.length+' prova(s) do Veritas importada(s).');
+  toast(semDuplicata.length+' prova(s) do Veritas importada(s).');
 }
 
 /* ------------------------------------------------------------------ *
@@ -3486,6 +3516,14 @@ function revisarImportacaoRetornoOitiva(d){
   ];
   openModal(modalShell('Revisão — retorno do Oitiva 360 (contexto do acusado)','prova',body,foot));
 }
+// Núcleo puro: monta a entrada de acusado.provasContexto a partir de um item do envelope de retorno.
+function mapearRetornoContexto(r, origem, agora){
+  return {
+    idProva:r.id_prova, origem:origem||'oitiva-360', pautaId:r.pauta_id||'', rodadaId:r.rodada_id||'',
+    idPonto:r.id_ponto||'', fatoReferencia:r.fato_referencia||'', resumoResposta:r.resumo_resposta||'',
+    acusadoVinculo:r.acusado_vinculo||'padrao', importadoEm:agora
+  };
+}
 function aplicarImportacaoRetornoOitiva(itens, d){
   const agora=new Date().toISOString();
   let n=0;
@@ -3494,11 +3532,7 @@ function aplicarImportacaoRetornoOitiva(itens, d){
     if(!Array.isArray(a.provasContexto)) a.provasContexto=[];
     // Nunca toca doc.provas/doc.fatos/enquadramentos — é isto que garante, estruturalmente, que
     // nenhuma rotina de indiciação/pendência é disparada por esta importação (seção 6.4).
-    a.provasContexto.push({
-      idProva:x.r.id_prova, origem:d.origem||'oitiva-360', pautaId:x.r.pauta_id||'', rodadaId:x.r.rodada_id||'',
-      idPonto:x.r.id_ponto||'', fatoReferencia:x.r.fato_referencia||'', resumoResposta:x.r.resumo_resposta||'',
-      acusadoVinculo:x.r.acusado_vinculo||'padrao', importadoEm:agora
-    });
+    a.provasContexto.push(mapearRetornoContexto(x.r, d.origem, agora));
     n++;
   });
   closeModal();

@@ -3505,6 +3505,11 @@ function processoVazio(){
 
 let estado = processoVazio();
 window.getEstado = function(){ return estado; }; // exposto para inspeção no console
+// Rodada 7 (seção 7.1): setter mínimo necessário porque gerarRoteiroInicial() ->
+// normasPautaResolvidasParaDepoente() lê estado.pautaImportada por closure, não por parâmetro —
+// para testar via Node sem reescrever essa cadeia inteira, o script de teste precisa poder colocar
+// um pautaImportada de fixture no lugar certo antes de chamar gerarRoteiroInicial(d).
+window.setEstadoPautaImportada = function(p){ estado.pautaImportada = p; };
 
 function processoTemConteudo(e){
   if (!e) return false;
@@ -3809,18 +3814,10 @@ document.getElementById("btn-cancelar-add-depoente").addEventListener("click", (
   dialogoAddDepoente.close();
 });
 
-document.getElementById("btn-confirmar-add-depoente").addEventListener("click", () => {
-  const identificacao = document.getElementById("campo-identificacao-depoente").value.trim();
-  const elementosBuscados = document.getElementById("campo-elementos-buscados-depoente").value.trim();
-  const erroWrap = document.getElementById("erro-add-depoente");
-
-  if (!identificacao || !elementosBuscados){
-    erroWrap.innerHTML = "<div class=\"aviso-erro\">Identificação e \"elementos buscados\" são obrigatórios para adicionar o depoente.</div>";
-    return;
-  }
-
-  estado.depoentes.push({
-    id: gerarId(),
+// Rodada 7 (seção 7.1): construtor puro do depoente — mesmo shape usado pelo handler do diálogo.
+function novoDepoente(identificacao, elementosBuscados, gerarIdFn){
+  return {
+    id: gerarIdFn(),
     identificacao: identificacao,
     papel: null,
     infracao: null,
@@ -3834,7 +3831,19 @@ document.getElementById("btn-confirmar-add-depoente").addEventListener("click", 
     referenciaAcusadoNexo: null, // { acusadoId, nome, confirmadoPeloUsuario } — nunca automático
     pautaSelecionada: [], // fatoIds marcados "abordar nesta oitiva" (seção 3.1)
     pautaConclusao: {} // fatoId -> { respondida, nota } — preenchido na Etapa 4 (seção 3.4)
-  });
+  };
+}
+document.getElementById("btn-confirmar-add-depoente").addEventListener("click", () => {
+  const identificacao = document.getElementById("campo-identificacao-depoente").value.trim();
+  const elementosBuscados = document.getElementById("campo-elementos-buscados-depoente").value.trim();
+  const erroWrap = document.getElementById("erro-add-depoente");
+
+  if (!identificacao || !elementosBuscados){
+    erroWrap.innerHTML = "<div class=\"aviso-erro\">Identificação e \"elementos buscados\" são obrigatórios para adicionar o depoente.</div>";
+    return;
+  }
+
+  estado.depoentes.push(novoDepoente(identificacao, elementosBuscados, gerarId));
   salvarLocalStorage();
   renderListaDepoentes();
   dialogoAddDepoente.close();
@@ -4031,8 +4040,12 @@ function normaCanonicaParaInterna(id){
 // item mudem no Nexo. idPontoOrigem/pautaIdOrigem/tipoLacuna/confirmadoPeloUsuario são guardados por
 // item para rastreabilidade (Rodada 6 vai referenciar pauta_id) e para distinguir pontos "manual" dos
 // sugeridos automaticamente — não precisam aparecer na UI, mas o dado fica presente.
-function aplicarImportacaoPauta(dados){
-  const itensExistentes = (estado.pautaImportada && estado.pautaImportada.itens) || [];
+// Rodada 7 (seção 7.1) — núcleo puro do merge de pauta importada (Rodada 4): recebe o
+// pautaImportada atual (ou null) e o envelope bruto, devolve o novo pautaImportada. Reimportar o
+// mesmo pauta_id atualiza os itens existentes por fatoId em vez de duplicá-los (idempotência natural
+// do merge por chave) — "abordado" nunca regride para "pendente" na reimportação.
+function mesclarPautaImportada(pautaImportadaAtual, dados, agoraIsoStr){
+  const itensExistentes = (pautaImportadaAtual && pautaImportadaAtual.itens) || [];
   const porFatoId = {};
   itensExistentes.forEach(i => { porFatoId[i.fatoId] = i; });
 
@@ -4060,18 +4073,25 @@ function aplicarImportacaoPauta(dados){
     };
   });
 
-  estado.pautaImportada = {
+  return {
     origem: "nexo-coger",
     catalogoSchemaVersionOrigem: dados.catalogo_schema_version || "",
     pautaIdUltimaImportacao: dados.pauta_id || "",
     depoenteOrigem: dados.depoente || null,
     processoOrigem: dados.processo || "",
-    importadaEm: agoraISO(),
-    acusadosContexto: dados.acusados_contexto || (estado.pautaImportada ? estado.pautaImportada.acusadosContexto : []) || [],
+    importadaEm: agoraIsoStr,
+    acusadosContexto: dados.acusados_contexto || (pautaImportadaAtual ? pautaImportadaAtual.acusadosContexto : []) || [],
     itens: Object.values(porFatoId)
   };
+}
+function aplicarImportacaoPauta(dados){
+  const jaExistiaEssaPauta = !!(estado.pautaImportada && estado.pautaImportada.pautaIdUltimaImportacao === dados.pauta_id);
+  estado.pautaImportada = mesclarPautaImportada(estado.pautaImportada, dados, agoraISO());
   salvarLocalStorage();
   renderResumoPautaNexo();
+  // Rodada 7, seção 7.4: reimportação sinalizada explicitamente (nunca silenciosa) — o merge por
+  // fatoId já evita duplicidade de itens.
+  if (jaExistiaEssaPauta) alert("A pauta " + dados.pauta_id + " já havia sido importada antes — itens existentes foram atualizados, nenhum item duplicado foi criado.");
 }
 
 function renderResumoPautaNexo(){
@@ -4205,13 +4225,18 @@ function atualizarChecklistPautaAoConcluir(d){
   });
 }
 
+// Rodada 7 (seção 7.1): núcleo puro — recebe pautaImportada explicitamente em vez de ler do
+// closure de estado, para ser chamável de fora (test-fluxo-integrado.js) sem depender de window.getEstado.
+function itensPautaAbordadosPuro(d, pautaImportada){
+  if (!pautaImportada || !d.pautaSelecionada) return [];
+  return d.pautaSelecionada
+    .map(fatoId => pautaImportada.itens.find(i => i.fatoId === fatoId))
+    .filter(item => item && item.statusChecklist === "abordado");
+}
 // Seção 6.2: itens da pauta que este depoente marcou e que já estão "abordado" — condição de
 // visibilidade do botão de exportação de prova.
 function itensPautaAbordadosNestaSessao(d){
-  if (!estado.pautaImportada || !d.pautaSelecionada) return [];
-  return d.pautaSelecionada
-    .map(fatoId => estado.pautaImportada.itens.find(i => i.fatoId === fatoId))
-    .filter(item => item && item.statusChecklist === "abordado");
+  return itensPautaAbordadosPuro(d, estado.pautaImportada);
 }
 
 function itensPautaVisiveisParaDepoente(mostrarTodos){
@@ -5367,36 +5392,41 @@ function gerarTermoTexto(d){
 // respostas mais recentes, mesmo que a Etapa 4 não tenha sido reaberta desde a última edição.
 // Substitui o textarea/cache em tela, igual ao botão "Regenerar termo", só que sem diálogo de
 // confirmação: exportar é, por definição, fechar a versão corrente do termo.
-async function exportarTermoParaVeritas(d){
-  const statusEl = document.getElementById("status-exportar-termo-veritas");
+// Rodada 7 (seção 7.1): núcleo puro do envelope de termo (Rodada 5) — recebe d/estado/rodadaId
+// explicitamente, calcula o hash (única parte assíncrona) e devolve {envelope, textoFinal, hashHex},
+// sem tocar em DOM, localStorage ou disparar download. rodadaIdAtual permite ao chamador decidir se
+// gera um novo id (d.rodadaId ainda vazio) ou reaproveita o existente — decisão fica do lado impuro.
+async function construirEnvelopeTermo(d, pautaImportada, catalogoCoger, rodadaIdAtual){
   const textoFinal = gerarTermoTexto(d);
-  d.termoTexto = textoFinal;
-  const termoTextareaEl = document.getElementById("termo-texto");
-  if (termoTextareaEl) termoTextareaEl.value = textoFinal;
-
-  if (statusEl) statusEl.textContent = "Calculando hash…";
   const hashHex = await sha256HexOitiva(textoFinal);
-
-  if (!d.rodadaId) d.rodadaId = gerarId();
-  salvarLocalStorage();
-
   const pautaIdsDoDepoente = Array.from(new Set(
     (d.pautaSelecionada || []).map(fatoId => {
-      const item = estado.pautaImportada && estado.pautaImportada.itens.find(i => i.fatoId === fatoId);
+      const item = pautaImportada && pautaImportada.itens.find(i => i.fatoId === fatoId);
       return item && item.pautaIdOrigem;
     }).filter(Boolean)
   ));
-
   const envelope = {
     schema_version: "1.0.0",
-    catalogo_schema_version: CATALOGO_COGER.schema_version,
+    catalogo_schema_version: catalogoCoger.schema_version,
     origem: "oitiva-360",
     pauta_id: pautaIdsDoDepoente.join(","),
-    rodada_id: d.rodadaId,
+    rodada_id: rodadaIdAtual,
     deponente: { nome: d.identificacao || "", papel: PAPEL_SLUG_PARA_ID_CATALOGO[d.papel] || d.papel },
     termo: { conteudo: textoFinal, gerado_em: new Date().toISOString(), responsavel: "" },
     hash_origem: "sha256:" + hashHex
   };
+  return { envelope, textoFinal, hashHex };
+}
+async function exportarTermoParaVeritas(d){
+  const statusEl = document.getElementById("status-exportar-termo-veritas");
+  if (!d.rodadaId) d.rodadaId = gerarId();
+  if (statusEl) statusEl.textContent = "Calculando hash…";
+  const { envelope, textoFinal, hashHex } = await construirEnvelopeTermo(d, estado.pautaImportada, CATALOGO_COGER, d.rodadaId);
+
+  d.termoTexto = textoFinal;
+  const termoTextareaEl = document.getElementById("termo-texto");
+  if (termoTextareaEl) termoTextareaEl.value = textoFinal;
+  salvarLocalStorage();
 
   const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -5420,6 +5450,33 @@ async function exportarTermoParaVeritas(d){
    Veritas (Rodada 5) — sem duplicar o conteúdo do termo, sem gerar indiciação no Nexo (que só
    populariza o "contexto do acusado", uma estrutura à parte da matriz fato-prova-norma).
    ===================================================================== */
+// Rodada 7 (seção 7.1): núcleo puro do envelope de retorno (Rodada 6) — recebe d/pautaImportada/
+// idProva/rodadaId explicitamente, devolve o envelope, sem tocar em DOM/localStorage/download.
+function construirEnvelopeRetorno(d, pautaImportada, idProva, catalogoCoger, rodadaIdAtual){
+  const itens = itensPautaAbordadosPuro(d, pautaImportada);
+  const retornos = itens.map(item => {
+    const conclusao = (d.pautaConclusao && d.pautaConclusao[item.fatoId]) || {};
+    const acusadoAlt = (conclusao.acusadoAlternativo || "").trim();
+    return {
+      id_prova: idProva.trim(),
+      pauta_id: item.pautaIdOrigem || "",
+      rodada_id: rodadaIdAtual,
+      id_ponto: item.idPontoOrigem || "",
+      // Seção 6.1: vazio/ausente = "padrao" (acusado do processo corrente), sem nenhuma ação extra
+      // do usuário no caso comum — só vira "manual" quando o campo opcional foi preenchido.
+      acusado_vinculo: acusadoAlt ? "manual" : "padrao",
+      acusado_alternativo: acusadoAlt || null,
+      fato_referencia: item.fatoId,
+      resumo_resposta: conclusao.resumoResposta || ""
+    };
+  });
+  return {
+    schema_version: "1.0.0",
+    catalogo_schema_version: catalogoCoger.schema_version,
+    origem: "oitiva-360",
+    retornos: retornos
+  };
+}
 function exportarRetornoContextoAcusado(d){
   const statusEl = document.getElementById("status-exportar-retorno-nexo");
   const itens = itensPautaAbordadosNestaSessao(d);
@@ -5437,29 +5494,8 @@ function exportarRetornoContextoAcusado(d){
   if (!d.rodadaId) d.rodadaId = gerarId();
   salvarLocalStorage();
 
-  const retornos = itens.map(item => {
-    const conclusao = (d.pautaConclusao && d.pautaConclusao[item.fatoId]) || {};
-    const acusadoAlt = (conclusao.acusadoAlternativo || "").trim();
-    return {
-      id_prova: idProva.trim(),
-      pauta_id: item.pautaIdOrigem || "",
-      rodada_id: d.rodadaId,
-      id_ponto: item.idPontoOrigem || "",
-      // Seção 6.1: vazio/ausente = "padrao" (acusado do processo corrente), sem nenhuma ação extra
-      // do usuário no caso comum — só vira "manual" quando o campo opcional foi preenchido.
-      acusado_vinculo: acusadoAlt ? "manual" : "padrao",
-      acusado_alternativo: acusadoAlt || null,
-      fato_referencia: item.fatoId,
-      resumo_resposta: conclusao.resumoResposta || ""
-    };
-  });
-
-  const envelope = {
-    schema_version: "1.0.0",
-    catalogo_schema_version: CATALOGO_COGER.schema_version,
-    origem: "oitiva-360",
-    retornos: retornos
-  };
+  const envelope = construirEnvelopeRetorno(d, estado.pautaImportada, idProva, CATALOGO_COGER, d.rodadaId);
+  const retornos = envelope.retornos;
 
   const blob = new Blob([JSON.stringify(envelope, null, 2)], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -6144,6 +6180,31 @@ function init(){
   renderTudo();
   validarCatalogo();
 }
+
+// Rodada 7 (seção 7.1): superfície de funções puras exposta para test-fluxo-integrado.js — todas
+// recebem dados e devolvem dados, nenhuma toca document/localStorage/DOM. Espelha exatamente a
+// lógica usada pela interface (as funções da UI são wrappers finos em torno destas mesmas).
+window.OitivaPuro = {
+  CATALOGO: CATALOGO,
+  CATALOGO_COGER: CATALOGO_COGER,
+  PAPEL_SLUG_PARA_ID_CATALOGO: PAPEL_SLUG_PARA_ID_CATALOGO,
+  gerarId: gerarId,
+  novoDepoente: novoDepoente,
+  garantirEstruturaAto: garantirEstruturaAto,
+  gerarRoteiroInicial: gerarRoteiroInicial,
+  chaveItemRoteiro: chaveItemRoteiro,
+  perguntasRespostasOrdenadas: perguntasRespostasOrdenadas,
+  gerarTermoTexto: gerarTermoTexto,
+  sha256HexOitiva: sha256HexOitiva,
+  papelTemDireitoSilencio: papelTemDireitoSilencio,
+  blocoDeveSerOmitido: blocoDeveSerOmitido,
+  normaCanonicaParaInterna: normaCanonicaParaInterna,
+  itensPautaAbordadosPuro: itensPautaAbordadosPuro,
+  mesclarPautaImportada: mesclarPautaImportada,
+  construirEnvelopeTermo: construirEnvelopeTermo,
+  construirEnvelopeRetorno: construirEnvelopeRetorno,
+  agoraISO: agoraISO
+};
 
 if (document.readyState === "loading"){
   document.addEventListener("DOMContentLoaded", init);

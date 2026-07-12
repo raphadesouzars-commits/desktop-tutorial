@@ -2610,6 +2610,83 @@ function viewRelatorio() {
 }
 
 /* ============================================================
+   Rodada 7 (seção 7.1) — núcleos puros dos contratos: recebem dados, devolvem dados, nunca tocam
+   DOM/document/localStorage. As funções de App.* abaixo passam a ser wrappers finos em torno destas,
+   para que test-fluxo-integrado.js consiga exercitar a lógica de verdade via Node, sem navegador.
+   ============================================================ */
+function construirContratoProvasNexo(dossie, catalogoCoger, exportadoEm){
+  return {
+    schema_version: "1.0",
+    catalogo_schema_version: catalogoCoger.schema_version,
+    exportado_em: exportadoEm,
+    origem: "veritas",
+    origem_instancia: dossie.processo.id,
+    provas: dossie.itens.map(function (it) {
+      return {
+        id_prova: it.id,
+        titulo: it.titulo,
+        tipo_prova: CATEGORIA_VERITAS_PARA_PROVA_ID[it.categoria] || null,
+        descricao: it.observacoes || "",
+        sigilo: it.sigilo,
+        status: it.status,
+        proveniencia: it.proveniencia,
+        arquivos: it.arquivos.map(function (a) {
+          return { nomeArquivo: a.nomeArquivo, descricao: a.descricao, hashLocal: a.hashLocal, hashDeclarado: a.hashDeclarado };
+        }),
+        cadeia_custodia: it.linhaDoTempoItem
+      };
+    })
+  };
+}
+// Validação pura do envelope de termo (Rodada 5): formato, hash (assíncrono, Web Crypto) e dedup por
+// hash_origem — reimportar o mesmo termo é recusado antes mesmo de tocar em DB.dossie.
+async function avaliarImportacaoTermo(dossie, dados, catalogoCoger){
+  if (!dados || dados.origem !== "oitiva-360" || !dados.termo || typeof dados.termo.conteudo !== "string" || !dados.hash_origem){
+    return { ok: false, motivo: "formato_invalido" };
+  }
+  var hashCalculado = "sha256:" + (await sha256Hex(dados.termo.conteudo));
+  if (hashCalculado !== dados.hash_origem){
+    return { ok: false, motivo: "hash_divergente", hashCalculado: hashCalculado };
+  }
+  var duplicado = !!(dossie && dossie.itens.some(function (it) {
+    return it.termoOitiva && it.termoOitiva.hashOrigem === dados.hash_origem;
+  }));
+  if (duplicado) return { ok: false, motivo: "duplicado" };
+  var catalogoDivergente = !!(dados.catalogo_schema_version && catalogoCoger && dados.catalogo_schema_version !== catalogoCoger.schema_version);
+  return { ok: true, catalogoDivergente: catalogoDivergente, hashCalculado: hashCalculado };
+}
+// Núcleo puro: monta o item de prova a partir de um envelope de termo já validado (ver avaliarImportacaoTermo).
+function construirItemTermoOitiva(dados, gerarIdItem){
+  var item = novoItemDraft();
+  item.id = gerarIdItem();
+  item.titulo = "Termo de oitiva — " + ((dados.deponente && dados.deponente.nome) || "depoente não identificado");
+  item.categoria = "termo_oitiva";
+  item.sigilo = "acesso_restrito";
+  item.status = "ativo";
+  item.observacoes = "Importado do Oitiva 360. rodada_id: " + (dados.rodada_id || "—") + (dados.pauta_id ? " · pauta_id: " + dados.pauta_id : "");
+  item.proveniencia.tipo = "gerado_internamente";
+  item.termoOitiva = {
+    conteudo: dados.termo.conteudo,
+    geradoEm: dados.termo.gerado_em || "",
+    responsavel: dados.termo.responsavel || "",
+    pautaId: dados.pauta_id || "",
+    rodadaId: dados.rodada_id || "",
+    deponente: dados.deponente || null,
+    hashOrigem: dados.hash_origem,
+    hashConferido: true
+  };
+  return item;
+}
+window.VeritasPuro = {
+  construirContratoProvasNexo: construirContratoProvasNexo,
+  avaliarImportacaoTermo: avaliarImportacaoTermo,
+  construirItemTermoOitiva: construirItemTermoOitiva,
+  sha256Hex: sha256Hex,
+  novoDossie: novoDossie,
+  CATEGORIA_VERITAS_PARA_PROVA_ID: CATEGORIA_VERITAS_PARA_PROVA_ID
+};
+
+/* ============================================================
    API pública — App
    ============================================================ */
 window.App = {
@@ -2678,28 +2755,7 @@ window.App = {
   exportarProvasParaNexo: function () {
     persistir().then(function () {
       var d = DB.dossie;
-      var contrato = {
-        schema_version: "1.0",
-        catalogo_schema_version: CATALOGO_COGER.schema_version,
-        exportado_em: nowIso(),
-        origem: "veritas",
-        origem_instancia: d.processo.id,
-        provas: d.itens.map(function (it) {
-          return {
-            id_prova: it.id,
-            titulo: it.titulo,
-            tipo_prova: CATEGORIA_VERITAS_PARA_PROVA_ID[it.categoria] || null,
-            descricao: it.observacoes || "",
-            sigilo: it.sigilo,
-            status: it.status,
-            proveniencia: it.proveniencia,
-            arquivos: it.arquivos.map(function (a) {
-              return { nomeArquivo: a.nomeArquivo, descricao: a.descricao, hashLocal: a.hashLocal, hashDeclarado: a.hashDeclarado };
-            }),
-            cadeia_custodia: it.linhaDoTempoItem
-          };
-        })
-      };
+      var contrato = construirContratoProvasNexo(d, CATALOGO_COGER, nowIso());
       var blob = new Blob([JSON.stringify(contrato, null, 2)], { type: "application/json" });
       var a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
@@ -2720,20 +2776,23 @@ window.App = {
     reader.onload = async function () {
       var dados;
       try { dados = JSON.parse(reader.result); } catch (e) { toast("Arquivo .json inválido.", "danger"); evt.target.value = ""; return; }
-      if (!dados || dados.origem !== "oitiva-360" || !dados.termo || typeof dados.termo.conteudo !== "string" || !dados.hash_origem) {
-        alert("Arquivo inválido: este arquivo não é um termo exportado pelo Oitiva 360 (esperado \"origem\":\"oitiva-360\", \"termo.conteudo\" e \"hash_origem\").");
+      if (!DB.dossie) App.criarDossie();
+      var avaliacao = await avaliarImportacaoTermo(DB.dossie, dados, CATALOGO_COGER);
+      if (!avaliacao.ok){
+        if (avaliacao.motivo === "formato_invalido"){
+          alert("Arquivo inválido: este arquivo não é um termo exportado pelo Oitiva 360 (esperado \"origem\":\"oitiva-360\", \"termo.conteudo\" e \"hash_origem\").");
+        } else if (avaliacao.motivo === "hash_divergente"){
+          alert("Importação bloqueada: o hash do termo não confere.\n\nEsperado (hash_origem): " + dados.hash_origem +
+            "\nCalculado sobre o texto recebido: " + avaliacao.hashCalculado +
+            "\n\nO conteúdo do termo pode ter sido alterado após a exportação do Oitiva 360. Nada foi importado.");
+        } else if (avaliacao.motivo === "duplicado"){
+          alert("Importação recusada: já existe uma prova neste dossiê com o mesmo hash_origem (" + dados.hash_origem +
+            "). Este termo já foi importado antes — reimportação não cria uma segunda prova.");
+        }
         evt.target.value = "";
         return;
       }
-      var hashCalculado = "sha256:" + (await sha256Hex(dados.termo.conteudo));
-      if (hashCalculado !== dados.hash_origem) {
-        alert("Importação bloqueada: o hash do termo não confere.\n\nEsperado (hash_origem): " + dados.hash_origem +
-          "\nCalculado sobre o texto recebido: " + hashCalculado +
-          "\n\nO conteúdo do termo pode ter sido alterado após a exportação do Oitiva 360. Nada foi importado.");
-        evt.target.value = "";
-        return;
-      }
-      if (dados.catalogo_schema_version && dados.catalogo_schema_version !== CATALOGO_COGER.schema_version) {
+      if (avaliacao.catalogoDivergente){
         var prosseguir = confirm(
           "Este termo foi exportado com catalogo_schema_version " + dados.catalogo_schema_version +
           ", diferente da versão do catálogo em uso neste Veritas (" + CATALOGO_COGER.schema_version +
@@ -2741,25 +2800,7 @@ window.App = {
         );
         if (!prosseguir) { evt.target.value = ""; return; }
       }
-      if (!DB.dossie) App.criarDossie();
-      var item = novoItemDraft();
-      item.id = uid();
-      item.titulo = "Termo de oitiva — " + ((dados.deponente && dados.deponente.nome) || "depoente não identificado");
-      item.categoria = "termo_oitiva";
-      item.sigilo = "acesso_restrito";
-      item.status = "ativo";
-      item.observacoes = "Importado do Oitiva 360. rodada_id: " + (dados.rodada_id || "—") + (dados.pauta_id ? " · pauta_id: " + dados.pauta_id : "");
-      item.proveniencia.tipo = "gerado_internamente"; // nasce dentro da própria suíte Coger, não é documento externo anexado
-      item.termoOitiva = {
-        conteudo: dados.termo.conteudo,
-        geradoEm: dados.termo.gerado_em || "",
-        responsavel: dados.termo.responsavel || "",
-        pautaId: dados.pauta_id || "",
-        rodadaId: dados.rodada_id || "",
-        deponente: dados.deponente || null,
-        hashOrigem: dados.hash_origem,
-        hashConferido: true
-      };
+      var item = construirItemTermoOitiva(dados, uid);
       registrarEventoItem(item, "item_identificado", { responsavel: "", observacao: "Termo de oitiva importado do Oitiva 360 — hash conferido." });
       DB.dossie.itens.push(item);
       persistir().then(function () {

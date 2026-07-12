@@ -2,6 +2,23 @@
 
 `catalogo-canonico.json` — `schema_version: 1.1.0` (estendida na Rodada 5, era `1.0.0`), `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `744bb790` (era `5906e98f`).
 
+## Rodada 7 — Teste de fluxo integrado ponta a ponta (fechada)
+
+### 7.1 — Diagnóstico de separabilidade
+
+- **`nexo-coger.html`** não tem IIFE — tudo (funções e variáveis de topo) já é escopo de script. A maior parte da lógica de contrato já era pura (`analisarLacunasPauta`, `normaInternaParaCanonica`, `retornoJaExiste`); o que faltava era **extrair** a construção de envelopes/objetos de dentro de funções que também baixavam arquivo/re-renderizavam (`gerarPautaPorDepoente`, `aplicarImportacaoVeritas`, `aplicarImportacaoRetornoOitiva`). Como `doc`/`CATALOGO_COGER`/`PROVA_ID_PARA_TIPO_NEXO` são `let`/`const` de topo de script, não viram propriedades do objeto global mesmo fora de IIFE (só `function` declarada vira) — foram criados accessors mínimos (`getDoc`/`setDoc`/`getCatalogoCoger`/`tipoNexoParaProvaId`) só para isso.
+- **`veritas.html`** e **`oitiva-360.html`** são IIFEs — só o que é explicitamente atribuído a `window` é visível de fora. Cada um ganhou um namespace novo (`window.VeritasPuro`, `window.OitivaPuro`) reunindo as funções centrais de cada contrato, todas reescritas/extraídas para receber dados e devolver dados (inclusive as assíncronas de hash), sem tocar `document`/`localStorage`. As funções de UI (`App.exportarProvasParaNexo`, `App.importarTermoOitiva`, `exportarTermoParaVeritas`, `exportarRetornoContextoAcusado`, `aplicarImportacaoPauta`) viraram wrappers finos em torno dessas — **mesmo comportamento de interface, lógica testável isolada**. Confirmado sem regressão reexecutando o teste Playwright da Rodada 6 (browser real) depois do refactor: passou integralmente.
+- Duas lacunas de idempotência foram descobertas só ao planejar os testes de 7.4 e corrigidas nesta rodada (iam além do que as Rodadas 3 e 5 tinham exigido originalmente): a importação de prova do Veritas no Nexo (Rodada 3) não tinha nenhum dedup — reimportar o mesmo `id_prova` criava uma segunda prova; e a importação de termo no Veritas (Rodada 5) também não tinha dedup — reimportar o mesmo `hash_origem` gerava um novo `id_prova` a cada vez. Ambas ganharam checagem de duplicidade com mensagem clara (`provaVeritasJaImportada`/`avaliarImportacaoTermo` com `motivo:"duplicado"`), no mesmo padrão já usado pela Rodada 6 para o retorno de contexto.
+
+### 7.2/7.3 — Fixture e script de teste
+
+- `fixtures/pad-ficticio-001.json`: 1 acusado, 3 fatos (1 com prova inicial do Veritas, 2 gerando lacuna — o teste usa a lacuna de `F2`, tipo `sem_prova`), depoente testemunha com uma `respostaPadrao` fictícia aplicada a todo o roteiro gerado, sem acusado alternativo (exercita o vínculo automático da Rodada 6).
+- `test-fluxo-integrado.js`: carrega os três `ferramentas/*.html` **reais** via `vm.createContext`/`vm.runInContext` do Node, com um stub mínimo de `document`/`localStorage`/`URL`/`Blob`/`crypto` só para os scripts terminarem de carregar sem lançar (nenhuma asserção depende do stub — toda a lógica exercitada é pura). Roda as 7 etapas do fluxo (Veritas exporta prova → Nexo importa → Nexo gera pauta → Oitiva importa pauta e monta roteiro → Oitiva responde e gera termo com hash → Veritas importa termo e gera `id_prova` → Oitiva exporta retorno e Nexo importa vinculando ao acusado padrão), depois repete os passos 2, 4, 6 e 7 com o mesmo payload (7.4) e testa hash adulterado + `catalogo_schema_version` divergente (7.5). Relatório por grupo no console, `console.assert`-style, sem framework.
+
+### Resultado
+
+`node test-fluxo-integrado.js` — **43/43 verificações passaram**, exit code 0: as 7 etapas, as 4 reimportações (nenhuma duplicidade, todas sinalizadas explicitamente — reimportar pauta agora dispara um aviso, reimportar prova/termo/retorno são recusados com motivo claro) e os 2 testes de falha controlada (hash divergente rejeitado; `catalogo_schema_version` divergente sinalizada sem bloquear quando o hash confere).
+
 ## Rodada 6 — Contrato Oitiva 360 → Nexo Coger: retorno da prova / contexto do acusado (fechada)
 
 ### 6.2 — Diagnóstico
