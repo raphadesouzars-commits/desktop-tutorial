@@ -6933,7 +6933,19 @@ window.OitivaPuro = {
   mesclarPautaImportada: mesclarPautaImportada,
   construirEnvelopeTermo: construirEnvelopeTermo,
   construirEnvelopeRetorno: construirEnvelopeRetorno,
-  agoraISO: agoraISO
+  agoraISO: agoraISO,
+  // Rodada PAR-6 (6.2, passo 4): expostas para o teste integrado exercitar a DERIVAÇÃO de domínio pela
+  // pauta (cascata PAR-4/PAR-5) e conferir a filtragem de papéis/blocos por domínio sem browser. São
+  // as mesmas funções já usadas pela UI (aplicarImportacaoPauta/renderEtapa2/gerarRoteiroInicial) —
+  // nenhuma mudança de comportamento, apenas exposição para teste (mesmo padrão dos setters acima).
+  derivarDominioDaPauta: derivarDominioDaPauta,
+  dominioProcesso: dominioProcesso,
+  itemVisivelNoDominio: itemVisivelNoDominio,
+  papelEhPAR: papelEhPAR,
+  // Rodada PAR-6 (6.4, caso 3): a recusa ATÔMICA de pauta em conflito de domínio não confirmado vive
+  // em aplicarImportacaoPauta (usa confirm()/estado por closure — PAR-5 Parte A). Exposta para o teste
+  // integrado exercitar a recusa inteira (confirm() => false) sem browser. Comportamento inalterado.
+  aplicarImportacaoPauta: aplicarImportacaoPauta
 };
 
 if (document.readyState === "loading"){

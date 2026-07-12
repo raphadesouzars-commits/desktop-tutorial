@@ -4281,7 +4281,15 @@ function tabelaFatoProvaEnquadramento(fatos){
     '</table>';
 }
 // documento completo e independente de UM indiciado (item 1 da especificação)
+// Rodada PAR-6 (6.2, passo 8): o CORPO da Nota de Indiciação foi extraído para esta função pura
+// (recebe id/dataDoc, lê o `doc` já carregado via setDoc e devolve a STRING HTML), sem tocar em
+// document/print — para ser exercitada por test-fluxo-integrado.js sem browser. renderIndiciacao
+// passou a ser um wrapper fino que apenas envia o resultado ao openPrint (comportamento idêntico).
 function renderIndiciacao(id,dataDoc){
+  const a=acusadoById(id);
+  openPrint(construirTextoIndiciacao(id,dataDoc),'Nota de Indiciação — '+(a.razaoSocial||a.nome||id));
+}
+function construirTextoIndiciacao(id,dataDoc){
   const p=doc.processo, c=p.comissao, a=acusadoById(id);
   const repLegal=(a.representantes||[]).find(r=>r.vinculo==='PAPEL.REPRESENTANTE_LEGAL'&&(r.nome||'').trim())||(a.representantes||[])[0]||{};
   // fatos ATIVOS imputados ao ente, na ORDEM NARRATIVA definida no painel
@@ -4384,7 +4392,7 @@ function renderIndiciacao(id,dataDoc){
     <p class="center" style="margin-top:36px">${esc(p.cidade||p.unidade||'')}, ${esc(dataFmt)}.</p>
     ${blocoAssinatura3(c)}`);
 
-  openPrint(partes.join('\n'),'Nota de Indiciação — '+(a.razaoSocial||a.nome||id));
+  return partes.join('\n');
 }
 
 /* ------------------------------------------------------------------ *

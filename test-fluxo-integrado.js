@@ -24,6 +24,19 @@ const ROOT = __dirname;
 // Relatório
 // ---------------------------------------------------------------------------
 const relatorio = []; // { grupo, nome, ok, detalhe }
+
+// Rodada PAR-6 (6.5): cada grupo de verificações pertence a uma das TRÊS seções do relatório
+// unificado. Grupos não mapeados caem em 'Outros' (defensivo — não deveria ocorrer).
+const GRUPOS_PAD = ['setup', 'fixture', 'passo1', 'passo2', 'passo3', 'passo4', 'passo5', 'passo6', 'passo7', 'idempotencia', 'falha_controlada'];
+const GRUPOS_PAR = ['par_passo1', 'par_passo2', 'par_passo3', 'par_passo4', 'par_passo5', 'par_passo6', 'par_passo7', 'par_passo8', 'par_idempotencia', 'par_falha_controlada'];
+const GRUPOS_CRUZADA = ['validacao_dominio', 'cruzada'];
+function secaoDoGrupo(g){
+  if (GRUPOS_PAD.includes(g)) return 'Fluxo PAD';
+  if (GRUPOS_PAR.includes(g)) return 'Fluxo PAR';
+  if (GRUPOS_CRUZADA.includes(g)) return 'Validação cruzada';
+  return 'Outros';
+}
+
 function registrar(grupo, nome, ok, detalhe){
   relatorio.push({ grupo, nome, ok, detalhe: detalhe || '' });
   const marca = ok ? '✅' : '❌';
@@ -431,22 +444,331 @@ const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'pad-fict
     c6.ok === false && c6.motivo === 'dominio_incompativel', JSON.stringify(c6));
 
   // --- Caso 7: fluxo PAD original (7 etapas) continua passando INALTERADO ---
-  const etapasOriginais = relatorio.filter(r => r.grupo !== 'validacao_dominio');
+  // Conta explicitamente as verificações da seção "Fluxo PAD" (grupos GRUPOS_PAD) — devem seguir 43/0,
+  // independentemente das novas seções PAR/cruzada adicionadas na Rodada PAR-6 (6.6: PAD intocado).
+  const etapasOriginais = relatorio.filter(r => GRUPOS_PAD.includes(r.grupo));
   const falhasNoOriginal = etapasOriginais.filter(r => !r.ok).length;
   checar('validacao_dominio', 'caso 7: placar das 7 etapas PAD originais inalterado (43 verificações, 0 falhas)',
     etapasOriginais.length === 43 && falhasNoOriginal === 0,
     'originais=' + etapasOriginais.length + ' falhas=' + falhasNoOriginal);
 
-  // =========================================================================
-  // Relatório final
-  // =========================================================================
-  console.log('\n=== Relatório final ===');
-  const grupos = [...new Set(relatorio.map(r => r.grupo))];
+  // #########################################################################
+  // ####  FLUXO PAR — ciclo completo de 8 etapas (Rodada PAR-6, seção 6.2) ###
+  // #########################################################################
+  console.log('\n\n########## FLUXO PAR (Rodada PAR-6) — ciclo de 8 etapas ##########');
+  const iso = () => new Date().toISOString();
+  // Instância dedicada do Oitiva 360 para o ciclo PAR (estado isolado do fluxo PAD acima).
+  const OitivaPar = carregarFerramenta('oitiva-360.html');
+
+  // --- PAR passo 1: Veritas exporta a prova inicial do fixture PAR ---
+  console.log('\n--- PAR passo 1: Veritas exporta a prova inicial (dominio "par") ---');
+  const dossieVeritasPar = Veritas.VeritasPuro.novoDossie();
+  dossieVeritasPar.processo.numero = parFixture.processo.numero;
+  dossieVeritasPar.processo.tipoProcesso = parFixture.processo.tipoProcesso; // 'PAR' -> dominio 'par'
+  const itemInicialPar = {
+    id: 'VDC-' + crypto.randomUUID(), titulo: parFixture.provaInicialVeritas.titulo,
+    categoria: parFixture.provaInicialVeritas.categoria, sigilo: parFixture.provaInicialVeritas.sigilo,
+    status: 'ativo', observacoes: '', proveniencia: { tipo: 'gerado_internamente' },
+    arquivos: [{ nomeArquivo: 'ata.txt', descricao: 'ata', hashLocal: crypto.createHash('sha256').update(parFixture.provaInicialVeritas.conteudoFicticio).digest('hex'), hashDeclarado: '' }],
+    linhaDoTempoItem: [{ evento: 'item_identificado', dataHora: iso(), responsavel: '', resultado: '', observacao: '' }]
+  };
+  dossieVeritasPar.itens.push(itemInicialPar);
+  const contratoProvasPar = Veritas.VeritasPuro.construirContratoProvasNexo(dossieVeritasPar, NexoPar.getCatalogoCoger(), iso());
+  checar('par_passo1', 'contrato tem schema_version/catalogo_schema_version/origem veritas', !!contratoProvasPar.schema_version && !!contratoProvasPar.catalogo_schema_version && contratoProvasPar.origem === 'veritas');
+  checar('par_passo1', 'envelope da prova declara dominio "par"', contratoProvasPar.dominio === 'par', 'dominio=' + contratoProvasPar.dominio);
+  checar('par_passo1', 'tipo_prova resolvido para id canônico do catálogo (' + contratoProvasPar.provas[0].tipo_prova + ')', contratoProvasPar.provas[0].tipo_prova === parFixture.provaInicialVeritas.categoriaCanonica);
+
+  // --- PAR passo 2: Nexo PAR importa a prova (monta o doc do ente + fatos) ---
+  console.log('\n--- PAR passo 2: Nexo PAR importa a prova e monta o doc (ente + fatos LAC) ---');
+  const docPar = NexoPar.docVazio(); NexoPar.setDoc(docPar);
+  docPar.processo.numero = parFixture.processo.numero;
+  docPar.processo.objetoApuracao = parFixture.processo.objetoApuracao;
+  const ente = {
+    id: NexoPar.genId('A'),
+    razaoSocial: parFixture.entePrivado.razaoSocial, nome: parFixture.entePrivado.razaoSocial,
+    cnpj: parFixture.entePrivado.cnpj, nomeFantasia: parFixture.entePrivado.nomeFantasia,
+    endereco: parFixture.entePrivado.endereco, faturamentoBruto: parFixture.entePrivado.faturamentoBruto,
+    representantes: [{ nome: parFixture.entePrivado.representanteLegal.nome, cpf: parFixture.entePrivado.representanteLegal.cpf, vinculo: parFixture.entePrivado.representanteLegal.vinculo }],
+    solidariedade: [], sucessao: { tipo: '', descricao: '', data: '' }, desconsideracao: { ativa: false, fundamentacao: '' },
+    alegacoesDefesaNaoAcatadas: '', situacaoFuncional: 'ativo', telefone: '', email: '',
+    notificacaoPrevia: { realizada: false, data: '', refAutos: '' },
+    interrogatorio: { status: 'pendente', data: '', refAutos: '', aposTodasAsProvas: null },
+    provasContexto: []
+  };
+  docPar.acusados.push(ente);
+  const fatosParPorChave = {};
+  parFixture.fatos.forEach(fx => {
+    const f = {
+      id: NexoPar.genId('F'), titulo: fx.titulo, descricao: fx.descricao, ordem: docPar.fatos.length + 1, status: 'ativo',
+      provaIds: [], provaIdsIndiciarias: [],
+      beneficioInteresse: fx.beneficioInteresse, nexoCausalidade: fx.nexoCausalidade,
+      condutas: [{ acusadoId: ente.id, descricaoConduta: 'Conduta lesiva fictícia referente a ' + fx.titulo, modalidade: 'comissiva' }],
+      enquadramentos: [{ normaId: fx.normaId, fundamentacao: 'Enquadramento fictício de teste (LAC).' }]
+    };
+    docPar.fatos.push(f);
+    fatosParPorChave[fx.chaveLocal] = f;
+  });
+  checar('par_passo2', 'doc do Nexo PAR montado (1 ente privado, ' + docPar.fatos.length + ' fatos LAC)', docPar.acusados.length === 1 && docPar.fatos.length === parFixture.fatos.length);
+  const pendParInicial = NexoPar.computePendencias();
+  checar('par_passo2', 'gate P-ENTE satisfeito (ente com representante legal) — sem pendência P-ENTE', !pendParInicial.some(p => p.codigo === 'P-ENTE'), JSON.stringify(pendParInicial.filter(p => p.codigo === 'P-ENTE')));
+  checar('par_passo2', 'gate P8-PAR satisfeito (benefício + nexo nos 2 fatos) — sem pendência P8-PAR', !pendParInicial.some(p => p.codigo === 'P8-PAR'), JSON.stringify(pendParInicial.filter(p => p.codigo === 'P8-PAR')));
+  const domParProva = NexoPar.validarDominioEnvelope(contratoProvasPar);
+  checar('par_passo2', 'Nexo PAR ACEITA o envelope de prova dominio "par"', domParProva.ok === true, JSON.stringify(domParProva));
+  const provaImpPar = contratoProvasPar.provas[0];
+  const rotuloPar = NexoPar.rotuloTipoProvaCatalogo(provaImpPar.tipo_prova);
+  const tipoNexoPar = NexoPar.tipoNexoParaProvaId(provaImpPar.tipo_prova);
+  const provasParAntes = docPar.provas.length;
+  function importarProvaVeritasNexoPar(it){
+    if (NexoPar.provaVeritasJaImportada(docPar, it.id_prova)) return { importou: false, motivo: 'duplicado' };
+    const nova = NexoPar.mapearProvaVeritasParaNexo(it, tipoNexoPar, rotuloPar, contratoProvasPar.origem_instancia, () => NexoPar.genId('P'));
+    docPar.provas.push(nova);
+    fatosParPorChave.FP1.provaIds.push(nova.id);
+    return { importou: true, prova: nova };
+  }
+  const impPar1 = importarProvaVeritasNexoPar(provaImpPar);
+  checar('par_passo2', 'prova PAR importada e vinculada ao fato FP1 (sem duplicar)', impPar1.importou === true && docPar.provas.length === provasParAntes + 1);
+  checar('par_passo2', 'rótulo do tipo de prova resolvido do catálogo (não id cru)', rotuloPar === 'Documento financeiro', 'veio: ' + rotuloPar);
+
+  // --- PAR passo 3: Nexo PAR gera a pauta a partir da lacuna FP2 ---
+  console.log('\n--- PAR passo 3: Nexo PAR gera a pauta a partir da lacuna FP2 ---');
+  const lacunasPar = NexoPar.analisarLacunasPauta();
+  checar('par_passo3', 'ao menos 1 lacuna detectada (' + lacunasPar.length + ')', lacunasPar.length >= 1);
+  const lacunaFP2 = lacunasPar.find(l => l.fatoId === fatosParPorChave.FP2.id);
+  checar('par_passo3', 'lacuna do fato FP2 (sem prova) detectada', !!lacunaFP2 && lacunaFP2.tipoLacuna === 'sem_prova', JSON.stringify(lacunaFP2 || {}));
+  const dataStrPar = new Date().toISOString().slice(0, 10);
+  const pautaIdPar = NexoPar.proximoPautaId(docPar, dataStrPar);
+  const depoenteRefPar = { nome: parFixture.depoente.identificacao, papelId: 'PAPEL.REPRESENTANTE_LEGAL' };
+  const contratoPautaPar = NexoPar.construirContratoPauta([lacunaFP2], depoenteRefPar, docPar, NexoPar.getCatalogoCoger(), pautaIdPar, iso());
+  checar('par_passo3', 'pauta_id segue o padrão PAUTA.<data>.<seq>', /^PAUTA\.\d{4}-\d{2}-\d{2}\.\d{3}$/.test(contratoPautaPar.pauta_id));
+  checar('par_passo3', 'ponto de instrução referencia norma LAC canônica (' + parFixture.fatos[1].normaCanonica + ')', (contratoPautaPar.pontos_instrucao[0].normas_relacionadas || []).includes(parFixture.fatos[1].normaCanonica), JSON.stringify(contratoPautaPar.pontos_instrucao[0].normas_relacionadas || []));
+  checar('par_passo3', 'envelope da pauta declara dominio "par" (emissão corrigida na PAR-5 Parte B)', contratoPautaPar.dominio === 'par', 'dominio=' + contratoPautaPar.dominio);
+
+  // --- PAR passo 4: Oitiva 360 importa a pauta e deriva o domínio PAR ---
+  console.log('\n--- PAR passo 4: Oitiva 360 importa a pauta e deriva o domínio PAR ---');
+  let pautaOitivaPar = OitivaPar.OitivaPuro.mesclarPautaImportada(null, contratoPautaPar, OitivaPar.OitivaPuro.agoraISO());
+  OitivaPar.setEstadoPautaImportada(pautaOitivaPar);
+  OitivaPar.OitivaPuro.derivarDominioDaPauta(contratoPautaPar); // cascata PAR-4/PAR-5
+  checar('par_passo4', 'domínio do processo derivado para "par" pela cascata da pauta', OitivaPar.OitivaPuro.dominioProcesso() === 'par');
+  checar('par_passo4', 'pauta mesclada tem 1 item, ligado ao fato FP2', pautaOitivaPar.itens.length === 1 && pautaOitivaPar.itens[0].fatoId === fatosParPorChave.FP2.id);
+  const papeisPar = OitivaPar.OitivaPuro.CATALOGO.papeis.filter(p => OitivaPar.OitivaPuro.itemVisivelNoDominio(p.dominio, 'par'));
+  checar('par_passo4', 'papéis do domínio PAR: PAPEL "acusado" NÃO aparece (é exclusivo do PAD)', !papeisPar.some(p => p.id === 'acusado'));
+  checar('par_passo4', 'papéis do domínio PAR: os 3 papéis PAR aparecem (representante_legal/preposto/socio_administrador)', ['representante_legal', 'preposto', 'socio_administrador'].every(id => papeisPar.some(p => p.id === id)));
+  const dPar = OitivaPar.OitivaPuro.novoDepoente(parFixture.depoente.identificacao, parFixture.depoente.elementosBuscados, OitivaPar.OitivaPuro.gerarId);
+  dPar.papel = parFixture.depoente.papel; // representante_legal
+  dPar.infracao = parFixture.depoente.infracaoPrincipal;
+  dPar.pautaSelecionada = [fatosParPorChave.FP2.id];
+  OitivaPar.OitivaPuro.garantirEstruturaAto(dPar);
+  dPar.roteiro = OitivaPar.OitivaPuro.gerarRoteiroInicial(dPar);
+  const perguntasPar = OitivaPar.OitivaPuro.perguntasRespostasOrdenadas(dPar);
+  checar('par_passo4', 'roteiro gerado com perguntas para o papel representante legal (' + perguntasPar.length + ')', perguntasPar.length > 0);
+  const BLOCOS_PAR = ['par_atos_licitacoes', 'par_terceiro_interposto', 'par_programa_integridade'];
+  const temPerguntaBlocoPar = perguntasPar.some(p => BLOCOS_PAR.some(b => p.chave.indexOf(b + '::') === 0));
+  checar('par_passo4', 'ao menos uma pergunta vem de um dos 3 blocos PAR do banco (PAR-4, item 4.4)', temPerguntaBlocoPar);
+
+  // --- PAR passo 5: Oitiva 360 gera o termo PAR com hash e exporta ---
+  console.log('\n--- PAR passo 5: Oitiva 360 responde e gera o termo PAR com hash ---');
+  perguntasPar.forEach(p => { dPar.respostasRoteiro[p.chave] = parFixture.depoente.respostaPadrao; });
+  dPar.pautaConclusao[fatosParPorChave.FP2.id] = { respondida: true, nota: '', resumoResposta: 'Resumo fictício: representante legal esclareceu a fraude na execução contratual relatada no fato FP2.', acusadoAlternativo: '' };
+  pautaOitivaPar.itens[0].statusChecklist = 'abordado';
+  if (!dPar.rodadaId) dPar.rodadaId = OitivaPar.OitivaPuro.gerarId();
+  const envelopeTermoParReal = await OitivaPar.OitivaPuro.construirEnvelopeTermo(dPar, pautaOitivaPar, OitivaPar.OitivaPuro.CATALOGO_COGER, dPar.rodadaId);
+  checar('par_passo5', 'todas as respostas do roteiro aparecem no termo', perguntasPar.every(() => envelopeTermoParReal.textoFinal.includes(parFixture.depoente.respostaPadrao)));
+  checar('par_passo5', 'hash_origem tem prefixo sha256: e bate com o hash calculado', envelopeTermoParReal.envelope.hash_origem === 'sha256:' + envelopeTermoParReal.hashHex);
+  checar('par_passo5', 'envelope do termo declara dominio "par"', envelopeTermoParReal.envelope.dominio === 'par', 'dominio=' + envelopeTermoParReal.envelope.dominio);
+  checar('par_passo5', 'pauta_id do termo referencia a pauta PAR importada', envelopeTermoParReal.envelope.pauta_id === pautaIdPar);
+
+  // --- PAR passo 6: Veritas importa o termo no dossiê PAR (confere domínio + hash) ---
+  console.log('\n--- PAR passo 6: Veritas importa o termo no dossiê PAR (domínio + hash) ---');
+  const dossieVeritasPar2 = Veritas.VeritasPuro.novoDossie();
+  dossieVeritasPar2.processo.tipoProcesso = 'PAR'; // dossiê marcado PAR
+  const avalPar1 = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieVeritasPar2, envelopeTermoParReal.envelope, NexoPar.getCatalogoCoger());
+  checar('par_passo6', 'avaliação aceita o termo PAR em dossiê PAR (domínio compatível + hash confere)', avalPar1.ok === true, JSON.stringify(avalPar1));
+  let idProvaPar = null;
+  if (avalPar1.ok){
+    const itemTermoPar = Veritas.VeritasPuro.construirItemTermoOitiva(envelopeTermoParReal.envelope, () => 'VDC-TERMO-' + crypto.randomUUID());
+    dossieVeritasPar2.itens.push(itemTermoPar);
+    idProvaPar = itemTermoPar.id;
+  }
+  checar('par_passo6', 'novo id_prova gerado, diferente do rodada_id', !!idProvaPar && idProvaPar !== envelopeTermoParReal.envelope.rodada_id);
+  checar('par_passo6', 'categoria da prova é termo_oitiva', dossieVeritasPar2.itens[0] && dossieVeritasPar2.itens[0].categoria === 'termo_oitiva');
+
+  // --- PAR passo 7: Oitiva exporta o retorno; Nexo PAR vincula ao ente privado padrão ---
+  console.log('\n--- PAR passo 7: Nexo PAR importa o retorno e vincula ao ente privado padrão ---');
+  const envRetornoPar = OitivaPar.OitivaPuro.construirEnvelopeRetorno(dPar, pautaOitivaPar, idProvaPar, OitivaPar.OitivaPuro.CATALOGO_COGER, dPar.rodadaId);
+  checar('par_passo7', 'retorno tem 1 item, acusado_vinculo:"padrao" (sem marcação manual)', envRetornoPar.retornos.length === 1 && envRetornoPar.retornos[0].acusado_vinculo === 'padrao');
+  checar('par_passo7', 'retorno referencia o id_prova gerado pelo Veritas no passo 6', envRetornoPar.retornos[0].id_prova === idProvaPar);
+  const pendParAntesRetorno = NexoPar.computePendencias().length;
+  const provasParAntesRetorno = docPar.provas.length;
+  function importarRetornoNexoPar(envelope){
+    let n = 0;
+    envelope.retornos.forEach(r => {
+      const alvo = r.acusado_vinculo === 'padrao' && docPar.acusados.length === 1 ? docPar.acusados[0] : null;
+      if (!alvo) return;
+      if (NexoPar.retornoJaExiste(alvo, r.id_prova, r.id_ponto)) return;
+      alvo.provasContexto.push(NexoPar.mapearRetornoContexto(r, envelope.origem, iso()));
+      n++;
+    });
+    return n;
+  }
+  const impRetPar1 = importarRetornoNexoPar(envRetornoPar);
+  checar('par_passo7', 'exatamente 1 contexto importado, vinculado ao ENTE PRIVADO (doc.acusados[0])', impRetPar1 === 1 && ente.provasContexto.length === 1);
+  checar('par_passo7', 'contexto do ente NÃO é o mesmo array de doc.provas (isolamento estrutural)', docPar.provas !== ente.provasContexto);
+  checar('par_passo7', 'importação do retorno NÃO dispara Nota de Indiciação nem altera pendências/provas',
+    NexoPar.computePendencias().length === pendParAntesRetorno && docPar.provas.length === provasParAntesRetorno && docPar._minutaGerada === false,
+    'pend antes=' + pendParAntesRetorno + ' depois=' + NexoPar.computePendencias().length + '; minutaGerada=' + docPar._minutaGerada);
+
+  // --- PAR passo 8: gerar a Nota de Indiciação (gates ok) e conferir marcadores ---
+  console.log('\n--- PAR passo 8: Nota de Indiciação (gates P-ENTE/P8-PAR ok) + marcadores ---');
+  docPar.processo.comissao.presidente = { nome: 'Presidente Fictício', cargo: 'Auditor', matricula: '1010' };
+  docPar.processo.comissao.membros = [{ nome: 'Vogal Um Fictício', cargo: '', matricula: '' }, { nome: 'Vogal Dois Fictício', cargo: '', matricula: '' }];
+  docPar.processo.comissao.portariaInstauracao = { numero: '007/2026', data: '2026-03-01' };
+  docPar.processo.cidade = 'Cidade de Teste';
+  const faltasMinuta = NexoPar.validaMinuta([ente.id]);
+  checar('par_passo8', 'validaMinuta não aponta faltas (dados obrigatórios completos)', faltasMinuta.length === 0, JSON.stringify(faltasMinuta));
+  checar('par_passo8', 'gates P-ENTE e P8-PAR seguem satisfeitos na geração', !NexoPar.computePendencias().some(p => p.codigo === 'P-ENTE' || p.codigo === 'P8-PAR'));
+  const notaTexto = NexoPar.construirTextoIndiciacao(ente.id, '2026-07-12');
+  const marcadores = [
+    ['título "Nota de Indiciação"', [/Nota de Indiciação/i]],
+    ['cabeçalho PAR + Lei nº 12.846/2013', [/Processo Administrativo de Responsabilização/i, /12\.846/]],
+    ['razão social do ente privado', [new RegExp(parFixture.entePrivado.razaoSocial.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i')]],
+    ['CNPJ do ente privado', [/CNPJ/]],
+    ['representante legal', [/[Rr]epresentante legal/]],
+    ['seção "Da conduta lesiva imputada ao ente privado"', [/conduta lesiva/i]],
+    ['seção "Das provas"', [/Das provas/i]],
+    ['enquadramento art. 5º, IV (LAC)', [/art\. 5º, IV/i]],
+    ['interesse/benefício da pessoa jurídica', [/[Ii]nteresse ou benefício da pessoa jurídica/]],
+    ['nexo de causalidade', [/[Nn]exo de causalidade/]],
+    ['multa + faturamento bruto (art. 17 IN CGU 13/2019)', [/faturamento bruto/i, /multa/i]],
+    ['parâmetro do inciso IV do art. 22 do Decreto nº 11.129/2022', [/inciso IV do art\. 22 do Decreto nº 11\.129/i]],
+    ['prazo de 30 dias para defesa', [/30 \(trinta\) dias/]],
+    ['programa de integridade', [/programa de integridade/i]],
+    ['resolução negociada (Termo de Compromisso / Acordo de Leniência)', [/Termo de Compromisso/i, /Acordo de Leniência/i]],
+    ['intimação — art. 17 da IN CGU nº 13/2019', [/art\. 17 da IN CGU nº 13\/2019/i]]
+  ];
+  marcadores.forEach(([nome, regexes]) => {
+    checar('par_passo8', 'Nota de Indiciação contém marcador: ' + nome, regexes.every(re => re.test(notaTexto)));
+  });
+
+  // #########################################################################
+  // ####  FLUXO PAR — idempotência e falha controlada (Rodada PAR-6, 6.3) ####
+  // #########################################################################
+  console.log('\n--- PAR 6.3: idempotência (reimportar passos 2, 4, 6, 7) ---');
+  // Passo 2 de novo (mesma prova)
+  const impPar2 = importarProvaVeritasNexoPar(provaImpPar);
+  checar('par_idempotencia', 'passo 2 reimportado: recusado explicitamente por duplicidade, sem duplicar', impPar2.importou === false && impPar2.motivo === 'duplicado' && docPar.provas.length === provasParAntesRetorno);
+  // Passo 4 de novo (mesma pauta_id — merge por fatoId)
+  const itensAntesReimportPautaPar = pautaOitivaPar.itens.length;
+  pautaOitivaPar = OitivaPar.OitivaPuro.mesclarPautaImportada(pautaOitivaPar, contratoPautaPar, OitivaPar.OitivaPuro.agoraISO());
+  checar('par_idempotencia', 'passo 4 reimportado: nenhum item novo criado (merge por fatoId)', pautaOitivaPar.itens.length === itensAntesReimportPautaPar);
+  checar('par_idempotencia', 'passo 4 reimportado: status "abordado" não regrediu para "pendente"', pautaOitivaPar.itens[0].statusChecklist === 'abordado');
+  // Passo 6 de novo (mesmo termo/hash_origem)
+  const avalPar2 = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieVeritasPar2, envelopeTermoParReal.envelope, NexoPar.getCatalogoCoger());
+  checar('par_idempotencia', 'passo 6 reimportado: recusado por duplicidade de hash_origem', avalPar2.ok === false && avalPar2.motivo === 'duplicado' && dossieVeritasPar2.itens.length === 1);
+  // Passo 7 de novo (mesmo id_prova + id_ponto)
+  const impRetPar2 = importarRetornoNexoPar(envRetornoPar);
+  checar('par_idempotencia', 'passo 7 reimportado: nenhum contexto novo aceito (retornoJaExiste)', impRetPar2 === 0 && ente.provasContexto.length === 1);
+
+  console.log('\n--- PAR 6.3: falha controlada (hash adulterado, schema divergente) ---');
+  // hash divergente: altera 1 trecho do termo PAR antes do passo 6
+  const termoParAdulterado = JSON.parse(JSON.stringify(envelopeTermoParReal.envelope));
+  termoParAdulterado.termo.conteudo = termoParAdulterado.termo.conteudo.replace(parFixture.depoente.respostaPadrao.slice(0, 10), 'XXXXXXXXXX');
+  const dossieParHash = Veritas.VeritasPuro.novoDossie(); dossieParHash.processo.tipoProcesso = 'PAR';
+  const avalParAdulterado = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieParHash, termoParAdulterado, NexoPar.getCatalogoCoger());
+  checar('par_falha_controlada', 'termo PAR com 1 trecho alterado é rejeitado por divergência de hash', avalParAdulterado.ok === false && avalParAdulterado.motivo === 'hash_divergente', JSON.stringify(avalParAdulterado));
+  // catalogo_schema_version divergente no contrato de prova PAR (Nexo PAR detecta como aviso)
+  const contratoParVersao = JSON.parse(JSON.stringify(contratoProvasPar));
+  contratoParVersao.catalogo_schema_version = '0.1.0';
+  checar('par_falha_controlada', 'catalogo_schema_version divergente detectada no contrato PAR (aviso, não falha silenciosa)', contratoParVersao.catalogo_schema_version !== NexoPar.getCatalogoCoger().schema_version);
+  // catalogo_schema_version divergente no termo PAR (aviso, hash confere -> não bloqueia)
+  const termoParVersao = JSON.parse(JSON.stringify(envelopeTermoParReal.envelope));
+  termoParVersao.catalogo_schema_version = '0.1.0';
+  const dossieParVersao = Veritas.VeritasPuro.novoDossie(); dossieParVersao.processo.tipoProcesso = 'PAR';
+  const avalParVersao = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieParVersao, termoParVersao, NexoPar.getCatalogoCoger());
+  checar('par_falha_controlada', 'termo PAR com catalogo_schema_version divergente gera aviso mas não bloqueia (hash confere)', avalParVersao.ok === true && avalParVersao.catalogoDivergente === true, JSON.stringify(avalParVersao));
+
+  // #########################################################################
+  // ####  VALIDAÇÃO CRUZADA PAD<->PAR com os fixtures REAIS (Rodada PAR-6, 6.4) ##
+  // #########################################################################
+  console.log('\n\n########## VALIDAÇÃO CRUZADA PAD<->PAR (fixtures reais, 6.4) ##########');
+
+  // Contratos de prova PAD (a partir do fixture PAD): um marcado PAD, um legado (sem dominio).
+  function itemVeritasDe(fix){
+    return {
+      id: 'VDC-' + crypto.randomUUID(), titulo: fix.provaInicialVeritas.titulo,
+      categoria: fix.provaInicialVeritas.categoria, sigilo: fix.provaInicialVeritas.sigilo,
+      status: 'ativo', observacoes: '', proveniencia: { tipo: 'gerado_internamente' },
+      arquivos: [{ nomeArquivo: 'doc.txt', descricao: 'doc', hashLocal: crypto.createHash('sha256').update(fix.provaInicialVeritas.conteudoFicticio).digest('hex'), hashDeclarado: '' }],
+      linhaDoTempoItem: [{ evento: 'item_identificado', dataHora: iso(), responsavel: '', resultado: '', observacao: '' }]
+    };
+  }
+  const dossiePadReal = Veritas.VeritasPuro.novoDossie();
+  dossiePadReal.processo.tipoProcesso = 'PAD';
+  dossiePadReal.itens.push(itemVeritasDe(fixture));
+  const contratoProvaPadComDominio = Veritas.VeritasPuro.construirContratoProvasNexo(dossiePadReal, Nexo.getCatalogoCoger(), iso());
+  const dossiePadLegado = Veritas.VeritasPuro.novoDossie(); // sem tipoProcesso -> sem dominio (legado)
+  dossiePadLegado.itens.push(itemVeritasDe(fixture));
+  const contratoProvaPadLegado = Veritas.VeritasPuro.construirContratoProvasNexo(dossiePadLegado, Nexo.getCatalogoCoger(), iso());
+  checar('cruzada', 'pré: contrato PAD marcado tem dominio "pad"; contrato legado NÃO tem dominio',
+    contratoProvaPadComDominio.dominio === 'pad' && !('dominio' in contratoProvaPadLegado),
+    'pad=' + contratoProvaPadComDominio.dominio + ' legadoTem=' + ('dominio' in contratoProvaPadLegado));
+
+  // --- Caso 1: prova do fixture PAR -> Nexo Coger: RECUSADA (+ atomicidade) ---
+  const provasNexoAntes1 = doc.provas.length;
+  const cruz1 = Nexo.validarDominioEnvelope(contratoProvasPar);
+  checar('cruzada', 'caso 1: prova PAR -> Nexo Coger é RECUSADA', cruz1.ok === false, JSON.stringify(cruz1));
+  checar('cruzada', 'caso 1 (atomicidade): doc.provas do Nexo Coger inalterado', doc.provas.length === provasNexoAntes1);
+
+  // --- Caso 2: prova do fixture PAD (marcada) -> Nexo PAR: RECUSADA (+ atomicidade) ---
+  const provasNexoParAntes2 = docPar.provas.length;
+  const cruz2 = NexoPar.validarDominioEnvelope(contratoProvaPadComDominio);
+  checar('cruzada', 'caso 2: prova PAD -> Nexo PAR é RECUSADA', cruz2.ok === false, JSON.stringify(cruz2));
+  checar('cruzada', 'caso 2 (atomicidade): docPar.provas do Nexo PAR inalterado', docPar.provas.length === provasNexoParAntes2);
+
+  // --- Caso 3: pauta PAR -> Oitiva 360 já em domínio PAD, sem confirmação: RECUSADA inteira (+ atomicidade) ---
+  const OitivaCruz = carregarFerramenta('oitiva-360.html');
+  OitivaCruz.getEstado().matriz.dominio = 'pad'; // domínio manual PAD já definido
+  OitivaCruz.confirm = () => false;               // usuário NÃO confirma a troca
+  const pautaAntesCruz3 = OitivaCruz.getEstado().pautaImportada;
+  const domManualAntesCruz3 = OitivaCruz.getEstado().matriz.dominio;
+  OitivaCruz.OitivaPuro.aplicarImportacaoPauta(contratoPautaPar); // deve recusar a importação inteira
+  const estadoCruz3 = OitivaCruz.getEstado();
+  checar('cruzada', 'caso 3: pauta PAR em processo PAD (sem confirmação) é RECUSADA — nada importado', estadoCruz3.pautaImportada === pautaAntesCruz3);
+  checar('cruzada', 'caso 3 (atomicidade): domínio manual do processo permanece "pad"', estadoCruz3.matriz.dominio === domManualAntesCruz3 && estadoCruz3.matriz.dominio === 'pad');
+
+  // --- Caso 4: termo PAR -> dossiê Veritas marcado PAD: RECUSADO (+ atomicidade) ---
+  const dossieVeritasPad = Veritas.VeritasPuro.novoDossie();
+  dossieVeritasPad.processo.tipoProcesso = 'PAD';
+  const itensAntesCruz4 = dossieVeritasPad.itens.length;
+  const cruz4 = await Veritas.VeritasPuro.avaliarImportacaoTermo(dossieVeritasPad, envelopeTermoParReal.envelope, Nexo.getCatalogoCoger());
+  checar('cruzada', 'caso 4: termo PAR -> dossiê Veritas PAD é RECUSADO (dominio_incompativel)', cruz4.ok === false && cruz4.motivo === 'dominio_incompativel', JSON.stringify(cruz4));
+  checar('cruzada', 'caso 4 (atomicidade): dossiê Veritas PAD sem nenhum item novo', dossieVeritasPad.itens.length === itensAntesCruz4);
+
+  // --- Caso 5: envelope PAD legado (sem dominio) -> Nexo Coger: ACEITO; -> Nexo PAR: RECUSADO (+ atomicidade) ---
+  const provasNexoAntes5 = doc.provas.length;
+  const provasNexoParAntes5 = docPar.provas.length;
+  const cruz5a = Nexo.validarDominioEnvelope(contratoProvaPadLegado);
+  const cruz5b = NexoPar.validarDominioEnvelope(contratoProvaPadLegado);
+  checar('cruzada', 'caso 5a: envelope PAD legado (sem dominio) -> Nexo Coger é ACEITO', cruz5a.ok === true, JSON.stringify(cruz5a));
+  checar('cruzada', 'caso 5b: envelope PAD legado -> Nexo PAR é RECUSADO (mensagem de legado)', cruz5b.ok === false && /anterior às Rodadas PAR|acervo legado/i.test(cruz5b.msg || ''), JSON.stringify(cruz5b));
+  checar('cruzada', 'caso 5 (atomicidade): provas de Nexo Coger e Nexo PAR inalteradas', doc.provas.length === provasNexoAntes5 && docPar.provas.length === provasNexoParAntes5);
+
+  // #########################################################################
+  // ####  Relatório final — TRÊS seções (Rodada PAR-6, 6.5)               ####
+  // #########################################################################
+  console.log('\n=== Relatório final (3 seções) ===');
+  const SECOES = ['Fluxo PAD', 'Fluxo PAR', 'Validação cruzada', 'Outros'];
   let totalOk = 0, totalFalhas = 0;
-  grupos.forEach(g => {
-    const itens = relatorio.filter(r => r.grupo === g);
-    const ok = itens.filter(i => i.ok).length;
-    console.log('  ' + g + ': ' + ok + '/' + itens.length + (ok === itens.length ? ' ✅' : ' ❌'));
+  SECOES.forEach(sec => {
+    const itensSec = relatorio.filter(r => secaoDoGrupo(r.grupo) === sec);
+    if (!itensSec.length) return;
+    const okSec = itensSec.filter(i => i.ok).length;
+    console.log('\n▓▓▓ ' + sec + ': ' + okSec + '/' + itensSec.length + (okSec === itensSec.length ? ' ✅' : ' ❌'));
+    const gruposSec = [...new Set(itensSec.map(r => r.grupo))];
+    gruposSec.forEach(g => {
+      const itens = relatorio.filter(r => r.grupo === g);
+      const ok = itens.filter(i => i.ok).length;
+      console.log('    ' + g + ': ' + ok + '/' + itens.length + (ok === itens.length ? ' ✅' : ' ❌'));
+    });
   });
   relatorio.forEach(r => { r.ok ? totalOk++ : totalFalhas++; });
   console.log('\nTotal: ' + totalOk + ' passaram, ' + totalFalhas + ' falharam, de ' + relatorio.length + ' verificações.');
@@ -456,7 +778,7 @@ const fixture = JSON.parse(fs.readFileSync(path.join(ROOT, 'fixtures', 'pad-fict
     relatorio.filter(r => !r.ok).forEach(r => console.log('  - [' + r.grupo + '] ' + r.nome + ' — ' + r.detalhe));
     process.exitCode = 1;
   } else {
-    console.log('\nTodas as verificações passaram — fluxo integrado Veritas <-> Nexo Coger <-> Oitiva 360 (Rodadas 3-6) validado de ponta a ponta.');
+    console.log('\nTodas as verificações passaram — Fluxo PAD (Rodadas 3-6), Fluxo PAR (8 etapas + Nota de Indiciação, Rodada PAR-6) e Validação cruzada PAD<->PAR validados de ponta a ponta num único comando.');
   }
 })().catch(e => {
   console.error('\n❌ ERRO NÃO TRATADO:', e);

@@ -2,6 +2,39 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada PAR-6 — Teste integrado do fluxo PAR + fixture completo (fechada)
+
+Equivalente PAR da Rodada 7 original: prova executável, sem browser e sem interação manual, de que o ciclo PAR funciona ponta a ponta. **Nenhuma funcionalidade de ferramenta mudou** (6.6) — só fixture, testes e extração pontual de funções puras sem mudança de comportamento observável. **Catálogo canônico intocado** (`schema_version`/hash8 inalterados). Um único `node test-fluxo-integrado.js` exercita os dois domínios e a validação cruzada.
+
+### 6.1 — `fixtures/par-ficticio-001.json` expandido (mesmo arquivo, não um segundo)
+
+A versão mínima da PAR-5 foi expandida para o conteúdo completo, espelho estrutural do `pad-ficticio-001.json`: **um ente privado** (*Construtora Fictícia Alfa Ltda.*, CNPJ `11.222.333/0001-81` fictício, faturamento bruto preenchido) com **um representante legal** de vínculo `PAPEL.REPRESENTANTE_LEGAL` (valor exato que o gate **P-ENTE** exige); **dois fatos** apurados, `FP1`→`NORMA.LAC.ART5_IV_A` (frustração do caráter competitivo) e `FP2`→`NORMA.LAC.ART5_IV_D` (fraude a contrato), **ambos** com `beneficioInteresse` + `nexoCausalidade` preenchidos (satisfaz o gate **P8-PAR**) e `descricao` (exigida por `validaMinuta`); **uma prova documental** inicial no Veritas vinculada a `FP1`; **uma lacuna** (`FP2` sem prova → `tipo_lacuna: sem_prova`) que gera a pauta; **um depoente representante legal** (papel `representante_legal`, um dos 3 vínculos PAR) com resposta fictícia e sem "acusado alternativo" (→ `acusado_vinculo:"padrao"`, vínculo ao ente privado). Campos dos fatos usam os **nomes reais lidos pelo Nexo PAR** (`beneficioInteresse`/`nexoCausalidade`), evitando remapeamento no teste. Blocos `_descricao`/`_comoReexecutar` documentam a reexecução.
+
+### 6.2 — Ciclo PAR de 8 etapas (grupos `par_passo1..par_passo8`)
+
+`test-fluxo-integrado.js` estendido (não um script paralelo) com o ciclo espelhando as 7 etapas do PAD + o 8º passo próprio do PAR: (1) Veritas exporta a prova inicial → contrato válido com `dominio:"par"`; (2) Nexo PAR monta o doc (ente + 2 fatos), confirma gates P-ENTE/P8-PAR satisfeitos, valida o domínio (`validarDominioEnvelope` ok) e importa a prova resolvendo tipo/rótulo do catálogo; (3) gera a pauta da lacuna `FP2` com `pauta_id` único, norma LAC nos `pontos_instrucao` e `dominio:"par"` no envelope (emissão corrigida na PAR-5 Parte B); (4) Oitiva 360 importa a pauta e **deriva o domínio PAR pela cascata** (`derivarDominioDaPauta`), confirmando que `PAPEL.ACUSADO` some e os 3 papéis PAR aparecem, e que ≥1 pergunta vem de um dos 3 blocos PAR (`par_atos_licitacoes`/`par_terceiro_interposto`/`par_programa_integridade`); (5) gera o termo com as respostas → hash sha256 conferido → `dominio:"par"`; (6) Veritas importa no dossiê PAR (domínio compatível + hash) → novo `id_prova` `termo_oitiva`; (7) Oitiva exporta o retorno → Nexo PAR importa e vincula ao **ente privado padrão** (`doc.acusados[0]`), **sem** disparar Nota de Indiciação (pendências/provas/`_minutaGerada` inalterados); (8) com os gates ok, gera a **Nota de Indiciação** via a função pura `construirTextoIndiciacao` e afirma por **busca de marcadores** (não igualdade literal) a presença de: título, cabeçalho PAR + Lei 12.846/2013, razão social/CNPJ/representante legal, conduta lesiva, provas, enquadramento art. 5º IV, benefício/nexo, multa + faturamento bruto, inciso IV do art. 22 do Decreto 11.129/2022, prazo de 30 dias, programa de integridade, resolução negociada (Termo de Compromisso/Acordo de Leniência) e art. 17 da IN CGU 13/2019.
+
+### 6.3 — Idempotência e falha controlada no ciclo PAR (`par_idempotencia`, `par_falha_controlada`)
+
+Réplica dos testes 7.4/7.5 para o PAR: reimportação dos passos 2/4/6/7 com o mesmo payload → recusa explícita por duplicidade (sem duplicar prova, item de pauta, item de dossiê ou contexto); termo PAR com 1 caractere alterado antes do passo 6 → rejeição por `hash_divergente`; `catalogo_schema_version` divergente no contrato de prova e no termo PAR → aviso (`catalogoDivergente:true`) sem bloquear, mesmo comportamento do PAD.
+
+### 6.4 — Recusa cruzada PAD↔PAR com os DOIS fixtures reais (`cruzada`, com atomicidade)
+
+Migrado dos payloads sintéticos da PAR-5 para os fixtures reais: (1) prova PAR → Nexo Coger **recusada**; (2) prova PAD (marcada) → Nexo PAR **recusada**; (3) pauta PAR → Oitiva 360 já em domínio PAD **sem confirmação** (`confirm()=>false`) → importação **inteira recusada** via `aplicarImportacaoPauta` (nada em `estado.pautaImportada`, domínio manual `pad` preservado); (4) termo PAR → dossiê Veritas PAD **recusado** (`dominio_incompativel`); (5) envelope PAD legado (sem `dominio`) → Nexo Coger **aceito**, → Nexo PAR **recusado** com mensagem de legado. **Toda** recusa afirma a **atomicidade**: snapshot da contagem de provas/itens/domínio do receptor antes e depois — idênticos. O grupo `validacao_dominio` (14) da PAR-5 permanece como cobertura das funções puras com entradas sintéticas; o grupo `cruzada` (12) adiciona os 6 casos com fixtures reais + atomicidade. Sem duplicação de casos idênticos.
+
+### 6.5 — Relatório unificado em três seções
+
+Saída de console reorganizada (sem framework, mesmos `checar`/`registrar`) em **Fluxo PAD**, **Fluxo PAR** e **Validação cruzada** via `secaoDoGrupo(grupo)`, cada seção listando seus grupos e placar. `process.exitCode = 1` quando qualquer verificação falha (comportamento já existente, mantido). O guard "caso 7" foi ajustado para contar explicitamente os grupos da seção PAD (43), robusto às novas seções.
+
+### Extração de função pura no Nexo PAR (e exposições no Oitiva 360)
+
+- **`ferramentas/nexo-par.html`:** `renderIndiciacao` estava acoplado ao DOM (chamava `openPrint` com a string montada). O **corpo** foi extraído para a função pura `construirTextoIndiciacao(id, dataDoc)` (lê o `doc` via `setDoc`, devolve a STRING HTML, sem tocar em `document`/print); `renderIndiciacao` virou wrapper fino que só envia o resultado ao `openPrint` — **comportamento idêntico**. Foi a única extração necessária: os gates **P-ENTE** e **P8-PAR** já eram puros em `computePendencias`, e o cadastro de ente já era construível direto no `doc` (como o acusado do fixture PAD).
+- **`ferramentas/oitiva-360.html`:** por ser um IIFE, quatro funções já existentes foram **expostas** em `window.OitivaPuro` para o teste (`derivarDominioDaPauta`, `dominioProcesso`, `itemVisivelNoDominio`, `papelEhPAR`) e `aplicarImportacaoPauta` (recusa atômica de pauta em conflito) — apenas exposição, nenhuma mudança de comportamento (mesmo padrão dos setters da Rodada 7). `veritas.html` e `nexo-coger.html` **não** foram tocados.
+
+### Placar final
+
+`node test-fluxo-integrado.js` → **127/127**, exit 0. Seções: **Fluxo PAD 43/43** (inalterado — 6.6 confirmada), **Fluxo PAR 58/58** (`par_passo1 3`, `par_passo2 6`, `par_passo3 5`, `par_passo4 6`, `par_passo5 4`, `par_passo6 3`, `par_passo7 5`, `par_passo8 18`, `par_idempotencia 5`, `par_falha_controlada 3`), **Validação cruzada 26/26** (`validacao_dominio 14` + `cruzada 12`). `node --check` (via `new Function`) no `<script>` de `nexo-par.html` e `oitiva-360.html`: OK.
+
 ## Rodada PAR-5 — Validação cruzada de domínio nos contratos (em andamento)
 
 Fechamento e consistência: cada receptor passa a validar o `dominio` do envelope contra o seu próprio domínio; nenhum campo novo de negócio, nenhuma tela nova além dos avisos de recusa. **Nenhuma alteração no catálogo canônico** (`schema_version`/hash8 inalterados). Tabela da "Política única de validação" registrada como comentário-referência no código de cada rotina de importação dos dois arquivos, com texto idêntico (não divergir em manutenção futura).

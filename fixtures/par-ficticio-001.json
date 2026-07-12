@@ -1,13 +1,14 @@
 {
-  "_descricao": "PAR (Processo Administrativo de Responsabilização — Lei nº 12.846/2013, LAC) fictício, criado na Rodada PAR-5 (seção 5.6) para exercitar a validação cruzada de domínio entre Veritas, Nexo Coger, Nexo PAR e Oitiva 360 sem precisar de navegador. Espelha o espírito de fixtures/pad-ficticio-001.json, mas no domínio PAR: o polo passivo é um ente privado (pessoa jurídica), o enquadramento é numa norma LAC (art. 5º da Lei 12.846/2013) e o fato traz os campos materiais do PAR (interesse/benefício da PJ + nexo de causalidade). Todos os nomes, CNPJ, textos e hashes são fictícios e sem valor real. Reutilizável nas próximas rodadas PAR.",
-  "_comoReexecutar": "node test-fluxo-integrado.js na raiz do projeto. O script carrega veritas.html, nexo-coger.html, nexo-par.html e oitiva-360.html via Node vm e chama as funções puras de validação de domínio (validarDominioEnvelope nos Nexos; avaliarImportacaoTermo/dominioDoProcesso no Veritas). Este fixture alimenta o grupo de verificações 'validacao_dominio'.",
+  "_descricao": "PAR (Processo Administrativo de Responsabilização — Lei nº 12.846/2013, LAC) fictício COMPLETO, espelho estrutural de fixtures/pad-ficticio-001.json, no domínio PAR. Criado na Rodada PAR-5 (versão mínima) e EXPANDIDO na Rodada PAR-6 (seção 6.1) para cobrir o ciclo inteiro de 8 etapas (Veritas -> Nexo PAR -> Oitiva 360 -> Veritas -> Nexo PAR -> Nota de Indiciação) e os 6 casos de validação cruzada PAD<->PAR, tudo sem navegador. O polo passivo é um ente privado (pessoa jurídica) com um representante legal (satisfaz o gate P-ENTE); há DOIS fatos apurados, ambos enquadrados em ato lesivo do art. 5º, IV, da LAC, cada um com benefício/interesse da PJ e nexo de causalidade preenchidos (satisfaz o gate P8-PAR); uma prova documental inicial no Veritas; uma lacuna (o 2º fato sem prova) que gera a pauta de instrução; e um depoente representante legal com respostas fictícias. Todos os nomes, CNPJ, CPF, textos e hashes são fictícios e sem valor real.",
+  "_comoReexecutar": "node test-fluxo-integrado.js na raiz do projeto. O script carrega veritas.html, nexo-coger.html, nexo-par.html e oitiva-360.html via Node vm e usa as funções puras de cada ferramenta. Este fixture alimenta a seção 'Fluxo PAR' (8 etapas + idempotência/falha) e os casos de validação cruzada que usam a prova/termo PAR reais. Se qualquer rodada PAR-1..PAR-6 mudar, reexecute para confirmar que os contratos e a Nota de Indiciação continuam funcionando. Campos dos fatos usam os NOMES REAIS lidos pelo Nexo PAR (beneficioInteresse, nexoCausalidade), para o teste montar o doc sem remapear.",
   "_dominio": "par",
 
   "processo": {
     "numero": "20000.888888/2026-55",
     "tipoProcesso": "PAR",
     "dominio": "par",
-    "objetoApuracao": "Apuração fictícia de responsabilização de pessoa jurídica por ato lesivo à Administração Pública em licitação, para fins de teste automatizado (sem valor real)."
+    "portaria": "PORT-PAR-FICT nº 007/2026",
+    "objetoApuracao": "Apuração fictícia de responsabilização de pessoa jurídica por atos lesivos à Administração Pública em licitação e na execução contratual (art. 5º, IV, da Lei nº 12.846/2013), para fins de teste automatizado (sem valor real)."
   },
 
   "entePrivado": {
@@ -15,26 +16,39 @@
     "cnpj": "11.222.333/0001-81",
     "nomeFantasia": "Alfa Engenharia",
     "endereco": "Rua Fictícia, 100, Sala 1 — Cidade de Teste/UF",
-    "faturamentoBruto": "",
+    "faturamentoBruto": "12.000.000,00",
     "representanteLegal": {
       "nome": "Beltrano Fictício Representante",
       "cpf": "123.456.789-09",
-      "vinculo": "representante_legal"
+      "vinculo": "PAPEL.REPRESENTANTE_LEGAL"
     },
-    "_observacao": "CNPJ e CPF são fictícios, apenas em formato válido (14/11 dígitos com máscara). No Nexo PAR o ente é gravado internamente em doc.acusados[] com a.nome espelhando a razão social (decisão estrutural da PAR-3, item 3.2)."
+    "_observacao": "CNPJ e CPF fictícios, apenas em formato válido (14/11 dígitos com máscara, sem DV real). vinculo do representante = 'PAPEL.REPRESENTANTE_LEGAL' (id do catálogo) — é o valor que computePendencias() do Nexo PAR exige para NÃO disparar a pendência crítica P-ENTE. No Nexo PAR o ente é gravado internamente em doc.acusados[] com a.razaoSocial/a.nome espelhando a razão social (decisão estrutural da PAR-3, item 3.2) — por isso o ente é o vínculo padrão do retorno de oitiva (equivalente PAR do 'acusado padrão' do PAD)."
   },
 
   "fatos": [
     {
       "chaveLocal": "FP1",
       "titulo": "Frustração fictícia do caráter competitivo de licitação (fato PAR fictício 1)",
+      "descricao": "Em certame fictício, a pessoa jurídica teria ajustado condições com concorrentes para afastar a disputa, comprometendo o caráter competitivo do procedimento licitatório (fato de teste, sem valor real).",
       "normaId": "NORMA.LAC.ART5_IV_A",
       "normaCanonica": "NORMA.LAC.ART5_IV_A",
       "grupo": "Licitações e contratos",
-      "beneficioInteresse": "A pessoa jurídica teria obtido vantagem competitiva indevida ao afastar concorrentes de certame fictício, com potencial sobrepreço em seu favor.",
-      "nexoCausal": "O ato de frustrar o caráter competitivo do certame teria sido praticado no interesse e para benefício da própria pessoa jurídica, que sagrou-se vencedora fictícia da licitação.",
+      "beneficioInteresse": "A pessoa jurídica teria obtido vantagem competitiva indevida ao afastar concorrentes do certame fictício, com potencial sobrepreço em seu favor.",
+      "nexoCausalidade": "O ato de frustrar o caráter competitivo do certame teria sido praticado no interesse e para benefício da própria pessoa jurídica, que se sagrou vencedora fictícia da licitação.",
       "temProvaInicial": true,
-      "_observacao": "Fato com enquadramento LAC (art. 5º, IV, 'a') + os dois campos materiais do PAR (benefício/interesse e nexo causal) preenchidos, para não disparar a pendência crítica P8-PAR (PAR-3, item 3.4)."
+      "_observacao": "Fato com enquadramento LAC (art. 5º, IV, 'a' — frustração do caráter competitivo) + os dois campos materiais do PAR preenchidos (beneficioInteresse + nexoCausalidade), para não disparar a P8-PAR (PAR-3, item 3.4). Recebe a prova inicial do Veritas — não gera lacuna."
+    },
+    {
+      "chaveLocal": "FP2",
+      "titulo": "Fraude fictícia na execução de contrato administrativo (fato PAR fictício 2)",
+      "descricao": "Na execução do contrato decorrente do certame, a pessoa jurídica teria fraudado medições e entregas, obtendo pagamentos indevidos (fato de teste, sem valor real).",
+      "normaId": "NORMA.LAC.ART5_IV_D",
+      "normaCanonica": "NORMA.LAC.ART5_IV_D",
+      "grupo": "Licitações e contratos",
+      "beneficioInteresse": "A pessoa jurídica teria auferido pagamentos indevidos ao fraudar a execução contratual, apropriando-se de valores sem a devida contraprestação.",
+      "nexoCausalidade": "A fraude na execução foi meio para o proveito econômico direto da pessoa jurídica, que recebeu por serviços/entregas fictícios em seu próprio benefício.",
+      "temProvaInicial": false,
+      "_observacao": "Segundo fato com enquadramento LAC (art. 5º, IV, 'd' — fraude a contrato) + os dois campos materiais preenchidos. NÃO tem prova vinculada — é a lacuna (tipo_lacuna: sem_prova) que gera o ponto de pauta de instrução usado nos passos 3-7 do ciclo PAR, mesma mecânica do F2/F3 do fixture PAD."
     }
   ],
 
@@ -48,16 +62,16 @@
   },
 
   "depoente": {
-    "identificacao": "Preposto Fictício da Alfa Engenharia",
-    "papel": "preposto",
-    "infracaoPrincipal": "NORMA.LAC.ART5_IV_A",
-    "elementosBuscados": "Preposto fictício com conhecimento direto da participação da pessoa jurídica no certame descrito no fato FP1 — fixture de teste automatizado.",
-    "respostaPadrao": "Resposta fictícia de teste: atuei como preposto da empresa e posso esclarecer os pontos apontados na pergunta sobre a participação no certame.",
-    "_observacao": "Papel 'preposto' é um dos 3 vínculos PAR do catálogo (PAR-1.2). No domínio PAR não existe o papel 'acusado' (esse é PAD). Este depoente alimenta a pauta PAR (dominio:'par') usada nas verificações de domínio."
+    "identificacao": "Beltrano Fictício Representante (representante legal da Alfa Engenharia)",
+    "papel": "representante_legal",
+    "infracaoPrincipal": "NORMA.LAC.ART5_IV_D",
+    "elementosBuscados": "Representante legal fictício com conhecimento direto da participação da pessoa jurídica no certame e na execução contratual descritos nos fatos FP1/FP2 — fixture de teste automatizado.",
+    "respostaPadrao": "Resposta fictícia de teste: na condição de representante legal da empresa, esclareço os pontos apontados na pergunta sobre a participação da pessoa jurídica no certame e na execução do contrato.",
+    "_observacao": "Papel 'representante_legal' é um dos 3 vínculos PAR do catálogo (PAR-1.2/PAR-4). No domínio PAR não existe o papel 'acusado' (esse é PAD). Ao menos uma pergunta do roteiro vem de um dos 3 blocos PAR do banco (par_atos_licitacoes / par_terceiro_interposto / par_programa_integridade — PAR-4, item 4.4), que só aparecem quando o domínio derivado é PAR. A resposta ao ponto de pauta é dada SEM preencher 'acusado alternativo', resultando em acusado_vinculo:'padrao' — vínculo automático ao único ente privado do processo (equivalente PAR do critério de aceite 1 da Rodada 6)."
   },
 
   "pauta": {
     "dominio": "par",
-    "_observacao": "A pauta emitida pelos Nexos passou a declarar 'dominio' na Rodada PAR-5 (seção 5.2): 'par' no Nexo PAR. Este bloco documenta o valor esperado; o envelope de pauta real é construído em tempo de teste por construirContratoPauta, que injeta DOMINIO_FERRAMENTA."
+    "_observacao": "A pauta emitida pelo Nexo PAR declara 'dominio':'par' no envelope desde a Rodada PAR-5 (seção 5.2). Este bloco documenta o valor esperado; o envelope de pauta real é construído em tempo de teste por construirContratoPauta, que injeta DOMINIO_FERRAMENTA='par'. A Oitiva 360 deriva o domínio PAR a partir deste campo (cascata PAR-4/PAR-5), o que faz aparecerem os papéis/blocos PAR e some o papel 'acusado'."
   }
 }
