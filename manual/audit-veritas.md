@@ -264,3 +264,96 @@ Itens importados de termo de oitiva ganham categoria automática `termo_oitiva` 
 **Badge "Pendências de termo"**: ícone `⏳` no topbar (`badgeTermoPendente`) mostra contagem de termos de oitiva importados pendentes de revisão; clicar leva ao primeiro item pendente.
 
 **Contagem aproximada de campos de formulário documentados no wizard (etapas 1-4, todas as variações condicionais incluídas)**: cerca de 40 campos de input/select/radio/checkbox distintos, mais 6 campos editáveis na tela de detalhe (seção 4) e ~10 campos adicionais nos modais de evento.
+
+---
+
+## 7. Reabertura de dossiê (importar .json exportado)
+
+**Como o usuário aciona** — botão de importação aparece em dois lugares, com rótulos ligeiramente diferentes:
+1. Tela inicial (`viewInicio`), ao lado de "+ Novo dossiê": rótulo exato `Importar dossiê (.json)` (L2052).
+2. Tela de Processo (`viewProcesso`), no cabeçalho "Dados do processo", como botão pequeno: rótulo exato `Importar` (L2087, `rfb-btn--sm`) — visualmente distinto do botão maior da tela inicial, mas aciona a mesma função.
+
+Ambos são um `<label>` estilizado como botão (`cursor:pointer`) envolvendo um `<input type="file" accept=".json,application/json" style="display:none">` oculto, disparado por `onchange="App.importarArquivo(event)"` — não há botão "Importar" separado de um seletor de arquivo: selecionar o arquivo já dispara a importação, sem clique extra de confirmação nesse primeiro passo. Não confundir com o botão, também presente na tela de Processo, `Importar termo (Oitiva 360)` (L2090, `onchange="App.importarTermoOitiva(event)"`) — é um fluxo de integração totalmente distinto (importação de termo de oitiva individual, não de dossiê inteiro), com suas próprias mensagens de bloqueio já documentadas na seção 6.
+
+**Função `App.importarArquivo(evt)` (L2744-2763)** — sequência exata:
+1. Lê o primeiro arquivo selecionado (`evt.target.files[0]`); se nenhum arquivo, retorna sem fazer nada.
+2. `FileReader.readAsText(file)`; no `onload`, tenta `JSON.parse(reader.result)`.
+3. **Se o parse falhar** (não é JSON válido): toast `"Arquivo .json inválido."` (severidade `danger`), e a importação para aí — nada mais é verificado.
+4. **Validação de formato/versão**: `if (parsed.versaoEsquema !== "2.0")` → toast `"Versão de esquema não suportada: " + parsed.versaoEsquema` (`danger`), interrompe. Ou seja, a validação de "é um dossiê Veritas válido" neste ponto se resume a checar o campo `versaoEsquema === "2.0"` — não há checagem de outros campos obrigatórios (`processo`, `itens` etc.) antes de prosseguir; um JSON com `versaoEsquema: "2.0"` mas estrutura incompleta passaria por este teste e provavelmente falharia (ou geraria estado inconsistente) só mais adiante, em `migrarDossie`/render — não localizado tratamento de erro explícito para esse caso intermediário neste levantamento.
+5. Calcula `hashCalc = await hashDossieMetadata(parsed)` e compara com `parsed.hashDoDossie`: `hashDivergente = parsed.hashDoDossie && hashCalc !== parsed.hashDoDossie` (só considera divergência se o arquivo já trouxer um `hashDoDossie` preenchido).
+6. **Se já existe um dossiê aberto com itens** (`DB.dossie && DB.dossie.itens.length > 0`): abre modal de confirmação (`UI.modal = {tipo:"importarChoice", parsed, hashDivergente}`) em vez de importar direto.
+7. **Se não há dossiê aberto (ou o dossiê aberto está vazio, 0 itens)**: importa direto, sem modal — `App._finalizarImportacao(parsed, hashDivergente)`.
+8. Ao final, `evt.target.value = ""` (limpa o input de arquivo, permitindo reimportar o mesmo arquivo depois).
+
+**Modal de confirmação de importação** (`renderModalImportChoice`, L2518-2526), texto exato:
+- Título: `Importar dossiê`
+- Corpo: `Você tem um dossiê aberto com N item(ns). A importação nunca mescla dossiês — o dossiê atual será substituído nesta sessão.` (N = `DB.dossie.itens.length` do dossiê **atualmente aberto**, não do arquivo importado)
+- Se `hashDivergente`, alerta adicional (`rfb-alert--danger`), título `Atenção`, mensagem: `O hashDoDossie do arquivo importado não confere com o conteúdo — possível indício de alteração externa do arquivo.`
+- Botões: `Cancelar` (`App.fecharModal()`) e `Substituir e importar` (`App.confirmarImportacao()`, que chama `App._finalizarImportacao(m.parsed, m.hashDivergente)`).
+
+**`App._finalizarImportacao(parsed, hashDivergente)` (L2776-2784)**: `DB.dossie = migrarDossie(parsed)`; fecha modal; navega para `UI.view = "processo"`; persiste e, ao final, exibe toast — se `hashDivergente`: `"Dossiê importado — hashDoDossie divergente, verifique a origem do arquivo."` (`danger`); caso contrário: `"Dossiê importado com sucesso."` (`success`). Note que a importação **prossegue mesmo com hash divergente** — o alerta é apenas informativo/de atenção, não é bloqueante (diferente da importação de termo de oitiva, onde hash divergente bloqueia a importação por completo — ver seção 6, item 2).
+
+Não há, no fluxo de importação de dossiê, nenhuma checagem equivalente a `catalogo_schema_version` (essa checagem, com `confirm()` nativo pedindo "Deseja continuar?", existe apenas no fluxo separado de importação de termo de oitiva — `App.importarTermoOitiva`, já documentado na seção 6, item 4). A auditoria anterior (seção 6) já citava corretamente as duas mensagens de hash divergente; a diferença de comportamento (bloqueante vs. não bloqueante) e a ausência de checagem de `catalogo_schema_version` na importação de dossiê são o detalhe adicional confirmado aqui.
+
+---
+
+## 8. Busca/filtro/ordenação na listagem de itens — não implementado
+
+A tabela de itens da tela de Processo (`viewProcesso`, L2063-2129) foi lida por completo. Cabeçalho fixo: `<th></th><th>Título</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Custodiante</th><th>Status</th><th>Fls.</th><th></th>`. Não há:
+- **Campo de busca por texto** — nenhum `<input>` de busca/filtro é renderizado acima ou ao lado da tabela; a única ação disponível na faixa "Itens (elementos de prova)" é o conjunto de botões `Conferência Geral`, `Relatório` e `+ Adicionar item` (L2119-2126).
+- **Filtros por categoria/status/proveniência** — nenhum `<select>` de filtro; as colunas Categoria, Proveniência e Status apenas exibem o valor de cada item (via `CATEGORIAS[...]`, `PROVENIENCIA_TIPOS[...]`, `STATUS_ITEM[...]`), sem controle de filtragem associado.
+- **Ordenação por cabeçalho de coluna** — os `<th>` são texto estático, sem `onclick` nem qualquer indicador de coluna ordenável; a ordem exibida é sempre `DB.dossie.itens.map(...)`, ou seja, a ordem de inserção/armazenamento no array, sem reordenação em tempo de exibição.
+
+Não foi encontrada nenhuma outra tela com listagem de itens que tivesse esses recursos (a tela de Conferência Geral e a tela de Relatório também percorrem `DB.dossie.itens` diretamente, sem busca/filtro/ordenação). Conclusão: **busca textual, filtros por categoria/status/proveniência e ordenação por coluna não existem no código atual** — se o manual mencionar esses recursos, deve ser corrigido ou removido.
+
+---
+
+## 9. Modal "Registrar evento" — os 6 tipos de evento, campo a campo e efeito ao salvar
+
+Fonte: `renderModalEvento` (L2471-2488), `buildEventoExtraFieldsHtml` (L2489-2517), `App.abrirModal` (L2969-2973, estado inicial do modal), `App.mudarTipoEvento`/`mudarNovoStatusEvento`/`mudarEscopoEvento` (L2979-2981, re-renderização dos campos extras ao trocar seleção) e `App.confirmarEvento` (L2982-3031, lógica de submissão/efeito). Estado inicial do modal ao abrir (`App.abrirModal('evento', {itemId})`): `UI.modal.campos = { tipo: "transferencia_custodia", novoStatus: "ativo", escopo: "item" }` — ou seja, o modal sempre abre pré-selecionado em "Transferência de custódia".
+
+Campos sempre presentes no modal, independentemente do tipo: `Tipo de evento` (select, `EVENTO_TIPO_OPTIONS` + `Conferência do lacre` condicional — ver abaixo), `Responsável` (input texto, id `evResponsavel`) e `Observação` (textarea 2 linhas, id `evObservacao`), ambos ao final, **nenhum dos dois é validado como obrigatório** em `confirmarEvento` (podem ficar vazios).
+
+A opção `Conferência do lacre` só é oferecida no select de tipo se `it.proveniencia.elementoFisico.presente` for `true` (L2475) — não aparece para itens sem elemento físico marcado.
+
+### 1) Transferência de custódia (`transferencia_custodia`)
+- Campo extra: `Novo custodiante` (input texto, id `evNovoCustodiante`).
+- **Obrigatório**: sim — `if (!novo.trim()) { toast("Informe o novo custodiante.", "danger"); return; }` (L2990), bloqueia o salvamento.
+- **Efeito ao salvar**: `it.custodianteAtual = novo` — atualiza diretamente o campo `custodianteAtual` do item (o mesmo campo editável na tela de detalhe, seção 4). Registra evento de item tipo `transferencia_custodia`; se a observação ficar vazia, é preenchida automaticamente com `"Novo custodiante: " + novo`.
+
+### 2) Enviado para perícia formal (`enviado_pericia`)
+- Campo extra: `Arquivo` (select, id `evArquivo`, populado com `it.arquivos` pelo par `descricao || nomeArquivo`).
+- **Obrigatório**: nenhuma validação explícita (o select sempre tem algum valor selecionado se houver arquivos; se `it.arquivos` estiver vazio, o select fica sem opções e `arqId` seria string vazia, sem checagem).
+- **Efeito ao salvar**: não altera nenhum campo do item ou do arquivo — apenas registra um evento de **arquivo** (`registrarEventoArquivo`) do tipo `enviado_pericia` (label no catálogo `EVENTO_TIPOS`: "Enviado para perícia formal", escopo `arquivo`), com `responsavel` e `observacao`. É puramente um registro de linha do tempo, sem mudança de status.
+
+### 3) Status alterado (`status_alterado`)
+- Campo extra fixo: `Novo status` (select, id `evNovoStatus`, opções = `Object.keys(STATUS_ITEM)`: `ativo`→"Ativo", `substituido`→"Substituído", `contestado`→"Contestado", `descartado`→"Descartado"; default pré-selecionado `ativo` pelo estado inicial do modal).
+- Campos condicionais adicionais, que aparecem dinamicamente ao trocar o select (via `App.mudarNovoStatusEvento`, que re-renderiza `#evExtraFields`):
+  - Se `novoStatus === "substituido"`: `Referência ao item substituto` (input texto, id `evItemSubstituto`) — **não obrigatório** (`|| null` se vazio).
+  - Se `novoStatus === "contestado"`: `Fundamentação da contestação` (hint "obrigatória", textarea 2 linhas, id `evFundamentacao`) — **obrigatório**: `if (!fund.trim()) { toast("Fundamentação da contestação é obrigatória.", "danger"); return; }` (L3001), bloqueia o salvamento.
+- **Efeito ao salvar**:
+  - Se `contestado`: `it.fundamentacaoContestacao = fund` (preenche esse campo do item, mencionado na seção 4 da auditoria anterior como só editável via este evento).
+  - Se `substituido`: `it.itemSubstitutoId = <valor ou null>`.
+  - Em todos os casos: `it.status = novoStatus` — este é o único fluxo do sistema que altera o campo `status` do item.
+  - Registra evento de item `status_alterado` com `resultado: novoStatus` (o valor do novo status fica gravado no campo `resultado` do evento, não só na observação).
+
+### 4) Item descartado (`item_descartado`)
+- Campo extra: `Justificativa` (hint "obrigatória", textarea 2 linhas, id `evJustificativa`).
+- **Obrigatório**: sim — `if (!just.trim()) { toast("Justificativa é obrigatória para descarte.", "danger"); return; }` (L3009), bloqueia o salvamento.
+- **Efeito ao salvar**: `it.status = "descartado"` (força o status do item para "Descartado", independentemente do que estava antes). Registra evento de item `item_descartado`, cuja `observacao` é preenchida com o texto da própria justificativa (`just`) — o campo `Observação` genérico do rodapé do modal é ignorado nesse caso específico (o código usa `just`, não `observacao`, como valor final).
+
+### 5) Descrição/contexto registrado (`descricao_registrada`)
+- Campo extra fixo: `Escopo` (select, id `evEscopo`, opções `item`→"Item (pacote)" e `arquivo`→"Arquivo"; default pré-selecionado `item`).
+- Campo condicional: se `escopo === "arquivo"`, aparece `Arquivo` (select, id `evArquivo`, populado com `it.arquivos`) — via `App.mudarEscopoEvento`.
+- Campo extra fixo adicional: `Texto` (textarea 2 linhas, id `evTexto`) — **não obrigatório** (se vazio, cai no `observacao` genérico como fallback: `texto || observacao`).
+- **Efeito ao salvar**: não altera nenhum campo de estado do item/arquivo (não muda status, custodiante etc.) — apenas registra um evento de linha do tempo:
+  - Se escopo = arquivo: `registrarEventoArquivo(arq2, "descricao_registrada", {...})` no arquivo selecionado.
+  - Se escopo = item: `registrarEventoItem(it, "descricao_registrada", {...})` no item como um todo.
+  - Em ambos os casos, é puramente um registro textual de contexto/observação na linha do tempo, sem efeito estrutural.
+
+### 6) Conferência do lacre (`conferencia_lacre`) — só disponível se elemento físico presente
+- Campo extra: `Condição do lacre nesta conferência` (select, id `evCondicaoLacre`, opções = `CONDICAO_LACRE`: `intacto`→"Íntegro", `rompido`→"Rompido", `nao_lacrado`→"Não lacrado"; pré-selecionado com a condição atual do lacre, `it.proveniencia.elementoFisico.condicaoLacre`).
+- **Obrigatório**: nenhuma validação explícita (select sempre tem um valor).
+- **Efeito ao salvar**: `it.proveniencia.elementoFisico.condicaoLacre = condicaoLacre` — este é o único fluxo do sistema (confirmado aqui, complementando a seção 4 da auditoria anterior) que permite alterar a condição do lacre depois que o item foi criado. Registra evento de item `conferencia_lacre` com `resultado: condicaoLacre`. Em seguida chama `recalcularAgregadoItem(it)` — recalcula o resultado agregado de integridade do item (o mesmo indicador usado no ícone de status da listagem, `statusIconClasse`/`statusIconGlifo`), ou seja, uma mudança na condição do lacre pode alterar o indicador visual de integridade do item na tabela de itens.
+
+Em todos os 6 tipos, ao final de `confirmarEvento`: `UI.modal = null; persistir().then(render); toast("Evento registrado.", "success");` — o modal fecha, o estado é persistido e a tela é re-renderizada, com o mesmo toast de sucesso genérico em todos os casos (não há mensagem de sucesso diferenciada por tipo de evento).

@@ -184,3 +184,79 @@ Ambos aparecem na Etapa 4, dependentes do papel escolhido (e de infração/modal
 - Mensagens de `alert()` relacionadas a importação de arquivo (.json do processo / pauta do Nexo) só se aplicam a fluxos de importação, fora do escopo "sem pauta importada" pedido — citadas aqui apenas por completude: "Arquivo inválido: não foi possível interpretar o JSON.", "Arquivo inválido: estrutura de processo do Oitiva 360 não reconhecida.", "Arquivo inválido: este arquivo não é uma pauta exportada pelo Nexo Coger (...)", "Arquivo inválido: a pauta não traz \"pauta_id\".", "A pauta " + pauta_id + " já havia sido importada antes — itens existentes foram atualizados, nenhum item duplicado foi criado.".
 - Botão de exportação para o Nexo Coger ("Exportar prova(s) para o Nexo" / "Exportar retorno (contexto do acusado)") só aparece quando há itens de pauta abordados na sessão (`itensPautaAbordadosNestaSessao(d).length`) — não aparece no fluxo manual sem pauta.
 - O botão "Exportar termo para o Veritas" (`btn-exportar-termo-veritas`) está sempre visível na Etapa 4, independente de pauta importada.
+
+---
+
+## 6. Gerenciar múltiplos depoentes do mesmo processo
+
+### 6.1 Lista de depoentes (Tela do Processo)
+
+Antes de entrar no wizard de qualquer depoente específico, a Tela do Processo mostra uma tabela de depoentes já cadastrados — `renderListaDepoentes()` (linha 3693), alvo do `<div id="tabela-depoentes-wrap">`. É a partir dela que o diálogo `dialogo-add-depoente` é aberto: o botão `btn-add-depoente` (linha 3810, na mesma tela) dispara `dialogoAddDepoente.showModal()`, mas só depois de a Matriz de Apuração estar completa (ver seção 1.0 acima).
+
+Se não houver nenhum depoente ainda: `<p class="vazio">Nenhum depoente adicionado ainda.</p>`.
+
+Com depoentes cadastrados, a tabela tem colunas **Identificação / Papel / Infração / Status / (ações)**:
+- Papel exibido é o nome de `CATALOGO.papeis` (ou "não definido" em `<span class="vazio">`, se ainda não escolhido na Etapa 2).
+- Infração exibida é o nome/rótulo de `CATALOGO.infracoes` (ou "não definida").
+- Status é um badge (`badge-status <status>`) com rótulo de `statusLabel(s)` (linha 3689): `rascunho` → "Rascunho", `roteiro_pronto` → "Roteiro pronto", `oitiva_realizada` → "Oitiva realizada". Esse status é o do **depoente** (progresso do wizard), não o de item de pauta (seção 9 abaixo trata do status de item de pauta, que é outro conceito).
+- Cada linha tem dois botões: **"Abrir depoente"** (`data-abrir-wizard="<id>"`) e **"Remover"** (`data-remover-depoente="<id>"`, classe `perigo pequeno`).
+
+### 6.2 Alternar entre depoentes já cadastrados
+
+Não há "próximo/anterior" — a navegação entre depoentes é sempre: fechar o wizard atual (`fecharWizard()`, que zera `depoenteAtivoId`, esconde `tela-wizard-depoente` e reexibe `tela-processo` com a lista) e clicar em "Abrir depoente" na linha correspondente ao próximo depoente desejado.
+
+### 6.3 Editar um depoente existente — sempre reabre na Etapa 1
+
+`abrirWizard(depoenteId)` (linha 4387) é o handler de "Abrir depoente": define `depoenteAtivoId`, garante a estrutura de `d.ato` (`garantirEstruturaAto`) e chama `irParaEtapa(1, { forcar: true })`. Ou seja: **qualquer reabertura de um depoente já cadastrado (mesmo com wizard já concluído/"Oitiva realizada") sempre volta para a Etapa 1 ("Dados do Ato")** — não há memória de "última etapa visitada". O usuário precisa navegar manualmente pelo stepper (1 → 2 → 3 → 4) até a etapa que deseja editar; os dados de cada etapa já preenchida permanecem salvos e são apenas re-renderizados.
+
+### 6.4 Remoção de um depoente
+
+Confirmado: o botão **"Remover"** de cada linha da lista (`data-remover-depoente`, seção 6.1 acima) é o único ponto de remoção de depoente na ferramenta — não há atalho de remoção de dentro do wizard. O handler (linha 3716-3726) exibe `confirm("Remover o depoente \"" + d.identificacao + "\"? Esta ação não pode ser desfeita.")`; se confirmado, filtra o depoente de `estado.depoentes`, persiste via `salvarLocalStorage()` e re-renderiza a lista. Não há "lixeira"/desfazer — a remoção é definitiva a partir da confirmação.
+
+---
+
+## 7. "Kit de Incidentes" (equivalente ao "kit de situações" pedido — não existe funcionalidade com esse nome exato)
+
+Busca por "situaç"/"kit" no código não encontrou nada chamado "kit de situações" ou "kit-situacoes". O que existe, e que cumpre exatamente esse papel, é o **"Kit de Incidentes"** (`CATALOGO.formulasIncidentes`, linha 3218 em diante) — um banco de 17 fórmulas verbais prontas para o condutor usar em situações específicas durante a oitiva/interrogatório (contradita, intimidação, pergunta ofensiva, pergunta indutiva, imprecisão do depoente, contradição/possível falso testemunho, questão de ordem, elucubrações/juízo de valor, consulta a anotações, conversa reservada advogado-cliente, abalo emocional, pedido-surpresa de diligência, táticas de desestabilização, pedido de perícia, perguntas impertinentes/protelatórias, pedido de esclarecimento/impugnação de pergunta da comissão, advogado da testemunha).
+
+Cada item tem: `id`, `grupo` (categoria, ex.: "Postura da defesa", "Depoimento do depoente", "Condução do ato", "Cuidado com o depoente", "Táticas de desestabilização"), `situacao` (rótulo curto do gatilho), `formulaVerbal` (o texto pronto, em geral entre aspas, para o presidente falar), opcionalmente `sequencia` (passos numerados antes da fala) e `baseLegal`. Comentários no código confirmam a origem: fórmulas extraídas/adaptadas do documento-fonte "Roteiros das Simulações de Oitiva e Interrogatório" (Marcos Salles Teixeira/CGU-CRG), com pronomes neutralizados.
+
+**Onde aparece na interface:** é conteúdo de apoio textual, sempre visível (não é preciso buscar), num painel lateral fixo nas **Etapas 3 e 4** do wizard (comentário na linha 5200: "Kit de Incidentes (aside — visível nas etapas 3 e 4)"). No DOM, fica ao lado do painel "💡 Dicas desta tela" (linha 1883-1888), sob o título "Kit de Incidentes" e o container `<div id="kit-incidentes-conteudo">`. `renderKitIncidentes()` (linha 5202) agrupa os 17 itens por `grupo` em blocos `<details>` (um `<summary>` por categoria, expansível), cada item mostrando situação, sequência de passos (se houver), a fórmula verbal e a base legal (se houver).
+
+**Como apoia a condução:** é puramente textual/de apoio — não há nenhuma ação/registro associado (não é um botão que grava algo no processo); o presidente consulta o painel durante a sessão e usa a fórmula sugerida na hora. O próprio banco de conteúdo (`abertura_objecoes_defesa`, `palavra_defesa_reperguntas`, linhas 3212-3213) referencia explicitamente o Kit de Incidentes como remissão cruzada (ex.: "seguir o procedimento de contradita descrito no Kit de Incidentes (inc_contradita)"), confirmando que ele é pensado como script de contingência a ser usado ao vivo, não como documento gerado.
+
+Ver também seção 8 abaixo — o "Cartão de Mesa" é a versão impressa de 17 dos itens deste mesmo Kit de Incidentes (todos, já que todos têm `cartaoMesa: true` no catálogo atual).
+
+---
+
+## 8. Impressão do "Cartão de Mesa"
+
+Botão **"Imprimir Cartão de Mesa"** (`btn-imprimir-cartao-mesa`, classe `secundario`), no cartão "Impressão" da **Etapa 4** ("Revisão e Checklist"), ao lado de "Imprimir roteiro" (linha 5662-5668). Handler (linha 5824-5829): chama `montarAreaImpressaoCartaoMesa()`, depois `prepararAreaImpressaoParaImpressao()` e `window.print()` — é uma impressão isolada (comentário no código: "só o Cartão de Mesa, sem o roteiro antes").
+
+**Conteúdo** (`montarAreaImpressaoCartaoMesa()`, linha 6137-6147): cabeçalho "Cartão de Mesa" com subtítulo "Kit de Incidentes — Ferramentas Coger · Oitiva 360"; em seguida uma grade de duas colunas (`cartao-mesa-grid`, `column-count:2`, fonte 8.5pt para impressão compacta) com um bloco por item do Kit de Incidentes filtrado por `inc.cartaoMesa` (todos os 17 itens atuais têm essa flag `true`) — cada bloco mostra a `situacao` em negrito e a `formulaVerbal` completa. Ou seja: o Cartão de Mesa **não é um resumo do ato/depoente** (não traz dados do processo, do depoente ou do roteiro) — é o Kit de Incidentes inteiro, compactado em duas colunas para caber numa folha de consulta rápida.
+
+**Indicação de uso, no próprio código:** o rodapé de impressão (`htmlRodapeImpressao`) recebe o texto **"Uso interno · Consulta rápida durante o ato"** (linha 6145) — confirma que o cartão se destina a ser impresso antes e consultado **durante** a sessão (na mesa da comissão), não como registro/anexo do processo.
+
+---
+
+## 9. Transição de status de item de pauta importada (pendente → em_andamento → concluída)
+
+Aplica-se apenas quando há uma pauta do Nexo Coger importada (`estado.pautaImportada`) — fora do escopo do fluxo manual sem pauta, mas documentado aqui à parte. O status de cada item de pauta **não é um campo armazenado com essas 3 palavras** — é computado ao vivo por `statusPautaItemRodada8(item, depoentes)` (linha 4106, comentário explícito nas linhas 4103-4105):
+
+```js
+function statusPautaItemRodada8(item, depoentes){
+  if (item.statusChecklist === "abordado" || item.statusChecklist === "sem_resposta") return "concluida";
+  const selecionadoPorAlguem = (depoentes || []).some(d => (d.pautaSelecionada || []).includes(item.fatoId));
+  return selecionadoPorAlguem ? "em_andamento" : "pendente";
+}
+```
+
+Ou seja, apenas `item.statusChecklist` é persistido (valores `"pendente"` | `"abordado"` | `"sem_resposta"`); os rótulos "pendente"/"em_andamento"/"concluida" usados na UI (badge de contagem no cabeçalho, `badgePautaPendente`) são derivados na hora da renderização, não gravados como tal.
+
+**Gatilhos exatos de cada transição:**
+
+1. **`pendente`** — estado inicial de todo item ao importar a pauta (`mesclarPautaImportada`, linha 4061-4063: `statusChecklist` novo começa como `"pendente"`) **e** enquanto nenhum depoente tiver esse item em `d.pautaSelecionada`. Ou seja, importar a pauta por si só não muda nada além de criar os itens com `statusChecklist: "pendente"` — a mudança de rótulo para "em_andamento" não depende de reimportação.
+2. **`em_andamento`** — assim que **qualquer** depoente cadastrado passa a ter o `fatoId` do item dentro de `d.pautaSelecionada` (isto é: o usuário, na Etapa 2 do wizard daquele depoente, marca o item da "Pauta do Nexo" como algo a abordar nesta oitiva — ação de seleção, fora do escopo do fluxo manual sem pauta e não detalhada nesta auditoria porque o cartão `cartao-pauta-nexo` só existe com pauta importada). Continua "em_andamento" enquanto `statusChecklist` permanecer `"pendente"`.
+3. **`concluida`** — só é atingido quando `item.statusChecklist` vira `"abordado"` ou `"sem_resposta"`, o que só acontece em `atualizarChecklistPautaAoConcluir(d)` (linha 4243), chamada **exclusivamente** pelo handler do checkbox **"Marcar oitiva como realizada"** (`chk-oitiva-realizada`, Etapa 4, linha 5702-5712) — nunca antes, nunca automaticamente. Ao marcar esse checkbox: `d.status` do depoente vira `"oitiva_realizada"` e, para cada item em `d.pautaSelecionada`, verifica `d.pautaConclusao[fatoId].respondida`: se `false`, `item.statusChecklist = "sem_resposta"` (com `notaSemResposta` opcional); caso contrário (padrão `respondida: true`), `item.statusChecklist = "abordado"`. Desmarcar o checkbox reverte apenas `d.status` do depoente para `"roteiro_pronto"` — **não** reverte `statusChecklist` do item de pauta (comentário no código confirma: só ao concluir a oitiva o statusChecklist é atualizado, "nunca antes, nunca calculado sozinho" — mas o código não mostra reversão automática ao desmarcar).
+
+Resumo direto: **importar pauta = pendente**; **algum depoente selecionar o item para abordar nesta sessão = em_andamento**; **marcar a checkbox "Marcar oitiva como realizada" na Etapa 4 daquele depoente = concluída** (como "abordado" ou "sem_resposta", conforme a resposta ter sido de fato registrada).
