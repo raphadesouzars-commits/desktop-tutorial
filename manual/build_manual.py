@@ -900,8 +900,8 @@ make_table(
     rows=[
         ("P3", "Prova órfã — prova cadastrada que não sustenta nenhum fato (aparece deslocada no mapa)."),
         ("P6a / P6b", "Prova vinculada não classificada como \"direta\" — reflete-se no mapa como aresta tracejada em vez de contínua (pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar)."),
-        ("P6c", "(pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar; descrição completa não confirmada no levantamento de código disponível)."),
-        ("P7", "(pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar; descrição completa não confirmada no levantamento de código disponível)."),
+        ("P6c", "Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784/99) — calculada quando o acusado tem Notificação prévia e Interrogatório com data preenchidas (Seção 3.6). É a única pendência do sistema vinculada a um acusado, não a um fato ou prova; clicar nela abre o cadastro do próprio acusado."),
+        ("P7", "Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo. Dispara quando o fato tem ao menos uma prova vinculada e todas as provas vinculadas são do tipo \"Prova indiciária\" ou \"Declaração de informante\" (nenhuma prova documental, pericial, testemunhal, emprestada, de interrogatório ou de diligência sustenta o fato)."),
     ],
     col_widths=[2.7, 12.8],
 )
@@ -945,22 +945,53 @@ add_body(
     "e na tela \"Revisão de pauta\".",
 )
 
+add_body(doc, "Os campos do formulário \"Acusado\" aparecem, nesta ordem exata:")
+
+add_numbered(doc, 1, "**Nome** — texto livre. **Obrigatório**: se vazio, \"Informe o nome do acusado.\" — é o único campo bloqueante no cadastro.")
+add_numbered(doc, 2, "**Matrícula (SIAPE)** — texto livre.")
+add_numbered(doc, 3, "**Cargo** — texto livre. Não é exigido para salvar o cadastro, mas passa a ser obrigatório mais adiante, no momento de gerar a minuta de indiciação (Seção 3.5).")
+add_numbered(doc, 4, "**Lotação** — texto livre.")
+add_numbered(doc, 5, "**Qualificação complementar** — área de texto livre; funciona como campo de escape para qualquer dado de qualificação sem campo dedicado (não há campo de CPF nem de endereço no formulário).")
+add_numbered(doc, 6, "**Situação funcional** — seleção com 4 opções: \"Ativo (não licenciado/afastado)\", \"Licenciado/afastado\", \"Inativo (aposentado)\" e \"Ex-servidor\".")
+add_numbered(doc, 7, "**Telefone(s) móvel(is)** — texto livre, usado no bloco \"Contatos:\" dos termos de intimação.")
+add_numbered(doc, 8, "**E-mail(s)** — texto livre.")
+add_numbered(doc, 9, "**Alegações da defesa não acatadas** — área de texto, preenchida antes da impressão final da indiciação (também ajustável na própria tela de impressão).")
+add_numbered(doc, 10, "**Bloco \"Notificação prévia\"** — três campos: \"Realizada?\" (Sim/Não), \"Data\" e \"Ref. autos\".")
+add_numbered(doc, 11, "**Bloco \"Interrogatório\"** — quatro campos: \"Status\" (Pendente / Realizado / Silêncio formalizado / Cancelado), \"Data\", \"Ref. autos\" e \"Realizado após todas as provas?\" (Sim/Não).")
+add_numbered(doc, 12, "**Bloco \"Contexto de oitiva\"** — condicional: só aparece quando o acusado já recebeu algum retorno de oitiva do Oitiva 360 (Seção 5.4). Lista cada item recebido com a referência do fato e da prova de origem, a citação do resumo da resposta (quando houver) e uma caixa \"Revisado\" para a comissão marcar a conferência.")
+
 add_alert(
     doc,
     [
-        "Este manual não detalha campo a campo o formulário de acusado além "
-        "do que foi efetivamente confirmado no levantamento de código: o "
-        "**nome** é obrigatório — se deixado em branco, o Nexo Coger bloqueia "
-        "com a mensagem \"Informe o nome do acusado.\". Ao excluir um "
-        "acusado, o Nexo Coger pede confirmação: \"Excluir este acusado? As "
-        "condutas vinculadas a ele nos fatos serão removidas.\". Os demais "
-        "campos do formulário (cargo, matrícula, lotação etc., citados de "
-        "passagem em outras partes deste manual, como na tabela de "
-        "qualificação da indiciação) não foram auditados campo a campo — "
-        "evite tomar esta seção como um roteiro completo do formulário.",
+        "Nenhum dos campos 2 a 11 é exigido para **salvar** o cadastro do "
+        "acusado — só o **Nome** bloqueia. \"Cargo\" volta a ser cobrado, "
+        "mas só no momento de **gerar a minuta de indiciação**; os campos "
+        "de \"Notificação prévia\" e \"Interrogatório\" não bloqueiam nada "
+        "diretamente, mas alimentam o checklist de encerramento e a "
+        "pendência P6c (Seção 3.9).",
     ],
     kind="info",
-    label="Cobertura parcial — seja cauteloso",
+    label="Só o Nome é obrigatório para salvar",
+)
+
+add_body(
+    doc,
+    "Ao excluir um acusado, o Nexo Coger pede confirmação: \"Excluir este "
+    "acusado? As condutas vinculadas a ele nos fatos serão removidas.\".",
+)
+
+add_body(
+    doc,
+    "Esses mesmos campos fecham o ciclo com a Seção 3.5: a **tabela de "
+    "qualificação** que abre a minuta do termo de indiciação lê exatamente "
+    "**Nome**, **Matrícula**, **Cargo** e **Lotação** do cadastro do "
+    "acusado (mostrando \"—\" para os que estiverem vazios), acrescida da "
+    "linha **\"Qualificação\"** apenas quando o campo \"Qualificação "
+    "complementar\" estiver preenchido. Os demais campos do cadastro "
+    "(situação funcional, telefone, e-mail, notificação prévia, "
+    "interrogatório) não são lidos pela minuta de indiciação — servem a "
+    "outros fins, como o checklist de encerramento e o painel de Prazos "
+    "(Seção 3.9).",
 )
 
 add_h2(doc, "3.7 Cadastro de prova no Nexo Coger")
@@ -971,33 +1002,62 @@ add_body(
     "**Declaração de informante** — Deponente, Papel do depoente, "
     "Compromissada?, trio de contradita — já foi apresentado na Seção 3.4 "
     "(Papel de pessoa). Esta seção cobre os campos **gerais** do formulário "
-    "de prova, presentes independentemente do tipo escolhido.",
+    "de prova, presentes independentemente do tipo escolhido, e o catálogo "
+    "completo do campo \"Tipo de prova\".",
+)
+
+add_body(doc, "Os campos gerais do formulário \"Prova\" aparecem, nesta ordem exata:")
+
+add_numbered(doc, 1, "**Tipo de prova** — seleção com 8 opções (ver tabela abaixo). Decide quais campos de detalhe adicionais aparecem.")
+add_numbered(doc, 2, "**Título** — texto livre. **Obrigatório**: se vazio, \"Informe o título da prova.\".")
+add_numbered(doc, 3, "**Descrição** — área de texto livre.")
+add_numbered(doc, 4, "**Documento (ref. autos)** e **Folhas** — dupla de campos que registra a referência da prova aos autos do processo (distinta da \"Ref. autos\" da contradita, que só existe no bloco de depoente testemunhal/declaração de informante).")
+add_numbered(doc, 5, "**Código do anexo (opcional)** — texto livre; se vazio, a minuta gera automaticamente \"Prova nº N\" no índice.")
+add_numbered(doc, 6, "**Hash Veritas Digital - Coger** — texto livre, referência manual ao hash do item no Veritas (sem integração automática — ver Seção 5 para a integração real via arquivo).")
+add_numbered(doc, 7, "**Bloco de detalhe do tipo** — ver tabela abaixo; varia conforme o \"Tipo de prova\" escolhido.")
+add_numbered(doc, 8, "**Trechos significativos** — lista repetível de pares Citação / Referência, com botão para adicionar/remover linhas.")
+add_numbered(doc, 9, "**Contraditório — acusado intimado da produção?** — três opções: \"Intimado\", \"Não intimado\" ou \"Não avaliado\".")
+
+add_body(doc, "A prova também carrega uma lista de **fatos aos quais está vinculada** (`fatoIds`) — o mesmo vínculo tratado do lado do fato na Seção 3.3: marcar a checkbox no formulário do fato e vincular pelo lado da prova refletem o mesmo relacionamento.")
+
+add_body(doc, "As 8 opções do campo **\"Tipo de prova\"**:")
+
+make_table(
+    doc,
+    headers=["Tipo", "Revela bloco de detalhe próprio?", "Campos do bloco (se houver)"],
+    rows=[
+        ("Documental", "Não", "—"),
+        ("Pericial", "Sim", "Perito; Quesitos formulados? (Sim/Não)"),
+        ("Testemunhal", "Sim", "Deponente; Papel do depoente; Compromissada?; trio de contradita (Seção 3.4)"),
+        ("Declaração de informante", "Sim", "Mesmo bloco de Testemunhal, só muda o valor padrão do Papel do depoente"),
+        ("Interrogatório", "Não", "—"),
+        ("Diligência", "Não", "—"),
+        ("Prova emprestada", "Sim", "Processo de origem; Certidão de juntada?; Origem judicial?; Autorização judicial"),
+        ("Prova indiciária", "Sim", "Fato secundário provado; Raciocínio indutivo"),
+    ],
+    col_widths=[3.6, 4.4, 7.5],
 )
 
 add_body(
     doc,
-    "Confirmados no levantamento: o campo **Título** é obrigatório — se "
-    "vazio, o Nexo Coger bloqueia com \"Informe o título da prova.\"; o "
-    "**Tipo de prova** é o campo que decide quais campos de detalhe "
-    "adicionais aparecem (entre eles, Testemunhal e Declaração de "
-    "informante, que revelam o bloco de depoente da Seção 3.4); e a prova "
-    "carrega uma lista de **fatos aos quais está vinculada** (`fatoIds`), "
-    "que é o mesmo vínculo tratado do lado do fato na Seção 3.3 — marcar a "
-    "checkbox no formulário do fato e vincular pelo lado da prova refletem "
-    "o mesmo relacionamento.",
+    "\"Interrogatório\" e \"Diligência\" são tipos de prova **sem nenhum "
+    "campo de detalhe específico** — mesmo \"Interrogatório\" sendo, no "
+    "cadastro de acusado (Seção 3.6), um ato com campos próprios "
+    "(Status/Data/Ref. autos), o tipo de prova homônimo usa só os campos "
+    "gerais listados acima.",
 )
 
 add_alert(
     doc,
     [
-        "Os demais campos gerais do formulário de prova (por exemplo, "
-        "referência aos autos, categoria/tipo específico fora de "
-        "testemunhal/declaração) não foram auditados campo a campo neste "
-        "levantamento — este manual documenta com detalhe apenas o que foi "
-        "efetivamente confirmado no código-fonte.",
+        "**Trocar o \"Tipo de prova\" zera o bloco de detalhe já "
+        "preenchido.** Escolha o tipo definitivo antes de preencher o "
+        "detalhe (Perito, Deponente, Processo de origem etc.) — se você "
+        "mudar o tipo depois, o Nexo Coger descarta silenciosamente os "
+        "dados de detalhe já digitados.",
     ],
     kind="info",
-    label="Cobertura parcial",
+    label="Preencha o detalhe só depois de fixar o tipo",
 )
 
 add_h2(doc, "3.8 Selo de origem — retorno de oitiva")
@@ -1022,19 +1082,19 @@ add_alert(
     doc,
     [
         "**Atualização (rodada 2026-07-12)**: os três campos do tooltip "
-        "(`pauta_id`, `rodada_id`, `id_ponto`) agora vêm preenchidos. O "
-        "Oitiva 360 passou a incluir os três identificadores por item de "
-        "prova no contrato \"Exportar prova(s) para o Nexo\", lidos do "
+        "(`pauta_id`, `rodada_id`, `id_ponto`) vêm preenchidos sempre que a "
+        "prova exportada por \"Exportar prova(s) para o Nexo\" tem origem "
+        "em um ponto de pauta respondido — o Oitiva 360 passou a incluir os "
+        "três identificadores por item de prova nesse contrato, lidos do "
         "mesmo ponto de pauta (`estado.pautaImportada.itens`) já usado pelo "
-        "contrato de retorno de contexto. Quando uma prova exportada por "
-        "esse caminho não tem origem identificável em nenhum ponto de "
-        "pauta (cenário defensivo — item de pauta removido entre abrir o "
-        "diálogo de exportação e confirmar), os três campos saem `null` "
-        "explicitamente, nunca inventados; ver audit-oitiva-360.md §10 e "
-        "audit-nexo-coger.md §6.5 para o detalhe e o teste end-to-end.",
+        "contrato de retorno de contexto. Quando a prova foi **adicionada "
+        "manualmente na sessão, sem vínculo de pauta**, os três campos saem "
+        "`null` — comportamento correto e documentado, não uma limitação: "
+        "ver audit-oitiva-360.md §10 e audit-nexo-coger.md §6.5 para o "
+        "detalhe e o teste end-to-end.",
     ],
     kind="info",
-    label="IDs do tooltip preenchidos",
+    label="IDs do tooltip: preenchidos com origem de pauta, null sem ela",
 )
 
 add_body(
@@ -1051,29 +1111,99 @@ add_h2(doc, "3.9 Toolbar lateral")
 
 add_body(
     doc,
-    "O Nexo Coger mantém uma barra lateral com painéis de apoio à condução "
-    "da apuração. O mais detalhado e mais bem documentado neste manual é o "
-    "**painel de Pendências**, que lista, em tempo real, todos os códigos "
-    "de pendência crítica (P1, P2, P5, P8) e frágil (P3, P6a, P6b, P6c, P7) "
-    "presentes no processo — o mesmo catálogo apresentado na Seção 3.5.",
+    "O Nexo Coger mantém uma barra lateral com quatro painéis de apoio à "
+    "condução da apuração: **Pendências**, **Ordem dos fatos**, "
+    "**Checklist de encerramento** e **Prazos**.",
 )
 
-add_alert(
+add_h3(doc, "Pendências")
+
+add_body(
     doc,
-    [
-        "Os demais painéis citados na interface — **Ordem dos fatos**, "
-        "**Checklist de encerramento** e **Prazos** — existem (por exemplo, "
-        "a variável de estado `prazosSecOpen` é acionada automaticamente "
-        "logo após a primeira geração bem-sucedida de minuta, abrindo o "
-        "painel de Prazos), mas este manual não confirma, campo a campo, "
-        "as interações internas de cada um desses três painéis — o "
-        "levantamento de código disponível não teve profundidade suficiente "
-        "para documentá-los com o mesmo detalhamento do painel de "
-        "Pendências. Evite tomar esta seção como um roteiro completo da "
-        "toolbar lateral.",
+    "Lista, em tempo real, todos os códigos de pendência crítica (P1, P2, "
+    "P5, P8) e frágil (P3, P6a, P6b, P6c, P7) presentes no processo — o "
+    "mesmo catálogo apresentado na Seção 3.5. Clicar num item do tipo "
+    "\"acusado\" (P6c) abre diretamente o cadastro do acusado correspondente.",
+)
+
+add_h3(doc, "Ordem dos fatos")
+
+add_body(
+    doc,
+    "Lista apenas os **fatos ativos** (fatos arquivados nunca aparecem "
+    "aqui, mas o cabeçalho informa a contagem de arquivados que não "
+    "constam da minuta). A ordenação **não é cronológica nem automática "
+    "por gravidade — é inteiramente manual**, feita arrastando cada linha "
+    "para a posição desejada. O próprio painel avisa: \"Arraste para "
+    "reordenar. Afeta apenas a sequência da minuta — não o mapa.\". Ao "
+    "soltar, o Nexo Coger renumera 1..N os fatos ativos nessa nova "
+    "sequência, que é exatamente a ordem em que \"Dos fatos e das "
+    "condutas\" aparece na minuta de indiciação (Seção 3.5).",
+)
+
+add_h3(doc, "Checklist de encerramento")
+
+add_body(
+    doc,
+    "Sempre visível (não é um painel recolhível). Traz 5 itens, quase "
+    "todos calculados automaticamente a partir do estado do processo — não "
+    "são checkboxes que o usuário marca diretamente:",
+)
+
+make_table(
+    doc,
+    headers=["Item", "Condição"],
+    rows=[
+        ("C1", "Notificação prévia registrada para todos os acusados."),
+        ("C2", "Interrogatório realizado ou silêncio formalizado para todos, após todas as provas."),
+        ("C3", "Zero pendências críticas (P1, P2, P5, P8)."),
+        ("C4", "Pendências frágeis todas marcadas como revisadas (único item com insumo manual — a revisão é feita no próprio painel de Pendências, item a item, não neste checklist)."),
+        ("C5", "Multiplicidades classificadas (zero pendências P4)."),
     ],
-    kind="info",
-    label="Cobertura parcial dos demais painéis",
+    col_widths=[1.6, 13.9],
+)
+
+add_body(
+    doc,
+    "Abaixo dos 5 itens, o botão \"Gerar minuta do termo de indiciação\" "
+    "fica desabilitado enquanto houver qualquer pendência crítica, com a "
+    "mesma mensagem já citada na Seção 3.5.",
+)
+
+add_h3(doc, "Prazos")
+
+add_body(
+    doc,
+    "Calcula o **prazo de conclusão do processo** a partir da data de "
+    "instauração (o mesmo campo \"Data de instauração\" da tela \"Dados do "
+    "Processo\", Seção 3.1), somada ao prazo padrão do rito e a eventuais "
+    "prorrogações registradas. Sem data de instauração preenchida, o "
+    "painel pede que ela seja informada em vez de mostrar a barra de "
+    "prazo. A barra muda de cor conforme a proximidade do vencimento "
+    "(verde / âmbar com 15 dias ou menos restantes / vermelho se excedido).",
+)
+
+add_body(
+    doc,
+    "Quando há pendência **P6c** aberta para algum acusado, o painel exibe "
+    "um aviso com link direto para o cadastro daquele acusado — e, se a "
+    "cor do prazo de conclusão estiver verde, o painel força o indicador "
+    "para âmbar mesmo sendo P6c uma pendência de outro assunto (intimação "
+    "para o interrogatório, não prazo de conclusão do processo).",
+)
+
+add_body(
+    doc,
+    "Após a primeira geração bem-sucedida da minuta de indiciação, o "
+    "painel de Prazos **abre automaticamente** e ganha uma subseção nova, "
+    "\"Citação e defesa escrita (art. 161)\" (data da citação, meio — "
+    "Pessoal ou Edital, com ajuste automático do prazo padrão de defesa —, "
+    "prazo de defesa em dias, e a data calculada do termo final da defesa "
+    "escrita). Esse bloco só é renderizado quando a mesma variável interna "
+    "que marca \"minuta já gerada\" está ativa — por isso o painel abre "
+    "sozinho justamente nesse momento: é quando ele passa a ter conteúdo "
+    "novo e relevante, chamando a atenção da comissão para o prazo de "
+    "defesa que passa a correr a partir da indiciação.",
 )
 
 page_break(doc)
@@ -1598,19 +1728,17 @@ add_body(
 add_alert(
     doc,
     [
-        "**Limitação técnica conhecida** (a mesma da Seção 3.8): hoje, os "
-        "três identificadores do tooltip do selo de prova (`pauta_id`, "
-        "`rodada_id`, `id_ponto`) aparecem vazios, porque o Oitiva 360 ainda "
-        "não emite esses três campos nesse contrato específico de "
-        "exportação de prova. O selo em si já funciona — aparece "
-        "corretamente sempre que a prova carrega a marca de origem de "
-        "oitiva — mas a rastreabilidade completa até a pauta/rodada/ponto "
-        "exatos ainda não está disponível por esse caminho. O selo "
-        "pré-existente no cartão de **fato**, mencionado acima, não tem essa "
-        "limitação e já funciona integralmente.",
+        "O tooltip do selo de prova (a mesma situação da Seção 3.8) mostra "
+        "os três identificadores **preenchidos** (`pauta_id`, `rodada_id`, "
+        "`id_ponto`) sempre que a prova exportada por \"Exportar prova(s) "
+        "para o Nexo\" tem origem em um ponto de pauta respondido. Quando a "
+        "prova foi adicionada manualmente na sessão, sem vínculo de pauta, "
+        "os três campos ficam `null` — comportamento correto e "
+        "documentado, não uma limitação. O selo pré-existente no cartão de "
+        "**fato**, mencionado acima, segue funcionando como sempre.",
     ],
     kind="info",
-    label="Selo de prova — IDs do tooltip ainda vazios",
+    label="IDs do tooltip: preenchidos com origem de pauta, null sem ela",
 )
 
 add_h2(doc, "5.5 Badges de pendência e status")
