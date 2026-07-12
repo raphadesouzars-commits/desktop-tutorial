@@ -438,8 +438,14 @@ svg.map{display:block}
 .block > .block-title{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
   color:var(--ink-2);margin-bottom:10px;display:flex;align-items:center;gap:8px}
 /* Gate — Dados do processo (primeira tela, bloqueia o resto do app) */
-.gate{position:fixed;inset:0;z-index:9999;display:flex;align-items:flex-start;justify-content:center;
+.gate{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
   padding:40px 16px;overflow:auto;background:linear-gradient(160deg,var(--rfb-navy-900) 0%,var(--rfb-navy-800) 100%)}
+.gate-hero{max-width:760px;width:100%;margin:0 0 22px;padding:0 4px}
+.gate-hero__eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:600;
+  letter-spacing:.6px;text-transform:uppercase;color:var(--rfb-gold-400)}
+.gate-hero__eyebrow::before{content:"";width:28px;height:2px;background:var(--rfb-gold-500);border-radius:1px;display:inline-block}
+.gate-hero__title{margin:6px 0 0;font-family:var(--rfb-font-display);font-size:clamp(26px,4vw,38px);font-weight:700;color:#fff}
+.gate-hero__sub{margin:6px 0 0;font-size:13px;color:#A8BEDD;letter-spacing:.2px}
 .gate-card{background:var(--paper);color:var(--ink);max-width:760px;width:100%;border-radius:14px;
   padding:28px 32px 22px;box-shadow:0 20px 60px rgba(0,0,0,.35)}
 .gate-card h1{font-family:var(--rfb-font-display);font-size:28px;margin:0 0 4px;color:var(--rfb-navy-900)}
@@ -523,6 +529,11 @@ svg.map.isolating .node.hl{opacity:1}
      (ver init()/atualizarGateProcesso()). Rótulos e formato do bloco de comissão seguem o mesmo
      vocabulário do Oitiva 360 (Presidente da comissão / Secretário(a) / Vogais + "+ Adicionar vogal"). -->
 <div class="gate" id="gate" style="display:none">
+  <div class="gate-hero">
+    <span class="gate-hero__eyebrow">Ferramenta interativa</span>
+    <h1 class="gate-hero__title">Nexo Coger</h1>
+    <p class="gate-hero__sub">Sistema de Verificação de Nexo Fático-Probatório · Coger/RFB</p>
+  </div>
   <div class="gate-card" id="gateCard"></div>
 </div>
 
