@@ -276,3 +276,53 @@ Efeito colateral: na primeira geração bem-sucedida, `doc._minutaGerada=true` e
 - O modelo de "acusado" (`doc.acusados[]`) é **totalmente separado** do sistema de papéis do catálogo (`papeis_pessoa`) — um acusado nunca tem `papelId`; o papel só existe no contexto de "depoente" (prova testemunhal/declaração de informante) e na tela de revisão de pauta.
 - O catálogo de papéis (`CATALOGO_COGER.papeis_pessoa`) é lido dinamicamente pelo Nexo Coger (comentário explícito no código, linhas 2602–2605: "Lista lida de CATALOGO_COGER.papeis_pessoa, não hardcoded, para que qualquer papel novo do catálogo apareça aqui automaticamente"), mas o filtro aplicado é só `status==='ativo'`; o campo `origem_permitida` (que sugere que 4 dos 5 papéis seriam exclusivos do Oitiva 360) **não é respeitado** na prática — todos os 5 aparecem nos dois seletores do próprio Nexo Coger.
 - Bug potencial identificado: inicialização de `compromissada:true` fixa ao criar o bloco de detalhe de depoente pela primeira vez, mesmo quando o papel padrão correspondente (`PAPEL.DECLARANTE_INFORMANTE`) tem `compromisso:false` no catálogo — só se autocorrige se o usuário reselecionar o papel no dropdown.
+
+---
+
+## 6. Adendo (rodada de implementação 2026-07-12) — Tela "Dados do Processo" (gate) e selo de origem oitiva
+
+### 6.1 Tela "Dados do Processo" — primeira etapa, bloqueante
+
+Novo bloco HTML `<div class="gate" id="gate">` (linhas ~510–516), fixo em tela cheia, `z-index:9999` — acima de `#overlay`/`#modal`. Conteúdo montado dinamicamente por `renderGateProcesso()` (função `13-bis`, logo antes de `abrirFormProcesso()`). Escreve **diretamente** em `doc.processo` (não é uma cópia como `abrirFormProcesso`), com `scheduleSave()` a cada alteração — autosave por campo, sem "Cancelar/Salvar".
+
+Campos, na ordem exibida (rótulos exatos):
+1. **"Número do processo"** (`fieldText`, id do input gerado por `fieldText`, sem `id` fixo — localizável por `.field:has-text("Número do processo") input`) — único campo obrigatório para liberar o gate.
+2. **"Tipo (PN CGU 27)"** (`<select>` agrupado, mesmo catálogo `TIPOS_PROCESSO` já usado em `abrirFormProcesso` — IP/SINVE/SINPA/SINAC/PAD, agrupados "— Investigativos —"/"— Acusatórios —"). *Desvio da especificação*: o pedido original citava um select simples "PAD, PAR, Sindicância"; optei por reaproveitar o catálogo `TIPOS_PROCESSO` já existente (mais preciso, 5 tipos reais da PN CGU 27/2022) em vez de introduzir uma segunda lista de tipos divergente da já usada em `abrirFormProcesso`/`renderIndiciacao` (`doc.processo.tipo==='PAD'?'CI':'CS'`, linha ~3863).
+3. **"Portaria de instauração — nº"** (`fieldText`) — grava em `doc.processo.comissao.portariaInstauracao.numero`.
+4. **"Data de instauração"** (`fieldText` tipo `date`, hint "Marco de interrupção da prescrição (art. 142, §3º, Lei 8.112/90).") — grava em `doc.processo.comissao.portariaInstauracao.data`. Não é um campo novo: é o mesmo `portariaInstauracao.data` que já existia (reaproveitado, só renomeado na UI da nova tela).
+5. **"Presidente da comissão"** — trio Nome/Cargo/Matrícula → `doc.processo.comissao.presidente`.
+6. **"Secretário(a)"** — trio Nome/Cargo/Matrícula → `doc.processo.comissao.secretario` (**campo novo** no modelo de dados; não existia antes desta rodada). Adicionado a `docVazio()` e retrocompatibilizado em `migra()`.
+7. **"Vogal(is)"** — lista repetível de trios Nome/Cargo/Matrícula, botão **"+ Adicionar vogal"**, botão "✕" por linha para remover. Grava em `doc.processo.comissao.membros` — **o nome interno do array continua `membros`** (não renomeado para `vogais`, para não tocar identificador interno já usado em `blocoAssinatura3`/`renderIndiciacao`/`migra`); só o rótulo visível virou "Vogal N" (era "Membro N") e o botão "+ Adicionar vogal" (era "+ membro"). O mesmo rótulo foi aplicado ao modal de edição já existente `abrirFormProcesso()` (bloco "Comissão"), para manter os dois pontos de edição consistentes entre si.
+
+Rótulos e agrupamento (Presidente → Secretário(a) → Vogais, com "+ Adicionar vogal") replicam literalmente o vocabulário da Etapa 1 do Oitiva 360 e da própria "Tela do Processo" do Oitiva 360 (`oitiva-360.html`, linhas ~1562–1615 e ~1650–1702).
+
+### 6.2 Lógica do gate
+
+- `processoGateCompleto()` → `!!(doc.processo.numero && doc.processo.numero.trim())`.
+- `atualizarGateProcesso()` → mesmo padrão de `atualizarAvisoMatriz()`/`atualizarAvisoNumeroProcesso()` do Oitiva 360: desabilita o botão `#gateBtnContinuar` e mostra `<div class="gate-aviso">` com o texto "Preencha ao menos o \"Número do processo\" para liberar o acesso ao cadastro de fatos, provas e ao mapa — o número também nomeia os arquivos exportados." enquanto incompleto.
+- `abrirGateProcesso()` → renderiza e exibe (`display:flex`); `fecharGateProcesso()` → esconde e chama `render()`.
+- Disparado em `init()`, logo após o primeiro `render()`: `if(!processoGateCompleto()) abrirGateProcesso();`. Também disparado por `limparTudo()` (que zera `doc.processo.numero`), reabrindo o gate após "Limpar tudo".
+- O gate é um elemento fixo cobrindo 100% da viewport com `z-index` acima de tudo — o app por trás (`#btnAddFato`, `#btnMenu`, etc.) continua no DOM mas fica inacessível a clique/tab enquanto o gate está visível (confirmado via teste automatizado: `page.click('#btnAddFato')` sob o gate estoura timeout de "elemento não clicável").
+- **Rascunhos antigos do localStorage**: se já existir um dossiê salvo com `doc.processo.numero` preenchido, o gate não aparece (mesma UX do Oitiva 360 — o gate é first-run, não uma tela obrigatória a cada carregamento).
+
+### 6.3 Nomeação de arquivos exportados pelo número do processo
+
+Levantamento de **todas** as funções de export (`baixar(...)`, 2 ocorrências no arquivo):
+- `exportJson()` (linha ~3122) — já usava `doc.processo.numero` antes desta rodada: `nexo-coger-<numero>-<data>.json`. Sem alteração necessária.
+- `gerarPautaPorDepoente()` (linha ~3291, dispara a partir de "Pauta de instrução por depoente") — **alterado nesta rodada**: antes só usava o nome do depoente (`nexo-coger-pauta-<depoente>-<data>.json`); passou a incluir também o número do processo: `nexo-coger-pauta-<numero>-<depoente>-<data>.json`.
+- `gerarMinutaFlow`/`gerarIntimacaoFlow`/`printMap` não geram download de arquivo — usam `openPrint()` (impressão do navegador), fora do escopo de "nome de arquivo exportado".
+- `manual/screenshot.js` foi ajustado (`runNexo`) para preencher o gate antes de dirigir o resto do fluxo, já que ele passou a bloquear `#btnMenu` no primeiro carregamento.
+
+### 6.4 Selo "🎙 Oitiva" no cartão de prova (`drawProvaCard`)
+
+**Achado importante antes de implementar** (confirmado por grep, não presumido): o contrato de retorno de oitiva "Rodada 6" (`origem:"oitiva-360"`, `pauta_id`, `rodada_id`, `id_ponto`) documentado no comentário de `oitiva-360.html` ("RODADA 6 do contrato entre ferramentas — Retorno da prova (contexto do acusado no Nexo Coger)", função `construirEnvelopeRetorno`) **não cria uma prova em `doc.provas`** — ele popula `acusado.provasContexto[]` (consumido por `importarRetornoOitiva()` → `mapearRetornoContexto()`, nexo-coger.html linha ~3600), que já tinha seu próprio selo dourado `🎙` no **cartão de FATO** (`contextoOitivaFato`, linha ~2193, pré-existente, fora do escopo desta rodada).
+
+O contrato que efetivamente cria itens em `doc.provas` a partir do Oitiva 360 é o botão "Exportar prova(s) para o Nexo" (`oitiva-360.html`, handler de `#btn-confirmar-exportar-prova`, ~linha 5984), que gera `{origem:"oitiva-360", processo, provas:[{fatoIds, tipo, titulo, ...}]}` — **sem** `pauta_id`/`rodada_id`/`id_ponto` por item na versão atual do Oitiva 360. Esse arquivo é consumido no Nexo Coger por `importarProva()` → `revisarImportacaoProva(d)` → `aplicarImportacaoProva(aprovadas, d)`.
+
+Implementação adotada (fiel ao contrato real, e preparada para quando/se o Oitiva 360 passar a emitir `pauta_id`/`rodada_id`/`id_ponto` por item de prova, já que a task pedia exatamente esses 3 campos no tooltip):
+- `revisarImportacaoProva(d)` agora passa `d` para `aplicarImportacaoProva(aprovadas, d)` (antes só recebia `aprovadas`).
+- `aplicarImportacaoProva` marca `nova.origemOitiva = {pautaId, rodadaId, idPonto}` quando `d.origem==='oitiva-360'` (lendo `it.pauta_id||it.pautaId`, etc. — hoje resultam em `''` porque o Oitiva 360 ainda não exporta esses 3 campos nesse contrato específico, mas o campo `origemOitiva` já fica presente e não-nulo, então o selo aparece mesmo assim, só com "—" nos 3 IDs). Provas importadas do Veritas (`revisarImportacaoVeritas`/`aplicarImportacaoVeritas`, que já gravam `origemVeritas`) **não** passam por este caminho, logo nunca recebem `origemOitiva`.
+- `migra()` faz backfill de `pr.origemOitiva=null` em provas de rascunhos antigos que não tinham o campo.
+- `docVazio()` não precisou de alteração (o campo só existe em provas concretas, nunca no array vazio inicial).
+- `drawProvaCard()` (linha ~2210): novo badge, inserido logo após o badge `🌐` (Veritas) e antes do `§` (trechos): `if(p.origemOitiva){ badge(node,bx,20,'🎙','var(--rfb-gold-600)', 'Origem: retorno de oitiva (Oitiva 360) · pauta_id: '+... ); bx-=20; }`. Usa a mesma variável `--rfb-gold-600` já usada no selo homônimo do cartão de fato (`contextoOitivaFato`), para manter a mesma paleta "dourado = Oitiva 360" em toda a ferramenta. Tooltip nativo (`<title>` dentro do `<text>` SVG, mesmo padrão de todos os outros badges de `drawProvaCard`/`drawFatoCard`) mostra `pauta_id`/`rodada_id`/`id_ponto`.
+- Testado via Playwright headless (`doc`/`aplicarImportacaoProva` chamados diretamente por `page.evaluate`, sem passar por upload de arquivo real): confirmado que o selo aparece com o tooltip correto quando `origemOitiva` está presente, e que uma prova com apenas `origemVeritas` (sem `origemOitiva`) não recebe o selo.

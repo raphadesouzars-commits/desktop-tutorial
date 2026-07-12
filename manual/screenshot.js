@@ -131,6 +131,17 @@ async function runNexo(page) {
   await page.goto(fileUrl(path.join(ROOT, 'ferramentas/nexo-coger.html')));
   await page.waitForSelector('#btnMenu');
 
+  // Nexo Coger now opens on the "Dados do Processo" gate (1ª etapa) when there's no saved draft —
+  // it blocks the rest of the app until "Número do processo" is filled. Clear it here so the rest
+  // of this script (which drives #btnMenu etc.) isn't blocked by the fixed overlay.
+  const gate = page.locator('#gate');
+  if (await gate.isVisible().catch(() => false)) {
+    const gateNumero = page.locator('#gateCard .field', { hasText: 'Número do processo' }).locator('input').first();
+    await gateNumero.fill(FIXTURE.processo.numero);
+    await page.click('#gateBtnContinuar');
+    await page.waitForTimeout(200);
+  }
+
   // Use built-in seed scenario "Carregar exemplo" to get a full fato-prova-norma map quickly.
   await page.click('#btnMenu');
   await page.waitForSelector('#menu.open');
