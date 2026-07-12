@@ -326,3 +326,151 @@ Implementação adotada (fiel ao contrato real, e preparada para quando/se o Oit
 - `docVazio()` não precisou de alteração (o campo só existe em provas concretas, nunca no array vazio inicial).
 - `drawProvaCard()` (linha ~2210): novo badge, inserido logo após o badge `🌐` (Veritas) e antes do `§` (trechos): `if(p.origemOitiva){ badge(node,bx,20,'🎙','var(--rfb-gold-600)', 'Origem: retorno de oitiva (Oitiva 360) · pauta_id: '+... ); bx-=20; }`. Usa a mesma variável `--rfb-gold-600` já usada no selo homônimo do cartão de fato (`contextoOitivaFato`), para manter a mesma paleta "dourado = Oitiva 360" em toda a ferramenta. Tooltip nativo (`<title>` dentro do `<text>` SVG, mesmo padrão de todos os outros badges de `drawProvaCard`/`drawFatoCard`) mostra `pauta_id`/`rodada_id`/`id_ponto`.
 - Testado via Playwright headless (`doc`/`aplicarImportacaoProva` chamados diretamente por `page.evaluate`, sem passar por upload de arquivo real): confirmado que o selo aparece com o tooltip correto quando `origemOitiva` está presente, e que uma prova com apenas `origemVeritas` (sem `origemOitiva`) não recebe o selo.
+
+---
+
+## 7. Adendo (releitura aprofundada) — 4 pontos deixados incompletos
+
+### 7.1 Cadastro de acusado — campos completos (`abrirFormAcusado`, linhas 2529–2596)
+
+Objeto `a` de um acusado novo (linhas 2531–2534):
+```js
+{id:genId('A'),nome:'',matricula:'',cargo:'',lotacao:'',qualificacaoComplementar:'',
+ situacaoFuncional:'ativo',telefone:'',email:'',alegacoesDefesaNaoAcatadas:'',
+ notificacaoPrevia:{realizada:false,data:'',refAutos:''},
+ interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null},
+ provasContexto:[]}
+```
+
+Campos do corpo do modal, na ordem exata em que aparecem (array `body`, linhas 2536–2582):
+
+| # | Label exato | Tipo de campo | Obrigatório na validação de salvamento? |
+|---|---|---|---|
+| 1 | "Nome" | `fieldText`, texto livre | **Sim** — único campo bloqueante: `if(!(a.nome||'').trim()){ $('#accErr').textContent='Informe o nome do acusado.'; return; }` [linha 2589] |
+| 2 | "Matrícula (SIAPE)" | `fieldText`, texto livre | Não |
+| 3 | "Cargo" | `fieldText`, texto livre | Não (mas ver nota abaixo — exigido indiretamente na *geração da minuta*, não no cadastro) |
+| 4 | "Lotação" | `fieldText`, texto livre | Não |
+| 5 | "Qualificação complementar" | `fieldArea`, texto livre | Não |
+| 6 | "Situação funcional" | `fieldSelect`, opções de `SITUACOES_FUNCIONAIS` (linhas 1485–1490): `Ativo (não licenciado/afastado)` / `Licenciado/afastado` / `Inativo (aposentado)` / `Ex-servidor` | Não |
+| 7 | "Telefone(s) móvel(is)" | `fieldText`, texto livre, hint: "Usado em \"Contatos:\" nos termos de intimação." | Não |
+| 8 | "E-mail(s)" | `fieldText`, texto livre | Não |
+| 9 | "Alegações da defesa não acatadas" | `fieldArea`, hint: "Preenchida antes da impressão final da indiciação. Também pode ser ajustada na própria tela de impressão." | Não |
+| 10 | Bloco "Notificação prévia": **"Realizada?"** (rádio Sim/Não), **"Data"** (`fieldText` tipo `date`), **"Ref. autos"** (`fieldText`) | — | Não (nenhuma validação de salvamento exige preenchimento; mas alimenta o item C1 do checklist de encerramento — ver 7.3) |
+| 11 | Bloco "Interrogatório": **"Status"** (`fieldSelect`: `Pendente` / `Realizado` / `Silêncio formalizado` / `Cancelado`), **"Data"** (`fieldText` tipo `date`), **"Ref. autos"** (`fieldText`), **"Realizado após todas as provas?"** (rádio Sim/Não) | — | Não (alimenta o item C2 do checklist — ver 7.3) |
+| 12 | (condicional) Bloco "Contexto de oitiva (N)" — só aparece se `a.provasContexto.length>0`. Lista cada item de `provasContexto` com "fato \<ref\> · id_prova \<id\>", a citação de `resumoResposta` entre aspas (se houver), e uma checkbox "Revisado" que alterna `p.status` entre `'revisado'`/`'pendente_revisao'` | checkbox | Não é campo de formulário no sentido tradicional; é a ação de revisão do retorno de oitiva (comentário no código, linha 2569–2571: é "parte do próprio ato de abrir e conferir o cadastro do acusado", não um botão isolado) |
+
+Confirmado: **não há campo de CPF nem de endereço** no formulário — a única "qualificação complementar" é o campo de texto livre (item 5), que serve como escape hatch genérico para qualquer dado de qualificação que não tenha campo dedicado (nome, matrícula, cargo, lotação).
+
+Validação completa no botão "Salvar" (linhas 2588–2593): só o nome é checado. Cargo, matrícula e lotação **não são exigidos no cadastro do acusado** — mas `validaMinuta()` (já documentada na seção 4) exige `a.cargo` no momento de *gerar a minuta* (linha 3803: `if(!a.cargo) f.push('• Cargo do indiciado '+(a.nome||id)+'.')`), ou seja, a obrigatoriedade de cargo é adiada para a geração do documento, não bloqueia o cadastro em si.
+
+**Confirmação de leitura em outro lugar do sistema** (grep por `a.matricula`, `a.cargo`, `a.lotacao`, `a.qualificacaoComplementar`): a "Tabela de qualificação" citada na seção 4 do documento de indiciação lê, de fato, os campos recém-documentados. Trecho de `renderIndiciacao` (linhas 3863–3868):
+```js
+partes.push(`<table class="qual">
+  <tr><td><b>Nome</b></td><td>${esc(a.nome)}</td></tr>
+  <tr><td><b>Matrícula</b></td><td>${esc(a.matricula||'—')}</td></tr>
+  <tr><td><b>Cargo</b></td><td>${esc(a.cargo||'—')}</td></tr>
+  <tr><td><b>Lotação</b></td><td>${esc(a.lotacao||'—')}</td></tr>
+  ${a.qualificacaoComplementar?`<tr><td><b>Qualificação</b></td><td>${esc(a.qualificacaoComplementar)}</td></tr>`:''}
+</table>`);
+```
+Confirma-se linha a linha: Nome, Matrícula, Cargo, Lotação sempre aparecem (com "—" se vazios); "Qualificação" só aparece se `qualificacaoComplementar` estiver preenchida. O cabeçalho do documento (linha 3861) também repete nome/cargo/matrícula: `` `Servidor: ${esc(a.nome)}, ${esc(a.cargo||'—')}, matrícula ${esc(a.matricula||'—')}` ``. Os demais campos do cadastro (situação funcional, telefone, e-mail, notificação prévia, interrogatório) **não são lidos** por `renderIndiciacao`/`tabelaFatoProvaEnquadramento` — servem a outros fins (checklist de encerramento, painel de Prazos/P6c — ver 7.3 e 7.4).
+
+### 7.2 Cadastro de prova — campos gerais completos (`abrirFormProva`, linhas 2613–2727)
+
+Objeto `p` de uma prova nova (linhas 2615–2617):
+```js
+{id:genId('P'),tipo:'documental',titulo:'',descricao:'',
+ refAutos:{documento:'',folhas:''},hashVeritas:'',codigoAnexo:'',trechosSignificativos:[],
+ contraditorio:{acusadoIntimado:null,refAutos:''},detalhe:{}}
+```
+
+Campos gerais do corpo do modal, na ordem (array `body`, linhas 2693–2713) — todos independentes do tipo escolhido, exceto o bloco `detBox` que muda de conteúdo:
+
+1. **"Tipo de prova"** — `fieldSelect`. **Ao trocar, zera `p.detalhe={}`** (linha 2698: `v=>{p.tipo=v;p.detalhe={};renderDetalhe();}`) — trocar o tipo descarta qualquer dado de detalhe já preenchido.
+2. **"Título"** — `fieldText`, texto livre.
+3. **"Descrição"** — `fieldArea`, texto livre.
+4. Linha dupla **"Documento (ref. autos)"** / **"Folhas"** — dois `fieldText`, gravam em `p.refAutos.documento`/`p.refAutos.folhas`. Este é o campo de "referência aos autos" da prova (distinto do "Ref. autos" da contradita, que só existe no bloco condicional testemunhal/declaração de informante).
+5. **"Código do anexo (opcional)"** — `fieldText`, hint: "Ex.: \"Anexo 3\", \"Doc. 12\". Se vazio, a minuta gera \"Prova nº N\" automaticamente no índice."
+6. **"🔗 Hash Veritas Digital - Coger"** — `fieldText`, hint: "Referência manual ao hash do item no Veritas (sem integração automática)."
+7. `detBox` — bloco condicional por tipo (ver tabela abaixo).
+8. `trechosBox` — bloco "Trechos significativos": lista repetível de pares Citação (textarea) / Ref. (`fieldText`), botão "✕" por linha, botão "+ trecho" para adicionar. Independente do tipo.
+9. **"Contraditório — acusado intimado da produção?"** — grupo de rádios com 3 opções: `Intimado` (`true`) / `Não intimado` (`false`) / `Não avaliado` (`null`). Grava em `p.contraditorio.acusadoIntimado`.
+
+Validação de salvamento (linha 2719): só **"Informe o título da prova."** se `p.titulo` vazio — nenhum outro campo geral é obrigatório.
+
+**Opções completas do select "Tipo de prova"** (linhas 2694–2698) e o que cada uma revela em `renderDetalhe()` (linhas 2620–2673):
+
+| Valor | Label | Bloco de detalhe próprio? | Campos do bloco |
+|---|---|---|---|
+| `documental` | Documental | **Não** — cai no `else` genérico (linha 2670–2671): "Este tipo de prova não possui campos adicionais." | — |
+| `pericial` | Pericial | **Sim** | "Perito" (`fieldText`), "Quesitos formulados?" (rádio Sim/Não) [linhas 2664–2669] |
+| `testemunhal` | Testemunhal | **Sim** (já documentado na auditoria anterior, seção 3) | "Deponente", "Papel do depoente", "Compromissada?", "Houve contradita?"/"Acolhida?"/"Ref. autos" [linhas 2623–2645] |
+| `declaracao_informante` | Declaração de informante | **Sim** — mesmo bloco de "testemunhal" (mesma condição `if`), só muda o valor padrão de `papelId` | idem acima |
+| `interrogatorio` | Interrogatório | **Não** — não tem `else if` próprio; cai no `else` genérico ("não possui campos adicionais") | — |
+| `diligencia` | Diligência | **Não** — mesmo `else` genérico | — |
+| `emprestada` | Prova emprestada | **Sim** | "Processo de origem" (`fieldText`), "Certidão de juntada?" (rádio), "Origem judicial?" (rádio), "Autorização judicial" (`fieldSelect`: Não aplicável/Pendente/Juntada) [linhas 2646–2658] |
+| `indiciaria` | Prova indiciária | **Sim** | "Fato secundário provado" (`fieldArea`), "Raciocínio indutivo" (`fieldArea`, hint: "Explicite a inferência: do fato provado, o que se conclui e por quê.") [linhas 2659–2663] |
+
+Achado relevante não coberto antes: **"Interrogatório" e "Diligência" são tipos de prova sem nenhum campo de detalhe específico** — apesar de existirem como opções no select e de "Interrogatório" ser, inclusive, o mesmo ato tratado com campos próprios no cadastro do *acusado* (bloco "Interrogatório" de `abrirFormAcusado`, seção 7.1 acima), o tipo de prova `interrogatorio` em si não tem formulário de detalhe — usa só os campos gerais (título, descrição, ref. autos etc.).
+
+### 7.3 Toolbar lateral — os 3 painéis restantes
+
+**Ordem dos fatos** — `renderFactOrder()`, linhas 2364–2404, painel `#factOrder`, controlado por `factOrderOpen` (linha 1553, recolhido por padrão).
+- Lista apenas os **fatos ativos** (`fatosAtivosOrdenados()`) — fatos arquivados nunca aparecem na lista, mas o cabeçalho mostra a contagem: "N fato(s) arquivado(s) não constam da minuta." se houver algum.
+- Critério de ordenação: **não é cronológico nem por gravidade — é 100% manual**, via arrasto (`draggable:'true'`, handlers `dragstart`/`dragover`/`drop`). O hint explícito confirma: "Arraste para reordenar. Afeta apenas a sequência da minuta — não o mapa." [linha 2375]
+- Ao soltar (`drop`), `moverOrdemFato(fromId,toId)` reordena o array e chama `renumeraOrdem(seq)`, que regrava `1..N` no campo `ordem` de cada fato ativo (comentário linha 2402: "grava 1..N na nova sequência (só ativos)").
+- É plenamente interativo (o usuário reordena arrastando); a numeração exibida (`f.ordem`) é o que a auditoria da seção 4 já citava como "na ordem narrativa definida no painel" para a montagem de "Dos fatos e das condutas" na minuta de indiciação.
+
+**Checklist de encerramento** — `renderChecklist()`, linhas 2466–2492, painel `#checklist` (sempre visível, não colapsável — distinto do Oitiva 360, que a auditoria diz ter checklist próprio separado).
+5 itens, todos calculados **automaticamente** a partir do estado do processo (nenhum item é marcado manualmente pelo usuário clicando num checkbox de conclusão):
+| Item | Texto exibido | Condição (código) |
+|---|---|---|
+| C1 | "Notificação prévia registrada para todos os acusados" | `ac.length>0 && ac.every(a=>a.notificacaoPrevia&&a.notificacaoPrevia.realizada)` |
+| C2 | "Interrogatório realizado/silêncio formalizado para todos, após todas as provas" | `ac.length>0 && ac.every(a=>['realizado','silencio_formalizado'].includes(a.interrogatorio.status) && a.interrogatorio.aposTodasAsProvas===true)` |
+| C3 | "Zero pendências críticas (P1, P2, P5, P8)" | nenhuma pendência com `nivel==='critico'` entre esses 4 códigos |
+| C4 | "Pendências frágeis todas marcadas como revisadas" | todas as pendências frágeis presentes em `PENDENCIAS` estão em `revisadas` (Set de `codigo:alvoId` marcados manualmente — este é o único ponto do checklist com insumo manual do usuário, indireto: o usuário marca pendências individuais como revisadas no painel de Pendências, não no checklist em si) |
+| C5 | "Multiplicidades classificadas (zero P4)" | nenhuma pendência `P4` presente |
+Abaixo dos itens, botão "Gerar minuta do termo de indiciação" (`gerarMinutaFlow()`), desabilitado (`btn.disabled=true`) se houver qualquer pendência crítica, com `title` "Há pendências críticas que impedem a indiciação. Veja o painel." — o mesmo texto do `alert` bloqueante já documentado na seção 4.
+
+**Prazos** — `renderPrazosPanel()`, linhas 2406–2464, painel `#prazosSec`, controlado por `prazosSecOpen` (linha 1554, recolhido por padrão).
+- Prazo de conclusão do processo (`prazoConclusaoInfo()`, linhas 2407–2415): calculado a partir de **`doc.processo.comissao.portariaInstauracao.data`** (data de instauração — mesmo campo documentado na seção 6.1 como "Data de instauração" do gate) somada a `doc.processo.prazos.prazoConclusaoDias` (default 60, ou 30 se rito sumário) + soma de `prorrogacoes[].dias`. Se não há data de instauração, mostra "Instauração não datada — informe a data da portaria para acompanhar o prazo de conclusão." em vez da barra. A barra de progresso fica verde/âmbar (≤15 dias restantes)/vermelho (prazo excedido).
+- Linha de aviso de **P6c** (se presente): "⚠ Antecedência de intimação insuficiente: \<nome do acusado\>" com link clicável que abre `abrirFormAcusado`. Se P6c estiver ativa e a cor do prazo de conclusão for verde, o painel força a bolinha de status para âmbar (linha 2421: `if(p6c && dot==='verde') dot='ambar';`) — ou seja, P6c "contamina" visualmente o indicador do painel mesmo sendo uma pendência de outro assunto (intimação para interrogatório, não prazo de conclusão).
+- Bloco **"Citação e defesa escrita (art. 161)"** — só aparece **se `doc._minutaGerada===true`** (linha 2441): "Data da citação" (`date`), "Meio" (select Pessoal/Edital — trocar para "Edital" ajusta automaticamente o prazo padrão de defesa para 15 dias se estava em 10, e vice-versa ao trocar para "Pessoal"), "Prazo de defesa (dias)" (texto numérico), e a data calculada "Termo final da defesa escrita" (`data da citação + prazo de defesa`).
+
+**Confirmação do gatilho `prazosSecOpen=true`** (linha 3775, dentro de `renderIndiciacao`): `if(!doc._minutaGerada){ doc._minutaGerada=true; prazosSecOpen=true; }` — confirmado, dispara exatamente na primeira geração bem-sucedida da minuta, como já citado na seção 4. **A razão específica é confirmável no código**: o bloco "Citação e defesa escrita (art. 161)" do próprio painel de Prazos só é renderizado quando `doc._minutaGerada` é verdadeiro (linha 2441, mesma flag). Ou seja, a auto-abertura do painel de Prazos no momento da indiciação existe precisamente porque é **nesse mesmo instante que o painel passa a ter conteúdo novo e relevante** — o prazo de defesa do art. 161, que só começa a fazer sentido depois que a minuta de indiciação existe (a citação para defesa escrita pressupõe indiciação já feita). Antes de `doc._minutaGerada`, o painel só mostra prazo de conclusão do processo e eventual alerta P6c; depois, ganha a subseção de citação/defesa — daí o auto-open ser disparado justamente ali.
+
+### 7.4 Pendências P6c e P7 — descrição completa
+
+Lista completa de códigos definidos em `computePendencias()` (linhas 1759–1822): **P1, P2, P4, P5, P7, P8** (dentro do loop de fatos), **P3, P6a, P6b** (dentro do loop de provas) e **P6c** (loop de acusados, bloco separado ao final). Isso confirma que a numeração da auditoria anterior está correta — **P6c e P7 realmente existem** no código atual, com esses nomes exatos.
+
+**P7** (linhas 1786–1789, dentro do loop de `doc.fatos`):
+```js
+const provas=(f.provaIds||[]).map(provaById).filter(Boolean);
+if(provas.length && provas.every(p=>p.tipo==='indiciaria'||p.tipo==='declaracao_informante'))
+  push('P7','fragil','fato',f.id,'Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo');
+```
+- Código: `P7`. Nível: **frágil** (não bloqueia a geração da minuta — só entra no banner de aviso e no item C4 do checklist).
+- Alvo: `fato` (`f.id`).
+- Mensagem exibida: "Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo".
+- Condição: o fato tem ao menos uma prova vinculada (`provas.length>0`) **e todas** as provas vinculadas são do tipo `indiciaria` ou `declaracao_informante` — ou seja, nenhuma prova "forte" (documental, pericial, testemunhal, emprestada, interrogatório, diligência) sustenta o fato. Se o fato não tem prova nenhuma, é P1 (crítico), não P7 — os dois códigos são mutuamente exclusivos por construção (`provas.length` precisa ser `>0` para P7 disparar).
+
+**P6c** (linhas 1812–1820, bloco próprio após o loop de provas, iterando `doc.acusados`):
+```js
+doc.acusados.forEach(a=>{
+  const nd=a.notificacaoPrevia&&a.notificacaoPrevia.data, id=a.interrogatorio&&a.interrogatorio.data;
+  if(nd&&id){
+    const du=diasUteisEntre(nd,id);
+    if(du!=null && du<3)
+      push('P6c','fragil','acusado',a.id,'Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784/99)');
+  }
+});
+```
+- Código: `P6c`. Nível: **frágil**.
+- Alvo: `acusado` (`a.id`) — é a única pendência de todo o sistema cujo `alvoTipo` é `acusado` em vez de `fato`/`prova`.
+- Mensagem exibida: "Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784/99)".
+- Condição: só é calculada se **ambas** as datas existirem — `notificacaoPrevia.data` e `interrogatorio.data` (campos do cadastro de acusado documentados na seção 7.1) — e a diferença em dias úteis entre elas (`diasUteisEntre`) for menor que 3.
+- Nota de limitação, já presente no próprio código como tooltip (linha 2321): "O cálculo de dias úteis considera apenas sábados e domingos — não considera feriados nacionais (v1)."
+- Ao clicar no item P6c no painel de Pendências, abre o cadastro do próprio acusado (`abrirFormAcusado(p.alvoId)`, linha 2340, comentário "P6c → abre o card do acusado") — coerente com o `alvoTipo:'acusado'`.
+- P6c também aparece linkada no painel de Prazos (ver 7.3) e é a única pendência capaz de "contaminar" a cor do indicador de prazo de conclusão do processo.
+
+Não foi necessária nenhuma correção de nomenclatura: os 9 códigos de pendência do sistema são exatamente P1, P2, P3, P4, P5, P6a, P6b, P6c, P7, P8 — todos existem, com esses nomes, no bloco `computePendencias()` atual.

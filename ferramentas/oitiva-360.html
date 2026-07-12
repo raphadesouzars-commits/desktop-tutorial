@@ -5987,12 +5987,25 @@ document.getElementById("btn-confirmar-exportar-prova").addEventListener("click"
   const d = getDepoenteAtivo();
   if (!d || !_exportProvaDraft) return;
 
+  // Adendo (rodada 2026-07-12, ver audit-oitiva-360.md/audit-nexo-coger.md §6.4): mesmo id de
+  // rodada usado por construirEnvelopeRetorno()/exportarRetornoContextoAcusado() — reaproveitado
+  // aqui para que os dois contratos (retorno de contexto e prova nova) apontem para a mesma sessão.
+  if (!d.rodadaId) d.rodadaId = gerarId();
+  salvarLocalStorage();
+
   // Seção 6.4: monta um objeto de prova por item incluído.
   const provas = Object.keys(_exportProvaDraft)
     .filter(fatoId => _exportProvaDraft[fatoId].incluir)
     .map(fatoId => {
       const draft = _exportProvaDraft[fatoId];
       const trechos = draft.trechos.split("\n").map(l => l.trim()).filter(Boolean).map(l => ({ citacao: l, ref: "" }));
+      // Vínculo prova -> ponto de pauta: cada fatoId em _exportProvaDraft vem de
+      // itensPautaAbordadosNestaSessao(d), ou seja, sempre corresponde a um item de
+      // estado.pautaImportada.itens (mesma fonte que construirEnvelopeRetorno usa para
+      // pautaIdOrigem/idPontoOrigem). Se o item não for mais localizável por algum motivo (ex.:
+      // pauta removida entre abrir o diálogo e confirmar a exportação), os 3 campos vão null —
+      // nunca um valor inventado só para não ficar vazio.
+      const itemPauta = estado.pautaImportada && estado.pautaImportada.itens.find(i => i.fatoId === fatoId);
       return {
         fatoIds: [fatoId],
         tipo: draft.tipo,
@@ -6000,6 +6013,9 @@ document.getElementById("btn-confirmar-exportar-prova").addEventListener("click"
         descricao: draft.descricao || "",
         refAutos: { documento: draft.refDocumento || "", folhas: draft.refFolhas || "" },
         trechosSignificativos: trechos,
+        pauta_id: (itemPauta && itemPauta.pautaIdOrigem) || null,
+        rodada_id: itemPauta ? (d.rodadaId || null) : null,
+        id_ponto: (itemPauta && itemPauta.idPontoOrigem) || null,
         detalhe: {
           deponente: d.identificacao || "",
           compromissada: draft.compromissada,
