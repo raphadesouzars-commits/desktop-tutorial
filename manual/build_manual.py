@@ -3,10 +3,29 @@ import os
 import sys
 sys.path.insert(0, "/home/user/desktop-tutorial/manual")
 from helpers import *
+from PIL import Image
 
 BASE = "/home/user/desktop-tutorial/manual"
 SHOTS = os.path.join(BASE, "assets", "screenshots")
 LOGO = os.path.join(BASE, "assets", "logo_coger.png")
+
+
+def figura_ajustada(doc, image_path, caption, max_width_cm=15.49, max_height_cm=20.0):
+    """Insere a figura calculando width_cm a partir da proporção real do PNG,
+    para nunca gerar uma altura desproporcional (e, no limite, uma página
+    quase em branco) quando a imagem for um crop estreito/comprido."""
+    width_cm = max_width_cm
+    try:
+        with Image.open(image_path) as im:
+            w, h = im.size
+        if w > 0 and h > 0:
+            altura_no_max = max_width_cm * h / w
+            if altura_no_max > max_height_cm:
+                width_cm = max_height_cm * w / h
+    except Exception:
+        pass
+    return add_figure(doc, image_path, caption, width_cm=width_cm)
+
 
 reset_figure_counter()
 doc = new_document()
@@ -142,7 +161,7 @@ add_body(
     "e 3 antes de gravar o item.",
 )
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "veritas-wizard-identificacao.png"),
     "Wizard de cadastro de prova — Etapa 1, Identificação.",
@@ -264,7 +283,7 @@ add_body(
     "(cor/característica); Local de guarda física; e Responsável pela guarda física.",
 )
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "veritas-cadeia-custodia.png"),
     "Etapa 2, Proveniência — detalhamento do tipo de proveniência e do bloco de elemento físico.",
@@ -390,7 +409,7 @@ add_body(
     "do processo (ou no ícone de edição ao final da linha).",
 )
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "veritas-consulta-listagem.png"),
     "Listagem de itens cadastrados na tela do processo — consulta.",
@@ -456,6 +475,128 @@ add_body(
     "será recuperável se você tiver exportado o .json antes.\"**.",
 )
 
+add_h2(doc, "2.4 Reabertura de dossiê")
+
+add_body(
+    doc,
+    "Um dossiê exportado anteriormente (\"Exportar .json\", Seção 2.3) pode ser "
+    "reaberto por importação de arquivo `.json`. O botão de importação aparece "
+    "em **dois pontos** da ferramenta: na tela inicial, ao lado de \"+ Novo "
+    "dossiê\", com o rótulo **\"Importar dossiê (.json)\"**; e na tela do "
+    "Processo, no cabeçalho \"Dados do processo\", como um botão pequeno de "
+    "rótulo **\"Importar\"**. Em ambos os casos, selecionar o arquivo já "
+    "dispara a importação — não há um botão de confirmação separado do "
+    "seletor de arquivo.",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "veritas-reabertura-dossie.png"),
+    "Pontos de acesso à reabertura de dossiê — tela inicial e tela do Processo.",
+)
+
+add_body(
+    doc,
+    "A validação, nessa ordem, é: (1) o conteúdo precisa ser um JSON válido — "
+    "senão, \"Arquivo .json inválido.\"; (2) o campo `versaoEsquema` do "
+    "arquivo precisa ser `\"2.0\"` — senão, \"Versão de esquema não "
+    "suportada: <versão>.\", e a importação é interrompida em ambos os casos.",
+)
+
+add_alert(
+    doc,
+    [
+        "Se já houver um dossiê aberto no navegador com pelo menos 1 item, o "
+        "Veritas abre um modal de confirmação antes de importar — "
+        "\"Você tem um dossiê aberto com N item(ns). A importação nunca mescla "
+        "dossiês — o dossiê atual será substituído nesta sessão.\" — com os "
+        "botões \"Cancelar\" e \"Substituir e importar\". Se o dossiê aberto "
+        "estiver vazio (0 itens), a importação ocorre direto, sem esse modal.",
+    ],
+    kind="info",
+    label="Substituição, nunca mesclagem",
+)
+
+add_body(
+    doc,
+    "Se o arquivo importado trouxer um `hashDoDossie` que não confere com o "
+    "conteúdo recebido, o Veritas **não bloqueia** a importação — apenas "
+    "acrescenta um alerta ao modal (\"O hashDoDossie do arquivo importado não "
+    "confere com o conteúdo — possível indício de alteração externa do "
+    "arquivo.\") e, ao concluir, mostra o toast \"Dossiê importado — "
+    "hashDoDossie divergente, verifique a origem do arquivo.\" em vez do toast "
+    "normal de sucesso. A importação prossegue de qualquer forma.",
+)
+
+add_alert(
+    doc,
+    [
+        "Não confunda esse comportamento com o da **importação de termo de "
+        "oitiva** (Seção 5.3): ali, um hash (`hash_origem`) divergente "
+        "**bloqueia totalmente** a importação e nada é gravado. Na reabertura "
+        "de dossiê (este fluxo), a divergência de `hashDoDossie` é apenas um "
+        "aviso — a importação do dossiê inteiro segue adiante mesmo assim. São "
+        "dois fluxos distintos, com políticas de bloqueio diferentes; não os "
+        "trate como equivalentes.",
+    ],
+    kind="warn",
+    label="Não confundir com o bloqueio da importação de termo de oitiva",
+)
+
+add_h2(doc, "2.5 Busca e filtro")
+
+add_alert(
+    doc,
+    [
+        "Não há campo de busca, filtro por categoria/status/proveniência nem "
+        "ordenação de colunas na listagem de itens — a tabela mostra os itens "
+        "na ordem em que foram cadastrados.",
+    ],
+    kind="info",
+    label="Recurso inexistente",
+)
+
+add_h2(doc, "2.6 Tipos de evento — detalhamento")
+
+add_body(
+    doc,
+    "A Seção 2.2 já apresentou os 6 tipos de evento disponíveis no modal "
+    "\"Registrar evento\". Esta seção detalha, tipo a tipo, os campos "
+    "extras pedidos e o efeito real de cada um ao salvar. O modal sempre "
+    "abre pré-selecionado em \"Transferência de custódia\", e traz, ao "
+    "final de qualquer tipo escolhido, os campos **Responsável** e "
+    "**Observação** — nenhum dos dois é obrigatório. A opção "
+    "\"Conferência do lacre\" só aparece no seletor de tipo quando o item "
+    "tem elemento físico presente.",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "veritas-modal-evento.png"),
+    "Modal \"Registrar evento\" — seleção do tipo de evento e campos extras dinâmicos.",
+)
+
+make_table(
+    doc,
+    headers=["Tipo", "Campos extras", "Efeito no item"],
+    rows=[
+        ("Transferência de custódia", "Novo custodiante (obrigatório)", "Atualiza custodianteAtual do item."),
+        ("Enviado para perícia formal", "Arquivo (seleção)", "Só registra evento no arquivo — não altera status."),
+        ("Status alterado", "Novo status; + Referência ao item substituto (se \"Substituído\") ou Fundamentação da contestação obrigatória (se \"Contestado\")", "Único fluxo que altera o campo status do item; se contestado, grava fundamentacaoContestacao."),
+        ("Item descartado", "Justificativa (obrigatória)", "Força status = \"Descartado\", independentemente do status anterior."),
+        ("Descrição/contexto registrado", "Escopo (Item/Arquivo) + Texto", "Só registra evento textual — não altera nenhum campo de estado."),
+        ("Conferência do lacre*", "Condição do lacre nesta conferência", "Único fluxo que altera a condição do lacre após a criação do item; recalcula o indicador de integridade do item."),
+    ],
+    col_widths=[4.3, 6.5, 5.5],
+)
+
+add_body(
+    doc,
+    "* Só disponível quando o item tem elemento físico marcado como presente "
+    "na Etapa 2 do wizard.",
+    size=9,
+)
+
 page_break(doc)
 
 # ---------------------------------------------------------------------------
@@ -472,13 +613,65 @@ add_body(
     "suficientemente madura — apoia a geração da minuta do termo de indiciação.",
 )
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "nexo-mapa-fato-prova-norma.png"),
     "Mapa fato-prova-norma do Nexo Coger, com arestas ligando fatos às provas vinculadas.",
 )
 
-add_h2(doc, "3.1 Cadastro de um fato apurado — campo a campo")
+add_h2(doc, "3.1 Dados do Processo")
+
+add_body(
+    doc,
+    "Antes de acessar o cadastro de fatos, provas ou o mapa, o Nexo Coger "
+    "exibe uma tela-gate, em tela cheia, chamada **\"Dados do Processo\"**. "
+    "Ela é a primeira coisa que aparece ao abrir a ferramenta sem um "
+    "processo já iniciado (rascunhos anteriores que já tenham o número do "
+    "processo preenchido não veem o gate de novo — é uma tela de "
+    "primeiro uso, não uma barreira a cada carregamento).",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "nexo-dados-processo.png"),
+    "Tela \"Dados do Processo\" — gate exibido antes do acesso ao cadastro de fatos.",
+)
+
+add_body(doc, "Os campos, nesta ordem exata:")
+add_numbered(doc, 1, "**Número do processo** — texto livre. **É o único campo que efetivamente libera o gate.**")
+add_numbered(doc, 2, "**Tipo (PN CGU 27)** — seleção agrupada, com os 5 tipos reais da Portaria Normativa CGU nº 27/2022 (Investigativos: IP, SINVE, SINPA, SINAC; Acusatórios: PAD).")
+add_numbered(doc, 3, "**Portaria de instauração — nº** — texto livre.")
+add_numbered(doc, 4, "**Data de instauração** — data, com hint indicando que é o marco de interrupção da prescrição (art. 142, §3º, Lei 8.112/90).")
+add_numbered(doc, 5, "**Presidente da comissão** — trio Nome/Cargo/Matrícula.")
+add_numbered(doc, 6, "**Secretário(a)** — trio Nome/Cargo/Matrícula.")
+add_numbered(doc, 7, "**Vogal(is)** — lista repetível de trios Nome/Cargo/Matrícula, com botão \"+ Adicionar vogal\" e remoção linha a linha.")
+
+add_alert(
+    doc,
+    [
+        "Enquanto o **Número do processo** não estiver preenchido, o botão de "
+        "continuar permanece desabilitado e a tela mostra o aviso: "
+        "\"Preencha ao menos o \\\"Número do processo\\\" para liberar o "
+        "acesso ao cadastro de fatos, provas e ao mapa — o número também "
+        "nomeia os arquivos exportados.\". Os demais 6 campos (tipo, "
+        "portaria, datas, comissão) não são exigidos para liberar o gate — "
+        "só o número do processo é checado.",
+    ],
+    kind="warn",
+    label="Único campo bloqueante",
+)
+
+add_body(
+    doc,
+    "Cada alteração nesta tela é salva automaticamente (não há botão "
+    "\"Salvar\" separado). O número do processo, além de liberar o gate, "
+    "também nomeia os arquivos `.json` exportados pelo Nexo Coger — por "
+    "exemplo, a exportação geral do processo segue o padrão "
+    "`nexo-coger-<número>-<data>.json`, e a pauta de instrução por depoente "
+    "segue `nexo-coger-pauta-<número>-<depoente>-<data>.json`.",
+)
+
+add_h2(doc, "3.2 Cadastro de um fato apurado — campo a campo")
 
 add_body(doc, "Os campos do formulário \"Fato\" aparecem, nesta ordem exata:")
 
@@ -568,7 +761,7 @@ add_body(
     "\"motivação jurídica: por que a comissão decidiu não indiciar este fato\".",
 )
 
-add_h2(doc, "3.2 Vinculação de prova a fato")
+add_h2(doc, "3.3 Vinculação de prova a fato")
 
 add_body(
     doc,
@@ -590,9 +783,9 @@ add_body(
     "como sinal deliberado dessa condição.",
 )
 
-add_h2(doc, "3.3 Papel de pessoa")
+add_h2(doc, "3.4 Papel de pessoa")
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "nexo-papel-pessoa.png"),
     "Seleção de papel do depoente no formulário de prova testemunhal/declaração de informante.",
@@ -660,9 +853,9 @@ add_body(
     "nessa condição.",
 )
 
-add_h2(doc, "3.4 Geração da indiciação")
+add_h2(doc, "3.5 Geração da indiciação")
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "nexo-indiciacao.png"),
     "Tela de geração da minuta do termo de indiciação.",
@@ -697,7 +890,20 @@ add_body(
     doc,
     "Pendências **frágeis** (P3, P6a, P6b, P6c, P7) não bloqueiam a geração, mas "
     "aparecem como aviso na própria tela: \"Pendências frágeis ainda abertas: "
-    "<códigos>. A minuta pode ser gerada, mas revise-as.\".",
+    "<códigos>. A minuta pode ser gerada, mas revise-as.\". O detalhamento "
+    "confirmado de cada uma:",
+)
+
+make_table(
+    doc,
+    headers=["Código", "Descrição"],
+    rows=[
+        ("P3", "Prova órfã — prova cadastrada que não sustenta nenhum fato (aparece deslocada no mapa)."),
+        ("P6a / P6b", "Prova vinculada não classificada como \"direta\" — reflete-se no mapa como aresta tracejada em vez de contínua (pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar)."),
+        ("P6c", "(pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar; descrição completa não confirmada no levantamento de código disponível)."),
+        ("P7", "(pendência frágil — não bloqueia geração de minuta, mas deve ser revisada antes de finalizar; descrição completa não confirmada no levantamento de código disponível)."),
+    ],
+    col_widths=[2.7, 12.8],
 )
 
 add_body(
@@ -728,6 +934,146 @@ add_body(
     "três colunas (Vogal | Presidente | Vogal).",
 )
 
+add_h2(doc, "3.6 Cadastro de acusado")
+
+add_body(
+    doc,
+    "O formulário de acusado (`doc.acusados[]`) é um **modelo de dados "
+    "totalmente separado** do sistema de papéis de pessoa (Seção 3.4) — um "
+    "acusado nunca recebe um `papelId`; o conceito de \"papel\" só existe "
+    "no contexto de depoente (prova testemunhal/declaração de informante) "
+    "e na tela \"Revisão de pauta\".",
+)
+
+add_alert(
+    doc,
+    [
+        "Este manual não detalha campo a campo o formulário de acusado além "
+        "do que foi efetivamente confirmado no levantamento de código: o "
+        "**nome** é obrigatório — se deixado em branco, o Nexo Coger bloqueia "
+        "com a mensagem \"Informe o nome do acusado.\". Ao excluir um "
+        "acusado, o Nexo Coger pede confirmação: \"Excluir este acusado? As "
+        "condutas vinculadas a ele nos fatos serão removidas.\". Os demais "
+        "campos do formulário (cargo, matrícula, lotação etc., citados de "
+        "passagem em outras partes deste manual, como na tabela de "
+        "qualificação da indiciação) não foram auditados campo a campo — "
+        "evite tomar esta seção como um roteiro completo do formulário.",
+    ],
+    kind="info",
+    label="Cobertura parcial — seja cauteloso",
+)
+
+add_h2(doc, "3.7 Cadastro de prova no Nexo Coger")
+
+add_body(
+    doc,
+    "O detalhamento do formulário de prova para os tipos **Testemunhal** e "
+    "**Declaração de informante** — Deponente, Papel do depoente, "
+    "Compromissada?, trio de contradita — já foi apresentado na Seção 3.4 "
+    "(Papel de pessoa). Esta seção cobre os campos **gerais** do formulário "
+    "de prova, presentes independentemente do tipo escolhido.",
+)
+
+add_body(
+    doc,
+    "Confirmados no levantamento: o campo **Título** é obrigatório — se "
+    "vazio, o Nexo Coger bloqueia com \"Informe o título da prova.\"; o "
+    "**Tipo de prova** é o campo que decide quais campos de detalhe "
+    "adicionais aparecem (entre eles, Testemunhal e Declaração de "
+    "informante, que revelam o bloco de depoente da Seção 3.4); e a prova "
+    "carrega uma lista de **fatos aos quais está vinculada** (`fatoIds`), "
+    "que é o mesmo vínculo tratado do lado do fato na Seção 3.3 — marcar a "
+    "checkbox no formulário do fato e vincular pelo lado da prova refletem "
+    "o mesmo relacionamento.",
+)
+
+add_alert(
+    doc,
+    [
+        "Os demais campos gerais do formulário de prova (por exemplo, "
+        "referência aos autos, categoria/tipo específico fora de "
+        "testemunhal/declaração) não foram auditados campo a campo neste "
+        "levantamento — este manual documenta com detalhe apenas o que foi "
+        "efetivamente confirmado no código-fonte.",
+    ],
+    kind="info",
+    label="Cobertura parcial",
+)
+
+add_h2(doc, "3.8 Selo de origem — retorno de oitiva")
+
+add_body(
+    doc,
+    "Quando uma prova é criada no Nexo Coger a partir da exportação "
+    "**\"Exportar prova(s) para o Nexo\"** do Oitiva 360 (Seção 5.1), o "
+    "cartão dessa prova no mapa fato-prova-norma recebe um selo dourado "
+    "**🎙**, ao lado dos demais selos do cartão de prova (como o 🌐 de "
+    "origem Veritas). O tooltip do selo mostra os campos `pauta_id`, "
+    "`rodada_id` e `id_ponto` do retorno de oitiva.",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "nexo-selo-oitiva.png"),
+    "Selo 🎙 no cartão de prova, indicando origem em retorno de oitiva do Oitiva 360.",
+)
+
+add_alert(
+    doc,
+    [
+        "**Limitação técnica conhecida**: hoje, os três campos do tooltip "
+        "(`pauta_id`, `rodada_id`, `id_ponto`) aparecem vazios. O selo "
+        "aparece corretamente sempre que a prova tem a marca de origem de "
+        "oitiva preenchida, mas o Oitiva 360 ainda não emite esses três "
+        "identificadores nesse contrato de exportação específico "
+        "(\"Exportar prova(s) para o Nexo\") — a infraestrutura do selo já "
+        "está pronta para exibi-los assim que o Oitiva 360 passar a "
+        "enviá-los, mas por ora a rastreabilidade até a pauta/rodada/ponto "
+        "exatos não está disponível por esse caminho.",
+    ],
+    kind="info",
+    label="IDs do tooltip ainda vazios",
+)
+
+add_body(
+    doc,
+    "Não confunda este selo de **prova** com o selo pré-existente, também "
+    "dourado (🎙), que aparece no **cartão de fato** quando o fato recebe "
+    "contexto de um retorno de oitiva importado pelo fluxo \"Exportar "
+    "retorno (contexto do acusado)\" (Seção 5.4) — esse outro selo, no "
+    "cartão de fato, é anterior a esta rodada de implementação e já "
+    "funciona plenamente.",
+)
+
+add_h2(doc, "3.9 Toolbar lateral")
+
+add_body(
+    doc,
+    "O Nexo Coger mantém uma barra lateral com painéis de apoio à condução "
+    "da apuração. O mais detalhado e mais bem documentado neste manual é o "
+    "**painel de Pendências**, que lista, em tempo real, todos os códigos "
+    "de pendência crítica (P1, P2, P5, P8) e frágil (P3, P6a, P6b, P6c, P7) "
+    "presentes no processo — o mesmo catálogo apresentado na Seção 3.5.",
+)
+
+add_alert(
+    doc,
+    [
+        "Os demais painéis citados na interface — **Ordem dos fatos**, "
+        "**Checklist de encerramento** e **Prazos** — existem (por exemplo, "
+        "a variável de estado `prazosSecOpen` é acionada automaticamente "
+        "logo após a primeira geração bem-sucedida de minuta, abrindo o "
+        "painel de Prazos), mas este manual não confirma, campo a campo, "
+        "as interações internas de cada um desses três painéis — o "
+        "levantamento de código disponível não teve profundidade suficiente "
+        "para documentá-los com o mesmo detalhamento do painel de "
+        "Pendências. Evite tomar esta seção como um roteiro completo da "
+        "toolbar lateral.",
+    ],
+    kind="info",
+    label="Cobertura parcial dos demais painéis",
+)
+
 page_break(doc)
 
 # ---------------------------------------------------------------------------
@@ -745,7 +1091,7 @@ add_body(
 
 add_h2(doc, "4.1 Pré-requisito — Matriz de Apuração")
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "oitiva-matriz-apuracao.png"),
     "Cartão \"Matriz de Apuração\" — pré-requisito obrigatório antes de adicionar depoentes.",
@@ -887,7 +1233,7 @@ add_body(
 
 add_h3(doc, "Etapa 4 — Respostas registradas")
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "oitiva-rodada-perguntas-respostas.png"),
     "Etapa 4 — registro das respostas dadas pelo depoente, uma pergunta por vez.",
@@ -922,7 +1268,7 @@ add_body(
 
 add_h2(doc, "4.6 Geração do termo")
 
-add_figure(
+figura_ajustada(
     doc,
     os.path.join(SHOTS, "oitiva-termo-final.png"),
     "Termo de redução gerado automaticamente ao entrar na Etapa 4.",
@@ -973,6 +1319,152 @@ add_body(
     "para o papel selecionado contra os já marcados: se houver pendentes, "
     "lista-os; se todos estiverem confirmados, mostra confirmação positiva; se "
     "o papel não tiver exigências específicas, mostra um texto neutro.",
+)
+
+add_h2(doc, "4.8 Gerenciar múltiplos depoentes")
+
+add_body(
+    doc,
+    "Antes de entrar no wizard de qualquer depoente específico, a Tela do "
+    "Processo mostra a **lista de depoentes já cadastrados** — colunas "
+    "Identificação, Papel, Infração, Status e ações. O **Status** exibido "
+    "é o do progresso do próprio depoente no wizard (\"Rascunho\", "
+    "\"Roteiro pronto\" ou \"Oitiva realizada\") — não é o mesmo conceito "
+    "do status de item de pauta tratado na Seção 4.11 abaixo. Se não houver "
+    "nenhum depoente ainda, a lista mostra \"Nenhum depoente adicionado "
+    "ainda.\".",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "oitiva-lista-depoentes.png"),
+    "Lista de depoentes cadastrados na Tela do Processo.",
+)
+
+add_body(
+    doc,
+    "Cada linha da lista tem dois botões: **\"Abrir depoente\"** e "
+    "**\"Remover\"**. Não existe navegação de \"próximo/anterior\" entre "
+    "depoentes — para alternar, é preciso fechar o wizard do depoente atual "
+    "(o que devolve à lista) e clicar em \"Abrir depoente\" na linha "
+    "desejada.",
+)
+
+add_alert(
+    doc,
+    [
+        "Reabrir um depoente já cadastrado **sempre volta para a Etapa 1 "
+        "(\"Dados do Ato\")**, mesmo que o wizard já esteja concluído "
+        "(\"Oitiva realizada\") — não há memória da última etapa visitada. "
+        "É preciso navegar manualmente pelo stepper (1 → 2 → 3 → 4) até a "
+        "etapa que se deseja editar; os dados já preenchidos permanecem "
+        "salvos e apenas são re-renderizados.",
+    ],
+    kind="warn",
+    label="Edição sempre reabre na Etapa 1",
+)
+
+add_body(
+    doc,
+    "A remoção de um depoente é feita apenas pelo botão \"Remover\" da "
+    "lista (não há atalho de remoção de dentro do wizard) e pede "
+    "confirmação: \"Remover o depoente '<identificação>'? Esta ação não "
+    "pode ser desfeita.\". Não há lixeira nem desfazer — a remoção é "
+    "definitiva a partir da confirmação.",
+)
+
+add_h2(doc, "4.9 Kit de Incidentes")
+
+add_body(
+    doc,
+    "O **Kit de Incidentes** é um banco de **17 fórmulas verbais prontas**, "
+    "agrupadas por categoria (Postura da defesa, Depoimento do depoente, "
+    "Condução do ato, Cuidado com o depoente, Táticas de desestabilização "
+    "etc.), para o condutor da sessão usar diante de situações específicas "
+    "durante a oitiva ou o interrogatório — contradita, intimidação, "
+    "pergunta ofensiva, pergunta indutiva, imprecisão do depoente, "
+    "contradição/possível falso testemunho, questão de ordem, abalo "
+    "emocional, entre outras.",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "oitiva-kit-situacoes.png"),
+    "Kit de Incidentes — painel lateral com fórmulas verbais agrupadas por categoria.",
+)
+
+add_body(
+    doc,
+    "Fica disponível como **painel lateral fixo, sempre visível, nas "
+    "Etapas 3 e 4** do wizard — o presidente consulta a fórmula sugerida "
+    "durante a sessão, sem precisar buscar.",
+)
+
+add_alert(
+    doc,
+    [
+        "O Kit de Incidentes é **puramente conteúdo de apoio ao vivo** — "
+        "consultá-lo não grava nada no processo. Não é um botão de ação "
+        "nem um formulário; é só a fórmula verbal pronta para o presidente "
+        "usar na hora.",
+    ],
+    kind="info",
+)
+
+add_h2(doc, "4.10 Cartão de Mesa")
+
+add_body(
+    doc,
+    "O botão **\"Imprimir Cartão de Mesa\"**, na Etapa 4 (\"Revisão e "
+    "Checklist\"), gera uma versão impressa do Kit de Incidentes: uma "
+    "**grade de duas colunas** com a situação (em negrito) e a fórmula "
+    "verbal completa de cada um dos 17 itens do Kit.",
+)
+
+figura_ajustada(
+    doc,
+    os.path.join(SHOTS, "oitiva-cartao-mesa.png"),
+    "Cartão de Mesa — impressão em grade de duas colunas do Kit de Incidentes.",
+)
+
+add_body(
+    doc,
+    "O Cartão de Mesa **não traz dados do processo, do depoente ou do "
+    "roteiro** — é o Kit de Incidentes inteiro, compactado para caber numa "
+    "folha de consulta rápida sobre a mesa da comissão. O rodapé da "
+    "impressão traz o texto **\"Uso interno · Consulta rápida durante o "
+    "ato\"**, confirmando que o documento se destina a ser consultado "
+    "durante a sessão — não é um registro/anexo do processo.",
+)
+
+add_h2(doc, "4.11 Status da pauta")
+
+add_body(
+    doc,
+    "Quando há uma pauta importada do Nexo Coger, cada item da pauta passa "
+    "por três estados possíveis, calculados em tempo real (não são um "
+    "campo gravado com esses nomes):",
+)
+
+make_table(
+    doc,
+    headers=["Status", "Quando ocorre"],
+    rows=[
+        ("pendente", "Estado inicial de todo item, ao importar a pauta — enquanto nenhum depoente tiver selecionado esse ponto para abordar."),
+        ("em_andamento", "Assim que algum depoente cadastrado marca o item da \"Pauta do Nexo\" como algo a abordar nesta sessão (Etapa 2 do wizard daquele depoente)."),
+        ("concluida", "Só ao marcar a checkbox \"Marcar oitiva como realizada\", na Etapa 4 do depoente — nunca antes, nunca automaticamente."),
+    ],
+    col_widths=[3.5, 12.0],
+)
+
+add_body(
+    doc,
+    "Ao marcar \"Marcar oitiva como realizada\", cada item selecionado por "
+    "aquele depoente é fechado como \"abordado\" (resposta de fato "
+    "registrada) ou \"sem resposta\" (se marcado explicitamente sem "
+    "resposta), e o depoente passa a status \"Oitiva realizada\". "
+    "Desmarcar essa checkbox reverte apenas o status do depoente — não "
+    "reverte o status já fechado do item de pauta.",
 )
 
 page_break(doc)
@@ -1084,12 +1576,39 @@ add_body(
 
 add_body(
     doc,
-    "Quando esse retorno é importado no Nexo Coger, os fatos e provas que ele "
-    "alimenta recebem um selo indicando a origem — \"origem: oitiva\" — no mapa "
-    "fato-prova-norma, sinalizando que aquele elemento nasceu de uma sessão de "
-    "oitiva e não de cadastro manual direto. Este manual não aprofunda o "
-    "funcionamento exato desse selo por não haver documentação de código mais "
-    "detalhada disponível no levantamento realizado.",
+    "Quando esse retorno é importado no Nexo Coger, o **fato** que ele "
+    "alimenta recebe um selo dourado **🎙**, sinalizando que aquele contexto "
+    "nasceu de uma sessão de oitiva e não de cadastro manual direto. Esse "
+    "selo do cartão de fato é anterior a esta rodada de implementação e já "
+    "funciona plenamente.",
+)
+
+add_body(
+    doc,
+    "Há ainda um **segundo selo, análogo, no cartão de prova** (não no "
+    "cartão de fato): quando uma prova é criada a partir do botão "
+    "\"Exportar prova(s) para o Nexo\" do Oitiva 360, ela recebe o mesmo "
+    "selo dourado 🎙, com tooltip mostrando os campos `pauta_id`, "
+    "`rodada_id` e `id_ponto`. Este selo de prova é detalhado na Seção 3.8 "
+    "deste manual.",
+)
+
+add_alert(
+    doc,
+    [
+        "**Limitação técnica conhecida** (a mesma da Seção 3.8): hoje, os "
+        "três identificadores do tooltip do selo de prova (`pauta_id`, "
+        "`rodada_id`, `id_ponto`) aparecem vazios, porque o Oitiva 360 ainda "
+        "não emite esses três campos nesse contrato específico de "
+        "exportação de prova. O selo em si já funciona — aparece "
+        "corretamente sempre que a prova carrega a marca de origem de "
+        "oitiva — mas a rastreabilidade completa até a pauta/rodada/ponto "
+        "exatos ainda não está disponível por esse caminho. O selo "
+        "pré-existente no cartão de **fato**, mencionado acima, não tem essa "
+        "limitação e já funciona integralmente.",
+    ],
+    kind="info",
+    label="Selo de prova — IDs do tooltip ainda vazios",
 )
 
 add_h2(doc, "5.5 Badges de pendência e status")
