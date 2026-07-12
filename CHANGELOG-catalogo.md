@@ -2,6 +2,34 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada PAR-4 — Ajuste do Oitiva 360 (modo dual PAD/PAR) (fechada)
+
+Modo dual (não fork), como decidido na spec: `ferramentas/oitiva-360.html` permanece um único arquivo. **Nenhuma alteração no catálogo canônico** (`schema_version`/hash8 inalterados) — a rodada é só de UI/lógica embutida no HTML, com o mesmo `CATALOGO_COGER` já compartilhado. Disciplina do modo dual respeitada: **nenhum condicional por domínio tocou a mecânica central** (rodadas de oitiva, geração/estrutura do termo, cálculo de hash). Tudo o que muda é filtragem de lista (papéis, infrações, blocos, checklist) e vocabulário. Confirmação objetiva: o termo gerado em modo PAD é **byte-idêntico** ao anterior (a neutralização do texto de abertura usa um placeholder que resolve para exatamente a string antiga em PAD) e `test-fluxo-integrado.js` segue **43/43** sem tocar em `sha256HexOitiva`/`gerarTermoTexto`.
+
+### 4.1 — Seletor de domínio na Matriz de Apuração
+5º campo da matriz (`estado.matriz.dominio`, `pad`|`par`). `processoVazio()` nasce `"pad"`; **JSONs antigos não são backfilled** em `migrarEstadoCarregado()` (confirmado) — assim a exportação só emite `dominio` quando explicitamente definido. Select editável enquanto `!dominioTravadoPorPauta()`; travado (exibido, não editável, com aviso "🔒 derivado da pauta") quando a pauta importada trouxe `dominio`. Troca manual com dados incompatíveis já cadastrados → `confirm()` que lista, ANTES de aplicar, as infrações que serão LIMPAS e os papéis que serão MANTIDOS mas sinalizados "fora do domínio"; recusa reverte o select. Derivação por pauta em `aplicarImportacaoPauta()` via novo `derivarDominioDaPauta()` (grava `pautaImportada.dominio`, alinha `estado.matriz.dominio`, avisa em conflito com domínio manual divergente). Pauta sem o campo não trava nada.
+
+### 4.2 — Categoria de infração sensível a domínio
+`popularSelectInfracao()` desvia para `popularSelectInfracaoLAC()` em modo PAR: 11 normas `NORMA.LAC.*` (derivadas de `CATALOGO_COGER.normas` em `INFRACOES_LAC`) em 2 optgroups. `renderInfracaoDetalhe()` mostra a `nota_aplicacao` da norma LAC como hint (📌), reaproveitando o padrão visual existente. `buscarInfracao()` unifica o lookup PAD+LAC (usado na lista de depoentes). Modo PAD inalterado (53 normas da Lei 8.112/LAI).
+
+### 4.3 — Papéis de depoente sensíveis a domínio
+`renderEtapa2()` filtra `CATALOGO.papeis` por `itemVisivelNoDominio(p.dominio, dominioProcesso())`. PAR: entram `representante_legal`/`preposto`/`socio_administrador` (3 entradas completas criadas no catálogo embutido, com `descricaoRegime` coerente com o regime PAR) + papéis `"comum"`; sai `acusado` (marcado `dominio:"pad"`). Papel já cadastrado fora do domínio novo é preservado no estado e ainda aparece no rádio (marcado), sinalizado "fora do domínio" — na lista de depoentes e na própria opção.
+
+### 4.4 — Banco de perguntas: 3 blocos PAR
+`par_atos_licitacoes` (7 perguntas, art. 5º, IV), `par_terceiro_interposto` (6, art. 5º, III/II), `par_programa_integridade` (7, art. 7º, VIII), todos `dominio:"par"` com `normasRelacionadas`. Blocos existentes classificados: `elemento_subjetivo` e `circunstancias_art128` → `"pad"` (institutos exclusivos do PAD; LAC é de responsabilidade objetiva, art. 2º); os demais → `"comum"`. Filtragem em `blocoForaDoDominio()`, consumida por `blocoDeveSerOmitido()` e `gerarRoteiroInicial()` (só a LISTA de blocos é filtrada; a geração/concatenação é idêntica).
+
+### 4.5 — Checklist condicional PAR
+6 itens novos com condições simbólicas resolvidas em `itensChecklistAplicaveis()`, no mesmo padrão de parsing dos casos existentes: `dominio == par` (transversal benefício/nexo causal, art. 2º LAC — aparece em toda combinação PAR), `papel_par`, `socio_par`, `representante_par`, `grupo == licitacoes` (via `grupoDaInfracaoLAC()`), `infracao == NORMA.LAC.ART5_III`. Nenhum ativa em PAD.
+
+### 4.6 — Propagação do domínio nas exportações
+`construirEnvelopeTermo()` (→ Veritas) e `construirEnvelopeRetorno()` (→ Nexo) emitem `dominio` a partir de `dominioProcessoDefinido()`, com o padrão da PAR-2 (`if (dom) envelope.dominio = dom;`) — omitido, nunca `null`, quando indefinido. Sem validação de importação por domínio (reservada à PAR-5).
+
+### 4.7 — Textos neutros e identidade
+Chip `PAD`/`PAR` no `topbar` (paleta navy/gold), atualizado por `renderChipDominio()`. Texto fixo compartilhado da abertura formal ("Processo Administrativo Disciplinar") neutralizado via placeholder `{{tipo_processo_extenso}}` (resolve para "Processo Administrativo Disciplinar" em PAD — string idêntica — e "Processo Administrativo de Responsabilização" em PAR). Grep de "servidor"/"acusado" revisado: as demais ocorrências são citações literais da Lei 8.112 ou perguntas atadas a normas `N-*` (só visíveis em PAD) — não são texto compartilhado, deixadas intactas por serem PAD por natureza.
+
+### Testes
+`node test-fluxo-integrado.js`: **43/43**, sem regressão (fluxo PAD intacto). Teste manual via Playwright (Chromium headless): **27/27** cobrindo os 5 critérios de aceite — modo PAR lista as 11 normas LAC (2 optgroups) + hint, papéis PAR e exclusão de `acusado`, 3 blocos de pergunta no roteiro e ausência dos blocos PAD; modo PAD idêntico (53 normas 8.112, `acusado` presente); troca de domínio com dados incompatíveis dispara `confirm()`; checklist PAR ativa os itens corretos incluindo o transversal benefício/nexo; ambos os envelopes de exportação carregam `dominio:"par"` (e omitem quando indefinido).
+
 ## Rodada PAR-3 — Fork do Nexo Coger → Nexo PAR (fechada)
 
 Fork (não modo dual): `ferramentas/nexo-par.html` criado como cópia byte-a-byte do `nexo-coger.html` estabilizado e transformado para o domínio PAR (Lei nº 12.846/2013 — LAC). **Nenhuma alteração no catálogo canônico** (`schema_version`/hash8 inalterados) — a rodada é só de UI/lógica do novo arquivo. `nexo-coger.html` permaneceu **byte a byte idêntico** (md5 `c7ee92022bbcedc0ec335002799f99ad` antes e depois; `git diff --stat` vazio). `CATALOGO_COGER` embutido no fork **não foi tocado** (é o catálogo compartilhado; suas `descricao`/`origem_permitida` que citam "nexo-coger" foram deliberadamente preservadas).

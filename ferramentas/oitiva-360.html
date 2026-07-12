@@ -1458,6 +1458,11 @@
   text-transform: uppercase; color: var(--rfb-gold-400);
 }
 .topbar__pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rfb-gold-500); box-shadow: 0 0 0 2.5px rgba(201,163,92,.30); }
+/* Rodada PAR-4 (item 4.7) — chip de domínio (PAD/PAR) no cabeçalho, paleta navy/gold existente. */
+.topbar__dominio { display: inline-flex; align-items: center; gap: 6px; padding: 3px 11px; border-radius: 999px;
+  font-family: var(--rfb-font-display); font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+.topbar__dominio--pad { background: rgba(46,99,184,.20); border: 1px solid rgba(46,99,184,.45); color: #A8BEDD; }
+.topbar__dominio--par { background: rgba(201,163,92,.16); border: 1px solid rgba(201,163,92,.45); color: var(--rfb-gold-400); }
 
 .hero { position: relative; height: 260px; overflow: hidden;
   background: linear-gradient(160deg, #030E24 0%, var(--rfb-navy-800) 60%, var(--rfb-navy-700) 100%); }
@@ -1495,6 +1500,7 @@
   <div class="topbar__brand">
     <img class="topbar__symbol" src="data:image/png;base64,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" alt="Símbolo RFB"/>
     <span class="topbar__name">Receita Federal <span>·</span> Corregedoria</span>
+    <span class="topbar__dominio topbar__dominio--pad" id="chip-dominio" title="Domínio do processo corrente">PAD</span>
   </div>
   <div class="topbar__pill"><span class="topbar__pill-dot"></span>COGER · Uso Interno</div>
 </nav>
@@ -1555,6 +1561,17 @@
         <label class="obrigatorio" for="campo-hipotese">Hipótese investigativa</label>
         <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">Qual a linha de raciocínio que conecta os fatos?</div>
         <textarea id="campo-hipotese" data-campo-matriz="hipotese"></textarea>
+      </div>
+      <!-- Rodada PAR-4 (item 4.1) — 5º campo da matriz: domínio do processo (pad|par). Editável enquanto
+           não houver pauta importada com domínio; travado (exibido, não editável) quando derivado da pauta. -->
+      <div class="campo" id="campo-dominio-wrap">
+        <label for="campo-dominio">Domínio do processo</label>
+        <div style="font-size:.78rem;color:var(--cor-texto-suave);margin-bottom:4px;">PAD (Lei nº 8.112/1990) ou PAR (Lei nº 12.846/2013). Define papéis, categorias de infração e blocos de perguntas disponíveis.</div>
+        <select id="campo-dominio">
+          <option value="pad">PAD — Processo Administrativo Disciplinar</option>
+          <option value="par">PAR — Responsabilização de ente privado (Lei nº 12.846/2013)</option>
+        </select>
+        <div id="campo-dominio-travado" style="display:none;font-size:.78rem;color:var(--cor-texto-suave);margin-top:4px;"></div>
       </div>
     </div>
 
@@ -2935,6 +2952,7 @@ const CATALOGO = {
     {
       id: "testemunha",
       nome: "Testemunha",
+      dominio: "comum", // Rodada PAR-4: papel comum aos dois domínios (PAD/PAR).
       descricaoRegime: "Presta compromisso legal de dizer a verdade (art. 342, CP). Responde a perguntas de praxe sobre parentesco, amizade/inimizade, interesse e impedimento. Tem o dever de depor, ressalvado o direito de não produzir prova contra si mesma.",
       compromisso: true,
       advertencias: ["adv_testemunha"],
@@ -2949,6 +2967,7 @@ const CATALOGO = {
     {
       id: "declarante_informante",
       nome: "Declarante/Informante",
+      dominio: "comum", // Rodada PAR-4
       descricaoRegime: "Não presta compromisso legal de dizer a verdade. Ouvido em razão de vínculo com o investigado ou de participação anterior no contexto apurado. Não responde por falso testemunho, mas apela-se à sua colaboração voluntária com a apuração.",
       compromisso: false,
       advertencias: ["adv_declarante"],
@@ -2960,6 +2979,7 @@ const CATALOGO = {
     {
       id: "situacao_indefinida",
       nome: "Pessoa em Situação Indefinida",
+      dominio: "comum", // Rodada PAR-4
       descricaoRegime: "Autos indicam possível envolvimento da pessoa no contexto fático, sem elementos ainda para tratá-la como investigada. Não presta compromisso de testemunha e tem facultado o direito ao silêncio, por cautela e analogia à vedação à autoincriminação. Exige consulta prévia à defesa sobre o enquadramento adotado.",
       compromisso: false,
       direitoSilencio: true,
@@ -2972,6 +2992,7 @@ const CATALOGO = {
     {
       id: "vitima",
       nome: "Vítima",
+      dominio: "comum", // Rodada PAR-4
       descricaoRegime: "Não é testemunha e não presta compromisso legal de dizer a verdade, não respondendo por falso testemunho — mas sujeita-se à denunciação caluniosa. Documentação própria: Termo de Depoimento, Termo de Declarações ou Alegações do Ofendido, conforme o caso.",
       compromisso: false,
       advertencias: ["adv_vitima"],
@@ -2983,6 +3004,7 @@ const CATALOGO = {
     {
       id: "acusado",
       nome: "Investigado/Acusado",
+      dominio: "pad", // Rodada PAR-4: exclusivo do PAD (no PAR o polo passivo é o ente privado).
       descricaoRegime: "Não presta compromisso. Tem direito constitucional ao silêncio, com advertência da Lei 13.869/2019 (art. 15, parágrafo único, I): se exercido o silêncio, a comissão não formula questionamentos. Defensor facultativo (Súmula Vinculante nº 5/STF). O interrogatório deve ser o último ato da instrução (art. 159), com antecedência mínima de 3 dias úteis na intimação.",
       compromisso: false,
       direitoSilencio: true,
@@ -2991,23 +3013,75 @@ const CATALOGO = {
       textoAbertura: null,
       requisitos: ["intimacao_3_dias_uteis", "ultimo_ato_instrucao"],
       alertasNulidade: ["omissao_silencio", "questionamento_apos_silencio", "ordem_instrucao"]
+    },
+    // Rodada PAR-4 — 3 papéis do domínio PAR (Lei nº 12.846/2013), visíveis só no modo PAR. Todos
+    // sem compromisso legal de testemunha e sem direito ao silêncio previsto no banco: o termo os
+    // roteia pelo parágrafo genérico de colaboração voluntária (gerarTermoTexto, ramo "else"), o que
+    // evita reaproveitar indevidamente o texto de silêncio/enquadramento próprio da "situação
+    // indefinida". A exposição pessoal do sócio/administrador (art. 14 LAC) é tratada por checklist
+    // (chk_par_desconsideracao) e pelo bloco de perguntas, não por boilerplate do termo.
+    {
+      id: "representante_legal",
+      nome: "Representante legal",
+      dominio: "par",
+      descricaoRegime: "Representante legal do ente privado; responde pelo ente nos atos processuais do PAR (Lei nº 12.846/2013). Não presta compromisso legal de testemunha; contribui com a apuração na condição de quem representa a pessoa jurídica.",
+      compromisso: false,
+      advertencias: [],
+      perguntasPraxe: [],
+      textoAbertura: null,
+      requisitos: [],
+      alertasNulidade: []
+    },
+    {
+      id: "preposto",
+      nome: "Preposto",
+      dominio: "par",
+      descricaoRegime: "Empregado ou preposto do ente privado, ouvido sobre os fatos. Não presta compromisso legal de testemunha; conta-se com sua colaboração voluntária para a apuração.",
+      compromisso: false,
+      advertencias: [],
+      perguntasPraxe: [],
+      textoAbertura: null,
+      requisitos: [],
+      alertasNulidade: []
+    },
+    {
+      id: "socio_administrador",
+      nome: "Sócio ou administrador",
+      dominio: "par",
+      descricaoRegime: "Sócio ou administrador do ente privado, potencialmente atingível por desconsideração da personalidade jurídica (art. 14 da Lei nº 12.846/2013). Não presta compromisso legal de testemunha; sua eventual participação pessoal nos fatos deve ser registrada.",
+      compromisso: false,
+      advertencias: [],
+      perguntasPraxe: [],
+      textoAbertura: null,
+      requisitos: [],
+      alertasNulidade: []
     }
   ],
 
+  // Rodada PAR-4 — campo `dominio` por bloco (pad/par/comum). Regra de filtragem (blocoForaDoDominio):
+  // um bloco só aparece se dominio for "comum" ou igual ao domínio do processo. Blocos de rito/cenário
+  // e de apuração genérica de fato (contexto/materialidade/autoria) são "comum"; os dois blocos ligados
+  // a institutos exclusivos do PAD — elemento subjetivo (dolo/culpa) e circunstâncias do art. 128 da
+  // Lei nº 8.112/90 — são "pad" (a LAC é de responsabilidade objetiva, art. 2º, e não conhece o art.
+  // 128); os 3 blocos novos abaixo são "par".
   blocos: [
-    { id: "preparacao_cenario",      ordem: 1,  nome: "Preparação e cenário",                              tipo: "checklist", aplicaA: ["todos"] },
-    { id: "acolhimento",             ordem: 2,  nome: "Acolhimento e identificação dos presentes",          tipo: "texto",      aplicaA: ["todos"] },
-    { id: "abertura_formal",         ordem: 3,  nome: "Abertura formal",                                    tipo: "texto",      aplicaA: ["todos"] },
-    { id: "avisos_legais_lgpd",      ordem: 4,  nome: "Avisos legais e LGPD",                               tipo: "texto",      aplicaA: ["todos"] },
-    { id: "qualificacao_compromisso",ordem: 5,  nome: "Qualificação, praxe e compromisso/advertências",     tipo: "misto",      aplicaA: ["todos"] },
-    { id: "objecoes_defesa",         ordem: 6,  nome: "Abertura para objeções da defesa",                   tipo: "texto",      aplicaA: ["todos"], condicional: "quando cabível" },
-    { id: "contexto_funcional",      ordem: 7,  nome: "Contexto funcional",                                 tipo: "perguntas",  aplicaA: ["todos"] },
-    { id: "materialidade",           ordem: 8,  nome: "Materialidade",                                      tipo: "perguntas",  aplicaA: ["todos"] },
-    { id: "autoria_participacao",    ordem: 9,  nome: "Autoria e participação",                             tipo: "perguntas",  aplicaA: ["todos"] },
-    { id: "elemento_subjetivo",      ordem: 10, nome: "Elemento subjetivo (dolo/culpa)",                    tipo: "perguntas",  aplicaA: ["todos"] },
-    { id: "circunstancias_art128",   ordem: 11, nome: "Circunstâncias do art. 128",                         tipo: "perguntas",  aplicaA: ["todos"] },
-    { id: "palavra_defesa",          ordem: 12, nome: "Palavra à defesa / reperguntas",                     tipo: "texto",      aplicaA: ["todos"], condicional: "quando cabível" },
-    { id: "fechamento",              ordem: 13, nome: "Fechamento",                                         tipo: "perguntas",  aplicaA: ["todos"] }
+    { id: "preparacao_cenario",      ordem: 1,  nome: "Preparação e cenário",                              tipo: "checklist", aplicaA: ["todos"], dominio: "comum" },
+    { id: "acolhimento",             ordem: 2,  nome: "Acolhimento e identificação dos presentes",          tipo: "texto",      aplicaA: ["todos"], dominio: "comum" },
+    { id: "abertura_formal",         ordem: 3,  nome: "Abertura formal",                                    tipo: "texto",      aplicaA: ["todos"], dominio: "comum" },
+    { id: "avisos_legais_lgpd",      ordem: 4,  nome: "Avisos legais e LGPD",                               tipo: "texto",      aplicaA: ["todos"], dominio: "comum" },
+    { id: "qualificacao_compromisso",ordem: 5,  nome: "Qualificação, praxe e compromisso/advertências",     tipo: "misto",      aplicaA: ["todos"], dominio: "comum" },
+    { id: "objecoes_defesa",         ordem: 6,  nome: "Abertura para objeções da defesa",                   tipo: "texto",      aplicaA: ["todos"], condicional: "quando cabível", dominio: "comum" },
+    { id: "contexto_funcional",      ordem: 7,  nome: "Contexto funcional",                                 tipo: "perguntas",  aplicaA: ["todos"], dominio: "comum" },
+    { id: "materialidade",           ordem: 8,  nome: "Materialidade",                                      tipo: "perguntas",  aplicaA: ["todos"], dominio: "comum" },
+    { id: "autoria_participacao",    ordem: 9,  nome: "Autoria e participação",                             tipo: "perguntas",  aplicaA: ["todos"], dominio: "comum" },
+    // Rodada PAR-4 — blocos exclusivos do domínio PAR (art. 5º e 7º, VIII, da Lei nº 12.846/2013).
+    { id: "par_atos_licitacoes",     ordem: 9.1, nome: "Atos lesivos em licitações e contratos",            tipo: "perguntas",  aplicaA: ["todos"], dominio: "par" },
+    { id: "par_terceiro_interposto", ordem: 9.2, nome: "Terceiro interposto empresarial",                   tipo: "perguntas",  aplicaA: ["todos"], dominio: "par" },
+    { id: "par_programa_integridade",ordem: 9.3, nome: "Programa de integridade",                           tipo: "perguntas",  aplicaA: ["todos"], dominio: "par" },
+    { id: "elemento_subjetivo",      ordem: 10, nome: "Elemento subjetivo (dolo/culpa)",                    tipo: "perguntas",  aplicaA: ["todos"], dominio: "pad" },
+    { id: "circunstancias_art128",   ordem: 11, nome: "Circunstâncias do art. 128",                         tipo: "perguntas",  aplicaA: ["todos"], dominio: "pad" },
+    { id: "palavra_defesa",          ordem: 12, nome: "Palavra à defesa / reperguntas",                     tipo: "texto",      aplicaA: ["todos"], condicional: "quando cabível", dominio: "comum" },
+    { id: "fechamento",              ordem: 13, nome: "Fechamento",                                         tipo: "perguntas",  aplicaA: ["todos"], dominio: "comum" }
   ],
 
   // ---- Perguntas de praxe (testemunha) — não removíveis (R2) ----
@@ -3436,7 +3510,38 @@ const CATALOGO = {
     // administrativa autônoma. Por isso o banco NÃO traz perguntas de mérito sobre o crime em si
     // (matéria da esfera penal, fora do PAD) — no máximo 2 perguntas, de natureza só processual.
     { id: "q_inf_crime_administracao_001", bloco: "contexto_funcional", texto: "Há conhecimento de processo criminal em curso ou de sentença já proferida relacionada a este fato? Em caso positivo, qual o número do processo e em que fase se encontra?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-I"], modulo: "nucleo", revisao: "pendente" },
-    { id: "q_inf_crime_administracao_002", bloco: "fechamento", texto: "Independentemente da esfera penal, há elementos deste fato que, na sua percepção, possam configurar uma infração administrativa autônoma (ex.: violação de dever funcional específico), a ser submetida à reconsideração do enquadramento pela comissão?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-I"], modulo: "nucleo", revisao: "pendente" }
+    { id: "q_inf_crime_administracao_002", bloco: "fechamento", texto: "Independentemente da esfera penal, há elementos deste fato que, na sua percepção, possam configurar uma infração administrativa autônoma (ex.: violação de dever funcional específico), a ser submetida à reconsideração do enquadramento pela comissão?", finalidade: "contexto", papeis: ["testemunha", "acusado"], infracoes: ["N-132-I"], modulo: "nucleo", revisao: "pendente" },
+
+    // =====================================================================
+    // Rodada PAR-4 — Perguntas dos 3 blocos do domínio PAR (Lei nº 12.846/2013).
+    // Redigidas a partir do resumo normativo da spec e das nota_aplicacao das normas LAC do catálogo
+    // canônico (art. 5º, IV; art. 5º, III; art. 7º, VIII). `infracoes: ["todas"]` — aparecem para
+    // qualquer enquadramento LAC; `normasRelacionadas` prepara a sugestão de blocos por enquadramento
+    // (checklist, item 4.5). `papeis` cobre todos os papéis visíveis em modo PAR (comuns + PAR).
+    // =====================================================================
+    // Bloco 1 — Atos lesivos em licitações e contratos (art. 5º, IV)
+    { id: "q_par_lic_001", bloco: "par_atos_licitacoes", texto: "Identifique o certame ou o contrato administrativo a que se referem os fatos (número, órgão, objeto) e descreva a participação da pessoa jurídica e a sua própria participação nele.", finalidade: "contexto", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_A", "NORMA.LAC.ART5_IV_D"] },
+    { id: "q_par_lic_002", bloco: "par_atos_licitacoes", texto: "Houve algum contato, ajuste ou combinação com outros licitantes a respeito de preços, propostas, divisão do objeto ou rodízio de vencedores?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_A"] },
+    { id: "q_par_lic_003", bloco: "par_atos_licitacoes", texto: "A pessoa jurídica ofereceu vantagem, pagamento ou benefício a algum concorrente, ou empregou fraude, para que este se retirasse ou não apresentasse proposta?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_C"] },
+    { id: "q_par_lic_004", bloco: "par_atos_licitacoes", texto: "A participação se deu por meio de pessoa jurídica criada especificamente para o certame, ou de empresa com sócios, endereço ou estrutura em comum com outra licitante (indício de empresa de fachada)?", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_E"] },
+    { id: "q_par_lic_005", bloco: "par_atos_licitacoes", texto: "Quanto a aditivos, prorrogações ou reequilíbrio econômico-financeiro do contrato, houve alteração de valores ou prazos sem amparo no edital ou no contrato? Como foi justificada?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_F", "NORMA.LAC.ART5_IV_G"] },
+    { id: "q_par_lic_006", bloco: "par_atos_licitacoes", texto: "Em que fase da licitação ou da execução contratual ocorreu a conduta apurada, e quem, na pessoa jurídica, decidiu ou autorizou a prática?", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_D"] },
+    { id: "q_par_lic_007", bloco: "par_atos_licitacoes", texto: "A pessoa jurídica obteve vantagem ou benefício econômico em razão dessas condutas? Qual e de que forma foi apropriada?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_IV_D", "NORMA.LAC.ART5_IV_F"] },
+    // Bloco 2 — Terceiro interposto empresarial (art. 5º, III; art. 5º, II)
+    { id: "q_par_ti_001", bloco: "par_terceiro_interposto", texto: "A pessoa jurídica valeu-se de intermediários, consultores, prepostos, advogados ou outros terceiros para tratar do objeto apurado? Quem eram e qual o papel de cada um?", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III"] },
+    { id: "q_par_ti_002", bloco: "par_terceiro_interposto", texto: "Houve pagamentos ou repasses a interposta pessoa física ou jurídica cuja finalidade real fosse ocultar ou dissimular a origem, o destino ou os reais interesses envolvidos?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III"] },
+    { id: "q_par_ti_003", bloco: "par_terceiro_interposto", texto: "Existe pessoa ou empresa que figura formalmente nos atos, mas que, de fato, atua em nome ou em benefício da pessoa jurídica investigada? Quem são os reais beneficiários dos valores ou vantagens?", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III", "NORMA.LAC.ART5_I"] },
+    { id: "q_par_ti_004", bloco: "par_terceiro_interposto", texto: "A pessoa jurídica tinha conhecimento e controle sobre os atos praticados por esses terceiros em seu nome? (Registre-se que o desconhecimento dos atos de terceiros que representavam a pessoa jurídica não é, por si só, defesa admissível.)", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III"] },
+    { id: "q_par_ti_005", bloco: "par_terceiro_interposto", texto: "Descreva a cadeia de intermediários entre a pessoa jurídica e o agente público ou o concorrente afetado — quem contratou quem, e com que finalidade declarada.", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III", "NORMA.LAC.ART5_II"] },
+    { id: "q_par_ti_006", bloco: "par_terceiro_interposto", texto: "Houve financiamento, custeio, patrocínio ou subvenção, pela pessoa jurídica, de atos praticados por esses terceiros em seu interesse?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_II"] },
+    // Bloco 3 — Programa de integridade (art. 7º, VIII)
+    { id: "q_par_pi_001", bloco: "par_programa_integridade", texto: "A pessoa jurídica possui programa de integridade (compliance) formalmente instituído? Desde quando, e por qual instância foi aprovado?", finalidade: "contexto", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] },
+    { id: "q_par_pi_002", bloco: "par_programa_integridade", texto: "Descreva os mecanismos e procedimentos internos de integridade existentes à época dos fatos: código de conduta, controles internos, canais de denúncia e treinamentos.", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] },
+    { id: "q_par_pi_003", bloco: "par_programa_integridade", texto: "O programa era efetivamente aplicado à época dos fatos, ou existia apenas formalmente? Cite evidências concretas de sua aplicação.", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] },
+    { id: "q_par_pi_004", bloco: "par_programa_integridade", texto: "Como a alta direção da pessoa jurídica apoiava e supervisionava o programa? Havia área ou responsável específico com autonomia e recursos?", finalidade: "autoria", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] },
+    { id: "q_par_pi_005", bloco: "par_programa_integridade", texto: "Há registro de denúncias, apurações internas ou sanções aplicadas a empregados ou terceiros por violações a normas de integridade? Cite exemplos.", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] },
+    { id: "q_par_pi_006", bloco: "par_programa_integridade", texto: "Que medidas de integridade eram adotadas na contratação e no acompanhamento de terceiros, intermediários e parceiros (due diligence)?", finalidade: "materialidade", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: ["NORMA.LAC.ART5_III"] },
+    { id: "q_par_pi_007", bloco: "par_programa_integridade", texto: "Após os fatos apurados, o programa de integridade foi criado, revisado ou aprimorado? De que forma e com quais resultados?", finalidade: "contexto", papeis: ["testemunha", "declarante_informante", "situacao_indefinida", "vitima", "representante_legal", "preposto", "socio_administrador"], infracoes: ["todas"], modulo: "par", normasRelacionadas: [] }
   ],
 
   // ---- Textos-modelo (merge com placeholders) ----
@@ -3451,7 +3556,7 @@ const CATALOGO = {
     adv_situacao_indefinida: "Informo que os autos indicam a possibilidade de seu envolvimento no contexto fático apurado, sem que existam, até o momento, elementos suficientes para tratá-lo(a) como investigado(a). Por essa razão, o(a) senhor(a) não presta compromisso de testemunha e tem facultado, por cautela e por analogia à vedação à autoincriminação, o direito de permanecer em silêncio diante de qualquer questionamento, sem que isso lhe traga qualquer prejuízo. [À defesa:] Podemos proceder dessa forma? A Defesa teria alguma objeção?",
     adv_vitima: "Informo que, em face de sua condição de vítima nestes autos, o(a) senhor(a) não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho, ficando contudo sujeito(a), como qualquer pessoa, à denunciação caluniosa em caso de imputação falsa. Peço que relate os fatos com a maior fidelidade possível.",
     acolhimento: "Bom dia/Boa tarde. Meu nome é {{presidente}}, presidente desta comissão. Sejam bem-vindos. Agradeço a disponibilidade de todos em colaborar com o nosso trabalho. Esperamos tomar o menor tempo possível e conduzir este ato com serenidade. Antes de iniciarmos, peço que cada um dos presentes informe seu nome completo, documento de identidade, CPF e, se for o caso, número de inscrição na OAB.",
-    abertura_formal: "Hoje, {{data}}, às {{hora}}, em {{local}}, dou início a este ato processual. Registro que estamos reunidos por força do Processo Administrativo Disciplinar nº {{processo}}, instaurado pela Portaria {{portaria}}. Presentes os membros da comissão: {{presidente}} (presidente), {{vogais}} (vogais), atuando como secretário(a) {{secretario}}; e ainda [depoente/acusado/defensor, conforme o caso], todos já identificados. Este processo tem por objeto a apuração de supostas irregularidades no âmbito de {{orgao_local}}.",
+    abertura_formal: "Hoje, {{data}}, às {{hora}}, em {{local}}, dou início a este ato processual. Registro que estamos reunidos por força do {{tipo_processo_extenso}} nº {{processo}}, instaurado pela Portaria {{portaria}}. Presentes os membros da comissão: {{presidente}} (presidente), {{vogais}} (vogais), atuando como secretário(a) {{secretario}}; e ainda [depoente/acusado/defensor, conforme o caso], todos já identificados. Este processo tem por objeto a apuração de supostas irregularidades no âmbito de {{orgao_local}}.",
     avisos_lgpd: "Antes de iniciarmos, deixo registrados os seguintes avisos:\n- O acesso aos registros deste ato e às informações dele decorrentes é restrito aos interessados neste procedimento, que tramita sob cláusula de acesso restrito para proteção da intimidade dos envolvidos e da elucidação dos fatos.\n- A utilização indevida de documentos, áudios e imagens decorrentes deste ato, em especial a veiculação irregular da imagem de qualquer dos presentes ou o tratamento inadequado de seus dados pessoais, poderá ensejar responsabilização, nos termos da legislação vigente.\n- Os termos e registros desta audiência serão armazenados nos autos do processo nº {{processo}} e poderão instrumentalizar outros procedimentos de responsabilização administrativa, podendo, nas hipóteses legais, ser compartilhados com órgãos responsáveis pela persecução administrativa, civil ou criminal.\n- Nos termos do art. 7º, inciso II, da Lei nº 13.709/2018 (LGPD), o tratamento de dados pessoais nesta hipótese decorre do cumprimento de obrigação legal desta unidade correcional e dispensa o consentimento dos titulares.\n- O(a) acusado(a) e seu(sua) procurador(a) terão acesso aos registros deste ato pelos meios processuais próprios e ficam advertidos quanto à responsabilização por utilização indevida.",
     orientacoes_testemunha: "Informo que o depoimento será prestado de forma oral. A comissão formulará suas perguntas e, ao final, será dada a palavra à defesa para os questionamentos que entender pertinentes, os quais serão dirigidos por meu intermédio. Deixo claro que nada está sendo apurado em relação ao(à) senhor(a). Peço apenas que procure ser o(a) mais claro(a) e preciso(a) possível e que nos informe, com transparência, se ao longo do depoimento surgir situação que gere dúvida ou constrangimento. Sua contribuição é muito importante para esta apuração.",
     orientacoes_declarante: "Informo que o(a) senhor(a) foi convidado(a) a colaborar com esta apuração em razão de seu vínculo com o(a) investigado(a) ou de sua participação anterior no contexto ora apurado, na condição de declarante/informante. Não presta compromisso legal de dizer a verdade e não responde pelo crime de falso testemunho, mas conto com a sua colaboração voluntária, da forma mais completa e transparente possível, para o esclarecimento dos fatos.",
@@ -3676,7 +3781,18 @@ const CATALOGO = {
     // Orientações de Implementação (2026-07-09): gate de nulidade específico do papel "Pessoa em
     // Situação Indefinida" — exige confirmação de que a defesa foi consultada sobre o enquadramento
     // antes de prosseguir com a oitiva sem compromisso e com direito ao silêncio facultado.
-    { id: "chk_consulta_defesa_enquadramento", texto: "Defesa consultada sobre o enquadramento como \"pessoa em situação indefinida\" adotado para esta oitiva, sem objeção registrada (ou objeção devidamente registrada e deliberada)", condicao: "papel == situacao_indefinida" }
+    { id: "chk_consulta_defesa_enquadramento", texto: "Defesa consultada sobre o enquadramento como \"pessoa em situação indefinida\" adotado para esta oitiva, sem objeção registrada (ou objeção devidamente registrada e deliberada)", condicao: "papel == situacao_indefinida" },
+    // Rodada PAR-4 — matriz PAR do checklist (papel × grupo de ato lesivo). Condições resolvidas em
+    // itensChecklistAplicaveis(): "dominio == par" (transversal), "papel_par" (qualquer dos 3 papéis
+    // PAR), "grupo == licitacoes" (enquadramento do grupo Licitações e contratos), "infracao == <id>"
+    // (art. 5º, III), "socio_par" e "representante_par". Nenhum aparece em modo PAD (todas gatilham em
+    // dominio == par ou em papel/infração que só existem no PAR).
+    { id: "chk_par_beneficio_nexo",       texto: "Explorar o interesse ou benefício da pessoa jurídica e o nexo de causalidade entre a conduta e o proveito do ente — elementos materiais da responsabilização (art. 2º da Lei nº 12.846/2013) que a comissão precisará demonstrar", condicao: "dominio == par" },
+    { id: "chk_par_poderes_representacao", texto: "Confirmar os poderes de representação/vínculo do depoente com o ente e advertir sobre o direito do ente de ser acompanhado por representante legal", condicao: "papel_par" },
+    { id: "chk_par_desconsideracao",      texto: "Registrar a eventual participação pessoal do sócio/administrador nos fatos, para fins de eventual desconsideração da personalidade jurídica (art. 14 da Lei nº 12.846/2013)", condicao: "socio_par" },
+    { id: "chk_par_licitacao_certame",    texto: "Confirmar a identificação do certame/contrato e a fase em que a conduta ocorreu; explorar as condutas do art. 5º, IV (combinação entre licitantes, afastamento de concorrente, empresa de fachada, fraude em aditivos, equilíbrio econômico-financeiro) — bloco de perguntas \"Atos lesivos em licitações e contratos\"", condicao: "grupo == licitacoes" },
+    { id: "chk_par_terceiro_interposto",  texto: "Mapear a cadeia de intermediários e beneficiários (art. 5º, III) — uso de interposta pessoa física ou jurídica, consultores e beneficiários ocultos — bloco de perguntas \"Terceiro interposto empresarial\"", condicao: "infracao == NORMA.LAC.ART5_III" },
+    { id: "chk_par_programa_integridade", texto: "Explorar existência, aplicação efetiva e histórico do programa de integridade do ente (art. 7º, VIII, da Lei nº 12.846/2013) — bloco de perguntas \"Programa de integridade\"", condicao: "representante_par" }
   ],
 
   // ---- Dicas contextuais (Fabian Maia) — camada de coaching ----
@@ -3751,7 +3867,10 @@ function processoVazio(){
       criadoEm: agoraISO(),
       atualizadoEm: agoraISO()
     },
-    matriz: { conduta: "", investigado: "", elementosDisponiveis: "", hipotese: "" },
+    // Rodada PAR-4: `dominio` (5º campo da matriz) nasce "pad" em processo novo — comportamento
+    // idêntico ao de hoje. JSONs antigos (sem o campo) NÃO são backfilled em migrarEstadoCarregado,
+    // para que a exportação só emita `dominio` quando definido.
+    matriz: { conduta: "", investigado: "", elementosDisponiveis: "", hipotese: "", dominio: "pad" },
     depoentes: [],
     // Rodada 6 (integração com o Nexo Coger, seção 2.2): null enquanto nenhuma pauta foi importada —
     // toda a UI desta rodada fica oculta nesse caso (não-objetivo: nenhum resquício visual).
@@ -3837,6 +3956,43 @@ function matrizCompleta(m){
 }
 
 /* =====================================================================
+   RODADA PAR-4 — Modo dual PAD/PAR
+   O domínio é o 5º campo da Matriz de Apuração (estado.matriz.dominio, "pad" | "par").
+   Disciplina (mesma da PAR-2 no Veritas): ausente => comporta-se como "pad" (retrocompat total dos
+   JSONs antigos), mas o campo NÃO é backfilled no estado antigo — assim a exportação (4.6) só emite
+   `dominio` quando ele foi de fato definido ("ausente, não null"). A mecânica central (rodadas de
+   oitiva, estrutura do termo e cálculo de hash) não recebe nenhum condicional por domínio: tudo é
+   filtragem de lista (papéis, infrações, blocos, checklist) e vocabulário.
+   ===================================================================== */
+function dominioProcesso(){
+  const dm = estado.matriz && estado.matriz.dominio;
+  return dm === "par" ? "par" : "pad"; // ausente/qualquer-outro => comportamento PAD
+}
+function dominioProcessoDefinido(){
+  const dm = estado.matriz && estado.matriz.dominio;
+  return (dm === "pad" || dm === "par") ? dm : undefined; // p/ exportação: só quando explícito
+}
+function dominioTravadoPorPauta(){
+  const pd = estado.pautaImportada && estado.pautaImportada.dominio;
+  return (pd === "pad" || pd === "par") && dominioProcesso() === pd;
+}
+// Filtro de lista por domínio: item ("comum" ou sem domínio) sempre visível; caso contrário, só quando
+// bate com o domínio do processo. Usado por papéis e blocos.
+function itemVisivelNoDominio(dominioItem, dominioProc){
+  return !dominioItem || dominioItem === "comum" || dominioItem === dominioProc;
+}
+function papelEhPAR(slug){
+  return slug === "representante_legal" || slug === "preposto" || slug === "socio_administrador";
+}
+// Uma infração pertence ao domínio PAR quando é uma norma LAC (id NORMA.LAC.*); às demais (N-… da Lei
+// 8.112/LAI e inf_outras) corresponde o domínio PAD.
+function infracaoEhLAC(id){ return typeof id === "string" && id.indexOf("NORMA.LAC.") === 0; }
+function infracaoPertenceAoDominio(id, dom){
+  if (!id) return true; // sem infração selecionada: compatível com qualquer domínio
+  return dom === "par" ? infracaoEhLAC(id) : !infracaoEhLAC(id);
+}
+
+/* =====================================================================
    RENDER — Tela do Processo
    ===================================================================== */
 function renderizarCardsDica(lista){
@@ -3873,6 +4029,8 @@ function renderCamposProcesso(){
   document.getElementById("campo-investigado").value = estado.matriz.investigado || "";
   document.getElementById("campo-elementos-disponiveis").value = estado.matriz.elementosDisponiveis || "";
   document.getElementById("campo-hipotese").value = estado.matriz.hipotese || "";
+  renderCampoDominio(); // Rodada PAR-4 (4.1)
+  renderChipDominio();  // Rodada PAR-4 (4.7)
 
   document.getElementById("campo-numero").value = estado.processo.numero || "";
   document.getElementById("campo-portaria").value = estado.processo.portaria || "";
@@ -3960,8 +4118,9 @@ function renderListaDepoentes(){
       depoentes.map(d => (
         "<tr>" +
           "<td>" + escapeHtml(d.identificacao) + "</td>" +
-          "<td>" + (d.papel ? escapeHtml((CATALOGO.papeis.find(p=>p.id===d.papel)||{}).nome || d.papel) : "<span class=\"vazio\">não definido</span>") + "</td>" +
-          "<td>" + (d.infracao ? escapeHtml((CATALOGO.infracoes.find(i=>i.id===d.infracao)||{}).nome || d.infracao) : "<span class=\"vazio\">não definida</span>") + "</td>" +
+          "<td>" + (d.papel ? escapeHtml((CATALOGO.papeis.find(p=>p.id===d.papel)||{}).nome || d.papel) +
+            (function(){ const p = CATALOGO.papeis.find(p=>p.id===d.papel); return (p && !itemVisivelNoDominio(p.dominio, dominioProcesso())) ? " <span class=\"badge-checklist-status pendente\" title=\"Papel fora do domínio atual do processo — considere reclassificar\">fora do domínio</span>" : ""; })() : "<span class=\"vazio\">não definido</span>") + "</td>" +
+          "<td>" + (d.infracao ? escapeHtml((buscarInfracao(d.infracao)||{}).nome || d.infracao) : "<span class=\"vazio\">não definida</span>") + "</td>" +
           "<td><span class=\"badge-status " + d.status + "\">" + statusLabel(d.status) + "</span></td>" +
           "<td><button type=\"button\" class=\"secundario pequeno\" data-abrir-wizard=\"" + d.id + "\">Abrir depoente</button> " +
               "<button type=\"button\" class=\"perigo pequeno\" data-remover-depoente=\"" + d.id + "\">Remover</button></td>" +
@@ -4022,6 +4181,83 @@ function ligarCamposMatriz(){
       salvarLocalStorage();
       atualizarAvisoMatriz();
     });
+  });
+  ligarCampoDominio(); // Rodada PAR-4 (4.1)
+}
+
+/* Rodada PAR-4 (item 4.1) — Domínio do processo na matriz.
+   renderCampoDominio(): reflete estado.matriz.dominio no <select>; quando o domínio veio de uma pauta
+   importada (dominioTravadoPorPauta()), o select fica desabilitado e um aviso indica a origem.
+   ligarCampoDominio(): ao trocar manualmente, se houver dados incompatíveis já selecionados (infração
+   ou papel de outro domínio), pede confirm() explicando o que será limpo/sinalizado ANTES de aplicar —
+   nunca troca silenciosamente. Depoentes com papel fora do novo domínio são MANTIDOS no estado (dado
+   não é apagado), apenas sinalizados "fora do domínio" na lista; a infração incompatível de cada um é
+   limpa (vira "não definida"), pois o select de infração passa a listar outro domínio. */
+// Rodada PAR-4 (item 4.7) — chip PAD/PAR no cabeçalho, reflete dominioProcesso().
+function renderChipDominio(){
+  const chip = document.getElementById("chip-dominio");
+  if (!chip) return;
+  const dom = dominioProcesso();
+  chip.textContent = dom.toUpperCase();
+  chip.classList.toggle("topbar__dominio--par", dom === "par");
+  chip.classList.toggle("topbar__dominio--pad", dom !== "par");
+}
+function renderCampoDominio(){
+  const sel = document.getElementById("campo-dominio");
+  const travadoWrap = document.getElementById("campo-dominio-travado");
+  if (!sel) return;
+  sel.value = dominioProcesso();
+  const travado = dominioTravadoPorPauta();
+  sel.disabled = travado;
+  if (travado){
+    travadoWrap.style.display = "";
+    travadoWrap.textContent = "🔒 Domínio derivado da pauta importada do Nexo — não editável enquanto a pauta estiver vinculada.";
+  } else {
+    travadoWrap.style.display = "none";
+    travadoWrap.textContent = "";
+  }
+}
+function depoentesComPapelForaDoDominio(novoDominio){
+  return (estado.depoentes || []).filter(d => {
+    const p = CATALOGO.papeis.find(x => x.id === d.papel);
+    return d.papel && p && !itemVisivelNoDominio(p.dominio, novoDominio);
+  });
+}
+function depoentesComInfracaoForaDoDominio(novoDominio){
+  return (estado.depoentes || []).filter(d => d.infracao && !infracaoPertenceAoDominio(d.infracao, novoDominio));
+}
+function ligarCampoDominio(){
+  const sel = document.getElementById("campo-dominio");
+  if (!sel) return;
+  sel.addEventListener("change", () => {
+    const novo = sel.value === "par" ? "par" : "pad";
+    const atual = dominioProcesso();
+    if (novo === atual){ estado.matriz.dominio = novo; salvarLocalStorage(); return; }
+    if (dominioTravadoPorPauta()){ renderCampoDominio(); return; } // salvaguarda: travado não muda
+
+    const papeisFora = depoentesComPapelForaDoDominio(novo);
+    const infracoesFora = depoentesComInfracaoForaDoDominio(novo);
+    if (papeisFora.length || infracoesFora.length){
+      let msg = "Trocar o domínio do processo para " + novo.toUpperCase() + " afeta dados já cadastrados:\n\n";
+      if (infracoesFora.length){
+        msg += "• " + infracoesFora.length + " depoente(s) têm categoria de infração de outro domínio — ela será LIMPA (voltará a \"não definida\"):\n  " +
+          infracoesFora.map(d => d.identificacao || "(sem nome)").join(", ") + "\n\n";
+      }
+      if (papeisFora.length){
+        msg += "• " + papeisFora.length + " depoente(s) têm papel que não existe no domínio " + novo.toUpperCase() +
+          " — o dado será MANTIDO, mas sinalizado como \"fora do domínio\" para reclassificação:\n  " +
+          papeisFora.map(d => d.identificacao || "(sem nome)").join(", ") + "\n\n";
+      }
+      msg += "Confirmar a troca de domínio?";
+      if (!confirm(msg)){ renderCampoDominio(); return; } // recusa: reverte o select
+      // Confirmado: limpa apenas as infrações incompatíveis (papéis são preservados, só sinalizados).
+      infracoesFora.forEach(d => { d.infracao = null; });
+    }
+    estado.matriz.dominio = novo;
+    salvarLocalStorage();
+    renderCampoDominio();
+    renderChipDominio();       // 4.7
+    renderListaDepoentes();    // reavalia badges "fora do domínio"
   });
 }
 
@@ -4350,11 +4586,38 @@ function mesclarPautaImportada(pautaImportadaAtual, dados, agoraIsoStr){
 function aplicarImportacaoPauta(dados){
   const jaExistiaEssaPauta = !!(estado.pautaImportada && estado.pautaImportada.pautaIdUltimaImportacao === dados.pauta_id);
   estado.pautaImportada = mesclarPautaImportada(estado.pautaImportada, dados, agoraISO());
+  // Rodada PAR-4 (item 4.1) — derivação do domínio pela pauta. Se a pauta importada traz `dominio`
+  // (pad|par), ele passa a governar o processo e o seletor manual fica travado (dominioTravadoPorPauta).
+  // Conflito com um domínio manual diferente: avisa e pede confirmação; recusa mantém o manual e a pauta
+  // fica sem travar. Pauta sem o campo (arquivos antigos) não trava nada. Nenhuma recusa de importação
+  // por domínio nesta rodada (escopo da PAR-5) — só derivação e aviso.
+  derivarDominioDaPauta(dados);
   salvarLocalStorage();
   renderResumoPautaNexo();
+  renderCampoDominio();
+  renderChipDominio();
   // Rodada 7, seção 7.4: reimportação sinalizada explicitamente (nunca silenciosa) — o merge por
   // fatoId já evita duplicidade de itens.
   if (jaExistiaEssaPauta) alert("A pauta " + dados.pauta_id + " já havia sido importada antes — itens existentes foram atualizados, nenhum item duplicado foi criado.");
+}
+// Rodada PAR-4 (item 4.1) — derivação do domínio a partir da pauta importada. Grava
+// estado.pautaImportada.dominio (fonte que dominioTravadoPorPauta consulta) e alinha
+// estado.matriz.dominio, com aviso de conflito quando havia um domínio manual divergente.
+function derivarDominioDaPauta(dados){
+  const domPauta = dados && dados.dominio;
+  if (domPauta !== "pad" && domPauta !== "par"){
+    // Pauta sem domínio (arquivo antigo): não trava nada, mantém o domínio atual do processo.
+    if (estado.pautaImportada) estado.pautaImportada.dominio = undefined;
+    return;
+  }
+  if (estado.pautaImportada) estado.pautaImportada.dominio = domPauta;
+  const domManual = dominioProcessoDefinido();
+  if (domManual && domManual !== domPauta){
+    alert("A pauta importada indica domínio \"" + domPauta.toUpperCase() + "\", diferente do domínio \"" +
+      domManual.toUpperCase() + "\" selecionado manualmente neste processo. O domínio passará a ser o da pauta (" +
+      domPauta.toUpperCase() + ") e o seletor manual ficará travado enquanto a pauta estiver vinculada.");
+  }
+  estado.matriz.dominio = domPauta;
 }
 
 // Rodada 8 (seção 8.2/8.3): status de cada item de pauta, recalculado ao vivo a partir do estado
@@ -4762,13 +5025,23 @@ function renderEtapa2(){
   document.getElementById("dep-vinculos").value = d.perfil.vinculos || "";
 
   const opcoesWrap = document.getElementById("papel-opcoes");
-  opcoesWrap.innerHTML = CATALOGO.papeis.map(p => (
-    "<label class=\"papel-opcao\">" +
+  // Rodada PAR-4 (item 4.3) — papéis filtrados por domínio: "comum"/sem-domínio sempre; "pad"/"par"
+  // só no domínio correspondente. Em PAR entram representante_legal/preposto/socio_administrador e sai
+  // acusado. Exceção: se o depoente JÁ tem um papel fora do domínio atual (troca de domínio posterior),
+  // esse papel é incluído na lista assim mesmo — para o rádio poder aparecer marcado e ser reclassificável,
+  // sem apagar o dado do depoente.
+  const papeisVisiveis = CATALOGO.papeis.filter(p =>
+    itemVisivelNoDominio(p.dominio, dominioProcesso()) || p.id === d.papel);
+  opcoesWrap.innerHTML = papeisVisiveis.map(p => {
+    const foraDominio = !itemVisivelNoDominio(p.dominio, dominioProcesso());
+    return "<label class=\"papel-opcao\">" +
       "<input type=\"radio\" name=\"papel-depoente\" value=\"" + p.id + "\"" + (d.papel === p.id ? " checked" : "") + ">" +
-      "<span><span class=\"papel-nome\">" + escapeHtml(p.nome) + "</span>" +
+      "<span><span class=\"papel-nome\">" + escapeHtml(p.nome) +
+        (foraDominio ? " <span class=\"badge-checklist-status pendente\" title=\"Papel fora do domínio atual do processo\">fora do domínio</span>" : "") +
+      "</span>" +
       "<span class=\"papel-desc\">" + escapeHtml(p.descricaoRegime) + "</span></span>" +
-    "</label>"
-  )).join("");
+    "</label>";
+  }).join("");
   opcoesWrap.querySelectorAll("input[name=papel-depoente]").forEach(r => {
     r.addEventListener("change", () => {
       const dep = getDepoenteAtivo();
@@ -4790,6 +5063,41 @@ function renderEtapa2(){
 // Rodada 5 (unificação de catálogo com o Nexo Coger): 52 normas agrupadas por origem (mesmo
 // agrupamento definido no Nexo — seção 3.5.3), ordenadas por inciso dentro de cada grupo, com busca
 // por rótulo/dispositivo/id. Reconstrói o <select> inteiro a cada busca (sem dependência de libs).
+// Rodada PAR-4 — categoria de infração sensível a domínio (item 4.2). Em modo PAR, o mesmo <select>
+// da matriz de apuração passa a listar as 11 normas LAC do catálogo canônico, em 2 optgroups, com a
+// nota_aplicacao como hint (📌) — mesmo padrão visual do Nexo PAR (PAR-3). Deriva-se de CATALOGO_COGER
+// (embutido) uma lista no mesmo "shape" das infrações internas (id/rotulo/dispositivo/nome) para
+// reaproveitar renderInfracaoDetalhe/busca sem tocar a mecânica. `rotulo` = descrição encurtada.
+function rotuloCurtoLAC(descricao){
+  const s = String(descricao || "").trim();
+  const corte = s.indexOf(", "); // primeiro segmento da conduta, legível como rótulo
+  let base = (corte > 10 && corte < 70) ? s.slice(0, corte) : s;
+  if (base.length > 72) base = base.slice(0, 71) + "…";
+  return base.replace(/\.$/, "");
+}
+const GRUPOS_INFRACAO_LAC = [
+  { grupo: "Atos de corrupção em geral", titulo: "LAC — Atos de corrupção em geral (art. 5º, I, II, III, V)" },
+  { grupo: "Licitações e contratos",     titulo: "LAC — Licitações e contratos (art. 5º, IV)" }
+];
+const INFRACOES_LAC = (CATALOGO_COGER.normas || [])
+  .filter(n => infracaoEhLAC(n.id) && n.status === "ativo")
+  .map(n => ({
+    id: n.id,
+    rotulo: rotuloCurtoLAC(n.descricao),
+    nome: rotuloCurtoLAC(n.descricao),
+    dispositivo: n.dispositivo || "",
+    descricao: n.descricao || "",
+    grupo: n.grupo || "",
+    notaAplicacao: n.nota_aplicacao || ""
+  }));
+// Lookup unificado por id (infrações PAD internas + LAC), usado onde d.infracao pode ser de qualquer domínio.
+function buscarInfracao(id){
+  return CATALOGO.infracoes.find(i => i.id === id) || INFRACOES_LAC.find(i => i.id === id) || null;
+}
+function grupoDaInfracaoLAC(id){
+  const it = INFRACOES_LAC.find(i => i.id === id);
+  return it ? it.grupo : "";
+}
 const GRUPOS_INFRACAO_ORDEM = [
   { prefixo: "N-116-", titulo: "Lei 8.112/90 — Deveres (art. 116)" },
   { prefixo: "N-117-", titulo: "Lei 8.112/90 — Proibições (art. 117)" },
@@ -4815,7 +5123,31 @@ function incisoOrdemDaInfracao(id){
   const m = id.match(/-([IVXL]+)$/);
   return m ? romanoParaInt(m[1]) : 0;
 }
+// Rodada PAR-4: em modo PAR, o select é montado a partir das 11 normas LAC (2 optgroups), em vez das
+// 52 normas da Lei 8.112/LAI. Nenhuma mudança na mecânica — só a fonte da lista muda por domínio.
+function popularSelectInfracaoLAC(filtro){
+  const d = getDepoenteAtivo();
+  const valorAtual = d ? d.infracao : null;
+  const termo = (filtro || "").trim().toLowerCase();
+  let html = "<option value=\"\">Selecione…</option>";
+  GRUPOS_INFRACAO_LAC.forEach(g => {
+    const itens = INFRACOES_LAC.filter(i => i.grupo === g.grupo && (!termo ||
+      i.rotulo.toLowerCase().includes(termo) ||
+      i.descricao.toLowerCase().includes(termo) ||
+      i.dispositivo.toLowerCase().includes(termo) ||
+      i.id.toLowerCase().includes(termo)));
+    if (!itens.length) return;
+    html += "<optgroup label=\"" + escapeHtml(g.titulo) + "\">";
+    html += itens.map(i => (
+      "<option value=\"" + i.id + "\"" + (valorAtual === i.id ? " selected" : "") + ">" +
+        escapeHtml(i.rotulo) + " — " + escapeHtml(i.dispositivo) + "</option>"
+    )).join("");
+    html += "</optgroup>";
+  });
+  document.getElementById("dep-infracao").innerHTML = html;
+}
 function popularSelectInfracao(filtro){
+  if (dominioProcesso() === "par"){ popularSelectInfracaoLAC(filtro); return; }
   const d = getDepoenteAtivo();
   const valorAtual = d ? d.infracao : null;
   const termo = (filtro || "").trim().toLowerCase();
@@ -4864,6 +5196,17 @@ function resolverNormaPorId(normaId){
 // isoladas do Oitiva).
 function renderInfracaoDetalhe(infracaoId){
   const wrap = document.getElementById("infracao-detalhe");
+  // Rodada PAR-4: norma LAC — detalhe próprio (descrição + grupo + nota_aplicacao como hint 📌), já que
+  // as normas LAC não têm gravidade/pena/elemento subjetivo (responsabilidade objetiva, art. 2º LAC).
+  const infLac = INFRACOES_LAC.find(i => i.id === infracaoId);
+  if (infLac){
+    wrap.innerHTML = "<div class=\"infracao-detalhe\"><strong>Dispositivo:</strong> " + escapeHtml(infLac.dispositivo) +
+      " · <strong>Grupo:</strong> " + escapeHtml(infLac.grupo) +
+      "<br><strong>Conduta:</strong> " + escapeHtml(infLac.descricao) +
+      (infLac.notaAplicacao ? "<br>📌 <strong>Nota de aplicação:</strong> " + escapeHtml(infLac.notaAplicacao) : "") +
+      "</div>";
+    return;
+  }
   const inf = CATALOGO.infracoes.find(i => i.id === infracaoId);
   wrap.innerHTML = inf
     ? "<div class=\"infracao-detalhe\"><strong>Tipo:</strong> " + escapeHtml(inf.descricaoTipo) +
@@ -5056,7 +5399,16 @@ function papelTemDireitoSilencio(papelId){
 // Resolução da pendência dos blocos 6 e 12: centraliza a decisão de omitir um bloco inteiro do roteiro
 // (silêncio do acusado já existente + bloco 12 sem defensor constituído presente), reaproveitada nas
 // três telas que percorrem CATALOGO.blocos (Etapa 3, Etapa 4 e impressão).
+// Rodada PAR-4: filtragem de blocos por domínio do processo — vocabulário/lista, NÃO lógica de negócio.
+// Blocos "pad" some no PAR, blocos "par" some no PAD, "comum"/sem-domínio aparecem sempre. Isto NÃO
+// altera a mecânica do termo/hash: gerarTermoTexto continua concatenando exatamente os itens que
+// perguntasRespostasOrdenadas devolve, apenas a LISTA de blocos considerada é filtrada (mesma natureza
+// da omissão já existente por silêncio / defensor ausente).
+function blocoForaDoDominio(bloco){
+  return !itemVisivelNoDominio(bloco.dominio, dominioProcesso());
+}
 function blocoDeveSerOmitido(bloco, d){
+  if (blocoForaDoDominio(bloco)) return true;
   const silencioExercido = papelTemDireitoSilencio(d.papel) && d.acusadoSilencio;
   if (silencioExercido && BLOCOS_OCULTOS_SILENCIO.includes(bloco.id)) return true;
   if (bloco.id === "palavra_defesa" && !d.ato.defensorPresente) return true;
@@ -5090,7 +5442,13 @@ function contextoMerge(d){
     data: formatarDataBR(d.ato.data),
     hora: d.ato.hora || "",
     local: d.ato.local || "",
-    orgao_local: estado.processo.orgaoLocal || ""
+    orgao_local: estado.processo.orgaoLocal || "",
+    // Rodada PAR-4 (item 4.7) — placeholder neutralizado por domínio para a abertura formal (bloco
+    // "comum", exibido nos dois modos). Continua sendo só uma substituição de {{...}} no mergeTexto —
+    // nenhuma lógica nova na geração do termo/hash.
+    tipo_processo_extenso: dominioProcesso() === "par"
+      ? "Processo Administrativo de Responsabilização"
+      : "Processo Administrativo Disciplinar"
   };
 }
 
@@ -5116,6 +5474,10 @@ function gerarRoteiroInicial(d){
   const normasPauta = normasPautaResolvidasParaDepoente(d); // Rodada 6, seção 4
   return CATALOGO.blocos.map(bloco => {
     let itens = [];
+
+    // Rodada PAR-4: não gera itens para blocos de outro domínio (mantém o roteiro limpo). É filtragem
+    // de lista por domínio; a estrutura/mecânica de geração dos demais blocos é idêntica.
+    if (blocoForaDoDominio(bloco)) return { blocoId: bloco.id, itens: [] };
 
     if (bloco.id === "preparacao_cenario"){
       itens = CATALOGO.checklistItens.filter(c => c.condicao === "sempre").map((c, i) => ({
@@ -5502,7 +5864,17 @@ function itensChecklistAplicaveis(d){
     (c.condicao === "modalidade == videoconferencia" && d.ato.modalidade === "videoconferencia") ||
     // Atualização incremental 01: grupo condicional por infração (enriquecimento ilícito).
     // Rodada 5: id migrado de inf_enriquecimento_ilicito para N-132-IV (catálogo unificado com o Nexo).
-    (c.condicao === "infracao == N-132-IV" && d.infracao === "N-132-IV")
+    (c.condicao === "infracao == N-132-IV" && d.infracao === "N-132-IV") ||
+    // Rodada PAR-4 (item 4.5) — matriz PAR do checklist (papel × grupo de ato lesivo). Mesmo padrão de
+    // parsing das condições acima (string simbólica → predicado sobre d/domínio). Nenhuma dessas ativa
+    // em modo PAD: "dominio == par" exige o domínio; papel_par/socio_par/representante_par exigem papéis
+    // que só existem no PAR; "grupo == licitacoes"/"infracao == NORMA.LAC.*" exigem enquadramento LAC.
+    (c.condicao === "dominio == par" && dominioProcesso() === "par") ||
+    (c.condicao === "papel_par" && papelEhPAR(d.papel)) ||
+    (c.condicao === "socio_par" && d.papel === "socio_administrador") ||
+    (c.condicao === "representante_par" && d.papel === "representante_legal") ||
+    (c.condicao === "grupo == licitacoes" && grupoDaInfracaoLAC(d.infracao) === "Licitações e contratos") ||
+    (c.condicao === "infracao == NORMA.LAC.ART5_III" && d.infracao === "NORMA.LAC.ART5_III")
   );
 }
 
@@ -5705,6 +6077,11 @@ async function construirEnvelopeTermo(d, pautaImportada, catalogoCoger, rodadaId
     termo: { conteudo: textoFinal, gerado_em: new Date().toISOString(), responsavel: "" },
     hash_origem: "sha256:" + hashHex
   };
+  // Rodada PAR-4 (item 4.6) — propaga `dominio` (pad|par) para o envelope quando o processo o tiver
+  // definido; ausente quando indefinido (estado antigo) — nunca emite null inventado. Mesmo padrão da
+  // PAR-2 no Veritas (if (dominio) contrato.dominio = dominio). Sem validação de importação (PAR-5).
+  const dom = dominioProcessoDefinido();
+  if (dom) envelope.dominio = dom;
   return { envelope, textoFinal, hashHex };
 }
 async function exportarTermoParaVeritas(d){
@@ -5760,12 +6137,16 @@ function construirEnvelopeRetorno(d, pautaImportada, idProva, catalogoCoger, rod
       resumo_resposta: conclusao.resumoResposta || ""
     };
   });
-  return {
+  const envelope = {
     schema_version: "1.0.0",
     catalogo_schema_version: catalogoCoger.schema_version,
     origem: "oitiva-360",
     retornos: retornos
   };
+  // Rodada PAR-4 (item 4.6) — mesmo padrão do envelope de termo: emite `dominio` só quando definido.
+  const dom = dominioProcessoDefinido();
+  if (dom) envelope.dominio = dom;
+  return envelope;
 }
 function exportarRetornoContextoAcusado(d){
   const statusEl = document.getElementById("status-exportar-retorno-nexo");
