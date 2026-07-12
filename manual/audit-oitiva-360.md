@@ -260,3 +260,36 @@ Ou seja, apenas `item.statusChecklist` é persistido (valores `"pendente"` | `"a
 3. **`concluida`** — só é atingido quando `item.statusChecklist` vira `"abordado"` ou `"sem_resposta"`, o que só acontece em `atualizarChecklistPautaAoConcluir(d)` (linha 4243), chamada **exclusivamente** pelo handler do checkbox **"Marcar oitiva como realizada"** (`chk-oitiva-realizada`, Etapa 4, linha 5702-5712) — nunca antes, nunca automaticamente. Ao marcar esse checkbox: `d.status` do depoente vira `"oitiva_realizada"` e, para cada item em `d.pautaSelecionada`, verifica `d.pautaConclusao[fatoId].respondida`: se `false`, `item.statusChecklist = "sem_resposta"` (com `notaSemResposta` opcional); caso contrário (padrão `respondida: true`), `item.statusChecklist = "abordado"`. Desmarcar o checkbox reverte apenas `d.status` do depoente para `"roteiro_pronto"` — **não** reverte `statusChecklist` do item de pauta (comentário no código confirma: só ao concluir a oitiva o statusChecklist é atualizado, "nunca antes, nunca calculado sozinho" — mas o código não mostra reversão automática ao desmarcar).
 
 Resumo direto: **importar pauta = pendente**; **algum depoente selecionar o item para abordar nesta sessão = em_andamento**; **marcar a checkbox "Marcar oitiva como realizada" na Etapa 4 daquele depoente = concluída** (como "abordado" ou "sem_resposta", conforme a resposta ter sido de fato registrada).
+
+---
+
+## 10. Correção — pauta_id/rodada_id/id_ponto ausentes em "Exportar prova(s) para o Nexo" (rodada 2026-07-12)
+
+Fecha o gap descrito no Adendo §6.4 de `audit-nexo-coger.md`: o handler de `#btn-confirmar-exportar-prova` (linha ~5986, dentro do listener `click`) agora inclui, por item de prova, os mesmos três campos que `construirEnvelopeRetorno()` já emitia desde a Rodada 6 (linha 5488-5512) — lidos exatamente da mesma fonte.
+
+**Vínculo prova → ponto de pauta**: cada chave de `_exportProvaDraft` é um `fatoId` que só existe porque veio de `itensPautaAbordadosNestaSessao(d)` (linha 4270), que por sua vez filtra `estado.pautaImportada.itens` pelos `fatoId` em `d.pautaSelecionada` com `statusChecklist==='abordado'` (linha 4262-4267, `itensPautaAbordadosPuro`). Ou seja: todo item que chega ao diálogo "Exportar prova(s) para o Nexo" já tem, por construção, um item correspondente em `estado.pautaImportada.itens` — o mesmo array de onde `construirEnvelopeRetorno` lê `item.pautaIdOrigem`/`item.idPontoOrigem` (linhas 5495 e 5497).
+
+No handler corrigido, cada prova agora faz esse mesmo lookup por `fatoId` antes de montar o objeto exportado:
+
+```js
+if (!d.rodadaId) d.rodadaId = gerarId();
+salvarLocalStorage();
+...
+const itemPauta = estado.pautaImportada && estado.pautaImportada.itens.find(i => i.fatoId === fatoId);
+return {
+  fatoIds: [fatoId],
+  ...
+  pauta_id: (itemPauta && itemPauta.pautaIdOrigem) || null,
+  rodada_id: itemPauta ? (d.rodadaId || null) : null,
+  id_ponto: (itemPauta && itemPauta.idPontoOrigem) || null,
+  ...
+};
+```
+
+`d.rodadaId` é o mesmo id de rodada reaproveitado por `exportarTermoParaVeritas`/`exportarRetornoContextoAcusado` (gerado uma vez por depoente, com `gerarId()`, se ainda não existir) — os dois contratos (retorno de contexto e prova nova) agora apontam para a mesma sessão de oitiva quando emitidos pelo mesmo depoente.
+
+**Caso sem origem de pauta**: como este diálogo só é populado a partir de itens de pauta (não existe, no Oitiva 360, um fluxo de "prova avulsa sem pauta" alimentando `_exportProvaDraft`), o `itemPauta` só fica `null`/`undefined` num cenário defensivo — item de pauta removido/inacessível entre abrir o diálogo e confirmar a exportação. Nesse caso os três campos saem `null` explicitamente (`(itemPauta && itemPauta.pautaIdOrigem) || null` — nunca um valor inventado), confirmado por teste automatizado (ver seção de teste abaixo): ao simular um `fatoId` inexistente em `estado.pautaImportada.itens`, a mesma expressão de lookup devolveu `pauta_id === null`, `rodada_id === null`, `id_ponto === null`.
+
+**Teste end-to-end** (Playwright, Chromium headless): gerado um contrato de pauta real no Nexo Coger (`construirContratoPauta`, a partir de um fato com lacuna de prova via `analisarLacunasPauta`), importado no Oitiva 360 via `mesclarPautaImportada`, depoente marcado com o item "abordado", e o botão real `#btn-confirmar-exportar-prova` clicado (handler de produção, não uma cópia da lógica) — o download capturado trouxe `pauta_id`/`id_ponto` idênticos aos gerados pelo Nexo e um `rodada_id` não vazio. O arquivo foi então importado de volta no Nexo Coger via `revisarImportacaoProva`/clique real em "Importar selecionadas", e `doc.provas[].origemOitiva` resultou com os três campos preenchidos e batendo com os valores originais.
+
+Dois hooks de teste mínimos foram adicionados perto de `window.getEstado`/`window.setEstadoPautaImportada` (mesmo padrão já existente desde a Rodada 7, seção 7.1) para tornar esse fluxo testável de fora do IIFE de topo do arquivo: `window.setDepoenteAtivoIdParaTeste` e `window.abrirDialogoExportarProvaParaTeste`. Nenhum dos dois altera comportamento em produção — são só portas de entrada para o script de teste.

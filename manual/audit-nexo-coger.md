@@ -327,6 +327,22 @@ Implementação adotada (fiel ao contrato real, e preparada para quando/se o Oit
 - `drawProvaCard()` (linha ~2210): novo badge, inserido logo após o badge `🌐` (Veritas) e antes do `§` (trechos): `if(p.origemOitiva){ badge(node,bx,20,'🎙','var(--rfb-gold-600)', 'Origem: retorno de oitiva (Oitiva 360) · pauta_id: '+... ); bx-=20; }`. Usa a mesma variável `--rfb-gold-600` já usada no selo homônimo do cartão de fato (`contextoOitivaFato`), para manter a mesma paleta "dourado = Oitiva 360" em toda a ferramenta. Tooltip nativo (`<title>` dentro do `<text>` SVG, mesmo padrão de todos os outros badges de `drawProvaCard`/`drawFatoCard`) mostra `pauta_id`/`rodada_id`/`id_ponto`.
 - Testado via Playwright headless (`doc`/`aplicarImportacaoProva` chamados diretamente por `page.evaluate`, sem passar por upload de arquivo real): confirmado que o selo aparece com o tooltip correto quando `origemOitiva` está presente, e que uma prova com apenas `origemVeritas` (sem `origemOitiva`) não recebe o selo.
 
+### 6.5 Fechamento da "Limitação técnica conhecida" — Oitiva 360 agora emite os 3 IDs (rodada 2026-07-12)
+
+A limitação apontada em §6.4 ("hoje, os três campos do tooltip aparecem vazios... o Oitiva 360 ainda não emite esses três identificadores nesse contrato de exportação específico") foi corrigida do lado do Oitiva 360 — ver `audit-oitiva-360.md`, seção 10, para o detalhe da mudança em `oitiva-360.html` (handler de `#btn-confirmar-exportar-prova`).
+
+**Nenhuma mudança de código foi necessária neste arquivo** (`nexo-coger.html`): `aplicarImportacaoProva` (linha 3499-3501) já lia `it.pauta_id||it.pautaId`, `it.rodada_id||it.rodadaId`, `it.id_ponto||it.idPonto` — chaves que batem exatamente com o que o Oitiva 360 passou a emitir (`pauta_id`, `rodada_id`, `id_ponto`, snake_case, por item de `provas[]`). A infraestrutura descrita em §6.4 já estava "preparada para quando/se o Oitiva 360 passar a emitir" esses campos — e passou a emitir.
+
+Confirmado por teste end-to-end (Playwright, ver `audit-oitiva-360.md` §10): após importar um arquivo de prova exportado pelo Oitiva 360 já corrigido (via `revisarImportacaoProva` + clique real em "Importar selecionadas"), `doc.provas[].origemOitiva` resultou:
+
+```json
+{"pautaId":"PAUTA.2026-07-12.001","rodadaId":"<uuid gerado no Oitiva 360>","idPonto":"PAUTA.2026-07-12.001.P01"}
+```
+
+— os três campos não vazios e coincidindo com os valores gerados no lado do Nexo Coger para aquela pauta. O caso "sem origem de pauta" (item de pauta não localizável no momento da exportação) foi validado separadamente no Oitiva 360: a mesma expressão de lookup usada no handler de exportação devolve `null` explícito para os 3 campos nesse cenário — nunca um valor inventado — que é exatamente o que `aplicarImportacaoProva` já tratava (`it.pauta_id||it.pautaId` cai em `''` quando ambos são `null`/`undefined`, preservando o comportamento pré-existente descrito em §6.4 para provas de origem oitiva sem os 3 identificadores).
+
+Screenshot substituído: `manual/assets/screenshots/nexo-selo-oitiva.png` (Figura 10 do manual) agora mostra o cartão de prova com o selo 🎙, gerado a partir de uma prova cujo `origemOitiva` tem os três campos preenchidos — o texto de aviso "IDs do tooltip ainda vazios" em `build_manual.py` ficou desatualizado e deve ser revisado/removido na próxima regeneração do manual.
+
 ---
 
 ## 7. Adendo (releitura aprofundada) — 4 pontos deixados incompletos

@@ -1021,18 +1021,20 @@ figura_ajustada(
 add_alert(
     doc,
     [
-        "**Limitação técnica conhecida**: hoje, os três campos do tooltip "
-        "(`pauta_id`, `rodada_id`, `id_ponto`) aparecem vazios. O selo "
-        "aparece corretamente sempre que a prova tem a marca de origem de "
-        "oitiva preenchida, mas o Oitiva 360 ainda não emite esses três "
-        "identificadores nesse contrato de exportação específico "
-        "(\"Exportar prova(s) para o Nexo\") — a infraestrutura do selo já "
-        "está pronta para exibi-los assim que o Oitiva 360 passar a "
-        "enviá-los, mas por ora a rastreabilidade até a pauta/rodada/ponto "
-        "exatos não está disponível por esse caminho.",
+        "**Atualização (rodada 2026-07-12)**: os três campos do tooltip "
+        "(`pauta_id`, `rodada_id`, `id_ponto`) agora vêm preenchidos. O "
+        "Oitiva 360 passou a incluir os três identificadores por item de "
+        "prova no contrato \"Exportar prova(s) para o Nexo\", lidos do "
+        "mesmo ponto de pauta (`estado.pautaImportada.itens`) já usado pelo "
+        "contrato de retorno de contexto. Quando uma prova exportada por "
+        "esse caminho não tem origem identificável em nenhum ponto de "
+        "pauta (cenário defensivo — item de pauta removido entre abrir o "
+        "diálogo de exportação e confirmar), os três campos saem `null` "
+        "explicitamente, nunca inventados; ver audit-oitiva-360.md §10 e "
+        "audit-nexo-coger.md §6.5 para o detalhe e o teste end-to-end.",
     ],
     kind="info",
-    label="IDs do tooltip ainda vazios",
+    label="IDs do tooltip preenchidos",
 )
 
 add_body(

@@ -3516,6 +3516,13 @@ window.getEstado = function(){ return estado; }; // exposto para inspeção no c
 // para testar via Node sem reescrever essa cadeia inteira, o script de teste precisa poder colocar
 // um pautaImportada de fixture no lugar certo antes de chamar gerarRoteiroInicial(d).
 window.setEstadoPautaImportada = function(p){ estado.pautaImportada = p; };
+// Adendo (rodada 2026-07-12): mesmo espírito do setter acima — depoenteAtivoId e
+// abrirDialogoExportarProva vivem na closure do IIFE de topo e não são alcançáveis de fora (nem
+// mesmo via page.evaluate do Playwright, que roda no mesmo realm mas fora do escopo léxico do
+// IIFE). Hooks mínimos para permitir teste end-to-end do contrato pauta->prova sem reescrever a
+// navegação inteira do wizard (etapas 1-4) num script de teste.
+window.setDepoenteAtivoIdParaTeste = function(id){ depoenteAtivoId = id; };
+window.abrirDialogoExportarProvaParaTeste = function(d){ abrirDialogoExportarProva(d); };
 
 function processoTemConteudo(e){
   if (!e) return false;
