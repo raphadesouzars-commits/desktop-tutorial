@@ -781,6 +781,12 @@ html, body { margin: 0; padding: 0; background: var(--rfb-bg); }
   text-transform: uppercase; color: var(--rfb-gold-400);
 }
 .topbar__pill-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rfb-gold-500); box-shadow: 0 0 0 2.5px rgba(201,163,92,.30); }
+/* Rodada 8 — badge de termos importados pendentes de revisão: navy do topbar + dourado sólido (em
+   vez do dourado translúcido do pill acima), para se distinguir como algo clicável/acionável. */
+.topbar__badge-pendencia { display: inline-flex; align-items: center; gap: 6px; cursor: pointer;
+  background: var(--rfb-gold-500); color: #1E1400; font-weight: 700; font-size: 11px;
+  border: 1px solid var(--rfb-gold-600); border-radius: 999px; padding: 4px 12px; margin-left: 8px; }
+.topbar__badge-pendencia:hover { background: var(--rfb-gold-400); }
 
 .hero { position: relative; height: 220px; overflow: hidden;
   background: linear-gradient(160deg, #030E24 0%, var(--rfb-navy-800) 60%, var(--rfb-navy-700) 100%); }
@@ -957,6 +963,7 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
     <span class="topbar__name">Receita Federal <span>·</span> Corregedoria</span>
   </div>
   <div class="topbar__pill"><span class="topbar__pill-dot"></span><span id="topbar-status-text">nenhum dossiê carregado</span></div>
+  <span class="topbar__badge-pendencia" id="badgeTermoPendente" title="Termos de oitiva importados pendentes de revisão" style="display:none;" role="button" tabindex="0" onclick="App.abrirPendenciasTermo()">⏳ 0</span>
 </nav>
 
 <div class="hero">
@@ -1898,6 +1905,8 @@ function migrarDossie(d) {
   }
   (d.itens || []).forEach(function (it) {
     if (it.proveniencia && !it.proveniencia.elementoFisico) it.proveniencia.elementoFisico = elementoFisicoVazio();
+    // Rodada 8: termos importados antes desta rodada não tinham status — default seguro.
+    if (it.termoOitiva && !it.termoOitiva.status) it.termoOitiva.status = "pendente_revisao";
   });
   return d;
 }
@@ -2005,9 +2014,26 @@ function render() {
 }
 function updateTopbar() {
   var el = document.getElementById("topbar-status-text");
-  if (!el) return;
-  if (!DB.dossie) { el.textContent = "nenhum dossiê carregado"; return; }
-  el.textContent = (DB.dossie.processo.numero || "processo sem número") + " · " + DB.dossie.itens.length + " item(ns)";
+  if (el){
+    if (!DB.dossie) { el.textContent = "nenhum dossiê carregado"; }
+    else { el.textContent = (DB.dossie.processo.numero || "processo sem número") + " · " + DB.dossie.itens.length + " item(ns)"; }
+  }
+  atualizarBadgeTermoPendente();
+}
+// Rodada 8 (seção 8.2/8.3): termos de oitiva importados (Rodada 5) pendentes de revisão — status
+// persistido (it.termoOitiva.status) porque "revisado" é uma decisão humana, não derivável de outro
+// dado. Badge recalculado ao vivo a partir do dossiê atualmente carregado, sem checar nenhum arquivo.
+function termosPendentesDeRevisao() {
+  if (!DB.dossie) return [];
+  return DB.dossie.itens.filter(function (it) { return it.termoOitiva && it.termoOitiva.status !== "revisado"; });
+}
+function atualizarBadgeTermoPendente() {
+  var badge = document.getElementById("badgeTermoPendente");
+  if (!badge) return;
+  var total = termosPendentesDeRevisao().length;
+  badge.style.display = total > 0 ? "" : "none";
+  badge.textContent = "⏳ " + total;
+  badge.title = total > 0 ? total + " termo(s) de oitiva pendente(s) de revisão — clique para ver" : "Nenhum termo pendente de revisão";
 }
 
 /* ============================================================
@@ -2352,6 +2378,23 @@ function viewItemDetalhe(itemId) {
       provenienciaResumoHtml(it) +
     '</div></div>' +
 
+    (it.termoOitiva ? (
+    '<div class="rfb-card"><div class="rfb-card__header"><span class="rfb-card__title">Termo de oitiva (Oitiva 360)</span>' +
+      '<span class="rfb-badge rfb-badge--' + (it.termoOitiva.status === "revisado" ? "success" : "warning") + '">' +
+        (it.termoOitiva.status === "revisado" ? "Revisado" : "Pendente de revisão") + '</span></div>' +
+      '<div class="rfb-card__body">' +
+        '<div class="rfb-body--small rfb-body--muted" style="margin-bottom:10px;">' +
+          'Deponente: ' + escapeHtml((it.termoOitiva.deponente && it.termoOitiva.deponente.nome) || "—") +
+          ' · rodada_id: ' + escapeHtml(it.termoOitiva.rodadaId || "—") +
+          (it.termoOitiva.pautaId ? ' · pauta_id: ' + escapeHtml(it.termoOitiva.pautaId) : '') +
+        '</div>' +
+        '<pre class="rfb-body--small" style="white-space:pre-wrap;max-height:260px;overflow:auto;background:var(--rfb-navy-50,#EEF3FA);padding:12px;border-radius:8px;">' + escapeHtml(it.termoOitiva.conteudo) + '</pre>' +
+        (it.termoOitiva.status !== "revisado" ?
+          '<div class="no-print" style="margin-top:10px;"><button class="rfb-btn rfb-btn--primary rfb-btn--sm" onclick="App.marcarTermoRevisado(\'' + it.id + '\')">Marcar como revisado</button></div>'
+          : '') +
+      '</div></div>'
+    ) : '') +
+
     '<div class="rfb-card"><div class="rfb-card__header"><span class="rfb-card__title">Arquivos (' + it.arquivos.length + ')</span></div><div class="rfb-card__body">' +
       '<div class="rfb-stack rfb-gap-3">' + it.arquivos.map(function (a) { return arquivoCardHtml(a, 0, it.id); }).join("") + '</div>' +
       '<div class="vdc-file-drop no-print" style="margin-top:14px;">' +
@@ -2673,7 +2716,8 @@ function construirItemTermoOitiva(dados, gerarIdItem){
     rodadaId: dados.rodada_id || "",
     deponente: dados.deponente || null,
     hashOrigem: dados.hash_origem,
-    hashConferido: true
+    hashConferido: true,
+    status: "pendente_revisao" // Rodada 8, seção 8.2 — vira "revisado" quando alguém abre o item e confirma
   };
   return item;
 }
@@ -2820,6 +2864,19 @@ window.App = {
 
   voltarProcesso: function () { UI.view = "processo"; UI.editingField = null; render(); },
   abrirItem: function (id) { UI.view = "itemDetalhe"; UI.editingField = id; render(); },
+  // Rodada 8: a ação natural que fecha pendente_revisao -> revisado é abrir o item e confirmar —
+  // não é um botão isolado só para "marcar como visto" (seção 8.2).
+  marcarTermoRevisado: function (id) {
+    var it = findItem(id);
+    if (!it || !it.termoOitiva) return;
+    it.termoOitiva.status = "revisado";
+    persistir().then(render);
+  },
+  abrirPendenciasTermo: function () {
+    var pendentes = termosPendentesDeRevisao();
+    if (!pendentes.length) return;
+    App.abrirItem(pendentes[0].id);
+  },
   irParaConferencia: function () { UI.view = "conferencia"; render(); },
   irParaRelatorio: function () { UI.view = "relatorio"; render(); },
 

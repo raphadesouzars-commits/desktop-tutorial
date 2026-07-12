@@ -2,6 +2,35 @@
 
 `catalogo-canonico.json` — `schema_version: 1.1.0` (estendida na Rodada 5, era `1.0.0`), `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `744bb790` (era `5906e98f`).
 
+## Rodada 8 — Sinalização visual de pendências (fechada)
+
+### 8.1 — Diagnóstico
+
+Confirmado: as três ferramentas já usam exclusivamente exportação/importação de JSON local (`exportJson`/`importJson` no Nexo, `App.exportarDossie`/`App.importarArquivo` no Veritas, botões de exportar/importar processo no Oitiva) — nenhuma usa `localStorage` como fonte de verdade entre sessões de trabalho compartilhadas (`localStorage` só existe como rascunho automático dentro do mesmo navegador). A Rodada 8 não introduziu nenhum mecanismo novo — os campos de status desta rodada viajam dentro do mesmo JSON já exportado/importado.
+
+### Decisão de arquitetura: status computado vs. persistido
+
+A introdução do escopo já avisa: "a detecção é sempre local, e recalculada a partir do estado atualmente carregado". Segui isso à risca — só usei um campo `status` **persistido e mutável** onde o estado realmente não é derivável de outro dado (é uma decisão humana, tipo "eu já li isso"). Onde o status já podia ser deduzido de uma relação que já existe no JSON, optei por **computar ao vivo a cada render**, para eliminar qualquer risco de desincronização entre o campo e a relação real:
+
+| Ferramenta | Entidade | Mecanismo |
+|---|---|---|
+| Nexo Coger | Prova importada do Veritas (`pendente`/`vinculada`) | **Computado**: pendente se `p.origemVeritas` existe e nenhum `f.provaIds` contém `p.id`; vinculada caso contrário. Mesma lógica já usada pela pendência P3 ("prova órfã"), sem campo novo — a vinculação em si já é a ação natural (checkbox no formulário do fato, Rodada existente). |
+| Oitiva 360 | Pauta importada do Nexo Coger (`pendente`/`em_andamento`/`concluida`) | **Computado**: concluída se `statusChecklist` é `abordado`/`sem_resposta`; em_andamento se algum depoente tem o `fatoId` em `pautaSelecionada`; pendente caso contrário. |
+| Nexo Coger | Retorno de prova de oitiva (`pendente_revisao`/`revisado`) | **Persistido**: `provasContexto[].status`, porque "revisado" é puramente uma confirmação humana — nenhum outro dado do JSON indica isso. Transição pela ação natural de abrir o cadastro do acusado, conferir o item e salvar (não é um botão isolado). |
+| Veritas (extensão além da tabela da spec) | Termo de oitiva importado (`pendente_revisao`/`revisado`) | **Persistido**: `item.termoOitiva.status`, mesmo raciocínio do retorno de oitiva. A tabela do escopo (8.2) lista só 3 entidades, mas o texto geral diz "cada entidade que chega por importação (Rodadas 3-6) ganha um campo de status" — e o Veritas recebe o termo (Rodada 5), então essa 4ª entidade foi coberta para os três badges baterem com o entregável 3 ("badge... nas três ferramentas"). Transição pela ação natural de abrir o item e clicar "Marcar como revisado" (mostrado só quando o item tem `termoOitiva`, junto com o próprio texto do termo — antes desta rodada não havia nenhuma tela mostrando esse conteúdo).
+
+### Badges
+
+Os três seguem a paleta navy/gold já usada pelo design system COGER: fundo navy do próprio cabeçalho de cada ferramenta (hero do Nexo/Oitiva, topbar do Veritas) com o badge em dourado sólido (`--rfb-gold-500`), texto navy escuro para contraste — nenhuma cor nova introduzida. Cada um só aparece quando a contagem é maior que zero (`display:none` em zero, evita ruído visual permanente). Clicar no badge do Nexo abre um modal listando os itens pendentes com atalho para abrir cada um; no Oitiva rola até o resumo da pauta; no Veritas abre diretamente o primeiro termo pendente.
+
+### Teste (Playwright, os três HTMLs reais)
+
+- Nexo: importar uma prova do Veritas sem vincular mantém o badge em 1; vincular a um fato reduz para 0 **sem recarregar a página**; simular salvar+recarregar o JSON com uma prova ainda pendente preserva o status (não some, não vira "vinculada" sozinho).
+- Nexo: um retorno de oitiva pendente conta no badge; abrir o formulário do acusado, marcar "Revisado" e salvar zera o badge e persiste `status:"revisado"` no objeto.
+- Confirmado que os elementos `#badgePautaPendente` (Oitiva) e `#badgeTermoPendente` (Veritas) existem no cabeçalho de cada ferramenta.
+- Reexecutado o teste de ponta a ponta da Rodada 6 (Playwright) e o `test-fluxo-integrado.js` da Rodada 7 (43/43) depois de todas as mudanças — nenhuma regressão.
+- Nenhuma das três ferramentas ganhou código de rede/`fetch`/leitura de arquivo de outra ferramenta — os badges só reagem a mudanças no próprio estado já carregado, conforme 8.4.
+
 ## Rodada 7 — Teste de fluxo integrado ponta a ponta (fechada)
 
 ### 7.1 — Diagnóstico de separabilidade

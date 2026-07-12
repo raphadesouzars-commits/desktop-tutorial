@@ -1481,6 +1481,11 @@
   letter-spacing: .5px; line-height: 1.05; text-transform: uppercase; color: #FFFFFF; }
 .hero__title em { font-style: normal; color: var(--rfb-gold-400); }
 .hero__sub { margin-top: 10px; font-size: 13.5px; color: #A8BEDD; letter-spacing: .2px; line-height: 1.5; }
+/* Rodada 8 — badge de pauta pendente: navy do cabeçalho (já é o fundo do hero) + dourado do número. */
+.hero__badge-pendencia { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; cursor: pointer;
+  background: var(--rfb-gold-500, #C9A35C); color: #1E1400; font-weight: 700; font-size: 13px;
+  border: 1px solid var(--rfb-gold-600, #B58A3D); border-radius: 999px; padding: 5px 14px; }
+.hero__badge-pendencia:hover { background: var(--rfb-gold-400, #D9B876); }
 
 @media (max-width: 900px) { .hero { height: 210px; } }
 @media print { .topbar, .hero { display: none !important; } }
@@ -1503,6 +1508,7 @@
     <div class="hero__eyebrow">Ferramenta interativa</div>
     <h1 class="hero__title">Oitiva <em>360</em></h1>
     <p class="hero__sub">Divisão de Processos (Dproc) · Gerador de Roteiro de Oitiva</p>
+    <span class="hero__badge-pendencia" id="badgePautaPendente" title="Itens de pauta do Nexo Coger pendentes ou em andamento nesta ferramenta" style="display:none;" role="button" tabindex="0">⏳ 0</span>
   </div>
 </div>
 
@@ -4094,9 +4100,35 @@ function aplicarImportacaoPauta(dados){
   if (jaExistiaEssaPauta) alert("A pauta " + dados.pauta_id + " já havia sido importada antes — itens existentes foram atualizados, nenhum item duplicado foi criado.");
 }
 
+// Rodada 8 (seção 8.2/8.3): status de cada item de pauta, recalculado ao vivo a partir do estado
+// atualmente carregado — pendente (nenhum depoente selecionou para abordar), em_andamento
+// (selecionado por algum depoente, ainda não concluído) ou concluida (statusChecklist abordado/sem_resposta).
+function statusPautaItemRodada8(item, depoentes){
+  if (item.statusChecklist === "abordado" || item.statusChecklist === "sem_resposta") return "concluida";
+  const selecionadoPorAlguem = (depoentes || []).some(d => (d.pautaSelecionada || []).includes(item.fatoId));
+  return selecionadoPorAlguem ? "em_andamento" : "pendente";
+}
+function contarPautaPendenteOuAndamento(){
+  const p = estado.pautaImportada;
+  if (!p) return 0;
+  return p.itens.filter(item => statusPautaItemRodada8(item, estado.depoentes) !== "concluida").length;
+}
+function atualizarBadgePautaPendente(){
+  const badge = document.getElementById("badgePautaPendente");
+  if (!badge) return;
+  const total = contarPautaPendenteOuAndamento();
+  badge.style.display = total > 0 ? "" : "none";
+  badge.textContent = "⏳ " + total;
+  badge.title = total > 0 ? total + " item(ns) de pauta do Nexo Coger pendente(s)/em andamento — clique para ver" : "Nenhum item de pauta pendente";
+  badge.onclick = total > 0 ? () => {
+    const el = document.getElementById("resumo-pauta-nexo");
+    if (el && el.scrollIntoView) el.scrollIntoView({ behavior: "smooth", block: "center" });
+  } : null;
+}
 function renderResumoPautaNexo(){
   const wrap = document.getElementById("resumo-pauta-nexo");
   if (!wrap) return;
+  atualizarBadgePautaPendente();
   const p = estado.pautaImportada;
   if (!p){
     wrap.innerHTML = "<p class=\"vazio\">Nenhuma pauta do Nexo importada para este processo ainda. Ao importar, uma seção \"Pauta do Nexo\" passa a aparecer no cadastro de cada depoente.</p>";
@@ -4300,6 +4332,7 @@ function renderPautaEtapa2(d){
       }
       salvarLocalStorage();
       renderPautaEtapa2(d);
+      atualizarBadgePautaPendente(); // Rodada 8: selecionar/desselecionar move pendente <-> em_andamento
     });
   });
 }

@@ -252,6 +252,11 @@ button{font-family:inherit;cursor:pointer}
 .hero .proc .presc{cursor:pointer;color:#A8BEDD}
 .hero .proc .presc:hover{border-color:var(--rfb-gold-400)}
 .hero .proc .presc.alerta{background:rgba(180,35,24,.28);border-color:var(--rfb-danger);color:#FFD4CE;font-weight:700}
+/* Rodada 8 — badge de pendências de integração (Rodadas 3-6): navy do cabeçalho + dourado do
+   número, mesma paleta já usada no resto do design system, sem introduzir cor nova. */
+.hero .proc .badge-integracao{cursor:pointer;background:var(--rfb-gold-500);border-color:var(--rfb-gold-600);
+  color:var(--rfb-navy-900);font-weight:700}
+.hero .proc .badge-integracao:hover{background:var(--rfb-gold-400)}
 @media(max-width:900px){ .hero{height:auto;min-height:150px}
   .hero__content{padding:16px 20px;align-items:flex-start;flex-direction:column}
   .hero .proc{justify-content:flex-start} }
@@ -520,6 +525,7 @@ svg.map.isolating .node.hl{opacity:1}
       <span class="tag editable" id="tagTipo">—</span>
       <span class="tag editable" id="tagFase">—</span>
       <span class="tag presc" id="prescBox" title="Prescrição (art. 142) — clique para detalhamento por acusado">Prescrição: —</span>
+      <span class="tag badge-integracao" id="badgeIntegracao" title="Itens de integração (Veritas/Oitiva) pendentes de revisão nesta ferramenta" style="display:none;">⏳ 0</span>
     </div>
   </div>
 </div>
@@ -1569,6 +1575,8 @@ function migra(d){
     // Rodada 6 (contrato Oitiva 360 -> Nexo Coger): contexto do acusado — deliberadamente à parte de
     // doc.provas/doc.fatos, para nunca participar de computePendencias()/força probatória/indiciação.
     if(!Array.isArray(a.provasContexto)) a.provasContexto=[];
+    // Rodada 8: contexto importado antes desta rodada não tinha status — default seguro.
+    a.provasContexto.forEach(p=>{ if(!p.status) p.status='pendente_revisao'; });
   });
   // ordem narrativa dos fatos (só afeta a minuta): retrocompatibilidade
   (d.fatos||[]).forEach((f,i)=>{
@@ -1831,7 +1839,64 @@ function render(){
   renderFactOrder();
   renderPrazosPanel();
   renderPrescricao();
+  renderBadgeIntegracao();
   scheduleSave();
+}
+
+/* ------------------------------------------------------------------ *
+ * RODADA 8 — sinalização visual de pendências de integração (local a esta
+ * ferramenta, sem verificar arquivo nenhum de outro sistema). Recalculada a
+ * cada render() a partir do estado atualmente carregado: nenhum campo
+ * separado é a "fonte da verdade" para a prova do Veritas — o status é
+ * derivado ao vivo de f.provaIds (mesma lógica já usada por P3/"prova
+ * órfã"). Só o retorno de oitiva usa um campo persistido (`status`), porque
+ * "revisado" é uma decisão humana que não tem outro dado para derivar de.
+ * ------------------------------------------------------------------ */
+function provasVeritasPendentes(){
+  return doc.provas.filter(p=>p.origemVeritas && !doc.fatos.some(f=>(f.provaIds||[]).includes(p.id)));
+}
+function retornosOitivaPendentes(){
+  const itens=[];
+  doc.acusados.forEach(a=>(a.provasContexto||[]).forEach(p=>{ if(p.status!=='revisado') itens.push({acusado:a, item:p}); }));
+  return itens;
+}
+function renderBadgeIntegracao(){
+  const badge=$('#badgeIntegracao'); if(!badge) return;
+  const nProvas=provasVeritasPendentes().length;
+  const nRetornos=retornosOitivaPendentes().length;
+  const total=nProvas+nRetornos;
+  badge.style.display = total>0 ? '' : 'none';
+  badge.textContent = '⏳ '+total;
+  badge.title = total>0
+    ? (nProvas+' prova(s) do Veritas ainda não vinculada(s) a um fato · '+nRetornos+' retorno(s) de oitiva pendente(s) de revisão — clique para ver')
+    : 'Nenhum item de integração pendente';
+  badge.onclick = total>0 ? abrirPainelIntegracaoPendente : null;
+}
+function abrirPainelIntegracaoPendente(){
+  const provasPend=provasVeritasPendentes();
+  const retornosPend=retornosOitivaPendentes();
+  const body=[];
+  if(provasPend.length){
+    body.push(el('div',{class:'block-title'},'Provas do Veritas ainda não vinculadas a um fato ('+provasPend.length+')'));
+    provasPend.forEach(p=>{
+      body.push(el('div',{class:'imp-item'}, el('div',{class:'imp-body'},
+        el('div',{class:'imp-tipo'}, p.titulo||'(prova sem título)'),
+        el('div',{class:'imp-meta'}, 'origem: '+(p.origemVeritas.tipoProvaOrigemLabel||'—'))),
+        el('button',{class:'btn small',onclick:()=>{closeModal();abrirFormProva(p.id);}},'Abrir e vincular')));
+    });
+  }
+  if(retornosPend.length){
+    body.push(el('div',{class:'block-title'},'Retornos de oitiva pendentes de revisão ('+retornosPend.length+')'));
+    retornosPend.forEach(({acusado,item})=>{
+      body.push(el('div',{class:'imp-item'}, el('div',{class:'imp-body'},
+        el('div',{class:'imp-tipo'}, 'Acusado: '+(acusado.nome||acusado.id)),
+        el('div',{class:'imp-meta'}, 'fato: '+(item.fatoReferencia||'—')+' · id_prova: '+(item.idProva||'—')),
+        item.resumoResposta?el('div',{class:'imp-prev'},'"'+esc(item.resumoResposta)+'"'):null),
+        el('button',{class:'btn small',onclick:()=>{closeModal();abrirFormAcusado(acusado.id);}},'Abrir e revisar')));
+    });
+  }
+  if(!body.length) body.push(el('div',{class:'hint'},'Nenhum item pendente.'));
+  openModal(modalShell('Pendências de integração','prova',body,[el('button',{class:'btn primary',onclick:closeModal},'Fechar')]));
 }
 
 function renderHero(){
@@ -2478,6 +2543,20 @@ function abrirFormAcusado(id){
           el('div',{class:'radios'},
             radio('apos',a.interrogatorio.aposTodasAsProvas,true,'Sim',v=>a.interrogatorio.aposTodasAsProvas=v),
             radio('apos',a.interrogatorio.aposTodasAsProvas,false,'Não',v=>a.interrogatorio.aposTodasAsProvas=v))))),
+    // Rodada 8: revisar contexto vindo do Oitiva 360 é a ação natural que fecha o status
+    // pendente_revisao -> revisado — não é um botão isolado só para "marcar como visto", é parte
+    // do próprio ato de abrir e conferir o cadastro do acusado.
+    (a.provasContexto&&a.provasContexto.length) ? el('div',{class:'block'},
+      el('div',{class:'block-title'},'Contexto de oitiva ('+a.provasContexto.length+')'),
+      ...a.provasContexto.map(p=>{
+        const cb=el('input',{type:'checkbox'}); cb.checked=p.status==='revisado';
+        cb.addEventListener('change',()=>{ p.status=cb.checked?'revisado':'pendente_revisao'; });
+        return el('div',{class:'imp-item'}, el('div',{class:'imp-body'},
+          el('div',{class:'imp-tipo'},'fato '+(p.fatoReferencia||'—')+' · id_prova '+(p.idProva||'—')),
+          p.resumoResposta?el('div',{class:'imp-prev'},'"'+esc(p.resumoResposta)+'"'):null,
+          el('label',{style:'font-weight:400;font-size:.85rem;display:flex;gap:6px;align-items:center;margin-top:4px;'},cb,'Revisado')));
+      })
+    ) : null,
   ];
   const foot=[
     novo?null:el('button',{class:'btn danger',onclick:()=>{ if(confirm('Excluir este acusado? As condutas vinculadas a ele nos fatos serão removidas.')){ excluirAcusado(id); closeModal(); }}},'Excluir'),
@@ -3521,7 +3600,8 @@ function mapearRetornoContexto(r, origem, agora){
   return {
     idProva:r.id_prova, origem:origem||'oitiva-360', pautaId:r.pauta_id||'', rodadaId:r.rodada_id||'',
     idPonto:r.id_ponto||'', fatoReferencia:r.fato_referencia||'', resumoResposta:r.resumo_resposta||'',
-    acusadoVinculo:r.acusado_vinculo||'padrao', importadoEm:agora
+    acusadoVinculo:r.acusado_vinculo||'padrao', importadoEm:agora,
+    status:'pendente_revisao' // Rodada 8, seção 8.2 — vira 'revisado' quando a comissão abre e confirma o item
   };
 }
 function aplicarImportacaoRetornoOitiva(itens, d){
