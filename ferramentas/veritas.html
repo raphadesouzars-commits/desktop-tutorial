@@ -992,7 +992,7 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
  * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1; estendido na Rodada 5)
  * Fonte de verdade: catalogo-canonico.json (raiz do projeto).
  * schema_version: 1.2.0
- * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 958dfd97
+ * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 0955151a
  * Copia embutida gerada nesta rodada; NAO editar diretamente aqui —
  * editar catalogo-canonico.json e regenerar as tres copias embutidas.
  * A logica interna de cada sistema ainda NAO consome todos os IDs
@@ -1298,7 +1298,8 @@ const CATALOGO_COGER = {
       "label": "Programa de integridade",
       "descricao": "Evidências e informações sobre existência e aplicação de programa de integridade (art. 7º, VIII, LAC; seção 11.3.2 do manual CGU).",
       "origem_permitida": [
-        "nexo-coger"
+        "nexo-coger",
+        "veritas"
       ],
       "status": "ativo",
       "dominio": "par"
@@ -1308,7 +1309,8 @@ const CATALOGO_COGER = {
       "label": "Informações do COAF",
       "descricao": "Relatórios de inteligência financeira do COAF (seção 11.4 do manual CGU).",
       "origem_permitida": [
-        "nexo-coger"
+        "nexo-coger",
+        "veritas"
       ],
       "status": "ativo",
       "dominio": "par"
@@ -2023,7 +2025,7 @@ async function hashDossieMetadata(dossie) {
 var CATALOGO = {
   epigrafe: { texto: "Toda prova, antes de provar, deve ser provada.", autor: "Iacoviello" },
   disclaimerCurto: "Ferramenta de apoio à decisão. Não realiza perícia técnica, não valida assinatura digital ICP-Brasil e não substitui laudo pericial formal.",
-  disclaimerLongo: "Veritas Digital - Coger é uma ferramenta de apoio à decisão para as unidades da Corregedoria da RFB — investigação, parecer técnico e comissões de PAD/sindicância. Documenta a consistência interna e a continuidade de elementos de prova digitais e documentais, mas não realiza perícia técnica formal, não valida assinatura digital ICP-Brasil e não substitui laudo pericial quando a autenticidade de um elemento for seriamente contestada. O carimbo de data/hora registrado é o relógio do sistema local do usuário — não é um selo de tempo com autoridade certificadora. A avaliação do caso concreto é sempre da unidade responsável.",
+  disclaimerLongo: "Veritas Digital - Coger é uma ferramenta de apoio à decisão para as unidades da Corregedoria da RFB — investigação, parecer técnico e comissões de PAD/sindicância/PAR. Documenta a consistência interna e a continuidade de elementos de prova digitais e documentais, mas não realiza perícia técnica formal, não valida assinatura digital ICP-Brasil e não substitui laudo pericial quando a autenticidade de um elemento for seriamente contestada. O carimbo de data/hora registrado é o relógio do sistema local do usuário — não é um selo de tempo com autoridade certificadora. A avaliação do caso concreto é sempre da unidade responsável.",
   fundamentacao: "A cadeia de custódia tem disciplina legal expressa apenas no processo penal (art. 158-A a 158-F do CPP, Lei 13.964/2019). No PAD, sua aplicação decorre por analogia e principiologia — verdade real, devido processo, ampla defesa — reforçada pela intercambialidade doutrinária de provas entre PAD e processo penal (compartilhamento de interceptações e dados de operações conjuntas). Esta ferramenta não sugere vinculação normativa direta ao CPP.",
   dicas: {
     dica_integralidade: "Cuidado: decisões não devem se fundamentar em prints de tela, áudios isolados ou trechos sem contexto. Se este é um extrato parcial, registre por que o conteúdo integral não foi anexado e avalie a necessidade de complementação.",
@@ -2092,8 +2094,80 @@ var CATEGORIA_VERITAS_PARA_PROVA_ID = {
   documento_fisico: "PROVA.DOCUMENTO_FISICO",
   dispositivo_fisico: "PROVA.DISPOSITIVO_FISICO",
   termo_oitiva: "PROVA.TERMO_OITIVA",
+  programa_integridade: "PROVA.PROGRAMA_INTEGRIDADE",
+  informacoes_coaf: "PROVA.INFORMACOES_COAF",
   outro: "PROVA.OUTRO"
 };
+
+/* ============================================================
+   Rodada PAR-2 (seção 2.1) — Tipo de processo / domínio (pad|par)
+   Mesmo catálogo TIPOS_PROCESSO já usado no nexo-coger.html (PN CGU 27/2022,
+   agora com PAR e IPS incluídos pela Rodada PAR-1). Campo opcional nos "Dados
+   do processo" do Veritas — não existia antes desta rodada.
+   ============================================================ */
+var TIPOS_PROCESSO = [
+  ['__inv', '— Investigativos —'],
+  ['investigacao_preliminar', 'Investigação Preliminar (IP)'],
+  ['investigacao_preliminar_sumaria', 'Investigação Preliminar Sumária (IPS)'],
+  ['sindicancia_investigativa', 'Sindicância Investigativa (SINVE)'],
+  ['sindicancia_patrimonial', 'Sindicância Patrimonial (SINPA)'],
+  ['__acu', '— Acusatórios —'],
+  ['sindicancia_acusatoria', 'Sindicância Acusatória (SINAC)'],
+  ['PAD', 'Processo Administrativo Disciplinar (PAD)'],
+  ['PAR', 'Processo Administrativo de Responsabilização (PAR)']
+];
+// Tipos que já levam a PAD hoje (mesma lógica implícita do Nexo Coger: PAD em si, mais os
+// investigativos/acusatórios que historicamente desembocam em PAD). investigacao_preliminar_sumaria
+// (IPS) foi deliberadamente OMITIDA deste conjunto — ver decisão documentada no CHANGELOG-catalogo.md,
+// seção PAR-2.1: IPS pode anteceder tanto PAD quanto PAR, então fica sem domínio até a comissão decidir
+// o rito, em vez de presumir "pad" e esconder categorias de prova PAR de quem ainda não sabe o rito.
+var TIPOS_QUE_LEVAM_A_PAD = new Set([
+  'PAD', 'investigacao_preliminar', 'sindicancia_investigativa', 'sindicancia_patrimonial', 'sindicancia_acusatoria'
+]);
+// Deriva o domínio (pad|par) a partir do tipo de processo escolhido. Sem tipo informado, ou tipo
+// ambíguo (IPS), devolve undefined — o chamador deve then tratar "sem domínio" como o comportamento
+// de hoje (lista de categorias completa, sem filtro; campo ausente na exportação).
+function dominioDoProcesso(tipoProcesso) {
+  if (tipoProcesso === 'PAR') return 'par';
+  if (TIPOS_QUE_LEVAM_A_PAD.has(tipoProcesso)) return 'pad';
+  return undefined;
+}
+// Monta as <option>/<optgroup> do select "Tipo de processo" a partir de TIPOS_PROCESSO
+// (mesmo agrupamento Investigativos/Acusatórios usado no nexo-coger.html).
+function tiposProcessoOptionsHtml(valorSelecionado) {
+  var html = "";
+  var grupoAberto = false;
+  TIPOS_PROCESSO.forEach(function (o) {
+    if (o[0].indexOf('__') === 0) {
+      if (grupoAberto) html += '</optgroup>';
+      html += '<optgroup label="' + escapeHtml(o[1].replace(/—/g, '').trim()) + '">';
+      grupoAberto = true;
+      return;
+    }
+    html += '<option value="' + o[0] + '"' + (valorSelecionado === o[0] ? ' selected' : '') + '>' + escapeHtml(o[1]) + '</option>';
+  });
+  if (grupoAberto) html += '</optgroup>';
+  return html;
+}
+// Rodada PAR-2 (seção 2.2) — categorias de prova adicionais expostas só quando domínio = par.
+// Rótulos reproduzidos do catalogo-canonico.json (PROVA.PROGRAMA_INTEGRIDADE / PROVA.INFORMACOES_COAF).
+// PROVA.EMPRESTADA não entra aqui: não existe como categoria própria selecionável no Veritas hoje
+// (CATEGORIAS não tem entrada equivalente) — ver nota no CHANGELOG-catalogo.md.
+var CATEGORIAS_ADICIONAIS_PAR = {
+  programa_integridade: "Programa de integridade",
+  informacoes_coaf: "Informações do COAF"
+};
+// Monta a lista de opções de categoria (mesmo formato de CATEGORIAS: {value: label}) a partir do
+// domínio do processo atual — não mexe no array/objeto estático CATEGORIAS, só o lê. dominio ausente
+// ou "pad" -> comportamento de hoje, inalterado; "par" -> CATEGORIAS + CATEGORIAS_ADICIONAIS_PAR.
+function categoriasDisponiveis(dominio) {
+  if (dominio === 'par') return Object.assign({}, CATEGORIAS, CATEGORIAS_ADICIONAIS_PAR);
+  return CATEGORIAS;
+}
+// Lookup de rótulo para exibição (tabela de itens, relatório) que não depende do domínio do
+// processo atual — um item já salvo com categoria PAR precisa continuar mostrando o rótulo certo
+// mesmo que o processo seja reaberto sem tipoProcesso definido, ou em outro navegador.
+var CATEGORIAS_TODAS = Object.assign({}, CATEGORIAS, CATEGORIAS_ADICIONAIS_PAR);
 
 /* ============================================================
    Estado
@@ -2128,7 +2202,7 @@ function novoDossie() {
   return {
     versaoFerramenta: "1.0", versaoEsquema: "2.0", hashDoDossie: "",
     processo: {
-      id: uid(), numero: "", portaria: "", secaoResponsavel: "",
+      id: uid(), numero: "", portaria: "", secaoResponsavel: "", tipoProcesso: "",
       comissao: { presidente: membroVazio(), secretario: membroVazio(), vogais: [] },
       criadoEm: nowIso(), atualizadoEm: nowIso()
     },
@@ -2144,6 +2218,11 @@ function migrarDossie(d) {
   if (!d) return d;
   if (d.processo) {
     if (d.processo.secaoResponsavel === undefined) d.processo.secaoResponsavel = "";
+    // Rodada PAR-2 (seção 2.1): dossiês exportados antes desta rodada não têm tipoProcesso —
+    // default "" (mesmo padrão de secaoResponsavel acima), o que preserva dominioDoProcesso("")
+    // === undefined, ou seja, o comportamento de hoje (sem filtro de categoria, sem campo dominio
+    // na exportação) fica intacto para dossiês antigos.
+    if (d.processo.tipoProcesso === undefined) d.processo.tipoProcesso = "";
     if (d.processo.comissao) {
       var c = d.processo.comissao;
       c.presidente = migrarMembro(c.presidente);
@@ -2165,6 +2244,15 @@ function migrarDossie(d) {
 async function persistir() {
   if (!DB.dossie) return;
   DB.dossie.processo.atualizadoEm = nowIso();
+  // Rodada PAR-2 (seção 2.3): mantém processo.dominio sincronizado com tipoProcesso a cada
+  // persistência — nunca fica dessincronizado (mesmo raciocínio "computado, não digitado à mão" da
+  // Rodada 8), mas embutido no próprio objeto do dossiê para que exportarDossie (serialização direta
+  // de DB.dossie) carregue o campo sem lógica extra, e para que o hashDoDossie seja calculado sobre o
+  // mesmo conteúdo que sai no arquivo exportado. Ausente (chave removida, não null) quando o tipo de
+  // processo não define domínio (não informado, ou IPS — ver dominioDoProcesso).
+  var dominioCalc = dominioDoProcesso(DB.dossie.processo.tipoProcesso);
+  if (dominioCalc) DB.dossie.processo.dominio = dominioCalc;
+  else delete DB.dossie.processo.dominio;
   DB.dossie.hashDoDossie = await hashDossieMetadata(DB.dossie);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(DB.dossie));
 }
@@ -2294,7 +2382,7 @@ function viewInicio() {
     '<div class="rfb-card"><div class="rfb-card__body" style="text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center;">' +
       '<div class="rfb-eyebrow">Coger/RFB — Divisão de Processos (Dproc)</div>' +
       '<h1 class="rfb-h1" style="font-size:28px;">Veritas Digital - Coger</h1>' +
-      '<p class="rfb-body rfb-body--muted" style="max-width:560px;">Cadeia de custódia dos elementos de prova digitais e documentais juntados ao processo — da coleta/recebimento ao relatório final. Uso transversal às unidades da Corregedoria: investigação, parecer técnico e comissões de PAD/sindicância.</p>' +
+      '<p class="rfb-body rfb-body--muted" style="max-width:560px;">Cadeia de custódia dos elementos de prova digitais e documentais juntados ao processo — da coleta/recebimento ao relatório final. Uso transversal às unidades da Corregedoria: investigação, parecer técnico e comissões de PAD/sindicância/PAR.</p>' +
       '<div class="vdc-actions">' +
         '<button class="rfb-btn rfb-btn--primary" onclick="App.criarDossie()">+ Novo dossiê</button>' +
         '<label class="rfb-btn rfb-btn--secondary" style="cursor:pointer;">Importar dossiê (.json)<input type="file" accept=".json,application/json" style="display:none" onchange="App.importarArquivo(event)"></label>' +
@@ -2317,7 +2405,7 @@ function viewProcesso() {
         return '<tr class="vdc-item-row" onclick="App.abrirItem(\'' + it.id + '\')" title="Abrir e editar item">' +
           '<td><span class="vdc-status-icon ' + statusIconClasse(it) + '" title="' + RESULTADO[it.resultadoAgregado] + '">' + statusIconGlifo(it) + '</span></td>' +
           '<td>' + escapeHtml(it.titulo || "(sem título)") + (it.sigilo !== "publico" ? ' <span class="rfb-badge rfb-badge--neutral">' + SIGILO[it.sigilo] + '</span>' : '') + '</td>' +
-          '<td>' + (CATEGORIAS[it.categoria] || "—") + '</td>' +
+          '<td>' + (CATEGORIAS_TODAS[it.categoria] || "—") + '</td>' +
           '<td>' + (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—").replace(/^[A-C]\) /, '') + '</td>' +
           '<td>' + it.arquivos.length + '</td>' +
           '<td>' + escapeHtml(it.custodianteAtual || "—") + '</td>' +
@@ -2343,6 +2431,15 @@ function viewProcesso() {
         '<div class="rfb-field"><label class="rfb-label">Nº do processo</label><input class="rfb-input" value="' + escapeHtml(p.numero) + '" onchange="App.setProcesso(\'numero\', this.value)"></div>' +
         '<div class="rfb-field"><label class="rfb-label">Portaria</label><input class="rfb-input" value="' + escapeHtml(p.portaria) + '" onchange="App.setProcesso(\'portaria\', this.value)"></div>' +
         '<div class="rfb-field"><label class="rfb-label">Seção/unidade responsável</label><input class="rfb-input" value="' + escapeHtml(p.secaoResponsavel || "") + '" onchange="App.setProcesso(\'secaoResponsavel\', this.value)" placeholder="Investigação, parecer técnico ou comissão"></div>' +
+      '</div>' +
+      '<div class="vdc-grid-3">' +
+        '<div class="rfb-field"><label class="rfb-label">Tipo de processo <span class="rfb-label__hint">opcional</span></label>' +
+          '<select class="rfb-input" onchange="App.setProcesso(\'tipoProcesso\', this.value)">' +
+            '<option value="">Selecione…</option>' +
+            tiposProcessoOptionsHtml(p.tipoProcesso) +
+          '</select>' +
+          '<div class="rfb-help">Usado só para derivar o domínio (PAD/PAR) das categorias de prova e da exportação — não bloqueia nada.</div>' +
+        '</div>' +
       '</div>' +
       '<div class="rfb-divider"></div>' +
       membroCampoHtml("Presidente da comissão", "presidente", p.comissao.presidente) +
@@ -2432,7 +2529,12 @@ function stepIdentificacao(d) {
     '<div class="vdc-grid-2" style="margin-top:14px;">' +
       '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Título/descrição</label><input class="rfb-input" value="' + escapeHtml(d.titulo) + '" oninput="App.setDraftQuiet(\'titulo\', this.value)" placeholder="Ex.: Extrato bancário — conta XXXX, período 01/2023 a 12/2023"></div>' +
       '<div class="rfb-field"><label class="rfb-label">Categoria</label><select class="rfb-select" onchange="App.setDraft(\'categoria\', this.value)">' +
-        '<option value="">Selecione…</option>' + Object.keys(CATEGORIAS).map(function (k) { return '<option value="' + k + '"' + (d.categoria === k ? ' selected' : '') + '>' + CATEGORIAS[k] + '</option>'; }).join("") + '</select></div>' +
+        '<option value="">Selecione…</option>' + (function () {
+          // Rodada PAR-2 (seção 2.2): lista montada dinamicamente a partir do domínio do processo
+          // atual, sem mexer no objeto estático CATEGORIAS (categoriasDisponiveis só o lê/estende).
+          var opcoes = categoriasDisponiveis(dominioDoProcesso(DB.dossie.processo.tipoProcesso));
+          return Object.keys(opcoes).map(function (k) { return '<option value="' + k + '"' + (d.categoria === k ? ' selected' : '') + '>' + opcoes[k] + '</option>'; }).join("");
+        })() + '</select></div>' +
       '<div class="rfb-field"><label class="rfb-label">Nº/folha nos autos <span class="rfb-label__hint">opcional</span></label><input class="rfb-input" value="' + escapeHtml(d.folhaAutos) + '" oninput="App.setDraftQuiet(\'folhaAutos\', this.value)"></div>' +
       '<div class="rfb-field" style="grid-column:span 2;"><label class="rfb-label">Vinculado à matriz de apuração</label><input class="rfb-input" value="' + escapeHtml(d.vinculoMatriz) + '" oninput="App.setDraftQuiet(\'vinculoMatriz\', this.value)" placeholder="Fato/hipótese que este elemento sustenta"></div>' +
       '<div class="rfb-field"><label class="rfb-label">Sigilo/classificação</label><select class="rfb-select" onchange="App.setDraft(\'sigilo\', this.value)">' +
@@ -2611,7 +2713,7 @@ function viewItemDetalhe(itemId) {
       '<div class="rfb-card__body">' +
         '<div class="vdc-grid-3">' +
           campo("Título/descrição", "titulo", it.titulo) +
-          selectCampoDetalhe("Categoria", "categoria", it.categoria, CATEGORIAS) +
+          selectCampoDetalhe("Categoria", "categoria", it.categoria, categoriasDisponiveis(dominioDoProcesso(DB.dossie.processo.tipoProcesso))) +
           campo("Nº/folha nos autos", "folhaAutos", it.folhaAutos) +
           campo("Vinculado à matriz de apuração", "vinculoMatriz", it.vinculoMatriz) +
           selectCampoDetalhe("Sigilo/classificação", "sigilo", it.sigilo, SIGILO) +
@@ -2881,7 +2983,7 @@ function viewRelatorio() {
           var ef = it.proveniencia.elementoFisico;
           var provCel = (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") +
             (ef && ef.presente ? '<br><span class="rfb-badge rfb-badge--' + (ef.condicaoLacre === "rompido" ? "danger" : "success") + '" style="margin-top:4px;">&#128274; Lacre ' + (ef.numeroLacre ? "nº " + escapeHtml(ef.numeroLacre) + " — " : "") + (CONDICAO_LACRE[ef.condicaoLacre] || "") + '</span>' : "");
-          return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS[it.categoria] || "—") + '</td><td>' + provCel + '</td>' +
+          return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS_TODAS[it.categoria] || "—") + '</td><td>' + provCel + '</td>' +
             '<td>' + it.arquivos.length + '</td><td>' + itemHashCelulaHtml(it) + '</td><td>' + STATUS_ITEM[it.status] + '</td><td>' + escapeHtml(it.folhaAutos || "—") + '</td></tr>';
         }).join("") + '</tbody></table></div>' +
 
@@ -2906,7 +3008,12 @@ function viewRelatorio() {
    para que test-fluxo-integrado.js consiga exercitar a lógica de verdade via Node, sem navegador.
    ============================================================ */
 function construirContratoProvasNexo(dossie, catalogoCoger, exportadoEm){
-  return {
+  // Rodada PAR-2 (seção 2.3): propaga dominio (pad|par) para o envelope do contrato quando o
+  // processo já o tiver (derivado de tipoProcesso, ou já persistido em processo.dominio). Ausente do
+  // envelope quando indefinido — nenhuma validação de importação por domínio nesta rodada (fica para
+  // a PAR-5); só a emissão do campo.
+  var dominio = dossie.processo.dominio || dominioDoProcesso(dossie.processo.tipoProcesso);
+  var contrato = {
     schema_version: "1.0",
     catalogo_schema_version: catalogoCoger.schema_version,
     exportado_em: exportadoEm,
@@ -2928,6 +3035,8 @@ function construirContratoProvasNexo(dossie, catalogoCoger, exportadoEm){
       };
     })
   };
+  if (dominio) contrato.dominio = dominio;
+  return contrato;
 }
 // Validação pura do envelope de termo (Rodada 5): formato, hash (assíncrono, Web Crypto) e dedup por
 // hash_origem — reimportar o mesmo termo é recusado antes mesmo de tocar em DB.dossie.
@@ -2975,7 +3084,15 @@ window.VeritasPuro = {
   construirItemTermoOitiva: construirItemTermoOitiva,
   sha256Hex: sha256Hex,
   novoDossie: novoDossie,
-  CATEGORIA_VERITAS_PARA_PROVA_ID: CATEGORIA_VERITAS_PARA_PROVA_ID
+  migrarDossie: migrarDossie,
+  CATEGORIA_VERITAS_PARA_PROVA_ID: CATEGORIA_VERITAS_PARA_PROVA_ID,
+  // Rodada PAR-2 (seção 2.1/2.2) — expostas aqui pelo mesmo motivo das demais: núcleos puros,
+  // testáveis fora do browser (ver test-fluxo-integrado.js e o padrão da Rodada 7).
+  TIPOS_PROCESSO: TIPOS_PROCESSO,
+  dominioDoProcesso: dominioDoProcesso,
+  categoriasDisponiveis: categoriasDisponiveis,
+  CATEGORIAS: CATEGORIAS,
+  CATEGORIAS_ADICIONAIS_PAR: CATEGORIAS_ADICIONAIS_PAR
 };
 
 /* ============================================================

@@ -298,7 +298,8 @@
       "label": "Programa de integridade",
       "descricao": "Evidências e informações sobre existência e aplicação de programa de integridade (art. 7º, VIII, LAC; seção 11.3.2 do manual CGU).",
       "origem_permitida": [
-        "nexo-coger"
+        "nexo-coger",
+        "veritas"
       ],
       "status": "ativo",
       "dominio": "par"
@@ -308,7 +309,8 @@
       "label": "Informações do COAF",
       "descricao": "Relatórios de inteligência financeira do COAF (seção 11.4 do manual CGU).",
       "origem_permitida": [
-        "nexo-coger"
+        "nexo-coger",
+        "veritas"
       ],
       "status": "ativo",
       "dominio": "par"
