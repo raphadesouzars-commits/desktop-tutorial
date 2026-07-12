@@ -1950,16 +1950,16 @@
 /* ============================================================
  * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1; estendido na Rodada 5)
  * Fonte de verdade: catalogo-canonico.json (raiz do projeto).
- * schema_version: 1.1.0
- * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 744bb790
+ * schema_version: 1.2.0
+ * hash8 (SHA-256[:8] do catalogo-canonico.json de origem): 958dfd97
  * Copia embutida gerada nesta rodada; NAO editar diretamente aqui —
  * editar catalogo-canonico.json e regenerar as tres copias embutidas.
  * A logica interna de cada sistema ainda NAO consome todos os IDs
  * (migracao de uso prevista para as Rodadas 2-6).
  * ============================================================ */
 const CATALOGO_COGER = {
-  "schema_version": "1.1.0",
-  "atualizado_em": "2026-07-11",
+  "schema_version": "1.2.0",
+  "atualizado_em": "2026-07-12",
   "papeis_pessoa": [
     {
       "id": "PAPEL.ACUSADO",
@@ -1971,7 +1971,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "PAPEL.VITIMA",
@@ -1982,7 +1983,8 @@ const CATALOGO_COGER = {
         "oitiva-360"
       ],
       "status": "ativo",
-      "nota": "Definição única do catálogo; corrige bug do Oitiva 360 em que tipoSugeridoParaItem() marcava prova de vítima como compromissada:true, contradizendo compromisso:false. Nexo Coger não tinha nenhum papel de vítima antes desta rodada."
+      "nota": "Definição única do catálogo; corrige bug do Oitiva 360 em que tipoSugeridoParaItem() marcava prova de vítima como compromissada:true, contradizendo compromisso:false. Nexo Coger não tinha nenhum papel de vítima antes desta rodada.",
+      "dominio": "comum"
     },
     {
       "id": "PAPEL.TESTEMUNHA",
@@ -1992,7 +1994,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PAPEL.DECLARANTE_INFORMANTE",
@@ -2002,7 +2005,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PAPEL.PESSOA_SITUACAO_INDEFINIDA",
@@ -2014,7 +2018,51 @@ const CATALOGO_COGER = {
         "oitiva-360"
       ],
       "status": "ativo",
-      "nota": "Ausente no Nexo Coger antes desta rodada; item novo criado a partir da definição do Oitiva 360 (Orientações de Implementação, 2026-07-09)."
+      "nota": "Ausente no Nexo Coger antes desta rodada; item novo criado a partir da definição do Oitiva 360 (Orientações de Implementação, 2026-07-09).",
+      "dominio": "comum"
+    },
+    {
+      "id": "PAPEL.ENTE_PRIVADO",
+      "label": "Ente Privado",
+      "descricao": "Pessoa jurídica processada no PAR (sujeito passivo da responsabilização).",
+      "origem_permitida": [
+        "nexo-coger",
+        "oitiva-360"
+      ],
+      "status": "ativo",
+      "dominio": "par"
+    },
+    {
+      "id": "PAPEL.REPRESENTANTE_LEGAL",
+      "label": "Representante Legal",
+      "descricao": "Representante legal do ente privado (responde pelo ente nos atos processuais).",
+      "origem_permitida": [
+        "nexo-coger",
+        "oitiva-360"
+      ],
+      "status": "ativo",
+      "dominio": "par"
+    },
+    {
+      "id": "PAPEL.PREPOSTO",
+      "label": "Preposto",
+      "descricao": "Empregado ou preposto do ente privado ouvido sobre os fatos.",
+      "origem_permitida": [
+        "oitiva-360"
+      ],
+      "status": "ativo",
+      "dominio": "par"
+    },
+    {
+      "id": "PAPEL.SOCIO_ADMINISTRADOR",
+      "label": "Sócio-Administrador",
+      "descricao": "Sócio ou administrador, inclusive potencialmente atingível por desconsideração da personalidade jurídica (art. 14 da LAC).",
+      "origem_permitida": [
+        "nexo-coger",
+        "oitiva-360"
+      ],
+      "status": "ativo",
+      "dominio": "par"
     }
   ],
   "tipos_prova": [
@@ -2026,7 +2074,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.PERICIAL",
@@ -2036,7 +2085,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.TESTEMUNHAL",
@@ -2046,7 +2096,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DECLARACAO_INFORMANTE",
@@ -2056,7 +2107,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.INTERROGATORIO",
@@ -2066,7 +2118,8 @@ const CATALOGO_COGER = {
         "nexo-coger",
         "oitiva-360"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DILIGENCIA",
@@ -2075,7 +2128,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "nexo-coger"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.EMPRESTADA",
@@ -2084,7 +2138,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "nexo-coger"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.INDICIARIA",
@@ -2093,7 +2148,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "nexo-coger"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.PRINT_SISTEMA",
@@ -2102,7 +2158,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DOCUMENTO_FINANCEIRO",
@@ -2111,7 +2168,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.COMUNICACAO",
@@ -2120,7 +2178,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.FOTO_VIDEO",
@@ -2129,7 +2188,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.OFICIO",
@@ -2138,7 +2198,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DECISAO_JUDICIAL",
@@ -2147,7 +2208,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DOCUMENTO_FISICO",
@@ -2156,7 +2218,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.DISPOSITIVO_FISICO",
@@ -2165,7 +2228,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.OUTRO",
@@ -2174,7 +2238,8 @@ const CATALOGO_COGER = {
       "origem_permitida": [
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
     },
     {
       "id": "PROVA.TERMO_OITIVA",
@@ -2184,7 +2249,28 @@ const CATALOGO_COGER = {
         "oitiva-360",
         "veritas"
       ],
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "comum"
+    },
+    {
+      "id": "PROVA.PROGRAMA_INTEGRIDADE",
+      "label": "Programa de integridade",
+      "descricao": "Evidências e informações sobre existência e aplicação de programa de integridade (art. 7º, VIII, LAC; seção 11.3.2 do manual CGU).",
+      "origem_permitida": [
+        "nexo-coger"
+      ],
+      "status": "ativo",
+      "dominio": "par"
+    },
+    {
+      "id": "PROVA.INFORMACOES_COAF",
+      "label": "Informações do COAF",
+      "descricao": "Relatórios de inteligência financeira do COAF (seção 11.4 do manual CGU).",
+      "origem_permitida": [
+        "nexo-coger"
+      ],
+      "status": "ativo",
+      "dominio": "par"
     }
   ],
   "normas": [
@@ -2195,7 +2281,8 @@ const CATALOGO_COGER = {
       "descricao": "Inassiduidade ao dever de exercer com zelo e dedicação.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_II",
@@ -2204,7 +2291,8 @@ const CATALOGO_COGER = {
       "descricao": "Deslealdade às instituições.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_III",
@@ -2213,7 +2301,8 @@ const CATALOGO_COGER = {
       "descricao": "Inobservância de normas legais e regulamentares.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_IV",
@@ -2222,7 +2311,8 @@ const CATALOGO_COGER = {
       "descricao": "Descumprimento de ordens superiores, exceto quando manifestamente ilegais.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_V",
@@ -2231,7 +2321,8 @@ const CATALOGO_COGER = {
       "descricao": "Falta de presteza ao público, à expedição de certidões ou às requisições para defesa da Fazenda Pública.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_VI",
@@ -2240,7 +2331,8 @@ const CATALOGO_COGER = {
       "descricao": "Omissão em levar irregularidades ao conhecimento da autoridade superior.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_VII",
@@ -2249,7 +2341,8 @@ const CATALOGO_COGER = {
       "descricao": "Falta de zelo pela economia do material e conservação do patrimônio.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_VIII",
@@ -2258,7 +2351,8 @@ const CATALOGO_COGER = {
       "descricao": "Violação do dever de guardar sigilo sobre assunto da repartição.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_IX",
@@ -2267,7 +2361,8 @@ const CATALOGO_COGER = {
       "descricao": "Conduta incompatível com a moralidade administrativa.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_X",
@@ -2276,7 +2371,8 @@ const CATALOGO_COGER = {
       "descricao": "Falta de assiduidade e pontualidade.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_XI",
@@ -2285,7 +2381,8 @@ const CATALOGO_COGER = {
       "descricao": "Falta de urbanidade.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART116_XII",
@@ -2294,7 +2391,8 @@ const CATALOGO_COGER = {
       "descricao": "Omissão do dever de representar contra ilegalidade, omissão ou abuso de poder.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_I",
@@ -2303,7 +2401,8 @@ const CATALOGO_COGER = {
       "descricao": "Ausentar-se do serviço durante o expediente sem autorização do chefe imediato.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_II",
@@ -2312,7 +2411,8 @@ const CATALOGO_COGER = {
       "descricao": "Retirar documento ou objeto da repartição sem anuência da autoridade competente.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_III",
@@ -2321,7 +2421,8 @@ const CATALOGO_COGER = {
       "descricao": "Recusar fé a documentos públicos.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_IV",
@@ -2330,7 +2431,8 @@ const CATALOGO_COGER = {
       "descricao": "Opor resistência injustificada ao andamento de documento, processo ou execução de serviço.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_V",
@@ -2339,7 +2441,8 @@ const CATALOGO_COGER = {
       "descricao": "Promover manifestação de apreço ou desapreço no recinto da repartição.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_VI",
@@ -2348,7 +2451,8 @@ const CATALOGO_COGER = {
       "descricao": "Cometer a pessoa estranha à repartição atribuição de sua responsabilidade ou de subordinado.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_VII",
@@ -2357,7 +2461,8 @@ const CATALOGO_COGER = {
       "descricao": "Coagir ou aliciar subordinados a filiação associativa, sindical ou partidária.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_VIII",
@@ -2366,7 +2471,8 @@ const CATALOGO_COGER = {
       "descricao": "Manter sob chefia imediata, em cargo/função de confiança, cônjuge, companheiro ou parente até 2º grau.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XIX",
@@ -2375,7 +2481,8 @@ const CATALOGO_COGER = {
       "descricao": "Recusar-se a atualizar dados cadastrais quando solicitado.",
       "gravidade": "leve",
       "penalidade": "advertencia",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XVII",
@@ -2384,7 +2491,8 @@ const CATALOGO_COGER = {
       "descricao": "Cometer a outro servidor atribuições estranhas ao cargo, fora de emergência transitória.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XVIII",
@@ -2393,7 +2501,8 @@ const CATALOGO_COGER = {
       "descricao": "Exercer atividades incompatíveis com o cargo/função ou com o horário de trabalho.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_IX",
@@ -2402,7 +2511,8 @@ const CATALOGO_COGER = {
       "descricao": "Valimento do cargo para lograr proveito pessoal ou de outrem, em detrimento da dignidade da função pública.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_X",
@@ -2411,7 +2521,8 @@ const CATALOGO_COGER = {
       "descricao": "Participar de gerência/administração de sociedade privada; exercer o comércio.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XI",
@@ -2420,7 +2531,8 @@ const CATALOGO_COGER = {
       "descricao": "Atuar como procurador ou intermediário junto a repartições públicas.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XII",
@@ -2429,7 +2541,8 @@ const CATALOGO_COGER = {
       "descricao": "Receber propina, comissão, presente ou vantagem de qualquer espécie.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XIII",
@@ -2438,7 +2551,8 @@ const CATALOGO_COGER = {
       "descricao": "Aceitar comissão, emprego ou pensão de estado estrangeiro.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XIV",
@@ -2447,7 +2561,8 @@ const CATALOGO_COGER = {
       "descricao": "Praticar usura sob qualquer de suas formas.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XV",
@@ -2456,7 +2571,8 @@ const CATALOGO_COGER = {
       "descricao": "Proceder de forma desidiosa.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART117_XVI",
@@ -2465,7 +2581,8 @@ const CATALOGO_COGER = {
       "descricao": "Utilizar pessoal ou recursos materiais da repartição em atividades particulares.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART130_P1",
@@ -2474,7 +2591,8 @@ const CATALOGO_COGER = {
       "descricao": "Recusa injustificada a inspeção médica determinada por autoridade competente.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_I",
@@ -2483,7 +2601,8 @@ const CATALOGO_COGER = {
       "descricao": "Crime contra a administração pública.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_II",
@@ -2492,7 +2611,8 @@ const CATALOGO_COGER = {
       "descricao": "Abandono de cargo.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_III",
@@ -2501,7 +2621,8 @@ const CATALOGO_COGER = {
       "descricao": "Inassiduidade habitual.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_IV",
@@ -2510,7 +2631,8 @@ const CATALOGO_COGER = {
       "descricao": "Improbidade administrativa.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_V",
@@ -2519,7 +2641,8 @@ const CATALOGO_COGER = {
       "descricao": "Incontinência pública e conduta escandalosa, na repartição.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_VI",
@@ -2528,7 +2651,8 @@ const CATALOGO_COGER = {
       "descricao": "Insubordinação grave em serviço.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_VII",
@@ -2537,7 +2661,8 @@ const CATALOGO_COGER = {
       "descricao": "Ofensa física, em serviço, a servidor ou particular, salvo em legítima defesa própria ou de outrem.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_VIII",
@@ -2546,7 +2671,8 @@ const CATALOGO_COGER = {
       "descricao": "Aplicação irregular de dinheiros públicos.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_IX",
@@ -2555,7 +2681,8 @@ const CATALOGO_COGER = {
       "descricao": "Revelação de segredo apropriado em razão do cargo.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_X",
@@ -2564,7 +2691,8 @@ const CATALOGO_COGER = {
       "descricao": "Lesão aos cofres públicos e dilapidação do patrimônio nacional.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_XI",
@@ -2573,7 +2701,8 @@ const CATALOGO_COGER = {
       "descricao": "Corrupção.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_XII",
@@ -2582,7 +2711,8 @@ const CATALOGO_COGER = {
       "descricao": "Acumulação ilegal de cargos, empregos ou funções públicas.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.L8112.ART132_XIII",
@@ -2591,7 +2721,8 @@ const CATALOGO_COGER = {
       "descricao": "Transgressão das proibições graves do art. 117, incisos IX a XVI.",
       "gravidade": "grave",
       "penalidade": "demissao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_I",
@@ -2600,7 +2731,8 @@ const CATALOGO_COGER = {
       "descricao": "Recusar, retardar ou fornecer incorretamente informação requerida.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_II",
@@ -2609,7 +2741,8 @@ const CATALOGO_COGER = {
       "descricao": "Utilizar indevidamente, subtrair, destruir, inutilizar, desfigurar, alterar ou ocultar informação sob guarda.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_III",
@@ -2618,7 +2751,8 @@ const CATALOGO_COGER = {
       "descricao": "Agir com dolo ou má-fé na análise de solicitação de acesso à informação.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_IV",
@@ -2627,7 +2761,8 @@ const CATALOGO_COGER = {
       "descricao": "Divulgar/permitir divulgação ou acessar/permitir acesso indevido a informação sigilosa ou pessoal.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_V",
@@ -2636,7 +2771,8 @@ const CATALOGO_COGER = {
       "descricao": "Impor sigilo para proveito pessoal/de terceiro ou ocultação de ato ilegal.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_VI",
@@ -2645,7 +2781,8 @@ const CATALOGO_COGER = {
       "descricao": "Ocultar da revisão de autoridade superior informação sigilosa.",
       "gravidade": "media",
       "penalidade": "suspensao",
-      "status": "ativo"
+      "status": "ativo",
+      "dominio": "pad"
     },
     {
       "id": "NORMA.LAI.ART32_VII",
@@ -2654,6 +2791,117 @@ const CATALOGO_COGER = {
       "descricao": "Destruir ou subtrair documentos sobre possíveis violações de direitos humanos por agentes do Estado.",
       "gravidade": "media",
       "penalidade": "suspensao",
+      "status": "ativo",
+      "dominio": "pad"
+    },
+    {
+      "id": "NORMA.LAC.ART5_I",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, I",
+      "grupo": "Atos de corrupção em geral",
+      "descricao": "Prometer, oferecer ou dar, direta ou indiretamente, vantagem indevida a agente público, ou a terceira pessoa a ele relacionada.",
+      "nota_aplicacao": "Não exige resultado material nem contraprestação do agente; basta demonstração de interesse ou benefício, ainda que potencial, da pessoa jurídica (Enunciado SIPRI/CGU nº 3/2025). Vantagem indevida pode ser de qualquer natureza, econômica ou não (Enunciado nº 2/2025). Solicitação ou exigência pelo agente não afasta a responsabilização (Enunciado nº 4/2025).",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_II",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, II",
+      "grupo": "Atos de corrupção em geral",
+      "descricao": "Comprovadamente, financiar, custear, patrocinar ou de qualquer modo subvencionar a prática dos atos ilícitos previstos nesta Lei.",
+      "nota_aplicacao": "Alcança cumplicidade, auxílio, incitamento ou intermediação (inclusive empresas 'laranjas'). Não exige concretização do ato financiado. Complementa o inciso III: pune também quem serviu de intermediário.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_III",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, III",
+      "grupo": "Atos de corrupção em geral",
+      "descricao": "Comprovadamente, utilizar-se de interposta pessoa física ou jurídica para ocultar ou dissimular seus reais interesses ou a identidade dos beneficiários dos atos praticados.",
+      "nota_aplicacao": "Abarca contratação de interpostas pessoas de qualquer tipo (advogados, prepostos, consultores, contadores). Desconhecimento dos atos de terceiros que representavam a pessoa jurídica não é defesa admissível.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_A",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, a",
+      "grupo": "Licitações e contratos",
+      "descricao": "Frustrar ou fraudar, mediante ajuste, combinação ou qualquer outro expediente, o caráter competitivo de procedimento licitatório público.",
+      "nota_aplicacao": "Bem jurídico tutelado: o caráter competitivo do certame.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_B",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, b",
+      "grupo": "Licitações e contratos",
+      "descricao": "Impedir, perturbar ou fraudar a realização de qualquer ato de procedimento licitatório público.",
+      "nota_aplicacao": "Previsão paralela ao art. 337-I do Código Penal (incluído pela Lei nº 14.133/2021).",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_C",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, c",
+      "grupo": "Licitações e contratos",
+      "descricao": "Afastar ou procurar afastar licitante, por meio de fraude ou oferecimento de vantagem de qualquer tipo.",
+      "nota_aplicacao": "Tutela a concorrência leal e a ampla competitividade. Exige fraude ou oferta de vantagem como meio.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_D",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, d",
+      "grupo": "Licitações e contratos",
+      "descricao": "Fraudar licitação pública ou contrato dela decorrente.",
+      "nota_aplicacao": "Tipo de maior abrangência — aplicação subsidiária quando a conduta não se enquadra em alínea mais específica.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_E",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, e",
+      "grupo": "Licitações e contratos",
+      "descricao": "Criar, de modo fraudulento ou irregular, pessoa jurídica para participar de licitação pública ou celebrar contrato administrativo.",
+      "nota_aplicacao": "Alcança empresas 'de fachada', constituídas apenas formalmente para participar de licitação ou contratar.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_F",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, f",
+      "grupo": "Licitações e contratos",
+      "descricao": "Obter vantagem ou benefício indevido, de modo fraudulento, de modificações ou prorrogações de contratos celebrados com a administração pública, sem autorização em lei, no ato convocatório da licitação pública ou nos respectivos instrumentos contratuais.",
+      "nota_aplicacao": "Condição mais vantajosa obtida fraudulentamente em aditivos/prorrogações sem amparo legal, editalício ou contratual.",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_IV_G",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, IV, g",
+      "grupo": "Licitações e contratos",
+      "descricao": "Manipular ou fraudar o equilíbrio econômico-financeiro dos contratos celebrados com a administração pública.",
+      "nota_aplicacao": "Tutela a equivalência material entre valor ajustado e contraprestação pactuada (art. 37, XXI, CF).",
+      "dominio": "par",
+      "status": "ativo"
+    },
+    {
+      "id": "NORMA.LAC.ART5_V",
+      "lei": "Lei nº 12.846, de 2013",
+      "dispositivo": "art. 5º, V",
+      "grupo": "Atos de corrupção em geral",
+      "descricao": "Dificultar atividade de investigação ou fiscalização de órgãos, entidades ou agentes públicos, ou intervir em sua atuação, inclusive no âmbito das agências reguladoras e dos órgãos de fiscalização do sistema financeiro nacional.",
+      "nota_aplicacao": "Ilícito de forma livre: destruição de provas, coação de testemunhas, tráfico de influência, prestação de informações falsas etc. Basta criar obstáculos adicionais — não exige que a fiscalização seja efetivamente frustrada.",
+      "dominio": "par",
       "status": "ativo"
     }
   ]

@@ -1,6 +1,37 @@
 # Changelog — Catálogo Canônico
 
-`catalogo-canonico.json` — `schema_version: 1.1.0` (estendida na Rodada 5, era `1.0.0`), `atualizado_em: 2026-07-11`, hash8 (SHA-256, 8 primeiros caracteres): `744bb790` (era `5906e98f`).
+`catalogo-canonico.json` — `schema_version: 1.2.0` (estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `958dfd97` (era `744bb790`).
+
+## Rodada PAR-1 — Extensão do catálogo para o domínio PAR (fechada)
+
+Primeira rodada da trilha PAR (responsabilização de entes privados, Lei nº 12.846/2013 — LAC), bloqueando as Rodadas PAR-2 a PAR-6. Escopo estritamente de dados: só o catálogo cresce; nenhuma interface das três ferramentas passou a expor os itens novos nesta rodada (exceção única e explícita: PAR/IPS em `TIPOS_PROCESSO`, ver PAR-1.3).
+
+### PAR-1.1 — Campo `dominio` em todos os itens existentes
+
+Todo item de `papeis_pessoa[]`, `tipos_prova[]` e `normas[]` ganhou o campo `dominio` (`"pad"` | `"par"` | `"comum"`). Nenhum item existente mudou de `id` ou de qualquer outro campo — validado programaticamente (script Python comparando, item a item por `id`, todos os campos exceto `dominio` entre o JSON original salvo antes da edição e o JSON final; zero divergências).
+
+- **Normas:** as 45 da Lei nº 8.112/1990 e as 7 do art. 32 da LAI (Lei nº 12.527/2011) → `"pad"`. A spec já indicava explicitamente a LAI como `"pad"` (é usada apenas no contexto de apuração PAD, conforme a auditoria original da Rodada 1 — o Veritas nem chega a referenciá-la); confirmado por leitura de cada item `NORMA.LAI.*` antes da migração, nenhum sinal de uso fora do contexto disciplinar.
+- **Papéis de pessoa:** `PAPEL.ACUSADO` → `"pad"` (é o servidor investigado; no PAR o polo passivo é o ente privado, um conceito à parte — `PAPEL.ENTE_PRIVADO`, novo). `PAPEL.VITIMA`, `PAPEL.TESTEMUNHA`, `PAPEL.DECLARANTE_INFORMANTE`, `PAPEL.PESSOA_SITUACAO_INDEFINIDA` → `"comum"`, exatamente como a spec instruiu.
+- **Tipos de prova (decisão de bom senso — não estavam listados item a item na spec):** os 8 tipos nativos do Nexo Coger (`PROVA.DOCUMENTAL`, `PROVA.PERICIAL`, `PROVA.TESTEMUNHAL`, `PROVA.DECLARACAO_INFORMANTE`, `PROVA.INTERROGATORIO`, `PROVA.DILIGENCIA`, `PROVA.EMPRESTADA`, `PROVA.INDICIARIA`) e as 9 subcategorias de evidência do Veritas (`PROVA.PRINT_SISTEMA`, `PROVA.DOCUMENTO_FINANCEIRO`, `PROVA.COMUNICACAO`, `PROVA.FOTO_VIDEO`, `PROVA.OFICIO`, `PROVA.DECISAO_JUDICIAL`, `PROVA.DOCUMENTO_FISICO`, `PROVA.DISPOSITIVO_FISICO`, `PROVA.OUTRO`) foram classificados `"comum"`: são vocabulário de tipo de mídia/meio de prova (um documento, uma perícia, uma comunicação eletrônica, um depoimento) e nada neles é exclusivo de um rito — tanto um PAD quanto um PAR podem ter prova documental, pericial, testemunhal ou uma comunicação eletrônica como evidência. `PROVA.TERMO_OITIVA` (Rodada 5) também foi classificada `"comum"` pelo mesmo raciocínio: é o veículo estruturado de pergunta-resposta de uma oitiva, e nada na Lei nº 12.846/2013 restringe a oitiva de preposto ou sócio-administrador a um formato diferente do já usado para testemunha/acusado no PAD.
+
+### PAR-1.2 — Itens novos
+
+- **11 normas `NORMA.LAC.*`** (art. 5º da Lei nº 12.846/2013), com `descricao` reproduzindo o texto legal do inciso tal como fornecido pela spec (sem paráfrase) e `nota_aplicacao` com o entendimento da CGU — grupo `"Atos de corrupção em geral"` (incisos I, II, III, V) e `"Licitações e contratos"` (inciso IV, alíneas a–g), exatamente a divisão doutrinária do manual CGU indicada na spec.
+- **4 papéis PAR:** `PAPEL.ENTE_PRIVADO`, `PAPEL.REPRESENTANTE_LEGAL`, `PAPEL.PREPOSTO`, `PAPEL.SOCIO_ADMINISTRADOR`, todos `dominio:"par"`.
+- **2 tipos de prova PAR novos:** `PROVA.PROGRAMA_INTEGRIDADE`, `PROVA.INFORMACOES_COAF`. `PROVA.EMPRESTADA` **não foi duplicada** — já existia desde a Rodada 1 (migrada do Nexo Coger); só recebeu `dominio:"comum"`, conforme a spec ("prova produzida em outro processo, transportada com contraditório" já era exatamente a definição existente).
+- **Contagem final:** 92 itens no catálogo (eram 74 na Rodada 1), 53 `"pad"`, 22 `"comum"`, 17 `"par"`.
+
+### PAR-1.3 — `TIPOS_PROCESSO` do `nexo-coger.html`
+
+Único ponto de UI tocado nesta rodada, por instrução explícita da spec (correção de lacuna preexistente, não feature nova do domínio PAR): adicionado `investigacao_preliminar_sumaria` ("Investigação Preliminar Sumária (IPS)") ao grupo Investigativos e `PAR` ("Processo Administrativo de Responsabilização (PAR)") ao grupo Acusatórios, em `TIPOS_PROCESSO`, `TIPO_SIGLA` e `TIPOS_INVESTIGATIVOS` (IPS somado ao `Set` de tipos investigativos, junto de IP/SINVE/SINPA, para preservar a lógica existente de `mostraRito` que já depende desse `Set`).
+
+### PAR-1.4 — Re-sincronização de `CATALOGO_COGER`
+
+Reembutido nos três `ferramentas/*.html` a partir do `catalogo-canonico.json` atualizado, comentário de cabeçalho atualizado (`schema_version: 1.2.0`, hash8 `958dfd97`). Script Python extraiu `CATALOGO_COGER` de cada um dos três arquivos via regex e comparou (`==` estrutural, via `json.loads`) contra o JSON fonte e entre si: **os quatro batem exatamente**. Verificação adicional: `node -c` (via `new Function()`) em cada `<script>` embutido dos três HTMLs, sem erro de sintaxe após a substituição.
+
+### Teste de regressão
+
+`node test-fluxo-integrado.js` — **43/43 verificações passaram, exit code 0** (mesmo placar de antes da mudança; conferido a contagem antes de editar, já era 43/43 desde a Rodada 7/8). Nenhum teste do domínio PAD foi afetado pela extensão. Teste adicional descartável (script Python, não versionado) confirmou: todo item tem `dominio` válido (`pad`/`par`/`comum`); as 11 normas LAC presentes com os IDs exatos da spec; os 4 papéis PAR e os 2 tipos de prova PAR presentes; `PROVA.EMPRESTADA` existe uma única vez com `dominio:"comum"`; os três HTMLs e o JSON fonte são estruturalmente idênticos.
 
 ## Rodada 8 — Sinalização visual de pendências (fechada)
 
