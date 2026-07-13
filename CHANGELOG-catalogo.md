@@ -683,3 +683,17 @@ A especificação da Rodada 1 menciona um "conjunto canônico de 45 dispositivos
 - Sintaxe: `new Function` sobre o `<script>` de `nexo-par.html` → **OK**.
 - `node test-fluxo-integrado.js` → **127/127** (sem regressão).
 - Playwright (Chromium): (a) confirmado por `getComputedStyle` que `.printview` tem z-index 1000 > `.topbar` (100) em ambos os arquivos; (b) chamada direta de `openPrint()` em ambos os arquivos → clique no botão "Imprimir / PDF" não é mais interceptado e `window.print()` é efetivamente chamado; (c) fluxo completo do Nexo PAR: botão "Gerar termo de intimação" presente no menu → modal com os 3 tipos ("Esclarecimento de fato", "Manifestação sobre prova", "Oitiva do representante legal") → destinatário listado pela razão social do ente → termo gerado exibe corretamente pessoa jurídica/CNPJ/representante legal, sem nenhum resquício de linguagem PAD (servidor/interrogatório/Lei 8.112/SV5) → impressão abre e `window.print()` é chamado.
+
+## Correção: PDF de impressão trazia o mapa fato-prova-norma por cima do documento (Nexo Coger + Nexo PAR)
+
+**Relato do usuário (com captura de tela):** ao gerar o PDF de intimação/indiciação, o topo da página mostrava os nós e conexões do mapa (ex.: "Oferecimento de vantagens indev...", "Frustração de caráter compet...") sobrepostos ao documento, diferente do resultado limpo já obtido em `Integritas.html`, `Dosimetria_TAC.html` e `Multa_PAR.html`.
+
+**Causa:** a regra `@media print` de `nexo-coger.html`/`nexo-par.html` (linha ~516-523) escondia `.topbar,.hero,.lensbar,.panel,.footer,.fab,.col-headers`, mas **não** escondia `.main` — o container que envolve o SVG do mapa (`#map`, dentro de `.canvas-wrap`). Como `.printview` passa a `position:static` na impressão (para fluir como documento normal), o mapa (ainda visível, por não estar na lista de elementos ocultos) aparecia antes do conteúdo do `.pv-doc` na mesma página. O padrão usado em `Integritas.html`, por comparação, esconde tudo que não é o conteúdo de impressão (`body>*:not(#printPage){display:none!important}`) — mais abrangente do que a lista extensa e incompleta usada no Nexo.
+
+**Correção:** adicionado `.main` à lista de seletores ocultos na regra `@media print` de ambos os arquivos (`.topbar,.hero,.lensbar,.main,.panel,.footer,.fab,.col-headers{display:none!important}`), linha 518 em `nexo-coger.html` e `nexo-par.html`. `.main` engloba tanto `.canvas-wrap` (mapa + cabeçalhos de coluna) quanto `.panel` (pendências), sem afetar `#printview`, que é irmão de `.main` no DOM (não descendente) — nenhum conteúdo de impressão é ocultado por engano.
+
+**Testes:**
+- `node test-fluxo-integrado.js` → **127/127** (sem regressão).
+- Sintaxe: `new Function` sobre o `<script>` de ambos os arquivos → **OK**.
+- Playwright com `page.emulateMedia({media:'print'})`: `getBoundingClientRect()` do `#map` retorna `width:0, height:0` (elemento efetivamente sem renderização sob mídia de impressão) em ambos os arquivos.
+- PDF real gerado via `page.pdf()` (Chromium) para o termo de intimação (Nexo PAR, tipo "Oitiva do representante legal") renderizado e inspecionado visualmente: documento limpo, sem o mapa, no mesmo padrão de `Integritas.html`/`Multa_PAR.html`/`Dosimetria_TAC.html`.
