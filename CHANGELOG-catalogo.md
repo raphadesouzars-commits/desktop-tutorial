@@ -770,7 +770,33 @@ A especificação da Rodada 1 menciona um "conjunto canônico de 45 dispositivos
 
 **Diretório criado:** `/home/user/desktop-tutorial/padroes/` — novo diretório centralizado para padrões reutilizáveis da suíte.
 
+## Rodada 10 — Implementação do COGER Print Standard no Veritas
+
+Integração completa do padrão unificado de impressão criado na Rodada 9 no arquivo `ferramentas/veritas.html`.
+
+**Implementação:**
+- **CSS COGER Print Standard:** integrado em bloco `@media print { … }` com:
+  - Definição de variáveis CSS (9 cores navy/gold, 3 fontes, espaçamento A4)
+  - Header fixo 60px com logos SVG, título "DOSSIÊ DE ANÁLISE...", metadata (ref, data, hora)
+  - Footer fixo 40px com referência, paginação "Página X de Y", nota "USO INTERNO"
+  - Page-break rules (orphans/widows, avoid para títulos/seções/tabelas/imagens)
+  - Estilos de tabelas (cabeçalho navy, alternância cinza, bordas consistentes)
+  - Utilidades (.no-print, .coger-print-page-break-before, etc.)
+- **HTML Elements:**
+  - `<header class="coger-print-header">` com logos, título, metadata (IDs: coger-print-ref, coger-print-date, coger-print-time)
+  - `<footer class="coger-print-footer">` com referência (ID: coger-print-footer-ref), paginação, nota institucional
+  - Ambos `display:none` por padrão, exibidos apenas em `@media print`
+- **JavaScript Utilities:** (embutido no `<script>` principal)
+  - `generatePrintReference()` — `INT-YYYYMMDD-XXXX` único
+  - `formatDatePT(date)`, `formatTimePT(date)` — localização português
+  - `prepareForPrint(options)` — preenche metadata header/footer, limpa margens, dispara `beforeprint`
+
+**Validação:**
+- Sintaxe verificada: 105 ocorrências de "coger-print", função `prepareForPrint` presente
+- Estrutura HTML balanceada (closing tags corretos)
+- CSS restrito a `@media print` — **zero impacto na UI interativa** (Veritas continua 100% funcional em tela)
+- Alinhamento com Rodada 9: mesmas variáveis, classes, estrutura header/footer
+
 **Próximas rodadas (dependentes):**
-- **Rodada 10 — Implementação no Veritas:** Integrar `coger-print-standard.css` no `ferramentas/veritas.html`, adaptar markup de impressão existente às classes do padrão, testar geração de PDF.
-- **Rodada 11 — Implementação no Nexo Coger:** Idem para `ferramentas/nexo-coger.html` (termos de intimação/indiciação).
+- **Rodada 11 — Implementação no Nexo Coger:** Integrar `coger-print-standard.css` no `ferramentas/nexo-coger.html`, adaptar markup de impressão existente às classes do padrão.
 - **Rodada 12 — Implementação no Oitiva 360:** Idem para `ferramentas/oitiva-360.html` (termo de oitiva).
