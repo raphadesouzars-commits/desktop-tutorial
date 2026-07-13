@@ -942,20 +942,305 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
 .vdc-report-appendix { margin-top: 28px; page-break-before: always; }
 .vdc-report-item-block { border: 1px solid var(--rfb-border); border-radius: var(--rfb-r-md); padding: 14px 16px; margin-bottom: 14px; page-break-inside: avoid; }
 
-@media print {
-  body { background: white !important; }
-  .vdc-main { max-width: none; padding: 0; }
-  .topbar, .hero, .rodape-app, .no-print { display: none !important; }
-  .vdc-report-item-block, .rfb-card { break-inside: avoid; }
-  a[href]::after { content: ""; }
-}
-
 /* Confidencialidade badge ------------------------------------------------------------*/
 .vdc-sigilo-warning { font-size: 11px; }
+
+/* ── COGER PRINT STANDARD (Rodada 9) ────────────────────────────────────────── */
+/* Variáveis CSS e estilos unificados para impressão em todas as ferramentas */
+
+:root {
+  --coger-print-navy-900: #0B2F5F;
+  --coger-print-navy-700: #1E4C99;
+  --coger-print-navy-600: #2E5F99;
+  --coger-print-gold-500: #C9A35C;
+  --coger-print-gold-100: #F5F0E8;
+  --coger-print-gray-100: #F5F8FC;
+  --coger-print-gray-300: #DCE6F4;
+  --coger-print-text-primary: #1A2740;
+  --coger-print-text-muted: #4A5568;
+  --coger-print-font-sans: "Inter", "Barlow Condensed", sans-serif;
+  --coger-print-font-display: "Barlow Condensed", sans-serif;
+  --coger-print-font-mono: "JetBrains Mono", monospace;
+  --coger-print-page-width: 210mm;
+  --coger-print-page-height: 297mm;
+  --coger-print-margin-top: 20mm;
+  --coger-print-margin-bottom: 20mm;
+  --coger-print-margin-left: 20mm;
+  --coger-print-margin-right: 20mm;
+  --coger-print-header-height: 60px;
+  --coger-print-footer-height: 40px;
+  --coger-print-border-radius: 5px;
+  --coger-print-border-width-thin: 1px;
+  --coger-print-border-width-medium: 1.5px;
+  --coger-print-border-width-thick: 3px;
+}
+
+@media print {
+  :root {
+    --font-sans: var(--coger-print-font-sans);
+    --font-display: var(--coger-print-font-display);
+    --font-mono: var(--coger-print-font-mono);
+  }
+
+  body {
+    background: white !important;
+    font-family: var(--coger-print-font-sans);
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .vdc-main, [role="main"] {
+    max-width: none;
+    padding: calc(var(--coger-print-header-height) + var(--coger-print-margin-top))
+             var(--coger-print-margin-right)
+             calc(var(--coger-print-footer-height) + var(--coger-print-margin-bottom))
+             var(--coger-print-margin-left);
+  }
+
+  .topbar, .hero, .rodape-app, .no-print {
+    display: none !important;
+  }
+
+  .vdc-report-item-block, .rfb-card {
+    break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+
+  /* ── Header Fixo ────────────────────────────────────────────────────────────── */
+  .coger-print-header {
+    position: fixed;
+    top: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    height: var(--coger-print-header-height);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    background: #fff;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 6px;
+  }
+
+  .coger-print-header-logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    height: 40px;
+    padding: 6px 0;
+  }
+
+  .coger-logo-mf, .coger-logo-rfb {
+    height: 40px;
+    width: auto;
+  }
+
+  .coger-print-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .coger-print-doc-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--coger-print-navy-900);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .coger-print-doc-subtitle {
+    font-size: 9pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .coger-print-header-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--coger-print-text-primary);
+    margin-top: 4px;
+  }
+
+  .coger-print-header-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-top: auto;
+  }
+
+  /* ── Footer Fixo ────────────────────────────────────────────────────────────── */
+  .coger-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    height: var(--coger-print-footer-height);
+    background: #fff;
+    border-top: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+
+  .coger-print-footer-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-bottom: 4px;
+  }
+
+  .coger-print-footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 600;
+    padding: 0 0 4px 0;
+    height: calc(var(--coger-print-footer-height) - 4px);
+  }
+
+  .coger-print-footer-left {
+    flex: 1;
+    text-align: left;
+  }
+
+  .coger-print-footer-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .coger-print-footer-right {
+    flex: 1;
+    text-align: right;
+  }
+
+  /* ── Seções ────────────────────────────────────────────────────────────────── */
+  .coger-print-section {
+    page-break-inside: avoid;
+    margin-bottom: 16pt;
+  }
+
+  .coger-print-section-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 13pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--coger-print-navy-900);
+    margin: 0 0 10pt 0;
+    padding-left: 14px;
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-gold-500);
+    line-height: 1.2;
+    page-break-after: avoid;
+  }
+
+  .coger-print-section-body {
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .coger-print-section-body p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ── Tabelas ────────────────────────────────────────────────────────────────– */
+  .coger-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-table thead th {
+    background: var(--coger-print-navy-900);
+    color: #fff;
+    font-family: var(--coger-print-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    padding: 8pt 10pt;
+    text-align: left;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+  }
+
+  .coger-print-table tbody td {
+    padding: 8pt 10pt;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-gray-300);
+    color: var(--coger-print-text-primary);
+    line-height: 1.5;
+  }
+
+  .coger-print-table tbody tr:nth-child(even) {
+    background: var(--coger-print-gray-100);
+  }
+
+  /* ── Utilitários ────────────────────────────────────────────────────────────– */
+  .no-print {
+    display: none !important;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+}
 
 </style>
 </head>
 <body class="rfb-app">
+
+<!-- COGER Print Standard — Header Fixo (Rodada 9) -->
+<header class="coger-print-header" style="display:none">
+  <div class="coger-print-header-logos">
+    <svg class="coger-logo-mf" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+      <text x="50" y="25" text-anchor="middle" font-size="12" fill="#0B2F5F" font-weight="bold">Ministério</text>
+    </svg>
+    <svg class="coger-logo-rfb" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+      <text x="50" y="25" text-anchor="middle" font-size="12" fill="#0B2F5F" font-weight="bold">Receita Federal</text>
+    </svg>
+  </div>
+  <div class="coger-print-header-title">
+    <h1 class="coger-print-doc-title">DOSSIÊ DE ANÁLISE DE CONDUTA FUNCIONAL</h1>
+    <p class="coger-print-doc-subtitle">Ferramentas COGER · Condutas Funcionais — Veritas</p>
+  </div>
+  <div class="coger-print-header-meta">
+    <span>Referência: <strong id="coger-print-ref">INT-XXXXXXX-XXXX</strong></span>
+    <span>Data: <strong id="coger-print-date">—</strong></span>
+    <span>Hora: <strong id="coger-print-time">—</strong></span>
+  </div>
+  <div class="coger-print-header-divider"></div>
+</header>
 
 <nav class="topbar no-print">
   <div class="topbar__brand">
@@ -3484,6 +3769,50 @@ window.App = {
 };
 
 /* ============================================================
+   COGER Print Utility (Rodada 9)
+   ============================================================ */
+function generatePrintReference() {
+  var timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  var sequence = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+  return 'INT-' + timestamp + '-' + sequence;
+}
+
+function formatDatePT(date) {
+  return date.toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function formatTimePT(date) {
+  return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+}
+
+function prepareForPrint(options) {
+  options = options || {};
+  var reference = options.reference || generatePrintReference();
+  var now = new Date();
+  var dateStr = formatDatePT(now);
+  var timeStr = formatTimePT(now);
+
+  var headerRef = document.getElementById('coger-print-ref');
+  if (headerRef) headerRef.textContent = reference;
+
+  var headerDate = document.getElementById('coger-print-date');
+  if (headerDate) headerDate.textContent = dateStr;
+
+  var headerTime = document.getElementById('coger-print-time');
+  if (headerTime) headerTime.textContent = timeStr;
+
+  var footerRef = document.getElementById('coger-print-footer-ref');
+  if (footerRef) footerRef.textContent = reference;
+
+  document.documentElement.style.margin = '0';
+  document.body.style.margin = '0';
+
+  window.dispatchEvent(new Event('beforeprint'));
+
+  return reference;
+}
+
+/* ============================================================
    Bootstrap
    ============================================================ */
 document.addEventListener("DOMContentLoaded", function () {
@@ -3495,5 +3824,22 @@ document.addEventListener("DOMContentLoaded", function () {
 })();
 
 </script>
+
+<!-- COGER Print Standard — Footer Fixo (Rodada 9) -->
+<footer class="coger-print-footer" style="display:none">
+  <div class="coger-print-footer-divider"></div>
+  <div class="coger-print-footer-content">
+    <div class="coger-print-footer-left">
+      <span id="coger-print-footer-ref">INT-XXXXXXX-XXXX</span>
+    </div>
+    <div class="coger-print-footer-center">
+      <span>Página <span class="page-number">1</span> de <span class="page-count">—</span></span>
+    </div>
+    <div class="coger-print-footer-right">
+      <span>USO INTERNO · FERRAMENTAS COGER</span>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
