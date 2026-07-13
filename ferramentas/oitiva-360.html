@@ -1111,6 +1111,21 @@
 
   .acoes-topo{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
 
+  /* Tela inicial (padrão uniforme da Suíte COGER) */
+  .ti-cartao{ text-align:center; max-width:640px; margin:24px auto; }
+  .ti-eyebrow{ font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color: var(--cor-texto-suave); font-weight:600; }
+  .ti-titulo{ font-size:1.6rem; margin:8px 0 6px; color: var(--cor-primaria-escura); }
+  .ti-sub{ font-size:.88rem; color: var(--cor-texto-suave); margin:0 auto 18px; max-width:520px; }
+  .ti-acoes{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .ti-processo-atual{
+    border:1px solid var(--cor-destaque); background: var(--cor-alerta-fundo);
+    border-radius: var(--raio); padding:12px 16px; margin-bottom:18px; text-align:left;
+  }
+  .ti-rotulo{ font-size:.72rem; text-transform:uppercase; letter-spacing:.05em; color: var(--cor-texto-suave); font-weight:600; }
+  .ti-numero{ font-size:1.05rem; font-weight:700; color: var(--cor-primaria-escura); margin:2px 0; }
+  .ti-meta{ font-size:.8rem; color: var(--cor-texto-suave); }
+  .ti-vazio{ color: var(--cor-texto-suave); font-style: italic; font-size:.88rem; margin-bottom:18px; }
+
   button, .botao{
     font-family: inherit;
     font-size: .85rem;
@@ -1528,6 +1543,24 @@
     <button type="button" class="etapa" data-etapa="4">4. Revisão e Checklist</button>
   </div>
 
+  <!-- ============================= TELA INICIAL ============================= -->
+  <!-- Padrão uniforme da Suíte COGER (mesmo do Veritas: viewInicio()/renderModalReiniciar()):
+       tela de entrada distinta da Matriz de Apuração, mostrada uma vez por carregamento. Sem
+       estado salvo -> vazio; com estado salvo -> identificador do processo. Os botões reaproveitam
+       as MESMAS rotinas de Novo/Importar/Exportar de PROCESSO já existentes (nada de storage novo). -->
+  <section id="tela-inicial" hidden>
+    <div class="cartao ti-cartao">
+      <div class="ti-eyebrow">Coger/RFB — Divisão de Processos (Dproc)</div>
+      <h2 class="ti-titulo">Oitiva 360</h2>
+      <p class="ti-sub">Apoio a oitivas e interrogatórios — modo dual PAD/PAR. Comece um novo processo ou importe o arquivo <code>.json</code> de um processo já iniciado.</p>
+      <div id="tela-inicial-identificador"></div>
+      <div class="ti-acoes">
+        <button id="btn-inicial-novo" type="button">+ Novo processo</button>
+        <button id="btn-inicial-importar" class="secundario" type="button">Importar processo (.json)</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ============================= TELA DO PROCESSO ============================= -->
   <section id="tela-processo">
 
@@ -1917,6 +1950,21 @@
     <button type="button" class="secundario" id="btn-cancelar-import">Cancelar</button>
     <button type="button" class="secundario" id="btn-abrir-como-novo">Abrir como novo</button>
     <button type="button" id="btn-substituir-import">Substituir</button>
+  </div>
+</dialog>
+
+<!-- Reiniciar / Novo processo com estado salvo — padrão uniforme da Suíte COGER (Veritas: renderModalReiniciar()). -->
+<dialog id="dialogo-reiniciar-inicial">
+  <div class="corpo-dialogo">
+    <h3 style="margin-top:0;">Novo processo</h3>
+    <div id="texto-reiniciar-inicial"></div>
+    <p style="font-size:.85rem;">Reiniciar apaga o processo deste navegador (localStorage) e volta à tela inicial, para começar um novo ou importar outro. <strong>Exporte o .json antes, se ainda precisar destes dados.</strong></p>
+    <div class="aviso-erro">Esta ação não pode ser desfeita — o processo só será recuperável se você tiver exportado o .json antes.</div>
+  </div>
+  <div class="rodape-dialogo">
+    <button type="button" class="secundario" id="btn-cancelar-reiniciar-inicial">Cancelar</button>
+    <button type="button" class="secundario" id="btn-exportar-antes-reiniciar">Exportar .json antes</button>
+    <button type="button" class="perigo" id="btn-confirmar-reiniciar-inicial">Reiniciar mesmo assim</button>
   </div>
 </dialog>
 
@@ -4300,14 +4348,76 @@ document.getElementById("btn-add-vogal").addEventListener("click", () => {
 /* =====================================================================
    Novo processo
    ===================================================================== */
-document.getElementById("btn-novo-processo").addEventListener("click", () => {
-  if (processoTemConteudo(estado) && !confirm("Isso vai descartar os dados do processo atual (não exportado). Deseja continuar?")){
-    return;
+/* --- Tela inicial (padrão uniforme da Suíte COGER) -------------------------
+   Distinta da Matriz de Apuração; exibida uma vez por carregamento. Reaproveita as rotinas de
+   Novo/Importar/Exportar de PROCESSO já existentes — nenhum mecanismo de storage novo. */
+function renderTelaInicial(){
+  const alvo = document.getElementById("tela-inicial-identificador");
+  if (processoTemConteudo(estado)){
+    const num = (estado.processo.numero && estado.processo.numero.trim()) ? estado.processo.numero.trim() : "processo sem número";
+    const nDep = (estado.depoentes || []).length;
+    alvo.innerHTML =
+      "<div class=\"ti-processo-atual\">" +
+        "<div class=\"ti-rotulo\">Processo salvo neste navegador</div>" +
+        "<div class=\"ti-numero\">" + escapeHtml(num) + "</div>" +
+        "<div class=\"ti-meta\">" + nDep + " depoente(s) — continuará carregando automaticamente ao reabrir o navegador.</div>" +
+      "</div>";
+  } else {
+    alvo.innerHTML = "<div class=\"ti-vazio\">Nenhum processo salvo neste navegador. Crie um novo ou importe um arquivo .json.</div>";
   }
+}
+function mostrarTelaInicial(){
+  renderTelaInicial();
+  document.getElementById("tela-inicial").hidden = false;
+  document.getElementById("tela-processo").hidden = true;
+  document.getElementById("tela-wizard-depoente").hidden = true;
+  document.getElementById("stepper-depoente").hidden = true;
+  document.getElementById("secao-kit-incidentes").hidden = true;
+}
+function mostrarTelaProcesso(){
+  document.getElementById("tela-inicial").hidden = true;
+  document.getElementById("tela-processo").hidden = false;
+  document.getElementById("tela-wizard-depoente").hidden = true;
+  document.getElementById("stepper-depoente").hidden = true;
+}
+// Descarta o processo atual e vai direto para a Matriz de Apuração (equivalente ao "Reiniciar" do Veritas).
+function reiniciarParaNovoProcesso(){
   estado = processoVazio();
   salvarLocalStorage();
   renderTudo();
+  mostrarTelaProcesso();
+}
+// "Novo processo": sem conteúdo -> direto à Matriz; com conteúdo -> aviso de confirmação (padrão Veritas).
+function solicitarNovoProcesso(){
+  if (!processoTemConteudo(estado)){
+    reiniciarParaNovoProcesso();
+    return;
+  }
+  const num = (estado.processo.numero && estado.processo.numero.trim()) ? estado.processo.numero.trim() : "sem número";
+  const nDep = (estado.depoentes || []).length;
+  document.getElementById("texto-reiniciar-inicial").innerHTML =
+    "<p style=\"font-size:.85rem;\">Este processo (" + escapeHtml(num) + ") tem " + nDep +
+    " depoente(s) e está salvo neste navegador — reabrir o navegador continuaria carregando-o automaticamente.</p>";
+  document.getElementById("dialogo-reiniciar-inicial").showModal();
+}
+
+document.getElementById("btn-cancelar-reiniciar-inicial").addEventListener("click", () => {
+  document.getElementById("dialogo-reiniciar-inicial").close();
 });
+document.getElementById("btn-exportar-antes-reiniciar").addEventListener("click", () => {
+  exportarProcesso();
+});
+document.getElementById("btn-confirmar-reiniciar-inicial").addEventListener("click", () => {
+  document.getElementById("dialogo-reiniciar-inicial").close();
+  reiniciarParaNovoProcesso();
+});
+
+document.getElementById("btn-inicial-novo").addEventListener("click", solicitarNovoProcesso);
+document.getElementById("btn-inicial-importar").addEventListener("click", () => {
+  document.getElementById("input-importar").click();
+});
+
+document.getElementById("btn-novo-processo").addEventListener("click", solicitarNovoProcesso);
 
 /* =====================================================================
    Adicionar depoente (R1 — matriz obrigatória; elementos buscados obrigatório)
@@ -4365,8 +4475,8 @@ document.getElementById("btn-confirmar-add-depoente").addEventListener("click", 
 /* =====================================================================
    Export / Import do .json do processo (R11 — nunca mesclar)
    ===================================================================== */
-document.getElementById("btn-exportar-processo").addEventListener("click", () => {
-  if (!numeroProcessoPreenchido()) return; // botão já fica desabilitado, dupla checagem
+function exportarProcesso(){
+  if (!numeroProcessoPreenchido()) return false; // número obrigatório para exportar (nome do arquivo)
   const conteudo = JSON.stringify(estado, null, 2);
   const blob = new Blob([conteudo], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -4379,6 +4489,10 @@ document.getElementById("btn-exportar-processo").addEventListener("click", () =>
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+  return true;
+}
+document.getElementById("btn-exportar-processo").addEventListener("click", () => {
+  exportarProcesso();
 });
 
 document.getElementById("btn-importar-processo").addEventListener("click", () => {
@@ -4437,6 +4551,7 @@ function aplicarImportacao(dados, comoNovo){
   estado.versaoFerramenta = VERSAO_FERRAMENTA;
   salvarLocalStorage();
   renderTudo();
+  mostrarTelaProcesso(); // sai da tela inicial (se estava nela) e mostra o processo importado
 }
 
 document.getElementById("btn-cancelar-import").addEventListener("click", () => {
@@ -6908,6 +7023,7 @@ function init(){
   ligarNavegacaoWizard();
   renderKitIncidentes();
   renderTudo();
+  mostrarTelaInicial(); // padrão uniforme da Suíte COGER: tela de entrada uma vez por carregamento
   validarCatalogo();
 }
 

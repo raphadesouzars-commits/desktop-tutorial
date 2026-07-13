@@ -275,6 +275,12 @@ async function buildCleanIndiciacaoScenario(page) {
 async function runOitiva(page) {
   console.log('=== Oitiva 360 ===');
   await page.goto(fileUrl(path.join(ROOT, 'ferramentas/oitiva-360.html')));
+  // Oitiva 360 agora abre numa tela inicial (padrão uniforme da Suíte COGER) antes da Matriz de
+  // Apuração. Sem estado salvo, "+ Novo processo" leva direto à Matriz (sem aviso).
+  const telaInicialNovo = page.locator('#btn-inicial-novo');
+  if (await telaInicialNovo.isVisible().catch(() => false)) {
+    await telaInicialNovo.click();
+  }
   await page.waitForSelector('#cartao-matriz');
 
   await page.fill('#campo-conduta', FIXTURE.fatos[1].titulo);
