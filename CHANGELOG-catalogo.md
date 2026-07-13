@@ -2,6 +2,35 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada 13 (correção) — Redesign do Nexo Coger no padrão Integritas + bug crítico corrigido
+
+Após a homologação da Rodada 13, o usuário apontou que o resultado visual ficou muito abaixo do padrão já estabelecido pelo Integritas (`ferramentas/Integritas.html`), cuja impressão usa estilo 100% inline por elemento (sem depender de classes CSS compartilhadas), cabeçalho/rodapé em fluxo normal do documento (sem `position:fixed`), cartões de dados com fundo cinza-claro, tabelas com cabeçalho de cor sólida, e rodapé navy sólido. Optou-se por refazer **apenas o Nexo Coger** primeiro (escopo escolhido pelo usuário), validar o resultado, e só depois replicar em Veritas/Oitiva 360 se aprovado.
+
+### Redesenho de `renderIndiciacao()` e `renderIntimacao()` (nexo-coger.html)
+
+Ambas as funções foram reescritas para gerar HTML com estilo inline em cada elemento — mesmo princípio do Integritas — em vez de depender das classes `coger-print-header`/`coger-print-section`/`coger-print-table` etc. Novas funções auxiliares compartilhadas: `impLogosInst()`, `impCabecalho()`, `impSecao()`, `impInfobox()`, `impRodape()`, `impTabelaSintese()`. O cabeçalho e o rodapé deixam de usar `position:fixed` (que se repetia em cada página impressa na especificação da Rodada 9-12) e passam a aparecer uma única vez, no fluxo normal do documento — mesmo padrão do Integritas, mais robusto entre motores de impressão. `renderIntimacao()` (Termo de Intimação), que antes usava um layout completamente legado sem nenhum estilo do Print Standard (não conformidade crítica nº 2 da Rodada 13), agora usa as mesmas funções auxiliares e tem paridade visual total com a Nota de Indiciação.
+
+### Bug crítico descoberto e corrigido: impressão real (PDF) saía em branco desde a Rodada 11
+
+Ao gerar o PDF real (`page.pdf()`/`Ctrl+P`) para validar visualmente o redesenho, foi descoberto que a regra `@media print { .printview { display: none !important; } }` (linha final do bloco de impressão) escondia **todo o painel que contém `#printPage`** — porque `renderIndiciacao()`/`renderIntimacao()` colocam o documento dentro de `#printview > .pv-doc > #printPage`, não como filho direto de `<body>`. A verificação da Rodada 13 original não pegou esse defeito porque só inspecionou a pré-visualização em tela (`@media screen`), nunca o resultado de `@media print` de fato. **Na prática, a impressão/PDF real do Nexo Coger (Nota de Indiciação e Termo de Intimação) sempre saiu em branco desde a Rodada 11** — um defeito muito mais grave do que qualquer um dos registrados no relatório original. Corrigido: `.printview` passa a ficar visível durante a impressão, com `position:static` (não mais fixo/recortado por `overflow:auto`, que cortava conteúdo maior que uma página), e apenas a barra de ferramentas (`.pv-toolbar`, botões "Imprimir"/"Fechar") é ocultada.
+
+### Bug secundário: cores de fundo (navy/gold) não apareciam na impressão real
+
+Mesmo após corrigir o bug acima, o cabeçalho navy das tabelas e o rodapé navy sólido não apareciam no PDF gerado por `page.pdf()` (que tem `printBackground` desligado por padrão) — o mesmo aconteceria na janela real de impressão do Chrome se o usuário não marcar manualmente "imprimir gráficos de segundo plano". Corrigido com `-webkit-print-color-adjust: exact` / `print-color-adjust: exact` em `*` dentro do `@media print`, que força a impressão de cores de fundo independentemente dessa opção do navegador.
+
+### Resultado verificado (PDF real gerado via emulação de impressão, não apenas tela)
+
+- ✅ Nota de Indiciação: 7 seções, tabela de síntese com cabeçalho navy real e zebra striping, paginação automática em 2 páginas (teste com 2 fatos), rodapé navy sólido em ambas.
+- ✅ Termo de Intimação: 3 seções (Identificação, Intimação, Encerramento), mesmo padrão visual da Nota de Indiciação — antes não tinha nenhum estilo do Print Standard.
+- ✅ `test-fluxo-integrado.js`: 127/127 — nenhuma regressão de lógica de negócio.
+- ⚠️ Veritas e Oitiva 360 **não foram alterados nesta correção** — continuam no padrão de classes CSS compartilhadas (Rodadas 10/12), que passou na Camada 3 da Rodada 13 mas ainda não tem o polimento visual do Integritas. Candidatos à mesma correção, mediante aprovação do usuário.
+
+### Evidências
+
+`scripts/screenshots/nexo-coger-nota-indiciacao.pdf` (PDF real, `printBackground:true`), `nexo-coger-nota-indiciacao-dom.png`/`nexo-coger-termo-intimacao-dom.png` (pré-visualização em tela).
+
+---
+
 ## Rodada 13 — Verificação e Homologação do Print Standard (4 camadas)
 
 Verificação sistemática (não implementação) do COGER Print Standard nas 4 ferramentas (Veritas, Nexo Coger, Nexo PAR, Oitiva 360), em 4 camadas independentes: integridade estrutural, não regressão funcional, conformidade visual, conformidade documental. Relatório completo em `relatorio-verificacao-print-standard-2026-07-13.md`; scripts reutilizáveis em `scripts/verify-camada*.js`/`.sh`.

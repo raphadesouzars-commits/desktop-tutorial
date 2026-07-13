@@ -12,7 +12,7 @@ function fileUrl(p) { return 'file://' + p; }
 
 async function main() {
   const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 3400 } });
   page.on('dialog', async (d) => { await d.accept(); });
   page.on('pageerror', (e) => console.log('  [pageerror]', e.message));
 
@@ -45,11 +45,8 @@ async function main() {
     return {
       exists: !!pp,
       innerTextSample: pp ? pp.innerText.slice(0, 500) : null,
-      hasCogerHeader: pp ? !!pp.querySelector('.coger-print-header') : false,
-      hasCogerFooter: pp ? !!pp.querySelector('.coger-print-footer') : false,
-      sectionCount: pp ? pp.querySelectorAll('.coger-print-section').length : 0,
-      sectionTitles: pp ? Array.from(pp.querySelectorAll('.coger-print-section-title')).map(e => e.textContent) : [],
-      hasTable: pp ? !!pp.querySelector('.coger-print-table') : false,
+      sectionCount: pp ? pp.querySelectorAll(':scope > div[style*="page-break-inside"]').length : 0,
+      hasTable: pp ? !!pp.querySelector('table') : false,
       fullHTMLLength: pp ? pp.outerHTML.length : 0,
     };
   }, acusados[0].id);
@@ -58,36 +55,41 @@ async function main() {
   if (info.exists) {
     fs.writeFileSync(path.join(OUT, 'nexo-coger-nota-indiciacao.html'), await page.evaluate(() => document.getElementById('printPage').outerHTML));
     await page.emulateMedia({ media: 'print' });
-    await page.pdf({ path: path.join(OUT, 'nexo-coger-nota-indiciacao.pdf'), format: 'A4' }).catch(e => console.log('pdf err (headed context?):', e.message));
+    await page.pdf({ path: path.join(OUT, 'nexo-coger-nota-indiciacao.pdf'), format: 'A4', printBackground: true }).catch(e => console.log('pdf err (headed context?):', e.message));
     await page.emulateMedia({ media: 'screen' });
-    const printPageLoc = page.locator('#printPage');
-    await printPageLoc.screenshot({ path: path.join(OUT, 'nexo-coger-nota-indiciacao-dom.png') }).catch(e => console.log('shot err', e.message));
+    await page.screenshot({ path: path.join(OUT, 'nexo-coger-nota-indiciacao-dom.png'), fullPage: true }).catch(e => console.log('shot err', e.message));
   }
+
+  // Fechar o painel de impressão antes de reabrir o menu (senão intercepta cliques)
+  await page.evaluate(() => { if (typeof closePrint === 'function') closePrint(); });
+  await page.waitForTimeout(200);
 
   // Try Termo de Intimação too
   await page.click('#btnMenu');
   await page.waitForSelector('#menu.open');
   const infoIntimacao = await page.evaluate((acId) => {
     try {
-      if (typeof gerarIntimacaoFlow === 'function') {
-        // just call renderIntimacao directly with a status object if signature allows
-      }
+      const st = { tipo: 'esclarecimento_fato', alvoId: null, dest: {}, prazoDias: 5, texto: 'Solicito esclarecimento sobre o fato apurado.', dataDoc: new Date().toISOString().slice(0,10), numero: '12/2026', sufixo: 'CI', momento: 'final' };
       if (typeof renderIntimacao === 'function') {
-        renderIntimacao({}, acId);
+        renderIntimacao(st, acId);
       }
       const pp = document.getElementById('printPage');
       return {
         exists: !!pp,
-        hasCogerHeader: pp ? !!pp.querySelector('.coger-print-header') : false,
-        titleText: pp ? (pp.querySelector('.coger-print-doc-title') || {}).textContent : null,
-        sectionTitles: pp ? Array.from(pp.querySelectorAll('.coger-print-section-title')).map(e => e.textContent) : [],
+        innerTextSample: pp ? pp.innerText.slice(0, 400) : null,
+        sectionCount: pp ? pp.querySelectorAll(':scope > div[style*="page-break-inside"]').length : 0,
         error: null,
       };
     } catch (e) {
-      return { error: e.message };
+      return { error: e.message, stack: e.stack };
     }
   }, acusados[0].id);
   console.log('Termo de Intimação render info:', JSON.stringify(infoIntimacao, null, 2));
+
+  if (infoIntimacao.exists) {
+    fs.writeFileSync(path.join(OUT, 'nexo-coger-termo-intimacao.html'), await page.evaluate(() => document.getElementById('printPage').outerHTML));
+    await page.screenshot({ path: path.join(OUT, 'nexo-coger-termo-intimacao-dom.png'), fullPage: true }).catch(e => console.log('shot err', e.message));
+  }
 
   await browser.close();
 }
