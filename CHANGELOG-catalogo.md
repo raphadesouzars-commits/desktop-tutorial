@@ -2,6 +2,26 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Importação + tela inicial padrão — Dosimetria_TAC
+
+Ferramenta **standalone** `ferramentas/Dosimetria_TAC.html` (React via `text/babel`, fora da suíte `test-fluxo-integrado.js`). Duas capacidades novas, alinhadas ao padrão Veritas mas adaptadas à arquitetura React (estado em `useState` no componente `App`, não `DB`/`render()` global). **Catálogo canônico intocado.**
+
+### Formato do JSON exportado/importado
+
+`exportarJSON` (Tela 11) e o novo `exportarCaso` (nível `App`, usado na tela inicial) produzem o **mesmo esquema**: o objeto `state` **achatado** (todas as chaves de `initState()` — `processo`, `regime`, `enquadramento`, `reincidencia`, `pontuacao`, `tac50`, campos TAC/LINDB, `schemaVersion:'3.0'`, etc.) acrescido dos campos calculados `somaTotal`, `penal`, `tacViavel`, `geradoEm` e — **novidade** — dos identificadores `ferramenta:'dosimetria_tac'` e `esquemaExport:'1.0'` no topo. Não há campo `step` no export (a exportação só ocorre no resultado final, então a importação sempre recai na Tela 11). Adicionar os dois campos de identificação é seguro: nada no arquivo lia esse JSON de volta antes (não havia importação).
+
+### Importação (`importarArquivo`) e validação
+
+Novo handler `App.importarArquivo(evt)`: lê o arquivo com `FileReader`, faz `JSON.parse` e valida em três camadas — (1) JSON malformado → `alert` "não é um JSON válido"; (2) `ferramenta !== 'dosimetria_tac'` → `alert` de ferramenta incorreta; (3) ausência de `processo` **ou** `pontuacao` → `alert` de campos essenciais faltando. Em qualquer falha o estado atual **não** é tocado. Se há caso em andamento com conteúdo (`temConteudoCaso(state)`: nº/servidor/matrícula, regime, enquadramento ou infrações), pede `window.confirm("A importação nunca mescla — o caso atual será substituído. Deseja continuar?")` antes de prosseguir. Ao confirmar, `reconstruirCasoImportado` descarta os campos calculados/identificadores e reidrata sobre `initState()` (defaults para chaves ausentes), navega à Tela 11 (`step=11`, `maxDone=11`) e passa a persistir no localStorage. Botão de importar disponível na Tela 11 (ao lado de "Exportar JSON") e na tela inicial. Feedback de erro por `alert`/`confirm` — não havia `toast` nesta ferramenta.
+
+### Tela inicial padrão (`TelaInicio` + `ModalNovoCaso`)
+
+Substitui o antigo `ModalSessaoSalva` (retomar/descartar silencioso). Exibida **antes** do wizard (`iniciado=false` por padrão). Ao montar, `carregarSessao()` é lido para `sessaoSalva` **sem** sobrescrever o localStorage (o efeito de salvar automático agora é condicionado a `iniciado`, evitando clobber do rascunho enquanto na tela inicial). Mostra o nº do processo do caso salvo (ou estado vazio) e os botões **"Continuar caso"** (só quando há rascunho com conteúdo — desvio justificado abaixo), **"+ Novo caso"** e **"Importar caso (.json)"**. "Novo caso" com rascunho salvo abre `ModalNovoCaso` (3 parágrafos: caso salvo no navegador / apagar localStorage e exportar antes / alerta de ação irreversível; botões Cancelar / Exportar .json antes / Iniciar novo mesmo assim). Sem rascunho, "Novo caso" entra direto no wizard sem aviso. **Desvio do padrão Veritas:** o Veritas mostra a tela inicial só quando não há dossiê e entra direto na tela de trabalho quando há; aqui, como o "trabalho" é um wizard, adicionei um botão explícito **"Continuar caso"** para retomar o rascunho (o Veritas não precisa dele). Justificado por não haver outra forma de retomar um caso em andamento a partir da tela inicial.
+
+### Testes (Playwright, Chromium, sem suíte integrada)
+
+Todos com `page.on('pageerror')` como verificação de sintaxe Babel — **zero erros** em todos os cenários. Tarefa 1: seed de estado válido → Tela 11 → exportar → JSON confere (`ferramenta`/`esquemaExport` presentes, sem `step`, `somaTotal=18`); importar arquivo diferente com caso em andamento → `confirm` de substituição → estado restaurado; JSON malformado → `alert`, estado intacto; ferramenta errada → recusado. Tarefa 2: tela inicial vazia (sem "Continuar"); com rascunho → mostra nº + "Continuar" → Tela 11; import a partir da tela vazia → restaura na Tela 11; "Novo caso" → modal com os 3 parágrafos + 3 botões; "Exportar .json antes" baixa o caso salvo; "Iniciar novo mesmo assim" limpa o localStorage e entra no wizard fresco; reload volta à tela inicial vazia; "Novo caso" sem rascunho entra direto na Tela 0.
+
 ## Rodada PAR-6 — Teste integrado do fluxo PAR + fixture completo (fechada)
 
 Equivalente PAR da Rodada 7 original: prova executável, sem browser e sem interação manual, de que o ciclo PAR funciona ponta a ponta. **Nenhuma funcionalidade de ferramenta mudou** (6.6) — só fixture, testes e extração pontual de funções puras sem mudança de comportamento observável. **Catálogo canônico intocado** (`schema_version`/hash8 inalterados). Um único `node test-fluxo-integrado.js` exercita os dois domínios e a validação cruzada.
