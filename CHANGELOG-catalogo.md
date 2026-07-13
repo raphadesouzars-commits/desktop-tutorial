@@ -2,6 +2,16 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Multa_PAR: desempacotamento do bundler + tela inicial padrão
+
+**Fase 1 — Desempacotamento.** `Multa_PAR.html` era o único arquivo da suíte empacotado por um bundler: a aplicação real (React + Babel standalone) ficava serializada como string JSON dentro de `<script type="__bundler/template">`, com imagens em base64 (por vezes gzip) num `<script type="__bundler/manifest">` à parte; um loader desempacotava tudo em `DOMContentLoaded`, gerando blob URLs e substituindo `document.documentElement` inteiro. Isso impedia edição direta de texto, diferente das outras 6 ferramentas.
+
+Executado, uma única vez, exatamente o que o loader fazia em runtime: decodificar o manifesto (com gunzip quando `compressed:true`), gerar **data URIs** (em vez de blob URLs, que não sobrevivem em disco) para cada asset, substituir os placeholders UUID no texto do template, remover `integrity`/`crossorigin` (sem sentido num arquivo local), injetar `window.__resources` logo após `<head>`, e salvar o HTML resultante como o novo `Multa_PAR.html` — sem nenhum vestígio de bundler (`__bundler_thumbnail`, loader, as três tags `__bundler/*`). Verificado via Playwright: zero erros de carregamento, calculadora renderiza e interage normalmente, mesma UI do arquivo original (comparação visual). A partir de agora é um HTML estático comum, mesma arquitetura do `Dosimetria_TAC.html` (React via `text/babel`), editável diretamente.
+
+**Fase 2 — Tela inicial padrão.** A ferramenta já tinha rascunho automático em localStorage e exportação (.json com `_meta`/`dados`, incluindo hash SHA-256 do conteúdo para detectar arquivo adulterado) — só faltava a tela de entrada uniforme. Implementada: identificador do caso (nº do PAR) ou estado vazio, com "▶ Continuar caso" (necessário aqui pelo mesmo motivo do Nexo/Dosimetria — a tela é bloqueante a cada carregamento), "+ Novo caso" (modal com o mesmo texto/estrutura do `renderModalReiniciar` do Veritas: aviso de dado salvo, sugestão de exportar antes, alerta "não pode ser desfeita", botões Cancelar/Exportar antes/Iniciar novo mesmo assim) e "📂 Importar caso (.json)" (reaproveita `importarEstado`, que já valida `_meta.aplicacao`, versão de schema e hash de conteúdo antes de aplicar, com confirmação extra se já há dado preenchido).
+
+Testado via Playwright (com tratamento dos diálogos nativos `confirm`/`alert` que a ferramenta já usa): fluxo completo exportar → recarregar → tela mostra o processo → "Novo" pede confirmação → cancelar preserva o rascunho → confirmar limpa; importar restaura o estado corretamente; JSON inválido é rejeitado com mensagem clara sem alterar nada. Nenhum campo/cálculo do wizard foi alterado.
+
 ## Correção de bugs — Nexo Coger e Nexo PAR (reportados pelo usuário)
 
 Dois bugs relatados no Nexo PAR, diagnosticados e corrigidos (um deles também no Nexo Coger, por ser o mesmo código herdado):
