@@ -2,6 +2,42 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada 13 — Verificação e Homologação do Print Standard (4 camadas)
+
+Verificação sistemática (não implementação) do COGER Print Standard nas 4 ferramentas (Veritas, Nexo Coger, Nexo PAR, Oitiva 360), em 4 camadas independentes: integridade estrutural, não regressão funcional, conformidade visual, conformidade documental. Relatório completo em `relatorio-verificacao-print-standard-2026-07-13.md`; scripts reutilizáveis em `scripts/verify-camada*.js`/`.sh`.
+
+**Veredito: REPROVADO para uso em produção sem correções.** Aprovados sem ressalva: Veritas, Oitiva 360. Nexo Coger aprovado com ressalva crítica. Nexo PAR reprovado (Camada 1 bloqueante).
+
+### Não conformidades críticas encontradas
+
+1. **Nexo Coger — tabela de síntese fato-prova-norma sem thead replicado.** Linha 4779: `.replace(/class="fact-proof-table"/g, 'class="coger-print-table"')` procura uma classe que `tabelaFatoProvaEnquadramento()` nunca gera (a função produz `class="qual fp"`) — substituição é no-op silencioso. A tabela nunca recebe estilo Print Standard nem `<thead>` (não existe elemento thead no HTML gerado). Contradiz a entrada da Rodada 11 neste changelog, que afirmava "cabeçalho replicado em cada página de quebra" — nunca funcionou. Bloqueia uso em produção para minutas com múltiplos fatos (tabela maior que 1 página).
+2. **Nexo Coger — Termo de Intimação (`renderIntimacao()`) nunca migrado ao Print Standard.** Usa o renderer legado `openPrint()`/`.pv-doc` (parágrafos corridos, sem `#printPage`, sem header/footer fixo, sem seções gold). A Rodada 11 só migrou `renderIndiciacao()` (Nota de Indiciação); o Termo de Intimação ficou de fora, apesar de `CLAUDE-CODE-RODADA-11-APENDICE.md` (produzido na Rodada 11-apêndice) descrevê-lo incorretamente como já implementado.
+3. **Nexo PAR — zero elementos do Print Standard.** `ferramentas/nexo-par.html` não tem nenhuma variável `--coger-print-*`, nenhuma classe `coger-print-*`, `window.CogerPrint` inexistente; `@media print` continua no formato mínimo pré-Rodada 9. Nenhuma "Rodada 11-PAR" foi de fato executada — apenas cogitada como opção no apêndice. Conteúdo textual da Nota de Indiciação PAR está correto (127/127 em `test-fluxo-integrado.js`, via função pura `NexoPar.construirTextoIndiciacao()`), mas a peça renderizada na tela (`renderIndiciacao()` de `nexo-par.html`) não foi confirmada como equivalente a essa função pura.
+
+### Não conformidades não bloqueantes
+
+- Oitiva 360: `window.CogerPrint` definido dentro de `ligarEventosEtapa4()` em vez de escopo top-level (padrão de Veritas/Nexo Coger) — funcionalmente inofensivo, mas inconsistente.
+- Oitiva 360: comentários "esperado" em `validarCatalogo()` desatualizados (`blocos: 16 vs. esperado 13`) — confirmado pré-existente (antes da Rodada 12), não é regressão do Print Standard.
+- Firefox não testado (indisponível no ambiente) — apenas Chromium via Playwright.
+
+### O que passou
+
+- `test-fluxo-integrado.js`: 127/127 verificações, incluindo os 5 contratos de integração entre ferramentas e validação cruzada de domínio PAD↔PAR — nenhuma regressão de lógica de negócio causada pelas Rodadas 10-12.
+- Veritas: Print Standard completo e funcional (header/footer fixos, seções, infobox, referência única).
+- Oitiva 360: Print Standard completo e funcional, incluindo formatação Q&A (34/34 perguntas do roteiro corretamente convertidas em `.coger-print-qa-item`, pergunta em negrito/resposta normal, `page-break-inside: avoid`).
+- Nexo Coger — Nota de Indiciação: conteúdo correto (identificação, fatos, enquadramento legal Lei 8.112/90), 7 seções com Print Standard, apenas a tabela da seção 5 reprovada (ver não conformidade 1).
+- Terminologia cruzada PAD↔PAR: zero contaminação nas funções de geração de documento (`renderIndiciacao`/`renderIntimacao`), verificado via script reutilizável `scripts/verify-camada4-terminologia.sh`.
+
+### Itens de correção para próxima rodada
+
+1. Corrigir `tabelaFatoProvaEnquadramento()`/linha 4779 do Nexo Coger para gerar `<thead>` real com classe `coger-print-table`.
+2. Migrar `renderIntimacao()` (Nexo Coger) ao Print Standard.
+3. Executar Print Standard completo em `nexo-par.html` (Rodada 11-PAR).
+4. Corrigir `CLAUDE-CODE-RODADA-11-APENDICE.md` (remover afirmação incorreta sobre o Termo de Intimação).
+5. (Não bloqueante) Mover `window.CogerPrint` do Oitiva 360 para escopo top-level; repetir Camada 3 em Firefox.
+
+---
+
 ## Rodada 12 — COGER Print Standard no Oitiva 360 (Termo de Oitiva)
 
 Implementação do **COGER Print Standard** em `ferramentas/oitiva-360.html` — renderização do termo de oitiva (redução de depoimento) com cabeçalho fixo, rodapé, 3 seções numeradas com barra lateral gold (Identificação, Perguntas e Respostas, Encerramento), formatação Q&A (pergunta em negrito, resposta normal), e referência única (INT-YYYYMMDD-XXXX). **Nenhuma alteração no catálogo canônico** — impressão isolada em `@media print`, UI interativa preservada. **Mais simples que Rodada 11** — estrutura linear Q&A, sem tabelas complexas.

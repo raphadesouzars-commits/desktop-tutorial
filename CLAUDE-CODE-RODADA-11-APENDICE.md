@@ -1,8 +1,10 @@
 # Apêndice — Rodada 11 — Formatos de Documento no Nexo Coger
 
+> **⚠️ CORREÇÃO (Rodada 13 — verificação de 2026-07-13):** este apêndice originalmente descrevia o **Termo de Intimação** (Formato 1, abaixo) como já implementado com a estrutura de 7 seções do Print Standard (`coger-print-section`, header/footer fixos). **Isso é incorreto.** A Rodada 11 migrou apenas `renderIndiciacao()` (Nota de Indiciação) ao Print Standard — a função `renderIntimacao()` (Termo de Intimação) continua usando o renderer legado `openPrint()`/`.pv-doc` (parágrafos corridos, sem header/footer fixo, sem seções numeradas, sem paleta/tipografia COGER), confirmado por inspeção direta do código-fonte e captura da impressão renderizada. A estrutura de 7 seções abaixo é a especificação **desejada**, não o estado real do código. Ver `relatorio-verificacao-print-standard-2026-07-13.md`, item 4.1 e não conformidade crítica nº 2, para detalhes. Correção pendente para rodada subsequente.
+
 ## 📋 Escopo
 
-Rodada 11 implementou **Print Standard unificado** (header, footer, seções, estilos) no Nexo Coger. Este apêndice esclarece os **formatos específicos de documento** que o Nexo Coger gera e como eles se relacionam com o Print Standard.
+Rodada 11 implementou **Print Standard unificado** (header, footer, seções, estilos) no Nexo Coger — **apenas para a Nota de Indiciação** (`renderIndiciacao()`). Este apêndice esclarece os **formatos específicos de documento** que o Nexo Coger gera e como eles se relacionam com o Print Standard (ver correção acima quanto ao Termo de Intimação).
 
 ---
 
