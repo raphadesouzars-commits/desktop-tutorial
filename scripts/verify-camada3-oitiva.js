@@ -125,6 +125,10 @@ async function main() {
   if (info.exists) {
     const html = await page.evaluate(() => document.getElementById('printPage').outerHTML);
     fs.writeFileSync(path.join(OUT, 'oitiva-360-termo-real.html'), html);
+    await page.emulateMedia({ media: 'print' });
+    await page.pdf({ path: path.join(OUT, 'oitiva-360-termo-real.pdf'), format: 'A4' }).catch((e) => console.log('pdf err', e.message));
+    await page.screenshot({ path: path.join(OUT, 'oitiva-360-termo-real.png'), fullPage: true }).catch((e) => console.log('shot err', e.message));
+    await page.emulateMedia({ media: 'screen' });
   }
   fs.writeFileSync(path.join(ROOT, 'scripts/camada3-oitiva-report.json'), JSON.stringify({ info, errs }, null, 2));
 
