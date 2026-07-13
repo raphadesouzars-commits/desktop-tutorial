@@ -498,6 +498,8 @@ svg.map{display:block}
 .pv-doc .inst{text-align:center;font-weight:700;margin-bottom:2px}
 .pv-doc table.qual{width:100%;border-collapse:collapse;margin:8px 0}
 .pv-doc table.qual td{border:1px solid #bbb;padding:5px 8px;font-size:13px;vertical-align:top}
+.pv-doc table.sig3{table-layout:fixed}
+.pv-doc table.sig3 td{overflow-wrap:break-word}
 .pv-doc .editable-block{border:1px dashed #999;border-radius:4px;padding:8px 10px;min-height:20px;margin:6px 0}
 .pv-doc .editable-block:empty::before{content:'Clique para preencher.';color:#999}
 .pv-doc .editable-inline{border:1px dashed #999;border-radius:3px;padding:1px 6px;display:inline-block;min-width:50px}
@@ -4333,7 +4335,7 @@ function blocoAssinatura3(c){
   const membros=(c.membros||[]).filter(m=>m&&m.nome);
   const col=(m,papel)=>`<td style="width:33%;text-align:center;vertical-align:top;padding:0 10px">
       <div style="font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#666;margin-bottom:26px">Assinatura digital</div>
-      <div>___________________________________</div>
+      <div style="border-bottom:1px solid #333;width:90%;margin:0 auto 4px"></div>
       <div>${esc((m&&m.nome)||papel)}</div>
       ${m&&m.cargo?`<div style="font-size:12px">${esc(m.cargo)}</div>`:''}
       <div style="font-size:12px;font-weight:700">${papel}${m&&m.matricula?' · Matrícula '+esc(m.matricula):''}</div>

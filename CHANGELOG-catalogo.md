@@ -697,3 +697,19 @@ A especificação da Rodada 1 menciona um "conjunto canônico de 45 dispositivos
 - Sintaxe: `new Function` sobre o `<script>` de ambos os arquivos → **OK**.
 - Playwright com `page.emulateMedia({media:'print'})`: `getBoundingClientRect()` do `#map` retorna `width:0, height:0` (elemento efetivamente sem renderização sob mídia de impressão) em ambos os arquivos.
 - PDF real gerado via `page.pdf()` (Chromium) para o termo de intimação (Nexo PAR, tipo "Oitiva do representante legal") renderizado e inspecionado visualmente: documento limpo, sem o mapa, no mesmo padrão de `Integritas.html`/`Multa_PAR.html`/`Dosimetria_TAC.html`.
+
+## Correção: barra de rolagem horizontal no termo de intimação/indiciação (Nexo Coger + Nexo PAR)
+
+**Relato do usuário (com captura de tela e o modelo do Integritas como referência):** mesmo após a correção do mapa sobreposto, o documento gerado continuava exibindo uma barra de rolagem horizontal, diferente do padrão limpo do `Integritas.html`.
+
+**Causa:** o bloco de assinatura (`blocoAssinatura3`, compartilhado entre indiciação e intimação) desenhava a linha de assinatura como texto literal (`___________________________________`, ~35 caracteres). A tabela `table.sig3` usava `table-layout` padrão (`auto`), então o navegador dimensionava as colunas pelo conteúdo: essa sequência de sublinhados, por ser um token não quebrável, forçava a coluna — e a tabela inteira — a ultrapassar a largura disponível de `.pv-doc` (measurement confirmado via Playwright: `scrollWidth` de `.pv-doc` de 843px contra um `width` de 820px antes da correção, chegando a exceder em ~63px a área útil de 740px). Esse é exatamente o tipo de problema que `Integritas.html` evita: lá o "documento" é montado como página HTML própria (`#printPage`), sem depender de texto sublinhado para desenhar linhas.
+
+**Correção (`ferramentas/nexo-coger.html` e `ferramentas/nexo-par.html`):**
+- `table.sig3{table-layout:fixed}` — força as 3 colunas a respeitarem `width:33%` cada, independentemente do conteúdo.
+- `table.sig3 td{overflow-wrap:break-word}` — rede de segurança para qualquer texto inesperadamente longo (sem `word-break:break-all`, que quebrava até números curtos como "1234567" no meio do dígito).
+- `blocoAssinatura3()`: a linha de assinatura deixou de ser o texto `___________________________________` e passou a ser um `<div style="border-bottom:1px solid #333;width:90%;margin:0 auto 4px"></div>` — uma linha desenhada por CSS, do mesmo jeito visual mas sem forçar largura de coluna (mesmo princípio usado no Integritas, que também não depende de caracteres de sublinhado para desenhar linhas).
+
+**Testes:**
+- `node test-fluxo-integrado.js` → **127/127** (sem regressão).
+- Sintaxe: `new Function` sobre o `<script>` de ambos os arquivos → **OK**.
+- Playwright: `.pv-doc.scrollWidth` (820px) agora é **idêntico** a `.pv-doc.getBoundingClientRect().width` (820px) — sem overflow horizontal — tanto na tela quanto no PDF gerado via `page.pdf()` (Chromium), inspecionado visualmente: bloco de assinatura com linha contínua, sem quebra de dígitos, sem barra de rolagem.
