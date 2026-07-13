@@ -2,6 +2,22 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Atualização do Manual da Suíte COGER para o domínio PAR (rodada de documentação, 3 etapas — fechada)
+
+Atualização do `manual/Manual_Suite_COGER.docx` (gerado por `manual/build_manual.py` via python-docx) para cobrir o domínio **PAR** por completo, fechando a lacuna entre o manual publicado — que só documentava o PAD com 3 ferramentas — e o sistema real pós-série PAR-1..PAR-6. **Catálogo canônico intocado** (`schema_version`/hash8 inalterados) — a rodada é só de documentação; nenhum HTML de ferramenta foi alterado. O manual não tem esquema/versão formal; registra-se aqui apenas a atualização de conteúdo.
+
+Executada em três etapas (diagnóstico → seções 1-4 → seções 5-8 + auditoria), das quais esta entrada fecha a rodada. Principais mudanças estruturais:
+
+- **Suíte passou de 3 para 4 ferramentas** — Capa, Introdução Geral e todas as contagens ("três ferramentas") atualizadas; introduzido o contraste **modo dual** (Veritas, Oitiva 360) × **modo fork** (Nexo Coger / Nexo PAR).
+- **Renumeração de seções** — Nexo PAR inserido como **nova Seção 4**; Oitiva 360 → **Seção 5**; Integração → **Seção 6**. Todas as referências cruzadas internas conferidas contra a nova numeração (busca global por "Seção 4/5/6"); nenhuma aponta para o número antigo.
+- **Nova Seção 4 (Nexo PAR)** — documentada campo a campo no rigor da Seção 3: cadastro de ente privado (razão social, CNPJ, representantes, estruturas societárias, desconsideração art. 14), fato PAR sem elemento subjetivo (benefício/interesse + nexo de causalidade), 11 normas LAC em 2 optgroups, catálogo de pendências (P8 removida, P8-PAR e P-ENTE novas), Nota de Indiciação (art. 17 da IN CGU 13/2019 + 4 textos complementares), prazos do rito PAR (com a ressalva de fonte não fornecida para o prazo de conclusão).
+- **Reescrita da Seção 5 (Oitiva 360)** — modo dual em cada subseção: 5º campo Domínio na Matriz com a cascata manual → pauta → trava → confirmação de conflito; categoria de infração e papéis de depoente por domínio (ACUSADO ausente no PAR; 3 papéis PAR); 3 blocos PAR do banco de perguntas; matriz do checklist condicional PAR; chip de domínio; exportações com campo `dominio`.
+- **Reescrita da Seção 6 (Integração)** — 4 contratos com campo `dominio` e validação na importação; diagrama do ciclo bifurcado por domínio; nova subseção com a tabela da Política de validação cruzada (PAR-5); subseção de mensagens de recusa padronizadas (formato domínio encontrado/esperado/ferramenta correta/nada alterado) e garantia de importação atômica; badges + chip de domínio do Oitiva 360.
+- **Glossário e FAQ** — novas entradas (Domínio, Ente privado, Ato lesivo, papéis PAR, Programa de integridade, Nota de Indiciação, Modo dual, Modo fork) com desambiguação explícita dos três sentidos de "nexo" (nexo fático-probatório × nexo de causalidade × nomes próprios Nexo Coger/Nexo PAR); FAQ do Veritas (Tipo de processo opcional/agnóstico), split Nexo Coger ↔ nova subseção Nexo PAR, e novas perguntas do Oitiva 360 (definição de domínio sem pauta; troca de domínio com dados preenchidos).
+- **Convenção de citação normativa** aplicada em todo o texto novo (primeira menção por extenso com data completa; seguintes abreviadas com o ano). **Marcadores `[CAPTURA PENDENTE]`** inseridos onde caberia captura nova (cadastro de ente, seletor de domínio da Matriz, Nota de Indiciação PAR, recusa por domínio).
+
+Verificação: `python3 build_manual.py` gera sem erro; docx é zip válido; 69 headings, 17 imagens, nenhuma imagem com altura > 20 cm; extração de texto via python-docx confirma ausência de "Seção 4" referindo-se à Oitiva 360 ou "Seção 5" referindo-se à Integração. Diagnóstico da etapa 1 em `manual/diagnostico-atualizacao-par.md`.
+
 ## Multa_PAR: desempacotamento do bundler + tela inicial padrão
 
 **Fase 1 — Desempacotamento.** `Multa_PAR.html` era o único arquivo da suíte empacotado por um bundler: a aplicação real (React + Babel standalone) ficava serializada como string JSON dentro de `<script type="__bundler/template">`, com imagens em base64 (por vezes gzip) num `<script type="__bundler/manifest">` à parte; um loader desempacotava tudo em `DOMContentLoaded`, gerando blob URLs e substituindo `document.documentElement` inteiro. Isso impedia edição direta de texto, diferente das outras 6 ferramentas.

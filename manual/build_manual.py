@@ -1180,7 +1180,7 @@ add_h2(doc, "3.8 Selo de origem — retorno de oitiva")
 add_body(
     doc,
     "Quando uma prova é criada no Nexo Coger a partir da exportação "
-    "**\"Exportar prova(s) para o Nexo\"** do Oitiva 360 (Seção 6.1), o "
+    "**\"Exportar prova(s) para o Nexo\"** do Oitiva 360 (Seção 6.4), o "
     "cartão dessa prova no mapa fato-prova-norma recebe um selo dourado "
     "**🎙**, ao lado dos demais selos do cartão de prova (como o 🌐 de "
     "origem Veritas). O tooltip do selo mostra os campos `pauta_id`, "
@@ -1679,6 +1679,41 @@ add_body(
     "correspondente.",
 )
 
+add_body(
+    doc,
+    "O Oitiva 360 opera em **modo dual**: um único arquivo que acomoda tanto o "
+    "domínio **PAD** — apuração de responsabilidade de servidores à luz da **Lei "
+    "nº 8.112, de 11 de dezembro de 1990** — quanto o domínio **PAR** — "
+    "responsabilização de entes privados à luz da **Lei nº 12.846, de 1º de agosto "
+    "de 2013** (Lei Anticorrupção — LAC). O domínio do processo em curso "
+    "condiciona quatro coisas: os **papéis de depoente** disponíveis, a lista de "
+    "**categorias de infração**, os **blocos do banco de perguntas** e os itens do "
+    "**checklist**. Tudo o mais — a estrutura de etapas, a geração do termo, o Kit "
+    "de Incidentes, o Cartão de Mesa e o cálculo de hash na exportação — é "
+    "idêntico nos dois domínios.",
+)
+
+add_alert(
+    doc,
+    [
+        "O termo \"nexo\" não aparece como conceito próprio do Oitiva 360; quando "
+        "surgir nesta seção, será sempre parte do nome de uma ferramenta receptora "
+        "(**Nexo Coger**, no domínio PAD, ou **Nexo PAR**, no domínio PAR) para "
+        "onde o Oitiva 360 exporta pauta e retorno.",
+    ],
+    kind="mono",
+    label="Nota terminológica — \"nexo\" nesta seção",
+)
+
+add_body(
+    doc,
+    "No canto superior da tela, um **chip de domínio** (PAD, em azul-marinho, ou "
+    "PAR, em dourado) indica sempre o domínio corrente do processo. Ele reflete "
+    "diretamente o campo **Domínio do processo** da Matriz de Apuração (Seção 5.1) "
+    "e acompanha em tempo real qualquer troca de domínio — manual ou derivada da "
+    "pauta importada.",
+)
+
 add_h2(doc, "5.1 Pré-requisito — Matriz de Apuração")
 
 figura_ajustada(
@@ -1691,7 +1726,7 @@ add_body(
     doc,
     "Antes de adicionar qualquer depoente, o Oitiva 360 exige o preenchimento "
     "completo do cartão **\"Matriz de Apuração (nível processo — obrigatória)\"**, "
-    "com 4 campos, todos obrigatórios:",
+    "com 4 campos de conteúdo, todos obrigatórios:",
 )
 add_numbered(doc, 1, "**Conduta investigada** — \"Qual ação ou omissão está sendo apurada?\"")
 add_numbered(doc, 2, "**Investigado** — \"Quem está, em tese, vinculado à conduta?\"")
@@ -1714,6 +1749,59 @@ add_body(
     "permanece desabilitado. O próprio código faz uma dupla checagem no clique, "
     "por segurança.",
 )
+
+add_h3(doc, "Campo Domínio do processo — a cascata de definição")
+
+add_body(
+    doc,
+    "A Matriz de Apuração traz ainda um **5º campo**, **\"Domínio do processo\"** "
+    "(uma lista de seleção com os valores **PAD** e **PAR**), que decide se o "
+    "processo corre no rito disciplinar (Lei nº 8.112, de 1990) ou no rito de "
+    "responsabilização de entes privados (Lei nº 12.846, de 2013). É esse campo "
+    "que sensibiliza os papéis, as categorias de infração, os blocos de perguntas "
+    "e o checklist descritos adiante. Um processo novo nasce no domínio **PAD**. O "
+    "valor efetivo do campo é definido por uma **cascata** de quatro estágios:",
+)
+
+add_numbered(doc, 1, "**Definição manual** — enquanto não houver pauta importada com domínio, o campo é uma lista **editável**: a comissão escolhe PAD ou PAR diretamente.")
+add_numbered(doc, 2, "**Derivação pela pauta** — ao importar uma pauta do Nexo Coger (domínio `pad`) ou do Nexo PAR (domínio `par`), o Oitiva 360 **deriva** o domínio do processo do envelope da pauta e alinha o campo a esse valor.")
+add_numbered(doc, 3, "**Trava pela pauta** — uma vez derivado da pauta, o campo fica **travado** (exibido, mas não editável), com o aviso \"🔒 Domínio derivado da pauta importada do Nexo — não editável enquanto a pauta estiver vinculada.\". A trava impede que o domínio derivado divirja da origem da pauta.")
+add_numbered(doc, 4, "**Confirmação de conflito** — se a pauta importada trouxer um domínio **diferente** de um domínio já definido manualmente no processo, o Oitiva 360 **pede confirmação antes de qualquer alteração** (ver a caixa abaixo). Cancelar recusa a importação inteira, de forma atômica; confirmar troca o domínio e trava o campo na origem da pauta.")
+
+add_alert(
+    doc,
+    [
+        "**Troca manual com dados já cadastrados.** Se a comissão troca o domínio "
+        "manualmente e já existem depoentes com papel ou categoria de infração de "
+        "outro domínio, o Oitiva 360 exibe, **antes de aplicar**, um "
+        "\"Trocar o domínio do processo para <PAD/PAR> afeta dados já "
+        "cadastrados:\" que discrimina: as categorias de **infração** de outro "
+        "domínio, que **serão LIMPAS** (voltam a \"não definida\"), e os **papéis** "
+        "que não existem no novo domínio, que **serão MANTIDOS** (o dado não é "
+        "apagado), apenas sinalizados \"fora do domínio\" para reclassificação. "
+        "Recusar a confirmação reverte a seleção e nada é alterado.",
+    ],
+    kind="warn",
+    label="Troca de domínio — nada é apagado silenciosamente",
+)
+
+add_alert(
+    doc,
+    [
+        "**Conflito de domínio na importação de pauta.** Quando a pauta importada "
+        "diverge do domínio manual já definido, o Oitiva 360 pergunta: "
+        "\"Conflito de domínio na importação da pauta. A pauta importada é de "
+        "domínio <origem>, mas este processo está configurado como <atual>. "
+        "Confirmar TROCA o domínio do processo (…) e importa a pauta. Cancelar "
+        "RECUSA a importação inteira — nenhum item de pauta será importado.\". Ao "
+        "cancelar, a importação é recusada de forma **atômica** (nada é gravado) e "
+        "aparece a mensagem-padrão de recusa por domínio (Seção 6.6).",
+    ],
+    kind="info",
+    label="Conflito pauta × domínio manual",
+)
+
+figura_pendente(doc, "cartão Matriz de Apuração do Oitiva 360 com o 5º campo \"Domínio do processo\" (PAD/PAR) e o aviso de trava \"🔒 derivado da pauta\" quando há pauta importada vinculada.")
 
 add_h2(doc, "5.2 Diálogo \"Adicionar depoente\"")
 
@@ -1752,37 +1840,60 @@ add_body(
     "depoente**.",
 )
 
-add_body(doc, "O **Papel do depoente** repete o mesmo catálogo de 5 papéis já apresentado na Seção 3.3:")
+add_body(
+    doc,
+    "A lista de **Papel do depoente** é **filtrada pelo domínio do processo** "
+    "(Seção 5.1). Quatro papéis são **comuns** aos dois domínios; a diferença "
+    "está no polo passivo: no PAD existe o papel **Investigado/Acusado**, que "
+    "**não existe no domínio PAR** — em seu lugar entram os três papéis do ente "
+    "privado. A tabela abaixo mostra os dois lados:",
+)
 make_table(
     doc,
-    headers=["Papel", "Descrição resumida"],
+    headers=["Papel", "Domínio", "Descrição resumida"],
     rows=[
-        ("Testemunha", "Presta compromisso legal (art. 342, CP); dever de depor."),
-        ("Declarante/Informante", "Não presta compromisso; colaboração voluntária."),
-        ("Pessoa em Situação Indefinida", "Envolvimento possível, sem elementos para tratar como investigada; silêncio facultado por cautela."),
-        ("Vítima", "Não presta compromisso; sujeita-se à denunciação caluniosa."),
-        ("Investigado/Acusado", "Não presta compromisso; direito ao silêncio (Lei 13.869/2019); interrogatório como último ato (art. 159)."),
+        ("Testemunha", "PAD e PAR", "Presta compromisso legal (art. 342, CP); dever de depor."),
+        ("Declarante/Informante", "PAD e PAR", "Não presta compromisso; colaboração voluntária."),
+        ("Pessoa em Situação Indefinida", "PAD e PAR", "Envolvimento possível, sem elementos para tratar como investigada; silêncio facultado por cautela."),
+        ("Vítima", "PAD e PAR", "Não presta compromisso; sujeita-se à denunciação caluniosa."),
+        ("Investigado/Acusado", "só PAD", "Não presta compromisso; direito ao silêncio (Lei nº 13.869, de 5 de setembro de 2019); interrogatório como último ato (art. 159). NÃO aparece no domínio PAR."),
+        ("Representante legal", "só PAR", "Pessoa física que representa legalmente o ente privado (papel PAR do catálogo)."),
+        ("Preposto", "só PAR", "Pessoa física que age em nome do ente privado (papel PAR do catálogo)."),
+        ("Sócio-administrador", "só PAR", "Sócio com poderes de administração do ente privado (papel PAR do catálogo)."),
     ],
-    col_widths=[4.5, 11.0],
+    col_widths=[4.0, 2.4, 9.1],
+)
+
+add_alert(
+    doc,
+    [
+        "Um depoente cadastrado com um papel que **não existe** no domínio atual "
+        "(por exemplo, um depoente \"Investigado/Acusado\" após a troca do "
+        "processo para PAR) **não é apagado**: continua no estado, ainda aparece "
+        "marcado no seletor e na lista de depoentes, mas recebe o rótulo \"fora do "
+        "domínio\" para que a comissão o reclassifique. É o mesmo comportamento da "
+        "cascata de domínio descrito na Seção 5.1.",
+    ],
+    kind="info",
+    label="Papel fora do domínio é preservado, só sinalizado",
 )
 
 add_body(
     doc,
     "Selecionar \"Testemunha\" com a infração \"art. 132, IV — enriquecimento "
-    "ilícito\" revela um cartão adicional, \"Terceiro interposto\", com a "
-    "checkbox \"Este depoente é possível terceiro interposto (familiar/pessoa em "
-    "cujo nome está bem sob suspeita)\".",
+    "ilícito\" (domínio PAD) revela um cartão adicional, \"Terceiro interposto\", "
+    "com a checkbox \"Este depoente é possível terceiro interposto (familiar/pessoa "
+    "em cujo nome está bem sob suspeita)\".",
 )
 
 add_body(
     doc,
     "O campo **Categoria de infração** é uma lista de seleção com um campo de "
     "busca ao lado (por rótulo ou dispositivo — ex.: \"sigilo\", \"art. 117, "
-    "IX\"), populada com **52 normas** agrupadas por origem normativa, na "
-    "mesma ordem de grupos vista no Nexo Coger: Lei 8.112/90 — Deveres (art. "
-    "116); Proibições (art. 117); Demissão (art. 132); Outras (art. 130); LAI "
-    "(Lei 12.527/2011); e Outras categorias.",
+    "IX\"), cujo conteúdo **depende do domínio do processo**:",
 )
+add_bullet(doc, "**No domínio PAD** — a lista traz as normas da **Lei nº 8.112, de 1990**, e da LAI (**Lei nº 12.527, de 18 de novembro de 2011**), agrupadas por origem normativa, na mesma ordem vista no Nexo Coger: Lei 8.112/90 — Deveres (art. 116); Proibições (art. 117); Demissão (art. 132); Outras (art. 130); LAI; e Outras categorias.")
+add_bullet(doc, "**No domínio PAR** — a lista é substituída pelas **11 normas da LAC** (art. 5º da Lei nº 12.846, de 2013), distribuídas em dois optgroups — \"Atos de corrupção em geral\" e \"Licitações e contratos\" — exatamente como o seletor de enquadramento do Nexo PAR (Seção 4.4). Ao selecionar uma norma LAC, sua **nota de aplicação** aparece como hint (📌).")
 
 add_body(
     doc,
@@ -1820,6 +1931,21 @@ add_body(
     "atuais (inclusive as adicionadas manualmente) pelas sugestões do banco, "
     "mediante confirmação. **Não há registro de resposta nesta etapa.**",
 )
+
+add_body(
+    doc,
+    "O **banco de perguntas é sensível ao domínio**. No domínio PAD, aparecem os "
+    "blocos próprios do rito disciplinar — inclusive \"Elemento subjetivo "
+    "(dolo/culpa)\" e \"Circunstâncias do art. 128\", institutos exclusivos do PAD "
+    "(a responsabilização do ente privado é objetiva, art. 2º da Lei nº 12.846, de "
+    "2013, e não perquire dolo ou culpa). No domínio PAR, esses dois blocos PAD "
+    "deixam de ser oferecidos e surgem **três blocos de perguntas próprios da "
+    "LAC**, descritos aqui por finalidade (as perguntas literais ficam no banco da "
+    "ferramenta):",
+)
+add_bullet(doc, "**Licitações e contratos** — explora as condutas do art. 5º, IV, da LAC: frustração ou fraude ao caráter competitivo de licitação, afastamento de licitante, fraude a contrato administrativo e manipulação do equilíbrio econômico-financeiro do contrato.")
+add_bullet(doc, "**Terceiro interposto** — investiga a atuação por interposta pessoa e a ocultação de reais beneficiários (art. 5º, III e II, da LAC): quem intermediou, em nome de quem, e qual o proveito do ente privado.")
+add_bullet(doc, "**Programa de integridade** — apura a existência, a abrangência e o funcionamento efetivo do programa de integridade (compliance) do ente, elemento relevante para a dosimetria da futura multa.")
 
 add_h3(doc, "Etapa 4 — Respostas registradas")
 
@@ -1909,6 +2035,29 @@ add_body(
     "para o papel selecionado contra os já marcados: se houver pendentes, "
     "lista-os; se todos estiverem confirmados, mostra confirmação positiva; se "
     "o papel não tiver exigências específicas, mostra um texto neutro.",
+)
+
+add_body(
+    doc,
+    "No **domínio PAR**, o checklist ganha itens condicionais próprios, cruzando "
+    "o **papel PAR** do depoente com o **grupo de ato lesivo** apurado, mais um "
+    "item **transversal** que aparece em toda combinação PAR — a confirmação de "
+    "que o **benefício/interesse do ente e o nexo de causalidade** (art. 2º da Lei "
+    "nº 12.846, de 2013) estão descritos. Nenhum desses itens ativa em processos "
+    "PAD:",
+)
+make_table(
+    doc,
+    headers=["Condição (domínio PAR)", "Quando o item entra no checklist"],
+    rows=[
+        ("Transversal — benefício/nexo causal", "Sempre que o processo está no domínio PAR, em qualquer combinação de papel e infração."),
+        ("Papel PAR (qualquer)", "Depoente com papel Representante legal, Preposto ou Sócio-administrador."),
+        ("Sócio-administrador", "Depoente especificamente no papel Sócio-administrador."),
+        ("Representante legal", "Depoente especificamente no papel Representante legal."),
+        ("Grupo \"Licitações e contratos\"", "Infração enquadrada em uma norma LAC do grupo de licitações e contratos (art. 5º, IV)."),
+        ("Ato de terceiro interposto (art. 5º, III)", "Infração enquadrada na norma da LAC de terceiro interposto/ocultação de beneficiário."),
+    ],
+    col_widths=[5.5, 10.0],
 )
 
 add_h2(doc, "5.8 Gerenciar múltiplos depoentes")
@@ -2057,6 +2206,22 @@ add_body(
     "reverte o status já fechado do item de pauta.",
 )
 
+add_h2(doc, "5.12 Exportações e o campo de domínio")
+
+add_body(
+    doc,
+    "Os dois contratos de saída do Oitiva 360 — o **termo** exportado para o "
+    "Veritas (\"Exportar termo para o Veritas\") e o **retorno** exportado para o "
+    "Nexo (\"Exportar retorno (contexto do acusado)\" e \"Exportar prova(s) para o "
+    "Nexo\") — carregam, no envelope, o campo **`dominio`** (`pad` ou `par`), "
+    "derivado do domínio corrente do processo (Seção 5.1). Quando o domínio ainda "
+    "não está definido, o campo é **omitido** (nunca sai `null`). É esse campo que "
+    "as ferramentas receptoras conferem na importação: o termo só entra em um "
+    "dossiê Veritas de domínio compatível, e o retorno só é aceito pelo Nexo do "
+    "mesmo domínio (Nexo Coger para `pad`, Nexo PAR para `par`). O tratamento "
+    "completo dessa validação está na Seção 6.",
+)
+
 page_break(doc)
 
 # ---------------------------------------------------------------------------
@@ -2066,41 +2231,87 @@ add_chapter(doc, "Seção 6", "Integração entre as quatro ferramentas")
 
 add_body(
     doc,
-    "Embora Veritas, Nexo Coger e Oitiva 360 funcionem de forma inteiramente "
-    "independente (Seções 2 a 5 comprovam isso), a suíte prevê um fluxo de "
-    "integração opcional, por troca de arquivos `.json`, que percorre "
-    "tipicamente o ciclo: **Veritas → Nexo Coger → Oitiva 360 → Veritas → Nexo "
-    "Coger**. Provas cadastradas no Veritas alimentam o mapa do Nexo Coger; o "
-    "Nexo Coger exporta uma pauta de pontos a apurar para o Oitiva 360; o "
-    "Oitiva 360 conduz a oitiva e devolve, de volta, o termo gerado (importável "
-    "como prova no Veritas) e um retorno de contexto (importável de volta no "
-    "Nexo Coger).",
+    "As quatro ferramentas da suíte funcionam de forma inteiramente independente "
+    "(Seções 2 a 5 comprovam isso), mas preveem um fluxo de integração opcional, "
+    "por troca de arquivos `.json`. Com a extensão da suíte ao domínio PAR, esse "
+    "fluxo **bifurca por domínio**: cada contrato de integração passou a carregar "
+    "um campo **`dominio`** (`pad` ou `par`) no envelope, e cada ferramenta "
+    "receptora **valida** esse campo na importação, recusando o cruzamento "
+    "indevido entre os ritos. Nesta seção, sempre que aparecer isolado, o termo "
+    "\"Nexo\" refere-se genericamente ao par de ferramentas de mapa — **Nexo "
+    "Coger** (domínio PAD) e **Nexo PAR** (domínio PAR) —, e não ao nexo "
+    "fático-probatório (a ligação fato-prova) nem ao nexo de causalidade da LAC.",
 )
 
-add_h2(doc, "6.1 Veritas → Nexo Coger: exportação de provas")
+add_body(doc, "O ciclo típico de integração percorre, no **domínio PAD**:")
+add_body(
+    doc,
+    "**Veritas → Nexo Coger → Oitiva 360 → Veritas → Nexo Coger** — provas "
+    "cadastradas no Veritas alimentam o mapa do Nexo Coger; o Nexo Coger exporta "
+    "uma pauta de pontos a apurar para o Oitiva 360; o Oitiva 360 conduz a oitiva "
+    "e devolve o termo gerado (importável como prova no Veritas) e um retorno de "
+    "contexto (importável de volta no Nexo Coger).",
+    size=10,
+)
+add_body(doc, "E o **mesmo ciclo espelhado no domínio PAR**:")
+add_body(
+    doc,
+    "**Veritas → Nexo PAR → Oitiva 360 → Veritas → Nexo PAR** — idêntico em "
+    "estrutura, com o Veritas em dossiê de tipo PAR, o Oitiva 360 em modo PAR e o "
+    "Nexo PAR no lugar do Nexo Coger. O Veritas e o Oitiva 360 são os mesmos "
+    "arquivos nos dois ciclos (modo dual); só o Nexo troca de arquivo (modo "
+    "fork). O campo `dominio` é o que mantém cada arquivo no ciclo do seu próprio "
+    "domínio — um envelope PAR não entra em uma ferramenta PAD e vice-versa.",
+    size=10,
+)
+
+add_h2(doc, "6.1 Veritas → Nexo Coger / Nexo PAR: exportação de provas")
 
 add_body(
     doc,
     "No Veritas, o botão **\"Exportar provas → Nexo Coger\"** gera um arquivo "
     "`nexo-coger-provas-<número do processo>.json` contendo apenas as provas "
-    "cujo tipo se mapeia para o catálogo canônico de tipos de prova do Nexo "
-    "Coger. É um contrato distinto e mais restrito do que a exportação isolada "
-    "\"Exportar .json\" (Seção 2.3), que exporta o dossiê inteiro.",
+    "cujo tipo se mapeia para o catálogo canônico de tipos de prova do Nexo. É um "
+    "contrato distinto e mais restrito do que a exportação isolada \"Exportar "
+    ".json\" (Seção 2.3), que exporta o dossiê inteiro.",
 )
-
-add_h2(doc, "6.2 Nexo Coger → Oitiva 360: exportação de pauta")
 
 add_body(
     doc,
-    "A partir da tela \"Revisão de pauta\" do Nexo Coger, é possível exportar "
-    "uma pauta de instrução por depoente, contendo os pontos de instrução "
-    "confirmados e o papel do depoente. O Nexo Coger bloqueia essa exportação "
+    "O envelope emite o campo **`dominio`** derivado do Tipo de processo do dossiê "
+    "(`pad`, `par`, ou omitido quando o dossiê é agnóstico). Na importação, o "
+    "**Nexo Coger** (domínio fixo `pad`) aceita envelopes `pad` **ou sem campo** "
+    "(arquivo legado, anterior às rodadas PAR) e **recusa** `par`; o **Nexo PAR** "
+    "(domínio fixo `par`) aceita **apenas** `par`, recusando tanto `pad` quanto o "
+    "envelope legado sem campo — no PAR não há acervo legado a preservar, pois o "
+    "fork nasceu depois do campo. As mensagens de recusa seguem o padrão da Seção "
+    "6.6.",
+)
+
+add_h2(doc, "6.2 Nexo Coger / Nexo PAR → Oitiva 360: exportação de pauta")
+
+add_body(
+    doc,
+    "A partir da tela \"Revisão de pauta\" do Nexo (Coger ou PAR), é possível "
+    "exportar uma pauta de instrução por depoente, contendo os pontos de "
+    "instrução confirmados e o papel do depoente. O Nexo bloqueia essa exportação "
     "quando o nome do depoente não foi informado (\"Informe o nome do "
     "depoente.\") ou quando não há nenhum ponto de instrução confirmado "
     "(\"Nenhum ponto de instrução confirmado — nada a exportar.\"). O Oitiva 360, "
     "ao importar essa pauta, exibe um cartão \"Pauta do Nexo\" com os itens "
-    "abordados na sessão e evita duplicação: reimportar a mesma pauta atualiza "
-    "os itens existentes em vez de criar itens duplicados.",
+    "abordados na sessão e evita duplicação: reimportar a mesma pauta atualiza os "
+    "itens existentes em vez de criar itens duplicados.",
+)
+
+add_body(
+    doc,
+    "O envelope da pauta emite **`dominio`** (`pad` no Nexo Coger, `par` no Nexo "
+    "PAR). O Oitiva 360, receptor de **modo dual**, aplica a cascata da Seção 5.1: "
+    "a pauta com domínio **deriva e trava** o domínio do processo; se o Oitiva 360 "
+    "já tinha um domínio definido manualmente e ele **conflita** com o da pauta, a "
+    "importação **pede confirmação antes de qualquer alteração** — cancelar recusa "
+    "a importação inteira, de forma atômica (nada é gravado); confirmar troca o "
+    "domínio e trava o campo na origem da pauta.",
 )
 
 add_h2(doc, "6.3 Oitiva 360 → Veritas: exportação do termo")
@@ -2110,13 +2321,15 @@ add_body(
     "O botão **\"Exportar termo para o Veritas\"**, sempre visível na Etapa 4 do "
     "Oitiva 360, gera um arquivo de termo que carrega um `hash_origem` — um hash "
     "calculado sobre o texto do termo no momento da exportação, usado pelo "
-    "Veritas para verificar a integridade do conteúdo na importação.",
+    "Veritas para verificar a integridade do conteúdo na importação — e o campo "
+    "**`dominio`** do processo (omitido quando indefinido).",
 )
 
 add_body(
     doc,
-    "Ao importar esse termo, o Veritas aplica três verificações bloqueantes e "
-    "uma não bloqueante, cujas mensagens exatas são:",
+    "Ao importar esse termo, o Veritas aplica as verificações abaixo, **nesta "
+    "ordem** — a validação de domínio roda **antes** da conferência de hash, para "
+    "recusar cedo, antes do trabalho caro:",
 )
 add_alert(
     doc,
@@ -2126,21 +2339,34 @@ add_alert(
 )
 add_alert(
     doc,
+    [
+        "**Domínio incompatível** — quando o dossiê tem Tipo de processo definido e "
+        "o domínio do termo diverge do domínio do dossiê (ex.: termo PAR em dossiê "
+        "PAD). Mensagem no padrão-base da Seção 6.6: \"Importação recusada — "
+        "domínio incompatível.\" seguida de \"Domínio encontrado / Domínio esperado "
+        "/ ferramenta correta / Nenhum dado foi alterado.\". Um dossiê **sem Tipo "
+        "de processo** (Veritas agnóstico) aceita termo de qualquer domínio.",
+    ],
+    kind="danger",
+    label="2. Domínio incompatível (ou termo legado em dossiê PAR) — bloqueia",
+)
+add_alert(
+    doc,
     ["Importação bloqueada: o hash do termo não confere.", "Esperado (hash_origem): <hash>", "Calculado sobre o texto recebido: <hash>", "O conteúdo do termo pode ter sido alterado após a exportação do Oitiva 360. Nada foi importado."],
     kind="danger",
-    label="2. Hash divergente — bloqueia",
+    label="3. Hash divergente — bloqueia",
 )
 add_alert(
     doc,
     ["Importação recusada: já existe uma prova neste dossiê com o mesmo hash_origem (<hash>). Este termo já foi importado antes — reimportação não cria uma segunda prova."],
     kind="danger",
-    label="3. Duplicado — bloqueia",
+    label="4. Duplicado — bloqueia",
 )
 add_alert(
     doc,
     ["Este termo foi exportado com catalogo_schema_version <X>, diferente da versão do catálogo em uso neste Veritas (<Y>). O hash já foi conferido e confere — o aviso é só sobre o vocabulário do catálogo. Deseja continuar?"],
     kind="warn",
-    label="4. Versão de catálogo divergente — pede confirmação, não bloqueia",
+    label="5. Versão de catálogo divergente — pede confirmação, não bloqueia",
 )
 
 add_body(
@@ -2152,35 +2378,47 @@ add_body(
     "termos pendentes de revisão.",
 )
 
-add_h2(doc, "6.4 Oitiva 360 → Nexo Coger: retorno de contexto do acusado")
+add_h2(doc, "6.4 Oitiva 360 → Nexo Coger / Nexo PAR: retorno de contexto")
 
 add_body(
     doc,
-    "Quando a sessão de oitiva aborda itens da pauta importada do Nexo Coger, o "
-    "Oitiva 360 disponibiliza o botão **\"Exportar retorno (contexto do "
-    "acusado)\"**, que devolve ao Nexo Coger um resumo da resposta obtida para "
-    "cada ponto de instrução abordado. Esse botão só aparece quando há itens de "
-    "pauta efetivamente abordados na sessão — não existe no fluxo manual sem "
-    "pauta importada.",
+    "Quando a sessão de oitiva aborda itens da pauta importada do Nexo, o Oitiva "
+    "360 disponibiliza o botão **\"Exportar retorno (contexto do acusado)\"**, que "
+    "devolve ao Nexo um resumo da resposta obtida para cada ponto de instrução "
+    "abordado. Esse botão só aparece quando há itens de pauta efetivamente "
+    "abordados na sessão — não existe no fluxo manual sem pauta importada. O "
+    "envelope do retorno também emite o campo **`dominio`**, validado na "
+    "importação: o Nexo Coger aceita `pad`/legado e recusa `par`; o Nexo PAR "
+    "aceita apenas `par` (Seção 6.5).",
+)
+
+add_alert(
+    doc,
+    [
+        "No **Nexo PAR**, o vínculo padrão do retorno de oitiva aponta para o "
+        "**ente privado** cadastrado no processo (o mesmo objeto que, no Nexo "
+        "Coger, seria o acusado). O retorno de contexto PAR alimenta, portanto, o "
+        "cadastro do ente, não uma estrutura de acusado servidor.",
+    ],
+    kind="info",
+    label="Retorno PAR vincula-se ao ente privado",
 )
 
 add_body(
     doc,
-    "Quando esse retorno é importado no Nexo Coger, o **fato** que ele "
-    "alimenta recebe um selo dourado **🎙**, sinalizando que aquele contexto "
-    "nasceu de uma sessão de oitiva e não de cadastro manual direto. Esse "
-    "selo do cartão de fato é anterior a esta rodada de implementação e já "
-    "funciona plenamente.",
+    "Quando esse retorno é importado no Nexo, o **fato** que ele alimenta recebe "
+    "um selo dourado **🎙**, sinalizando que aquele contexto nasceu de uma sessão "
+    "de oitiva e não de cadastro manual direto. Esse selo do cartão de fato é "
+    "anterior às rodadas PAR e já funciona plenamente.",
 )
 
 add_body(
     doc,
-    "Há ainda um **segundo selo, análogo, no cartão de prova** (não no "
-    "cartão de fato): quando uma prova é criada a partir do botão "
-    "\"Exportar prova(s) para o Nexo\" do Oitiva 360, ela recebe o mesmo "
-    "selo dourado 🎙, com tooltip mostrando os campos `pauta_id`, "
-    "`rodada_id` e `id_ponto`. Este selo de prova é detalhado na Seção 3.8 "
-    "deste manual.",
+    "Há ainda um **segundo selo, análogo, no cartão de prova** (não no cartão de "
+    "fato): quando uma prova é criada a partir do botão \"Exportar prova(s) para o "
+    "Nexo\" do Oitiva 360, ela recebe o mesmo selo dourado 🎙, com tooltip "
+    "mostrando os campos `pauta_id`, `rodada_id` e `id_ponto`. Este selo de prova "
+    "é detalhado na Seção 3.8 deste manual.",
 )
 
 add_alert(
@@ -2199,32 +2437,121 @@ add_alert(
     label="IDs do tooltip: preenchidos com origem de pauta, null sem ela",
 )
 
-add_h2(doc, "6.5 Badges de pendência e status")
+add_h2(doc, "6.5 Política de validação cruzada de domínio")
 
 add_body(
     doc,
-    "Cada ferramenta usa seu próprio conjunto de selos (badges) para sinalizar "
-    "o estado de itens importados ou pendentes de revisão:",
+    "Todos os quatro contratos acima seguem uma **única política de validação**, "
+    "aplicada uniformemente na importação — não há regras ad hoc por ferramenta. "
+    "Ao importar qualquer envelope, a ferramenta receptora compara o `dominio` do "
+    "envelope com o seu próprio domínio corrente e aplica:",
 )
+
 make_table(
     doc,
-    headers=["Ferramenta", "Badges"],
+    headers=["Situação", "Comportamento"],
     rows=[
-        ("Veritas", "termo: pendente_revisao / revisado"),
-        ("Nexo Coger", "prova: pendente / vinculada — retorno: pendente_revisao / revisado"),
-        ("Oitiva 360", "pauta: pendente / em_andamento / concluida"),
+        ("Domínio do envelope igual ao domínio do receptor",
+         "Importa normalmente."),
+        ("Domínio do envelope diferente do domínio do receptor",
+         "Recusa com mensagem clara (qual domínio o arquivo carrega, qual a ferramenta/processo espera, e qual a ferramenta correta para aquele arquivo). Nunca falha silenciosa, nunca importação parcial."),
+        ("Envelope sem o campo dominio (arquivo anterior às rodadas PAR)",
+         "Tratado como legado PAD: aceito pelos receptores de domínio PAD (Nexo Coger, dossiê Veritas PAD); nos receptores PAR (Nexo PAR, dossiê Veritas PAR), recusado com mensagem específica de arquivo legado."),
+        ("Receptor de modo dual (Oitiva 360) sem domínio definido recebendo envelope com domínio",
+         "Deriva o domínio do envelope, pela cascata da Seção 5.1 — com a confirmação de conflito lá especificada."),
     ],
-    col_widths=[4.0, 11.5],
+    col_widths=[6.2, 9.3],
+)
+
+add_body(
+    doc,
+    "Essa tabela está registrada como comentário-referência no código de cada uma "
+    "das quatro rotinas de importação, justamente para que os pontos de validação "
+    "não divirjam em manutenções futuras.",
+)
+
+figura_pendente(doc, "exemplo de recusa por domínio — importação de um arquivo PAR em uma ferramenta PAD, com a mensagem padronizada de domínio encontrado/esperado e a indicação da ferramenta correta.")
+
+add_h2(doc, "6.6 Mensagens de recusa padronizadas e importação atômica")
+
+add_body(
+    doc,
+    "As quatro ferramentas usam a **mesma estrutura de frase** ao recusar um "
+    "envelope por domínio, terminando sempre com o quarteto **domínio encontrado "
+    "/ domínio esperado / ferramenta correta a usar / garantia de que nenhum dado "
+    "foi alterado**. Os rótulos de domínio aparecem por extenso — \"PAD (Lei "
+    "8.112/1990)\", \"PAR (Lei 12.846/2013)\" ou \"não indicado (arquivo legado, "
+    "anterior às rodadas PAR)\". Dois exemplos reais:",
 )
 
 add_alert(
     doc,
     [
-        "A integração entre Veritas, Nexo Coger e Oitiva 360 é **opcional e "
-        "aditiva**. Cada ferramenta já funciona de forma completa sozinha, como "
-        "demonstrado nas Seções 2 a 5 — a troca de arquivos `.json` apenas "
-        "poupa redigitação de dados quando as três são usadas em conjunto no "
-        "mesmo processo.",
+        "Este arquivo foi exportado de um processo PAR (Lei nº 12.846/2013 — LAC). "
+        "Este é o Nexo Coger, que trabalha com processos PAD (Lei nº 8.112/1990) — "
+        "importe-o no Nexo PAR. Domínio encontrado: PAR (Lei 12.846/2013). Domínio "
+        "esperado: PAD (Lei 8.112/1990). Nenhum dado foi alterado.",
+    ],
+    kind="mono",
+    label="Nexo Coger recusando um envelope PAR",
+)
+add_alert(
+    doc,
+    [
+        "Este arquivo não indica domínio (formato anterior às Rodadas PAR) e não "
+        "pode ser importado no Nexo PAR, que trabalha exclusivamente com processos "
+        "PAR (Lei nº 12.846/2013 — LAC). No PAR não existe acervo legado a "
+        "preservar. Domínio encontrado: não indicado (arquivo legado, anterior às "
+        "rodadas PAR). Domínio esperado: PAR (Lei 12.846/2013). Nenhum dado foi "
+        "alterado.",
+    ],
+    kind="mono",
+    label="Nexo PAR recusando um envelope legado (sem domínio)",
+)
+
+add_alert(
+    doc,
+    [
+        "**Importação atômica.** Nenhuma recusa por domínio deixa estado parcial: a "
+        "validação roda **antes** de qualquer mutação — antes de montar o modal de "
+        "revisão, antes de gravar qualquer item, antes da conferência de hash. Ou "
+        "entra tudo, ou nada. A contagem de provas, itens e o domínio do receptor "
+        "permanecem exatamente como estavam antes da tentativa recusada.",
+    ],
+    kind="green",
+    label="Recusa nunca deixa estado parcial",
+)
+
+add_h2(doc, "6.7 Badges de pendência, status e domínio")
+
+add_body(
+    doc,
+    "Cada ferramenta usa seu próprio conjunto de selos (badges) para sinalizar o "
+    "estado de itens importados ou pendentes de revisão. Além desses, o Oitiva "
+    "360 exibe no cabeçalho o **chip de domínio** (PAD/PAR), que não é um badge de "
+    "item mas um indicador do domínio corrente do processo — reflete o mesmo "
+    "mecanismo de cascata descrito na Seção 5.1:",
+)
+make_table(
+    doc,
+    headers=["Ferramenta", "Badges / indicadores"],
+    rows=[
+        ("Veritas", "termo: pendente_revisao / revisado"),
+        ("Nexo Coger / Nexo PAR", "prova: pendente / vinculada — retorno: pendente_revisao / revisado"),
+        ("Oitiva 360", "pauta: pendente / em_andamento / concluida — chip de domínio: PAD / PAR (cabeçalho)"),
+    ],
+    col_widths=[4.5, 11.0],
+)
+
+add_alert(
+    doc,
+    [
+        "A integração entre as quatro ferramentas é **opcional e aditiva**. Cada "
+        "ferramenta já funciona de forma completa sozinha, como demonstrado nas "
+        "Seções 2 a 5 — a troca de arquivos `.json` apenas poupa redigitação de "
+        "dados quando as ferramentas são usadas em conjunto no mesmo processo, e a "
+        "validação de domínio garante que cada arquivo só seja aceito na ferramenta "
+        "do rito correto.",
     ],
     kind="green",
     label="Integração é opcional",
@@ -2244,9 +2571,19 @@ make_table(
         ("Cadeia de custódia", "Registro contínuo de quem coletou, recebeu, transferiu ou custodiou uma prova, do momento em que ela surge até seu uso na decisão."),
         ("Proveniência", "Origem declarada de um elemento de prova — como e de onde ele chegou ao processo (gerado internamente, recebido de outro órgão, ou extraído de sistema)."),
         ("Hash", "Uma \"impressão digital\" numérica calculada a partir do conteúdo de um arquivo; se o arquivo muda, o hash muda — usado para verificar se um arquivo permanece idêntico ao original."),
-        ("Nexo fático-probatório", "A ligação demonstrável entre um fato apurado e as provas que o sustentam."),
-        ("Enquadramento legal", "O dispositivo normativo (dever, proibição, hipótese de demissão etc.) em que uma conduta apurada se amolda."),
-        ("Elemento subjetivo", "O grau de intenção ou de falta de cuidado do agente em relação à conduta — dolo direto, dolo eventual, negligência, imprudência ou imperícia."),
+        ("Nexo fático-probatório", "A ligação demonstrável entre um fato apurado e as provas que o sustentam (a mecânica do mapa fato-prova-norma). É um dos três sentidos de \"nexo\" na suíte — distinto do nexo de causalidade (conceito da LAC) e dos nomes próprios Nexo Coger / Nexo PAR (ferramentas)."),
+        ("Nexo de causalidade", "Conceito jurídico da Lei nº 12.846, de 1º de agosto de 2013 (LAC): a correlação entre o ato lesivo e o benefício ou interesse auferido pela pessoa jurídica. No Nexo PAR, é um campo do fato (Seção 4.3). Não confundir com o nexo fático-probatório nem com os nomes das ferramentas."),
+        ("Nexo Coger / Nexo PAR", "Nomes próprios das duas ferramentas de mapa fato-prova-norma da suíte: o Nexo Coger atende o domínio PAD; o Nexo PAR atende o domínio PAR. São dois arquivos independentes (modo fork). Nomear uma ferramenta \"Nexo\" não a confunde com o nexo fático-probatório nem com o nexo de causalidade."),
+        ("Enquadramento legal", "O dispositivo normativo (dever, proibição, hipótese de demissão, ato lesivo da LAC etc.) em que uma conduta apurada se amolda."),
+        ("Elemento subjetivo", "O grau de intenção ou de falta de cuidado do agente em relação à conduta — dolo direto, dolo eventual, negligência, imprudência ou imperícia. É instituto do domínio PAD; no PAR a responsabilização é objetiva (art. 2º da LAC) e não há elemento subjetivo."),
+        ("Domínio (PAD/PAR)", "O rito normativo de um processo na suíte: PAD (e sindicância), à luz da Lei nº 8.112, de 11 de dezembro de 1990, ou PAR, à luz da Lei nº 12.846, de 1º de agosto de 2013 (LAC). O domínio condiciona campos, papéis, normas e documentos, e viaja nos contratos de integração no campo `dominio`."),
+        ("Ente privado", "A pessoa jurídica sujeita à responsabilização no domínio PAR — o polo passivo do PAR, no lugar do servidor (acusado) do PAD."),
+        ("Ato lesivo", "Conduta praticada em interesse ou benefício de ente privado que atenta contra a Administração Pública, tipificada no art. 5º da Lei nº 12.846, de 2013 (LAC) — inclui corrupção, fraude a licitações e contratos e obstrução da fiscalização."),
+        ("Representante legal / Preposto / Sócio-administrador", "Os três papéis de pessoa física vinculada ao ente privado no domínio PAR (papéis PAR do catálogo). O representante legal é exigido para gerar a Nota de Indiciação (pendência P-ENTE)."),
+        ("Programa de integridade", "Conjunto de mecanismos internos de integridade, auditoria e incentivo à denúncia de um ente privado (compliance). Sua existência e efetivo funcionamento são elemento de dosimetria da multa do PAR e podem ser apresentados com a defesa (Portaria CGU nº 909, de 7 de abril de 2025)."),
+        ("Nota de Indiciação", "Documento formal que, no domínio PAR, imputa ao ente privado a conduta lesiva e abre o prazo de defesa (art. 17 da Instrução Normativa CGU nº 13, de 2019). É o equivalente PAR do termo de indiciação do PAD."),
+        ("Modo dual", "Arquitetura de uma ferramenta que, em um único arquivo, acomoda os dois domínios com comportamento condicional (Veritas e Oitiva 360)."),
+        ("Modo fork", "Arquitetura em que cada domínio tem seu próprio arquivo independente, compartilhando a mesma mecânica (Nexo Coger para PAD, Nexo PAR para PAR)."),
         ("Estado probatório", "Avaliação de quão bem sustentado um fato está pelas provas reunidas até o momento: suficiente, indícios, ou ausente."),
         ("Pendência crítica/frágil", "Sinalização automática de um problema no mapa fato-prova-norma; crítica bloqueia a geração da indiciação, frágil apenas alerta."),
         ("Indiciação", "Ato formal que atribui a um servidor a autoria de fato(s) apurado(s), com enquadramento legal, dando início à fase de defesa escrita."),
@@ -2272,6 +2609,7 @@ add_numbered(doc, 1, "**O que fazer se o hash não confere ao importar uma prova
 add_numbered(doc, 2, "**Posso editar a proveniência depois de salvar um item?** Não. Todo o bloco de proveniência (tipo e subcampos) fica travado, somente leitura, assim que o item é salvo. O mesmo vale para o elemento físico (exceto a condição do lacre, alterável apenas via evento de \"Conferência do lacre\"), para \"conteúdo integral\"/justificativa, e para o status do item.")
 add_numbered(doc, 3, "**Qual a diferença entre \"Exportar .json\" e \"Exportar provas → Nexo Coger\"?** \"Exportar .json\" gera o dossiê inteiro, para backup geral. \"Exportar provas → Nexo Coger\" gera um arquivo menor, apenas com as provas convertidas para o catálogo canônico do Nexo Coger — é o contrato de integração específico entre as duas ferramentas.")
 add_numbered(doc, 4, "**O carimbo de data/hora do Veritas vale como prova de quando o arquivo foi coletado?** Não com força de selo de tempo certificado — é apenas o relógio do computador do usuário no momento em que o arquivo foi anexado. Tem valor para mostrar consistência interna, não para provar o instante exato de forma inatacável.")
+add_numbered(doc, 5, "**O campo Tipo de processo é obrigatório? O que muda se eu não preencher?** Não é obrigatório. Sem Tipo de processo definido, o Veritas permanece **agnóstico de domínio**: aceita prova de qualquer origem, sem filtro, não marca `pad` nem `par` no dossiê, e as categorias de prova exclusivas do PAR (Programa de integridade, Informações do COAF) não aparecem. Ao importar um termo de oitiva, um dossiê sem tipo aceita termo de qualquer domínio. O campo só passa a influenciar o comportamento quando efetivamente preenchido — dossiês antigos seguem funcionando como antes.")
 
 add_h3(doc, "Nexo Coger")
 add_numbered(doc, 1, "**Por que o papel \"Pessoa em Situação Indefinida\" não aparece separado, com instruções de uso, na tela?** O Nexo Coger não exibe nenhum texto de orientação sobre quando usar esse papel — apenas o rótulo curto aparece no seletor. A explicação jurídica completa só existe no catálogo de dados, e este manual a reproduz na Seção 3.3, junto de uma orientação prática de uso.")
@@ -2279,11 +2617,18 @@ add_numbered(doc, 2, "**O que acontece se eu gerar a indiciação e depois perce
 add_numbered(doc, 3, "**Um fato arquivado precisa de enquadramento legal e provas completas?** Não. Um fato marcado como \"Arquivado\" só exige a Justificativa do arquivamento; não gera pendências e não entra na minuta de indiciação.")
 add_numbered(doc, 4, "**O que fazer quando o elemento subjetivo escolhido conflita com o exigido pela norma?** O Nexo Coger apenas avisa (não bloqueia o salvamento) quando o elemento subjetivo escolhido diverge do que a norma exige — por exemplo, marcar conduta culposa em norma que exige dolo. Revise o enquadramento ou ajuste a fundamentação antes de prosseguir para a indiciação.")
 
+add_h3(doc, "Nexo PAR")
+add_numbered(doc, 1, "**Por que o Nexo PAR não tem campo de elemento subjetivo (dolo/culpa)?** Porque a responsabilização do ente privado na Lei nº 12.846, de 1º de agosto de 2013 (LAC), é **objetiva** (art. 2º): independe de dolo ou culpa. Por isso o Nexo PAR remove tanto o campo Elemento subjetivo quanto a pendência a ele associada (a P8 do Nexo Coger). Em seu lugar, o fato exige a descrição do **benefício/interesse do ente e do nexo de causalidade** — cobrados pela pendência crítica P8-PAR (Seção 4.3 e 4.5).")
+add_numbered(doc, 2, "**O que acontece se eu tentar importar uma prova PAD no Nexo PAR?** A importação é **recusada**, de forma atômica (nenhum dado é gravado). O Nexo PAR aceita apenas envelopes de domínio `par`; um envelope `pad` — ou um envelope legado, sem domínio — é recusado com a mensagem padronizada de domínio (domínio encontrado / esperado / ferramenta correta), que sugere importar o arquivo no Nexo Coger. O detalhe dessa validação cruzada está na Seção 6 (Seções 6.5 e 6.6).")
+add_numbered(doc, 3, "**Preciso cadastrar um representante legal para gerar a Nota de Indiciação?** Sim. A falta de ente privado cadastrado, ou de ao menos um representante legal, dispara a pendência crítica P-ENTE, que **bloqueia a geração** da Nota de Indiciação (embora não impeça salvar o cadastro do ente). Ver Seção 4.2 e 4.5.")
+
 add_h3(doc, "Oitiva 360")
 add_numbered(doc, 1, "**Preciso preencher a Matriz de Apuração toda vez?** Sim, ela é obrigatória em nível de processo — os 4 campos (conduta, investigado, elementos disponíveis, hipótese investigativa) precisam estar preenchidos antes que o botão \"Adicionar depoente\" seja habilitado. Uma vez preenchida, vale para todos os depoentes daquele processo.")
 add_numbered(doc, 2, "**Existe campo de observação separado da resposta, na Etapa 4?** Não. Cada pergunta do roteiro tem apenas uma única área de texto para a resposta do depoente — não há campo auxiliar de observação nem de marcação de relevância.")
 add_numbered(doc, 3, "**O termo é gerado automaticamente ou preciso clicar em algo?** É gerado automaticamente ao entrar na Etapa 4, sem bloqueio por campos vazios — campos ainda não preenchidos aparecem como \"____\" no texto. É possível editar o texto manualmente ou regenerá-lo a partir dos dados atuais do ato (com confirmação, pois substitui edições manuais).")
-add_numbered(doc, 4, "**Por que não vejo o botão \"Exportar retorno (contexto do acusado)\"?** Esse botão só aparece quando a sessão aborda itens de uma pauta importada do Nexo Coger. No fluxo manual, sem pauta importada, ele não é exibido — apenas o botão \"Exportar termo para o Veritas\" fica sempre visível na Etapa 4.")
+add_numbered(doc, 4, "**Por que não vejo o botão \"Exportar retorno (contexto do acusado)\"?** Esse botão só aparece quando a sessão aborda itens de uma pauta importada do Nexo (Coger ou PAR). No fluxo manual, sem pauta importada, ele não é exibido — apenas o botão \"Exportar termo para o Veritas\" fica sempre visível na Etapa 4.")
+add_numbered(doc, 5, "**Como o domínio (PAD/PAR) é definido quando não há pauta importada?** Pela seleção **manual** no 5º campo da Matriz de Apuração (\"Domínio do processo\"), editável enquanto não houver pauta vinculada. Um processo novo nasce em PAD. Assim que uma pauta do Nexo é importada, o domínio passa a ser **derivado e travado** pela pauta (Seção 5.1).")
+add_numbered(doc, 6, "**O que acontece se eu trocar de domínio com dados já preenchidos?** O Oitiva 360 mostra, **antes de aplicar**, exatamente o que será afetado: as categorias de infração de outro domínio **serão LIMPAS** (voltam a \"não definida\") e os papéis que não existem no novo domínio **serão MANTIDOS**, apenas sinalizados \"fora do domínio\" para reclassificação. Nada é apagado silenciosamente, e recusar a confirmação reverte a troca (Seção 5.1).")
 
 # ---------------------------------------------------------------------------
 # Nota editorial final
