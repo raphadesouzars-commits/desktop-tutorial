@@ -453,6 +453,14 @@ svg.map{display:block}
 .gate-aviso{background:var(--rfb-gold-200);border:1px solid var(--rfb-gold-500);color:#5c4713;
   border-radius:8px;padding:10px 12px;font-size:12.5px;margin:16px 0}
 .gate-foot{display:flex;justify-content:flex-end;margin-top:8px}
+.inicio-estado{background:var(--panel,var(--paper));border:1px solid var(--line,#d8e0ea);border-radius:10px;
+  padding:16px 18px;margin:6px 0 18px}
+.inicio-estado--vazio{border-style:dashed;text-align:center}
+.inicio-estado__label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-2)}
+.inicio-estado__num{font-family:var(--rfb-font-display);font-size:22px;font-weight:700;color:var(--rfb-navy-900);margin:4px 0 2px}
+.inicio-estado__meta{font-size:12.5px;color:var(--ink-2)}
+.inicio-acoes{display:flex;gap:10px;flex-wrap:wrap}
+.inicio-p{margin:0 0 10px;font-size:13px;line-height:1.55;color:var(--ink)}
 .radios{display:flex;gap:14px;flex-wrap:wrap}
 .radios label{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;cursor:pointer}
 .inline-warn{background:var(--estado-fragil-bg);border:1px solid #e8cf8a;color:#8a5d0d;
@@ -535,6 +543,20 @@ svg.map.isolating .node.hl{opacity:1}
     <p class="gate-hero__sub">Responsabilização de Entes Privados (Lei nº 12.846/2013 — LAC) · Coger/RFB</p>
   </div>
   <div class="gate-card" id="gateCard"></div>
+</div>
+
+<!-- ===================== TELA INICIAL (aparece ANTES do gate "Dados do Processo") =====================
+     Mesmo padrão visual .gate/.gate-hero/.gate-card. Mostra o processo salvo neste navegador (ou estado
+     vazio) com "+ Novo processo" e "Importar processo (.json)". Só aparece uma vez por carregamento
+     (ver init()/abrirInicio()). "Novo" com dados em andamento pede confirmação (modal reiniciar);
+     "Importar" reaproveita a MESMA rotina de importação de estado completo (importJson/#fileInput). -->
+<div class="gate" id="inicio" style="display:none">
+  <div class="gate-hero">
+    <span class="gate-hero__eyebrow">Ferramenta interativa</span>
+    <h1 class="gate-hero__title">Nexo PAR</h1>
+    <p class="gate-hero__sub">Responsabilização de Entes Privados (Lei nº 12.846/2013 — LAC) · Coger/RFB</p>
+  </div>
+  <div class="gate-card" id="inicioCard"></div>
 </div>
 
 <!-- ===================== HERO (banner institucional) ===================== -->
@@ -3506,6 +3528,66 @@ function abrirGateProcesso(){ renderGateProcesso(); $('#gate').style.display='fl
 function fecharGateProcesso(){ $('#gate').style.display='none'; render(); }
 
 /* ------------------------------------------------------------------ *
+ * 13-bis. TELA INICIAL (antes do gate "Dados do Processo")
+ * Uniformiza com o padrão já existente no Veritas (viewInicio/renderModalReiniciar): mostra o número
+ * do processo salvo neste navegador (ou estado vazio) e dá dois caminhos — "Novo processo" e "Importar
+ * processo (.json)". Não introduz storage novo: reusa doc/loadDraft, exportJson/importJson (mesma rotina
+ * de estado completo) e docVazio(). Só aparece uma vez por carregamento (chamada única em init()).
+ * ------------------------------------------------------------------ */
+function abrirInicio(){ renderInicio(); $('#inicio').style.display='flex'; }
+function fecharInicio(){ $('#inicio').style.display='none'; }
+function inicioTemDados(){
+  return !!(processoGateCompleto() || doc.fatos.length || doc.provas.length || doc.acusados.length);
+}
+function renderInicio(){
+  const card=$('#inicioCard'); card.innerHTML='';
+  let estado;
+  if(inicioTemDados()){
+    estado=el('div',{class:'inicio-estado'},
+      el('div',{class:'inicio-estado__label'},'Processo em andamento neste navegador'),
+      el('div',{class:'inicio-estado__num'}, doc.processo.numero || '(sem número)'),
+      el('div',{class:'inicio-estado__meta'},
+        doc.acusados.length+' ente(s) privado(s) · '+doc.fatos.length+' fato(s) · '+doc.provas.length+' prova(s)'));
+  } else {
+    estado=el('div',{class:'inicio-estado inicio-estado--vazio'},
+      el('div',{class:'inicio-estado__label'},'Nenhum processo aberto neste navegador'),
+      el('div',{class:'inicio-estado__meta',style:'margin-top:4px'},
+        'Comece um novo processo ou importe o .json de um processo já iniciado.'));
+  }
+  card.append(
+    el('h1',{},'Nexo PAR'),
+    el('p',{class:'gate-sub'},'Responsabilização de entes privados (Lei nº 12.846/2013 — LAC). Comece um novo processo ou importe o .json de um processo já iniciado — ele fica salvo neste navegador e é recarregado automaticamente na próxima abertura.'),
+    estado,
+    el('div',{class:'inicio-acoes'},
+      el('button',{class:'btn primary',onclick:inicioNovo},'+ Novo processo'),
+      el('button',{class:'btn',onclick:()=>importJson()},'Importar processo (.json)'))
+  );
+}
+function inicioNovo(){
+  // Sem nada em andamento → vai direto ao gate. Com dados → confirma antes de descartar (item Veritas).
+  if(!inicioTemDados()){ fecharInicio(); abrirGateProcesso(); return; }
+  $('#inicio').style.display='none'; // modal (#overlay z-index 60) fica abaixo do #inicio (z-index 9999)
+  const corpo=[
+    el('p',{class:'inicio-p'},'Este processo (',el('b',{},doc.processo.numero||'sem número'),') tem ',
+      el('b',{},doc.fatos.length+' fato(s)'),' e ',el('b',{},doc.acusados.length+' ente(s) privado(s)'),
+      ' e está salvo neste navegador — reabrir o navegador continuaria carregando-o automaticamente.'),
+    el('p',{class:'inicio-p'},'Reiniciar apaga o processo deste navegador (localStorage) e volta à tela inicial, para começar um novo ou importar outro. ',
+      el('strong',{},'Exporte o .json antes, se ainda precisar destes dados.')),
+    el('div',{class:'gate-aviso'},'Esta ação não pode ser desfeita — o processo só será recuperável se você tiver exportado o .json antes.')
+  ];
+  const foot=[
+    el('button',{class:'btn ghost',onclick:()=>{ closeModal(); abrirInicio(); }},'Cancelar'),
+    el('button',{class:'btn',onclick:exportJson},'Exportar .json antes'),
+    el('button',{class:'btn danger',onclick:confirmarReiniciarInicio},'Reiniciar mesmo assim')
+  ];
+  openModal(modalShell('Reiniciar processo',null,corpo,foot));
+}
+function confirmarReiniciarInicio(){
+  doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); scheduleSave(); render();
+  closeModal(); abrirGateProcesso();
+}
+
+/* ------------------------------------------------------------------ *
  * 14. EDIÇÃO DO PROCESSO
  * ------------------------------------------------------------------ */
 function abrirFormProcesso(){
@@ -3637,6 +3719,8 @@ $('#fileInput').addEventListener('change',e=>{
       if(temDados && !confirm('Isto substituirá o rascunho atual. Continuar?')) return;
       doc=migra(d); if(!doc._seq) recomputaSeq();
       lens='todos'; isolatedFato=null; revisadas.clear(); render();
+      fecharInicio(); // se a importação veio da tela inicial, sai dela; se veio do menu, é inócuo
+      if(!processoGateCompleto()) abrirGateProcesso(); // .json sem número → cai no gate
     }catch(err){ alert('Falha ao ler o JSON: '+err.message); }
   };
   rd.readAsText(file); e.target.value='';
@@ -4717,7 +4801,7 @@ function init(){
   window.addEventListener('resize',()=>renderMap());
 
   render();
-  if(!processoGateCompleto()) abrirGateProcesso(); // 1ª etapa — bloqueia o resto até "Número do processo" preenchido
+  abrirInicio(); // tela inicial (uma vez por carregamento) — dela sai-se para o gate "Dados do Processo"
 }
 
 </script>
