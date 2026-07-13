@@ -713,3 +713,64 @@ A especificação da Rodada 1 menciona um "conjunto canônico de 45 dispositivos
 - `node test-fluxo-integrado.js` → **127/127** (sem regressão).
 - Sintaxe: `new Function` sobre o `<script>` de ambos os arquivos → **OK**.
 - Playwright: `.pv-doc.scrollWidth` (820px) agora é **idêntico** a `.pv-doc.getBoundingClientRect().width` (820px) — sem overflow horizontal — tanto na tela quanto no PDF gerado via `page.pdf()` (Chromium), inspecionado visualmente: bloco de assinatura com linha contínua, sem quebra de dígitos, sem barra de rolagem.
+
+## Rodada 9 — Guia de Estilo de Impressão Unificado (COGER Print Standard)
+
+**Entrega de especificação:** "Rodada 9 — Guia de Estilo de Impressão Unificado (COGER Print Standard)" — documento especificativo que harmoniza a aparência impressa de todas as três ferramentas (Veritas, Nexo Coger, Oitiva 360) com o padrão visual consolidado do Integritas, sem quebrar a funcionalidade interativa. **Nenhuma alteração em ferramentas ou catálogo canônico nesta rodada**; é a criação de padrões reutilizáveis (CSS, HTML, JavaScript, documentação) que serão aplicados sequencialmente nas Rodadas 10–12.
+
+**Arquivo especificativo fornecido pelo usuário:** `/root/.claude/uploads/175ecdf8-5887-57b7-9696-2a2c1672751d/e7b88c01-rodada9guiaestiloimpressao.md` (documentação completa com definições de variáveis CSS, estrutura de página, header/footer fixos, seções com barras laterais, info boxes, blocos legais, tabelas padronizadas, quebras de página e utilitários JavaScript).
+
+**Entregáveis criados (`padroes/` — novo diretório):**
+
+1. **`coger-print-standard.css`** — Arquivo CSS unificado com:
+   - Definição de variáveis CSS COGER (paleta navy/gold, tipografia Inter/Barlow Condensed/JetBrains Mono, espaçamento A4/mm)
+   - Estilos de header fixo (60px, com logos, título, metadata — referência INT-YYYYMMDD-XXXX, data, hora)
+   - Estilos de footer fixo (40px, com referência, página X de Y, "USO INTERNO")
+   - Seções numeradas com barra lateral ouro (3px)
+   - Info boxes (dados estruturados com fundo cinza e borda)
+   - Blocos legais (citações de lei com barra lateral navy)
+   - Tabelas (cabeçalho navy com texto branco, linhas alternadas, bordas consistentes)
+   - Página-breaks automáticos (orphans/widows, page-break-inside:avoid em seções/tabelas/boxes)
+   - Classes utilitárias (.no-print, .coger-print-page-break-before, etc.)
+   - Tudo encapsulado em `@media print { … }` — zero impacto na UI interativa
+
+2. **`coger-print-template.html`** — Exemplo de markup HTML mostrando a estrutura esperada quando uma ferramenta adota o padrão:
+   - Header com logos (SVG embutido), título, metadata
+   - Main com ID `#printPage`
+   - Seções com `.coger-print-section`, `.coger-print-section-title`, `.coger-print-section-body`
+   - Info boxes com `.coger-print-infobox` + `.coger-print-infobox-row`
+   - Tabelas com `.coger-print-table` + `.coger-print-table-head`
+   - Blocos legais com `.coger-print-legal-block` + `.coger-print-legal-quote`
+   - Footer com referência, paginação, nota institucional
+   - Anotações comentadas para orientar integração
+
+3. **`coger-print-utility.js`** — Funções JavaScript reutilizáveis:
+   - `generatePrintReference()` — gera `INT-YYYYMMDD-XXXX` único
+   - `formatDatePT(date)`, `formatTimePT(date)` — localização para português
+   - `prepareForPrint(options)` — preenchimento de metadata no header/footer, zero de margens do body, disparo de evento `beforeprint`
+   - `validatePrintStructure()` — validação de presença de elementos críticos
+   - `estimatePrintPages()`, `updatePageCount(count)` — suporte a numeração
+   - `onPrintButtonClick(event)` — listener pronto para plugar em botão `[data-act="print"]`
+   - `initPrintSupport()` — inicialização completa (listeners, validação)
+   - Exportável como módulo CommonJS (quando necessário)
+
+4. **`GUIA-COGER-PRINT-STANDARD.md`** — Documentação de implementação:
+   - Explicação de princípios (offline-first, CSS puro, sem regressão)
+   - Passo a passo de integração (copiar CSS, adicionar header/footer HTML, copiar JS utility)
+   - Descrição visual de cada elemento (seções, info boxes, blocos legais, tabelas)
+   - Referência de paleta de cores (9 variáveis)
+   - Referência de tipografia (3 fontes, usos específicos)
+   - Referência de espaçamento e margens
+   - Explicação de quebras de página (automáticas e forçadas)
+   - Guia de funções JavaScript disponíveis
+   - Exemplo de fluxo completo (click → prepareForPrint → window.print)
+   - Seção de testes (navegador, headless)
+   - Troubleshooting (header não aparece, conteúdo cortado, etc.)
+   - Tabela de referência rápida de classes/IDs
+
+**Diretório criado:** `/home/user/desktop-tutorial/padroes/` — novo diretório centralizado para padrões reutilizáveis da suíte.
+
+**Próximas rodadas (dependentes):**
+- **Rodada 10 — Implementação no Veritas:** Integrar `coger-print-standard.css` no `ferramentas/veritas.html`, adaptar markup de impressão existente às classes do padrão, testar geração de PDF.
+- **Rodada 11 — Implementação no Nexo Coger:** Idem para `ferramentas/nexo-coger.html` (termos de intimação/indiciação).
+- **Rodada 12 — Implementação no Oitiva 360:** Idem para `ferramentas/oitiva-360.html` (termo de oitiva).
