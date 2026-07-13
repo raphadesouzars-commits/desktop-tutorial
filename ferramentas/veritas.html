@@ -992,12 +992,14 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
     padding: 0;
   }
 
-  .vdc-main, [role="main"] {
+  .vdc-main, [role="main"], #printPage {
     max-width: none;
     padding: calc(var(--coger-print-header-height) + var(--coger-print-margin-top))
              var(--coger-print-margin-right)
              calc(var(--coger-print-footer-height) + var(--coger-print-margin-bottom))
              var(--coger-print-margin-left);
+    width: 100%;
+    margin: 0;
   }
 
   .topbar, .hero, .rodape-app, .no-print {
@@ -1213,6 +1215,75 @@ footer.rodape-app .pad-par { margin-top: 4px; opacity: .75; }
   img {
     max-width: 100%;
     page-break-inside: avoid;
+  }
+
+  /* ── Blocos de Informação (COGER Print Standard) ──────────────────────────── */
+  .coger-print-infobox {
+    background: var(--coger-print-gray-100);
+    border: var(--coger-print-border-width-medium) solid var(--coger-print-gray-300);
+    border-radius: var(--coger-print-border-radius);
+    padding: 12pt 14pt;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-infobox-row {
+    display: flex;
+    gap: 12pt;
+    margin-bottom: 6pt;
+    font-size: 10pt;
+  }
+
+  .coger-print-infobox-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .coger-print-infobox-label {
+    font-weight: 700;
+    color: var(--coger-print-navy-700);
+    min-width: 120pt;
+    text-transform: capitalize;
+    flex-shrink: 0;
+  }
+
+  .coger-print-infobox-value {
+    color: var(--coger-print-text-primary);
+    flex: 1;
+    word-break: break-word;
+  }
+
+  /* ── Blocos de Legislação (citações de lei) ───────────────────────────────── */
+  .coger-print-legal-block {
+    background: var(--coger-print-gray-100);
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-navy-900);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-legal-label {
+    font-family: var(--coger-print-font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--coger-print-navy-900);
+    margin-bottom: 6pt;
+    display: block;
+  }
+
+  .coger-print-legal-quote {
+    font-size: 10pt;
+    color: var(--coger-print-text-primary);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.6;
+    font-family: var(--coger-print-font-mono);
+  }
+
+  /* ── Ocultar elementos não-print ─────────────────────────────────────────── */
+  .vdc-relatorio {
+    display: none !important;
   }
 }
 
@@ -3248,57 +3319,239 @@ function itemHashCelulaHtml(it) {
     return (it.arquivos.length > 1 ? '<small>' + escapeHtml(a.descricao || a.nomeArquivo) + ':</small> ' : '') + a.hashLocal;
   }).join("<br>") + '</div>';
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   COGER PRINT STANDARD (Rodada 10) — Utilidades de Impressão
+   ══════════════════════════════════════════════════════════════════════════════ */
+(function() {
+  window.CogerPrint = window.CogerPrint || {};
+
+  // Gera referência única no formato INT-YYYYMMDD-XXXX
+  function generatePrintReference() {
+    var now = new Date();
+    var yyyy = now.getFullYear();
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(now.getDate()).padStart(2, '0');
+    var xxxx = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    return 'INT-' + yyyy + mm + dd + '-' + xxxx;
+  }
+
+  // Formata data em português (ex: "13 de julho de 2026")
+  function formatDatePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+                 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
+  }
+
+  // Formata hora em português (ex: "18:35")
+  function formatTimePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  // Preenche metadados no header e footer
+  function fillPrintMetadata(options) {
+    options = options || {};
+    var reference = options.reference || generatePrintReference();
+    var now = new Date();
+    var dateStr = formatDatePtBr(now);
+    var timeStr = formatTimePtBr(now);
+
+    // Header
+    document.getElementById('coger-print-ref').textContent = reference;
+    document.getElementById('coger-print-date').textContent = dateStr;
+    document.getElementById('coger-print-time').textContent = timeStr;
+
+    // Footer
+    document.getElementById('coger-print-footer-ref').textContent = reference;
+
+    // Calcula total de páginas (simulação baseada em height do printPage)
+    var printPage = document.getElementById('printPage');
+    if (printPage) {
+      var pageHeight = 297 - 40 - 40; // A4 (297mm) - header (60px ~20mm) - footer (40px ~13mm)
+      var contentHeight = printPage.scrollHeight;
+      var estimatedPages = Math.ceil(contentHeight / (pageHeight * 3.78)); // conversão px para mm
+      document.querySelectorAll('.page-count').forEach(function(el) {
+        el.textContent = Math.max(1, estimatedPages);
+      });
+    }
+
+    return reference;
+  }
+
+  // Prepara documento para print
+  function prepareForPrint(options) {
+    options = options || {};
+    var reference = fillPrintMetadata(options);
+    return reference;
+  }
+
+  // Expõe funções públicas
+  window.CogerPrint.generatePrintReference = generatePrintReference;
+  window.CogerPrint.formatDatePtBr = formatDatePtBr;
+  window.CogerPrint.formatTimePtBr = formatTimePtBr;
+  window.CogerPrint.fillPrintMetadata = fillPrintMetadata;
+  window.CogerPrint.prepareForPrint = prepareForPrint;
+})();
+
 function viewRelatorio() {
   var d = DB.dossie, p = d.processo;
   var temSigilo = d.itens.some(function (i) { return i.sigilo !== "publico"; });
+
+  // SVG logos como data URIs (placeholders simples)
+  var logoMF = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 40%22%3E%3Crect width=%22100%22 height=%2240%22 fill=%22%230B2F5F%22/%3E%3Ctext x=%2250%22 y=%2228%22 text-anchor=%22middle%22 font-size=%2216%22 fill=%22white%22 font-family=%22Arial%22%3EMF%3C/text%3E%3C/svg%3E';
+  var logoRFB = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 40%22%3E%3Crect width=%22100%22 height=%2240%22 fill=%221E4C99%22/%3E%3Ctext x=%2250%22 y=%2228%22 text-anchor=%22middle%22 font-size=%2216%22 fill=%22white%22 font-family=%22Arial%22%3ERFB%3C/text%3E%3C/svg%3E';
+
   return '<div class="vdc-page">' +
-    '<div class="vdc-actions no-print"><button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.voltarProcesso()">&larr; Voltar</button><button class="rfb-btn rfb-btn--primary rfb-btn--sm" onclick="window.print()">Imprimir / Salvar PDF</button></div>' +
-    '<div class="rfb-card vdc-relatorio"><div class="rfb-card__body">' +
+    '<div class="vdc-actions no-print" style="margin-bottom:20px;"><button class="rfb-btn rfb-btn--ghost rfb-btn--sm" onclick="App.voltarProcesso()">&larr; Voltar</button><button class="rfb-btn rfb-btn--primary rfb-btn--sm" onclick="window.CogerPrint.prepareForPrint(); window.print();">Imprimir / Salvar PDF</button></div>' +
 
-      '<div class="impresso-topo"><div class="impresso-marca">Receita Federal <span>·</span> Corregedoria</div></div>' +
-      '<div class="impresso-titulo">Veritas Digital - Coger</div>' +
-      '<div class="impresso-subtitulo">Relatório de Cadeia de Custódia · Investigação, pareceres e comissões</div>' +
-      '<div class="impresso-epigrafe">&ldquo;' + escapeHtml(CATALOGO.epigrafe.texto) + '&rdquo; — ' + escapeHtml(CATALOGO.epigrafe.autor) + '</div>' +
+    '<div id="printPage">' +
+      /* HEADER FIXO */
+      '<header class="coger-print-header">' +
+        '<div class="coger-print-header-logos">' +
+          '<img src="' + logoMF + '" alt="Ministério da Fazenda"/>' +
+          '<img src="' + logoRFB + '" alt="Receita Federal"/>' +
+        '</div>' +
+        '<div class="coger-print-header-title">' +
+          '<h1 class="coger-print-doc-title">DOSSIÊ DE PROVAS</h1>' +
+          '<p class="coger-print-doc-subtitle">Ferramentas COGER · Veritas</p>' +
+        '</div>' +
+        '<div class="coger-print-header-meta">' +
+          '<span>Referência: <strong id="coger-print-ref">INT-YYYYMMDD-XXXX</strong></span>' +
+          '<span>Data: <strong id="coger-print-date">—</strong></span>' +
+          '<span>Hora: <strong id="coger-print-time">—</strong></span>' +
+        '</div>' +
+        '<div class="coger-print-header-divider"></div>' +
+      '</header>' +
 
-      '<div class="impresso-refs">' +
-        '<span><b>Processo nº</b> ' + escapeHtml(p.numero || "—") + '</span>' +
-        '<span><b>Portaria</b> ' + escapeHtml(p.portaria || "—") + '</span>' +
-        '<span><b>Seção/unidade</b> ' + escapeHtml(p.secaoResponsavel || "—") + '</span>' +
-        '<span><b>Gerado em</b> ' + fmtDT(nowIso()) + '</span>' +
-      '</div>' +
+      /* CONTEÚDO PRINCIPAL */
+      '<main>' +
+        /* SEÇÃO 1: DADOS DO PROCESSO */
+        '<section class="coger-print-section">' +
+          '<h2 class="coger-print-section-title">1 — DADOS DO PROCESSO</h2>' +
+          '<div class="coger-print-section-body">' +
+            '<div class="coger-print-infobox">' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Processo:</span>' +
+                '<span class="coger-print-infobox-value">' + escapeHtml(p.numero || "—") + '</span>' +
+              '</div>' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Portaria:</span>' +
+                '<span class="coger-print-infobox-value">' + escapeHtml(p.portaria || "—") + '</span>' +
+              '</div>' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Seção/Unidade:</span>' +
+                '<span class="coger-print-infobox-value">' + escapeHtml(p.secaoResponsavel || "—") + '</span>' +
+              '</div>' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Tipo de Processo:</span>' +
+                '<span class="coger-print-infobox-value">' + escapeHtml((p.tipoProcesso && TIPOS_PROCESSO[p.tipoProcesso] && TIPOS_PROCESSO[p.tipoProcesso].nome) || "—") + '</span>' +
+              '</div>' +
+            '</div>' +
+            '<div class="coger-print-infobox">' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Presidente:</span>' +
+                '<span class="coger-print-infobox-value">' + (p.comissao.presidente.nome ? escapeHtml(p.comissao.presidente.nome) + (p.comissao.presidente.cargo ? ' (' + escapeHtml(p.comissao.presidente.cargo) + ')' : '') : "—") + '</span>' +
+              '</div>' +
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Secretário(a):</span>' +
+                '<span class="coger-print-infobox-value">' + (p.comissao.secretario.nome ? escapeHtml(p.comissao.secretario.nome) + (p.comissao.secretario.cargo ? ' (' + escapeHtml(p.comissao.secretario.cargo) + ')' : '') : "—") + '</span>' +
+              '</div>' +
+              (p.comissao.vogais.length > 0 ?
+                '<div class="coger-print-infobox-row">' +
+                  '<span class="coger-print-infobox-label">Vogais:</span>' +
+                  '<span class="coger-print-infobox-value">' + p.comissao.vogais.map(function(v) { return escapeHtml(v.nome || "—") + (v.cargo ? ' (' + escapeHtml(v.cargo) + ')' : ''); }).join('; ') + '</span>' +
+                '</div>'
+                : '') +
+            '</div>' +
+          '</div>' +
+        '</section>' +
 
-      '<div class="impresso-infobox">' +
-        membroResumoHtml("Presidente", p.comissao.presidente) +
-        membroResumoHtml("Secretário(a)", p.comissao.secretario) +
-        (p.comissao.vogais.length ? p.comissao.vogais.map(function (v, i) { return membroResumoHtml("Vogal " + (i + 1), v); }).join("") : "<div><b>Vogais:</b> —</div>") +
-        '<div class="divisor"></div>' +
-        '<div class="linha"><div><div class="rotulo">hashDoDossie</div><span style="font-family:var(--rfb-font-mono);font-size:10.5px;">' + d.hashDoDossie + '</span></div></div>' +
-      '</div>' +
+        /* SEÇÃO 2: ELEMENTOS DE PROVA */
+        '<section class="coger-print-section">' +
+          '<h2 class="coger-print-section-title">2 — ELEMENTOS DE PROVA</h2>' +
+          '<div class="coger-print-section-body">' +
+            (d.itens.length === 0 ?
+              '<p>Nenhum elemento de prova catalogado neste dossiê.</p>'
+              : d.itens.map(function(it) {
+                var ef = it.proveniencia.elementoFisico;
+                return '<div class="coger-print-infobox">' +
+                  '<div class="coger-print-infobox-row">' +
+                    '<span class="coger-print-infobox-label">Título:</span>' +
+                    '<span class="coger-print-infobox-value">' + escapeHtml(it.titulo) + '</span>' +
+                  '</div>' +
+                  '<div class="coger-print-infobox-row">' +
+                    '<span class="coger-print-infobox-label">Categoria:</span>' +
+                    '<span class="coger-print-infobox-value">' + (CATEGORIAS_TODAS[it.categoria] || "—") + '</span>' +
+                  '</div>' +
+                  '<div class="coger-print-infobox-row">' +
+                    '<span class="coger-print-infobox-label">Proveniência:</span>' +
+                    '<span class="coger-print-infobox-value">' + (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") + '</span>' +
+                  '</div>' +
+                  '<div class="coger-print-infobox-row">' +
+                    '<span class="coger-print-infobox-label">Folhas nos autos:</span>' +
+                    '<span class="coger-print-infobox-value">' + escapeHtml(it.folhaAutos || "—") + '</span>' +
+                  '</div>' +
+                  '<div class="coger-print-infobox-row">' +
+                    '<span class="coger-print-infobox-label">Status:</span>' +
+                    '<span class="coger-print-infobox-value">' + (STATUS_ITEM[it.status] || "—") + '</span>' +
+                  '</div>' +
+                  (it.arquivos.length > 0 ?
+                    '<div class="coger-print-infobox-row">' +
+                      '<span class="coger-print-infobox-label">Arquivos:</span>' +
+                      '<span class="coger-print-infobox-value">' + it.arquivos.length + '</span>' +
+                    '</div>'
+                    : '') +
+                '</div>';
+              }).join('')) +
+          '</div>' +
+        '</section>' +
 
-      (temSigilo ? '<div class="impresso-alerta">Atenção — conteúdo classificado: este relatório contém itens de acesso restrito e/ou sigilosos. Trate a divulgação e o compartilhamento conforme a classificação de cada item.</div>' : '') +
+        /* SEÇÃO 3: LINHA DO TEMPO */
+        (d.itens.some(function(it) { return eventosMesclados(it).length > 0; }) ?
+          '<section class="coger-print-section">' +
+            '<h2 class="coger-print-section-title">3 — LINHA DO TEMPO DETALHADA</h2>' +
+            '<div class="coger-print-section-body">' +
+              d.itens.map(function(it) {
+                var evs = eventosMesclados(it);
+                if (evs.length === 0) return '';
+                return '<div class="coger-print-infobox">' +
+                  '<div style="font-weight:600; margin-bottom:10pt;">' + escapeHtml(it.titulo) + '</div>' +
+                  '<div style="font-size:10pt; color:#4A5568;">' +
+                  evs.map(function(ev) {
+                    return '<div style="margin-bottom:6pt;"><strong>' + escapeHtml(ev.titulo) + '</strong><br/>' +
+                      (ev.data ? '<span style="font-size:9pt; color:#666;">' + escapeHtml(ev.data) + '</span>' : '') +
+                      (ev.observacoes ? ' — ' + escapeHtml(ev.observacoes) : '') + '</div>';
+                  }).join('') +
+                  '</div>' +
+                '</div>';
+              }).join('') +
+            '</div>' +
+          '</section>'
+          : '') +
 
-      '<h3 class="impresso-secao">1. Itens (elementos de prova)</h3>' +
-      '<div class="rfb-table-wrap"><table class="rfb-table"><thead><tr><th>Item</th><th>Categoria</th><th>Proveniência</th><th>Arquivos</th><th>Hash</th><th>Status</th><th>Fls.</th></tr></thead><tbody>' +
-        d.itens.map(function (it) {
-          var ef = it.proveniencia.elementoFisico;
-          var provCel = (PROVENIENCIA_TIPOS[it.proveniencia.tipo] || "—") +
-            (ef && ef.presente ? '<br><span class="rfb-badge rfb-badge--' + (ef.condicaoLacre === "rompido" ? "danger" : "success") + '" style="margin-top:4px;">&#128274; Lacre ' + (ef.numeroLacre ? "nº " + escapeHtml(ef.numeroLacre) + " — " : "") + (CONDICAO_LACRE[ef.condicaoLacre] || "") + '</span>' : "");
-          return '<tr><td>' + escapeHtml(it.titulo) + '</td><td>' + (CATEGORIAS_TODAS[it.categoria] || "—") + '</td><td>' + provCel + '</td>' +
-            '<td>' + it.arquivos.length + '</td><td>' + itemHashCelulaHtml(it) + '</td><td>' + STATUS_ITEM[it.status] + '</td><td>' + escapeHtml(it.folhaAutos || "—") + '</td></tr>';
-        }).join("") + '</tbody></table></div>' +
+      '</main>' +
 
-      '<h3 class="impresso-secao">2. Apêndice — linha do tempo detalhada</h3>' +
-        d.itens.map(function (it) {
-          var evs = eventosMesclados(it);
-          return '<div class="vdc-report-item-block"><div style="font-weight:600;margin-bottom:6px;">' + escapeHtml(it.titulo) + '</div>' +
-            '<div class="vdc-timeline">' + (evs.length ? evs.map(timelineEventHtml).join("") : '<div class="rfb-body--small rfb-body--muted">Sem eventos.</div>') + '</div></div>';
-        }).join("") +
+      /* FOOTER FIXO */
+      '<footer class="coger-print-footer">' +
+        '<div class="coger-print-footer-divider"></div>' +
+        '<div class="coger-print-footer-content">' +
+          '<div class="coger-print-footer-left">' +
+            '<span id="coger-print-footer-ref">INT-YYYYMMDD-XXXX</span>' +
+          '</div>' +
+          '<div class="coger-print-footer-center">' +
+            '<span>Página <span class="page-number">1</span> de <span class="page-count">1</span></span>' +
+          '</div>' +
+          '<div class="coger-print-footer-right">' +
+            '<span>USO INTERNO · FERRAMENTAS COGER</span>' +
+          '</div>' +
+        '</div>' +
+      '</footer>' +
+    '</div>' +
 
-      '<div class="impresso-rodape">' +
-        '<div class="disclaimer"><strong>Fundamentação doutrinária:</strong> ' + escapeHtml(CATALOGO.fundamentacao) + '<br><br>' + escapeHtml(CATALOGO.disclaimerLongo) + '</div>' +
-        '<div class="linha-final"><span>Veritas Digital - Coger · Ferramentas Coger · RFB</span><span>' + escapeHtml(p.numero || "sem número") + '</span></div>' +
-      '</div>' +
-    '</div></div>' +
   '</div>';
 }
 
