@@ -27,6 +27,20 @@ def figura_ajustada(doc, image_path, caption, max_width_cm=15.49, max_height_cm=
     return add_figure(doc, image_path, caption, width_cm=width_cm)
 
 
+def figura_pendente(doc, descricao):
+    """Marcador de posição para uma figura que ainda não tem captura de tela.
+    Consome um número de figura da sequência normal (para que as figuras reais
+    seguintes não colidam) sem inserir imagem — apenas um texto visível."""
+    import helpers as _h
+    _h._FIGURE_COUNTER["n"] += 1
+    n = _h._FIGURE_COUNTER["n"]
+    add_muted(
+        doc,
+        "Figura %d (pendente) — [CAPTURA PENDENTE — %s]" % (n, descricao),
+    )
+    return n
+
+
 reset_figure_counter()
 doc = new_document()
 
@@ -37,10 +51,11 @@ add_cover(
     doc,
     LOGO,
     "Manual da Suíte COGER",
-    "Veritas · Nexo Coger · Oitiva 360",
+    "Veritas · Nexo Coger · Nexo PAR · Oitiva 360",
     [
-        "Lei nº 8.112, de 11 de dezembro de 1990 — Processo Administrativo Disciplinar",
-        "Suíte de 3 ferramentas offline/locais, integráveis mas independentes entre si",
+        "Lei nº 8.112, de 11 de dezembro de 1990 — Processo Administrativo Disciplinar; "
+        "Lei nº 12.846, de 1º de agosto de 2013 — Responsabilização Administrativa (LAC)",
+        "Suíte de 4 ferramentas offline/locais, integráveis mas independentes entre si",
         "Corregedoria da Receita Federal do Brasil (Coger/RFB)",
     ],
 )
@@ -54,15 +69,19 @@ add_chapter(doc, "Seção 1", "Introdução Geral")
 
 add_body(
     doc,
-    "A **Suíte COGER** reúne três ferramentas de apoio ao trabalho de comissões de "
+    "A **Suíte COGER** reúne quatro ferramentas de apoio ao trabalho de comissões de "
     "Processo Administrativo Disciplinar (PAD), Processo Administrativo de "
     "Responsabilização (PAR) e sindicância, no âmbito da Corregedoria da Receita "
-    "Federal do Brasil, à luz da **Lei nº 8.112, de 11 de dezembro de 1990**. As três "
-    "ferramentas — **Veritas**, **Nexo Coger** e **Oitiva 360** — são páginas HTML "
-    "autocontidas, executadas inteiramente no navegador do usuário, **sem servidor, "
-    "sem nuvem e sem envio de dados a terceiros**. Todo o armazenamento é local "
-    "(localStorage do navegador) e a persistência entre sessões depende de "
-    "exportação/importação manual de arquivos `.json` pelo próprio usuário.",
+    "Federal do Brasil. A suíte cobre dois domínios normativos distintos: o **PAD** "
+    "e a sindicância, à luz da **Lei nº 8.112, de 11 de dezembro de 1990**, e o "
+    "**PAR**, à luz da **Lei nº 12.846, de 1º de agosto de 2013** (Lei Anticorrupção "
+    "— LAC), que trata da responsabilização objetiva de entes privados por atos "
+    "lesivos à Administração. As quatro ferramentas — **Veritas**, **Nexo Coger**, "
+    "**Nexo PAR** e **Oitiva 360** — são páginas HTML autocontidas, executadas "
+    "inteiramente no navegador do usuário, **sem servidor, sem nuvem e sem envio de "
+    "dados a terceiros**. Todo o armazenamento é local (localStorage do navegador) e "
+    "a persistência entre sessões depende de exportação/importação manual de arquivos "
+    "`.json` pelo próprio usuário.",
 )
 
 add_body(
@@ -77,32 +96,62 @@ add_body(
 add_alert(
     doc,
     [
-        "**Veritas** — cadastro de provas com cadeia de custódia (proveniência, hash, linha do tempo).",
-        "**Nexo Coger** — mapa fato-prova-norma, apoio à construção da indiciação.",
-        "**Oitiva 360** — apoio à condução de oitivas e interrogatórios, com roteiro e termo.",
+        "**Veritas** — cadastro de provas com cadeia de custódia (proveniência, hash, linha do tempo); opera em modo dual (PAD/PAR).",
+        "**Nexo Coger** — mapa fato-prova-norma e apoio à indiciação no domínio **PAD**.",
+        "**Nexo PAR** — mapa fato-prova-norma e apoio à Nota de Indiciação no domínio **PAR** (LAC), com cadastro de ente privado.",
+        "**Oitiva 360** — apoio à condução de oitivas e interrogatórios, com roteiro e termo; opera em modo dual (PAD/PAR).",
     ],
     kind="info",
-    label="As três ferramentas da suíte",
+    label="As quatro ferramentas da suíte",
+)
+
+add_body(
+    doc,
+    "A cobertura dos dois domínios se distribui de duas formas. O **Nexo** é "
+    "**bifurcado por domínio**: o **Nexo Coger** atende o PAD e o **Nexo PAR** "
+    "atende o PAR, cada um em seu próprio arquivo. Já o **Veritas** e o **Oitiva "
+    "360** operam em **modo dual** — um único arquivo que ajusta seu comportamento "
+    "conforme o domínio do processo em curso.",
+)
+
+add_alert(
+    doc,
+    [
+        "**Modo dual** — um único arquivo, com comportamento condicional ao domínio "
+        "do processo (PAD ou PAR). É o caso do **Veritas** e do **Oitiva 360**: a "
+        "mesma ferramenta acomoda os dois ritos, revelando campos e regras próprios "
+        "de cada domínio conforme o tipo de processo em uso.",
+        "**Modo fork** — dois arquivos independentes, um por domínio. É o caso do "
+        "par **Nexo Coger** (PAD) / **Nexo PAR** (PAR): não é uma ferramenta com "
+        "duas variações, mas duas ferramentas distintas que compartilham a mesma "
+        "mecânica de mapa fato-prova-norma. Isso explica por que só o Nexo aparece "
+        "em \"duas versões\" e o Veritas e o Oitiva 360 não.",
+    ],
+    kind="info",
+    label="Modo dual × modo fork",
 )
 
 add_body(
     doc,
     "Cada ferramenta é **funcionalmente completa por si só** — é inteiramente "
-    "possível cadastrar provas no Veritas, montar o mapa fático no Nexo Coger e "
-    "conduzir oitivas no Oitiva 360 sem que nenhuma delas jamais troque um arquivo "
-    "com as outras. As Seções 2, 3 e 4 deste manual documentam cada ferramenta "
-    "**em uso isolado**, exatamente como ela se comporta quando usada sozinha.",
+    "possível cadastrar provas no Veritas, montar o mapa fático no Nexo Coger ou no "
+    "Nexo PAR e conduzir oitivas no Oitiva 360 sem que nenhuma delas jamais troque "
+    "um arquivo com as outras. As Seções 2 a 5 deste manual documentam cada "
+    "ferramenta **em uso isolado**, exatamente como ela se comporta quando usada "
+    "sozinha.",
 )
 
 add_body(
     doc,
-    "Ainda assim, as três ferramentas **podem** trocar informações entre si por "
+    "Ainda assim, as quatro ferramentas **podem** trocar informações entre si por "
     "meio de exportação e importação de arquivos `.json` — por exemplo, provas "
-    "cadastradas no Veritas podem alimentar o mapa do Nexo Coger, e um termo de "
-    "oitiva gerado no Oitiva 360 pode ser importado como prova no Veritas. Essa "
-    "integração é **opcional e aditiva**: nenhuma das ferramentas exige a outra "
-    "para funcionar, e os detalhes de cada contrato de integração ficam reservados "
-    "para a **Seção 5 — Integração entre as três ferramentas**.",
+    "cadastradas no Veritas podem alimentar o mapa do Nexo Coger ou do Nexo PAR, e "
+    "um termo de oitiva gerado no Oitiva 360 pode ser importado como prova no "
+    "Veritas. Cada contrato carrega, hoje, um campo de **domínio** (PAD/PAR) que a "
+    "ferramenta receptora confere na importação. Essa integração é **opcional e "
+    "aditiva**: nenhuma das ferramentas exige a outra para funcionar, e os detalhes "
+    "de cada contrato de integração ficam reservados para a **Seção 6 — Integração "
+    "entre as quatro ferramentas**.",
 )
 
 add_separator(doc)
@@ -148,6 +197,31 @@ add_alert(
     label="Fundamentação doutrinária",
 )
 
+add_body(
+    doc,
+    "Nos **Dados do processo** (o cabeçalho da tela do dossiê, onde ficam o número "
+    "do processo e o botão de exportação), há um campo **Tipo de processo**, "
+    "**opcional**. É dele que o Veritas deriva o **domínio** do dossiê: se o tipo "
+    "escolhido for um tipo PAR, o domínio passa a `par`; se for um tipo PAD ou de "
+    "sindicância, o domínio é `pad`. Esse domínio é o que sensibiliza, mais adiante, "
+    "as categorias de prova disponíveis (Etapa 1) e é emitido nos contratos de "
+    "exportação (Seção 2.3). Preencher o Tipo de processo não é exigido para "
+    "cadastrar provas.",
+)
+
+add_alert(
+    doc,
+    [
+        "Sem **Tipo de processo** definido, o Veritas permanece **agnóstico de "
+        "domínio**: aceita prova de qualquer origem, sem filtro, e não marca "
+        "`pad` nem `par` no dossiê. O campo só passa a influenciar o comportamento "
+        "da ferramenta quando efetivamente preenchido — dossiês antigos, sem esse "
+        "campo, seguem funcionando exatamente como antes.",
+    ],
+    kind="info",
+    label="Sem tipo de processo, o Veritas é agnóstico de domínio",
+)
+
 add_h2(doc, "2.1 O wizard de cadastro de prova nova")
 
 add_body(
@@ -181,11 +255,25 @@ add_alert(
 )
 
 add_numbered(doc, 1, "**Título/descrição** — campo de texto livre. **Obrigatório**: se deixado em branco, o Veritas bloqueia o avanço com a mensagem \"Informe o título/descrição.\". Placeholder de exemplo: *Ex.: Extrato bancário — conta XXXX, período 01/2023 a 12/2023*.")
-add_numbered(doc, 2, "**Categoria** — seleção em lista. **Obrigatória**: se não selecionada, a mensagem é \"Selecione a categoria.\". As opções são: Print de sistema, Documento financeiro, Comunicação (e-mail/mensagem), Foto/vídeo, Laudo/perícia, Ofício, Decisão judicial, Documento físico, Dispositivo/mídia física (HD, celular, pendrive etc.) e Outro. Existe ainda a categoria **\"Termo de oitiva\"**, mas ela é reservada — só é atribuída automaticamente quando um termo do Oitiva 360 é importado (ver Seção 5); não é um fluxo de criação manual normal.")
+add_numbered(doc, 2, "**Categoria** — seleção em lista. **Obrigatória**: se não selecionada, a mensagem é \"Selecione a categoria.\". As opções são: Print de sistema, Documento financeiro, Comunicação (e-mail/mensagem), Foto/vídeo, Laudo/perícia, Ofício, Decisão judicial, Documento físico, Dispositivo/mídia física (HD, celular, pendrive etc.) e Outro. Existe ainda a categoria **\"Termo de oitiva\"**, mas ela é reservada — só é atribuída automaticamente quando um termo do Oitiva 360 é importado (ver Seção 6); não é um fluxo de criação manual normal.")
 add_numbered(doc, 3, "**Nº/folha nos autos** — texto livre, opcional (marcado como \"opcional\" na própria tela).")
 add_numbered(doc, 4, "**Vinculado à matriz de apuração** — texto livre, opcional, para anotar a que fato/hipótese este elemento de prova sustenta.")
 add_numbered(doc, 5, "**Sigilo/classificação** — seleção em lista, opcional, com valor padrão \"Acesso restrito\". Opções: Público nos autos, Acesso restrito, Sigiloso.")
 add_numbered(doc, 6, "**Extrato ou conteúdo integral?** — grupo de opções (\"Sim — conteúdo integral\" / \"Não — extrato/trecho parcial\"), com valor padrão \"Sim\".")
+
+add_alert(
+    doc,
+    [
+        "Quando o dossiê está no **domínio PAR** (Tipo de processo PAR — ver a nota "
+        "de abertura desta seção), a lista de **Categoria** ganha duas opções "
+        "adicionais, próprias da responsabilização de entes privados: **\"Programa "
+        "de integridade\"** e **\"Informações do COAF\"**. Elas não aparecem em "
+        "dossiês PAD ou sem tipo definido. A categoria **\"Prova emprestada\"** "
+        "permanece comum aos dois domínios.",
+    ],
+    kind="info",
+    label="Categorias de prova adicionais no domínio PAR",
+)
 
 add_body(
     doc,
@@ -462,10 +550,21 @@ add_alert(
         "Nexo Coger\"** — um botão diferente, que gera apenas as provas "
         "convertidas para o catálogo canônico de tipos de prova do Nexo Coger. "
         "Essa segunda exportação é o contrato de integração com o Nexo Coger e "
-        "está documentada na Seção 5 deste manual.",
+        "está documentada na Seção 6 deste manual.",
     ],
     kind="warn",
     label="Atenção — não confundir as duas exportações",
+)
+
+add_body(
+    doc,
+    "Os **dois contratos de exportação** — o \"Exportar .json\" (dossiê inteiro) e "
+    "o \"Exportar provas → Nexo Coger\" — emitem, no envelope, o campo **`dominio`** "
+    "(`pad` ou `par`) derivado do Tipo de processo. É esse campo que a ferramenta "
+    "receptora (Nexo Coger ou Nexo PAR) confere na importação, aceitando apenas "
+    "provas do seu próprio domínio. Quando o dossiê não tem Tipo de processo "
+    "definido, o envelope sai sem domínio marcado (agnóstico); o tratamento dessa "
+    "conferência na importação é detalhado na Seção 6.",
 )
 
 add_body(
@@ -532,7 +631,7 @@ add_alert(
     doc,
     [
         "Não confunda esse comportamento com o da **importação de termo de "
-        "oitiva** (Seção 5.3): ali, um hash (`hash_origem`) divergente "
+        "oitiva** (Seção 6.3): ali, um hash (`hash_origem`) divergente "
         "**bloqueia totalmente** a importação e nada é gravado. Na reabertura "
         "de dossiê (este fluxo), a divergência de `hashDoDossie` é apenas um "
         "aviso — a importação do dossiê inteiro segue adiante mesmo assim. São "
@@ -617,6 +716,22 @@ figura_ajustada(
     doc,
     os.path.join(SHOTS, "nexo-mapa-fato-prova-norma.png"),
     "Mapa fato-prova-norma do Nexo Coger, com arestas ligando fatos às provas vinculadas.",
+)
+
+add_alert(
+    doc,
+    [
+        "Esta seção documenta o **Nexo Coger no domínio PAD** — a apuração de "
+        "responsabilidade de servidores à luz da **Lei nº 8.112, de 11 de dezembro "
+        "de 1990**. O domínio **PAR** (responsabilização de entes privados pela "
+        "**Lei nº 12.846, de 1º de agosto de 2013** — LAC) é atendido por uma "
+        "ferramenta própria e independente, o **Nexo PAR**, documentada na **Seção "
+        "4**. Os dois compartilham a mesma mecânica de mapa fato-prova-norma "
+        "(modo fork — dois arquivos, um por domínio), mas têm campos, papéis, "
+        "pendências e documento final distintos.",
+    ],
+    kind="info",
+    label="Escopo desta seção — domínio PAD",
 )
 
 add_h2(doc, "3.1 Dados do Processo")
@@ -746,7 +861,7 @@ add_body(
     "obrigatória. Sempre que o estado exibido (calculado ou sobrescrito) não for "
     "\"suficiente\", surge o campo **Elementos buscados**, com o hint \"O que "
     "falta provar? Vira 'elementos buscados' da próxima oitiva.\" — este campo "
-    "alimenta diretamente o Oitiva 360 (ver Seção 5).",
+    "alimenta diretamente o Oitiva 360 (ver Seção 6).",
 )
 
 add_h3(doc, "Situação do fato")
@@ -813,7 +928,7 @@ add_body(
     "informante\" — junto com os campos **Deponente**, **Papel do depoente**, "
     "**Compromissada?** e o trio de campos sobre contradita; e (b) na tela "
     "**\"Revisão de pauta\"** (usada para preparar a exportação de pauta para o "
-    "Oitiva 360 — ver Seção 5), no bloco \"Depoente\", com os campos **Nome** e "
+    "Oitiva 360 — ver Seção 6), no bloco \"Depoente\", com os campos **Nome** e "
     "**Papel (catálogo canônico)**.",
 )
 
@@ -958,7 +1073,7 @@ add_numbered(doc, 8, "**E-mail(s)** — texto livre.")
 add_numbered(doc, 9, "**Alegações da defesa não acatadas** — área de texto, preenchida antes da impressão final da indiciação (também ajustável na própria tela de impressão).")
 add_numbered(doc, 10, "**Bloco \"Notificação prévia\"** — três campos: \"Realizada?\" (Sim/Não), \"Data\" e \"Ref. autos\".")
 add_numbered(doc, 11, "**Bloco \"Interrogatório\"** — quatro campos: \"Status\" (Pendente / Realizado / Silêncio formalizado / Cancelado), \"Data\", \"Ref. autos\" e \"Realizado após todas as provas?\" (Sim/Não).")
-add_numbered(doc, 12, "**Bloco \"Contexto de oitiva\"** — condicional: só aparece quando o acusado já recebeu algum retorno de oitiva do Oitiva 360 (Seção 5.4). Lista cada item recebido com a referência do fato e da prova de origem, a citação do resumo da resposta (quando houver) e uma caixa \"Revisado\" para a comissão marcar a conferência.")
+add_numbered(doc, 12, "**Bloco \"Contexto de oitiva\"** — condicional: só aparece quando o acusado já recebeu algum retorno de oitiva do Oitiva 360 (Seção 6.4). Lista cada item recebido com a referência do fato e da prova de origem, a citação do resumo da resposta (quando houver) e uma caixa \"Revisado\" para a comissão marcar a conferência.")
 
 add_alert(
     doc,
@@ -1013,7 +1128,7 @@ add_numbered(doc, 2, "**Título** — texto livre. **Obrigatório**: se vazio, \
 add_numbered(doc, 3, "**Descrição** — área de texto livre.")
 add_numbered(doc, 4, "**Documento (ref. autos)** e **Folhas** — dupla de campos que registra a referência da prova aos autos do processo (distinta da \"Ref. autos\" da contradita, que só existe no bloco de depoente testemunhal/declaração de informante).")
 add_numbered(doc, 5, "**Código do anexo (opcional)** — texto livre; se vazio, a minuta gera automaticamente \"Prova nº N\" no índice.")
-add_numbered(doc, 6, "**Hash Veritas Digital - Coger** — texto livre, referência manual ao hash do item no Veritas (sem integração automática — ver Seção 5 para a integração real via arquivo).")
+add_numbered(doc, 6, "**Hash Veritas Digital - Coger** — texto livre, referência manual ao hash do item no Veritas (sem integração automática — ver Seção 6 para a integração real via arquivo).")
 add_numbered(doc, 7, "**Bloco de detalhe do tipo** — ver tabela abaixo; varia conforme o \"Tipo de prova\" escolhido.")
 add_numbered(doc, 8, "**Trechos significativos** — lista repetível de pares Citação / Referência, com botão para adicionar/remover linhas.")
 add_numbered(doc, 9, "**Contraditório — acusado intimado da produção?** — três opções: \"Intimado\", \"Não intimado\" ou \"Não avaliado\".")
@@ -1065,7 +1180,7 @@ add_h2(doc, "3.8 Selo de origem — retorno de oitiva")
 add_body(
     doc,
     "Quando uma prova é criada no Nexo Coger a partir da exportação "
-    "**\"Exportar prova(s) para o Nexo\"** do Oitiva 360 (Seção 5.1), o "
+    "**\"Exportar prova(s) para o Nexo\"** do Oitiva 360 (Seção 6.1), o "
     "cartão dessa prova no mapa fato-prova-norma recebe um selo dourado "
     "**🎙**, ao lado dos demais selos do cartão de prova (como o 🌐 de "
     "origem Veritas). O tooltip do selo mostra os campos `pauta_id`, "
@@ -1102,7 +1217,7 @@ add_body(
     "Não confunda este selo de **prova** com o selo pré-existente, também "
     "dourado (🎙), que aparece no **cartão de fato** quando o fato recebe "
     "contexto de um retorno de oitiva importado pelo fluxo \"Exportar "
-    "retorno (contexto do acusado)\" (Seção 5.4) — esse outro selo, no "
+    "retorno (contexto do acusado)\" (Seção 6.4) — esse outro selo, no "
     "cartão de fato, é anterior a esta rodada de implementação e já "
     "funciona plenamente.",
 )
@@ -1209,9 +1324,352 @@ add_body(
 page_break(doc)
 
 # ---------------------------------------------------------------------------
-# Seção 4 — Oitiva 360
+# Seção 4 — Nexo PAR
 # ---------------------------------------------------------------------------
-add_chapter(doc, "Seção 4", "Oitiva 360 (uso isolado)")
+add_chapter(doc, "Seção 4", "Nexo PAR (uso isolado)")
+
+add_body(
+    doc,
+    "O **Nexo PAR** é a ferramenta de mapa fato-prova-norma da Suíte COGER para o "
+    "domínio **PAR** — o Processo Administrativo de Responsabilização de entes "
+    "privados, à luz da **Lei nº 12.846, de 1º de agosto de 2013** (Lei "
+    "Anticorrupção — LAC). É um **fork** independente do Nexo Coger: compartilha a "
+    "mesma mecânica de mapa fato-prova-norma, o mesmo design e a mesma barra "
+    "lateral, mas trabalha com um objeto distinto — a **pessoa jurídica** —, um "
+    "enquadramento próprio (art. 5º da LAC) e um documento final próprio, a **Nota "
+    "de Indiciação**. Esta seção documenta o que **difere** do Nexo Coger; para os "
+    "comportamentos herdados sem alteração, remete-se à Seção 3 (ver a nota de "
+    "fecho, Seção 4.8).",
+)
+
+add_alert(
+    doc,
+    [
+        "Três sentidos de \"nexo\" convivem nesta seção e não devem ser "
+        "confundidos: **Nexo PAR** e **Nexo Coger** são nomes próprios de "
+        "ferramentas; o **nexo fático-probatório** é a ligação entre um fato e as "
+        "provas que o sustentam (a mecânica do mapa); e o **nexo de causalidade** é "
+        "um conceito jurídico da LAC — a correlação entre o ato lesivo e o "
+        "benefício ou interesse da pessoa jurídica —, que aqui vira um campo do "
+        "fato (Seção 4.3).",
+    ],
+    kind="mono",
+    label="Desambiguação — os três \"nexos\"",
+)
+
+add_h2(doc, "4.1 Identidade e Dados do Processo")
+
+add_body(
+    doc,
+    "Ao abrir o Nexo PAR, aparece a mesma tela-gate **Dados do Processo** descrita "
+    "na Seção 3.1, com uma diferença estrutural: o campo **Tipo de processo** já "
+    "vem **fixado em PAR** — o domínio do processo é, portanto, sempre `par`, sem "
+    "escolha do usuário. Os campos de portaria, datas e composição da comissão "
+    "funcionam como no Nexo Coger, e, como lá, **apenas o Número do processo** "
+    "libera o gate.",
+)
+
+add_body(
+    doc,
+    "Todos os arquivos exportados pelo Nexo PAR seguem o prefixo `nexo-par-` — a "
+    "exportação geral segue `nexo-par-<número>-<data>.json` e a pauta de instrução "
+    "por depoente segue `nexo-par-pauta-<número>-<depoente>-<data>.json`. Esse "
+    "prefixo, somado ao campo `dominio` (`par`) emitido no envelope, é o que "
+    "permite à validação de domínio na importação (Seção 6) recusar o cruzamento "
+    "indevido de um arquivo PAR importado no Nexo Coger, ou vice-versa.",
+)
+
+add_h2(doc, "4.2 Cadastro do ente privado")
+
+add_body(
+    doc,
+    "No lugar do cadastro de **acusado** (servidor) da Seção 3.6, o Nexo PAR "
+    "cadastra o **ente privado** — a pessoa jurídica sujeita à responsabilização. "
+    "Os campos do formulário aparecem nesta ordem:",
+)
+
+make_table(
+    doc,
+    headers=["Campo", "Rótulo exato / hint", "Obrigatoriedade"],
+    rows=[
+        ("Razão social", "\"Razão social\"",
+         "Obrigatória — bloqueio: \"Informe a razão social do ente.\""),
+        ("CNPJ", "\"CNPJ\"; hint \"14 dígitos, com ou sem máscara.\"",
+         "Opcional; se preenchido, valida o formato (14 dígitos) — bloqueio: \"CNPJ inválido: informe 14 dígitos (com ou sem máscara).\""),
+        ("Nome fantasia", "\"Nome fantasia (opcional)\"", "Opcional"),
+        ("Faturamento bruto", "\"Faturamento bruto (opcional)\"; hint \"Base para a futura dosimetria da multa (Multa_PAR).\"",
+         "Opcional"),
+        ("Endereço da sede", "\"Endereço da sede (opcional)\"", "Opcional"),
+    ],
+    col_widths=[3.4, 7.1, 5.0],
+)
+
+add_body(
+    doc,
+    "Abaixo dos dados de qualificação, um bloco repetível **Representantes** "
+    "registra as pessoas físicas ligadas ao ente. Cada linha tem **Nome**, **CPF "
+    "(opcional)** e **Vínculo** (lista de seleção), com o botão **\"+ Adicionar "
+    "representante\"**. O Vínculo oferece os **três papéis PAR** do catálogo — "
+    "**Representante legal** (valor padrão), **Preposto** e "
+    "**Sócio-administrador**. Enquanto nenhum representante for cadastrado, o "
+    "bloco exibe o aviso \"Nenhum representante. Cadastre ao menos um "
+    "representante legal (exigência P-ENTE).\".",
+)
+
+add_body(
+    doc,
+    "Por fim, o bloco **\"Estruturas societárias (registro, sem cálculo)\"** "
+    "reúne, de forma puramente declaratória (o Nexo PAR não faz nenhum cálculo "
+    "sobre eles), três registros opcionais:",
+)
+add_bullet(doc, "**Solidariedade — entes do mesmo grupo econômico** — bloco repetível com CNPJ, Razão social e Descrição do vínculo por linha, e o botão \"+ Adicionar ente relacionado\".")
+add_bullet(doc, "**Sucessão empresarial — tipo** — lista de seleção (—, Fusão, Incorporação, Cisão), mais Descrição e Data.")
+add_bullet(doc, "**Desconsideração da personalidade jurídica (art. 14 da LAC)** — checkbox \"Aplicar desconsideração da personalidade jurídica\"; quando ativada, revela o campo Fundamentação e checkboxes por representante \"atingido\" pela desconsideração.")
+
+add_alert(
+    doc,
+    [
+        "Cadastrar ao menos um **representante legal** é exigência do gate "
+        "**P-ENTE**: a falta dele **não** impede salvar o ente, mas **bloqueia a "
+        "geração da Nota de Indiciação** (Seção 4.5). Ao excluir um ente, o Nexo "
+        "PAR confirma: \"Excluir este ente? As condutas vinculadas a ele nos fatos "
+        "serão removidas.\".",
+    ],
+    kind="warn",
+    label="Representante legal é exigido para indiciar",
+)
+
+figura_pendente(doc, "tela de cadastro de ente privado do Nexo PAR — razão social, CNPJ, bloco de representantes e bloco de estruturas societárias (solidariedade, sucessão, desconsideração).")
+
+add_h2(doc, "4.3 Fato e conduta no domínio PAR")
+
+add_body(
+    doc,
+    "O formulário de fato do Nexo PAR reaproveita os campos gerais da Seção 3.2 "
+    "(título, descrição, período, local, condutas individualizadas, provas "
+    "vinculadas, estado probatório e situação do fato), com uma diferença central "
+    "no enquadramento: **não existe o campo Elemento subjetivo**. No PAD, cada "
+    "enquadramento pede dolo ou culpa (Seção 3.2); no PAR, a responsabilização do "
+    "ente privado é **objetiva** — independe de dolo ou culpa —, nos termos do "
+    "**art. 2º da Lei nº 12.846, de 2013**. Por isso o Nexo PAR remove tanto o "
+    "campo Elemento subjetivo quanto a pendência a ele associada (a P8 do Nexo "
+    "Coger — ver Seção 4.5).",
+)
+
+add_body(
+    doc,
+    "Em seu lugar, o fato ganha o bloco **\"Interesse/benefício da PJ e nexo "
+    "causal\"** (marcado com `*` quando há enquadramento LAC ativo), com o hint "
+    "\"Obrigatórios quando há enquadramento LAC (pendência crítica P8-PAR se em "
+    "branco).\". São dois campos:",
+)
+add_numbered(doc, 1, "**Interesse ou benefício da pessoa jurídica** — área de texto: em proveito de que a conduta lesiva se deu para o ente.")
+add_numbered(doc, 2, "**Nexo de causalidade** — área de texto, hint \"Correlação entre o ato lesivo e o benefício/interesse apontado.\".")
+
+add_body(
+    doc,
+    "Nenhum dos dois **bloqueia o salvamento** do fato — como no Nexo Coger, o "
+    "fato pode ser salvo incompleto. A cobrança acontece na **geração** da Nota "
+    "de Indiciação, pela pendência crítica **P8-PAR** (Seção 4.5), que dispara "
+    "quando há enquadramento LAC ativo e o benefício **ou** o nexo causal está em "
+    "branco.",
+)
+
+add_h2(doc, "4.4 Seletor de enquadramento — normas da LAC")
+
+add_body(
+    doc,
+    "O enquadramento no Nexo PAR usa **exclusivamente** as normas da LAC (art. 5º "
+    "da Lei nº 12.846, de 2013), e não o catálogo da Lei nº 8.112, de 1990, do "
+    "Nexo Coger. São **11 normas**, distribuídas em **dois optgroups** — **\"Atos "
+    "de corrupção em geral\"** e **\"Licitações e contratos\"** —, além do grupo "
+    "residual **\"Criadas pelo usuário\"** para normas adicionadas manualmente:",
+)
+
+make_table(
+    doc,
+    headers=["Dispositivo", "Grupo"],
+    rows=[
+        ("art. 5º, I", "Atos de corrupção em geral"),
+        ("art. 5º, II", "Atos de corrupção em geral"),
+        ("art. 5º, III", "Atos de corrupção em geral"),
+        ("art. 5º, V", "Atos de corrupção em geral"),
+        ("art. 5º, IV, a", "Licitações e contratos"),
+        ("art. 5º, IV, b", "Licitações e contratos"),
+        ("art. 5º, IV, c", "Licitações e contratos"),
+        ("art. 5º, IV, d", "Licitações e contratos"),
+        ("art. 5º, IV, e", "Licitações e contratos"),
+        ("art. 5º, IV, f", "Licitações e contratos"),
+        ("art. 5º, IV, g", "Licitações e contratos"),
+    ],
+    col_widths=[5.0, 10.5],
+)
+
+add_body(
+    doc,
+    "Ao selecionar uma norma, sua **nota de aplicação** é exibida como hint "
+    "(📌), orientando o uso do dispositivo. O rótulo mostrado é a **descrição "
+    "integral** da norma (apenas sem o ponto final) — não é mais truncado como em "
+    "versões anteriores, de modo que a frase aparece por inteiro tanto no seletor "
+    "quanto na Nota de Indiciação.",
+)
+
+add_h2(doc, "4.5 Catálogo de pendências do fork")
+
+add_body(
+    doc,
+    "O Nexo PAR herda a maior parte do catálogo de pendências da Seção 3.5, "
+    "adaptando os textos que falam em \"acusado\" para \"ente privado\", "
+    "**removendo** a P8 (que dependia de dolo/culpa, inexistentes no PAR) e "
+    "**acrescentando** duas pendências críticas próprias, **P8-PAR** e "
+    "**P-ENTE**:",
+)
+
+make_table(
+    doc,
+    headers=["Código", "Nível", "Descrição"],
+    rows=[
+        ("P1", "crítico", "Fato sem prova vinculada — alegação sem evidência (mantida, salvo override de estado probatório justificado)."),
+        ("P2", "crítico*", "Fato sem enquadramento legal (*crítica a partir da indiciação em diante)."),
+        ("P3", "frágil", "Prova órfã — não sustenta nenhum fato do mapa."),
+        ("P4", "pendente", "Multiplicidade de enquadramentos não classificada: concurso formal ou conflito aparente?"),
+        ("P5", "crítico", "Conduta não individualizada — risco de indiciação genérica (nulidade)."),
+        ("P6a", "frágil", "Prova emprestada com pendência formal (certidão/autorização)."),
+        ("P6b", "frágil", "Ente privado não intimado da produção desta prova (contraditório) — reescrita a partir da P6b do Nexo Coger, que falava em \"acusado\"."),
+        ("P7", "frágil", "Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo."),
+        ("P8", "removida", "Não existe no PAR — a responsabilização é objetiva (art. 2º da LAC), sem dolo ou culpa a aferir."),
+        ("P8-PAR", "crítico", "Fato com enquadramento LAC sem descrição de benefício/interesse ou nexo causal (nova — dispara com enquadramento ativo e benefício OU nexo em branco)."),
+        ("P-ENTE", "crítico", "Processo sem ente privado cadastrado, ou ente privado sem representante legal cadastrado (nova — bloqueia a geração)."),
+    ],
+    col_widths=[2.1, 2.2, 11.2],
+)
+
+add_body(
+    doc,
+    "A pendência **P6c** do Nexo Coger (antecedência de intimação para "
+    "interrogatório, art. 41 da Lei nº 9.784, de 29 de janeiro de 1999) permanece "
+    "no código, mas **sem interface no PAR** — o ente privado não é interrogado. O "
+    "checklist de encerramento acompanha as mudanças: **C1** \"Ente privado "
+    "cadastrado com representante legal\"; **C2** \"Benefício/interesse e nexo "
+    "causal descritos em todo fato com enquadramento LAC\"; **C3** \"Zero "
+    "pendências críticas (P1, P2, P5, P8-PAR, P-ENTE)\".",
+)
+
+add_h2(doc, "4.6 Geração da Nota de Indiciação")
+
+add_alert(
+    doc,
+    [
+        "A geração da **Nota de Indiciação** é um **ato final** da instrução — "
+        "produz o documento formal que imputa ao ente privado a conduta lesiva e "
+        "abre o prazo de defesa. Não a gere prematuramente, antes que fatos, "
+        "provas, enquadramentos e o cadastro do ente estejam consolidados.",
+    ],
+    kind="danger",
+    label="Ato final — use com cautela",
+)
+
+add_body(
+    doc,
+    "Antes de gerar, o Nexo PAR roda uma checagem de campos essenciais "
+    "(`validaMinuta`) e lista o que faltar, sem gerar nada até que esteja "
+    "completo: **razão social** do ente, ao menos um **representante legal** "
+    "cadastrado, e ao menos um **fato ativo** imputado. Pendências críticas (P1, "
+    "P2, P5, P8-PAR, P-ENTE) bloqueiam a geração, como no Nexo Coger.",
+)
+
+add_body(
+    doc,
+    "A Nota de Indiciação gerada — cujo conteúdo mínimo atende ao **art. 17 da "
+    "Instrução Normativa CGU nº 13, de 2019** — traz, nesta ordem:",
+)
+add_numbered(doc, 1, "**Cabeçalho institucional** — órgão, corregedoria, o título \"Nota de Indiciação\", a identificação do \"Processo Administrativo de Responsabilização (PAR) nº …\", a referência à Lei nº 12.846, de 2013 (LAC), a portaria e a linha \"Pessoa jurídica: <razão social>, CNPJ <…>\".")
+add_numbered(doc, 2, "**Tabela de qualificação do ente** — razão social, CNPJ, nome fantasia e endereço da sede (quando houver) e representante legal; se a desconsideração da personalidade jurídica estiver ativa, um parágrafo em itálico invoca o art. 14 da LAC.")
+add_numbered(doc, 3, "**\"Da conduta lesiva imputada ao ente privado\"** — por fato: descrição, conduta individualizada (comissiva/omissiva) e, quando preenchidos, \"Interesse ou benefício da pessoa jurídica:\" e \"Nexo de causalidade:\".")
+add_numbered(doc, 4, "**\"Das provas\"** — por fato, com índice numerado e trechos significativos.")
+add_numbered(doc, 5, "**\"Do enquadramento legal\"** — por fato, \"a conduta amolda-se ao <dispositivo> (<rótulo>)\", **sem** elemento subjetivo; trata concurso formal / conflito aparente quando houver multiplicidade.")
+add_numbered(doc, 6, "**\"Síntese dos fatos, provas e enquadramentos\"** — tabela-resumo.")
+add_numbered(doc, 7, "**\"Das alegações da defesa não acatadas\"** — bloco editável.")
+add_numbered(doc, 8, "**\"Da multa, do faturamento bruto e do programa de integridade\"** — os quatro textos complementares fixos (abaixo).")
+add_numbered(doc, 9, "**\"Do encerramento\"** — ressalva de adequação do enquadramento; a intimação para defesa \"no prazo de 30 (trinta) dias\" (art. 17 da IN CGU nº 13, de 2019); cidade/data; e o bloco de assinatura em três colunas.")
+
+add_body(doc, "Os quatro textos complementares fixos da seção 8, reproduzidos literalmente:")
+add_alert(
+    doc,
+    [
+        "Faculta-se expressamente à pessoa jurídica indiciada apresentar "
+        "informações e provas relativas aos parâmetros de cálculo da multa e ao "
+        "seu faturamento bruto no exercício anterior ao da instauração do processo.",
+        "Solicitam-se, ainda, informações e documentos necessários à análise do "
+        "parâmetro previsto no inciso IV do art. 22 do Decreto nº 11.129, de 11 de "
+        "julho de 2022.",
+        "Fica assegurado o prazo de 30 (trinta) dias para apresentação de defesa "
+        "escrita, contado da intimação desta Nota de Indiciação, podendo a pessoa "
+        "jurídica apresentar, em conjunto com a defesa, evidências da existência e "
+        "do funcionamento de programa de integridade, nos termos da Portaria CGU "
+        "nº 909, de 7 de abril de 2025.",
+        "Registra-se, por fim, a possibilidade de resolução negociada do processo, "
+        "por meio de Termo de Compromisso ou de Acordo de Leniência, na forma da "
+        "legislação de regência.",
+    ],
+    kind="mono",
+    label="Textos complementares fixos da Nota de Indiciação",
+)
+
+figura_pendente(doc, "Nota de Indiciação PAR gerada — cabeçalho institucional, tabela de qualificação do ente privado e a seção \"Da multa, do faturamento bruto e do programa de integridade\".")
+
+add_h2(doc, "4.7 Toolbar lateral — prazos do rito PAR")
+
+add_body(
+    doc,
+    "A barra lateral do Nexo PAR é a mesma da Seção 3.9 (Pendências, Ordem dos "
+    "fatos, Checklist de encerramento e Prazos). A diferença está nos **textos e "
+    "prazos** do painel **Prazos**, adaptados do rito PAD para o rito PAR:",
+)
+
+add_bullet(doc, "**Prazo confirmado** — o painel substitui a lógica PAD de citação pessoal/edital (10/15 dias, Lei nº 8.112, de 1990) pelo bloco **\"Intimação da Nota de Indiciação e defesa escrita\"**, com o hint \"Prazo de 30 dias para defesa escrita a contar da intimação da Nota de Indiciação (art. 17, IN CGU nº 13, de 2019).\". É o único prazo PAR com fonte normativa confirmada.")
+add_bullet(doc, "**Prazo de conclusão do processo** — mantém o mesmo cálculo do PAD (data de instauração + prazo em dias, editável), por ausência de fonte normativa PAR fornecida. O hint do campo é explícito: \"Prazo de conclusão do processo em dias (editável). Fonte do prazo do PAR não fornecida nesta rodada.\".")
+
+add_alert(
+    doc,
+    [
+        "O prazo de **conclusão do processo** no PAR usa o mesmo cálculo do PAD "
+        "**por ausência de fonte normativa PAR fornecida — não se inventa prazo**. "
+        "O único prazo PAR com fonte confirmada é o de 30 dias para a defesa "
+        "escrita, no bloco de intimação da Nota de Indiciação. Trate o prazo de "
+        "conclusão como um valor editável de referência, não como um marco legal "
+        "PAR consolidado.",
+    ],
+    kind="warn",
+    label="Prazo de conclusão sem fonte PAR confirmada",
+)
+
+add_h2(doc, "4.8 O que NÃO muda em relação ao Nexo Coger")
+
+add_alert(
+    doc,
+    [
+        "Para o leitor que já conhece o Nexo Coger (Seção 3), estes comportamentos "
+        "são herdados **sem alteração** no Nexo PAR, e não precisam ser relidos: a "
+        "**mecânica do mapa fato-prova-norma** (vínculo fato-prova-norma, arestas, "
+        "provas órfãs, estado probatório calculado); a **importação de provas do "
+        "Veritas** e a **importação de retorno de oitiva** do Oitiva 360; a "
+        "**exportação de pauta** de instrução por depoente; o **selo 🎙** de origem "
+        "em oitiva; a **barra lateral** (exceto os textos e prazos do painel "
+        "Prazos, Seção 4.7); e todo o **design system**. Os contratos de "
+        "integração e a validação de domínio na importação são detalhados na "
+        "Seção 6.",
+    ],
+    kind="green",
+    label="Herdado do Nexo Coger sem alteração",
+)
+
+page_break(doc)
+
+# ---------------------------------------------------------------------------
+# Seção 5 — Oitiva 360
+# ---------------------------------------------------------------------------
+add_chapter(doc, "Seção 5", "Oitiva 360 (uso isolado)")
 
 add_body(
     doc,
@@ -1221,7 +1679,7 @@ add_body(
     "correspondente.",
 )
 
-add_h2(doc, "4.1 Pré-requisito — Matriz de Apuração")
+add_h2(doc, "5.1 Pré-requisito — Matriz de Apuração")
 
 figura_ajustada(
     doc,
@@ -1257,7 +1715,7 @@ add_body(
     "por segurança.",
 )
 
-add_h2(doc, "4.2 Diálogo \"Adicionar depoente\"")
+add_h2(doc, "5.2 Diálogo \"Adicionar depoente\"")
 
 add_body(doc, "O diálogo pede apenas 2 campos, ambos obrigatórios:")
 add_numbered(doc, 1, "**Identificação** — texto livre (placeholder: *Ex.: T-01 ou \"Depoente A\"*), com aviso: \"Use iniciais ou nome fictício — evite dados pessoais reais (LGPD).\".")
@@ -1270,7 +1728,7 @@ add_body(
     "depoente.\".",
 )
 
-add_h2(doc, "4.3 Etapa 1 — Dados do Ato")
+add_h2(doc, "5.3 Etapa 1 — Dados do Ato")
 
 add_body(
     doc,
@@ -1284,7 +1742,7 @@ add_body(
     "momento de exibição de documentos).",
 )
 
-add_h2(doc, "4.4 Etapa 2 — Depoente")
+add_h2(doc, "5.4 Etapa 2 — Depoente")
 
 add_body(
     doc,
@@ -1343,7 +1801,7 @@ add_body(
     "faltantes.",
 )
 
-add_h2(doc, "4.5 Registro de perguntas e respostas")
+add_h2(doc, "5.5 Registro de perguntas e respostas")
 
 add_h3(doc, "Etapa 3 — Montagem do Roteiro")
 
@@ -1398,7 +1856,7 @@ add_body(
     "sem áreas de resposta.",
 )
 
-add_h2(doc, "4.6 Geração do termo")
+add_h2(doc, "5.6 Geração do termo")
 
 figura_ajustada(
     doc,
@@ -1431,7 +1889,7 @@ add_body(
     "mediante confirmação.",
 )
 
-add_h2(doc, "4.7 Checklist pré-oitiva e alertas de nulidade")
+add_h2(doc, "5.7 Checklist pré-oitiva e alertas de nulidade")
 
 add_body(
     doc,
@@ -1453,7 +1911,7 @@ add_body(
     "o papel não tiver exigências específicas, mostra um texto neutro.",
 )
 
-add_h2(doc, "4.8 Gerenciar múltiplos depoentes")
+add_h2(doc, "5.8 Gerenciar múltiplos depoentes")
 
 add_body(
     doc,
@@ -1462,7 +1920,7 @@ add_body(
     "Identificação, Papel, Infração, Status e ações. O **Status** exibido "
     "é o do progresso do próprio depoente no wizard (\"Rascunho\", "
     "\"Roteiro pronto\" ou \"Oitiva realizada\") — não é o mesmo conceito "
-    "do status de item de pauta tratado na Seção 4.11 abaixo. Se não houver "
+    "do status de item de pauta tratado na Seção 5.11 abaixo. Se não houver "
     "nenhum depoente ainda, a lista mostra \"Nenhum depoente adicionado "
     "ainda.\".",
 )
@@ -1505,7 +1963,7 @@ add_body(
     "definitiva a partir da confirmação.",
 )
 
-add_h2(doc, "4.9 Kit de Incidentes")
+add_h2(doc, "5.9 Kit de Incidentes")
 
 add_body(
     doc,
@@ -1543,7 +2001,7 @@ add_alert(
     kind="info",
 )
 
-add_h2(doc, "4.10 Cartão de Mesa")
+add_h2(doc, "5.10 Cartão de Mesa")
 
 add_body(
     doc,
@@ -1569,7 +2027,7 @@ add_body(
     "durante a sessão — não é um registro/anexo do processo.",
 )
 
-add_h2(doc, "4.11 Status da pauta")
+add_h2(doc, "5.11 Status da pauta")
 
 add_body(
     doc,
@@ -1602,14 +2060,14 @@ add_body(
 page_break(doc)
 
 # ---------------------------------------------------------------------------
-# Seção 5 — Integração
+# Seção 6 — Integração
 # ---------------------------------------------------------------------------
-add_chapter(doc, "Seção 5", "Integração entre as três ferramentas")
+add_chapter(doc, "Seção 6", "Integração entre as quatro ferramentas")
 
 add_body(
     doc,
     "Embora Veritas, Nexo Coger e Oitiva 360 funcionem de forma inteiramente "
-    "independente (Seções 2 a 4 comprovam isso), a suíte prevê um fluxo de "
+    "independente (Seções 2 a 5 comprovam isso), a suíte prevê um fluxo de "
     "integração opcional, por troca de arquivos `.json`, que percorre "
     "tipicamente o ciclo: **Veritas → Nexo Coger → Oitiva 360 → Veritas → Nexo "
     "Coger**. Provas cadastradas no Veritas alimentam o mapa do Nexo Coger; o "
@@ -1619,7 +2077,7 @@ add_body(
     "Nexo Coger).",
 )
 
-add_h2(doc, "5.1 Veritas → Nexo Coger: exportação de provas")
+add_h2(doc, "6.1 Veritas → Nexo Coger: exportação de provas")
 
 add_body(
     doc,
@@ -1630,7 +2088,7 @@ add_body(
     "\"Exportar .json\" (Seção 2.3), que exporta o dossiê inteiro.",
 )
 
-add_h2(doc, "5.2 Nexo Coger → Oitiva 360: exportação de pauta")
+add_h2(doc, "6.2 Nexo Coger → Oitiva 360: exportação de pauta")
 
 add_body(
     doc,
@@ -1645,7 +2103,7 @@ add_body(
     "os itens existentes em vez de criar itens duplicados.",
 )
 
-add_h2(doc, "5.3 Oitiva 360 → Veritas: exportação do termo")
+add_h2(doc, "6.3 Oitiva 360 → Veritas: exportação do termo")
 
 add_body(
     doc,
@@ -1694,7 +2152,7 @@ add_body(
     "termos pendentes de revisão.",
 )
 
-add_h2(doc, "5.4 Oitiva 360 → Nexo Coger: retorno de contexto do acusado")
+add_h2(doc, "6.4 Oitiva 360 → Nexo Coger: retorno de contexto do acusado")
 
 add_body(
     doc,
@@ -1741,7 +2199,7 @@ add_alert(
     label="IDs do tooltip: preenchidos com origem de pauta, null sem ela",
 )
 
-add_h2(doc, "5.5 Badges de pendência e status")
+add_h2(doc, "6.5 Badges de pendência e status")
 
 add_body(
     doc,
@@ -1764,7 +2222,7 @@ add_alert(
     [
         "A integração entre Veritas, Nexo Coger e Oitiva 360 é **opcional e "
         "aditiva**. Cada ferramenta já funciona de forma completa sozinha, como "
-        "demonstrado nas Seções 2, 3 e 4 — a troca de arquivos `.json` apenas "
+        "demonstrado nas Seções 2 a 5 — a troca de arquivos `.json` apenas "
         "poupa redigitação de dados quando as três são usadas em conjunto no "
         "mesmo processo.",
     ],
@@ -1833,12 +2291,12 @@ add_numbered(doc, 4, "**Por que não vejo o botão \"Exportar retorno (contexto 
 add_separator(doc)
 add_muted(
     doc,
-    "Este manual documenta o comportamento observado no código-fonte das três "
+    "Este manual documenta o comportamento observado no código-fonte das quatro "
     "ferramentas em 2026. Todos os exemplos, números de processo e dados de "
     "identificação usados nas capturas de tela são fictícios, produzidos para "
-    "fins exclusivamente ilustrativos. As três ferramentas — Veritas, Nexo "
-    "Coger e Oitiva 360 — são aplicações offline/locais, sem servidor, cujo "
-    "armazenamento depende do navegador do usuário e de exportação manual de "
+    "fins exclusivamente ilustrativos. As quatro ferramentas — Veritas, Nexo "
+    "Coger, Nexo PAR e Oitiva 360 — são aplicações offline/locais, sem servidor, "
+    "cujo armazenamento depende do navegador do usuário e de exportação manual de "
     "arquivos .json para backup e integração.",
 )
 
