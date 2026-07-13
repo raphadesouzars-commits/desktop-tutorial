@@ -2,6 +2,18 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Correção de bugs — Nexo Coger e Nexo PAR (reportados pelo usuário)
+
+Dois bugs relatados no Nexo PAR, diagnosticados e corrigidos (um deles também no Nexo Coger, por ser o mesmo código herdado):
+
+**1. Radios permitindo marcar mais de uma opção ao mesmo tempo (nexo-coger.html e nexo-par.html).**
+A função `radio(name,cur,val,label,onset)` (usada por todo grupo de rádio construído manualmente na ferramenta — ex.: "Contraditório — acusado intimado da produção?", com as 3 opções Intimado/Não intimado/Não avaliado) gerava um sufixo aleatório por CHAMADA: `name+Math.random().toString(36).slice(2,6)`. Como cada opção do mesmo grupo lógico é uma chamada separada de `radio()`, cada uma nascia com um `name` diferente — quebrando o agrupamento nativo de exclusão mútua do navegador. Resultado: era possível marcar as 3 opções simultaneamente. Bug idêntico, linha a linha, em `nexo-coger.html` (herdado pelo fork na Rodada PAR-3, não introduzido por ela). Corrigido nos dois arquivos: `name` fixo (sem sufixo), preservando o agrupamento. Confirmado por grep que nenhum grupo de rádio na mesma tela reutiliza o mesmo `name` para campos diferentes (sem risco de colisão). `veritas.html`/`oitiva-360.html` não usam esse helper (radios com `name` fixo desde sempre) — não afetados.
+
+**2. Descrição truncada no meio da frase para as normas LAC (nexo-par.html).**
+`buildCatalogo()` gerava o rótulo de cada norma LAC truncando `descricao` (o texto integral do inciso, único campo disponível no catálogo canônico para essas normas — diferente das normas da Lei 8.112, que têm um `rotulo` curto autoral separado) em 78 caracteres, cortando no meio da frase (ex.: "...vantagem indevida a…", sem "agente público"). Esse rótulo truncado aparecia tanto no `<select>` de enquadramento quanto embutido na Nota de Indiciação gerada — nos dois casos, uma frase jurídica incompleta. Corrigido: `rotuloCurto` não trunca mais, usa o texto integral (só remove o ponto final, para caber melhor entre parênteses no documento gerado). O navegador acomoda a opção mais larga no `<select>` sem problema.
+
+Testes: `test-fluxo-integrado.js` — 127/127, sem regressão. Verificação visual via Playwright: nenhuma opção de norma termina em "…"; os 3 radios do campo "Contraditório" agora são mutuamente exclusivos nos dois arquivos.
+
 ## Importação + tela inicial padrão — Dosimetria_TAC
 
 Ferramenta **standalone** `ferramentas/Dosimetria_TAC.html` (React via `text/babel`, fora da suíte `test-fluxo-integrado.js`). Duas capacidades novas, alinhadas ao padrão Veritas mas adaptadas à arquitetura React (estado em `useState` no componente `App`, não `DB`/`render()` global). **Catálogo canônico intocado.**

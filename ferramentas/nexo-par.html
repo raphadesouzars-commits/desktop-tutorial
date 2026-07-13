@@ -1720,7 +1720,13 @@ function buildCatalogo(){
   // dominio "pad") NÃO é mais usado aqui. Os campos são mapeados para o mesmo shape que o resto do
   // código já consome (dispositivo/rotulo/notasEnquadramento etc.); gravidade/pena/elementoSubjetivo
   // não existem na LAC (responsabilidade objetiva) e ficam vazios/neutros.
-  const rotuloCurto=s=>{ s=(s||'').trim(); return s.length>78 ? s.slice(0,75).replace(/\s+\S*$/,'')+'…' : s; };
+  // As normas LAC do catálogo canônico não têm um "rótulo curto" próprio (só a `descricao` — o
+  // texto integral do inciso). Truncar às cegas em 78 caracteres cortava a conduta no meio da
+  // frase (ex.: "...vantagem indevida a…", faltando "agente público"), tanto no <select> quanto
+  // embutido na Nota de Indiciação gerada — descrição inadequada nos dois lugares. Usar o texto
+  // integral (sem truncar) é mais correto: o navegador acomoda a opção mais larga sem problema, e a
+  // frase citada no documento gerado fica completa e juridicamente coerente.
+  const rotuloCurto=s=>(s||'').trim().replace(/\.$/, '');
   return (CATALOGO_COGER.normas||[])
     .filter(n=>n.dominio==='par' && n.status==='ativo')
     .map(n=>({
@@ -2984,7 +2990,10 @@ function abrirFormAcusado(id){
   openModal(modalShell(novo?'Novo ente privado':'Editar ente privado',null,body,foot));
 }
 function radio(name,cur,val,label,onset){
-  const r=el('input',{type:'radio',name:name+Math.random().toString(36).slice(2,6)});
+  // O `name` identifica o grupo de exclusão mútua do navegador — precisa ser IGUAL para todas as
+  // opções de um mesmo campo (bug corrigido: um sufixo aleatório por chamada fazia cada opção
+  // nascer num grupo próprio, permitindo marcar mais de uma ao mesmo tempo).
+  const r=el('input',{type:'radio',name:name});
   r.checked = cur===val;
   r.addEventListener('change',()=>{ if(r.checked) onset(val); });
   return el('label',{}, r, label);

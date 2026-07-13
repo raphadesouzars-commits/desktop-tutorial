@@ -2876,7 +2876,10 @@ function abrirFormAcusado(id){
   openModal(modalShell(novo?'Novo acusado':'Editar acusado',null,body,foot));
 }
 function radio(name,cur,val,label,onset){
-  const r=el('input',{type:'radio',name:name+Math.random().toString(36).slice(2,6)});
+  // O `name` identifica o grupo de exclusão mútua do navegador — precisa ser IGUAL para todas as
+  // opções de um mesmo campo (bug corrigido: um sufixo aleatório por chamada fazia cada opção
+  // nascer num grupo próprio, permitindo marcar mais de uma ao mesmo tempo).
+  const r=el('input',{type:'radio',name:name});
   r.checked = cur===val;
   r.addEventListener('change',()=>{ if(r.checked) onset(val); });
   return el('label',{}, r, label);
