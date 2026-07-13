@@ -2,6 +2,54 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada 12 — COGER Print Standard no Oitiva 360 (Termo de Oitiva)
+
+Implementação do **COGER Print Standard** em `ferramentas/oitiva-360.html` — renderização do termo de oitiva (redução de depoimento) com cabeçalho fixo, rodapé, 3 seções numeradas com barra lateral gold (Identificação, Perguntas e Respostas, Encerramento), formatação Q&A (pergunta em negrito, resposta normal), e referência única (INT-YYYYMMDD-XXXX). **Nenhuma alteração no catálogo canônico** — impressão isolada em `@media print`, UI interativa preservada. **Mais simples que Rodada 11** — estrutura linear Q&A, sem tabelas complexas.
+
+### Diagnóstico D1–D4 (Oitiva 360)
+
+1. **D1 — Função de impressão:** existe `montarAreaImpressaoTermo(d)` (linha 7389) que constrói HTML e preenche `#area-impressao`; chamada pelo handler de `btn-imprimir-termo` seguida por `prepararAreaImpressaoParaImpressao()` e `window.print()`.
+2. **D2 — Estrutura HTML atual:** termo renderizado em estrutura simples (header + refs + impresso-termo como pré-formatado + rodapé); será refatorado para `#printPage` com 3 seções estruturadas (header fixo, main, footer fixo).
+3. **D3 — CSS @media print:** sim, ~200 linhas com estilos `#area-impressao` (básico); será estendido com Print Standard completo (header/footer fixos, seções gold, Q&A items com page-break).
+4. **D4 — Metadados:** acessíveis via `d` (depoent object) com campos `d.papel`, `d.identificacao`, `d.ato.numero`, `d.ato.data`, `d.ato.hora`, `d.termoTexto` (texto completo gerado por `gerarTermoTexto()`).
+
+### Implementação 12.1–12.7
+
+**12.1 CSS Print Standard:** integração das variáveis de tema (26 variáveis: navy/gold/cinza/fontes/dimensões) + @media print bloco completo (320+ linhas, copy de Rodada 11) com header/footer fixos, seções gold, tabelas thead replicado, infobox, blocos legais, **novo: seções Q&A** (`.coger-print-qa-item` com `page-break-inside: avoid`, `.coger-print-qa-question`/`response` formatação).
+
+**12.2 JavaScript utility module:** integração de `window.CogerPrint` IIFE (5 funções puras idênticas a Rodadas 10–11) — `generatePrintReference()`, `formatDatePtBr()`, `formatTimePtBr()`, `fillPrintMetadata()`, `prepareForPrint()`.
+
+**12.3 Refatoração montarAreaImpressaoTermo():** HTML refatorado para `<div id="printPage">` com (a) header com logos data URI + metadados; (b) main com 3 seções; (c) footer com paginação. Seções: 1. **IDENTIFICAÇÃO** (infobox com processo/depoente/papel/data); 2. **PERGUNTAS E RESPOSTAS** (items coger-print-qa-item parseados de d.termoTexto); 3. **ENCERRAMENTO** (fecho + bloco de assinatura 3 colunas).
+
+**12.4 Parsing Q&A:** nova função `extrairQADoTermo(termoTexto)` com regex pattern para detectar pares "N. P: [pergunta]\n   R: [resposta]" — retorna array de {pergunta, resposta}; cada item renderizado como coger-print-qa-item com pergunta em `<strong>`, resposta normal.
+
+**12.5 Formatação Q&A:** pergunta em negrito (P[N]. [pergunta]); resposta normal com prefixo "R:" em negrito; espaçamento 10pt entre items; `page-break-inside: avoid` em cada item (vs. seção em Rodada 11).
+
+**12.6 Classe no-print aplicada:** botões interativos (`btn-imprimir-termo`, etc.) herdam `no-print` existente ou recebem classe explícita — ocultos em impressão via `display: none !important`.
+
+**12.7 Referência única e metadados:** `montarAreaImpressaoTermo()` agora chama `window.CogerPrint.prepareForPrint()` logo antes de `prepararAreaImpressaoParaImpressao()` — preenche header/footer com INT-YYYYMMDD-XXXX, data/hora, page count estimado.
+
+### Resultado esperado
+
+Ao imprimir termo de oitiva (Oitiva 360, Ctrl+P → Salvar como PDF):
+
+- ✅ Header fixo (logos + "TERMO DE OITIVA" + referência/data/hora)
+- ✅ Footer fixo (referência + "Página X de Y" + "USO INTERNO")
+- ✅ 3 seções numeradas com barra lateral gold 3px
+- ✅ Identificação em infobox (background cinza/borda navy)
+- ✅ Q&A com pergunta negrito, resposta normal
+- ✅ Cada P/R fica junto (page-break-inside: avoid)
+- ✅ Nenhuma seção-title fica órfã no pé de página
+- ✅ Referência única gerada (INT-YYYYMMDD-XXXX)
+- ✅ Nenhum botão/input interativo na impressão
+- ✅ UI interativa funciona normalmente
+- ✅ Tipografia consistente (Barlow Condensed, Inter, JetBrains Mono)
+- ✅ Paleta navy/gold conforme padrão COGER
+
+**Validação:** ~450 insertions (CSS Print Standard + window.CogerPrint) + ~80 insertions (refatoração montarAreaImpressaoTermo) + nova função `extrairQADoTermo`; braces balanceadas; nenhuma quebra de funcionalidade interativa.
+
+---
+
 ## Rodada 11 — COGER Print Standard no Nexo Coger (Minuta de Indiciação)
 
 Implementação do **COGER Print Standard** em `ferramentas/nexo-coger.html` — renderização da minuta de indiciação (termo de indiciação formal) com cabeçalho fixo, rodapé, 7 seções numeradas com barra lateral gold, tabelas com header replicado em quebras de página, e referência única (INT-YYYYMMDD-XXXX). **Nenhuma alteração no catálogo canônico** — impressão isolada em `@media print`, UI interativa preservada.

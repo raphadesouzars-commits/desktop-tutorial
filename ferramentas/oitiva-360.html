@@ -1442,6 +1442,362 @@
   }
   #area-impressao .cartao-mesa-item .situacao{ font-weight:700; color: var(--rfb-navy-800); display:block; margin-bottom:4px; }
   #area-impressao .impresso-termo{ white-space:pre-wrap; font-family: var(--rfb-font-mono); font-size:9.5pt; line-height:1.7; margin-top:14px; text-align: justify; }
+
+  /* ======================================================================= */
+  /* Rodada 12 — CSS Print Standard COGER (Copy de Rodada 11 nexo-coger)  */
+  /* ======================================================================= */
+  :root {
+    --coger-print-navy-900: #0B2F5F;
+    --coger-print-navy-700: #1E4C99;
+    --coger-print-navy-600: #2E5F99;
+    --coger-print-gold-500: #C9A35C;
+    --coger-print-gold-100: #F5F0E8;
+    --coger-print-gray-100: #F5F8FC;
+    --coger-print-gray-300: #DCE6F4;
+    --coger-print-text-primary: #1A2740;
+    --coger-print-text-muted: #4A5568;
+    --coger-print-font-sans: "Inter", "Barlow Condensed", sans-serif;
+    --coger-print-font-display: "Barlow Condensed", sans-serif;
+    --coger-print-font-mono: "JetBrains Mono", monospace;
+    --coger-print-page-width: 210mm;
+    --coger-print-page-height: 297mm;
+    --coger-print-margin-top: 20mm;
+    --coger-print-margin-bottom: 20mm;
+    --coger-print-margin-left: 20mm;
+    --coger-print-margin-right: 20mm;
+    --coger-print-header-height: 60px;
+    --coger-print-footer-height: 40px;
+    --coger-print-border-radius: 5px;
+    --coger-print-border-width-thin: 1px;
+    --coger-print-border-width-medium: 1.5px;
+    --coger-print-border-width-thick: 3px;
+  }
+
+@media print {
+  :root {
+    --font-sans: var(--coger-print-font-sans);
+    --font-display: var(--coger-print-font-display);
+    --font-mono: var(--coger-print-font-mono);
+  }
+
+  body {
+    background: white !important;
+    font-family: var(--coger-print-font-sans);
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .printview, [role="main"], #printPage {
+    max-width: none;
+    padding: calc(var(--coger-print-header-height) + var(--coger-print-margin-top))
+             var(--coger-print-margin-right)
+             calc(var(--coger-print-footer-height) + var(--coger-print-margin-bottom))
+             var(--coger-print-margin-left);
+    width: 100%;
+    margin: 0;
+  }
+
+  .topbar, .hero, .lensbar, .main, .panel, .footer, .fab, .col-headers, .no-print {
+    display: none !important;
+  }
+
+  .pv-report-item-block, .rfb-card {
+    break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+
+  .coger-print-header {
+    position: fixed;
+    top: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    height: var(--coger-print-header-height);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    background: #fff;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 6px;
+  }
+
+  .coger-print-header-logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    height: 40px;
+    padding: 6px 0;
+  }
+
+  .coger-logo-mf, .coger-logo-rfb {
+    height: 40px;
+    width: auto;
+  }
+
+  .coger-print-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .coger-print-doc-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--coger-print-navy-900);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .coger-print-doc-subtitle {
+    font-size: 9pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .coger-print-header-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--coger-print-text-primary);
+    margin-top: 4px;
+  }
+
+  .coger-print-header-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-top: auto;
+  }
+
+  .coger-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    height: var(--coger-print-footer-height);
+    background: #fff;
+    border-top: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+
+  .coger-print-footer-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-bottom: 4px;
+  }
+
+  .coger-print-footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 600;
+    padding: 0 0 4px 0;
+    height: calc(var(--coger-print-footer-height) - 4px);
+  }
+
+  .coger-print-footer-left {
+    flex: 1;
+    text-align: left;
+  }
+
+  .coger-print-footer-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .coger-print-footer-right {
+    flex: 1;
+    text-align: right;
+  }
+
+  .coger-print-section {
+    page-break-inside: avoid;
+    margin-bottom: 16pt;
+  }
+
+  .coger-print-section-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 13pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--coger-print-navy-900);
+    margin: 0 0 10pt 0;
+    padding-left: 14px;
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-gold-500);
+    line-height: 1.2;
+    page-break-after: avoid;
+  }
+
+  .coger-print-section-body {
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .coger-print-section-body p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  .coger-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 12pt 0;
+  }
+
+  .coger-print-table thead {
+    display: table-header-group;
+  }
+
+  .coger-print-table thead th {
+    background: var(--coger-print-navy-900);
+    color: #fff;
+    font-family: var(--coger-print-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    padding: 8pt 10pt;
+    text-align: left;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+  }
+
+  .coger-print-table tbody td {
+    padding: 8pt 10pt;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-gray-300);
+    color: var(--coger-print-text-primary);
+    line-height: 1.5;
+  }
+
+  .coger-print-table tbody tr {
+    page-break-inside: avoid;
+  }
+
+  .coger-print-table tbody tr:nth-child(even) {
+    background: var(--coger-print-gray-100);
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-infobox {
+    background: var(--coger-print-gray-100);
+    border: var(--coger-print-border-width-medium) solid var(--coger-print-gray-300);
+    border-radius: var(--coger-print-border-radius);
+    padding: 12pt 14pt;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-infobox-row {
+    display: flex;
+    gap: 12pt;
+    margin-bottom: 6pt;
+    font-size: 10pt;
+  }
+
+  .coger-print-infobox-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .coger-print-infobox-label {
+    font-weight: 700;
+    color: var(--coger-print-navy-700);
+    min-width: 120pt;
+    text-transform: capitalize;
+    flex-shrink: 0;
+  }
+
+  .coger-print-infobox-value {
+    color: var(--coger-print-text-primary);
+    flex: 1;
+    word-break: break-word;
+  }
+
+  .coger-print-legal-block {
+    background: var(--coger-print-gray-100);
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-navy-900);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-legal-label {
+    font-family: var(--coger-print-font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--coger-print-navy-900);
+    margin-bottom: 6pt;
+    display: block;
+  }
+
+  .coger-print-legal-quote {
+    font-size: 10pt;
+    color: var(--coger-print-text-primary);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.6;
+    font-family: var(--coger-print-font-mono);
+  }
+
+  .coger-print-qa-item {
+    page-break-inside: avoid;
+    margin-bottom: 10pt;
+  }
+
+  .coger-print-qa-question {
+    font-weight: 700;
+    margin-bottom: 4pt;
+    font-size: 10pt;
+    color: var(--coger-print-navy-900);
+  }
+
+  .coger-print-qa-response {
+    font-size: 10pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.5;
+    margin-bottom: 6pt;
+  }
+
+  .printview {
+    display: none !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -6623,8 +6979,80 @@ function ligarEventosEtapa4(container, d){
     prepararAreaImpressaoParaImpressao();
     window.print();
   });
+
+  /* ========================================================================
+     Rodada 12 — window.CogerPrint IIFE module (Copy de Rodada 11)
+     ======================================================================== */
+  window.CogerPrint = window.CogerPrint || {};
+
+  function generatePrintReference() {
+    var now = new Date();
+    var yyyy = now.getFullYear();
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(now.getDate()).padStart(2, '0');
+    var xxxx = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    return 'INT-' + yyyy + mm + dd + '-' + xxxx;
+  }
+
+  function formatDatePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+                 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
+  }
+
+  function formatTimePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  function fillPrintMetadata(options) {
+    options = options || {};
+    var reference = options.reference || generatePrintReference();
+    var now = new Date();
+    var dateStr = formatDatePtBr(now);
+    var timeStr = formatTimePtBr(now);
+
+    var refEl = document.getElementById('coger-print-ref');
+    var dateEl = document.getElementById('coger-print-date');
+    var timeEl = document.getElementById('coger-print-time');
+    var footerRefEl = document.getElementById('coger-print-footer-ref');
+
+    if (refEl) refEl.textContent = reference;
+    if (dateEl) dateEl.textContent = dateStr;
+    if (timeEl) timeEl.textContent = timeStr;
+    if (footerRefEl) footerRefEl.textContent = reference;
+
+    var printPage = document.getElementById('printPage');
+    if (printPage) {
+      var pageHeight = 297 - 40 - 40;
+      var contentHeight = printPage.scrollHeight;
+      var estimatedPages = Math.ceil(contentHeight / (pageHeight * 3.78));
+      document.querySelectorAll('.page-count').forEach(function(el) {
+        el.textContent = Math.max(1, estimatedPages);
+      });
+    }
+
+    return reference;
+  }
+
+  function prepareForPrint(options) {
+    options = options || {};
+    var reference = fillPrintMetadata(options);
+    return reference;
+  }
+
+  window.CogerPrint.generatePrintReference = generatePrintReference;
+  window.CogerPrint.formatDatePtBr = formatDatePtBr;
+  window.CogerPrint.formatTimePtBr = formatTimePtBr;
+  window.CogerPrint.fillPrintMetadata = fillPrintMetadata;
+  window.CogerPrint.prepareForPrint = prepareForPrint;
+
   document.getElementById("btn-imprimir-termo").addEventListener("click", () => {
     montarAreaImpressaoTermo(d);
+    window.CogerPrint.prepareForPrint();
     prepararAreaImpressaoParaImpressao();
     window.print();
   });
@@ -6960,21 +7388,131 @@ function montarAreaImpressaoCartaoMesa(){
 
 function montarAreaImpressaoTermo(d){
   const papelNome = (CATALOGO.papeis.find(p => p.id === d.papel) || {}).nome || d.papel;
-  let html = "";
+  const logoMF = obterLogoRFBDataUri(); // Will use same logo for both for consistency
+  const logoRFB = obterLogoRFBDataUri();
+  const processNum = d.ato.numero || estado.processo.numero || "—";
+  const dataBR = formatarDataBR(d.ato.data) || "—";
 
-  html += htmlCabecalhoImpressao("Termo de Redução", "Ferramentas Coger · Oitiva 360");
+  let html = "<div id=\"printPage\">";
 
-  html += "<div class=\"impresso-refs\">" +
-    "<span><b>Processo nº</b> " + escapeHtml(d.ato.numero || estado.processo.numero || "—") + "</span>" +
-    "<span><b>Depoente</b> " + escapeHtml(d.identificacao) + " (" + escapeHtml(papelNome) + ")</span>" +
-    "<span><b>Data</b> " + escapeHtml(formatarDataBR(d.ato.data) || "—") + "</span>" +
-  "</div>";
+  // HEADER FIXO
+  html += "<header class=\"coger-print-header\">" +
+    "<div class=\"coger-print-header-logos\">" +
+      (logoMF ? "<img src=\"" + logoMF + "\" alt=\"Ministério da Fazenda\" class=\"coger-logo-mf\"/>" : "") +
+      (logoRFB ? "<img src=\"" + logoRFB + "\" alt=\"Receita Federal\" class=\"coger-logo-rfb\"/>" : "") +
+    "</div>" +
+    "<div class=\"coger-print-header-title\">" +
+      "<h1 class=\"coger-print-doc-title\">TERMO DE OITIVA</h1>" +
+      "<p class=\"coger-print-doc-subtitle\">Ferramentas COGER · Oitiva 360</p>" +
+    "</div>" +
+    "<div class=\"coger-print-header-meta\">" +
+      "<span>Referência: <strong id=\"coger-print-ref\">INT-YYYYMMDD-XXXX</strong></span>" +
+      "<span>Data: <strong id=\"coger-print-date\">...</strong></span>" +
+      "<span>Hora: <strong id=\"coger-print-time\">...</strong></span>" +
+    "</div>" +
+    "<div class=\"coger-print-header-divider\"></div>" +
+  "</header>";
 
-  html += "<div class=\"impresso-termo\">" + escapeHtml(d.termoTexto || "") + "</div>";
+  // MAIN CONTENT
+  html += "<main>";
 
-  html += htmlRodapeImpressao("Uso interno · Processo nº " + (d.ato.numero || estado.processo.numero || "—"));
+  // Seção 1: Identificação
+  html += "<section class=\"coger-print-section\">" +
+    "<h2 class=\"coger-print-section-title\">1 — IDENTIFICAÇÃO</h2>" +
+    "<div class=\"coger-print-section-body\">" +
+      "<div class=\"coger-print-infobox\">" +
+        "<div class=\"coger-print-infobox-row\">" +
+          "<span class=\"coger-print-infobox-label\">Processo nº:</span>" +
+          "<span class=\"coger-print-infobox-value\">" + escapeHtml(processNum) + "</span>" +
+        "</div>" +
+        "<div class=\"coger-print-infobox-row\">" +
+          "<span class=\"coger-print-infobox-label\">Depoente:</span>" +
+          "<span class=\"coger-print-infobox-value\">" + escapeHtml(d.identificacao || "—") + "</span>" +
+        "</div>" +
+        "<div class=\"coger-print-infobox-row\">" +
+          "<span class=\"coger-print-infobox-label\">Papel:</span>" +
+          "<span class=\"coger-print-infobox-value\">" + escapeHtml(papelNome) + "</span>" +
+        "</div>" +
+        "<div class=\"coger-print-infobox-row\">" +
+          "<span class=\"coger-print-infobox-label\">Data:</span>" +
+          "<span class=\"coger-print-infobox-value\">" + escapeHtml(dataBR) + "</span>" +
+        "</div>" +
+      "</div>" +
+    "</div>" +
+  "</section>";
+
+  // Seção 2: Perguntas e Respostas (parsed from d.termoTexto)
+  const qaItems = extrairQADoTermo(d.termoTexto || "");
+  html += "<section class=\"coger-print-section\">" +
+    "<h2 class=\"coger-print-section-title\">2 — PERGUNTAS E RESPOSTAS</h2>" +
+    "<div class=\"coger-print-section-body\">";
+
+  qaItems.forEach((item, idx) => {
+    html += "<div class=\"coger-print-qa-item\">" +
+      "<div class=\"coger-print-qa-question\"><strong>P" + (idx + 1) + ". " + escapeHtml(item.pergunta) + "</strong></div>" +
+      "<div class=\"coger-print-qa-response\"><strong>R:</strong> " + escapeHtml(item.resposta) + "</div>" +
+    "</div>";
+  });
+
+  html += "  </div>" +
+  "</section>";
+
+  // Seção 3: Encerramento
+  html += "<section class=\"coger-print-section\">" +
+    "<h2 class=\"coger-print-section-title\">3 — ENCERRAMENTO</h2>" +
+    "<div class=\"coger-print-section-body\">" +
+      "<p style=\"text-align: justify; margin-bottom: 20pt;\">Nada mais havendo, encerrou-se o presente termo, que, lido e achado conforme, vai assinado por todos os presentes.</p>" +
+      "<div style=\"margin-top: 40px; display: flex; justify-content: space-around; padding-top: 40px; border-top: 1px solid #ddd;\">" +
+        "<div style=\"text-align: center; flex: 1;\">" +
+          "<div style=\"height: 60px; margin-bottom: 8px;\"></div>" +
+          "<strong>Investigador</strong>" +
+        "</div>" +
+        "<div style=\"text-align: center; flex: 1;\">" +
+          "<div style=\"height: 60px; margin-bottom: 8px;\"></div>" +
+          "<strong>Investigado</strong>" +
+        "</div>" +
+        "<div style=\"text-align: center; flex: 1;\">" +
+          "<div style=\"height: 60px; margin-bottom: 8px;\"></div>" +
+          "<strong>Testemunha</strong>" +
+        "</div>" +
+      "</div>" +
+    "</div>" +
+  "</section>";
+
+  html += "</main>";
+
+  // FOOTER FIXO
+  html += "<footer class=\"coger-print-footer\">" +
+    "<div class=\"coger-print-footer-divider\"></div>" +
+    "<div class=\"coger-print-footer-content\">" +
+      "<div class=\"coger-print-footer-left\"><span id=\"coger-print-footer-ref\">INT-YYYYMMDD-XXXX</span></div>" +
+      "<div class=\"coger-print-footer-center\">Página <span class=\"page-number\">1</span> de <span class=\"page-count\">1</span></div>" +
+      "<div class=\"coger-print-footer-right\">USO INTERNO · FERRAMENTAS COGER</div>" +
+    "</div>" +
+  "</footer>";
+
+  html += "</div>";
 
   document.getElementById("area-impressao").innerHTML = html;
+}
+
+// Extrai pares P/R do texto do termo
+function extrairQADoTermo(termoTexto) {
+  const items = [];
+  // Pattern: "P: pergunta\n   R: resposta" (flexible on spacing)
+  const qaPattern = /(\d+)\.\s*P:\s*([^\n]+)\n\s*R:\s*([^\n]*(?:\n(?!\s*\d+\.\s*P:)[^\n]*)*)/gi;
+  let match;
+
+  while ((match = qaPattern.exec(termoTexto)) !== null) {
+    const pergunta = (match[2] || "").trim();
+    const resposta = (match[3] || "").trim().replace(/\n\s*/g, " ");
+    if (pergunta) {
+      items.push({ pergunta, resposta });
+    }
+  }
+
+  // Se não encontrou padrão, retorna array vazio (seção Q&A fica vazia)
+  return items;
 }
 
 // Formata um membro da comissão (nome — cargo (mat. matrícula)), no padrão do documento de
