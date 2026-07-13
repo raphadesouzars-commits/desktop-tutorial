@@ -131,9 +131,17 @@ async function runNexo(page) {
   await page.goto(fileUrl(path.join(ROOT, 'ferramentas/nexo-coger.html')));
   await page.waitForSelector('#btnMenu');
 
-  // Nexo Coger now opens on the "Dados do Processo" gate (1ª etapa) when there's no saved draft —
-  // it blocks the rest of the app until "Número do processo" is filled. Clear it here so the rest
-  // of this script (which drives #btnMenu etc.) isn't blocked by the fixed overlay.
+  // Nexo Coger now opens on the "tela inicial" (padrão da Suíte COGER) before the gate. With no
+  // saved draft it shows an empty state; click "+ Novo processo" to reach the "Dados do Processo"
+  // gate (1ª etapa) beneath it.
+  const inicio = page.locator('#inicio');
+  if (await inicio.isVisible().catch(() => false)) {
+    await page.click('#inicio .inicio-actions button.primary'); // "+ Novo processo" (estado vazio)
+    await page.waitForTimeout(200);
+  }
+
+  // The gate blocks the rest of the app until "Número do processo" is filled. Clear it here so the
+  // rest of this script (which drives #btnMenu etc.) isn't blocked by the fixed overlay.
   const gate = page.locator('#gate');
   if (await gate.isVisible().catch(() => false)) {
     const gateNumero = page.locator('#gateCard .field', { hasText: 'Número do processo' }).locator('input').first();

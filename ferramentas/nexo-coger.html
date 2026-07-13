@@ -453,6 +453,14 @@ svg.map{display:block}
 .gate-aviso{background:var(--rfb-gold-200);border:1px solid var(--rfb-gold-500);color:#5c4713;
   border-radius:8px;padding:10px 12px;font-size:12.5px;margin:16px 0}
 .gate-foot{display:flex;justify-content:flex-end;margin-top:8px}
+/* Tela inicial (padrão da Suíte COGER — variante mínima de .gate, uniformizada com o Veritas) */
+.inicio{z-index:10000}
+.inicio-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.inicio-box{background:var(--rfb-navy-50);border:1px solid var(--rfb-navy-100);border-radius:10px;padding:16px 18px;margin:6px 0 2px}
+.inicio-box .num{font-family:var(--rfb-font-display);font-size:20px;font-weight:700;color:var(--rfb-navy-900)}
+.inicio-box .meta{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+.inicio-empty{background:var(--rfb-navy-50);border:1px dashed var(--rfb-navy-100);border-radius:10px;
+  padding:16px 18px;margin:6px 0 2px;color:var(--ink-2);font-size:13.5px}
 .radios{display:flex;gap:14px;flex-wrap:wrap}
 .radios label{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;cursor:pointer}
 .inline-warn{background:var(--estado-fragil-bg);border:1px solid #e8cf8a;color:#8a5d0d;
@@ -535,6 +543,16 @@ svg.map.isolating .node.hl{opacity:1}
     <p class="gate-hero__sub">Sistema de Verificação de Nexo Fático-Probatório · Coger/RFB</p>
   </div>
   <div class="gate-card" id="gateCard"></div>
+</div>
+
+<!-- ===================== TELA INICIAL (padrão Suíte COGER — antes do gate) ===================== -->
+<div class="gate inicio" id="inicio" style="display:none">
+  <div class="gate-hero">
+    <span class="gate-hero__eyebrow">Ferramenta interativa</span>
+    <h1 class="gate-hero__title">Nexo Coger</h1>
+    <p class="gate-hero__sub">Sistema de Verificação de Nexo Fático-Probatório · Coger/RFB</p>
+  </div>
+  <div class="gate-card" id="inicioCard"></div>
 </div>
 
 <!-- ===================== HERO (banner institucional) ===================== -->
@@ -3389,6 +3407,74 @@ function abrirGateProcesso(){ renderGateProcesso(); $('#gate').style.display='fl
 function fecharGateProcesso(){ $('#gate').style.display='none'; render(); }
 
 /* ------------------------------------------------------------------ *
+ * 13-ter. TELA INICIAL (padrão da Suíte COGER — uniformizado com o Veritas)
+ * Aparece uma vez por carregamento, ANTES do gate "Dados do Processo".
+ * Não inventa storage: só aciona rotinas já existentes — abrirGateProcesso,
+ * exportJson, importJson (handler do #fileInput) e a limpeza de limparTudo
+ * (extraída em limparTudoCore). O gate "Dados do Processo" continua idêntico.
+ * ------------------------------------------------------------------ */
+function inicioTemProcesso(){
+  return processoGateCompleto() || doc.fatos.length>0 || doc.provas.length>0 || doc.acusados.length>0;
+}
+function abrirInicio(){ renderInicio(); $('#gate').style.display='none'; $('#inicio').style.display='flex'; }
+function fecharInicio(){ inicioImportPendente=false; $('#inicio').style.display='none'; }
+function renderInicio(){
+  const card=$('#inicioCard'); card.innerHTML='';
+  const tem=inicioTemProcesso();
+  // Botão "Importar" — mesma rotina de import de ESTADO COMPLETO já existente (#fileInput):
+  // se há conteúdo, o handler confirma a substituição; se vazio, importa direto.
+  const importarBtn=el('button',{class:'btn',
+    onclick:()=>{ inicioImportPendente=true; importJson(); }},'⬆ Importar processo (.json)');
+
+  if(!tem){
+    // Estado vazio: "Novo" vai direto ao gate (sem aviso — não há nada a perder).
+    card.append(
+      el('h1',{},'Nexo Coger'),
+      el('p',{class:'gate-sub'},'Verificação de nexo fático-probatório de apurações disciplinares. Comece um novo processo ou importe um arquivo de estado (.json) exportado anteriormente.'),
+      el('div',{class:'inicio-empty'},'Nenhuma apuração aberta neste navegador.'),
+      el('div',{class:'inicio-actions'},
+        el('button',{class:'btn primary',onclick:()=>{ fecharInicio(); abrirGateProcesso(); }},'+ Novo processo'),
+        importarBtn));
+  }else{
+    // Há processo salvo: mostra o identificador; "Novo" pede confirmação antes de descartar.
+    const n=doc.processo.numero||'sem número';
+    const partes=[];
+    partes.push(doc.fatos.length+' fato(s)');
+    partes.push(doc.provas.length+' prova(s)');
+    partes.push(doc.acusados.length+' acusado(s)');
+    card.append(
+      el('h1',{},'Nexo Coger'),
+      el('p',{class:'gate-sub'},'Este navegador tem uma apuração salva. Continue de onde parou, comece um novo processo ou importe outro arquivo (.json).'),
+      el('div',{class:'inicio-box'},
+        el('div',{class:'num'},'Processo '+n),
+        el('div',{class:'meta'}, partes.join(' · ')+' — carregado automaticamente do localStorage.')),
+      el('div',{class:'inicio-actions'},
+        el('button',{class:'btn primary',onclick:()=>{ fecharInicio(); if(!processoGateCompleto()) abrirGateProcesso(); }},'Continuar →'),
+        el('button',{class:'btn',onclick:abrirModalNovoProcesso},'+ Novo processo'),
+        importarBtn));
+  }
+}
+// Modal de confirmação para "Novo processo" quando já há um em andamento (texto/estrutura do
+// renderModalReiniciar do Veritas, adaptado dossiê→processo, item→fato).
+function abrirModalNovoProcesso(){
+  const n=doc.processo.numero||'sem número';
+  const body=[
+    el('p',{style:'margin:0 0 10px'},'Este processo ('+n+') tem '+doc.fatos.length+' fato(s) e está salvo neste navegador — reabrir o navegador continuaria carregando-o automaticamente.'),
+    el('p',{style:'margin:0 0 10px'},'Reiniciar apaga o processo deste navegador (localStorage) e volta à tela inicial, para começar um novo ou importar outro. ',
+      el('strong',{},'Exporte o .json antes, se ainda precisar destes dados.')),
+    el('div',{class:'gate-aviso',style:'margin:0'},'Esta ação não pode ser desfeita — o processo só será recuperável se você tiver exportado o .json antes.')
+  ];
+  const foot=[
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn',onclick:exportJson},'Exportar .json antes'),
+    el('button',{class:'btn danger',onclick:()=>{ closeModal(); fecharInicio(); limparTudoCore(); }},'Reiniciar mesmo assim')
+  ];
+  openModal(modalShell('Novo processo — reiniciar o atual?','fato',body,foot));
+  $('#overlay').style.zIndex='10001'; // este modal abre sobre a tela inicial (.inicio z-index:10000)
+}
+let inicioImportPendente=false; // sinaliza que o import em curso partiu da tela inicial
+
+/* ------------------------------------------------------------------ *
  * 14. EDIÇÃO DO PROCESSO
  * ------------------------------------------------------------------ */
 function abrirFormProcesso(){
@@ -3505,6 +3591,7 @@ function importJson(){ $('#fileInput').click(); }
 $('#fileInput').addEventListener('change',e=>{
   const file=e.target.files[0]; if(!file) return;
   const rd=new FileReader();
+  const partiuDoInicio=inicioImportPendente; inicioImportPendente=false;
   rd.onload=()=>{
     try{
       const d=JSON.parse(rd.result);
@@ -3514,6 +3601,9 @@ $('#fileInput').addEventListener('change',e=>{
       if(temDados && !confirm('Isto substituirá o rascunho atual. Continuar?')) return;
       doc=migra(d); if(!doc._seq) recomputaSeq();
       lens='todos'; isolatedFato=null; revisadas.clear(); render();
+      // Se o import partiu da tela inicial, encerra-a e segue o fluxo normal:
+      // gate se o processo importado não tiver número, senão direto ao mapa.
+      if(partiuDoInicio){ fecharInicio(); if(!processoGateCompleto()) abrirGateProcesso(); }
     }catch(err){ alert('Falha ao ler o JSON: '+err.message); }
   };
   rd.readAsText(file); e.target.value='';
@@ -4514,10 +4604,13 @@ function carregarExemplo(){
 /* ------------------------------------------------------------------ *
  * 18. WIRING DE UI
  * ------------------------------------------------------------------ */
+function limparTudoCore(){ // limpeza compartilhada por "Limpar tudo" (menu) e "Novo processo" (tela inicial)
+  doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); scheduleSave(); render();
+  if(!processoGateCompleto()) abrirGateProcesso(); // docVazio() zera doc.processo.numero — reabre a 1ª etapa
+}
 function limparTudo(){
   if(!confirm('Limpar TODO o conteúdo (acusados, fatos, provas)? O catálogo de normas de fábrica é mantido. Esta ação não afeta arquivos .json já exportados.')) return;
-  doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); scheduleSave(); render();
-  if(!processoGateCompleto()) abrirGateProcesso(); // "Limpar tudo" também zera doc.processo.numero — reabre a 1ª etapa
+  limparTudoCore();
 }
 function toggleMenu(open){
   const m=$('#menu'); m.classList.toggle('open', open==null?!m.classList.contains('open'):open);
@@ -4560,7 +4653,7 @@ function init(){
   window.addEventListener('resize',()=>renderMap());
 
   render();
-  if(!processoGateCompleto()) abrirGateProcesso(); // 1ª etapa — bloqueia o resto até "Número do processo" preenchido
+  abrirInicio(); // tela inicial padrão da Suíte COGER — aparece uma vez por carregamento, antes do gate "Dados do Processo"
 }
 
 </script>
