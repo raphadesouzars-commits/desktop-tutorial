@@ -3258,7 +3258,7 @@ function showIdentificacao(){
   elFlow.innerHTML=
     '<div class="pre-card">'
     +'<h2>Identificação da Análise</h2>'
-    +'<p class="pre-sub">Preencha os dados do processo antes de iniciar o fluxo de análise disciplinar.</p>'
+    +'<p class="pre-sub">Preencha os dados do processo abaixo para iniciar uma nova análise, ou <a href="#" id="pi-importar" style="color:var(--rfb-navy-600);font-weight:600;text-decoration:underline">importe uma análise existente (.json)</a>.</p>'
     +'<div class="pre-row">'
     +'<div class="pre-field"><label>Número do Processo *</label>'
     +'<input id="pi-proc" type="text" placeholder="Ex.: 10880.720001/2025-11"/></div>'
@@ -3331,6 +3331,13 @@ function showIdentificacao(){
     document.getElementById("pi-m2-cargo").value=SESSION.membro2.cargo||"";
     document.getElementById("pi-m2-mat").value=SESSION.membro2.matricula||"";
   }
+
+  var piImp=document.getElementById("pi-importar");
+  if(piImp) piImp.onclick=function(e){
+    e.preventDefault();
+    var fi=document.getElementById("importFileInput");
+    if(fi) fi.click();
+  };
 
   document.getElementById("pi-submit").onclick=function(){
     var proc=document.getElementById("pi-proc").value.trim();
@@ -3701,6 +3708,7 @@ function checkAndShowRecovery(){
     +'</div>'
     +'<div class="rb-actions">'
     +'<button class="rfb-btn rfb-btn--primary" id="rec-resume">Retomar análise</button>'
+    +'<button class="rfb-btn rfb-btn--light" id="rec-import">Importar análise (.json)</button>'
     +'<button class="rfb-btn rfb-btn--light" id="rec-new">Iniciar nova análise</button>'
     +'</div>'
     +'</div>'
@@ -3713,13 +3721,52 @@ function checkAndShowRecovery(){
   document.getElementById("rec-resume").onclick=function(){
     restoreFromStorage(saved);
   };
-  document.getElementById("rec-new").onclick=function(){
-    clearStorage();
-    CONDUTAS=[];
-    SESSION={processo:"",unidade:"",dataFatos:"",conduta:"",antecedentes:"",reparacao:"",presidente:{nome:"",cargo:"",matricula:""},membro1:{nome:"",cargo:"",matricula:""},membro2:{nome:"",cargo:"",matricula:""}};
-    hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
-    showIdentificacao();
+  document.getElementById("rec-import").onclick=function(){
+    var fi=document.getElementById("importFileInput");
+    if(fi) fi.click();
   };
+  document.getElementById("rec-new").onclick=function(){
+    showConfirmNovaAnalise(saved);
+  };
+}
+
+// Modal de confirmação de "Iniciar nova análise" (padrão Veritas) — só é chamado
+// quando HÁ análise salva; substitui a limpeza silenciosa que existia antes.
+function limparAnaliseEIrParaIdentificacao(){
+  clearStorage();
+  CONDUTAS=[];
+  SESSION={processo:"",unidade:"",dataFatos:"",conduta:"",antecedentes:"",reparacao:"",presidente:{nome:"",cargo:"",matricula:""},membro1:{nome:"",cargo:"",matricula:""},membro2:{nome:"",cargo:"",matricula:""}};
+  hist=[{id:"start",ch:null,justs:[{fund:"",prob:"",pag:""}]}];
+  showIdentificacao();
+}
+
+function showConfirmNovaAnalise(saved){
+  var proc=(saved.SESSION&&saved.SESSION.processo)?saved.SESSION.processo:"não identificado";
+  var n=(saved.CONDUTAS&&saved.CONDUTAS.length)||0;
+  var cLbl=n+" conduta"+(n!==1?"s":"")+" concluída"+(n!==1?"s":"");
+  elFlow.innerHTML=
+    '<div class="dismiss-gate">'
+    +'<h2>Iniciar nova análise</h2>'
+    +'<p style="font-size:13.5px;margin-bottom:12px">Esta análise (processo <strong>'+escapeHtml(proc)+'</strong>) tem <strong>'+cLbl+'</strong> e está salva neste navegador — reabrir o navegador continuaria carregando-a automaticamente.</p>'
+    +'<p style="font-size:13.5px;margin-bottom:14px">Iniciar nova análise apaga os dados deste navegador (localStorage) e volta à identificação, para começar uma nova ou importar outra. <strong>Exporte o .json antes, se ainda precisar destes dados.</strong></p>'
+    +'<div class="gate-sumula" style="background:var(--rfb-danger-bg,#fbeaea);border-left:3px solid var(--rfb-danger)">Esta ação não pode ser desfeita — a análise só será recuperável se você tiver exportado o .json antes.</div>'
+    +'<div class="gate-actions">'
+    +'<button class="rfb-btn rfb-btn--ghost" id="nova-cancel">'+ICO_BACK+' Cancelar</button>'
+    +'<button class="rfb-btn rfb-btn--light" id="nova-export">Exportar .json antes</button>'
+    +'<button class="rfb-btn rfb-btn--danger" id="nova-confirm">Iniciar nova mesmo assim</button>'
+    +'</div>'
+    +'</div>';
+
+  document.getElementById("nova-cancel").onclick=function(){ checkAndShowRecovery(); };
+  document.getElementById("nova-export").onclick=function(){
+    // No ponto de recuperação os dados salvos ainda não estão nos globais; carrega-os
+    // em memória (sem navegar) para que exportarProcessoJson gere o .json correto.
+    SESSION=saved.SESSION||SESSION;
+    CONDUTAS=saved.CONDUTAS||[];
+    hist=(saved.hist&&saved.hist.length)?saved.hist:hist;
+    exportarProcessoJson();
+  };
+  document.getElementById("nova-confirm").onclick=limparAnaliseEIrParaIdentificacao;
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
