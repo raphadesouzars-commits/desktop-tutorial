@@ -2,6 +2,55 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada 10 — COGER Print Standard completo no Veritas (redo com especificação de referência)
+
+Implementação da **Rodada 9** no Veritas (`ferramentas/veritas.html`) — Rodada 9 criou a especificação de design unificado (`padroes/coger-print-standard.css`, `padroes/coger-print-utility.js`, `padroes/coger-print-template.html`), redo de Rodada 10 aplica o padrão completo ao Veritas com fidelidade à especificação. **Nenhuma alteração no catálogo canônico** (`schema_version`/hash8 inalterados). Impressão exclusiva — nenhuma mudança no `@media screen` (UI interativa preservada).
+
+### Diagnóstico D1–D4 (Veritas)
+
+1. **D1 — Função de impressão:** existe `window.print()` chamado no botão "Imprimir / Salvar PDF" da tela `viewRelatorio()` (linha anterior 3255), sem validação de conteúdo.
+2. **D2 — Elemento printPage:** não existia `#printPage`; conteúdo de impressão era renderizado como `.vdc-relatorio` dentro do fluxo normal da UI.
+3. **D3 — CSS @media print:** sim, ~300 linhas com variáveis de tema (navy/gold) e regras básicas de header/footer/seções, mas sem infobox styles completos.
+4. **D4 — Metadados:** armazenados em `DB.dossie.processo` (objeto com `numero`, `comissao`, `secaoResponsavel`, `tipoProcesso`, etc.); acesso via `p = d.processo` em `viewRelatorio()`.
+
+### Implementação 10.1–10.10
+
+**10.1 CSS Print Standard:** integração completa das variáveis (navy `#0B2F5F`, gold `#C9A35C`, cinza `#F5F8FC`, tipografia inter/Barlow Condensed/JetBrains Mono) + `page-break` rules (seções `page-break-inside: avoid`, títulos `page-break-after: avoid`, orphans/widows 3) + novo: estilos `.coger-print-infobox`, `.coger-print-infobox-row`, `.coger-print-infobox-label`, `.coger-print-infobox-value`, `.coger-print-legal-block` (blocos de legislação com barra lateral navy).
+
+**10.2 Refatoração HTML para COGER Print Standard:** `viewRelatorio()` gerava `.vdc-relatorio` (tabelas, antigo padrão de impressão); refatorado para gerar `<div id="printPage">` com estrutura exata da especificação — (a) `<header class="coger-print-header">` com logos data URI SVG (MF + RFB placeholders, 100x40px) + título + metadados em `<span id="coger-print-ref">`, `#coger-print-date`, `#coger-print-time`; (b) `<main>` com seções numeradas; (c) `<footer class="coger-print-footer">` com referência (id `coger-print-footer-ref`), paginação (`.page-number` de/`.page-count` de), nota "USO INTERNO · FERRAMENTAS COGER".
+
+**10.3 Seções numeradas com barra lateral gold:** 1. **DADOS DO PROCESSO** — blocos `coger-print-infobox` para número/portaria/seção/tipo/presidente/secretário/vogais; 2. **ELEMENTOS DE PROVA** — cada item renderizado como `coger-print-infobox` com título/categoria/proveniência/folhas/status/arquivos; 3. **LINHA DO TEMPO DETALHADA** (condicional — só se itens tiverem eventos) — blocos com eventos mesclados por prova (data + título + observações). Cada seção tem `<h2 class="coger-print-section-title">` com número e barra esquerda de 3px solid `--coger-print-gold-500`, `page-break-after: avoid` e espaçamento 16pt (12pt + 4pt).
+
+**10.4 Referência única:** novo módulo `window.CogerPrint` (IIFE) expondo 5 funções puras: (a) `generatePrintReference()` → `INT-YYYYMMDD-XXXX` (ex: `INT-20260713-2305`), onde YYYY/MM/DD é data/hora atual e XXXX é aleatório 0000–9999; (b) `formatDatePtBr(date)` → "13 de julho de 2026"; (c) `formatTimePtBr(date)` → "18:35"; (d) `fillPrintMetadata(options)` → preenche `#coger-print-ref`, `#coger-print-footer-ref`, `#coger-print-date`, `#coger-print-time`, calcula `.page-count`; (e) `prepareForPrint(options)` → função principal, retorna referência gerada.
+
+**10.5 Botão imprimir:** chamada antes de `window.print()` é `window.CogerPrint.prepareForPrint()` — já aplicado (linha 3422, antes da mudança), sem spinner ou confirmação — tão logo o usuário clica, o diálogo de impressão do navegador abre com metadados preenchidos.
+
+**10.6 Ocultar UI interativa:** classe `.no-print` já presente no botão de ações (`.vdc-actions.no-print`); CSS em `@media print` continua com `display: none !important` para `.no-print`; adicionado explícito `display: none !important` para `.vdc-relatorio` (antiga renderização, substituída por `#printPage`).
+
+**10.7 Page-break rules e compatibilidade:** header/footer com `position: fixed` + `z-index: 1000`; `#printPage` + `.vdc-main` + `[role="main"]` com padding = header + margin top + footer + margin bottom (total ~100mm de reserva); seções, tabelas, blocos de info com `page-break-inside: avoid`; títulos com `page-break-after: avoid` + `orphans: 3` + `widows: 3` para evitar órfãos.
+
+**10.8 Logos como data URIs:** sem dependência externa; SVG mínimos (navy + RFB branco) codificados inline em `data:image/svg+xml,%3Csvg...%3C/svg%3E` (URL encoding aplicado na string).
+
+### Resultado esperado
+
+Ao imprimir Veritas para PDF (Ctrl+P → Salvar como PDF):
+
+- ✅ Header fixo em **todas** as páginas (50mm altura visual, 60px em pixels)
+- ✅ Footer fixo em **todas** as páginas (como header)
+- ✅ Título centrado "DOSSIÊ DE PROVAS"
+- ✅ Referência INT-YYYYMMDD-XXXX preenchida dinamicamente
+- ✅ Data e hora em português
+- ✅ Seções numeradas com barra lateral 3px gold
+- ✅ Blocos de dados (infobox) com borda navy-100 / background gray-100
+- ✅ Tipografia consistente (Barlow Condensed títulos, Inter corpo, JetBrains Mono hashes)
+- ✅ Sem botões, inputs, ou elementos interativos na página impressa
+- ✅ Múltiplas páginas: nenhuma title fica órfã no rodapé
+- ✅ Paginação automática no footer ("Página 1 de N")
+
+**Validação:** braces balanceadas (`node -e` check); componentes presentes (7 referências `window.CogerPrint`, 18 `coger-print-header`, 48 `coger-print-infobox`); `git push` para `claude/tool-integration-setup-7wxech` bem-sucedido.
+
+**Próximo:** Rodada 11 — replicar padrão em **Nexo Coger** (Minuta de Indiciação PAD/PAR); Rodada 12 — replicar em **Oitiva 360** (Termo de Oitiva PAD/PAR).
+
 ## Atualização do Manual da Suíte COGER para o domínio PAR (rodada de documentação, 3 etapas — fechada)
 
 Atualização do `manual/Manual_Suite_COGER.docx` (gerado por `manual/build_manual.py` via python-docx) para cobrir o domínio **PAR** por completo, fechando a lacuna entre o manual publicado — que só documentava o PAD com 3 ferramentas — e o sistema real pós-série PAR-1..PAR-6. **Catálogo canônico intocado** (`schema_version`/hash8 inalterados) — a rodada é só de documentação; nenhum HTML de ferramenta foi alterado. O manual não tem esquema/versão formal; registra-se aqui apenas a atualização de conteúdo.
