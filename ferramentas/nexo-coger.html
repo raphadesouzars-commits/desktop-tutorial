@@ -515,13 +515,349 @@ svg.map.isolating .edge.hl{opacity:1}
 svg.map.isolating .node{opacity:.18}
 svg.map.isolating .node.hl{opacity:1}
 
-@media print{
-  body{height:auto;overflow:visible;display:block}
-  .topbar,.hero,.lensbar,.main,.panel,.footer,.fab,.col-headers{display:none!important}
-  .printview.open{position:static}
-  .printview .pv-toolbar{display:none!important}
-  .pv-doc{margin:0;max-width:none}
-  @page{margin:18mm}
+/* ── COGER PRINT STANDARD (Rodada 11 — Nexo Coger) ──────────────────────────── */
+/* Variáveis CSS e estilos unificados para impressão */
+
+:root {
+  --coger-print-navy-900: #0B2F5F;
+  --coger-print-navy-700: #1E4C99;
+  --coger-print-navy-600: #2E5F99;
+  --coger-print-gold-500: #C9A35C;
+  --coger-print-gold-100: #F5F0E8;
+  --coger-print-gray-100: #F5F8FC;
+  --coger-print-gray-300: #DCE6F4;
+  --coger-print-text-primary: #1A2740;
+  --coger-print-text-muted: #4A5568;
+  --coger-print-font-sans: "Inter", "Barlow Condensed", sans-serif;
+  --coger-print-font-display: "Barlow Condensed", sans-serif;
+  --coger-print-font-mono: "JetBrains Mono", monospace;
+  --coger-print-page-width: 210mm;
+  --coger-print-page-height: 297mm;
+  --coger-print-margin-top: 20mm;
+  --coger-print-margin-bottom: 20mm;
+  --coger-print-margin-left: 20mm;
+  --coger-print-margin-right: 20mm;
+  --coger-print-header-height: 60px;
+  --coger-print-footer-height: 40px;
+  --coger-print-border-radius: 5px;
+  --coger-print-border-width-thin: 1px;
+  --coger-print-border-width-medium: 1.5px;
+  --coger-print-border-width-thick: 3px;
+}
+
+@media print {
+  :root {
+    --font-sans: var(--coger-print-font-sans);
+    --font-display: var(--coger-print-font-display);
+    --font-mono: var(--coger-print-font-mono);
+  }
+
+  body {
+    background: white !important;
+    font-family: var(--coger-print-font-sans);
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  .printview, [role="main"], #printPage {
+    max-width: none;
+    padding: calc(var(--coger-print-header-height) + var(--coger-print-margin-top))
+             var(--coger-print-margin-right)
+             calc(var(--coger-print-footer-height) + var(--coger-print-margin-bottom))
+             var(--coger-print-margin-left);
+    width: 100%;
+    margin: 0;
+  }
+
+  .topbar, .hero, .lensbar, .main, .panel, .footer, .fab, .col-headers, .no-print {
+    display: none !important;
+  }
+
+  .pv-report-item-block, .rfb-card {
+    break-inside: avoid;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+
+  /* ── Header Fixo ────────────────────────────────────────────────────────────── */
+  .coger-print-header {
+    position: fixed;
+    top: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    height: var(--coger-print-header-height);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    background: #fff;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 6px;
+  }
+
+  .coger-print-header-logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    height: 40px;
+    padding: 6px 0;
+  }
+
+  .coger-logo-mf, .coger-logo-rfb {
+    height: 40px;
+    width: auto;
+  }
+
+  .coger-print-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .coger-print-doc-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--coger-print-navy-900);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .coger-print-doc-subtitle {
+    font-size: 9pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .coger-print-header-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--coger-print-text-primary);
+    margin-top: 4px;
+  }
+
+  .coger-print-header-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-top: auto;
+  }
+
+  /* ── Footer Fixo ────────────────────────────────────────────────────────────── */
+  .coger-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    height: var(--coger-print-footer-height);
+    background: #fff;
+    border-top: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+
+  .coger-print-footer-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-bottom: 4px;
+  }
+
+  .coger-print-footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 600;
+    padding: 0 0 4px 0;
+    height: calc(var(--coger-print-footer-height) - 4px);
+  }
+
+  .coger-print-footer-left {
+    flex: 1;
+    text-align: left;
+  }
+
+  .coger-print-footer-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .coger-print-footer-right {
+    flex: 1;
+    text-align: right;
+  }
+
+  /* ── Seções ────────────────────────────────────────────────────────────────── */
+  .coger-print-section {
+    page-break-inside: avoid;
+    margin-bottom: 16pt;
+  }
+
+  .coger-print-section-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 13pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--coger-print-navy-900);
+    margin: 0 0 10pt 0;
+    padding-left: 14px;
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-gold-500);
+    line-height: 1.2;
+    page-break-after: avoid;
+  }
+
+  .coger-print-section-body {
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .coger-print-section-body p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ── Tabelas ────────────────────────────────────────────────────────────────– */
+  .coger-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 12pt 0;
+  }
+
+  .coger-print-table thead {
+    display: table-header-group;
+  }
+
+  .coger-print-table thead th {
+    background: var(--coger-print-navy-900);
+    color: #fff;
+    font-family: var(--coger-print-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    padding: 8pt 10pt;
+    text-align: left;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+  }
+
+  .coger-print-table tbody td {
+    padding: 8pt 10pt;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-gray-300);
+    color: var(--coger-print-text-primary);
+    line-height: 1.5;
+  }
+
+  .coger-print-table tbody tr {
+    page-break-inside: avoid;
+  }
+
+  .coger-print-table tbody tr:nth-child(even) {
+    background: var(--coger-print-gray-100);
+  }
+
+  /* ── Utilitários ────────────────────────────────────────────────────────────– */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  /* ── Blocos de Informação (COGER Print Standard) ──────────────────────── */
+  .coger-print-infobox {
+    background: var(--coger-print-gray-100);
+    border: var(--coger-print-border-width-medium) solid var(--coger-print-gray-300);
+    border-radius: var(--coger-print-border-radius);
+    padding: 12pt 14pt;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-infobox-row {
+    display: flex;
+    gap: 12pt;
+    margin-bottom: 6pt;
+    font-size: 10pt;
+  }
+
+  .coger-print-infobox-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .coger-print-infobox-label {
+    font-weight: 700;
+    color: var(--coger-print-navy-700);
+    min-width: 120pt;
+    text-transform: capitalize;
+    flex-shrink: 0;
+  }
+
+  .coger-print-infobox-value {
+    color: var(--coger-print-text-primary);
+    flex: 1;
+    word-break: break-word;
+  }
+
+  /* ── Blocos de Legislação (citações de lei) ───────────────────────────── */
+  .coger-print-legal-block {
+    background: var(--coger-print-gray-100);
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-navy-900);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-legal-label {
+    font-family: var(--coger-print-font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--coger-print-navy-900);
+    margin-bottom: 6pt;
+    display: block;
+  }
+
+  .coger-print-legal-quote {
+    font-size: 10pt;
+    color: var(--coger-print-text-primary);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.6;
+    font-family: var(--coger-print-font-mono);
+  }
+
+  /* ── Ocultar elementos não-print ─────────────────────────────────────────── */
+  .printview {
+    display: none !important;
+  }
 }
 </style>
 
@@ -658,6 +994,78 @@ svg.map.isolating .node.hl{opacity:1}
 <input type="file" id="fileInputRetornoOitiva" accept="application/json,.json" style="display:none">
 
 <script>
+/* ══════════════════════════════════════════════════════════════════════════════
+   COGER PRINT STANDARD (Rodada 11) — Utilidades de Impressão
+   ══════════════════════════════════════════════════════════════════════════════ */
+(function() {
+  window.CogerPrint = window.CogerPrint || {};
+
+  function generatePrintReference() {
+    var now = new Date();
+    var yyyy = now.getFullYear();
+    var mm = String(now.getMonth() + 1).padStart(2, '0');
+    var dd = String(now.getDate()).padStart(2, '0');
+    var xxxx = String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+    return 'INT-' + yyyy + mm + dd + '-' + xxxx;
+  }
+
+  function formatDatePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    var meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+                 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return d.getDate() + ' de ' + meses[d.getMonth()] + ' de ' + d.getFullYear();
+  }
+
+  function formatTimePtBr(date) {
+    if (!date) return '';
+    var d = new Date(date);
+    return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  function fillPrintMetadata(options) {
+    options = options || {};
+    var reference = options.reference || generatePrintReference();
+    var now = new Date();
+    var dateStr = formatDatePtBr(now);
+    var timeStr = formatTimePtBr(now);
+
+    var refEl = document.getElementById('coger-print-ref');
+    var dateEl = document.getElementById('coger-print-date');
+    var timeEl = document.getElementById('coger-print-time');
+    var footerRefEl = document.getElementById('coger-print-footer-ref');
+
+    if (refEl) refEl.textContent = reference;
+    if (dateEl) dateEl.textContent = dateStr;
+    if (timeEl) timeEl.textContent = timeStr;
+    if (footerRefEl) footerRefEl.textContent = reference;
+
+    var printPage = document.getElementById('printPage');
+    if (printPage) {
+      var pageHeight = 297 - 40 - 40;
+      var contentHeight = printPage.scrollHeight;
+      var estimatedPages = Math.ceil(contentHeight / (pageHeight * 3.78));
+      document.querySelectorAll('.page-count').forEach(function(el) {
+        el.textContent = Math.max(1, estimatedPages);
+      });
+    }
+
+    return reference;
+  }
+
+  function prepareForPrint(options) {
+    options = options || {};
+    var reference = fillPrintMetadata(options);
+    return reference;
+  }
+
+  window.CogerPrint.generatePrintReference = generatePrintReference;
+  window.CogerPrint.formatDatePtBr = formatDatePtBr;
+  window.CogerPrint.formatTimePtBr = formatTimePtBr;
+  window.CogerPrint.fillPrintMetadata = fillPrintMetadata;
+  window.CogerPrint.prepareForPrint = prepareForPrint;
+})();
+
 /* ============================================================
  * CATALOGO_COGER — Catálogo Canônico Unificado (Rodada 1; estendido na Rodada 5)
  * Fonte de verdade: catalogo-canonico.json (raiz do projeto).
@@ -4243,32 +4651,79 @@ function tabelaFatoProvaEnquadramento(fatos){
 // documento completo e independente de UM indiciado (item 1 da especificação)
 function renderIndiciacao(id,dataDoc){
   const p=doc.processo, c=p.comissao, a=acusadoById(id);
-  // fatos ATIVOS imputados ao acusado, na ORDEM NARRATIVA definida no painel
-  // (arquivados são ignorados: apurados, mas a comissão decidiu não indiciar)
   const fatos=fatosOrdenados(doc.fatos.filter(x=>!fatoArquivado(x)&&(x.condutas||[]).some(cc=>cc.acusadoId===id)));
-  const partes=[];
-  partes.push(`<div class="inst">MINISTÉRIO DA FAZENDA — RECEITA FEDERAL DO BRASIL</div>
-    <div class="inst">CORREGEDORIA DA RECEITA FEDERAL DO BRASIL (Coger/RFB) — ${esc(p.unidade||'')}</div>
-    <h1>Indiciação</h1>
-    <p class="center">Processo Administrativo Disciplinar nº ${esc(p.numero)} — Rito ${esc(p.rito)}</p>
-    <p class="center">Comissão designada pela Portaria nº ${esc(c.portariaInstauracao.numero||'—')}${c.portariaInstauracao.data?', de '+esc(c.portariaInstauracao.data):''}.</p>
-    <p class="center">Servidor: ${esc(a.nome)}, ${esc(a.cargo||'—')}, matrícula ${esc(a.matricula||'—')}</p>`);
-  // qualificação
-  partes.push(`<table class="qual">
-    <tr><td><b>Nome</b></td><td>${esc(a.nome)}</td></tr>
-    <tr><td><b>Matrícula</b></td><td>${esc(a.matricula||'—')}</td></tr>
-    <tr><td><b>Cargo</b></td><td>${esc(a.cargo||'—')}</td></tr>
-    <tr><td><b>Lotação</b></td><td>${esc(a.lotacao||'—')}</td></tr>
-    ${a.qualificacaoComplementar?`<tr><td><b>Qualificação</b></td><td>${esc(a.qualificacaoComplementar)}</td></tr>`:''}
-  </table>`);
-  // fatos e condutas
-  partes.push('<h2>Dos fatos e das condutas</h2>');
+
+  // SVG logos como data URIs
+  const logoMF = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 40%22%3E%3Crect width=%22100%22 height=%2240%22 fill=%220B2F5F%22/%3E%3Ctext x=%2250%22 y=%2228%22 text-anchor=%22middle%22 font-size=%2216%22 fill=%22white%22 font-family=%22Arial%22%3EMF%3C/text%3E%3C/svg%3E';
+  const logoRFB = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 40%22%3E%3Crect width=%22100%22 height=%2240%22 fill=%221E4C99%22/%3E%3Ctext x=%2250%22 y=%2228%22 text-anchor=%22middle%22 font-size=%2216%22 fill=%22white%22 font-family=%22Arial%22%3ERFB%3C/text%3E%3C/svg%3E';
+
+  let html = '<div id="printPage">' +
+    /* HEADER FIXO */
+    '<header class="coger-print-header">' +
+      '<div class="coger-print-header-logos">' +
+        '<img src="' + logoMF + '" alt="Ministério da Fazenda"/>' +
+        '<img src="' + logoRFB + '" alt="Receita Federal"/>' +
+      '</div>' +
+      '<div class="coger-print-header-title">' +
+        '<h1 class="coger-print-doc-title">TERMO DE INDICIAÇÃO</h1>' +
+        '<p class="coger-print-doc-subtitle">Ferramentas COGER · Nexo Coger</p>' +
+      '</div>' +
+      '<div class="coger-print-header-meta">' +
+        '<span>Referência: <strong id="coger-print-ref">INT-YYYYMMDD-XXXX</strong></span>' +
+        '<span>Data: <strong id="coger-print-date">—</strong></span>' +
+        '<span>Hora: <strong id="coger-print-time">—</strong></span>' +
+      '</div>' +
+      '<div class="coger-print-header-divider"></div>' +
+    '</header>' +
+
+    /* CONTEÚDO PRINCIPAL */
+    '<main>' +
+      /* SEÇÃO 1: QUALIFICAÇÃO DO ACUSADO */
+      '<section class="coger-print-section">' +
+        '<h2 class="coger-print-section-title">1 — QUALIFICAÇÃO DO ACUSADO</h2>' +
+        '<div class="coger-print-section-body">' +
+          '<div class="coger-print-infobox">' +
+            '<div class="coger-print-infobox-row">' +
+              '<span class="coger-print-infobox-label">Nome:</span>' +
+              '<span class="coger-print-infobox-value">' + esc(a.nome) + '</span>' +
+            '</div>' +
+            '<div class="coger-print-infobox-row">' +
+              '<span class="coger-print-infobox-label">Matrícula:</span>' +
+              '<span class="coger-print-infobox-value">' + esc(a.matricula||'—') + '</span>' +
+            '</div>' +
+            '<div class="coger-print-infobox-row">' +
+              '<span class="coger-print-infobox-label">Cargo:</span>' +
+              '<span class="coger-print-infobox-value">' + esc(a.cargo||'—') + '</span>' +
+            '</div>' +
+            '<div class="coger-print-infobox-row">' +
+              '<span class="coger-print-infobox-label">Lotação:</span>' +
+              '<span class="coger-print-infobox-value">' + esc(a.lotacao||'—') + '</span>' +
+            '</div>' +
+            (a.qualificacaoComplementar?
+              '<div class="coger-print-infobox-row">' +
+                '<span class="coger-print-infobox-label">Qualificação:</span>' +
+                '<span class="coger-print-infobox-value">' + esc(a.qualificacaoComplementar) + '</span>' +
+              '</div>'
+              : '') +
+          '</div>' +
+        '</div>' +
+      '</section>';
+
+  /* SEÇÃO 2: DOS FATOS E DAS CONDUTAS */
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">2 — DOS FATOS E DAS CONDUTAS</h2>' +
+    '<div class="coger-print-section-body">';
   fatos.forEach((ft,i)=>{
     const cond=(ft.condutas||[]).find(cc=>cc.acusadoId===id)||{};
-    partes.push(`<p><b>Fato ${i+1} (${esc(ft.titulo)}).</b> ${esc(ft.descricao)}${ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)?` Período: ${esc(ft.periodo.inicio||'?')} a ${esc(ft.periodo.fim||'?')}.`:''}${ft.local?` Local: ${esc(ft.local)}.`:''}</p>`);
-    partes.push(`<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ${esc(cond.modalidade==='omissiva'?'omissiva':'comissiva')}, ${esc(cond.descricaoConduta||'')}</p>`);
+    html += '<p><b>Fato ' + (i+1) + ' — ' + esc(ft.titulo) + '.</b> ' + esc(ft.descricao);
+    if(ft.periodo&&(ft.periodo.inicio||ft.periodo.fim)) html += ' Período: ' + esc(ft.periodo.inicio||'?') + ' a ' + esc(ft.periodo.fim||'?') + '.';
+    if(ft.local) html += ' Local: ' + esc(ft.local) + '.';
+    html += '</p>';
+    html += '<p>Quanto à conduta individualizada do indiciado, apurou-se que, de forma ' + esc(cond.modalidade==='omissiva'?'omissiva':'comissiva') + ', ' + esc(cond.descricaoConduta||'') + '</p>';
   });
-  // provas — com índice numerado (item 5, herdado). Numeração derivada, não persistida.
+  html += '</div></section>';
+
+  /* SEÇÃO 3: DAS PROVAS */
   const provaIndex=[], provaNum={};
   const registra=(pr,fatoId)=>{
     if(!(pr.id in provaNum)){
@@ -4278,57 +4733,89 @@ function renderIndiciacao(id,dataDoc){
     }
     const e=provaIndex[provaNum[pr.id]-1]; if(!e.fatos.includes(fatoId)) e.fatos.push(fatoId);
   };
-  partes.push('<h2>Das provas</h2>');
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">3 — DAS PROVAS</h2>' +
+    '<div class="coger-print-section-body">';
   fatos.forEach((ft,i)=>{
     const provas=(ft.provaIds||[]).map(provaById).filter(Boolean);
-    if(!provas.length){ partes.push(`<p>Fato ${i+1}: (sem prova vinculada).</p>`); return; }
+    if(!provas.length){ html += '<p>Fato ' + (i+1) + ': (sem prova vinculada).</p>'; return; }
     provas.forEach(pr=>registra(pr,ft.id));
-    let s=`<p>Fato ${i+1} — sustenta-se em: `;
-    s+=provas.map(pr=>{
-      let r=`(${esc(provaIndex[provaNum[pr.id]-1].ref)}) ${esc(pr.titulo)} (${esc(pr.tipo)}`;
-      if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r+=`, ${esc(pr.refAutos.documento||'')}${pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):''}`;
-      r+=')';
+    html += '<p>Fato ' + (i+1) + ' — sustenta-se em: ';
+    html += provas.map(pr=>{
+      let r='(' + esc(provaIndex[provaNum[pr.id]-1].ref) + ') ' + esc(pr.titulo) + ' (' + esc(pr.tipo);
+      if(pr.refAutos&&(pr.refAutos.documento||pr.refAutos.folhas)) r += ', ' + esc(pr.refAutos.documento||'') + (pr.refAutos.folhas?' fls. '+esc(pr.refAutos.folhas):'');
+      r += ')';
       return r;
-    }).join('; ')+'.</p>';
-    partes.push(s);
+    }).join('; ') + '.</p>';
     provas.forEach(pr=>(pr.trechosSignificativos||[]).forEach(t=>{ if((t.citacao||'').trim())
-      partes.push(`<div class="quote">"${esc(t.citacao)}"${t.ref?' ('+esc(t.ref)+')':''}</div>`); }));
+      html += '<div class="quote">"' + esc(t.citacao) + '"' + (t.ref?' ('+esc(t.ref)+')':'') + '</div>'; }));
   });
-  // enquadramento
-  partes.push('<h2>Do enquadramento legal</h2>');
+  html += '</div></section>';
+
+  /* SEÇÃO 4: DO ENQUADRAMENTO LEGAL */
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">4 — DO ENQUADRAMENTO LEGAL</h2>' +
+    '<div class="coger-print-section-body">';
   fatos.forEach((ft,i)=>{
     const ativos=enquadramentosAtivos(ft);
     const afastados=(ft.enquadramentos||[]).filter(e=>e.afastado);
     ativos.forEach(e=>{
       const n=normaById(e.normaId);
-      partes.push(`<p>Fato ${i+1}: a conduta amolda-se ao <b>${esc(n.dispositivo)}</b> (${esc(n.rotulo)}), a título de <b>${esc(rotES(e.elementoSubjetivo))}</b>. ${esc(e.fundamentacao||'')}</p>`);
+      html += '<p>Fato ' + (i+1) + ': a conduta amolda-se ao <b>' + esc(n.dispositivo) + '</b> (' + esc(n.rotulo) + '), a título de <b>' + esc(rotES(e.elementoSubjetivo)) + '</b>. ' + esc(e.fundamentacao||'') + '</p>';
     });
     if(ft.multiplicidade&&ft.multiplicidade.classificacao==='concurso_formal'&&ativos.length>1)
-      partes.push(`<p><i>Reconhece-se concurso formal entre os dispositivos acima, cuja repercussão se dará na dosimetria da pena.</i></p>`);
+      html += '<p><i>Reconhece-se concurso formal entre os dispositivos acima, cuja repercussão se dará na dosimetria da pena.</i></p>';
     if(ft.multiplicidade&&ft.multiplicidade.classificacao==='conflito_aparente'&&afastados.length){
       const prev=normaById(ft.multiplicidade.normaPrevalente);
-      partes.push(`<p><i>Prevalece o ${esc(prev?prev.dispositivo:'')} por ${esc(ft.multiplicidade.principioAplicado)}. Afasta-se: ${afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ')}. ${esc(ft.multiplicidade.justificativa||'')}</i></p>`);
+      html += '<p><i>Prevalece o ' + esc(prev?prev.dispositivo:'') + ' por ' + esc(ft.multiplicidade.principioAplicado) + '. Afasta-se: ' + afastados.map(e=>esc((normaById(e.normaId)||{}).dispositivo)).join('; ') + '. ' + esc(ft.multiplicidade.justificativa||'') + '</i></p>';
     }
   });
-  // síntese fato × prova × enquadramento (item 4 — substitui o antigo "Índice de Provas Citadas" por prova)
-  partes.push('<h2>Síntese dos fatos, provas e enquadramentos</h2>');
-  partes.push(tabelaFatoProvaEnquadramento(fatos));
-  // alegações da defesa não acatadas (item 5)
-  partes.push('<h2>Das alegações da defesa não acatadas</h2>');
+  html += '</div></section>';
+
+  /* SEÇÃO 5: SÍNTESE FATO-PROVA-NORMA */
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">5 — SÍNTESE FATO-PROVA-NORMA</h2>' +
+    '<div class="coger-print-section-body">' +
+      tabelaFatoProvaEnquadramento(fatos).replace(/class="fact-proof-table"/g, 'class="coger-print-table"') +
+    '</div>' +
+    '</section>';
+
+  /* SEÇÃO 6: DAS ALEGAÇÕES DA DEFESA NÃO ACATADAS */
   const alegacoes=(a.alegacoesDefesaNaoAcatadas||'').trim();
-  partes.push(`<div class="editable-block" contenteditable="true">${alegacoes
-    ? esc(alegacoes).replace(/\n/g,'<br>')
-    : '[Inserir alegações da defesa não acatadas durante a instrução, se houver, e a motivação de sua rejeição]'}</div>`);
-  // fecho
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">6 — DAS ALEGAÇÕES DA DEFESA NÃO ACATADAS</h2>' +
+    '<div class="coger-print-section-body">' +
+      '<div class="editable-block no-print" contenteditable="true">' + (alegacoes ? esc(alegacoes).replace(/\n/g,'<br>') : '[Inserir alegações da defesa não acatadas durante a instrução, se houver, e a motivação de sua rejeição]') + '</div>' +
+    '</div>' +
+    '</section>';
+
+  /* SEÇÃO 7: DO ENCERRAMENTO */
   const dt=parseDate(dataDoc);
   const dataFmt=dt?fmtDate(dt):(dataDoc||new Date().toLocaleDateString('pt-BR'));
-  partes.push(`<h2>Do encerramento</h2>
-    <p>Ressalva-se que o enquadramento ora proposto poderá ser adequado por ocasião do Relatório Final, à luz da defesa, uma vez que o indiciado se defende dos fatos e não da sua capitulação.</p>
-    <p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do indiciado para, no prazo legal, apresentar defesa escrita.</p>
-    <p class="center" style="margin-top:36px">${esc(p.cidade||p.unidade||'')}, ${esc(dataFmt)}.</p>
-    ${blocoAssinatura3(c)}`);
+  html += '<section class="coger-print-section">' +
+    '<h2 class="coger-print-section-title">7 — DO ENCERRAMENTO</h2>' +
+    '<div class="coger-print-section-body">' +
+      '<p>Ressalva-se que o enquadramento ora proposto poderá ser adequado por ocasião do Relatório Final, à luz da defesa, uma vez que o indiciado se defende dos fatos e não da sua capitulação.</p>' +
+      '<p>Nos termos do art. 161, §1º, da Lei nº 8.112/90, determina-se a citação do indiciado para, no prazo legal, apresentar defesa escrita.</p>' +
+      '<p class="center" style="margin-top:36px">' + esc(p.cidade||p.unidade||'') + ', ' + esc(dataFmt) + '.</p>' +
+      blocoAssinatura3(c) +
+    '</div>' +
+    '</section>' +
+    '</main>' +
 
-  openPrint(partes.join('\n'),'Indiciação — '+(a.nome||id));
+    /* FOOTER FIXO */
+    '<footer class="coger-print-footer">' +
+      '<div class="coger-print-footer-divider"></div>' +
+      '<div class="coger-print-footer-content">' +
+        '<div class="coger-print-footer-left"><span id="coger-print-footer-ref">INT-YYYYMMDD-XXXX</span></div>' +
+        '<div class="coger-print-footer-center">Página <span class="page-number">1</span> de <span class="page-count">—</span></div>' +
+        '<div class="coger-print-footer-right">USO INTERNO · FERRAMENTAS COGER</div>' +
+      '</div>' +
+    '</footer>' +
+    '</div>';
+
+  openPrint(html,'Indiciação — '+(a.nome||id));
+  window.CogerPrint.prepareForPrint();
 }
 function rotES(v){ return {dolo_direto:'dolo direto',dolo_eventual:'dolo eventual',negligencia:'negligência',imprudencia:'imprudência',impericia:'imperícia'}[v]||v; }
 

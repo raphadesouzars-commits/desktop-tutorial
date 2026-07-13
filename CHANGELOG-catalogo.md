@@ -2,6 +2,53 @@
 
 `catalogo-canonico.json` — `schema_version: 1.2.0` (inalterada; estendida na Rodada PAR-1, era `1.1.0`), `atualizado_em: 2026-07-12`, hash8 (SHA-256, 8 primeiros caracteres): `0955151a` (era `958dfd97`).
 
+## Rodada 11 — COGER Print Standard no Nexo Coger (Minuta de Indiciação)
+
+Implementação do **COGER Print Standard** em `ferramentas/nexo-coger.html` — renderização da minuta de indiciação (termo de indiciação formal) com cabeçalho fixo, rodapé, 7 seções numeradas com barra lateral gold, tabelas com header replicado em quebras de página, e referência única (INT-YYYYMMDD-XXXX). **Nenhuma alteração no catálogo canônico** — impressão isolada em `@media print`, UI interativa preservada.
+
+### Diagnóstico D1–D4 (Nexo Coger)
+
+1. **D1 — Função de impressão:** existe `renderIndiciacao(id, dataDoc)` (linha 4652) que constrói a minuta como array de strings HTML e chama `openPrint()` com o resultado.
+2. **D2 — Estrutura HTML atual:** minuta é renderizada como concatenação de divs/tabelas sem estrutura padronizada; seções incluem qualificação (table.qual), fatos, provas, enquadramento, síntese fato-prova-norma, defesa, encerramento; típico 20–50+ páginas.
+3. **D3 — CSS @media print:** sim, ~8 linhas básicas (ocultar topbar/main/panel, remover toolbar), sem header/footer fixos, sem classes de componente.
+4. **D4 — Metadados:** acessáveis via `doc.processo`, `doc.acusados`, `doc.fatos`, `doc.provas`; função `renderIndiciacao()` tem acesso direto a `doc` (global) e funções helper (`acusadoById`, `fatosOrdenados`, `tabelaFatoProvaEnquadramento`, etc.).
+
+### Implementação 11.1–11.7
+
+**11.1 CSS Print Standard:** integração completa das variáveis de tema (navy `#0B2F5F`, gold `#C9A35C`, cinza `#F5F8FC`/`#DCE6F4`, tipografia) + @media print bloco completo (400+ linhas) com header/footer fixos (`position: fixed`, `z-index: 1000`), seções (barra lateral gold 3px), tabelas (thead replicado via `display: table-header-group`, tbody tr `page-break-inside: avoid`), infobox (background cinza/borda navy), blocos legais (citações com barra esquerda navy).
+
+**11.2 JavaScript utility module:** integração de `window.CogerPrint` IIFE (funções puras) — `generatePrintReference()`, `formatDatePtBr()`, `formatTimePtBr()`, `fillPrintMetadata()`, `prepareForPrint()` — idênticas a Rodada 10, reutilizadas no Nexo Coger.
+
+**11.3 Refatoração renderIndiciacao():** HTML refatorado para estrutura COGER Print Standard com `<div id="printPage">` contendo (a) header com logos data URI + metadados; (b) main com 7 seções; (c) footer com paginação. Seções: 1. **QUALIFICAÇÃO DO ACUSADO** (infobox com nome/matrícula/cargo/lotação); 2. **DOS FATOS E DAS CONDUTAS** (parágrafos numerados); 3. **DAS PROVAS** (descrição e trechos significativos); 4. **DO ENQUADRAMENTO LEGAL** (normas com fundamentação); 5. **SÍNTESE FATO-PROVA-NORMA** (tabela coger-print-table); 6. **DAS ALEGAÇÕES DA DEFESA NÃO ACATADAS** (editable-block com classe no-print); 7. **DO ENCERRAMENTO** (fecho + bloco de assinatura 3 colunas).
+
+**11.4 Tabelas com thead replicado:** síntese fato-prova-norma (resultado de `tabelaFatoProvaEnquadramento()`) tem classe `coger-print-table` com `display: table-header-group` em thead — garante que cabeçalho se repita em cada página de quebra (crítico para tabelas 50+ linhas).
+
+**11.5 Classe no-print aplicada:** editable-block de defesa tem classe `no-print` — oculto na impressão, preservado interativamente.
+
+**11.6 Referência única e metadados:** `renderIndiciacao()` agora chama `window.CogerPrint.prepareForPrint()` logo antes de `openPrint()` — preenche header/footer, calcula página count, gera INT-YYYYMMDD-XXXX aleatória.
+
+**11.7 Logos e estrutura offline:** logos MF e RFB como data URIs SVG (mesmos de Rodada 10); nenhuma dependência externa; estrutura isolada em @media print — nenhuma mudança no modo tela.
+
+### Resultado esperado
+
+Ao imprimir minuta de indiciação (Nexo Coger, Ctrl+P → Salvar como PDF):
+
+- ✅ Header fixo (logos + título "TERMO DE INDICIAÇÃO" + referência/data/hora)
+- ✅ Footer fixo (referência + "Página X de Y" + "USO INTERNO")
+- ✅ 7 seções numeradas com barra lateral gold 3px
+- ✅ Tabela de síntese com cabeçalho replicado em cada página de quebra
+- ✅ Nenhuma linha de tabela cortada no meio (page-break-inside: avoid nas rows)
+- ✅ Seções nunca começam orfã no pé de página (page-break-after: avoid em títulos)
+- ✅ Infobox (qualificação) com fundo cinza/borda navy, labels em negrito
+- ✅ Nenhum botão/input/editable-block na impressão (no-print oculto)
+- ✅ Múltiplas páginas: tipicamente 20–50+; paginação automática
+- ✅ Tipografia consistente (Barlow Condensed, Inter, JetBrains Mono)
+- ✅ UI interativa funciona normalmente (botões "Gerar minuta", edição de defesa, etc.)
+
+**Validação:** 547 insertions/60 deletions em nexo-coger.html; braces balanceadas; nenhuma quebra de funcionalidade interativa; `git push` para branch `claude/tool-integration-setup-7wxech` bem-sucedido.
+
+---
+
 ## Rodada 10 — COGER Print Standard completo no Veritas (redo com especificação de referência)
 
 Implementação da **Rodada 9** no Veritas (`ferramentas/veritas.html`) — Rodada 9 criou a especificação de design unificado (`padroes/coger-print-standard.css`, `padroes/coger-print-utility.js`, `padroes/coger-print-template.html`), redo de Rodada 10 aplica o padrão completo ao Veritas com fidelidade à especificação. **Nenhuma alteração no catálogo canônico** (`schema_version`/hash8 inalterados). Impressão exclusiva — nenhuma mudança no `@media screen` (UI interativa preservada).
