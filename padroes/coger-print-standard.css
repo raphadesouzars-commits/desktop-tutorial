@@ -1,0 +1,376 @@
+/* ── COGER PRINT STANDARD ──────────────────────────────────────────────── */
+/*
+   Unified print styling for COGER tools (Veritas, Nexo Coger, Oitiva 360).
+   This CSS is designed to be embedded in each tool's <style> tag via @media print.
+   No external dependencies. All colors use CSS variables for consistency.
+*/
+
+:root {
+  /* Cores — Paleta COGER Navy/Gold */
+  --coger-print-navy-900: #0B2F5F;   /* hero, headers, barra lateral */
+  --coger-print-navy-700: #1E4C99;   /* bordas, background secundário */
+  --coger-print-navy-600: #2E5F99;   /* text muted */
+  --coger-print-gold-500: #C9A35C;   /* accent, barras laterais */
+  --coger-print-gold-100: #F5F0E8;   /* background muy claro */
+  --coger-print-gray-100: #F5F8FC;   /* background neutr */
+  --coger-print-gray-300: #DCE6F4;   /* divider */
+  --coger-print-text-primary: #1A2740;
+  --coger-print-text-muted: #4A5568;
+
+  /* Tipografia */
+  --coger-print-font-sans: "Inter", "Barlow Condensed", sans-serif;
+  --coger-print-font-display: "Barlow Condensed", sans-serif;
+  --coger-print-font-mono: "JetBrains Mono", monospace;
+
+  /* Espaçamento e tamanhos */
+  --coger-print-page-width: 210mm;     /* A4 */
+  --coger-print-page-height: 297mm;    /* A4 */
+  --coger-print-margin-top: 20mm;
+  --coger-print-margin-bottom: 20mm;
+  --coger-print-margin-left: 20mm;
+  --coger-print-margin-right: 20mm;
+  --coger-print-margin-footer: 10mm;
+
+  /* Altura de header/footer */
+  --coger-print-header-height: 60px;
+  --coger-print-footer-height: 40px;
+
+  /* Medidas de elemento */
+  --coger-print-border-radius: 5px;
+  --coger-print-border-width-thin: 1px;
+  --coger-print-border-width-medium: 1.5px;
+  --coger-print-border-width-thick: 3px;
+
+  /* Quebras de página */
+  --coger-print-page-break: always;
+  --coger-print-page-break-inside: avoid;
+}
+
+@media print {
+  /* Override: contexto de print usa variáveis de print */
+  :root {
+    --font-sans: var(--coger-print-font-sans);
+    --font-display: var(--coger-print-font-display);
+    --font-mono: var(--coger-print-font-mono);
+    --navy-900: var(--coger-print-navy-900);
+    --navy-700: var(--coger-print-navy-700);
+    --gold-500: var(--coger-print-gold-500);
+    --text-primary: var(--coger-print-text-primary);
+  }
+
+  /* ── BODY ──────────────────────────────────────────────────────────────── */
+  body {
+    font-family: var(--coger-print-font-sans);
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Main content area — respeita header/footer fixos */
+  #printPage, [role="main"] {
+    width: var(--coger-print-page-width);
+    margin: 0 auto;
+    padding:
+      calc(var(--coger-print-header-height) + var(--coger-print-margin-top))
+      var(--coger-print-margin-right)
+      calc(var(--coger-print-footer-height) + var(--coger-print-margin-bottom))
+      var(--coger-print-margin-left);
+    background: #fff;
+  }
+
+  /* ── HEADER ────────────────────────────────────────────────────────────── */
+  .coger-print-header {
+    position: fixed;
+    top: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    height: var(--coger-print-header-height);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    background: #fff;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 6px;
+  }
+
+  .coger-print-header-logos {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    height: 40px;
+    padding: 6px 0;
+  }
+
+  .coger-logo-mf, .coger-logo-rfb {
+    height: 40px;
+    width: auto;
+  }
+
+  .coger-print-header-title {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .coger-print-doc-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 18pt;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--coger-print-navy-900);
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin: 0;
+  }
+
+  .coger-print-doc-subtitle {
+    font-size: 9pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .coger-print-header-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 9pt;
+    font-weight: 600;
+    color: var(--coger-print-text-primary);
+    margin-top: 4px;
+  }
+
+  .coger-print-header-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-top: auto;
+  }
+
+  /* ── FOOTER ────────────────────────────────────────────────────────────── */
+  .coger-print-footer {
+    position: fixed;
+    bottom: 0;
+    left: var(--coger-print-margin-left);
+    right: var(--coger-print-margin-right);
+    width: calc(var(--coger-print-page-width) - var(--coger-print-margin-left) - var(--coger-print-margin-right));
+    height: var(--coger-print-footer-height);
+    background: #fff;
+    border-top: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1000;
+  }
+
+  .coger-print-footer-divider {
+    height: var(--coger-print-border-width-thin);
+    background: var(--coger-print-navy-900);
+    margin-bottom: 4px;
+  }
+
+  .coger-print-footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 8pt;
+    color: var(--coger-print-text-muted);
+    font-weight: 600;
+    padding: 0 0 4px 0;
+    height: calc(var(--coger-print-footer-height) - 4px);
+  }
+
+  .coger-print-footer-left {
+    flex: 1;
+    text-align: left;
+  }
+
+  .coger-print-footer-center {
+    flex: 1;
+    text-align: center;
+  }
+
+  .coger-print-footer-right {
+    flex: 1;
+    text-align: right;
+  }
+
+  /* ── SECTIONS ──────────────────────────────────────────────────────────── */
+  .coger-print-section {
+    page-break-inside: avoid;
+    margin-bottom: 16pt;
+  }
+
+  .coger-print-section-title {
+    font-family: var(--coger-print-font-display);
+    font-size: 13pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--coger-print-navy-900);
+    margin: 0 0 10pt 0;
+    padding-left: 14px;
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-gold-500);
+    line-height: 1.2;
+    page-break-after: avoid;
+  }
+
+  .coger-print-section-body {
+    font-size: 11pt;
+    color: var(--coger-print-text-primary);
+    line-height: 1.6;
+    text-align: justify;
+  }
+
+  .coger-print-section-body p {
+    margin: 0 0 8pt 0;
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* ── INFO BOXES ────────────────────────────────────────────────────────── */
+  .coger-print-infobox {
+    background: var(--coger-print-gray-100);
+    border: var(--coger-print-border-width-medium) solid var(--coger-print-gray-300);
+    border-radius: var(--coger-print-border-radius);
+    padding: 12pt 14pt;
+    margin-bottom: 12pt;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-infobox-row {
+    display: flex;
+    gap: 12pt;
+    margin-bottom: 6pt;
+    font-size: 10pt;
+  }
+
+  .coger-print-infobox-row:last-child {
+    margin-bottom: 0;
+  }
+
+  .coger-print-infobox-label {
+    font-weight: 700;
+    color: var(--coger-print-navy-700);
+    min-width: 120pt;
+    text-transform: capitalize;
+  }
+
+  .coger-print-infobox-value {
+    color: var(--coger-print-text-primary);
+    flex: 1;
+  }
+
+  /* ── LEGAL BLOCKS ──────────────────────────────────────────────────────── */
+  .coger-print-legal-block {
+    background: var(--coger-print-gray-100);
+    border-left: var(--coger-print-border-width-thick) solid var(--coger-print-navy-900);
+    padding: 10pt 14pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-legal-label {
+    font-family: var(--coger-print-font-display);
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--coger-print-navy-900);
+    margin-bottom: 6pt;
+    display: block;
+  }
+
+  .coger-print-legal-quote {
+    font-size: 10pt;
+    color: var(--coger-print-text-primary);
+    font-style: italic;
+    margin: 0;
+    line-height: 1.6;
+    font-family: var(--coger-print-font-mono);
+  }
+
+  /* ── TABLES ────────────────────────────────────────────────────────────── */
+  .coger-print-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+    margin: 12pt 0;
+    page-break-inside: avoid;
+  }
+
+  .coger-print-table-head {
+    background: var(--coger-print-navy-900);
+    color: #fff;
+  }
+
+  .coger-print-table thead th {
+    font-family: var(--coger-print-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    padding: 8pt 10pt;
+    text-align: left;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-navy-900);
+  }
+
+  .coger-print-table tbody td {
+    padding: 8pt 10pt;
+    border-bottom: var(--coger-print-border-width-thin) solid var(--coger-print-gray-300);
+    color: var(--coger-print-text-primary);
+    line-height: 1.5;
+  }
+
+  .coger-print-table tbody tr:nth-child(even) {
+    background: var(--coger-print-gray-100);
+  }
+
+  /* ── PAGE BREAKING ─────────────────────────────────────────────────────── */
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    orphans: 3;
+    widows: 3;
+  }
+
+  ul, ol {
+    page-break-inside: avoid;
+  }
+
+  img {
+    max-width: 100%;
+    page-break-inside: avoid;
+  }
+
+  body > * {
+    page-break-before: auto;
+  }
+
+  /* ── UTILITY CLASSES ───────────────────────────────────────────────────── */
+  .no-print {
+    display: none !important;
+  }
+
+  .coger-print-page-break-before {
+    page-break-before: var(--coger-print-page-break);
+  }
+
+  .coger-print-no-break {
+    page-break-inside: avoid;
+  }
+
+  a {
+    color: var(--coger-print-text-primary);
+    text-decoration: none;
+  }
+
+  @media print and (prefers-color-scheme: light) {
+    .coger-print-infobox,
+    .coger-print-legal-block {
+      border-color: var(--coger-print-gray-300);
+      background: var(--coger-print-gray-100);
+    }
+  }
+}
