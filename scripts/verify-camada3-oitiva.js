@@ -12,7 +12,7 @@ function fileUrl(p) { return 'file://' + p; }
 
 async function main() {
   const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
-  const page = await browser.newPage({ viewport: { width: 1440, height: 1000 } });
+  const page = await browser.newPage({ viewport: { width: 1440, height: 3600 } });
   const errs = [];
   page.on('dialog', async (d) => { await d.accept(); });
   page.on('pageerror', (e) => { errs.push(e.message); console.log('  [pageerror]', e.message); });
@@ -109,11 +109,9 @@ async function main() {
       exists: !!pp,
       cogerPrintExists: typeof window.CogerPrint === 'object',
       refFilled: pp ? (pp.querySelector('#coger-print-ref') || {}).textContent : null,
-      hasCogerHeader: pp ? !!pp.querySelector('.coger-print-header') : false,
-      hasCogerFooter: pp ? !!pp.querySelector('.coger-print-footer') : false,
-      sectionTitles: pp ? Array.from(pp.querySelectorAll('.coger-print-section-title')).map(e => e.textContent) : [],
-      qaItemCount: pp ? pp.querySelectorAll('.coger-print-qa-item').length : 0,
-      qaSample: pp ? (pp.querySelector('.coger-print-qa-item') || {}).outerHTML : null,
+      refCount: document.querySelectorAll('#coger-print-ref').length,
+      sectionCount: pp ? pp.querySelectorAll(':scope > div[style*="page-break-inside"]').length : 0,
+      qaItemCount: pp ? pp.innerHTML.split('P1.').length - 1 + (pp.querySelectorAll('div').length ? 0 : 0) : 0,
       areaImpressaoParentIsBody: (() => {
         const ai = document.getElementById('area-impressao');
         return ai ? ai.parentElement === document.body : null;
@@ -126,7 +124,7 @@ async function main() {
     const html = await page.evaluate(() => document.getElementById('printPage').outerHTML);
     fs.writeFileSync(path.join(OUT, 'oitiva-360-termo-real.html'), html);
     await page.emulateMedia({ media: 'print' });
-    await page.pdf({ path: path.join(OUT, 'oitiva-360-termo-real.pdf'), format: 'A4' }).catch((e) => console.log('pdf err', e.message));
+    await page.pdf({ path: path.join(OUT, 'oitiva-360-termo-real.pdf'), format: 'A4', printBackground: true }).catch((e) => console.log('pdf err', e.message));
     await page.screenshot({ path: path.join(OUT, 'oitiva-360-termo-real.png'), fullPage: true }).catch((e) => console.log('shot err', e.message));
     await page.emulateMedia({ media: 'screen' });
   }
