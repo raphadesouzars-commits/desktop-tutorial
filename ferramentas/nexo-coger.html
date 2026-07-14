@@ -4695,7 +4695,6 @@ function impCabecalho(titulo,subtitulo){
       '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:19pt;font-weight:700;color:#0B2F5F;text-transform:uppercase;letter-spacing:.4px">' + esc(titulo) + '</div>' +
       '<div style="font-size:9.5pt;color:#5B6781;margin-top:2pt">' + esc(subtitulo) + '</div>' +
       '<div style="display:flex;gap:24pt;font-size:9pt;color:#5B6781;margin-top:7pt">' +
-        '<span><strong style="color:#1A2740">Referência:</strong> <strong id="coger-print-ref" style="font-family:\'JetBrains Mono\',monospace;color:#0B2F5F">INT-YYYYMMDD-XXXX</strong></span>' +
         '<span><strong style="color:#1A2740">Data:</strong> <strong id="coger-print-date">—</strong></span>' +
         '<span><strong style="color:#1A2740">Hora:</strong> <strong id="coger-print-time">—</strong></span>' +
       '</div>' +
@@ -4715,7 +4714,7 @@ function impInfobox(rows){
 function impRodape(){
   return '<div style="background:#0B2F5F;color:#fff;padding:8pt 14pt;font-size:8pt;margin-top:18pt;display:flex;justify-content:space-between;align-items:center">' +
     '<span>Ferramentas COGER · Nexo Coger</span>' +
-    '<span>USO INTERNO · <span id="coger-print-footer-ref">INT-YYYYMMDD-XXXX</span></span>' +
+    '<span>USO INTERNO</span>' +
   '</div>';
 }
 // Tabela de síntese fato-prova-norma com estilo 100% inline (thead navy real, zebra striping) —

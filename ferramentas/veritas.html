@@ -3338,12 +3338,10 @@ function itemHashCelulaHtml(it) {
     var timeStr = formatTimePtBr(now);
 
     // Header
-    document.getElementById('coger-print-ref').textContent = reference;
-    document.getElementById('coger-print-date').textContent = dateStr;
-    document.getElementById('coger-print-time').textContent = timeStr;
-
-    // Footer
-    document.getElementById('coger-print-footer-ref').textContent = reference;
+    var headerDateEl = document.getElementById('coger-print-date');
+    var headerTimeEl = document.getElementById('coger-print-time');
+    if (headerDateEl) headerDateEl.textContent = dateStr;
+    if (headerTimeEl) headerTimeEl.textContent = timeStr;
 
     // Calcula total de páginas (simulação baseada em height do printPage)
     var printPage = document.getElementById('printPage');
@@ -3387,7 +3385,6 @@ function impCabecalho(titulo, subtitulo) {
       '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:19pt;font-weight:700;color:#0B2F5F;text-transform:uppercase;letter-spacing:.4px">' + escapeHtml(titulo) + '</div>' +
       '<div style="font-size:9.5pt;color:#5B6781;margin-top:2pt">' + escapeHtml(subtitulo) + '</div>' +
       '<div style="display:flex;gap:24pt;font-size:9pt;color:#5B6781;margin-top:7pt">' +
-        '<span><strong style="color:#1A2740">Referência:</strong> <strong id="coger-print-ref" style="font-family:\'JetBrains Mono\',monospace;color:#0B2F5F">INT-YYYYMMDD-XXXX</strong></span>' +
         '<span><strong style="color:#1A2740">Data:</strong> <strong id="coger-print-date">—</strong></span>' +
         '<span><strong style="color:#1A2740">Hora:</strong> <strong id="coger-print-time">—</strong></span>' +
       '</div>' +
@@ -3407,7 +3404,7 @@ function impInfobox(rows) {
 function impRodape() {
   return '<div style="background:#0B2F5F;color:#fff;padding:8pt 14pt;font-size:8pt;margin-top:18pt;display:flex;justify-content:space-between;align-items:center">' +
     '<span>Ferramentas COGER · Veritas</span>' +
-    '<span>USO INTERNO · <span id="coger-print-footer-ref">INT-YYYYMMDD-XXXX</span></span>' +
+    '<span>USO INTERNO</span>' +
   '</div>';
 }
 
