@@ -3691,9 +3691,34 @@ function describeRestoredState(p){
   return {proc:proc, step:stepName, condutas:condutas, dt:dt};
 }
 
+// Tela inicial padrão da Suíte COGER (mesmo padrão de Veritas/Nexo Coger/Nexo PAR/Oitiva 360):
+// ponto de entrada neutro com as duas ações — "+ Nova análise" e "Importar análise (.json)" —
+// em vez de ir direto ao formulário de Identificação quando não há nada salvo no navegador.
+function showTelaInicial(){
+  elSN.textContent="—";
+  elCrumbs.innerHTML="";
+  elSB.innerHTML="";
+  elFlow.innerHTML=
+    '<div class="pre-card" style="text-align:center;display:flex;flex-direction:column;gap:16px;align-items:center;max-width:640px">'
+    +'<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--rfb-navy-500)">Coger/RFB — Divisão de Processos (Dproc)</div>'
+    +'<h2 style="font-size:26px;margin-bottom:0">Condutas Funcionais — Integritas</h2>'
+    +'<p class="pre-sub" style="margin-bottom:0;max-width:520px">Guia decisório para a análise disciplinar de condutas funcionais — do enquadramento à dosimetria da penalidade, com fundamentação técnica registrada a cada etapa.</p>'
+    +'<div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">'
+    +'<button class="rfb-btn rfb-btn--primary" id="ti-nova">+ Nova análise</button>'
+    +'<button class="rfb-btn rfb-btn--secondary" id="ti-importar">Importar análise (.json)</button>'
+    +'</div>'
+    +'</div>';
+
+  document.getElementById("ti-nova").onclick=function(){ showIdentificacao(); };
+  document.getElementById("ti-importar").onclick=function(){
+    var fi=document.getElementById("importFileInput");
+    if(fi) fi.click();
+  };
+}
+
 function checkAndShowRecovery(){
   var saved=loadFromStorage();
-  if(!saved){showIdentificacao();return;}
+  if(!saved){showTelaInicial();return;}
   var info=describeRestoredState(saved);
   elFlow.innerHTML=
     '<div class="recovery-banner">'
