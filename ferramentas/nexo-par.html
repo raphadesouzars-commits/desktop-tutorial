@@ -3561,7 +3561,8 @@ function renderInicio(){
     el('p',{class:'gate-sub'},'Responsabilização de entes privados (Lei nº 12.846/2013 — LAC). Comece um novo processo ou importe o .json de um processo já iniciado — ele fica salvo neste navegador e é recarregado automaticamente na próxima abertura.'),
     estado,
     el('div',{class:'inicio-acoes'},
-      el('button',{class:'btn primary',onclick:inicioNovo},'+ Novo processo'),
+      ...(inicioTemDados() ? [el('button',{class:'btn primary',onclick:()=>{ fecharInicio(); if(!processoGateCompleto()) abrirGateProcesso(); }},'Continuar →')] : []),
+      el('button',{class:'btn'+(inicioTemDados()?'':' primary'),onclick:inicioNovo},'+ Novo processo'),
       el('button',{class:'btn',onclick:()=>importJson()},'Importar processo (.json)'))
   );
 }
