@@ -90,6 +90,38 @@
   .badge-alert{position:absolute;top:.65rem;right:.65rem;background:#ef4444;color:#fff;
     font-size:.58rem;font-weight:800;border-radius:99px;padding:.18rem .45rem}
 
+  /* ─ HOJE CARD ─ */
+  .hoje-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+    overflow:hidden;margin-bottom:1rem}
+  .hoje-header{display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.1rem}
+  .hoje-title{font-size:.85rem;font-weight:800}
+  .hoje-dia{font-size:.72rem;color:var(--muted);margin-left:.5rem;font-weight:600}
+  .hoje-tog{background:none;border:none;color:var(--muted);cursor:pointer;
+    font-size:.95rem;transition:transform .2s;padding:.2rem}
+  .hoje-tog.open{transform:rotate(180deg)}
+  .hoje-body{border-top:1px solid var(--border);padding:.35rem .5rem .5rem;display:none}
+  .hoje-body.open{display:block}
+  .hb{display:flex;align-items:center;gap:.55rem;padding:.45rem .6rem;
+    border-radius:var(--rsm);transition:background .12s;position:relative}
+  .hb.clickable{cursor:pointer}
+  .hb.clickable:hover{background:var(--surface2)}
+  .hb.now{background:rgba(99,102,241,.09);padding-left:.45rem}
+  .hb.now::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+    border-radius:2px;background:#6366f1}
+  .hb-h{font-size:.7rem;color:var(--muted);font-weight:700;min-width:38px;flex-shrink:0}
+  .hb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+  .hb-lbl{flex:1;font-size:.82rem;font-weight:600}
+  .hb-tag{font-size:.56rem;font-weight:800;padding:.14rem .42rem;border-radius:99px;
+    text-transform:uppercase;letter-spacing:.03em;flex-shrink:0}
+  .hb-arr{color:var(--muted);font-size:.95rem;flex-shrink:0}
+  .tag-aula{background:rgba(255,255,255,.07);color:var(--muted)}
+  .tag-hard{background:#f9731622;color:#f97316}
+  .tag-exer{background:#6366f122;color:#818cf8}
+  .tag-sim{background:#a855f722;color:#c084fc}
+  .tag-uerj{background:#ec489922;color:#f472b6}
+  .tag-extra{background:rgba(255,255,255,.05);color:var(--muted)}
+  .livre-pill{font-size:.78rem;color:var(--muted);padding:.6rem 1rem;text-align:center;display:block}
+
   /* ─ PROGRESS RING ─ */
   .ring-wrap{position:absolute;bottom:.8rem;right:.8rem}
   .ring-wrap svg{width:38px;height:38px;transform:rotate(-90deg)}
@@ -386,6 +418,86 @@ const CATALOG = {
   ],
 };
 
+// ── SCHEDULE ────────────────────────────────────────
+// h=início, f=fim, l=label, t=tipo, sid=subjId|null
+// tipo: aula | hard | exer | sim | uerj | extra
+// dias: 0=Dom 1=Seg 2=Ter 3=Qua 4=Qui 5=Sex 6=Sab
+const MANHA = { // igual para Malu e Bruno (mesma turma)
+  1:[{h:'07:00',f:'08:20',l:'Linguagens',t:'aula',sid:'portugues'},
+     {h:'08:30',f:'09:50',l:'Biologia',t:'aula',sid:'biologia'},
+     {h:'10:10',f:'11:30',l:'Matemática',t:'aula',sid:'matematica'},
+     {h:'11:40',f:'13:00',l:'Química',t:'aula',sid:'quimica'}],
+  2:[{h:'07:00',f:'08:20',l:'Matemática',t:'aula',sid:'matematica'},
+     {h:'08:30',f:'09:50',l:'Redação',t:'aula',sid:'redacao'},
+     {h:'10:10',f:'11:30',l:'Geografia',t:'aula',sid:'geografia'},
+     {h:'11:40',f:'13:00',l:'Química',t:'aula',sid:'quimica'}],
+  3:[{h:'07:00',f:'08:20',l:'Gramática',t:'aula',sid:'portugues'},
+     {h:'08:30',f:'09:50',l:'Biologia',t:'aula',sid:'biologia'},
+     {h:'10:10',f:'11:30',l:'Física',t:'aula',sid:'fisica'},
+     {h:'11:40',f:'13:00',l:'Física',t:'aula',sid:'fisica'}],
+  4:[{h:'07:00',f:'08:20',l:'Química',t:'aula',sid:'quimica'},
+     {h:'08:30',f:'09:50',l:'Biologia',t:'aula',sid:'biologia'},
+     {h:'10:10',f:'11:30',l:'Sociologia/Filosofia',t:'aula',sid:null},
+     {h:'11:40',f:'13:00',l:'Hard Matemática',t:'hard',sid:'matematica'}],
+  5:[{h:'07:00',f:'08:20',l:'Biologia',t:'aula',sid:'biologia'},
+     {h:'08:30',f:'09:50',l:'História',t:'aula',sid:'historia'},
+     {h:'10:10',f:'11:30',l:'Hard Química',t:'hard',sid:'quimica'},
+     {h:'11:40',f:'13:00',l:'Redação',t:'aula',sid:'redacao'}],
+  6:[{h:'08:40',f:'13:00',l:'Simulado Bahiana',t:'sim',sid:null}],
+};
+const TARDE = {
+  malu:{
+    0:[{h:'09:00',f:'13:00',l:'Simulado Discursivo UERJ',t:'sim',sid:null}],
+    1:[{h:'14:00',f:'14:50',l:'Matemática — estudo',t:'exer',sid:'matematica'},
+       {h:'15:10',f:'16:10',l:'Biologia — estudo',t:'exer',sid:'biologia'},
+       {h:'16:30',f:'17:00',l:'Linguagens — estudo',t:'exer',sid:'portugues'},
+       {h:'17:30',f:'18:20',l:'Química — estudo',t:'exer',sid:'quimica'},
+       {h:'19:00',f:'21:00',l:'Reta Final UERJ',t:'uerj',sid:null}],
+    2:[{h:'14:00',f:'15:00',l:'Química — estudo',t:'exer',sid:'quimica'},
+       {h:'15:10',f:'16:10',l:'Redação — produção Bahiana',t:'exer',sid:'redacao'},
+       {h:'16:30',f:'17:30',l:'Matemática — estudo',t:'exer',sid:'matematica'},
+       {h:'18:00',f:'18:50',l:'Hard História',t:'hard',sid:'historia'},
+       {h:'19:00',f:'21:00',l:'Química — Comu Vulgar UERJ',t:'uerj',sid:'quimica'}],
+    3:[{h:'14:00',f:'16:00',l:'Matemática do Zero',t:'aula',sid:'matematica'},
+       {h:'17:40',f:'18:30',l:'Física — estudo',t:'exer',sid:'fisica'},
+       {h:'19:00',f:'21:00',l:'Reta Final UERJ',t:'uerj',sid:null}],
+    4:[{h:'13:50',f:'14:20',l:'Gramática — estudo',t:'exer',sid:'portugues'},
+       {h:'14:40',f:'15:30',l:'Hard Física',t:'hard',sid:'fisica'},
+       {h:'16:00',f:'18:00',l:'Hard Biologia',t:'hard',sid:'biologia'},
+       {h:'19:00',f:'21:00',l:'Biologia — Comu Vulgar UERJ',t:'uerj',sid:'biologia'}],
+    5:[{h:'14:00',f:'15:00',l:'Biologia — estudo',t:'exer',sid:'biologia'},
+       {h:'15:10',f:'15:50',l:'Inglês',t:'extra',sid:null},
+       {h:'16:00',f:'16:50',l:'Hard Geografia',t:'hard',sid:'geografia'},
+       {h:'17:00',f:'18:00',l:'História — estudo',t:'exer',sid:'historia'},
+       {h:'19:00',f:'21:00',l:'Reta Final UERJ',t:'uerj',sid:null}],
+  },
+  bruno:{
+    1:[{h:'14:00',f:'15:00',l:'Biologia — exercícios',t:'exer',sid:'biologia'},
+       {h:'15:20',f:'16:00',l:'Inglês',t:'extra',sid:null},
+       {h:'16:20',f:'17:10',l:'Linguagens — exercícios',t:'exer',sid:'portugues'},
+       {h:'17:20',f:'18:10',l:'Química — exercícios',t:'exer',sid:'quimica'},
+       {h:'18:40',f:'19:30',l:'Matemática — exercícios',t:'exer',sid:'matematica'}],
+    2:[{h:'14:00',f:'15:00',l:'Geografia — exercícios',t:'exer',sid:'geografia'},
+       {h:'15:10',f:'16:10',l:'Matemática — exercícios',t:'exer',sid:'matematica'},
+       {h:'16:40',f:'17:30',l:'Redação — produção',t:'exer',sid:'redacao'},
+       {h:'18:00',f:'18:50',l:'Hard História',t:'hard',sid:'historia'},
+       {h:'19:10',f:'19:30',l:'Sociologia/Filosofia',t:'extra',sid:null}],
+    3:[{h:'14:00',f:'16:00',l:'Matemática do Zero',t:'aula',sid:'matematica'},
+       {h:'16:20',f:'17:10',l:'Física — exercícios',t:'exer',sid:'fisica'},
+       {h:'17:20',f:'18:10',l:'Biologia — exercícios',t:'exer',sid:'biologia'},
+       {h:'18:40',f:'19:30',l:'Gramática — exercícios',t:'exer',sid:'portugues'}],
+    4:[{h:'14:40',f:'15:30',l:'Hard Física',t:'hard',sid:'fisica'},
+       {h:'16:00',f:'18:00',l:'Hard Biologia',t:'hard',sid:'biologia'},
+       {h:'18:40',f:'19:30',l:'Química — exercícios',t:'exer',sid:'quimica'}],
+    5:[{h:'14:00',f:'15:00',l:'Mentoria / Sociologia',t:'extra',sid:null},
+       {h:'15:20',f:'16:00',l:'Inglês',t:'extra',sid:null},
+       {h:'16:00',f:'16:50',l:'Hard Geografia',t:'hard',sid:'geografia'},
+       {h:'17:20',f:'18:10',l:'Biologia — exercícios',t:'exer',sid:'biologia'},
+       {h:'18:40',f:'19:30',l:'História — exercícios',t:'exer',sid:'historia'}],
+  },
+};
+const DIAS_PT=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+
 const SUBJECTS = [
   {id:'fisica',    name:'Física',     icon:'⚡', color:'var(--fisica)'},
   {id:'biologia',  name:'Biologia',   icon:'🌿', color:'var(--biologia)'},
@@ -672,6 +784,68 @@ function doAddManualRevisao(){
 }
 
 // ══════════════════════════════════════════════════════
+// RENDER — HOJE CARD
+// ══════════════════════════════════════════════════════
+function parseMin(h){const[hh,mm]=h.split(':').map(Number);return hh*60+mm}
+
+function renderHoje(){
+  if(!D.perfil)return'';
+  const now=new Date();
+  const dow=now.getDay();
+  const nowMin=now.getHours()*60+now.getMinutes();
+  const morning=MANHA[dow]||[];
+  const tarde=(TARDE[D.perfil]||{})[dow]||[];
+  const blocks=[...morning,...tarde];
+  const TAG={aula:'tag-aula',hard:'tag-hard',exer:'tag-exer',sim:'tag-sim',uerj:'tag-uerj',extra:'tag-extra'};
+  const TLBL={aula:'aula',hard:'hard',exer:'exercícios',sim:'simulado',uerj:'UERJ',extra:'extra'};
+
+  const open=sessionStorage.getItem('hojeOpen')!=='0';
+
+  if(!blocks.length){
+    return `<div class="hoje-card">
+      <div class="hoje-header">
+        <span class="hoje-title">📅 Hoje <span class="hoje-dia">— ${DIAS_PT[dow]}</span></span>
+      </div>
+      <div class="hoje-body${open?' open':''}">
+        <span class="livre-pill">🌴 Dia livre</span>
+      </div>
+    </div>`;
+  }
+
+  const rows=blocks.map(b=>{
+    const s=b.sid?SUBJECTS.find(x=>x.id===b.sid):null;
+    const dotColor=s?s.color:'var(--muted)';
+    const startMin=parseMin(b.h);
+    const endMin=b.f?parseMin(b.f):startMin+90;
+    const isNow=nowMin>=startMin&&nowMin<=endMin;
+    const click=b.sid?`onclick="openSubj('${b.sid}')" class="hb${isNow?' now':''} clickable"`
+                     :`class="hb${isNow?' now':''}"`;
+    return `<div ${click}>
+      <div class="hb-h">${b.h}</div>
+      <div class="hb-dot" style="background:${dotColor}"></div>
+      <div class="hb-lbl">${b.l}</div>
+      <div class="hb-tag ${TAG[b.t]||'tag-extra'}">${TLBL[b.t]||b.t}</div>
+      ${b.sid?'<div class="hb-arr">›</div>':''}
+    </div>`;
+  }).join('');
+
+  return `<div class="hoje-card">
+    <div class="hoje-header">
+      <span class="hoje-title">📅 Hoje <span class="hoje-dia">— ${DIAS_PT[dow]}</span></span>
+      <button class="hoje-tog${open?' open':''}" onclick="toggleHoje(this)">▾</button>
+    </div>
+    <div class="hoje-body${open?' open':''}" id="hojeBody">${rows}</div>
+  </div>`;
+}
+
+function toggleHoje(btn){
+  const body=document.getElementById('hojeBody');
+  const isOpen=body.classList.toggle('open');
+  btn.classList.toggle('open',isOpen);
+  sessionStorage.setItem('hojeOpen',isOpen?'1':'0');
+}
+
+// ══════════════════════════════════════════════════════
 // RENDER — PAINEL
 // ══════════════════════════════════════════════════════
 function renderPainel(){
@@ -710,7 +884,7 @@ function renderPainel(){
       ${s.id!=='redacao'?(ringHtml||''):''}
     </div>`;
   }).join('');
-  el.innerHTML=`<div class="cards-grid" style="padding:.4rem 0 .8rem">${rows}</div>`;
+  el.innerHTML=renderHoje()+`<div class="cards-grid" style="padding:.4rem 0 .8rem">${rows}</div>`;
 }
 
 // ══════════════════════════════════════════════════════
