@@ -269,6 +269,29 @@
   .bysub-name{flex:1;font-size:.88rem;font-weight:600}
   .bysub-count{font-size:.83rem;color:var(--muted)}
 
+  /* ─ CALENDÁRIO SEMANAL ─ */
+  .wk-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -.9rem;padding:0 .9rem .3rem}
+  .wk-grid{display:flex;gap:.45rem;min-width:max-content;padding-bottom:.1rem}
+  .wk-col{width:138px;flex-shrink:0;background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);overflow:hidden}
+  .wk-col.wk-today{border-color:#6366f1}
+  .wk-day-hd{font-size:.65rem;font-weight:800;padding:.45rem .7rem;background:var(--surface2);
+    display:flex;align-items:center;gap:.35rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+  .wk-col.wk-today .wk-day-hd{color:#818cf8}
+  .wk-today-pip{width:5px;height:5px;border-radius:50%;background:#6366f1;flex-shrink:0}
+  .wk-blocks{padding:.3rem .35rem .4rem;display:flex;flex-direction:column;gap:.22rem}
+  .wk-block{display:flex;align-items:flex-start;gap:.38rem;padding:.28rem .3rem;border-radius:var(--rsm);
+    transition:background .12s}
+  .wk-block.clickable{cursor:pointer}
+  .wk-block.clickable:hover{background:var(--surface2)}
+  .wk-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:.28rem}
+  .wk-bl-inner{min-width:0;flex:1}
+  .wk-time{font-size:.58rem;color:var(--muted);font-weight:700;line-height:1.1}
+  .wk-lbl{font-size:.7rem;font-weight:600;line-height:1.3}
+  .wk-type-tag{font-size:.52rem;font-weight:800;padding:.08rem .3rem;border-radius:99px;
+    text-transform:uppercase;letter-spacing:.03em;display:inline-block;margin-top:.12rem}
+  .wk-empty{padding:.7rem;font-size:.72rem;color:var(--muted);text-align:center}
+
   /* ─ MODAL ─ */
   .modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:200;
     display:flex;align-items:flex-end;justify-content:center}
@@ -1230,6 +1253,52 @@ function delRedacao(i){
 // ══════════════════════════════════════════════════════
 // RENDER — MINHA SEMANA
 // ══════════════════════════════════════════════════════
+function renderCalendarioSemanal(){
+  if(!D.perfil)return'';
+  const DIAS_ABV=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  const today=new Date().getDay();
+  const TAG_DOT={aula:'var(--muted)',hard:'#f97316',exer:'#818cf8',sim:'#c084fc',uerj:'#f472b6',extra:'var(--muted)'};
+  const TAG_BG ={aula:'rgba(255,255,255,.07)',hard:'#f9731620',exer:'#6366f120',sim:'#a855f720',uerj:'#ec489920',extra:'rgba(255,255,255,.05)'};
+  const TAG_TC ={aula:'var(--muted)',hard:'#f97316',exer:'#818cf8',sim:'#c084fc',uerj:'#f472b6',extra:'var(--muted)'};
+  const TAG_LBL={aula:'aula',hard:'hard',exer:'exerc.',sim:'simul.',uerj:'uerj',extra:'extra'};
+
+  const cols=[];
+  for(let dow=0;dow<=6;dow++){
+    const morning=MANHA[dow]||[];
+    const tarde=(TARDE[D.perfil]||{})[dow]||[];
+    const blocks=[...morning,...tarde];
+    if(blocks.length)cols.push({dow,blocks});
+  }
+  if(!cols.length)return'';
+
+  const colsHtml=cols.map(({dow,blocks})=>{
+    const isToday=dow===today;
+    const bHtml=blocks.map(b=>{
+      const s=b.sid?SUBJECTS.find(x=>x.id===b.sid):null;
+      const dotColor=s?s.color:(TAG_DOT[b.t]||'var(--muted)');
+      const click=b.sid?`onclick="openSubj('${b.sid}')" `:'';
+      const tagBg=TAG_BG[b.t]||TAG_BG.extra;
+      const tagTc=TAG_TC[b.t]||TAG_TC.extra;
+      const tagLbl=TAG_LBL[b.t]||b.t;
+      return `<div ${click}class="wk-block${b.sid?' clickable':''}">
+        <div class="wk-dot" style="background:${dotColor}"></div>
+        <div class="wk-bl-inner">
+          <div class="wk-time">${b.h}</div>
+          <div class="wk-lbl">${b.l}</div>
+          <span class="wk-type-tag" style="background:${tagBg};color:${tagTc}">${tagLbl}</span>
+        </div>
+      </div>`;
+    }).join('');
+    return `<div class="wk-col${isToday?' wk-today':''}">
+      <div class="wk-day-hd">${DIAS_ABV[dow]}${isToday?'<span class="wk-today-pip"></span>':''}</div>
+      <div class="wk-blocks">${bHtml}</div>
+    </div>`;
+  }).join('');
+
+  return `<div class="sec-title">📅 Planejamento da Semana</div>
+    <div class="wk-scroll"><div class="wk-grid">${colsHtml}</div></div>`;
+}
+
 function renderSemana(){
   const el=document.getElementById('semanaContent');
   // run sync before rendering so auto items are up-to-date without a full save()
@@ -1328,6 +1397,7 @@ function renderSemana(){
       </div>
       ${redDelta}
     </div>
+    ${renderCalendarioSemanal()}
     <div class="sec-title">Sessões por matéria</div>
     ${bySubHtml}
     <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
