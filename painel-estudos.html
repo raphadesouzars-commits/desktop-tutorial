@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Painel de Estudos</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
   :root {
     --fisica:    #6366f1;
@@ -57,6 +59,12 @@
   .profile-chip{font-size:.72rem;font-weight:700;padding:.28rem .7rem;border-radius:99px;
     background:var(--surface2);color:var(--muted);cursor:pointer;flex-shrink:0;border:none}
   .color-bar{height:3px;position:absolute;top:0;left:0;right:0}
+  .sync-status{font-size:.62rem;font-weight:700;padding:.18rem .5rem;border-radius:99px;
+    flex-shrink:0;transition:opacity .3s;letter-spacing:.02em}
+  .sync-status:empty{display:none}
+  .sync-saving{background:#6366f122;color:#818cf8}
+  .sync-saved{background:#22c55e22;color:#22c55e}
+  .sync-error{background:#ef444422;color:#ef4444}
 
   /* ─ PAGES ─ */
   .page{display:none;flex:1;overflow-y:auto;padding:1rem 1rem 5.5rem}
@@ -356,6 +364,7 @@
   <div class="topbar" id="topbar">
     <button class="back-btn" id="backBtn" onclick="goBack()">‹</button>
     <span class="topbar-title" id="topbarTitle">Painel</span>
+    <span id="syncStatus" class="sync-status"></span>
     <button class="profile-chip" id="profileChip" onclick="openSettings()"></button>
   </div>
   <div class="prof-bar" id="profBar"></div>
@@ -558,6 +567,63 @@ function topicKey(name){
     .replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'').substring(0,40);
 }
 
+// ══════════════════════════════════════════════════════
+// FIREBASE
+// ══════════════════════════════════════════════════════
+const firebaseConfig={
+  apiKey:"AIzaSyAl-hCQqqcXs5OODpYTU2J2Dmq-kbTW4HU",
+  authDomain:"painel-de-estudos-ebmsp.firebaseapp.com",
+  projectId:"painel-de-estudos-ebmsp",
+  storageBucket:"painel-de-estudos-ebmsp.firebasestorage.app",
+  messagingSenderId:"936088353266",
+  appId:"1:936088353266:web:b9644106dca7dcfaadd36b"
+};
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+
+let _syncTimer=null;
+function setSyncUI(state){
+  const el=document.getElementById('syncStatus');
+  if(!el)return;
+  el.className='sync-status';
+  if(state==='saving'){el.className='sync-status sync-saving';el.textContent='⏳ salvando';}
+  else if(state==='saved'){el.className='sync-status sync-saved';el.textContent='☁️ salvo';}
+  else if(state==='error'){el.className='sync-status sync-error';el.textContent='⚠️ offline';}
+  else{el.textContent='';}
+}
+
+async function saveToCloud(){
+  if(!D.perfil)return;
+  setSyncUI('saving');
+  try{
+    await db.collection('perfis').doc(D.perfil).set(D);
+    setSyncUI('saved');
+    clearTimeout(_syncTimer);
+    _syncTimer=setTimeout(()=>setSyncUI('idle'),2500);
+  }catch(e){
+    console.warn('Firestore save:',e);
+    setSyncUI('error');
+  }
+}
+
+async function loadFromCloud(perfil){
+  try{
+    const snap=await db.collection('perfis').doc(perfil).get();
+    if(snap.exists){
+      D=snap.data();
+      if(!D.listaRevisao)D.listaRevisao=[];
+      localStorage.setItem('painelV2',JSON.stringify(D));
+      return true;
+    }
+  }catch(e){
+    console.warn('Firestore load:',e);
+  }
+  return false;
+}
+
+// ══════════════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════════════
 function load(){
   const raw = localStorage.getItem('painelV2');
   if(raw){
@@ -574,6 +640,7 @@ function load(){
 function save(){
   syncRevisao();
   localStorage.setItem('painelV2',JSON.stringify(D));
+  saveToCloud();
 }
 
 function getM(sid){return D.materias[sid]}
@@ -582,8 +649,19 @@ function getTopic(sid,tid){return getM(sid).assuntos[tid]}
 // ══════════════════════════════════════════════════════
 // PROFILE
 // ══════════════════════════════════════════════════════
-function chooseProfile(p){
-  D.perfil=p; save(); startApp();
+async function chooseProfile(p){
+  D.perfil=p;
+  // tenta carregar dados já existentes na nuvem para este perfil
+  const loaded=await loadFromCloud(p);
+  if(!loaded){
+    // perfil novo: inicializa estrutura e sobe para nuvem
+    D={perfil:p,materias:{},redacao:{sessoes:[]},listaRevisao:[]};
+    SUBJECTS.forEach(s=>{
+      if(s.id!=='redacao')D.materias[s.id]={assuntosSelecionados:[],assuntos:{}};
+    });
+    save();
+  }
+  startApp();
 }
 function startApp(){
   document.getElementById('onboarding').style.display='none';
@@ -593,6 +671,10 @@ function startApp(){
   document.getElementById('profBar').innerHTML=`Painel de <strong>${D.perfil==='malu'?'Malu':'Bruno'}</strong>`;
   renderPainel();
   showMainPage('painel');
+  // sincroniza com nuvem em background ao abrir (sem bloquear UI)
+  loadFromCloud(D.perfil).then(loaded=>{
+    if(loaded){renderPainel();}
+  });
 }
 function openSettings(){
   showModal('Configurações',`
