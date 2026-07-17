@@ -136,6 +136,28 @@
   .hb-now-bar{flex:1;height:4px;background:var(--surface2);border-radius:2px;overflow:hidden}
   .hb-now-fill{height:100%;background:#6366f1;border-radius:2px;transition:width .5s}
   .hb-now-rest{font-size:.64rem;color:#818cf8;font-weight:800;flex-shrink:0;white-space:nowrap}
+  .hoje-reg-btn{width:calc(100% - 1.2rem);margin:.2rem .6rem .3rem;padding:.7rem;
+    background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;border-radius:var(--rsm);
+    color:#fff;font-size:.9rem;font-weight:800;cursor:pointer;transition:transform .1s,filter .12s;display:block}
+  .hoje-reg-btn:hover{filter:brightness(1.1)}
+  .hoje-reg-btn:active{transform:scale(.98)}
+  .hoje-foco-btn{background:none;border:1px solid var(--border);color:var(--muted);
+    margin:.1rem .6rem .5rem;padding:.5rem;border-radius:var(--rsm);font-size:.8rem;font-weight:700;
+    cursor:pointer;width:calc(100% - 1.2rem);display:block}
+  .hoje-foco-btn:hover{border-color:#6366f1;color:#818cf8}
+  .foco-presets{display:grid;grid-template-columns:repeat(4,1fr);gap:.4rem;margin-bottom:.5rem}
+  .foco-preset{padding:.6rem .3rem;background:var(--surface2);border:1px solid var(--border);
+    border-radius:var(--rsm);color:var(--text);font-weight:700;font-size:.82rem;cursor:pointer}
+  .foco-preset:hover{border-color:#6366f1}
+  #focoOverlay{position:fixed;inset:0;z-index:500;background:var(--bg);
+    display:none;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem;text-align:center}
+  #focoOverlay.active{display:flex}
+  .foco-timer-num{font-size:3.8rem;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .foco-ring{transform:rotate(-90deg)}
+  .foco-actions{display:flex;gap:.8rem}
+  .foco-actions button{padding:.65rem 1.4rem;border-radius:var(--rsm);font-size:.9rem;font-weight:700;cursor:pointer;border:none}
+  .foco-btn-pause{background:var(--surface2);color:var(--text)}
+  .foco-btn-end{background:none;border:1px solid var(--border)!important;color:var(--muted)}
   .hb-h{font-size:.7rem;color:var(--muted);font-weight:700;min-width:38px;flex-shrink:0}
   .hb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
   .hb-lbl{flex:1;font-size:.82rem;font-weight:600}
@@ -732,6 +754,22 @@ function startApp(){
   });
   // #6 lembretes — checa a cada minuto
   setInterval(checarLembretes,60000);
+  // F — restaurar timer se havia um ativo
+  const savedFocus=localStorage.getItem('focusState');
+  if(savedFocus){
+    try{
+      const fs=JSON.parse(savedFocus);
+      if(fs.endTime>Date.now()){
+        focusState=fs;
+        renderFocoOverlay();
+        focusTimer=setInterval(tickFoco,1000);
+      }else{
+        localStorage.removeItem('focusState');
+      }
+    }catch(e){localStorage.removeItem('focusState');}
+  }
+  // G — banner de recomeco (acolhedor, sem cobrança)
+  checarRecomeco();
 }
 function openSettings(){
   const lembAtivo=localStorage.getItem('lembretesAtivos')==='1'&&Notification.permission==='granted';
@@ -1002,7 +1040,7 @@ function renderHoje(){
         <span class="hoje-title">📅 Hoje <span class="hoje-dia">— ${DIAS_PT[dow]}${totalMinutosDia(dow)?` · ${fmtHoras(totalMinutosDia(dow))}`:''}</span></span>
       </div>
       <div class="hoje-body">
-        <span class="livre-pill">🌴 Dia livre</span>
+        <span class="livre-pill">🌴 Dia de respirar</span>
       </div>
     </div>`;
   }
@@ -1039,6 +1077,8 @@ function renderHoje(){
         <div class="hb-now-bar"><div class="hb-now-fill" style="width:${blockPct}%"></div></div>
         <span class="hb-now-rest">${rest} min restantes</span>
       </div>
+      ${b.sid?`<button class="hoje-reg-btn" onclick="reg1Toque('${b.sid}')">✅ Terminei — marcar que estudei</button>`:''}
+      ${b.sid?`<button class="hoje-foco-btn" onclick="abrirModoFoco('${b.sid}')">⏱ Modo foco</button>`:''}
     </div>`;
   }).join('');
 
@@ -1433,7 +1473,7 @@ function renderMateria(sid){
   let topicsHtml='';
   if(!selArr.length){
     topicsHtml=`<div class="empty"><div class="ei">${s.icon}</div>
-      <p>Selecione os assuntos acima para começar a acompanhar.</p></div>`;
+      <p>Ainda não tem nada aqui — bora começar?</p></div>`;
   }else{
     topicsHtml=selArr.map(tid=>{
       const t=m.assuntos[tid];
@@ -1487,7 +1527,7 @@ function renderMateria(sid){
       </div>
     </div>
     ${evoMateriaHtml}
-    <div class="sec-title">Assuntos em acompanhamento</div>
+    <div class="sec-title">Seus assuntos</div>
     ${topicsHtml}`;
 }
 
@@ -1570,7 +1610,7 @@ function renderAssunto(sid,tid){
   let html=`<div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;flex-wrap:wrap">
     <span style="font-size:.78rem;font-weight:800;padding:.22rem .65rem;border-radius:99px;
       background:${done?'var(--done)22':'var(--surface2)'};color:${done?'var(--done)':'var(--muted)'}">
-      ${done?'✅ Concluído':'Em andamento'}
+      ${done?'✅ Fechou!':'Tá rolando'}
     </span>
     <button class="btn-mark-review${inReview?' already':''}"
       onclick="markForReview('${sid}','${tid}')">
@@ -1988,7 +2028,7 @@ function renderSemana(){
   const pvPct=pv.totalPast?Math.round(pv.donePast/pv.totalPast*100):null;
   const pvColor=pvPct===null?'var(--muted)':pvPct>=80?'#22c55e':pvPct>=50?'#f97316':'#ef4444';
   const pvHtml=`<div class="stat-card" style="grid-column:1/-1">
-    <div class="sc-lbl">Planejado vs. realizado (até agora)</div>
+    <div class="sc-lbl">Como foi sua semana (até agora)</div>
     <div class="sc-val" style="color:${pvColor}">
       ${pv.totalPast?`${pv.donePast}/${pv.totalPast}`:'—'}
       ${pvPct!==null?`<span style="font-size:1rem;font-weight:600;color:var(--muted)"> · ${pvPct}%</span>`:''}
@@ -2001,6 +2041,7 @@ function renderSemana(){
       <div style="font-size:1.8rem;margin-bottom:.3rem">${em}</div>
       <h2>${gr}, ${nome}!</h2>
       <div class="wh-sub">Resumo dos últimos 7 dias</div>
+      <div style="font-size:.82rem;color:var(--muted);margin-top:.15rem">${mensagemDoDia(total)}</div>
       <div class="big-num">${total} <span>sessões esta semana</span></div>
       ${(()=>{const ms=horasEstudadas('semana');return ms?`<div style="font-size:1.1rem;font-weight:700;color:var(--muted);margin-top:.3rem">⏱ ${fmtHoras(ms)} estudadas esta semana</div>`:''})()}
     </div>
@@ -2012,7 +2053,7 @@ function renderSemana(){
         <div class="sc-delta delta-ne">${mm?'baseado nos blocos concluídos':'marque blocos como concluídos para acompanhar'}</div>
       </div>`;})()}
       <div class="stat-card">
-        <div class="sc-lbl">Pontos a revisar</div>
+        <div class="sc-lbl">O que vale revisar</div>
         <div class="sc-val" style="color:${lr.length?'#ef4444':'#22c55e'}">${lr.length}</div>
         <div class="sc-delta ${lr.length?'delta-ne':'delta-up'}">${lr.length?'na lista':'Tudo em dia!'}</div>
       </div>
@@ -2024,7 +2065,7 @@ function renderSemana(){
       ${redDelta}
     </div>
     ${renderCalendarioSemanal()}
-    <div class="sec-title">Sessões por matéria</div>
+    <div class="sec-title">No que você mexeu</div>
     ${bySubHtml}
     ${(()=>{
       const parados=assuntosParados();
@@ -2045,7 +2086,7 @@ function renderSemana(){
           </button>
         </div>`;
       }).join('');
-      return`<div class="sec-title">⏰ Sem revisão há um tempo</div>${itens}`;
+      return`<div class="sec-title">⏰ Faz um tempo que você não volta aqui</div>${itens}`;
     })()}
     <div class="sec-title" style="display:flex;align-items:center;justify-content:space-between">
       <span>📋 Lista de revisão</span>
@@ -2093,11 +2134,235 @@ function showToast(msg){
 }
 
 // ══════════════════════════════════════════════════════
+// FASE 4 — E. Registrar em 1 toque
+// ══════════════════════════════════════════════════════
+function assuntoProvavel(sid){
+  const sel=getM(sid).assuntosSelecionados||[];
+  if(!sel.length)return null;
+  let melhor=sel[0],maisRecente=0;
+  sel.forEach(tid=>{
+    const t=getTopic(sid,tid);
+    const datas=AP_TYPES.flatMap(at=>(t.apostilas[at.id].sessoes||[]).map(s=>new Date(s.data).getTime()));
+    const max=datas.length?Math.max(...datas):0;
+    if(max>maisRecente){maisRecente=max;melhor=tid;}
+  });
+  return melhor;
+}
+function r1ToggleFields(){
+  const atId=document.getElementById('r1Tipo')?.value;
+  if(!atId)return;
+  const at=AP_TYPES.find(x=>x.id===atId);
+  const today=new Date().toISOString().split('T')[0];
+  let html=`<div class="form-group"><label>Data</label><input type="date" class="form-input" id="r1Data" value="${today}"></div>`;
+  if(at.hasScore){
+    html+=`<div class="form-row">
+      <div class="form-group"><label>Total de questões</label><input type="number" class="form-input" id="r1Tot" min="1" placeholder="Ex: 20"></div>
+      <div class="form-group"><label>Acertos</label><input type="number" class="form-input" id="r1Ac" min="0" placeholder="Ex: 14"></div>
+    </div>`;
+  }else{
+    html+=`<div class="form-group"><label>Observação</label><textarea class="form-input" id="r1Obs" placeholder="Opcional…"></textarea></div>`;
+  }
+  document.getElementById('r1Fields').innerHTML=html;
+}
+function reg1Toque(sid){
+  const m=getM(sid);const sel=m.assuntosSelecionados||[];
+  const s=SUBJECTS.find(x=>x.id===sid);
+  if(!sel.length){
+    showModal('Ops!',`<p style="color:var(--muted);font-size:.88rem;margin-bottom:1rem">
+      Você ainda não escolheu nenhum assunto de ${s.name}. Bora escolher?</p>`,
+      [{label:'Escolher assunto',cls:'btn-pri',fn:`closeModal();openSubj('${sid}')`}]);
+    return;
+  }
+  const provavel=assuntoProvavel(sid);
+  const topicOpts=sel.map(tid=>`<option value="${tid}" ${tid===provavel?'selected':''}>${escHtml(getTopic(sid,tid).nome)}</option>`).join('');
+  const apOpts=AP_TYPES.map(at=>`<option value="${at.id}" ${at.id==='multipla'?'selected':''}>${at.name}</option>`).join('');
+  showModal(`Marcar que estudei — ${s.name}`,`
+    <div class="form-group"><label>Assunto</label>
+      <select class="form-input" id="r1Topic">${topicOpts}</select></div>
+    <div class="form-group"><label>Tipo</label>
+      <select class="form-input" id="r1Tipo" onchange="r1ToggleFields()">${apOpts}</select></div>
+    <div id="r1Fields"></div>
+  `,[
+    {label:'Agora não',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Salvar ✅',cls:'btn-pri',fn:`doReg1Toque('${sid}')`},
+  ]);
+  r1ToggleFields();
+}
+function doReg1Toque(sid){
+  const tid=document.getElementById('r1Topic').value;
+  const atId=document.getElementById('r1Tipo').value;
+  const at=AP_TYPES.find(x=>x.id===atId);
+  const dt=document.getElementById('r1Data')?.value;
+  if(!dt){showToast('Faltou preencher a data 🙂');return;}
+  if(at.hasScore){
+    const tot=parseInt(document.getElementById('r1Tot')?.value);
+    const ac=parseInt(document.getElementById('r1Ac')?.value);
+    if(isNaN(tot)||isNaN(ac)||ac>tot){showToast('Faltou preencher os acertos 🙂');return;}
+    registrarSessao(sid,tid,atId,{data:dt,total:tot,acertos:ac});
+  }else{
+    const obs=document.getElementById('r1Obs')?.value||'';
+    registrarSessao(sid,tid,atId,{data:dt,observacao:obs});
+  }
+  closeModal();renderPainel();
+  showToast('Prontinho! 🎉');
+}
+
+// ══════════════════════════════════════════════════════
+// FASE 4 — F. Timer Pomodoro / Modo Foco
+// ══════════════════════════════════════════════════════
+let focusTimer=null;
+let focusState=null;
+
+function abrirModoFoco(sid){
+  const s=SUBJECTS.find(x=>x.id===sid);
+  showModal(`Modo foco — ${s.name}`,`
+    <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Quanto tempo você quer focar?</p>
+    <div class="foco-presets">
+      <button class="foco-preset" onclick="iniciarFoco('${sid}',25)">25 min</button>
+      <button class="foco-preset" onclick="iniciarFoco('${sid}',45)">45 min</button>
+      <button class="foco-preset" onclick="iniciarFoco('${sid}',50)">50 min</button>
+      <button class="foco-preset" onclick="iniciarFoco('${sid}',90)">90 min</button>
+    </div>
+    <div class="form-group"><label>Ou personalizado (min)</label>
+      <input class="form-input" type="number" id="focoCustom" min="5" max="180" placeholder="Ex: 30"></div>
+  `,[
+    {label:'Cancelar',cls:'btn-sec',fn:'closeModal()'},
+    {label:'Iniciar',cls:'btn-pri',fn:`iniciarFocoCustom('${sid}')`},
+  ]);
+}
+function iniciarFocoCustom(sid){
+  const v=parseInt(document.getElementById('focoCustom')?.value);
+  if(!v||v<5){showToast('Escolha um tempo válido.');return;}
+  iniciarFoco(sid,v);
+}
+function iniciarFoco(sid,durationMin){
+  closeModal();
+  if(focusTimer)clearInterval(focusTimer);
+  focusState={sid,endTime:Date.now()+durationMin*60000,durationMin,paused:false,remainingWhenPaused:0};
+  localStorage.setItem('focusState',JSON.stringify(focusState));
+  renderFocoOverlay();
+  focusTimer=setInterval(tickFoco,1000);
+}
+function renderFocoOverlay(){
+  const s=SUBJECTS.find(x=>x.id===focusState.sid)||{color:'#6366f1',name:'Estudo'};
+  const nome=D.perfil==='malu'?'Malu':'Bruno';
+  const msg=D.perfil==='malu'?`Foco na Malu 💜`:`Você consegue, Bruno 🚀`;
+  const el=document.getElementById('focoOverlay');
+  el.innerHTML=`
+    <div style="font-size:.82rem;font-weight:700;color:${s.color};letter-spacing:.05em;text-transform:uppercase">${s.name}</div>
+    <div style="position:relative;width:160px;height:160px">
+      <svg class="foco-ring" width="160" height="160" viewBox="0 0 160 160">
+        <circle cx="80" cy="80" r="70" fill="none" stroke="var(--surface2)" stroke-width="10"/>
+        <circle id="focoRingArc" cx="80" cy="80" r="70" fill="none" stroke="${s.color}" stroke-width="10"
+          stroke-dasharray="439.8" stroke-dashoffset="0" stroke-linecap="round"/>
+      </svg>
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+        <div class="foco-timer-num" id="focoTimerNum">--:--</div>
+      </div>
+    </div>
+    <div style="font-size:1rem;color:var(--muted)">${msg}</div>
+    <div class="foco-actions">
+      <button class="foco-btn-pause" onclick="pausarFoco()" id="focoPauseBtn">⏸ Pausar</button>
+      <button class="foco-btn-end" onclick="finalizarFoco(false)">Encerrar</button>
+    </div>`;
+  el.classList.add('active');
+  atualizarDisplayFoco(focusState.paused?focusState.remainingWhenPaused:focusState.endTime-Date.now());
+}
+function atualizarDisplayFoco(restaMs){
+  const num=document.getElementById('focoTimerNum');
+  const arc=document.getElementById('focoRingArc');
+  if(!num||!arc)return;
+  const restaS=Math.max(0,Math.ceil(restaMs/1000));
+  const m=Math.floor(restaS/60),s=restaS%60;
+  num.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const total=focusState.durationMin*60;
+  const pct=Math.max(0,restaS/total);
+  const circ=2*Math.PI*70;
+  arc.setAttribute('stroke-dashoffset',String(circ*(1-pct)));
+}
+function tickFoco(){
+  if(!focusState||focusState.paused)return;
+  const restaMs=focusState.endTime-Date.now();
+  if(restaMs<=0){finalizarFoco(true);return;}
+  atualizarDisplayFoco(restaMs);
+}
+function pausarFoco(){
+  if(!focusState)return;
+  if(focusState.paused){
+    focusState.endTime=Date.now()+focusState.remainingWhenPaused;
+    focusState.paused=false;
+    document.getElementById('focoPauseBtn').textContent='⏸ Pausar';
+  }else{
+    focusState.remainingWhenPaused=Math.max(0,focusState.endTime-Date.now());
+    focusState.paused=true;
+    document.getElementById('focoPauseBtn').textContent='▶ Retomar';
+  }
+  localStorage.setItem('focusState',JSON.stringify(focusState));
+}
+function esconderFocoOverlay(){
+  document.getElementById('focoOverlay').classList.remove('active');
+  document.getElementById('focoOverlay').innerHTML='';
+}
+function finalizarFoco(completou){
+  clearInterval(focusTimer);focusTimer=null;
+  const sid=focusState?.sid;
+  const minFocados=focusState?Math.round((Date.now()-(focusState.endTime-focusState.durationMin*60000))/60000):0;
+  focusState=null;
+  localStorage.removeItem('focusState');
+  esconderFocoOverlay();
+  if(completou){
+    if(navigator.vibrate)navigator.vibrate([200,100,200]);
+    showModal('Tempo concluído! 🎉',`
+      <p style="font-size:.95rem;margin-bottom:.3rem">Você focou <strong>${minFocados} min</strong>!</p>
+      <p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem">Quer registrar essa sessão de estudo?</p>
+    `,[
+      {label:'Agora não',cls:'btn-sec',fn:'closeModal()'},
+      {label:'Marcar que estudei',cls:'btn-pri',fn:`closeModal();reg1Toque('${sid}')`},
+    ]);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// FASE 4 — G. Mensagem do dia
+// ══════════════════════════════════════════════════════
+function mensagemDoDia(total){
+  if(total===0)return'Semana nova, começa quando você quiser 🌱';
+  if(total>=10)return'Que semana, hein? Tá voando 🔥';
+  return'No seu ritmo, sempre 👊';
+}
+function checarRecomeco(){
+  const key='ultimoRecomeco';
+  const hoje=new Date().toISOString().split('T')[0];
+  if(localStorage.getItem(key)===hoje)return;
+  // verifica última sessão em qualquer matéria
+  let ultimaData=null;
+  SUBJECTS.forEach(s=>{
+    if(s.id==='redacao')return;
+    (getM(s.id).assuntosSelecionados||[]).forEach(tid=>{
+      const t=getTopic(s.id,tid);
+      AP_TYPES.forEach(at=>{
+        (t.apostilas[at.id].sessoes||[]).forEach(sess=>{
+          const d=new Date(sess.data);
+          if(!ultimaData||d>ultimaData)ultimaData=d;
+        });
+      });
+    });
+  });
+  if(!ultimaData)return;
+  const diasSem=Math.floor((new Date()-ultimaData)/86400000);
+  if(diasSem>=5){
+    localStorage.setItem(key,hoje);
+    setTimeout(()=>showToast('Que bom te ver de volta 🌱 Sem cobrança — bora do zero.'),1200);
+  }
+}
+
+// ══════════════════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════════════════
 load();
 if(D.perfil){startApp()}
 else{document.getElementById('onboarding').style.display='flex'}
 </script>
+<div id="focoOverlay"></div>
 </body>
 </html>
