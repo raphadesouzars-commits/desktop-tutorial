@@ -586,8 +586,13 @@ const firebaseConfig={
   messagingSenderId:"936088353266",
   appId:"1:936088353266:web:b9644106dca7dcfaadd36b"
 };
-firebase.initializeApp(firebaseConfig);
-const db=firebase.firestore();
+let db=null;
+try{
+  firebase.initializeApp(firebaseConfig);
+  db=firebase.firestore();
+}catch(e){
+  console.warn('Firebase init falhou — modo offline:',e);
+}
 
 let _syncTimer=null;
 function setSyncUI(state){
@@ -601,7 +606,7 @@ function setSyncUI(state){
 }
 
 async function saveToCloud(){
-  if(!D.perfil)return;
+  if(!db||!D.perfil)return;
   setSyncUI('saving');
   try{
     await db.collection('perfis').doc(D.perfil).set(D);
@@ -615,6 +620,7 @@ async function saveToCloud(){
 }
 
 async function loadFromCloud(perfil){
+  if(!db)return false;
   try{
     const snap=await db.collection('perfis').doc(perfil).get();
     if(snap.exists){
