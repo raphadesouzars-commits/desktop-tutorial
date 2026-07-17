@@ -306,9 +306,10 @@
   .wk-col{width:auto;min-width:0;background:var(--surface);border:1px solid var(--border);
     border-radius:var(--radius);overflow:hidden}
   .wk-col.wk-today{border-color:#6366f1}
-  .wk-day-hd{font-size:.62rem;font-weight:800;padding:.4rem .35rem;background:var(--surface2);
-    display:flex;align-items:center;justify-content:center;gap:.3rem;text-transform:uppercase;
+  .wk-day-hd{font-size:.62rem;font-weight:800;padding:.4rem .3rem;background:var(--surface2);
+    display:flex;flex-direction:column;align-items:center;gap:.15rem;text-transform:uppercase;
     letter-spacing:.04em;color:var(--muted)}
+  .wk-day-load{font-size:.58rem;font-weight:700;text-transform:none;letter-spacing:0}
   .wk-col.wk-today .wk-day-hd{color:#818cf8}
   .wk-today-pip{width:5px;height:5px;border-radius:50%;background:#6366f1;flex-shrink:0}
   .wk-blocks{padding:.3rem .3rem .4rem;display:flex;flex-direction:column;gap:.22rem}
@@ -998,7 +999,7 @@ function renderHoje(){
   if(!blocks.length){
     return `<div class="hoje-card">
       <div class="hoje-header">
-        <span class="hoje-title">📅 Hoje <span class="hoje-dia">— ${DIAS_PT[dow]}</span></span>
+        <span class="hoje-title">📅 Hoje <span class="hoje-dia">— ${DIAS_PT[dow]}${totalMinutosDia(dow)?` · ${fmtHoras(totalMinutosDia(dow))}`:''}</span></span>
       </div>
       <div class="hoje-body">
         <span class="livre-pill">🌴 Dia livre</span>
@@ -1097,7 +1098,88 @@ function renderPainel(){
       ${s.id!=='redacao'?(ringHtml||''):''}
     </div>`;
   }).join('');
-  el.innerHTML=renderHoje()+`<div class="cards-grid" style="padding:.4rem 0 .8rem">${rows}</div>`;
+  el.innerHTML=renderPreSimulado()+renderHoje()+`<div class="cards-grid" style="padding:.4rem 0 .8rem">${rows}</div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// FASE 3 — A/C/D helpers
+// ══════════════════════════════════════════════════════
+function isJanelaPreSimulado(){
+  const now=new Date();const dow=now.getDay();
+  const min=now.getHours()*60+now.getMinutes();
+  if(dow===5&&min>=18*60)return true;
+  if(dow===6&&min<parseMin('08:40'))return true;
+  return false;
+}
+function assuntosPioresPreSimulado(limit=6){
+  const c=[];
+  SUBJECTS.forEach(s=>{
+    if(s.id==='redacao')return;
+    (getM(s.id).assuntosSelecionados||[]).forEach(tid=>{
+      const t=getTopic(s.id,tid);if(!t)return;
+      const pct=topicOverallPct(t);if(pct===null)return;
+      c.push({sid:s.id,tid,pct});
+    });
+  });
+  return c.sort((a,b)=>a.pct-b.pct).slice(0,limit);
+}
+function renderPreSimulado(){
+  if(!isJanelaPreSimulado())return'';
+  const piores=assuntosPioresPreSimulado();
+  if(!piores.length)return'';
+  const itens=piores.map(({sid,tid,pct})=>{
+    const s=SUBJECTS.find(x=>x.id===sid);
+    const t=getTopic(sid,tid);
+    const isRed=pctCls(pct)==='pct-b';
+    return`<div class="hb clickable" onclick="openTopic('${sid}','${tid}')">
+      <div class="hb-dot" style="background:${s.color}"></div>
+      <div class="hb-lbl">${escHtml(t.nome)}</div>
+      <span class="hb-tag" style="background:${isRed?'#ef444422':'#f9731622'};color:${isRed?'#ef4444':'#f97316'}">${pct}%</span>
+    </div>`;
+  }).join('');
+  return`<div class="hoje-card" style="border-color:#ef444455">
+    <div class="hoje-header">
+      <span class="hoje-title">⚠️ Véspera do Simulado Bahiana</span>
+    </div>
+    <div class="hoje-body">
+      <p style="font-size:.78rem;color:var(--muted);padding:0 .6rem .5rem">
+        Revisão rápida antes da prova — assuntos com menor desempenho:
+      </p>
+      ${itens}
+    </div>
+  </div>`;
+}
+// C — carga por dia
+const CARGA_ATENCAO_MIN=300,CARGA_SOBRECARGA_MIN=360;
+function totalMinutosDia(dow){
+  const blocks=[...(MANHA[dow]||[]),...((TARDE[D.perfil]||{})[dow]||[])];
+  return blocks.reduce((soma,b)=>{
+    const start=parseMin(b.h);const end=b.f?parseMin(b.f):start+90;
+    return soma+(end-start);
+  },0);
+}
+function fmtHoras(min){const h=Math.floor(min/60),m=min%60;return m?`${h}h${String(m).padStart(2,'0')}`:`${h}h`;}
+function corCarga(min){if(min>CARGA_SOBRECARGA_MIN)return'#ef4444';if(min>CARGA_ATENCAO_MIN)return'#f97316';return'var(--muted)';}
+// B — salvar nota
+function saveTopicNota(sid,tid,val){getTopic(sid,tid).nota=val;save();}
+// D — horas estudadas
+function horasEstudadas(periodo='mes'){
+  if(!D.blocosConcluidos)return 0;
+  const hoje=new Date();let minutos=0;
+  Object.entries(D.blocosConcluidos).forEach(([key,done])=>{
+    if(!done)return;
+    const partes=key.split('_');const idx=parseInt(partes.pop());
+    const dataStr=partes.join('_');
+    const data=new Date(dataStr+'T00:00:00');
+    if(periodo==='semana'){const d=(hoje-data)/86400000;if(d>7||d<0)return;}
+    else if(periodo==='mes'){if(data.getMonth()!==hoje.getMonth()||data.getFullYear()!==hoje.getFullYear())return;}
+    const dow=data.getDay();
+    const blocks=[...(MANHA[dow]||[]),...((TARDE[D.perfil]||{})[dow]||[])];
+    const b=blocks[idx];if(!b)return;
+    const start=parseMin(b.h);const end=b.f?parseMin(b.f):start+90;
+    minutos+=(end-start);
+  });
+  return minutos;
 }
 
 // ══════════════════════════════════════════════════════
@@ -1365,7 +1447,7 @@ function renderMateria(sid){
         <div class="tc-dot" style="background:${pc}"></div>
         <div class="tc-info">
           <div class="tc-name${done?' done-text':''}">
-            ${escHtml(t.nome)}${alerts?' ⚠️':''}
+            ${escHtml(t.nome)}${alerts?' ⚠️':''}${t.nota?' 📝':''}
             ${t.origem==='manual'?'<span style="font-size:.62rem;font-weight:700;padding:.1rem .38rem;border-radius:99px;background:var(--surface2);color:var(--muted);margin-left:.35rem;vertical-align:middle">extra</span>':''}
           </div>
           <div class="tc-sub">${concl}/3 etapas${pct!==null?' · '+pct+'% acerto':''}</div>
@@ -1494,6 +1576,13 @@ function renderAssunto(sid,tid){
       onclick="markForReview('${sid}','${tid}')">
       ${inReview?'📋 Na lista de revisão':'+ Marcar para revisão'}
     </button>
+  </div>`;
+
+  // B — anotação rápida
+  html+=`<div class="ap-name-row" style="margin-bottom:1rem">
+    <label style="display:block;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:.35rem">📝 Anotação</label>
+    <textarea class="form-input" rows="2" placeholder="Ex: tirar dúvida com o professor sobre..."
+      onchange="saveTopicNota('${sid}','${tid}',this.value)">${escHtml(t.nota||'')}</textarea>
   </div>`;
 
   // #4 gráfico nível assunto
@@ -1748,7 +1837,10 @@ function renderCalendarioSemanal(){
       </div>`;
     }).join('');
     return `<div class="wk-col${isToday?' wk-today':''}" id="${isToday?'wkColToday':''}">
-      <div class="wk-day-hd">${DIAS_ABV[dow]}${isToday?'<span class="wk-today-pip"></span>':''}</div>
+      <div class="wk-day-hd">
+        <span>${DIAS_ABV[dow]}${isToday?'<span class="wk-today-pip"></span>':''}</span>
+        ${(()=>{const tm=totalMinutosDia(dow);return tm?`<span class="wk-day-load" style="color:${corCarga(tm)}">${fmtHoras(tm)}</span>`:''})()}
+      </div>
       <div class="wk-blocks">${bHtml}</div>
     </div>`;
   }).join('');
@@ -1910,9 +2002,15 @@ function renderSemana(){
       <h2>${gr}, ${nome}!</h2>
       <div class="wh-sub">Resumo dos últimos 7 dias</div>
       <div class="big-num">${total} <span>sessões esta semana</span></div>
+      ${(()=>{const ms=horasEstudadas('semana');return ms?`<div style="font-size:1.1rem;font-weight:700;color:var(--muted);margin-top:.3rem">⏱ ${fmtHoras(ms)} estudadas esta semana</div>`:''})()}
     </div>
     <div class="stats2">
       ${pvHtml}
+      ${(()=>{const mm=horasEstudadas('mes');return`<div class="stat-card">
+        <div class="sc-lbl">Horas estudadas (mês)</div>
+        <div class="sc-val">${mm?fmtHoras(mm):'—'}</div>
+        <div class="sc-delta delta-ne">${mm?'baseado nos blocos concluídos':'marque blocos como concluídos para acompanhar'}</div>
+      </div>`;})()}
       <div class="stat-card">
         <div class="sc-lbl">Pontos a revisar</div>
         <div class="sc-val" style="color:${lr.length?'#ef4444':'#22c55e'}">${lr.length}</div>
