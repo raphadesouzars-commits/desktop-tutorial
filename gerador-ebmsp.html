@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Questões — Padrão EBMSP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f1117;
+    --bg2: #181c27;
+    --bg3: #1e2333;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.13);
+    --text: #e8eaf0;
+    --text2: #8b90a0;
+    --text3: #555c72;
+    --accent: #4f7cff;
+    --accent2: #3b5fcc;
+    --green: #22c97a;
+    --red: #ff5a6e;
+    --amber: #f5a623;
+    --purple: #a78bfa;
+    --teal: #2dd4bf;
+    --coral: #fb7185;
+    --fis: #4f7cff;
+    --bio: #22c97a;
+    --qui: #f5a623;
+    --mat: #a78bfa;
+    --his: #fb7185;
+    --geo: #2dd4bf;
+    --radius: 10px;
+    --radius-lg: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 600; color: white;
+    flex-shrink: 0;
+  }
+
+  header h1 { font-size: 17px; font-weight: 600; color: var(--text); }
+  header p  { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+  main { max-width: 780px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  /* ── seções ── */
+  .section { margin-bottom: 28px; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  /* ── grade de disciplinas ── */
+  .disc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 8px;
+  }
+
+  .disc-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 10px 10px;
+    cursor: pointer;
+    transition: all .18s;
+    user-select: none;
+    text-align: center;
+  }
+  .disc-card:hover { border-color: var(--border2); background: var(--bg3); }
+  .disc-card .icon { font-size: 20px; margin-bottom: 5px; }
+  .disc-card .name { font-size: 12px; font-weight: 500; color: var(--text2); }
+
+  .disc-card.on { border-width: 1.5px; }
+  .disc-card.on-fis { border-color: var(--fis); background: rgba(79,124,255,.1); }
+  .disc-card.on-fis .name { color: var(--fis); }
+  .disc-card.on-bio { border-color: var(--bio); background: rgba(34,201,122,.1); }
+  .disc-card.on-bio .name { color: var(--bio); }
+  .disc-card.on-qui { border-color: var(--qui); background: rgba(245,166,35,.1); }
+  .disc-card.on-qui .name { color: var(--qui); }
+  .disc-card.on-mat { border-color: var(--mat); background: rgba(167,139,250,.1); }
+  .disc-card.on-mat .name { color: var(--mat); }
+  .disc-card.on-his { border-color: var(--his); background: rgba(251,113,133,.1); }
+  .disc-card.on-his .name { color: var(--his); }
+  .disc-card.on-geo { border-color: var(--geo); background: rgba(45,212,191,.1); }
+  .disc-card.on-geo .name { color: var(--geo); }
+
+  /* ── chips de assunto ── */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px; font-weight: 500;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+    user-select: none;
+  }
+  .chip:hover { border-color: rgba(255,255,255,.22); color: var(--text); }
+  .chip.on { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.3); color: var(--text); }
+
+  /* ── selects e controles ── */
+  .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); gap: 10px; }
+
+  select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    color: var(--text);
+    padding: 9px 12px;
+    font-size: 13px;
+    font-family: 'Sora', sans-serif;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+  select option { background: #1e2333; }
+
+  /* ── botão gerar ── */
+  .btn-gerar {
+    width: 100%;
+    padding: 13px;
+    background: var(--accent);
+    border: none;
+    border-radius: var(--radius);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: background .15s, transform .1s;
+    margin-top: 4px;
+  }
+  .btn-gerar:hover { background: var(--accent2); }
+  .btn-gerar:active { transform: scale(.99); }
+  .btn-gerar:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+
+  /* ── aviso ── */
+  .aviso {
+    padding: 10px 14px;
+    border-radius: var(--radius);
+    background: rgba(245,166,35,.12);
+    border: 1px solid rgba(245,166,35,.3);
+    color: var(--amber);
+    font-size: 13px;
+    margin-bottom: 14px;
+    display: none;
+  }
+
+  /* ── loading ── */
+  #tela-gerando {
+    display: none;
+    padding: 32px 0;
+    text-align: center;
+  }
+  .spinner-wrap { margin-bottom: 14px; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2.5px solid var(--border2);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    display: inline-block;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .prog-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 14px; overflow: hidden; }
+  .prog-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .35s; }
+  #msg-gerando { font-size: 15px; font-weight: 500; margin-bottom: 4px; }
+  #msg-sub { font-size: 12px; color: var(--text3); }
+
+  /* ── caderno ── */
+  #tela-caderno { display: none; }
+
+  .caderno-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .caderno-header h2 { font-size: 18px; font-weight: 600; }
+  .caderno-header p  { font-size: 12px; color: var(--text3); margin-top: 3px; }
+
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn-sm {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--text2);
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'Sora', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .btn-sm:hover { border-color: var(--border2); background: var(--bg3); color: var(--text); }
+  .btn-sm.primary { background: rgba(79,124,255,.15); border-color: rgba(79,124,255,.4); color: var(--accent); }
+  .btn-sm.primary:hover { background: rgba(79,124,255,.25); }
+
+  /* ── cards de questão ── */
+  .q-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    transition: border-color .15s;
+  }
+  .q-card:hover { border-color: var(--border2); }
+
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .q-num {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: .02em;
+  }
+  .tag-fis { background: rgba(79,124,255,.15); color: #7fa8ff; }
+  .tag-bio { background: rgba(34,201,122,.15); color: #5ee8a0; }
+  .tag-qui { background: rgba(245,166,35,.15); color: #ffc654; }
+  .tag-mat { background: rgba(167,139,250,.15); color: #c4b0fd; }
+  .tag-his { background: rgba(251,113,133,.15); color: #ffa0b0; }
+  .tag-geo { background: rgba(45,212,191,.15); color: #5ee8dc; }
+  .tag-gray { background: rgba(255,255,255,.06); color: var(--text3); }
+  .tag-purple { background: rgba(167,139,250,.12); color: #c4b0fd; }
+  .tag-pink { background: rgba(251,113,133,.12); color: #ffa0b0; }
+
+  .q-enunciado {
+    font-size: 13.5px;
+    line-height: 1.8;
+    color: var(--text);
+    margin-bottom: 16px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 9px 13px;
+    margin: 5px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .opt .letra { font-weight: 600; min-width: 18px; font-family: 'JetBrains Mono', monospace; }
+
+  .disc-tag {
+    display: inline-block;
+    padding: 5px 0 5px 12px;
+    border-left: 3px solid;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* ── gabarito ── */
+  #secao-gabarito { display: none; margin-top: 32px; }
+
+  .gab-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+  }
+  .gab-box h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+  .gab-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .gab-row:last-child { border-bottom: none; }
+  .gab-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text3); min-width: 26px; font-weight: 500; }
+  .gab-letra {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(34,201,122,.15);
+    border: 1px solid rgba(34,201,122,.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    font-family: 'JetBrains Mono', monospace;
+    flex-shrink: 0;
+  }
+  .gab-disc { margin-left: auto; }
+
+  .res-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+  }
+  .res-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .res-card-header .titulo { font-size: 13px; font-weight: 600; color: var(--text); }
+  .res-text {
+    font-size: 13px;
+    line-height: 1.85;
+    color: var(--text2);
+    background: var(--bg3);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+  }
+
+  /* ── divisor entre config e caderno ── */
+  #tela-config { }
+
+  /* ── responsivo ── */
+  @media (max-width: 520px) {
+    header { padding: 20px 18px 16px; }
+    main { padding: 20px 16px 48px; }
+    .q-card { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Q</div>
+  <div>
+    <h1>Gerador de Questões EBMSP</h1>
+    <p>Física · Biologia · Química · Matemática · História · Geografia</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== CONFIGURAÇÃO ===== -->
+  <div id="tela-config">
+
+    <div class="section">
+      <p class="section-label">1. Disciplinas</p>
+      <div class="disc-grid" id="disc-grid"></div>
+    </div>
+
+    <div id="area-assuntos"></div>
+
+    <div class="section">
+      <p class="section-label">Opções do caderno</p>
+      <div class="controls">
+        <div>
+          <p style="font-size:11px;color:var(--text3);margin-bottom:5px;">Quantidade</p>
+          <select id="sel-qtd">
+            <option value="5">5 questões</option>
+            <option value="10" selected>10 questões</option>
+            <option value="15">15 questões</option>
+            <option value="20">20 questões</option>
+          </select>
+        </div>
+        <div>
+          <p style="font-size:11px;color:var(--text3);margin-bottom:5px;">Fase</p>
+          <select id="sel-fase">
+            <option value="1fase">1ª Fase — múltipla escolha</option>
+            <option value="2fase">2ª Fase — discursiva</option>
+            <option value="mista">Mista (1ª e 2ª)</option>
+          </select>
+        </div>
+        <div>
+          <p style="font-size:11px;color:var(--text3);margin-bottom:5px;">Dificuldade</p>
+          <select id="sel-dif">
+            <option value="mista">Mista</option>
+            <option value="facil">Fácil</option>
+            <option value="media">Média</option>
+            <option value="dificil">Difícil</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="aviso" id="aviso-sel">
+      ⚠ Selecione ao menos uma disciplina antes de gerar.
+    </div>
+
+    <button class="btn-gerar" id="btn-gerar" onclick="iniciarGeracao()">
+      Gerar caderno de questões
+    </button>
+
+  </div><!-- /tela-config -->
+
+  <!-- ===== GERANDO ===== -->
+  <div id="tela-gerando">
+    <div class="spinner-wrap"><div class="spinner"></div></div>
+    <p id="msg-gerando">Gerando questões...</p>
+    <p id="msg-sub">Questão 1 de 10</p>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <p style="font-size:11px;color:var(--text3);margin-top:12px;">Cada questão é gerada individualmente pela IA.</p>
+  </div>
+
+  <!-- ===== CADERNO ===== -->
+  <div id="tela-caderno">
+
+    <div class="caderno-header">
+      <div>
+        <h2>Caderno de questões</h2>
+        <p id="subtitulo-caderno"></p>
+      </div>
+      <div class="btn-row">
+        <button class="btn-sm" onclick="voltarConfig()">&#8592; Novo caderno</button>
+        <button class="btn-sm primary" id="btn-gab" onclick="revelarGabarito()">Ver gabarito</button>
+      </div>
+    </div>
+
+    <div id="lista-questoes"></div>
+
+    <div id="secao-gabarito">
+      <div class="gab-box">
+        <h3>Gabarito</h3>
+        <div id="lista-gabarito"></div>
+      </div>
+      <div id="secao-resolucoes"></div>
+    </div>
+
+  </div><!-- /tela-caderno -->
+
+</main>
+
+<script>
+const DISC = {
+  fisica:{
+    label:'Física', icon:'⚛', cls:'fis', tagCls:'tag-fis',
+    contexto:'biomédico (corpo humano, equipamentos hospitalares, fisiologia ou procedimentos médicos)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'mecanica',l:'Mecânica'},{v:'eletricidade',l:'Eletricidade'},
+      {v:'ondas',l:'Ondas'},{v:'optica',l:'Óptica Geométrica'},{v:'termologia',l:'Termologia'},{v:'radioatividade',l:'Radioatividade'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de Física',
+      mecanica:'Mecânica (cinemática, dinâmica, fluidos, gravitação ou energia)',
+      eletricidade:'Eletricidade (campo elétrico, magnetismo, circuitos, indução ou capacitores)',
+      ondas:'Ondas (ultrassom, ondas eletromagnéticas, Efeito Doppler, som ou ondas estacionárias)',
+      optica:'Óptica Geométrica (lentes, espelhos, fibra óptica, defeitos da visão ou instrumentos)',
+      termologia:'Termologia (escalas térmicas, calorimetria, gases ideais ou termodinâmica)',
+      radioatividade:'Radioatividade (radiações alfa, beta, gama, raios X ou aplicações médicas)'
+    }
+  },
+  biologia:{
+    label:'Biologia', icon:'🧬', cls:'bio', tagCls:'tag-bio',
+    contexto:'saúde humana ou medicina (doenças, diagnósticos, tratamentos ou pesquisa médica)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'citologia',l:'Citologia'},{v:'genetica',l:'Genética'},
+      {v:'evolucao',l:'Evolução'},{v:'ecologia',l:'Ecologia'},{v:'fisiologia',l:'Fisiologia Humana'},
+      {v:'botanica',l:'Botânica'},{v:'microbiologia',l:'Microbiologia'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de Biologia',
+      citologia:'Citologia (organelas, divisão celular, membrana plasmática, metabolismo)',
+      genetica:'Genética (Leis de Mendel, herança ligada ao sexo, mutações, biotecnologia)',
+      evolucao:'Evolução (teorias evolutivas, seleção natural, especiação, filogenia)',
+      ecologia:'Ecologia (cadeias alimentares, ciclos biogeoquímicos, biomas, impactos ambientais)',
+      fisiologia:'Fisiologia Humana (sistemas circulatório, respiratório, digestório, nervoso ou endócrino)',
+      botanica:'Botânica (fotossíntese, reprodução vegetal, tecidos vegetais, hormônios)',
+      microbiologia:'Microbiologia (vírus, bactérias, fungos, protozoários, doenças infecciosas)'
+    }
+  },
+  quimica:{
+    label:'Química', icon:'⚗', cls:'qui', tagCls:'tag-qui',
+    contexto:'farmacologia ou medicina (medicamentos, diagnósticos laboratoriais, toxicologia ou nutrição)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'organica',l:'Orgânica'},{v:'inorganica',l:'Inorgânica'},
+      {v:'fisicoquimica',l:'Físico-Química'},{v:'bioquimica',l:'Bioquímica'},
+      {v:'analitica',l:'Analítica'},{v:'ambiental',l:'Ambiental'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de Química',
+      organica:'Química Orgânica (funções orgânicas, isomeria, reações, polímeros)',
+      inorganica:'Química Inorgânica (ácidos, bases, sais, óxidos, reações inorgânicas)',
+      fisicoquimica:'Físico-Química (termoquímica, cinética, equilíbrio, eletroquímica, soluções)',
+      bioquimica:'Bioquímica (proteínas, carboidratos, lipídios, ácidos nucleicos, enzimas)',
+      analitica:'Química Analítica (titulação, estequiometria, concentração de soluções, pH)',
+      ambiental:'Química Ambiental (poluição, tratamento de água, combustíveis, agrotóxicos)'
+    }
+  },
+  matematica:{
+    label:'Matemática', icon:'∑', cls:'mat', tagCls:'tag-mat',
+    contexto:'saúde ou medicina (dosagem de medicamentos, estatística epidemiológica, crescimento bacteriano, meia-vida de fármacos ou probabilidade em genética)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'aritmetica',l:'Aritmética e %'},{v:'algebra',l:'Álgebra'},
+      {v:'funcoes',l:'Funções'},{v:'geometria',l:'Geometria'},{v:'probabilidade',l:'Probabilidade'},
+      {v:'estatistica',l:'Estatística'},{v:'trigonometria',l:'Trigonometria'},{v:'progressoes',l:'Progressões'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de Matemática',
+      aritmetica:'Aritmética e Porcentagem (regra de três, razão, proporção, porcentagem aplicada a dosagens)',
+      algebra:'Álgebra (equações, sistemas lineares, inequações aplicadas a contextos clínicos)',
+      funcoes:'Funções (afim, quadrática, exponencial ou logarítmica aplicadas a crescimento/decaimento biológico)',
+      geometria:'Geometria (plana ou espacial aplicada a diagnósticos por imagem ou volumes de órgãos)',
+      probabilidade:'Probabilidade (combinatória, probabilidade condicional, sensibilidade e especificidade de testes)',
+      estatistica:'Estatística (média, mediana, moda, desvio padrão, dados epidemiológicos)',
+      trigonometria:'Trigonometria (seno, cosseno, tangente aplicados a ondas biológicas ou anatomia)',
+      progressoes:'Progressões (PA e PG: crescimento bacteriano, meia-vida de fármacos, decaimento radioativo)'
+    }
+  },
+  historia:{
+    label:'História', icon:'📜', cls:'his', tagCls:'tag-his',
+    contexto:'história da saúde pública, medicina ou ciência (epidemias, descobertas médicas, políticas de saúde no Brasil, criação do SUS, Reforma Sanitária ou história das vacinas)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'historia_brasil',l:'Brasil'},{v:'historia_geral',l:'Geral'},
+      {v:'republica',l:'República'},{v:'seculo20',l:'Século XX'},{v:'ditadura',l:'Ditadura'},
+      {v:'sus',l:'SUS e Saúde'},{v:'guerras',l:'Guerras Mundiais'},{v:'contemporanea',l:'Contemporânea'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de História contextualizado em saúde pública ou medicina',
+      historia_brasil:'História do Brasil com foco em epidemias históricas ou políticas sanitárias',
+      historia_geral:'História Geral com foco em história da medicina ou pandemias históricas',
+      republica:'República Brasileira com ênfase em políticas sanitárias (Primeira República, Era Vargas)',
+      seculo20:'Século XX com conexão a avanços na saúde pública mundial',
+      ditadura:'Ditadura Militar e Redemocratização no Brasil com foco em direitos sociais e criação do SUS',
+      sus:'SUS e Saúde Pública Brasileira (Reforma Sanitária, Constituição de 1988, princípios do SUS)',
+      guerras:'Guerras Mundiais e impactos na medicina, vacinas e saúde dos combatentes',
+      contemporanea:'História Contemporânea: pandemias do século XXI, OMS, globalização e saúde'
+    }
+  },
+  geografia:{
+    label:'Geografia', icon:'🌎', cls:'geo', tagCls:'tag-geo',
+    contexto:'saúde, epidemiologia ou meio ambiente (distribuição de doenças, saneamento básico, desigualdade no acesso à saúde, biomas e vetores de doenças, transição epidemiológica)',
+    assuntos:[
+      {v:'aleatorio',l:'Aleatório'},{v:'geo_brasil',l:'Brasil'},{v:'geo_fisica',l:'Física'},
+      {v:'geo_humana',l:'Humana'},{v:'biomas',l:'Biomas'},{v:'demografia',l:'Demografia'},
+      {v:'geopolitica',l:'Geopolítica'},{v:'urbanizacao',l:'Urbanização'},{v:'climatologia',l:'Climatologia'}
+    ],
+    prompts:{
+      aleatorio:'um assunto aleatório de Geografia contextualizado em saúde pública ou meio ambiente',
+      geo_brasil:'Geografia do Brasil: saneamento básico, desigualdades regionais, doenças endêmicas',
+      geo_fisica:'Geografia Física: relevo, hidrografia e clima relacionados a vetores de doenças',
+      geo_humana:'Geografia Humana: população, migrações, urbanização e saúde pública',
+      biomas:'Biomas e Meio Ambiente: Amazônia, Cerrado, doenças emergentes e biodiversidade',
+      demografia:'Demografia: transição demográfica, epidemiológica e nutricional no Brasil',
+      geopolitica:'Geopolítica: organismos internacionais de saúde, distribuição de vacinas no mundo',
+      urbanizacao:'Urbanização: crescimento urbano, periferias, saneamento e doenças',
+      climatologia:'Climatologia: mudanças climáticas, expansão de vetores de doenças, eventos extremos'
+    }
+  }
+};
+
+const ORDEM = ['fisica','biologia','quimica','matematica','historia','geografia'];
+let discSel = { fisica:true, biologia:false, quimica:false, matematica:false, historia:false, geografia:false };
+let assuntosSel = {};
+ORDEM.forEach(d => assuntosSel[d] = new Set(['aleatorio']));
+let questoesGeradas = [];
+
+/* ── init ── */
+function initDiscGrid() {
+  const grid = document.getElementById('disc-grid');
+  ORDEM.forEach(d => {
+    const cfg = DISC[d];
+    const div = document.createElement('div');
+    div.id = 'dcard-' + d;
+    div.className = 'disc-card' + (discSel[d] ? ' on on-'+cfg.cls : '');
+    div.onclick = () => toggleDisc(d);
+    div.innerHTML = `<div class="icon">${cfg.icon}</div><div class="name">${cfg.label}</div>`;
+    grid.appendChild(div);
+  });
+}
+
+function toggleDisc(d) {
+  discSel[d] = !discSel[d];
+  const card = document.getElementById('dcard-' + d);
+  card.className = 'disc-card' + (discSel[d] ? ' on on-'+DISC[d].cls : '');
+  renderAssuntos();
+}
+
+function renderAssuntos() {
+  const area = document.getElementById('area-assuntos');
+  const ativas = ORDEM.filter(d => discSel[d]);
+  if (!ativas.length) { area.innerHTML = ''; return; }
+
+  let html = '<div class="section">';
+  html += '<p class="section-label">2. Assuntos</p>';
+  ativas.forEach(d => {
+    const cfg = DISC[d];
+    html += `<div style="margin-bottom:14px;">
+      <p style="font-size:11px;font-weight:600;color:var(--text3);margin-bottom:8px;">
+        <span class="tag ${cfg.tagCls}">${cfg.label}</span>
+      </p>
+      <div class="chips">`;
+    cfg.assuntos.forEach(a => {
+      const sel = assuntosSel[d].has(a.v);
+      html += `<span class="chip${sel?' on':''}" onclick="toggleAssunto('${d}','${a.v}')">${a.l}</span>`;
+    });
+    html += `</div></div>`;
+  });
+  html += '</div>';
+  area.innerHTML = html;
+}
+
+function toggleAssunto(d, v) {
+  const s = assuntosSel[d];
+  if (v === 'aleatorio') { s.clear(); s.add('aleatorio'); }
+  else {
+    s.delete('aleatorio');
+    if (s.has(v)) { s.delete(v); if (!s.size) s.add('aleatorio'); }
+    else s.add(v);
+  }
+  renderAssuntos();
+}
+
+/* ── sorteio ── */
+function sortearConfig() {
+  const ativas = ORDEM.filter(d => discSel[d]);
+  const disc = ativas[Math.floor(Math.random() * ativas.length)];
+  const cfg = DISC[disc];
+  const arr = Array.from(assuntosSel[disc]);
+  const assunto = arr[Math.floor(Math.random() * arr.length)];
+  const faseOpt = document.getElementById('sel-fase').value;
+  const fase = faseOpt === 'mista' ? (Math.random() < 0.7 ? '1fase' : '2fase') : faseOpt;
+  const difOpt = document.getElementById('sel-dif').value;
+  const difs = ['facil','media','dificil'];
+  const dif = difOpt === 'mista' ? difs[Math.floor(Math.random() * difs.length)] : difOpt;
+  return { disc, assunto, fase, dif, cfg };
+}
+
+/* ── gerar questão via API ── */
+async function gerarUmaQuestao(idx, total) {
+  document.getElementById('msg-sub').textContent = `Questão ${idx+1} de ${total}`;
+  document.getElementById('prog-fill').style.width = Math.round((idx / total) * 100) + '%';
+
+  const { disc, assunto, fase, dif, cfg } = sortearConfig();
+  const assuntoDesc = cfg.prompts[assunto] || assunto;
+  const faseLabel = fase === '1fase'
+    ? 'múltipla escolha com exatamente 5 alternativas (a, b, c, d, e), apenas uma correta'
+    : 'questão discursiva aberta, sem alternativas';
+  const difLabel = { facil:'fácil', media:'média', dificil:'difícil' }[dif];
+
+  const prompt = `Você é professor especialista em ${cfg.label} para o vestibular da EBMSP (Escola Bahiana de Medicina e Saúde Pública).
+
+Crie UMA questão de ${cfg.label}, dificuldade ${difLabel}, sobre ${assuntoDesc}.
+
+PADRÃO OBRIGATÓRIO EBMSP:
+- Contexto obrigatório: ${cfg.contexto}
+- Tipo: ${faseLabel}
+- Enunciado com 2-4 linhas de contexto introdutório antes da pergunta
+- Linguagem formal, técnica, padrão vestibular medicina
+- Alternativas plausíveis e bem elaboradas (se houver)
+- Resolução didática e completa
+
+RESPONDA APENAS com JSON válido. Sem texto fora do JSON. Sem markdown:
+{"disciplina":"${cfg.label}","assunto":"assunto principal","subtopico":"subtópico específico","fase":"${fase}","dificuldade":"${dif}","enunciado":"texto completo","alternativas":${fase==='1fase'?'{"a":"","b":"","c":"","d":"","e":""}':'null'},"resposta_correta":${fase==='1fase'?'"a, b, c, d ou e"':'null'},"resolucao":"resolução completa passo a passo"}`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1200,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  const raw = data.content[0].text.trim();
+  const clean = raw.replace(/^```[a-z]*\n?/, '').replace(/\n?```$/, '').trim();
+  return JSON.parse(clean);
+}
+
+/* ── iniciar geração ── */
+async function iniciarGeracao() {
+  const ativas = ORDEM.filter(d => discSel[d]);
+  if (!ativas.length) {
+    document.getElementById('aviso-sel').style.display = 'block';
+    return;
+  }
+  document.getElementById('aviso-sel').style.display = 'none';
+  const total = parseInt(document.getElementById('sel-qtd').value);
+
+  document.getElementById('tela-config').style.display = 'none';
+  document.getElementById('tela-gerando').style.display = 'block';
+  document.getElementById('msg-gerando').textContent = `Gerando ${total} questões...`;
+
+  questoesGeradas = [];
+  for (let i = 0; i < total; i++) {
+    try {
+      questoesGeradas.push(await gerarUmaQuestao(i, total));
+    } catch (e) {
+      questoesGeradas.push(null);
+    }
+  }
+
+  document.getElementById('prog-fill').style.width = '100%';
+  setTimeout(() => {
+    document.getElementById('tela-gerando').style.display = 'none';
+    renderCaderno();
+  }, 400);
+}
+
+/* ── renderizar caderno ── */
+function renderCaderno() {
+  const discAtivas = ORDEM.filter(d => discSel[d]).map(d => DISC[d].label).join(', ');
+  const total = questoesGeradas.length;
+  const data = new Date().toLocaleDateString('pt-BR');
+  document.getElementById('subtitulo-caderno').textContent =
+    `${total} questões · ${discAtivas} · Padrão EBMSP · ${data}`;
+
+  let html = '';
+  questoesGeradas.forEach((q, i) => {
+    if (!q) {
+      html += `<div class="q-card"><p style="font-size:13px;color:var(--text3);">Questão ${i+1} — erro ao gerar.</p></div>`;
+      return;
+    }
+    const dcfg = Object.values(DISC).find(c => c.label === q.disciplina) || DISC.fisica;
+    const difLabel = { facil:'Fácil', media:'Média', dificil:'Difícil' }[q.dificuldade] || q.dificuldade;
+    const faseLabel = q.fase === '1fase' ? '1ª Fase' : '2ª Fase';
+
+    let altsHtml = '';
+    if (q.fase === '1fase' && q.alternativas) {
+      ['a','b','c','d','e'].forEach(l => {
+        if (q.alternativas[l])
+          altsHtml += `<div class="opt"><span class="letra">${l})</span><span>${q.alternativas[l]}</span></div>`;
+      });
+    } else {
+      altsHtml = `<div style="padding:10px 12px;border-radius:8px;background:var(--bg3);font-size:12px;color:var(--text3);margin-top:8px;">
+        ✏ Questão discursiva — desenvolva sua resposta.
+      </div>`;
+    }
+
+    html += `<div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">${i+1}</span>
+        <span class="tag ${dcfg.tagCls}">${q.disciplina}</span>
+        <span class="tag tag-gray">${q.assunto}</span>
+        <span class="tag tag-pink">${q.subtopico}</span>
+        <span class="tag tag-gray">${difLabel}</span>
+        <span class="tag tag-purple">${faseLabel}</span>
+      </div>
+      <div class="q-enunciado">${q.enunciado.replace(/\n/g,'<br>')}</div>
+      ${altsHtml}
+    </div>`;
+  });
+
+  document.getElementById('lista-questoes').innerHTML = html;
+  document.getElementById('secao-gabarito').style.display = 'none';
+  document.getElementById('btn-gab').style.display = 'inline-block';
+  document.getElementById('tela-caderno').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── revelar gabarito ── */
+function revelarGabarito() {
+  document.getElementById('secao-gabarito').style.display = 'block';
+  document.getElementById('btn-gab').style.display = 'none';
+
+  let gabHtml = '';
+  let resHtml = '';
+
+  questoesGeradas.forEach((q, i) => {
+    if (!q) return;
+    const dcfg = Object.values(DISC).find(c => c.label === q.disciplina) || DISC.fisica;
+
+    if (q.fase === '1fase' && q.resposta_correta) {
+      gabHtml += `<div class="gab-row">
+        <span class="gab-num">${i+1}.</span>
+        <span class="gab-letra">${q.resposta_correta.toUpperCase()}</span>
+        <span style="flex:1;font-size:12px;color:var(--text2);">${q.assunto} — ${q.subtopico}</span>
+        <span class="tag ${dcfg.tagCls} gab-disc" style="font-size:10px;">${q.disciplina}</span>
+      </div>`;
+    } else {
+      gabHtml += `<div class="gab-row">
+        <span class="gab-num">${i+1}.</span>
+        <span class="tag tag-qui" style="font-size:10px;">Discursiva</span>
+        <span style="flex:1;font-size:12px;color:var(--text2);margin-left:6px;">${q.assunto} — ${q.subtopico}</span>
+        <span class="tag ${dcfg.tagCls} gab-disc" style="font-size:10px;">${q.disciplina}</span>
+      </div>`;
+    }
+
+    resHtml += `<div class="res-card">
+      <div class="res-card-header">
+        <span class="q-num" style="background:rgba(79,124,255,.15);border-color:rgba(79,124,255,.3);color:var(--accent);">${i+1}</span>
+        <span class="titulo">${q.assunto} — ${q.subtopico}</span>
+        ${q.fase === '1fase' && q.resposta_correta
+          ? `<span class="gab-letra">${q.resposta_correta.toUpperCase()}</span>`
+          : ''}
+        <span class="tag ${dcfg.tagCls}" style="font-size:10px;">${q.disciplina}</span>
+      </div>
+      <div class="res-text">${q.resolucao.replace(/\n/g,'<br>')}</div>
+    </div>`;
+  });
+
+  document.getElementById('lista-gabarito').innerHTML = gabHtml;
+  document.getElementById('secao-resolucoes').innerHTML = resHtml;
+  document.getElementById('secao-gabarito').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ── voltar ── */
+function voltarConfig() {
+  document.getElementById('tela-caderno').style.display = 'none';
+  document.getElementById('tela-config').style.display = 'block';
+  questoesGeradas = [];
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ── boot ── */
+initDiscGrid();
+renderAssuntos();
+</script>
+</body>
+</html>
