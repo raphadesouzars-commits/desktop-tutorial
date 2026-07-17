@@ -1,0 +1,22 @@
+{
+  "name": "Painel de Estudos EBMSP",
+  "short_name": "Painel PE",
+  "description": "Acompanhamento de estudos Malu e Bruno",
+  "start_url": "/desktop-tutorial/painel-estudos.html",
+  "display": "standalone",
+  "background_color": "#0f0f14",
+  "theme_color": "#0f0f14",
+  "icons": [
+    {
+      "src": "/desktop-tutorial/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/desktop-tutorial/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
