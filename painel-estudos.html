@@ -1040,7 +1040,7 @@ function renderMateria(sid){
       if(!t)return'';
       const done=topicDone(t);
       const pct=topicOverallPct(t);
-      const alerts=topicReviewReasons(sid,tid).length;
+      const alerts=topicAutoReasons(sid,tid).length;
       const concl=AP_TYPES.filter(at=>t.apostilas[at.id].concluido).length;
       return `<div class="topic-card${done?' done':''}" onclick="openTopic('${sid}','${tid}')">
         <div class="tc-dot" style="background:${done?'var(--done)':s.color}"></div>
