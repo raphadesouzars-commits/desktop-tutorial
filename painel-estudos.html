@@ -612,7 +612,7 @@ const SUBJECTS = [
 const AP_TYPES = [
   {id:'multipla',  name:'Múltipla Escolha',    icon:'📘', hasScore:true},
   {id:'vf',        name:'Verdadeiro ou Falso',  icon:'📗', hasScore:true},
-  {id:'discursiva',name:'Discursiva',           icon:'📕', hasScore:false},
+  {id:'discursiva',name:'Discursiva',           icon:'📕', hasScore:true},
 ];
 
 // ══════════════════════════════════════════════════════
@@ -852,20 +852,11 @@ function avgPct(sessions){
   if(!scored.length)return null;
   return Math.round(scored.reduce((a,s)=>a+(s.acertos/s.total)*100,0)/scored.length);
 }
-function avgNota(sessions){
-  if(!sessions||!sessions.length)return null;
-  const scored=sessions.filter(s=>s.nota!=null);
-  if(!scored.length)return null;
-  const avg=scored.reduce((a,s)=>a+s.nota,0)/scored.length;
-  return Math.round(avg*10)/10;
-}
 function topicDone(topic){
   return AP_TYPES.every(at=>topic.apostilas[at.id].concluido);
 }
 function topicOverallPct(topic){
   const avgs=AP_TYPES.filter(a=>a.hasScore).map(at=>avgPct(topic.apostilas[at.id].sessoes));
-  const nota=avgNota(topic.apostilas.discursiva.sessoes);
-  if(nota!==null)avgs.push(nota*10);
   const valid=avgs.filter(x=>x!==null);
   return valid.length?Math.round(valid.reduce((a,b)=>a+b,0)/valid.length):null;
 }
@@ -876,8 +867,6 @@ function topicAutoReasons(sid,tid){
     const p=avgPct(getTopic(sid,tid).apostilas[at.id].sessoes);
     if(p!==null&&p<70) reasons.push(`${at.name}: ${p}% de acerto`);
   });
-  const nota=avgNota(getTopic(sid,tid).apostilas.discursiva.sessoes);
-  if(nota!==null&&nota<7)reasons.push(`Discursiva: ${nota}/10`);
   return reasons;
 }
 function redacaoAutoReasons(){
@@ -1432,10 +1421,6 @@ function quickRegFields(sid){
       <div class="form-group"><label>Total</label><input type="number" class="form-input" id="qrTot" min="1" placeholder="Ex: 20"></div>
       <div class="form-group"><label>Acertos</label><input type="number" class="form-input" id="qrAc" min="0" placeholder="Ex: 14"></div>
     </div>`;
-  }else if(atId==='discursiva'){
-    html+=`<div class="form-group"><label>Nota (0–10, opcional)</label>
-      <input type="number" class="form-input" id="qrNota" min="0" max="10" step="0.5" placeholder="Ex: 7.5"></div>
-    <div class="form-group"><label>Observações</label><textarea class="form-input" id="qrObs" placeholder="Opcional…"></textarea></div>`;
   }else{
     html+=`<div class="form-group"><label>Observações</label><textarea class="form-input" id="qrObs" placeholder="Opcional…"></textarea></div>`;
   }
@@ -1453,13 +1438,6 @@ function doQuickReg(sid){
     const ac=parseInt(document.getElementById('qrAc')?.value);
     if(isNaN(tot)||isNaN(ac)||ac>tot){alert('Verifique total e acertos.');return;}
     registrarSessao(sid,tid,atId,{data:dt,total:tot,acertos:ac});
-  }else if(atId==='discursiva'){
-    const notaVal=document.getElementById('qrNota')?.value;
-    const nota=notaVal!==''&&notaVal!=null?parseFloat(notaVal):null;
-    const obs=document.getElementById('qrObs')?.value||'';
-    const dados={data:dt,observacao:obs};
-    if(nota!=null&&!isNaN(nota))dados.nota=Math.min(10,Math.max(0,nota));
-    registrarSessao(sid,tid,atId,dados);
   }else{
     const obs=document.getElementById('qrObs')?.value||'';
     registrarSessao(sid,tid,atId,{data:dt,observacao:obs});
@@ -1660,15 +1638,11 @@ function renderAssunto(sid,tid){
     const ap=t.apostilas[at.id];
     const sess=ap.sessoes||[];
     const pct=at.hasScore?avgPct(sess):null;
-    const nota=at.id==='discursiva'?avgNota(sess):null;
     const conc=ap.concluido;
 
     const metricHtml=at.hasScore
       ?`<div class="ap-pct ${pctCls(pct)}">${pct!==null?pct+'%':'—'}</div>
         <div class="ap-pct-lbl">acerto médio</div>`
-      :nota!==null
-      ?`<div class="ap-pct ${pctCls(nota*10)}">${nota}/10</div>
-        <div class="ap-pct-lbl">nota média</div>`
       :`<div class="ap-pct pct-na">${sess.length}</div>
         <div class="ap-pct-lbl">sessões</div>`;
 
@@ -1677,8 +1651,6 @@ function renderAssunto(sid,tid){
       :sess.map((s2,i)=>{
         const info=at.hasScore
           ?`${s2.acertos}/${s2.total} acertos — <strong>${Math.round((s2.acertos/s2.total)*100)}%</strong>`
-          :at.id==='discursiva'&&s2.nota!=null
-          ?`<strong>${s2.nota}/10</strong>${s2.observacao?' — '+escHtml(s2.observacao):''}`
           :(escHtml(s2.observacao)||'—');
         return `<div class="sess-item">
           <span class="sess-date">${fmtDate(s2.data)}</span>
@@ -1762,12 +1734,6 @@ function openRegModal(sid,tid,atId){
       <div class="form-group"><label>Acertos</label>
         <input type="number" class="form-input" id="sacer" min="0" placeholder="Ex: 14"></div>
     </div>`;
-  }else if(atId==='discursiva'){
-    body+=`<div class="form-group"><label>Nota (0–10, opcional)</label>
-      <input type="number" class="form-input" id="snota" min="0" max="10" step="0.5" placeholder="Ex: 7.5"></div>
-    <div class="form-group"><label>Observações (opcional)</label>
-      <textarea class="form-input" id="sobs" placeholder="Ex: revisar conceito X…"></textarea>
-    </div>`;
   }else{
     body+=`<div class="form-group"><label>Observações (opcional)</label>
       <textarea class="form-input" id="sobs" placeholder="Ex: revisar conceito X…"></textarea>
@@ -1787,13 +1753,6 @@ function doReg(sid,tid,atId,hasScore){
     const ac=parseInt(document.getElementById('sacer').value);
     if(isNaN(tot)||isNaN(ac)||ac>tot){alert('Verifique total e acertos.');return}
     registrarSessao(sid,tid,atId,{data:dt,total:tot,acertos:ac});
-  }else if(atId==='discursiva'){
-    const notaVal=document.getElementById('snota')?.value;
-    const nota=notaVal!==''&&notaVal!=null?parseFloat(notaVal):null;
-    const obs=document.getElementById('sobs').value;
-    const dados={data:dt,observacao:obs};
-    if(nota!=null&&!isNaN(nota))dados.nota=Math.min(10,Math.max(0,nota));
-    registrarSessao(sid,tid,atId,dados);
   }else{
     const obs=document.getElementById('sobs').value;
     registrarSessao(sid,tid,atId,{data:dt,observacao:obs});
@@ -2200,10 +2159,6 @@ function r1ToggleFields(){
       <div class="form-group"><label>Total de questões</label><input type="number" class="form-input" id="r1Tot" min="1" placeholder="Ex: 20"></div>
       <div class="form-group"><label>Acertos</label><input type="number" class="form-input" id="r1Ac" min="0" placeholder="Ex: 14"></div>
     </div>`;
-  }else if(atId==='discursiva'){
-    html+=`<div class="form-group"><label>Nota (0–10, opcional)</label>
-      <input type="number" class="form-input" id="r1Nota" min="0" max="10" step="0.5" placeholder="Ex: 7.5"></div>
-    <div class="form-group"><label>Observação</label><textarea class="form-input" id="r1Obs" placeholder="Opcional…"></textarea></div>`;
   }else{
     html+=`<div class="form-group"><label>Observação</label><textarea class="form-input" id="r1Obs" placeholder="Opcional…"></textarea></div>`;
   }
@@ -2244,13 +2199,6 @@ function doReg1Toque(sid){
     const ac=parseInt(document.getElementById('r1Ac')?.value);
     if(isNaN(tot)||isNaN(ac)||ac>tot){showToast('Faltou preencher os acertos 🙂');return;}
     registrarSessao(sid,tid,atId,{data:dt,total:tot,acertos:ac});
-  }else if(atId==='discursiva'){
-    const notaVal=document.getElementById('r1Nota')?.value;
-    const nota=notaVal!==''&&notaVal!=null?parseFloat(notaVal):null;
-    const obs=document.getElementById('r1Obs')?.value||'';
-    const dados={data:dt,observacao:obs};
-    if(nota!=null&&!isNaN(nota))dados.nota=Math.min(10,Math.max(0,nota));
-    registrarSessao(sid,tid,atId,dados);
   }else{
     const obs=document.getElementById('r1Obs')?.value||'';
     registrarSessao(sid,tid,atId,{data:dt,observacao:obs});
