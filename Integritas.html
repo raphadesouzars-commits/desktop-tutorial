@@ -738,7 +738,15 @@ var CUMUL_RULES = [
   { eixos:["disc","ameaca"],
     msg:"<strong>Ameaça com motivação discriminatória</strong> — a ameaça dirigida à vítima em razão de sua raça, gênero, orientação sexual ou outra característica protegida potencializa o enquadramento, podendo configurar, cumulativamente, discriminação (art. 1º, Lei nº 9.029/95) e ameaça (art. 147 do CP / art. 116 da Lei nº 8.112/90)." },
   { eixos:["ag","moral"],
-    msg:"<strong>Agressão no contexto de assédio</strong> — a ocorrência de agressão física em cenário de assédio moral preexistente representa escalada de gravidade. Ambos os enquadramentos podem ser aplicados cumulativamente, devendo a autoridade avaliar se a agressão representa episódio autônomo ou desfecho do ciclo assediante." }
+    msg:"<strong>Agressão no contexto de assédio</strong> — a ocorrência de agressão física em cenário de assédio moral preexistente representa escalada de gravidade. Ambos os enquadramentos podem ser aplicados cumulativamente, devendo a autoridade avaliar se a agressão representa episódio autônomo ou desfecho do ciclo assediante." },
+  { eixos:["ret","moral"],
+    msg:"<strong>Retaliação como padrão de assédio</strong> — quando a represália ao denunciante assume a forma de padrão reiterado de condutas hostis, o nexo causal com o ato protegido caracteriza a retaliação (Eixo 6) e o padrão reiterado pode configurar simultaneamente assédio moral (Eixo 5). Cap. 19 do Manual." },
+  { eixos:["vverbal","moral"],
+    msg:"<strong>Ofensa verbal reiterada como assédio moral</strong> — quando a ofensa verbal é episódio de um padrão reiterado, o episódio isolado é analisado pelo Eixo 7 e o padrão reiterado deve ser analisado complementarmente pelo Eixo 5. Cap. 19 do Manual." },
+  { eixos:["stalk","moral"],
+    msg:"<strong>Stalking funcional com impacto psicológico</strong> — quando o padrão de perseguição produziu impacto psicológico documentável sobre a vítima (laudo, afastamento, comprometimento funcional), avaliar complementarmente o Eixo 5 além do Eixo 8. Cap. 19 do Manual." },
+  { eixos:["sex","moral"],
+    msg:"<strong>Conduta sexual inserida em padrão hostil</strong> — quando a conduta de conotação sexual se insere em um padrão reiterado de condutas hostis, o conteúdo sexual justifica o Eixo 3 e o padrão reiterado pode justificar, de forma autônoma, o Eixo 5. Cap. 19 do Manual." }
 ];
 
 // Prazos prescricionais por penalidade (Lei 8.112/90, art. 142)
@@ -1045,7 +1053,7 @@ var S = {
   "moral-direcao":{ax:"Eixo Moral",ak:"moral",tc:true,
     q:"Qual a <em>direção hierárquica</em> do assédio moral reiterado?",
     h:hBlock("Qual a relação hierárquica entre agressor e vítima?","<strong>Vertical:</strong> chefia assedia subordinado — o uso do cargo é agravante direto. <strong>Horizontal:</strong> entre pares — art. 132, V ou 116. <strong>Ascendente:</strong> subordinado assedia chefe — art. 116 ou 132, V.","Vertical → próxima pergunta verifica o uso do cargo. Horizontal e ascendente → verificam motivação discriminatória e moralidade."),
-    opts:[{l:"VERTICAL",s:"Chefe a subordinado",v:"vertical",nx:"moral-cargo"},{l:"HORIZONTAL",s:"Entre pares",v:"horizontal",nx:"moral-disc-check",st:"o-alt"},{l:"ASCENDENTE",s:"Subordinado a chefe",v:"ascendente",nx:"moral-disc-check",st:"o-alt"}]},
+    opts:[{l:"VERTICAL",s:"Chefe a subordinado",v:"vertical",nx:"moral-cargo"},{l:"HORIZONTAL",s:"Entre pares",v:"horizontal",nx:"moral-moralidade-final",st:"o-alt"},{l:"ASCENDENTE",s:"Subordinado a chefe",v:"ascendente",nx:"moral-moralidade-final",st:"o-alt"}]},
 
   "moral-disc-check":{ax:"Eixo Assédio Moral",ak:"moral",
     q:"A escolha da vítima está associada a <em>característica pessoal protegida</em>?",
