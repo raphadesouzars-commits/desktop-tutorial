@@ -201,6 +201,7 @@ button{font-family:inherit;cursor:pointer}
 .btn.primary{background:var(--topbar);color:#fff;border-color:var(--topbar)}
 .btn.primary:hover{background:var(--topbar-2)}
 .btn.primary:disabled{background:#9aa3ad;border-color:#9aa3ad;cursor:not-allowed;opacity:.8}
+.btn.primary.soft-disabled{background:#9aa3ad;border-color:#9aa3ad;cursor:pointer;opacity:.85}
 .btn.ghost{background:transparent;border-color:transparent}
 .btn.small{padding:4px 8px;font-size:12px}
 .btn.danger{color:var(--estado-critico);border-color:#e7b7b3}
@@ -270,6 +271,10 @@ button{font-family:inherit;cursor:pointer}
 .popover .st{font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;white-space:nowrap}
 .popover .st.alerta{background:var(--estado-critico-bg);color:var(--estado-critico)}
 .popover .st.info,.popover .st.neutro{background:#eef1f5;color:var(--ink-2)}
+.pop-crit-item{padding:6px 4px;border-bottom:1px solid var(--borda);cursor:pointer}
+.pop-crit-item:last-child{border-bottom:none}
+.pop-crit-item:hover{background:var(--rfb-navy-50,#f3f5f8)}
+.pop-crit-item .code{font-weight:800;color:var(--estado-critico)}
 .popover .st.running{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
 .popover .est{font-style:italic;color:var(--ink-2)}
 .popover .disc{margin-top:6px;font-size:11px;color:var(--ink-2);border-top:1px dashed var(--borda);padding-top:6px}
@@ -306,10 +311,9 @@ button{font-family:inherit;cursor:pointer}
 .canvas-wrap{flex:1 1 auto;min-width:0;position:relative;overflow:auto;background:var(--canvas-bg)}
 .col-headers{position:sticky;top:0;z-index:5;display:grid;
   grid-template-columns:1fr 1fr 1fr;pointer-events:none}
-.col-h{margin:8px;padding:6px 12px;border-radius:8px;font-weight:700;font-size:12.5px;
-  text-transform:uppercase;letter-spacing:.5px;color:#fff;text-align:center}
-.col-h.fato{background:var(--cor-fato)} .col-h.prova{background:var(--cor-prova)}
-.col-h.norma{background:var(--cor-norma)}
+.col-h{margin:8px;padding:6px 12px;font-weight:700;font-size:12.5px;
+  text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2);text-align:center;
+  border-bottom:2px solid var(--borda)}
 svg.map{display:block}
 .empty-state{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
   padding:40px;text-align:center;color:var(--ink-2);font-size:14px;line-height:1.6;pointer-events:none}
@@ -327,9 +331,22 @@ svg.map{display:block}
 .counter.c{background:var(--estado-critico-bg);color:var(--estado-critico)}
 .counter.f{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
 .counter.p{background:var(--estado-pendente-bg);color:var(--estado-pendente)}
+.ref-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.ref-table th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink-2);
+  padding:6px 8px;border-bottom:1px solid var(--borda)}
+.ref-table td{padding:7px 8px;border-bottom:1px solid var(--borda);vertical-align:top}
+.ref-table td.rc{font-weight:800;white-space:nowrap}
+.ref-table .rn{display:inline-block;padding:1px 8px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.ref-table .rn.critico{background:var(--estado-critico-bg);color:var(--estado-critico)}
+.ref-table .rn.fragil{background:var(--estado-fragil-bg);color:var(--estado-fragil)}
+.ref-table .rn.pendente{background:var(--estado-pendente-bg);color:var(--estado-pendente)}
 .pend-list{overflow:auto;flex:1 1 auto;padding:8px}
 .pend-group-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
   color:var(--ink-2);margin:10px 6px 4px}
+.pend-group-progress{font-weight:600;text-transform:none;letter-spacing:0;color:var(--ink-2);opacity:.75}
+.pend-toggle-link{font-size:12px;font-weight:700;color:var(--ink-2);cursor:pointer;
+  padding:8px 6px;text-align:left;text-decoration:underline}
+.pend-toggle-link:hover{color:var(--ink)}
 .pend{border:1px solid var(--borda);border-left-width:4px;border-radius:8px;padding:8px 10px;
   margin-bottom:6px;font-size:12.5px;cursor:pointer;background:var(--paper)}
 .pend:hover{background:#fbfcfd}
@@ -343,12 +360,19 @@ svg.map{display:block}
 .selo-ok{margin:14px;padding:12px;border:1px dashed #66bb6a;border-radius:10px;
   color:#2e7d32;background:#edf7ee;font-size:13px;font-weight:600;text-align:center}
 .checklist{border-top:1px solid var(--borda);padding:10px 14px;flex:0 0 auto}
-.checklist h3{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
-.check{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-bottom:6px;line-height:1.35}
-.check .mk{width:16px;height:16px;border-radius:4px;flex:0 0 auto;display:flex;align-items:center;
-  justify-content:center;font-size:11px;font-weight:800;color:#fff;margin-top:1px}
-.check.ok .mk{background:#2e7d32}.check.no .mk{background:#c0c7d0}
-.checklist .btn{width:100%;justify-content:center;margin-top:8px}
+.checklist-card{background:var(--rfb-navy-50,#f3f5f8);border:1px solid var(--borda);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px}
+.checklist-head{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+.checklist-head h3{margin:0;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--ink)}
+.checklist-count{font-size:12px;font-weight:700;color:var(--ink-2);white-space:nowrap}
+.checklist-bar{height:6px;border-radius:5px;background:#dfe3e8;overflow:hidden;margin-bottom:10px}
+.checklist-bar > i{display:block;height:100%;background:#2e7d32}
+.check-row{display:flex;gap:8px;align-items:flex-start;font-size:12px;margin-bottom:6px;line-height:1.35}
+.check-row:last-child{margin-bottom:0}
+.check-row .mk{width:16px;height:16px;border-radius:50%;flex:0 0 auto;display:flex;align-items:center;
+  justify-content:center;font-size:10px;font-weight:800;color:#fff;margin-top:1px}
+.check-row.ok .mk{background:#2e7d32}.check-row.no .mk{background:#c0c7d0;color:#5b6781}
+.checklist .btn{width:100%;justify-content:center;margin-top:4px}
 /* ordem narrativa dos fatos (arrasto) */
 .factorder{border-top:1px solid var(--borda);flex:0 0 auto;max-height:34%;display:flex;flex-direction:column}
 .factorder .fo-head{padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer}
@@ -369,6 +393,9 @@ svg.map{display:block}
 /* seção "Prazos" (colapsada por padrão) */
 .prazos-sec{border-top:1px solid var(--borda);flex:0 0 auto}
 .prazos-sec .pz-head{padding:8px 14px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.prazos-sec .pz-head-compact{padding:8px 14px;display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12px}
+.prazos-sec .pz-clock{font-size:12px;flex:0 0 auto}
+.prazos-sec .pz-compact-txt{color:var(--ink-2);font-weight:500}
 .prazos-sec .pz-head h3{margin:0;font-size:12px;text-transform:uppercase;letter-spacing:.5px;color:var(--ink-2)}
 .prazos-sec .pz-dot{width:11px;height:11px;border-radius:50%;background:var(--estado-ok)}
 .prazos-sec .pz-dot.verde{background:#2e7d32}.prazos-sec .pz-dot.ambar{background:var(--estado-fragil)}
@@ -461,6 +488,8 @@ svg.map{display:block}
 .inicio-estado__meta{font-size:12.5px;color:var(--ink-2)}
 .inicio-acoes{display:flex;gap:10px;flex-wrap:wrap}
 .inicio-p{margin:0 0 10px;font-size:13px;line-height:1.55;color:var(--ink)}
+.inicio-veritas-hint{font-size:12.5px;color:var(--ink-2);margin-top:10px}
+.inicio-veritas-link{color:var(--rfb-navy-700,var(--ink));font-weight:700;cursor:pointer;text-decoration:underline}
 .radios{display:flex;gap:14px;flex-wrap:wrap}
 .radios label{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;cursor:pointer}
 .inline-warn{background:var(--estado-fragil-bg);border:1px solid #e8cf8a;color:#8a5d0d;
@@ -593,7 +622,7 @@ svg.map.isolating .node.hl{opacity:1}
   <button class="btn" id="btnAddFato">+ Fato</button>
   <button class="btn" id="btnAddProva">+ Prova</button>
   <div class="menu-wrap">
-    <button class="btn" id="btnMenu">exportar ▾</button>
+    <button class="btn" id="btnMenu">Ações ▾</button>
     <div class="menu" id="menu">
       <div class="lbl">Guarda &amp; troca</div>
       <button data-act="exportJson">⬇ Exportar .json (documento completo)</button>
@@ -625,13 +654,14 @@ svg.map.isolating .node.hl{opacity:1}
       <div class="col-h norma">Normas</div>
     </div>
     <svg class="map" id="map" xmlns="http://www.w3.org/2000/svg"></svg>
-    <div class="empty-state" id="emptyState"><div>Comece cadastrando os acusados e o primeiro fato. O mapa mostrará as conexões — e as lacunas — conforme você constrói a instrução.</div></div>
+    <div class="empty-state" id="emptyState"><div>Comece cadastrando os entes privados e o primeiro fato. O mapa mostrará as conexões — e as lacunas — conforme você constrói a instrução.</div></div>
   </div>
 
   <aside class="panel" id="panel">
     <div class="panel-head">
       <h2>Pendências</h2>
       <div class="counters" id="counters"></div>
+      <button class="btn ghost small" id="btnPendRef" title="O que significa cada tipo de pendência?">?</button>
       <button class="btn ghost small" id="btnCollapse" title="Recolher painel">✕</button>
     </div>
     <div class="pend-list" id="pendList"></div>
@@ -1840,6 +1870,7 @@ let isolatedFato = null; // id do fato isolado por clique
 let searchTerm = '';
 let factOrderOpen = false;   // seção "ordem dos fatos" recolhida por padrão
 let prazosSecOpen = false;   // seção "Prazos" recolhida por padrão
+let pendGruposSecOpen = false; // grupos frágil/pendente do painel recolhidos por padrão (item 3.10)
 let dragFatoId = null;       // id do fato em arrasto na lista de ordem
 const revisadas = new Set(); // pendências marcadas "revisado ✓" (volátil)
 
@@ -2049,6 +2080,7 @@ function calcEstadoProbatorio(f){
   // direta mas com pendência formal, ou só indiretas → indícios
   return algumaDireta ? 'indicios' : 'indicios';
 }
+const ESTADO_PROB_LABEL={suficiente:'suficiente',indicios:'indícios',ausente:'ausente'};
 function estadoExibido(f){
   const calc=calcEstadoProbatorio(f);
   const ov=f.estadoProbatorio&&f.estadoProbatorio.override;
@@ -2087,7 +2119,7 @@ function computePendencias(){
     // P7
     const provas=(f.provaIds||[]).map(provaById).filter(Boolean);
     if(provas.length && provas.every(p=>p.tipo==='indiciaria'||p.tipo==='declaracao_informante'))
-      push('P7','fragil','fato',f.id,'Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo');
+      push('P7','fragil','fato',f.id,'Sustentação exclusivamente indiciária/informal — considere explicitar o raciocínio indutivo que sustenta o fato');
     // P8 (dolo/culpa) REMOVIDA no fork PAR — a LAC é objetiva (item 3.3). Substituída por P8-PAR.
     // P8-PAR — fato com enquadramento LAC mas sem descrição de benefício/interesse OU nexo causal.
     // Crítica (bloqueia a Nota de Indiciação): decisão de bom senso — substitui a P8, que era crítica,
@@ -2103,7 +2135,7 @@ function computePendencias(){
       push('P3','fragil','prova',p.id,'Prova órfã — não sustenta nenhum fato do mapa');
     // P6a
     if(provaTemP6a(p))
-      push('P6a','fragil','prova',p.id,'Prova emprestada com pendência formal (certidão/autorização)');
+      push('P6a','fragil','prova',p.id,'Prova emprestada com pendência formal — considere revisar certidão/autorização');
     // P6b
     if(provaTemP6b(p))
       push('P6b','fragil','prova',p.id,'Ente privado não intimado da produção desta prova (contraditório)');
@@ -2126,7 +2158,7 @@ function computePendencias(){
     if(nd&&id){
       const du=diasUteisEntre(nd,id);
       if(du!=null && du<3)
-        push('P6c','fragil','acusado',a.id,'Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784/99)');
+        push('P6c','fragil','acusado',a.id,'Considere reagendar: antecedência da intimação para o interrogatório inferior a 3 dias úteis (art. 41, Lei nº 9.784/99)');
     }
   });
   return P;
@@ -2220,7 +2252,7 @@ function abrirPainelIntegracaoPendente(){
     body.push(el('div',{class:'block-title'},'Retornos de oitiva pendentes de revisão ('+retornosPend.length+')'));
     retornosPend.forEach(({acusado,item})=>{
       body.push(el('div',{class:'imp-item'}, el('div',{class:'imp-body'},
-        el('div',{class:'imp-tipo'}, 'Acusado: '+(acusado.nome||acusado.id)),
+        el('div',{class:'imp-tipo'}, 'Ente privado: '+(acusado.nome||acusado.id)),
         el('div',{class:'imp-meta'}, 'fato: '+(item.fatoReferencia||'—')+' · id_prova: '+(item.idProva||'—')),
         item.resumoResposta?el('div',{class:'imp-prev'},'"'+esc(item.resumoResposta)+'"'):null),
         el('button',{class:'btn small',onclick:()=>{closeModal();abrirFormAcusado(acusado.id);}},'Abrir e revisar')));
@@ -2251,13 +2283,13 @@ function renderPrescricao(){
   else if(r.dataPior){ box.textContent='Prescrição (pior caso): '+fmtDate(r.dataPior); }
   else if(r.soInterrompidas){ box.textContent='Prescrição: interrompida'; }
   else { box.textContent='Prescrição: —'; }
-  box.title='Prescrição (art. 142) — clique para detalhamento por acusado';
+  box.title='Prescrição (art. 142) — clique para detalhamento por ente privado';
 }
 function abrirPopoverPrescricao(){
   const pop=$('#popover'); pop.innerHTML='';
-  pop.append(el('h4',{},'Prescrição por acusado (art. 142, Lei nº 8.112/90)'));
+  pop.append(el('h4',{},'Prescrição por ente privado (art. 142, Lei nº 8.112/90)'));
   const rs=prescricaoTodos();
-  if(!doc.acusados.length){ pop.append(el('div',{class:'est'},'Nenhum acusado cadastrado.')); }
+  if(!doc.acusados.length){ pop.append(el('div',{class:'est'},'Nenhum ente privado cadastrado.')); }
   else{
     const tb=el('table',{});
     rs.forEach(r=>{
@@ -2286,9 +2318,37 @@ function abrirPopoverPrescricao(){
   const box=$('#prescBox').getBoundingClientRect();
   pop.style.left=Math.max(8, Math.min(box.left, window.innerWidth-440))+'px';
   pop.style.top=(box.bottom+6)+'px';
+  pop.style.bottom='auto';
   pop.classList.add('open');
 }
 function fecharPopover(){ const p=$('#popover'); if(p) p.classList.remove('open'); }
+// popover do botão "Gerar Nota de Indiciação" quando há pendências críticas — lista montada
+// dinamicamente a partir de PENDENCIAS em runtime (nunca lista fixa de códigos: o conjunto de
+// críticos do PAR — P1, P2 condicional, P5, P8-PAR, P-ENTE — varia conforme a fase do processo)
+function abrirPopoverCriticas(anchorEl){
+  const pop=$('#popover'); pop.innerHTML='';
+  pop.append(el('h4',{},'Pendências críticas que impedem a indiciação'));
+  const criticas=PENDENCIAS.filter(p=>p.nivel==='critico');
+  const list=el('div',{});
+  criticas.forEach(p=>{
+    const alvoLbl=p.alvoTipo==='fato'
+      ? p.alvoId+' — '+((doc.fatos.find(f=>f.id===p.alvoId)||{}).titulo||'')
+      : p.alvoTipo==='acusado'
+        ? p.alvoId+' — '+((acusadoById(p.alvoId)||{}).nome||'(ente privado)')
+        : p.alvoTipo==='processo'
+          ? 'Processo'
+          : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
+    list.append(el('div',{class:'pop-crit-item',onclick:()=>{ fecharPopover(); focarNo(p); }},
+      el('span',{class:'code'},p.codigo), ' — '+alvoLbl));
+  });
+  pop.append(list);
+  pop.append(el('div',{class:'disc'},'Clique em um item para localizá-lo.'));
+  const box=anchorEl.getBoundingClientRect();
+  pop.style.left=Math.max(8, Math.min(box.left, window.innerWidth-440))+'px';
+  pop.style.top='auto';
+  pop.style.bottom=(window.innerHeight-box.top+6)+'px';
+  pop.classList.add('open');
+}
 
 function renderLens(){
   const box=$('#lensChips'); box.innerHTML='';
@@ -2450,9 +2510,10 @@ function cardBase(g,x,y,cat,sev){
   if(sev==='critico'){ rect.setAttribute('stroke','var(--estado-critico)'); rect.setAttribute('stroke-width',2.5); node.style.filter='drop-shadow(0 3px 6px #0002)'; }
   else if(sev==='fragil'){ rect.setAttribute('stroke','var(--estado-fragil)'); rect.setAttribute('stroke-width',2); rect.setAttribute('stroke-dasharray','7 4'); }
   node.append(rect);
-  // barra lateral de categoria (identidade sempre presente)
+  // barra lateral (identidade de categoria em provas/normas; em fatos é sobrescrita
+  // pelo estado probatório em drawFatoCard — único indicador de cor no card em repouso)
   const barCor={fato:'var(--cor-fato)',prova:'var(--cor-prova)',norma:'var(--cor-norma)'}[cat];
-  node.append(svgEl('rect',{x:0,y:0,width:5,height:CARD_H,rx:2,fill:barCor}));
+  node.append(svgEl('rect',{class:'barcat',x:0,y:0,width:5,height:CARD_H,rx:2,fill:barCor}));
   g.append(node);
   return node;
 }
@@ -2479,28 +2540,21 @@ function drawFatoCard(g,f,x,y,pends){
   const node=cardBase(g,x,y,'fato',sev);
   node.dataset.fato=f.id;
   if(arq) node.style.opacity=0.5; // memória da decisão: fato apurado e não indiciado
-  // semáforo estado probatório
+  // estado probatório: única cor do card em repouso — sobrescreve a barra lateral de categoria
   const est=estadoExibido(f);
   const corSem = arq ? '#9AA3AD' : ({suficiente:'#4CAF50',indicios:'#E0A800',ausente:'var(--estado-critico)'}[est.exibido]||'#9AA3AD');
-  const disc=svgEl('circle',{cx:20,cy:24,r:6,fill:corSem});
-  const dt=svgEl('title');
-  dt.textContent = arq
-    ? `Fato arquivado pela comissão — não consta da minuta. Justificativa: ${f.justificativaArquivamento||'(não informada)'}`
-    : (est.override
-        ? `calculado: ${est.calc} — sobrescrito pela comissão: ${est.override}. Justificativa: ${est.just}`
-        : `estado probatório: ${est.exibido}`);
-  disc.append(dt); node.append(disc);
-  const tit=txt(node,34,28,f.titulo||'(fato sem título)',{weight:'bold',max:30,title:f.titulo});
+  node.querySelector('.barcat').setAttribute('fill',corSem);
+  const tit=txt(node,20,28,f.titulo||'(fato sem título)',{weight:'bold',max:32,title:f.titulo});
   if(arq) tit.setAttribute('text-decoration','line-through');
   // linha secundária: estado probatório OU marca de arquivamento
   const rotEstado = arq
     ? 'arquivado — não indiciado'
     : {suficiente:'suficiente',indicios:'indícios — in dubio pro societate',ausente:'ausente'}[est.exibido];
-  txt(node,34,46,rotEstado,{size:11,fill:'var(--ink-2)',max:38,title:arq?(f.justificativaArquivamento||''):''});
-  // chips de acusados
+  txt(node,20,46,rotEstado,{size:11,fill:'var(--ink-2)',max:40,title:arq?(f.justificativaArquivamento||''):''});
+  // chips de entes privados
   const cond=f.condutas||[];
   if(cond.length){
-    let cx=34;
+    let cx=20;
     cond.slice(0,4).forEach(c=>{
       const ini=iniciais(nomeAcusado(c.acusadoId));
       const cg=svgEl('g',{transform:`translate(${cx},56)`});
@@ -2510,26 +2564,30 @@ function drawFatoCard(g,f,x,y,pends){
       cg.append(ct); node.append(cg); cx+=26;
     });
   }
-  // badges canto sup. direito
-  let bx=CARD_W-16;
-  if(sev==='critico'){ badge(node,bx,20,'⛔','var(--estado-critico)','Pendência crítica'); bx-=20; }
-  else if(sev==='fragil'){ badge(node,bx,20,'⚠','var(--estado-fragil)','Pendência frágil'); bx-=20; }
-  if(pends.some(p=>p.codigo==='P4')){ badge(node,bx,20,'?','var(--estado-pendente)','Decisão de multiplicidade pendente'); bx-=20; }
-  if(pends.some(p=>p.codigo==='P8')){ badge(node,bx,20,'⚡','var(--estado-critico)','Alternatividade violada'); bx-=20; }
-  if(arq){ badge(node,bx,20,'🗄','var(--ink-2)','Fato arquivado — não consta da minuta'); bx-=20; }
-  // Rodada 6 (contrato Oitiva 360 -> Nexo Coger): selo distinto para contexto vindo de oitiva —
-  // acusado.provasContexto é isolado de doc.provas, então este selo não indica prova evidenciária
-  // formal nem participa da força probatória; é só um rastro informativo de que houve oitiva sobre
-  // este fato. Cor gold (design system COGER) para diferenciar do azul/estado usado nos demais selos.
-  const contextoOitivaFato=doc.acusados.some(a=>(a.provasContexto||[]).some(p=>p.fatoReferencia===f.id));
-  if(contextoOitivaFato){ badge(node,bx,20,'🎙','var(--rfb-gold-600)','Contexto de oitiva vinculado a este fato (Oitiva 360) — não é prova evidenciária formal, não conta para a força probatória'); bx-=20; }
-  if(cond.length){ badge(node,bx,40,'👤'+(cond.length>1?'×'+cond.length:''),'var(--ink-2)',cond.length+' acusado(s)'); }
   // rastro informativo (neutro): pauta enviada, enquanto o fato ainda carece de prova
   if(!arq && f.pautaEnviada && f.pautaEnviada.em && (est.exibido==='ausente'||est.exibido==='indicios')){
     const dt=parseDate(f.pautaEnviada.em);
     txt(node,CARD_W-12,68,'📤 pauta '+(dt?fmtDate(dt).slice(0,5):''),{size:10,fill:'var(--ink-2)',max:20,
       title:'Pauta enviada em '+(dt?fmtDate(dt):f.pautaEnviada.em)}).setAttribute('text-anchor','end');
   }
+  // tooltip único do card (item 3.10): consolida o que antes eram ícones empilhados no rosto do
+  // card — severidade de pendência, multiplicidade (P4), benefício/nexo causal (P8-PAR),
+  // arquivamento, contexto de oitiva e nº de entes privados. Detalhe completo permanece no
+  // formulário de edição do fato.
+  const contextoOitivaFato=doc.acusados.some(a=>(a.provasContexto||[]).some(p=>p.fatoReferencia===f.id));
+  const notas=[];
+  if(arq) notas.push(`Arquivado — não consta da minuta. Justificativa: ${f.justificativaArquivamento||'(não informada)'}`);
+  else notas.push(est.override
+    ? `Estado probatório calculado: ${est.calc} — sobrescrito pela comissão: ${est.override}. Justificativa: ${est.just}`
+    : `Estado probatório: ${est.exibido}`);
+  if(sev==='critico') notas.push('⛔ Pendência crítica');
+  else if(sev==='fragil') notas.push('⚠ Pendência frágil');
+  if(pends.some(p=>p.codigo==='P4')) notas.push('? Decisão de multiplicidade pendente');
+  if(pends.some(p=>p.codigo==='P8-PAR')) notas.push('⚡ Benefício/interesse ou nexo causal não descrito (P8-PAR)');
+  if(contextoOitivaFato) notas.push('🎙 Contexto de oitiva vinculado (Oitiva 360) — informativo, não é prova evidenciária');
+  if(cond.length) notas.push('👤 '+cond.length+' ente(s) privado(s)');
+  const cardTitle=svgEl('title'); cardTitle.textContent=notas.join(' · ');
+  node.prepend(cardTitle);
 
   node.addEventListener('click',ev=>{ ev.stopPropagation(); toggleIsolate(f.id); });
   node.addEventListener('dblclick',ev=>{ ev.stopPropagation(); abrirFormFato(f.id); });
@@ -2539,7 +2597,9 @@ function drawFatoCard(g,f,x,y,pends){
 }
 
 function drawProvaCard(g,p,x,y,pends){
-  const sev=nivelMaisSevero(pends);
+  // borda tracejada reservada a pendência FORMAL (P6a/P6b) — P3 (órfã) já tem sinal
+  // visual próprio (desalinhamento posicional), não precisa duplicar em cor/traço (item 3.10)
+  const sev=(provaTemP6a(p)||provaTemP6b(p))?'fragil':null;
   const node=cardBase(g,x,y,'prova',sev);
   txt(node,14,26,p.titulo||'(prova sem título)',{weight:'bold',max:32,title:p.titulo});
   const tipoLbl={documental:'Documental',pericial:'Pericial',testemunhal:'Testemunhal',
@@ -2568,17 +2628,14 @@ function drawNormaCard(g,n,x,y,afastada){
   const t=txt(node,14,26,n.rotulo,{weight:'bold',max:34,title:n.rotulo});
   if(afastada) t.setAttribute('text-decoration','line-through');
   txt(node,14,45,n.dispositivo,{size:11,fill:'var(--ink-2)',max:40});
-  // pílula de grupo LAC (fork PAR: não há gravidade/pena — a LAC é objetiva; a pílula mostra o
-  // grupo de enquadramento). Para normas residuais (NU-, sem grupo) recai na pena, se houver.
+  // grupo/gravidade: texto neutro discreto — sem fundo colorido (azul reservado a elementos
+  // interativos/clicáveis no restante da interface; item 3.10). Fork PAR: não há gravidade/pena
+  // própria — a LAC é objetiva; o rótulo mostra o grupo de enquadramento (normas residuais, sem
+  // grupo, recaem na pena, se houver — mesma lógica já existente).
   const penaLbl = n.grupo
     ? (n.grupo==='Licitações e contratos' ? 'licitações e contratos' : 'atos de corrupção')
     : (({advertencia:'advertência',suspensao:'suspensão',demissao:'demissão'}[n.penaPrevista])||n.penaPrevista||'—');
-  const corP = n.grupo ? 'var(--rfb-navy-700,#12315e)' : ({leve:'#1a56c4',media:'#8a5d0d',grave:'var(--estado-critico)'}[n.gravidade]||'#1a56c4');
-  const bgP = n.grupo ? 'var(--rfb-gold-100,#f4ead0)' : ({leve:'#e8f0fe',media:'var(--estado-fragil-bg)',grave:'var(--estado-critico-bg)'}[n.gravidade]||'#e8f0fe');
-  const pw=penaLbl.length*6+16;
-  node.append(svgEl('rect',{x:CARD_W-pw-12,y:56,width:pw,height:15,rx:7,fill:bgP}));
-  const pt=svgEl('text',{x:CARD_W-pw/2-12,y:67,'font-size':9,'text-anchor':'middle',fill:corP,'font-weight':'bold'});
-  pt.textContent=penaLbl; node.append(pt);
+  txt(node,CARD_W-12,67,penaLbl,{size:10,fill:'var(--ink-2)',weight:'600',max:24}).setAttribute('text-anchor','end');
   if(afastada) badge(node,CARD_W-16,20,'⊘','var(--ink-2)','Enquadramento afastado (conflito aparente resolvido)');
   node.addEventListener('click',ev=>ev.stopPropagation());
 }
@@ -2620,36 +2677,54 @@ function renderPanel(){
   if(!PENDENCIAS.length){
     list.append(el('div',{class:'selo-ok'},'✓ instrução íntegra'));
   }else{
-    const grupos=[['crítico',crit],['frágil',frag],['pendente',pend]];
-    grupos.forEach(([nome,arr])=>{
-      if(!arr.length) return;
-      list.append(el('div',{class:'pend-group-title'},nome+' ('+arr.length+')'));
-      arr.forEach(p=>{
-        const key=p.codigo+':'+p.alvoId;
-        const alvoLbl=p.alvoTipo==='fato'
-          ? p.alvoId+' — '+(doc.fatos.find(f=>f.id===p.alvoId)||{}).titulo
-          : p.alvoTipo==='acusado'
-            ? p.alvoId+' — '+((acusadoById(p.alvoId)||{}).nome||'(ente privado)')
-            : p.alvoTipo==='processo'
-              ? 'Processo'
-              : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
-        const item=el('div',{class:'pend lvl-'+p.nivel+(revisadas.has(key)?' revisado':''),
-          title:(p.codigo==='P6c'?'O cálculo de dias úteis considera apenas sábados e domingos — não considera feriados nacionais (v1).':''),
-          onclick:()=>focarNo(p)});
-        item.append(el('div',{},el('span',{class:'code'},p.codigo), p.mensagem));
-        item.append(el('div',{class:'alvo'},alvoLbl));
-        if(p.nivel==='fragil'){
-          item.append(el('button',{class:'btn ghost small rev-btn',onclick:(e)=>{
-            e.stopPropagation();
-            if(revisadas.has(key)) revisadas.delete(key); else revisadas.add(key);
-            renderPanel();
-          }}, revisadas.has(key)?'✓ revisado':'marcar revisado'));
-        }
-        list.append(item);
-      });
-    });
+    const renderGrupo=(nome,arr)=>{
+      const title=el('div',{class:'pend-group-title'},nome+' ('+arr.length+')');
+      if(nome==='frágil'){
+        const revCount=arr.filter(p=>revisadas.has(p.codigo+':'+p.alvoId)).length;
+        title.append(el('span',{class:'pend-group-progress'},` · ${revCount} de ${arr.length} revisadas`));
+      }
+      list.append(title);
+      arr.forEach(p=>list.append(renderPendItem(p)));
+    };
+    // crítico sempre expandido; frágil/pendente colapsados por padrão atrás de um link (item 3.10)
+    if(crit.length) renderGrupo('crítico',crit);
+    const ocultaveis=frag.length+pend.length;
+    if(ocultaveis){
+      if(!pendGruposSecOpen){
+        list.append(el('div',{class:'pend-toggle-link',onclick:()=>{pendGruposSecOpen=true;renderPanel();}},
+          'mostrar frágeis e pendentes ('+ocultaveis+') ▸'));
+      }else{
+        if(frag.length) renderGrupo('frágil',frag);
+        if(pend.length) renderGrupo('pendente',pend);
+        list.append(el('div',{class:'pend-toggle-link',onclick:()=>{pendGruposSecOpen=false;renderPanel();}},
+          'ocultar frágeis e pendentes ▾'));
+      }
+    }
   }
   renderChecklist();
+}
+function renderPendItem(p){
+  const key=p.codigo+':'+p.alvoId;
+  const alvoLbl=p.alvoTipo==='fato'
+    ? p.alvoId+' — '+(doc.fatos.find(f=>f.id===p.alvoId)||{}).titulo
+    : p.alvoTipo==='acusado'
+      ? p.alvoId+' — '+((acusadoById(p.alvoId)||{}).nome||'(ente privado)')
+      : p.alvoTipo==='processo'
+        ? 'Processo'
+        : p.alvoId+' — '+((provaById(p.alvoId)||{}).titulo||'');
+  const item=el('div',{class:'pend lvl-'+p.nivel+(revisadas.has(key)?' revisado':''),
+    title:(p.codigo==='P6c'?'O cálculo de dias úteis considera apenas sábados e domingos — não considera feriados nacionais (v1).':''),
+    onclick:()=>focarNo(p)});
+  item.append(el('div',{},el('span',{class:'code'},p.codigo), p.mensagem));
+  item.append(el('div',{class:'alvo'},alvoLbl));
+  if(p.nivel==='fragil'){
+    item.append(el('button',{class:'btn ghost small rev-btn',onclick:(e)=>{
+      e.stopPropagation();
+      if(revisadas.has(key)) revisadas.delete(key); else revisadas.add(key);
+      renderPanel();
+    }}, revisadas.has(key)?'✓ revisado':'marcar revisado'));
+  }
+  return item;
 }
 
 function focarNo(p){
@@ -2676,6 +2751,41 @@ function flash(node){
     r.setAttribute('stroke-width', n%2?4:ow);
     if(++n>4){ clearInterval(iv); r.setAttribute('stroke',orig); r.setAttribute('stroke-width',ow); }
   },200);
+}
+
+/* ---------- REFERÊNCIA DE PENDÊNCIAS (catálogo estático — não deriva de PENDENCIAS) ---------- */
+// alvo em linguagem de domínio: 'acusado' (nome interno, contrato compartilhado com o Coger) é
+// sempre exibido como "Ente privado" nesta ferramenta; nunca o termo interno cru (item 3.2/3.9).
+const PENDENCIAS_REF=[
+  ['P1','critico','Fato','Fato sem prova vinculada — alegação sem evidência'],
+  ['P2','critico','Fato','Fato sem enquadramento legal (crítico da indiciação em diante; frágil nas fases anteriores)'],
+  ['P3','fragil','Prova','Prova órfã — não sustenta nenhum fato do mapa'],
+  ['P4','pendente','Fato','Multiplicidade de enquadramentos não classificada: concurso formal ou conflito aparente?'],
+  ['P5','critico','Fato','Conduta não individualizada — risco de indiciação genérica (nulidade)'],
+  ['P6a','fragil','Prova','Prova emprestada com pendência formal (certidão/autorização)'],
+  ['P6b','fragil','Prova','Ente privado não intimado da produção desta prova (contraditório)'],
+  ['P6c','fragil','Ente privado','Intimação para o interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784, de 29 de janeiro de 1999)'],
+  ['P7','fragil','Fato','Sustentação exclusivamente indiciária/informal — explicitar raciocínio indutivo'],
+  ['P8-PAR','critico','Fato','Fato com enquadramento LAC sem descrição de benefício/interesse ou nexo causal'],
+  ['P-ENTE','critico','Processo / Ente privado','Processo sem ente privado cadastrado / Ente privado sem representante legal cadastrado'],
+];
+const NIVEL_LABEL={critico:'Crítico',fragil:'Frágil',pendente:'Pendente'};
+function abrirModalReferenciaPendencias(){
+  const tb=el('table',{class:'ref-table'});
+  tb.append(el('tr',{}, el('th',{},'Código'), el('th',{},'Nível'), el('th',{},'Alvo'), el('th',{},'Descrição')));
+  PENDENCIAS_REF.forEach(([cod,niv,alvo,desc])=>{
+    tb.append(el('tr',{},
+      el('td',{class:'rc'},cod),
+      el('td',{}, el('span',{class:'rn '+niv},NIVEL_LABEL[niv])),
+      el('td',{},alvo),
+      el('td',{},desc)));
+  });
+  const body=[
+    el('div',{class:'hint'},'Referência dos tipos de pendência identificados pela ferramenta ao longo da instrução.'),
+    tb
+  ];
+  const foot=[el('button',{class:'btn primary',onclick:closeModal},'Fechar')];
+  openModal(modalShell('O que significa cada pendência',null,body,foot));
 }
 
 /* ---------- ORDEM NARRATIVA DOS FATOS (arrasto; só afeta a minuta) ---------- */
@@ -2739,8 +2849,15 @@ function renderPrazosPanel(){
   const p6c=PENDENCIAS.some(x=>x.codigo==='P6c');
   let dot = !info.temData ? '' : info.cor;
   if(p6c && dot==='verde') dot='ambar';
-  box.append(el('div',{class:'pz-head',onclick:()=>{prazosSecOpen=!prazosSecOpen;renderPrazosPanel();}},
-    el('span',{class:'pz-dot '+dot}), el('h3',{},'Prazos'),
+  // linha de status compacta (item 3.10) — não tem a mesma hierarquia visual de Pendências/Checklist;
+  // o detalhamento completo (barra, citação/defesa) fica atrás do clique, mantendo prazosSecOpen
+  const resumoTxt = !info.temData
+    ? 'Prazo de conclusão: instauração não datada'
+    : `Prazo de conclusão: ${info.dec} de ${info.total} dias`+(info.dec>info.total?' (excedido)':'');
+  box.append(el('div',{class:'pz-head-compact',onclick:()=>{prazosSecOpen=!prazosSecOpen;renderPrazosPanel();}},
+    el('span',{class:'pz-dot '+dot}),
+    el('span',{class:'pz-clock'},'🕐'),
+    el('span',{class:'pz-compact-txt'},resumoTxt),
     el('span',{class:'pz-chev'}, prazosSecOpen?'▾':'▸')));
   if(!prazosSecOpen) return;
   const body=el('div',{class:'pz-body'});
@@ -2784,7 +2901,6 @@ function renderPrazosPanel(){
 
 function renderChecklist(){
   const box=$('#checklist'); box.innerHTML='';
-  box.append(el('h3',{},'Checklist de encerramento'));
   // Fork Nexo PAR: os itens PAD (notificação prévia / interrogatório, art. 8.112) foram substituídos
   // por checagens do rito PAR — ente com representante legal (P-ENTE) e benefício/nexo causal (P8-PAR).
   const c1 = doc.acusados.length>0 && !PENDENCIAS.some(p=>p.codigo==='P-ENTE');
@@ -2801,13 +2917,28 @@ function renderChecklist(){
     [c4,'Pendências frágeis todas marcadas como revisadas'],
     [c5,'Multiplicidades classificadas (zero P4)'],
   ];
+  // cartão único de progresso (item 3.10) — cálculo 100% automático, sem marcação manual;
+  // não é mais uma lista de <input type=checkbox>, nem elemento clicável
+  const concluidos=items.filter(([ok])=>ok).length;
+  const card=el('div',{class:'checklist-card'});
+  card.append(el('div',{class:'checklist-head'},
+    el('h3',{},'Pronto para indiciar'),
+    el('span',{class:'checklist-count'},concluidos+' de '+items.length)));
+  const bar=el('div',{class:'checklist-bar'}); bar.append(el('i',{style:'width:'+((concluidos/items.length)*100).toFixed(0)+'%'}));
+  card.append(bar);
   items.forEach(([ok,txt])=>{
-    box.append(el('div',{class:'check '+(ok?'ok':'no')},
-      el('span',{class:'mk'},ok?'✓':''), el('span',{},txt)));
+    card.append(el('div',{class:'check-row '+(ok?'ok':'no')},
+      el('span',{class:'mk'},ok?'✓':'○'), el('span',{},txt)));
   });
+  box.append(card);
   const temCritica=PENDENCIAS.some(p=>p.nivel==='critico');
-  const btn=el('button',{class:'btn primary',onclick:()=>gerarMinutaFlow()},'Gerar Nota de Indiciação');
-  if(temCritica){ btn.disabled=true; btn.title='Há pendências críticas que impedem a indiciação. Veja o painel.'; }
+  const btn=el('button',{class:'btn primary'+(temCritica?' soft-disabled':''),
+    title:temCritica?'Há pendências críticas que impedem a indiciação — clique para ver quais.':'',
+    onclick:(e)=>{
+      if(!temCritica){ gerarMinutaFlow(); return; }
+      e.stopPropagation();
+      if($('#popover').classList.contains('open')) fecharPopover(); else abrirPopoverCriticas(btn);
+    }},'Gerar Nota de Indiciação');
   box.append(btn);
 }
 
@@ -3096,7 +3227,7 @@ function abrirFormProva(id, onSaveNew){
     fieldText('🔗 Hash Veritas Digital - Coger',p.hashVeritas,v=>p.hashVeritas=v,'Referência manual ao hash do item no Veritas (sem integração automática).'),
     detBox,
     trechosBox,
-    el('div',{class:'field'}, el('label',{},'Contraditório — acusado intimado da produção?'),
+    el('div',{class:'field'}, el('label',{},'Contraditório — ente privado intimado da produção?'),
       el('div',{class:'radios'},
         radio('ci',p.contraditorio.acusadoIntimado,true,'Intimado',v=>p.contraditorio.acusadoIntimado=v),
         radio('ci',p.contraditorio.acusadoIntimado,false,'Não intimado',v=>p.contraditorio.acusadoIntimado=v),
@@ -3264,9 +3395,9 @@ function abrirFormFato(id){
     const sel=el('select',{onchange:e=>{f.estadoProbatorio.override=e.target.value||null;renderEst();}});
     [['','(usar calculado: '+calc+')'],['suficiente','Sobrescrever: suficiente'],['indicios','Sobrescrever: indícios'],['ausente','Sobrescrever: ausente']]
       .forEach(([v,t])=>{const o=el('option',{value:v},t);if((f.estadoProbatorio.override||'')===v)o.selected=true;sel.append(o);});
-    estBox.append(el('div',{class:'field'}, el('label',{},'Override da comissão'), sel));
+    estBox.append(el('div',{class:'field'}, el('label',{},'Sobrescrever estado probatório'), sel));
     if(f.estadoProbatorio.override){
-      estBox.append(fieldArea('Justificativa do override (obrigatória)',f.estadoProbatorio.justificativaOverride,v=>f.estadoProbatorio.justificativaOverride=v));
+      estBox.append(fieldArea('Justificativa da sobrescrita (obrigatória)',f.estadoProbatorio.justificativaOverride,v=>f.estadoProbatorio.justificativaOverride=v));
     }
     // elementos buscados quando estado != suficiente
     const exib=f.estadoProbatorio.override||calc;
@@ -3286,7 +3417,7 @@ function abrirFormFato(id){
         radio('sit',f.status,'arquivado','Arquivado — apurado, não indiciado',v=>{f.status=v;renderSit();}))));
     if(f.status==='arquivado'){
       sitBox.append(el('div',{class:'banner info'},el('span',{},'🗄'),el('div',{},
-        'Fato arquivado não gera pendências e não entra na minuta; permanece no mapa como memória da decisão (ex.: princípio da insignificância; instrução não confirmou o fato contra o acusado).')));
+        'Fato arquivado não gera pendências e não entra na minuta; permanece no mapa como memória da decisão (ex.: princípio da insignificância; instrução não confirmou o fato contra o ente privado).')));
       sitBox.append(fieldArea('Justificativa do arquivamento (obrigatória)',f.justificativaArquivamento,
         v=>f.justificativaArquivamento=v,'Motivação jurídica: por que a comissão decidiu não indiciar este fato.'));
     }
@@ -3322,7 +3453,7 @@ function abrirFormFato(id){
         if(!(f.justificativaArquivamento||'').trim()){ $('#fatoErr').textContent='O arquivamento exige justificativa.'; return; }
       } else {
         if(f.estadoProbatorio.override && !(f.estadoProbatorio.justificativaOverride||'').trim()){
-          $('#fatoErr').textContent='O override do estado probatório exige justificativa.'; return; }
+          $('#fatoErr').textContent='A sobrescrita do estado probatório exige justificativa.'; return; }
         // ELEMENTO SUBJETIVO REMOVIDO (item 3.3) — a LAC é objetiva; não se exige dolo/culpa por
         // enquadramento. O benefício/interesse e o nexo causal (item 3.4) são cobrados como pendência
         // crítica P8-PAR (bloqueia a Nota de Indiciação), não como validação de salvamento do fato.
@@ -3330,6 +3461,7 @@ function abrirFormFato(id){
       const i=doc.fatos.findIndex(x=>x.id===f.id);
       if(i>=0) doc.fatos[i]=f; else doc.fatos.push(f);
       closeModal(); render();
+      toast('Fato salvo — estado probatório: '+ESTADO_PROB_LABEL[calcEstadoProbatorio(f)]);
     }},'Salvar')
   ];
   openModal(modalShell(novo?'Novo fato':'Editar fato — '+f.id,'fato',body,foot));
@@ -3495,7 +3627,8 @@ function renderGateProcesso(){
     return el('div',{class:'field'}, el('label',{},'Tipo (PN CGU 27)'), sel);
   })();
 
-  const numeroInput=fieldText('Número do processo',p.numero,v=>{p.numero=v;scheduleSave();atualizarGateProcesso();});
+  const numeroInput=fieldText('Número do processo',p.numero,v=>{p.numero=v;scheduleSave();atualizarGateProcesso();},
+    'Os demais dados do processo (ente privado, comissão, prazos, cidade) você preenche conforme avança na instrução — não é preciso completar tudo agora.');
 
   const aviso=el('div',{id:'gateAviso'});
   const btnContinuar=el('button',{class:'btn primary',id:'gateBtnContinuar',
@@ -3565,6 +3698,11 @@ function renderInicio(){
       el('button',{class:'btn'+(inicioTemDados()?'':' primary'),onclick:inicioNovo},'+ Novo processo'),
       el('button',{class:'btn',onclick:()=>importJson()},'Importar processo (.json)'))
   );
+  if(processoGateCompleto()){
+    card.append(el('div',{class:'inicio-veritas-hint'},
+      'Já tem provas cadastradas no Veritas? ',
+      el('span',{class:'inicio-veritas-link',onclick:()=>{ fecharInicio(); importarProvasVeritas(); }},'Importar provas do Veritas')));
+  }
 }
 function inicioNovo(){
   // Sem nada em andamento → vai direto ao gate. Com dados → confirma antes de descartar (item Veritas).
@@ -4197,7 +4335,7 @@ function revisarImportacaoRetornoOitiva(d){
   if(catalogoDivergente) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},
     'catalogo_schema_version do arquivo (',el('b',{},esc(d.catalogo_schema_version)),') diverge da versão em uso (',
     el('b',{},esc(CATALOGO_COGER.schema_version)),').')));
-  if(!doc.acusados.length) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},'Nenhum acusado cadastrado neste processo — cadastre ao menos um antes de importar.')));
+  if(!doc.acusados.length) body.push(el('div',{class:'banner warn'},el('span',{},'⚠'),el('div',{},'Nenhum ente privado cadastrado neste processo — cadastre ao menos um antes de importar.')));
 
   const linhas=[];
   itens.forEach(x=>{
@@ -4211,13 +4349,13 @@ function revisarImportacaoRetornoOitiva(d){
     const acusadoAtual=()=>acusadoById(x.acusadoAlvoId);
     const dup=retornoJaExiste(acusadoAtual(), r.id_prova, r.id_ponto);
     const linhaEl=el('div',{class:'imp-item'+(dup?' err':'')});
-    const sel=fieldSelect('Acusado', x.acusadoAlvoId, doc.acusados.map(a=>[a.id, a.nome||a.id]), v=>{
+    const sel=fieldSelect('Ente privado', x.acusadoAlvoId, doc.acusados.map(a=>[a.id, a.nome||a.id]), v=>{
       x.acusadoAlvoId=v; renderBanner();
     });
     const bannerDup=el('div',{class:'imp-errmsg'});
     function renderBanner(){
       bannerDup.textContent = retornoJaExiste(acusadoAtual(), r.id_prova, r.id_ponto)
-        ? 'Já existe este id_prova + id_ponto no contexto deste acusado — reimportação recusada.' : '';
+        ? 'Já existe este id_prova + id_ponto no contexto deste ente privado — reimportação recusada.' : '';
       linhaEl.classList.toggle('err', !!bannerDup.textContent);
     }
     renderBanner();
@@ -4234,11 +4372,11 @@ function revisarImportacaoRetornoOitiva(d){
     el('button',{class:'btn',onclick:closeModal},'Cancelar'),
     el('button',{class:'btn primary',onclick:()=>{
       const aplicaveis=linhas.filter(l=>!l.x.invalido && l.x.acusadoAlvoId && !l.duplicado);
-      if(!aplicaveis.length){ alert('Nenhum retorno importável (tudo inválido, duplicado ou sem acusado selecionado).'); return; }
+      if(!aplicaveis.length){ alert('Nenhum retorno importável (tudo inválido, duplicado ou sem ente privado selecionado).'); return; }
       aplicarImportacaoRetornoOitiva(aplicaveis.map(l=>l.x), d);
     }},'Importar')
   ];
-  openModal(modalShell('Revisão — retorno do Oitiva 360 (contexto do acusado)','prova',body,foot));
+  openModal(modalShell('Revisão — retorno do Oitiva 360 (contexto do ente privado)','prova',body,foot));
 }
 // Núcleo puro: monta a entrada de acusado.provasContexto a partir de um item do envelope de retorno.
 function mapearRetornoContexto(r, origem, agora){
@@ -4898,7 +5036,7 @@ function carregarExemplo(){
  * 18. WIRING DE UI
  * ------------------------------------------------------------------ */
 function limparTudo(){
-  if(!confirm('Limpar TODO o conteúdo (acusados, fatos, provas)? O catálogo de normas de fábrica é mantido. Esta ação não afeta arquivos .json já exportados.')) return;
+  if(!confirm('Limpar TODO o conteúdo (entes privados, fatos, provas)? O catálogo de normas de fábrica é mantido. Esta ação não afeta arquivos .json já exportados.')) return;
   doc=docVazio(); lens='todos'; isolatedFato=null; revisadas.clear(); scheduleSave(); render();
   if(!processoGateCompleto()) abrirGateProcesso(); // "Limpar tudo" também zera doc.processo.numero — reabre a 1ª etapa
 }
@@ -4935,6 +5073,7 @@ function init(){
   $('#tagFase').addEventListener('click',abrirFormProcesso);
   $('#prescBox').addEventListener('click',e=>{ e.stopPropagation();
     if($('#popover').classList.contains('open')) fecharPopover(); else abrirPopoverPrescricao(); });
+  $('#btnPendRef').addEventListener('click',e=>{ e.stopPropagation(); abrirModalReferenciaPendencias(); });
   $('#search').addEventListener('input',e=>{searchTerm=e.target.value.trim();renderMap();});
   const togglePanel=()=>{ $('#panel').classList.toggle('collapsed'); updateFab(); };
   $('#btnCollapse').addEventListener('click',togglePanel);
