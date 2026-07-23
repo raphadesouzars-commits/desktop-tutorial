@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 3.1.0 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 3.1.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -308,6 +308,14 @@
     Ctrl+Enter. Testado com 80 checagens automatizadas (Playwright) cobrindo os 11 itens isoladamente,
     navegação livre com dados incompletos em todas as combinações de etapa, blocos ocultos por regra de
     negócio, impressão, e um fluxo completo em domínio PAR — zero erros de console.
+  - 3.1.1 (correção de bug relatado pelo usuário, 2026-07-23): o aviso da Matriz de Apuração (item 1.1
+    da Rodada 8) dizia "Preencha os quatro campos" mesmo quando os 4 campos já tinham texto digitado,
+    só que abaixo do limiar mínimo de 15 caracteres — mensagem enganosa para quem já havia preenchido
+    os campos com respostas curtas (ex.: "BO e nf", 7 caracteres) e via o botão "+ Adicionar depoente"
+    permanecer desabilitado sem entender por quê. `atualizarAvisoMatriz()` passa a distinguir "nenhum
+    campo tem texto" (mensagem original) de "algum campo tem texto, mas abaixo do mínimo" (nova
+    mensagem, cita o limiar de 15 caracteres explicitamente). O limiar em si e a obrigatoriedade dos 4
+    campos não mudaram — só a clareza do aviso.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -2477,7 +2485,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v3.1.0</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v3.1.1</div>
 </footer>
 
 <script>
@@ -4722,10 +4730,16 @@ function atualizarAvisoMatriz(){
   const btnAdd = document.getElementById("btn-add-depoente");
   const completa = matrizCompleta();
   btnAdd.disabled = !completa;
-  if (!completa){
+  const algumCampoTemTexto = CAMPOS_MATRIZ.some(campo => (estado.matriz[campo] || "").trim().length > 0);
+  if (!completa && !algumCampoTemTexto){
     avisoWrap.innerHTML = "<div class=\"aviso-pedagogico\">Preencha os quatro campos da Matriz de Apuração acima para habilitar a adição de depoentes — \"roteiro sem matriz é roteiro cego\".</div>";
+  } else if (!completa){
+    // Rodada 8, item 1.1 — correção de bug relatado: com texto curto em algum campo (< 15 caracteres),
+    // a mensagem anterior ("preencha os campos") enganava quem já tinha digitado algo ali. Agora deixa
+    // claro que o problema é o tamanho do texto, não a ausência dele.
+    avisoWrap.innerHTML = "<div class=\"aviso-pedagogico\">Um ou mais campos da Matriz de Apuração ainda estão curtos demais (mínimo de " + LIMIAR_MATRIZ_MINIMO + " caracteres por campo) para habilitar a adição de depoentes — complete um pouco mais cada campo.</div>";
   } else if (!matrizRobusta()){
-    // Rodada 8, item 1.1: rascunho mínimo já libera o botão, mas sugere aprofundar antes da oitiva.
+    // Rascunho mínimo já libera o botão, mas sugere aprofundar antes da oitiva.
     avisoWrap.innerHTML = "<div class=\"aviso-pedagogico\">Recomendamos detalhar melhor a Matriz de Apuração antes da oitiva. Você já pode adicionar depoentes, mas um resumo mais completo melhora o roteiro gerado.</div>";
   } else {
     avisoWrap.innerHTML = "";
