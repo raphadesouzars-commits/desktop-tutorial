@@ -6,7 +6,7 @@
 <title>Oitiva 360 — Gerador de Roteiro de Oitiva</title>
 <!--
   Oitiva 360 — Coger/RFB (Divisão de Processos — Dproc)
-  Versão do arquivo: 3.1.1 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
+  Versão do arquivo: 3.1.2 (Fase 1 — MVP completo + Atualização Incremental 01 + resolução de
   pendências + coger-ui.css oficial + ajustes de UX/impressão + comissão em 3 campos, defensor
   identificado e impressão do Termo de Redução + Orientações de Implementação: 5 papéis do
   depoente, Kit de Incidentes com 17 itens em caixa, alinhamento justificado, categoria "Outras
@@ -316,6 +316,13 @@
     campo tem texto" (mensagem original) de "algum campo tem texto, mas abaixo do mínimo" (nova
     mensagem, cita o limiar de 15 caracteres explicitamente). O limiar em si e a obrigatoriedade dos 4
     campos não mudaram — só a clareza do aviso.
+  - 3.1.2 (correção de bug relatado pelo usuário, 2026-07-23): a Tela Inicial (padrão uniforme da
+    Suíte COGER) mostrava "Processo salvo neste navegador" quando havia dados em localStorage, mas só
+    oferecia "+ Novo processo" (reinicia, com confirmação) e "Importar processo (.json)" (arquivo
+    externo) — nenhum botão levava simplesmente à Tela do Processo com os dados já carregados em
+    `estado`. Novo botão "Continuar processo salvo" (`btn-inicial-continuar`), visível só quando
+    `processoTemConteudo(estado)` é verdadeiro, chama `mostrarTelaProcesso()` diretamente (sem
+    reiniciar nem exigir arquivo); nesse caso, "+ Novo processo" passa a aparecer como ação secundária.
 
   Fontes de verdade: Oitiva360_Desenho_Estrutural_v0.2.md e Oitiva360_Banco_de_Conteudo_Fase1.md
   (e a Atualização Incremental 01, que adicionou a 11ª infração); coger-ui.css oficial (Cogerui
@@ -2034,6 +2041,7 @@
       <p class="ti-sub">Apoio a oitivas e interrogatórios — modo dual PAD/PAR. Comece um novo processo ou importe o arquivo <code>.json</code> de um processo já iniciado.</p>
       <div id="tela-inicial-identificador"></div>
       <div class="ti-acoes">
+        <button id="btn-inicial-continuar" type="button" hidden>Continuar processo salvo</button>
         <button id="btn-inicial-novo" type="button">+ Novo processo</button>
         <button id="btn-inicial-importar" class="secundario" type="button">Importar processo (.json)</button>
       </div>
@@ -2485,7 +2493,7 @@
 
 <footer class="rodape-app">
   <div><strong>Ferramenta de apoio à decisão — não substitui a análise do caso concreto pela comissão.</strong></div>
-  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v3.1.1</div>
+  <div class="pad-par">Cobre processos administrativos disciplinares (PAD — Lei 8.112/90). O PAR possui regime próprio. · Oitiva 360 v3.1.2</div>
 </footer>
 
 <script>
@@ -4886,7 +4894,8 @@ document.getElementById("btn-add-vogal").addEventListener("click", () => {
    Novo/Importar/Exportar de PROCESSO já existentes — nenhum mecanismo de storage novo. */
 function renderTelaInicial(){
   const alvo = document.getElementById("tela-inicial-identificador");
-  if (processoTemConteudo(estado)){
+  const temConteudo = processoTemConteudo(estado);
+  if (temConteudo){
     const num = (estado.processo.numero && estado.processo.numero.trim()) ? estado.processo.numero.trim() : "processo sem número";
     const nDep = (estado.depoentes || []).length;
     alvo.innerHTML =
@@ -4898,6 +4907,10 @@ function renderTelaInicial(){
   } else {
     alvo.innerHTML = "<div class=\"ti-vazio\">Nenhum processo salvo neste navegador. Crie um novo ou importe um arquivo .json.</div>";
   }
+  // Correção de bug relatado pelo usuário: faltava uma forma de prosseguir com o processo já salvo —
+  // só havia "+ Novo processo" (que reinicia, com confirmação) e "Importar" (arquivo externo).
+  document.getElementById("btn-inicial-continuar").hidden = !temConteudo;
+  document.getElementById("btn-inicial-novo").classList.toggle("secundario", temConteudo);
 }
 function mostrarTelaInicial(){
   renderTelaInicial();
@@ -4945,6 +4958,7 @@ document.getElementById("btn-confirmar-reiniciar-inicial").addEventListener("cli
   reiniciarParaNovoProcesso();
 });
 
+document.getElementById("btn-inicial-continuar").addEventListener("click", mostrarTelaProcesso);
 document.getElementById("btn-inicial-novo").addEventListener("click", solicitarNovoProcesso);
 document.getElementById("btn-inicial-importar").addEventListener("click", () => {
   document.getElementById("input-importar").click();
