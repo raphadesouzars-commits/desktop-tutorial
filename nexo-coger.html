@@ -975,6 +975,7 @@ svg.map.isolating .node.hl{opacity:1}
 <div class="lensbar">
   <div id="lensChips" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"></div>
   <button class="chip" id="btnAddAcusado">+ acusado</button>
+  <button class="chip" id="btnAddPessoa">+ pessoa</button>
   <div class="spacer"></div>
   <input class="search" id="search" placeholder="buscar fato, prova, norma…" autocomplete="off">
   <button class="btn" id="btnAddFato">+ Fato</button>
@@ -2283,8 +2284,8 @@ function docVazio(){
       prazos:{ prazoConclusaoDias:60, prorrogacoes:[] },
       citacao:{ data:'', meio:'pessoal', prazoDefesaDias:10 }
     },
-    acusados:[], fatos:[], provas:[], catalogoNormas:buildCatalogo(),
-    _seq:{A:0,F:0,P:0,NU:0,PAUTA:0}, _minutaGerada:false
+    acusados:[], fatos:[], provas:[], pessoas:[], catalogoNormas:buildCatalogo(),
+    _seq:{A:0,F:0,P:0,NU:0,PAUTA:0,PE:0}, _minutaGerada:false
   };
 }
 
@@ -2363,6 +2364,32 @@ function migra(d){
   co.secretario=membroObj(co.secretario); // Etapa "Dados do Processo" (nova tela) — retrocompat p/ rascunhos antigos
   co.membros=Array.isArray(co.membros)?co.membros.map(membroObj):[{nome:'',cargo:'',matricula:''},{nome:'',cargo:'',matricula:''}];
   co.portariaInstauracao=co.portariaInstauracao||{numero:'',data:''};
+  // cadastro de Pessoas (testemunhas/vítimas/declarantes) — retrocompat de rascunhos anteriores a esta rodada
+  if(!Array.isArray(d.pessoas)) d.pessoas=[];
+  if(typeof d._seq.PE!=='number') d._seq.PE=0;
+  (d.fatos||[]).forEach(f=>{ if(!Array.isArray(f.pessoasRelacionadas)) f.pessoasRelacionadas=[]; });
+  migrarDeponentesLegados(d);
+  return d;
+}
+// migra o texto livre p.detalhe.deponente (testemunhal/declaracao_informante) para um vínculo
+// com doc.pessoas — dedupe por nome exatamente igual (case/espaços-insensível); idempotente, pois
+// uma vez migrado det.deponente deixa de existir (condição det.deponente&&!det.depoenteId).
+function migrarDeponentesLegados(d){
+  const porNome=new Map(d.pessoas.map(p=>[p.nome.trim().toLowerCase(), p]));
+  (d.provas||[]).forEach(p=>{
+    const det=p.detalhe||{};
+    if((p.tipo==='testemunhal'||p.tipo==='declaracao_informante') && det.deponente && !det.depoenteId){
+      const chave=det.deponente.trim().toLowerCase();
+      let pessoa=porNome.get(chave);
+      if(!pessoa){
+        d._seq.PE+=1;
+        pessoa={id:'PE'+d._seq.PE, nome:det.deponente.trim(), papelId:det.papelId||'PAPEL.TESTEMUNHA', telefone:'', email:'', observacoes:''};
+        d.pessoas.push(pessoa); porNome.set(chave,pessoa);
+      }
+      det.depoenteId=pessoa.id;
+      delete det.deponente;
+    }
+  });
   return d;
 }
 // próximo inteiro de ordem narrativa (maior existente + 1)
@@ -2557,6 +2584,9 @@ function computePendencias(){
     // P6b
     if(provaTemP6b(p))
       push('P6b','fragil','prova',p.id,'Considere intimar o acusado da produção desta prova (art. 119, §4º, PN CGU 27/2022)');
+    // P9
+    if((p.tipo==='testemunhal'||p.tipo==='declaracao_informante') && !(p.detalhe&&p.detalhe.depoenteId))
+      push('P9','fragil','prova',p.id,'Depoente sem cadastro de pessoa vinculado — associe a um registro em Pessoas');
   });
 
   // P6c — antecedência mínima da intimação para o interrogatório (art. 41, Lei 9.784/99)
@@ -3160,6 +3190,7 @@ const PENDENCIAS_REF=[
   ['P6c','fragil','Acusado','Intimação para interrogatório com antecedência inferior a 3 dias úteis (art. 41, Lei nº 9.784, de 29 de janeiro de 1999)'],
   ['P7','fragil','Fato','Sustentação exclusivamente indiciária/informal'],
   ['P8','critico','Fato','Alternatividade violada — enquadramentos doloso e culposo simultâneos'],
+  ['P9','fragil','Prova','Depoente sem cadastro de pessoa vinculado — associe a um registro em Pessoas'],
 ];
 const NIVEL_LABEL={critico:'Crítico',fragil:'Frágil',pendente:'Pendente'};
 function abrirModalReferenciaPendencias(){
@@ -3451,6 +3482,82 @@ function excluirAcusado(id){
 }
 
 /* ------------------------------------------------------------------ *
+ * 9-bis. FORMULÁRIO DE PESSOA (testemunhas, vítimas, declarantes/informantes)
+ * Cadastro leve de não-acusados, nos mesmos moldes do cadastro de acusado. Vínculo direto com
+ * fatos (pessoasRelacionadas) e reaproveitado no campo "Depoente" da prova e na pauta do Oitiva
+ * 360. "Promover a acusado" converte (não duplica) o registro quando a instrução revelar que a
+ * pessoa deve responder ao processo.
+ * ------------------------------------------------------------------ */
+function pessoaById(id){ return doc.pessoas.find(p=>p.id===id); }
+function abrirFormPessoa(id, onSaveNew){
+  const novo=!id;
+  const pe = novo ? {id:genId('PE'),nome:'',papelId:'PAPEL.TESTEMUNHA',telefone:'',email:'',observacoes:''}
+    : JSON.parse(JSON.stringify(pessoaById(id)));
+  const body=[
+    fieldText('Nome',pe.nome,v=>pe.nome=v),
+    fieldSelect('Papel',pe.papelId,
+      CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo'&&x.id!=='PAPEL.ACUSADO').map(x=>[x.id,x.label]),
+      v=>pe.papelId=v),
+    el('div',{class:'row2'}, fieldText('Telefone',pe.telefone,v=>pe.telefone=v), fieldText('E-mail',pe.email,v=>pe.email=v)),
+    fieldArea('Observações',pe.observacoes,v=>pe.observacoes=v),
+  ];
+  const foot=[
+    novo?null:el('button',{class:'btn danger',onclick:()=>excluirPessoa(id)},'Excluir'),
+    novo?null:el('button',{class:'btn',onclick:()=>promoverPessoaParaAcusado(pe.id)},'Promover a acusado'),
+    el('span',{class:'err-msg',id:'pesErr'}),
+    el('button',{class:'btn',onclick:closeModal},'Cancelar'),
+    el('button',{class:'btn primary',onclick:()=>{
+      if(!(pe.nome||'').trim()){ $('#pesErr').textContent='Informe o nome da pessoa.'; return; }
+      const i=doc.pessoas.findIndex(x=>x.id===pe.id);
+      if(i>=0) doc.pessoas[i]=pe; else doc.pessoas.push(pe);
+      closeModal(); render();
+      if(onSaveNew) onSaveNew(pe.id);
+    }},'Salvar')
+  ];
+  openModal(modalShell(novo?'Nova pessoa':'Editar pessoa',null,body,foot));
+}
+function excluirPessoa(id){
+  const fatosAfetados=doc.fatos.filter(f=>(f.pessoasRelacionadas||[]).some(pr=>pr.pessoaId===id));
+  const provasAfetadas=doc.provas.filter(p=>p.detalhe&&p.detalhe.depoenteId===id);
+  const msg=(fatosAfetados.length||provasAfetadas.length)
+    ? `Esta pessoa está vinculada a ${fatosAfetados.length} fato(s) e ${provasAfetadas.length} prova(s). Excluí-la removerá esses vínculos (a prova continuará existindo, sem depoente identificado). Confirmar exclusão?`
+    : 'Excluir esta pessoa?';
+  if(!confirm(msg)) return;
+  doc.pessoas=doc.pessoas.filter(p=>p.id!==id);
+  doc.fatos.forEach(f=>f.pessoasRelacionadas=(f.pessoasRelacionadas||[]).filter(pr=>pr.pessoaId!==id));
+  doc.provas.forEach(p=>{ if(p.detalhe&&p.detalhe.depoenteId===id) p.detalhe.depoenteId=null; });
+  closeModal(); render();
+}
+function promoverPessoaParaAcusado(pessoaId){
+  const pe=pessoaById(pessoaId); if(!pe) return;
+  if(!confirm(`Promover ${pe.nome||pessoaId} a acusado? Esta ação é irreversível: a pessoa deixará de existir como registro separado e passará a ser um acusado, levando consigo os vínculos com fatos e provas.`)) return;
+  const novoId=genId('A');
+  doc.acusados.push({id:novoId,nome:pe.nome,matricula:'',cargo:'',lotacao:'',qualificacaoComplementar:'',
+    situacaoFuncional:'ativo',telefone:pe.telefone||'',email:pe.email||'',alegacoesDefesaNaoAcatadas:'',
+    notificacaoPrevia:{realizada:false,data:'',refAutos:''},
+    interrogatorio:{status:'pendente',data:'',refAutos:'',aposTodasAsProvas:null},
+    provasContexto:[]});
+  // fatos: remove o vínculo de pessoa e individualiza uma conduta vazia — não é possível inferir
+  // automaticamente o texto da conduta a partir do vínculo anterior de testemunha/declarante.
+  doc.fatos.forEach(f=>{
+    const vinc=(f.pessoasRelacionadas||[]).some(pr=>pr.pessoaId===pessoaId);
+    if(vinc){
+      f.pessoasRelacionadas=(f.pessoasRelacionadas||[]).filter(pr=>pr.pessoaId!==pessoaId);
+      f.condutas=f.condutas||[];
+      f.condutas.push({acusadoId:novoId,descricaoConduta:'',modalidade:'comissiva'});
+    }
+  });
+  // provas: o depoimento realizado continua sendo um depoimento (não vira "interrogatório"
+  // automaticamente); mantém depoenteId para preservar o histórico, mas congela o nome para
+  // exibição somente leitura, já que a pessoa sai de doc.pessoas.
+  doc.provas.forEach(p=>{
+    if(p.detalhe && p.detalhe.depoenteId===pessoaId) p.detalhe.depoenteNomeSnapshot=pe.nome;
+  });
+  doc.pessoas=doc.pessoas.filter(p=>p.id!==pessoaId);
+  closeModal(); render();
+}
+
+/* ------------------------------------------------------------------ *
  * 10. FORMULÁRIO DE PROVA
  * ------------------------------------------------------------------ */
 function abrirFormProva(id, onSaveNew){
@@ -3464,17 +3571,43 @@ function abrirFormProva(id, onSaveNew){
     detBox.innerHTML=''; detBox.append(el('div',{class:'block-title'},'Detalhes do tipo'));
     const d=p.detalhe;
     if(p.tipo==='testemunhal'||p.tipo==='declaracao_informante'){
-      if(d.deponente===undefined) Object.assign(d,{deponente:'',papelId:(p.tipo==='declaracao_informante'?'PAPEL.DECLARANTE_INFORMANTE':'PAPEL.TESTEMUNHA'),compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}});
+      if(d.depoenteId===undefined) Object.assign(d,{depoenteId:null,papelId:(p.tipo==='declaracao_informante'?'PAPEL.DECLARANTE_INFORMANTE':'PAPEL.TESTEMUNHA'),compromissada:true,contradita:{houve:false,acolhida:null,refAutos:''}});
       // Rodada 2 — Bug 2: até aqui o depoente só tinha nome livre + booleano "compromissada", sem
       // nenhum campo de papel — por isso PAPEL.PESSOA_SITUACAO_INDEFINIDA (e os demais papéis) não
       // apareciam em ponto algum do Nexo Coger. Lista lida de CATALOGO_COGER.papeis_pessoa, não
       // hardcoded, para que qualquer papel novo do catálogo apareça aqui automaticamente.
       if(d.papelId===undefined) d.papelId=(p.tipo==='declaracao_informante'?'PAPEL.DECLARANTE_INFORMANTE':'PAPEL.TESTEMUNHA');
+      // Depoente: referência a doc.pessoas (não mais texto livre). Se a pessoa foi promovida a
+      // acusado, ela saiu de doc.pessoas — exibe o nome congelado, somente leitura, preservando o
+      // histórico do que foi dito antes da promoção (depoenteId não é limpo nesse caso).
+      const pessoaDepoente=doc.pessoas.find(x=>x.id===d.depoenteId);
+      const papelLabel=(CATALOGO_COGER.papeis_pessoa.find(x=>x.id===d.papelId)||{}).label||d.papelId;
       detBox.append(
-        fieldText('Deponente',d.deponente,v=>d.deponente=v),
-        fieldSelect('Papel do depoente',d.papelId,
-          CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo').map(x=>[x.id,x.label]),
-          v=>{ d.papelId=v; const pc=CATALOGO_COGER.papeis_pessoa.find(x=>x.id===v); if(pc) d.compromissada=!!pc.compromisso; renderDetalhe(); }),
+        d.depoenteId && !pessoaDepoente
+          ? el('div',{class:'field'}, el('label',{},'Depoente'),
+              el('div',{class:'hint'}, (d.depoenteNomeSnapshot||'(pessoa removida)')+' (promovido a acusado)'))
+          : el('div',{class:'field'}, el('label',{},'Depoente'),
+              el('div',{style:'display:flex;gap:8px;align-items:center'},
+                (()=>{
+                  const sel=el('select',{onchange:e=>{
+                    d.depoenteId=e.target.value||null;
+                    const pz=doc.pessoas.find(x=>x.id===d.depoenteId);
+                    if(pz){ d.papelId=pz.papelId; const pc=CATALOGO_COGER.papeis_pessoa.find(x=>x.id===pz.papelId); if(pc) d.compromissada=!!pc.compromisso; }
+                    renderDetalhe();
+                  }});
+                  sel.append(el('option',{value:''},'—'));
+                  doc.pessoas.forEach(pz=>{
+                    const lbl=(CATALOGO_COGER.papeis_pessoa.find(x=>x.id===pz.papelId)||{}).label||pz.papelId;
+                    const o=el('option',{value:pz.id},`${pz.nome} — ${lbl}`); if(pz.id===d.depoenteId)o.selected=true; sel.append(o);
+                  });
+                  return sel;
+                })(),
+                el('button',{class:'btn small',onclick:()=>abrirFormPessoa(null,(peid)=>{
+                  d.depoenteId=peid; const pz=doc.pessoas.find(x=>x.id===peid);
+                  if(pz){ d.papelId=pz.papelId; const pc=CATALOGO_COGER.papeis_pessoa.find(x=>x.id===pz.papelId); if(pc) d.compromissada=!!pc.compromisso; }
+                  renderDetalhe();
+                })},'+ nova pessoa'))),
+        el('div',{class:'field'}, el('label',{},'Papel do depoente'), el('div',{class:'hint',style:'margin-top:2px'}, papelLabel)),
         el('div',{class:'field'}, el('label',{},'Compromissada?'),
           el('div',{class:'radios'}, radio('comp',d.compromissada,true,'Sim',v=>d.compromissada=v),
             radio('comp',d.compromissada,false,'Não',v=>d.compromissada=v))),
@@ -3586,9 +3719,10 @@ function abrirFormFato(id){
   const novo=!id;
   const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
     ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'', pautaEnviada:{em:null},
-    condutas:[],provaIds:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
+    condutas:[],provaIds:[],pessoasRelacionadas:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
     enquadramentos:[],multiplicidade:{classificacao:'nao_classificada',principioAplicado:null,normaPrevalente:null,justificativa:''},
     elementosBuscados:''} : JSON.parse(JSON.stringify(doc.fatos.find(x=>x.id===id)));
+  if(!Array.isArray(f.pessoasRelacionadas)) f.pessoasRelacionadas=[];
 
   // --- bloco condutas ---
   const condBox=el('div',{class:'block'});
@@ -3627,6 +3761,37 @@ function abrirFormFato(id){
     })},'+ criar prova daqui'));
   }
   renderProv();
+
+  // --- bloco pessoas relacionadas (testemunhas/vítimas/declarantes vinculados a este fato,
+  // independentemente de já existir prova) ---
+  const pesBox=el('div',{class:'block'});
+  function renderPes(){
+    pesBox.innerHTML=''; pesBox.append(el('div',{class:'block-title'},'Pessoas relacionadas'));
+    if(!doc.pessoas.length) pesBox.append(el('div',{class:'hint'},'Cadastre pessoas primeiro (+ pessoa).'));
+    const ms=el('div',{class:'multiselect'});
+    doc.pessoas.forEach(pz=>{
+      const vinc=f.pessoasRelacionadas.find(pr=>pr.pessoaId===pz.id);
+      const cb=el('input',{type:'checkbox'}); cb.checked=!!vinc;
+      // papel neste fato: pré-preenchido com o papel cadastral da pessoa, mas editável — cobre o
+      // caso de quem é "Declarante" em geral e atua como "Testemunha" neste fato específico.
+      const papelSel=el('select',{disabled:!vinc,
+        onchange:e=>{ const v=f.pessoasRelacionadas.find(pr=>pr.pessoaId===pz.id); if(v) v.papelId=e.target.value; }});
+      CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo'&&x.id!=='PAPEL.ACUSADO').forEach(x=>{
+        const o=el('option',{value:x.id},x.label); if(x.id===(vinc?vinc.papelId:pz.papelId)) o.selected=true; papelSel.append(o);
+      });
+      cb.addEventListener('change',()=>{
+        if(cb.checked) f.pessoasRelacionadas.push({pessoaId:pz.id, papelId:pz.papelId});
+        else f.pessoasRelacionadas=f.pessoasRelacionadas.filter(pr=>pr.pessoaId!==pz.id);
+        renderPes();
+      });
+      ms.append(el('label',{class:'ms-item'}, cb, pz.nome||pz.id, papelSel));
+    });
+    pesBox.append(ms, el('button',{class:'btn small',onclick:()=>abrirFormPessoa(null,(peid)=>{
+      const pz=pessoaById(peid); f.pessoasRelacionadas.push({pessoaId:peid, papelId:(pz&&pz.papelId)||'PAPEL.TESTEMUNHA'});
+      renderPes();
+    })},'+ criar pessoa daqui'));
+  }
+  renderPes();
 
   // --- bloco enquadramentos ---
   const enqBox=el('div',{class:'block'});
@@ -3750,7 +3915,7 @@ function abrirFormFato(id){
         el('a',{href:'#',style:'color:var(--estado-fragil);font-style:normal',onclick:(e)=>{e.preventDefault();f.pautaEnviada={em:null};box.remove();}},'limpar marca de pauta enviada')));
       return box;
     })():null,
-    condBox, provBox, wizardBanner, enqBox, estBox, sitBox
+    condBox, provBox, pesBox, wizardBanner, enqBox, estBox, sitBox
   ];
   const foot=[
     novo?null:el('button',{class:'btn danger',onclick:()=>{ if(confirm('Excluir este fato?')){ doc.fatos=doc.fatos.filter(x=>x.id!==id); closeModal(); render(); }}},'Excluir'),
@@ -4229,7 +4394,7 @@ function analisarLacunasPauta(){
 function abrirRevisaoPauta(){
   const sugestoes=analisarLacunasPauta().map((p,i)=>Object.assign({sel:true},p,{i}));
   const manuais=[]; // {fatoId, pergunta}
-  const depoente={nome:'', papelId:'PAPEL.TESTEMUNHA'};
+  const depoente={pessoaId:null, nome:'', papelId:'PAPEL.TESTEMUNHA'};
   const bodyBox=el('div',{});
   function renderCorpo(){
     bodyBox.innerHTML='';
@@ -4261,16 +4426,34 @@ function abrirRevisaoPauta(){
       manuais.push({fatoId:primeiro?primeiro.id:'', pergunta:''}); renderCorpo();
     }},'+ Adicionar ponto manual'));
     bodyBox.append(el('div',{class:'block-title'},'Depoente'));
-    bodyBox.append(fieldText('Nome',depoente.nome,v=>depoente.nome=v));
-    bodyBox.append(fieldSelect('Papel (catálogo canônico)',depoente.papelId,
-      CATALOGO_COGER.papeis_pessoa.filter(x=>x.status==='ativo').map(x=>[x.id,x.label]),
-      v=>depoente.papelId=v));
+    // nome/papelId derivados automaticamente da pessoa selecionada (não editáveis diretamente) —
+    // mantém construirContratoPauta funcionando sem alteração na leitura desses dois campos.
+    const selPessoa=el('select',{onchange:e=>{
+      depoente.pessoaId=e.target.value||null;
+      const pz=doc.pessoas.find(x=>x.id===depoente.pessoaId);
+      depoente.nome=pz?pz.nome:''; depoente.papelId=pz?pz.papelId:'PAPEL.TESTEMUNHA';
+      renderCorpo();
+    }});
+    selPessoa.append(el('option',{value:''},'—'));
+    doc.pessoas.forEach(pz=>{
+      const lbl=(CATALOGO_COGER.papeis_pessoa.find(x=>x.id===pz.papelId)||{}).label||pz.papelId;
+      const o=el('option',{value:pz.id},`${pz.nome} — ${lbl}`); if(pz.id===depoente.pessoaId)o.selected=true; selPessoa.append(o);
+    });
+    bodyBox.append(el('div',{class:'field'}, el('label',{},'Depoente'),
+      el('div',{style:'display:flex;gap:8px;align-items:center'},
+        selPessoa,
+        el('button',{class:'btn small',onclick:()=>abrirFormPessoa(null,(peid)=>{
+          const pz=doc.pessoas.find(x=>x.id===peid);
+          depoente.pessoaId=peid; depoente.nome=pz?pz.nome:''; depoente.papelId=pz?pz.papelId:'PAPEL.TESTEMUNHA';
+          renderCorpo();
+        })},'+ nova pessoa'))));
+    if(!doc.pessoas.length) bodyBox.append(el('div',{class:'hint'},'Cadastre pessoas primeiro (+ pessoa).'));
   }
   renderCorpo();
   const foot=[
     el('button',{class:'btn',onclick:closeModal},'Cancelar'),
     el('button',{class:'btn primary',onclick:()=>{
-      if(!depoente.nome.trim()){ alert('Informe o nome do depoente.'); return; }
+      if(!depoente.pessoaId){ alert('Selecione o depoente cadastrado em Pessoas.'); return; }
       const confirmados=sugestoes.filter(s=>s.sel).map(s=>({
         fatoId:s.fatoId, tituloFato:s.tituloFato, tipoLacuna:s.tipoLacuna,
         normasRelacionadas:s.normasRelacionadas, acusadosVinculados:s.acusadosVinculados,
@@ -4324,14 +4507,14 @@ function validarDominioEnvelope(env){
 }
 function construirContratoPauta(pontos, depoente, docRef, catalogoCoger, pautaId, exportadoEm){
   return {
-    schema_version:'1.0.0',
+    schema_version:'1.1.0', // Rodada Cadastro de Pessoas: campo aditivo depoente.pessoa_id
     catalogo_schema_version:catalogoCoger.schema_version,
     pauta_id:pautaId,
     exportado_em:exportadoEm,
     origem:FERRAMENTA,
     dominio:DOMINIO_FERRAMENTA, // Rodada PAR-5 (5.2): emissor de pauta declara o domínio ("pad")
     processo:docRef.processo.numero||'',
-    depoente:{nome:depoente.nome, papel:depoente.papelId},
+    depoente:{pessoa_id:depoente.pessoaId||null, nome:depoente.nome, papel:depoente.papelId},
     acusados_contexto:docRef.acusados.map(a=>({acusadoId:a.id, nome:a.nome||''})),
     pontos_instrucao:pontos.map((p,i)=>({
       id_ponto:pautaId+'.P'+String(i+1).padStart(2,'0'),
@@ -5299,6 +5482,7 @@ function init(){
   if(!doc._seq || doc._seq.A===undefined) recomputaSeq();
 
   $('#btnAddAcusado').addEventListener('click',()=>abrirFormAcusado(null));
+  $('#btnAddPessoa').addEventListener('click',()=>abrirFormPessoa(null));
   $('#btnAddFato').addEventListener('click',()=>abrirFormFato(null));
   $('#btnAddProva').addEventListener('click',()=>abrirFormProva(null));
   $('#btnMenu').addEventListener('click',e=>{e.stopPropagation();toggleMenu();});
