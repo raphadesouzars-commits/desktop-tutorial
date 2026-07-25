@@ -1388,7 +1388,7 @@ function registrarSessao(sid,tid,atId,dados){
   save();
   if(D.perfil==='malu'){
     const pctDepois=topicOverallPct(t);
-    if(pctDepois!==null&&pctDepois>=75&&(pctAntes===null||pctAntes<75)){
+    if(pctDepois!==null&&pctDepois>=85&&(pctAntes===null||pctAntes<85)){
       celebrarMalu(t.nome,pctDepois);
     }
   }
