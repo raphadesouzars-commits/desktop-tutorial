@@ -1382,8 +1382,34 @@ function checarLembretes(){
 // #7 — REGISTRO RÁPIDO
 // ══════════════════════════════════════════════════════
 function registrarSessao(sid,tid,atId,dados){
-  getTopic(sid,tid).apostilas[atId].sessoes.push(dados);
+  const t=getTopic(sid,tid);
+  const pctAntes=topicOverallPct(t);
+  t.apostilas[atId].sessoes.push(dados);
   save();
+  if(D.perfil==='malu'){
+    const pctDepois=topicOverallPct(t);
+    if(pctDepois!==null&&pctDepois>=75&&(pctAntes===null||pctAntes<75)){
+      celebrarMalu(t.nome,pctDepois);
+    }
+  }
+}
+
+const MSGS_MALU=[
+  n=>`Que orgulho, Malu! 🌸 Você chegou a <strong>${n}% de acerto</strong> nesse assunto. Continua assim!`,
+  n=>`Isso aí, Malu! 💜 <strong>${n}%</strong> — esse assunto tá dominado. Bora pro próximo!`,
+  n=>`Arrasou, Malu! ✨ <strong>${n}% de acerto</strong>. Esse esforço todo tá valendo muito!`,
+  n=>`Você é demais, Malu! 🔥 <strong>${n}%</strong> nesse assunto. Tô com muito orgulho de você!`,
+  n=>`Uhul, Malu! 🎉 <strong>${n}% de acerto</strong> — esse assunto deixa pra lá, tá cravado!`,
+];
+function celebrarMalu(nomeAssunto,pct){
+  const msg=MSGS_MALU[Math.floor(Math.random()*MSGS_MALU.length)](pct);
+  if(navigator.vibrate)navigator.vibrate([100,50,100,50,200]);
+  showModal(`🏆 ${escHtml(nomeAssunto)}`,`
+    <div style="text-align:center;padding:.5rem 0 1rem">
+      <div style="font-size:3rem;margin-bottom:.6rem">🌸</div>
+      <p style="font-size:1rem;line-height:1.55">${msg}</p>
+    </div>
+  `,[{label:'💜 Valeu!',cls:'btn-pri',fn:'closeModal()'}]);
 }
 
 function quickRegModal(sid){
