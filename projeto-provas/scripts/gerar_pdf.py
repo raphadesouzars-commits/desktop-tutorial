@@ -62,6 +62,21 @@ class Questao:
 
 
 @dataclass
+class UnidadeQuestoes:
+    """Uma unidade de conteúdo dentro da seção de questões: ou um bloco de
+    texto-suporte compartilhado por 2+ questões (largura cheia da página,
+    fora do layout de 2 colunas — ver especificacao_visual.md), ou uma
+    sequência de questões em 2 colunas (avulsas ou já com texto-suporte
+    próprio embutido em cada Questao)."""
+
+    tipo: str  # "estimulo_grupo" ou "questoes"
+    rotulo_grupo: str = ""
+    texto_suporte_html: str = ""
+    fonte: str | None = None
+    questoes: list[Questao] = field(default_factory=list)
+
+
+@dataclass
 class ItemGabarito:
     numero: str
     correta: str
@@ -72,8 +87,11 @@ class ItemGabarito:
 class Documento:
     titulo: str
     resumo_html: str
-    questoes: list[Questao] = field(default_factory=list)
+    unidades_questoes: list[UnidadeQuestoes] = field(default_factory=list)
     gabarito: list[ItemGabarito] = field(default_factory=list)
+
+    def todas_questoes(self) -> list[Questao]:
+        return [q for u in self.unidades_questoes for q in u.questoes]
 
 
 def _sem_acentos_maiusculo(texto: str) -> str:
@@ -169,6 +187,13 @@ QUESTAO_HEADER_RE = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 
+# Rótulo de texto-suporte compartilhado, ex.: "**Questões 1 e 2** (estímulo
+# comum)" — note o plural ("Questões"), que não colide com QUESTAO_HEADER_RE
+# (singular "QUESTÃO N").
+GRUPO_LABEL_RE = re.compile(
+    r"^\*\*\s*Quest[õo]es\s+(.+?)\*\*.*$", re.IGNORECASE | re.MULTILINE
+)
+
 ALTERNATIVA_RE = re.compile(
     r"^[ \t]*([A-E])\)[ \t]+(.+?)\s*$", re.MULTILINE
 )
@@ -195,8 +220,13 @@ def _extrair_fonte_de_paragrafo(paragrafo: str) -> str | None:
         and not p.endswith("**")
     ):
         texto = p[1:-1].strip()
-        texto = re.sub(r"^\(?\s*Fonte\s*:?\s*", "", texto, flags=re.IGNORECASE)
-        return texto.rstrip(")").strip()
+        # Só remove parênteses se envolverem o texto inteiro (par
+        # abre/fecha) — nunca um único lado, para não cortar só o ")"
+        # de um texto como "(Texto elaborado ... digitais.)".
+        if texto.startswith("(") and texto.endswith(")"):
+            texto = texto[1:-1].strip()
+        texto = re.sub(r"^Fonte\s*:?\s*", "", texto, flags=re.IGNORECASE)
+        return texto.strip()
     return None
 
 
@@ -266,6 +296,96 @@ def _parsear_questao(numero: str, conteudo: str) -> Questao:
     )
 
 
+def _parsear_bloco_questoes(bloco: str) -> list[UnidadeQuestoes]:
+    """Divide a seção de questões em unidades, respeitando grupos de
+    texto-suporte compartilhado ("Questões N e M") quando existirem."""
+    marcadores: list[tuple[str, re.Match]] = []
+    for m in GRUPO_LABEL_RE.finditer(bloco):
+        marcadores.append(("grupo", m))
+    for m in QUESTAO_HEADER_RE.finditer(bloco):
+        marcadores.append(("questao", m))
+    marcadores.sort(key=lambda par: par[1].start())
+
+    if not marcadores:
+        raise FormatoInvalidoError(
+            "Não encontrei nenhum cabeçalho de questão (esperado algo como "
+            '"**QUESTÃO 1**") dentro da seção de questões.'
+        )
+
+    unidades: list[UnidadeQuestoes] = []
+    grupo_restante = 0
+    grupo_rotulo_atual = ""
+
+    for i, (tipo, m) in enumerate(marcadores):
+        fim = marcadores[i + 1][1].start() if i + 1 < len(marcadores) else len(bloco)
+
+        if tipo == "grupo":
+            if grupo_restante > 0:
+                raise FormatoInvalidoError(
+                    f"O grupo '{grupo_rotulo_atual}' anunciava questões que "
+                    "não encontrei antes do próximo rótulo de grupo "
+                    f"('{m.group(0).strip()}'). Verifique o .md."
+                )
+            numeros = re.findall(r"\d+", m.group(1))
+            if len(numeros) < 2:
+                raise FormatoInvalidoError(
+                    f"Rótulo de grupo de questões '{m.group(0).strip()}' não "
+                    "indica pelo menos duas questões. Verifique o .md."
+                )
+            conteudo_estimulo = bloco[m.end():fim].strip()
+            paragrafos = [
+                p for p in re.split(r"\n\s*\n", conteudo_estimulo) if p.strip()
+            ]
+            fonte_grupo = None
+            texto_suporte_paragrafos = []
+            for p in paragrafos:
+                candidato = _extrair_fonte_de_paragrafo(p) if fonte_grupo is None else None
+                if candidato is not None:
+                    fonte_grupo = candidato
+                else:
+                    texto_suporte_paragrafos.append(p)
+            texto_suporte_md = "\n\n".join(texto_suporte_paragrafos)
+
+            grupo_restante = len(numeros)
+            grupo_rotulo_atual = (
+                "Questões " + ", ".join(numeros[:-1]) + " e " + numeros[-1]
+            )
+
+            unidades.append(
+                UnidadeQuestoes(
+                    tipo="estimulo_grupo",
+                    rotulo_grupo=grupo_rotulo_atual,
+                    texto_suporte_html=_md_para_html(texto_suporte_md)
+                    if texto_suporte_md
+                    else "",
+                    fonte=fonte_grupo,
+                )
+            )
+            unidades.append(UnidadeQuestoes(tipo="questoes"))
+            continue
+
+        # tipo == "questao"
+        numero = m.group(1)
+        conteudo = bloco[m.end():fim].strip()
+        questao = _parsear_questao(numero, conteudo)
+
+        if grupo_restante > 0:
+            grupo_restante -= 1
+
+        if unidades and unidades[-1].tipo == "questoes":
+            unidades[-1].questoes.append(questao)
+        else:
+            unidades.append(UnidadeQuestoes(tipo="questoes", questoes=[questao]))
+
+    if grupo_restante > 0:
+        raise FormatoInvalidoError(
+            f"O grupo '{grupo_rotulo_atual}' anunciava mais questões do que "
+            "encontrei até o fim da seção. Verifique o .md."
+        )
+
+    return unidades
+
+
 TABELA_GABARITO_LINHA_RE = re.compile(
     r"^\|\s*(\d+)\s*\|\s*([A-E])\s*\|", re.IGNORECASE | re.MULTILINE
 )
@@ -321,13 +441,10 @@ def parsear_documento(caminho: Path) -> Documento:
     gabarito_bloco = texto[gabarito_ini:fim]
     gabarito_sem_header = HEADER_RE.sub("", gabarito_bloco, count=1).strip()
 
-    questoes = [
-        _parsear_questao(numero, conteudo)
-        for numero, conteudo in _dividir_por_questao(questoes_sem_header)
-    ]
+    unidades_questoes = _parsear_bloco_questoes(questoes_sem_header)
     gabarito = _parsear_gabarito(gabarito_sem_header)
 
-    numeros_questoes = {q.numero for q in questoes}
+    numeros_questoes = {q.numero for u in unidades_questoes for q in u.questoes}
     numeros_gabarito = {g.numero for g in gabarito}
     if numeros_questoes != numeros_gabarito:
         raise FormatoInvalidoError(
@@ -339,7 +456,7 @@ def parsear_documento(caminho: Path) -> Documento:
     return Documento(
         titulo=titulo,
         resumo_html=_md_para_html(resumo_sem_header),
-        questoes=questoes,
+        unidades_questoes=unidades_questoes,
         gabarito=gabarito,
     )
 
@@ -367,6 +484,8 @@ def renderizar_pdf(
     env = Environment(loader=FileSystemLoader(str(TEMPLATE_DIR)))
     template = env.get_template("prova.html")
 
+    todas_questoes = doc.todas_questoes()
+
     html_final = template.render(
         titulo=doc.titulo,
         instituicao=instituicao,
@@ -375,7 +494,9 @@ def renderizar_pdf(
         nome_prova=nome_prova,
         instrucao=instrucao,
         resumo_html=doc.resumo_html,
-        questoes=doc.questoes,
+        unidades_questoes=doc.unidades_questoes,
+        primeira_questao=todas_questoes[0].numero if todas_questoes else None,
+        ultima_questao=todas_questoes[-1].numero if todas_questoes else None,
         incluir_gabarito=incluir_gabarito,
         gabarito=doc.gabarito,
     )

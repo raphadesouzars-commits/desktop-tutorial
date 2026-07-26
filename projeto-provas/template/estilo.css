@@ -185,16 +185,30 @@ body {
   overflow-wrap: break-word;
 }
 
+/* ---------- Texto-suporte compartilhado por 2+ questões -------------------- */
+/* Decisão de projeto análoga à do resumo: fica fora do container de 2
+   colunas, ocupando a largura cheia da página (ver especificacao_visual.md
+   → "Colunas"). Cada bloco de estímulo compartilhado interrompe o
+   .conteudo corrente; um novo .conteudo recomeça logo depois, só com as
+   questões daquele grupo. */
+
+.estimulo-grupo {
+  margin-bottom: 0.3cm;
+}
+
+.estimulo-grupo-rotulo {
+  font-family: var(--fonte-sans);
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 0.15cm;
+}
+
 /* ---------- Questões + gabarito: 2 colunas --------------------------------- */
 
 .conteudo {
   column-count: 2;
   column-gap: var(--gutter-colunas);
   column-rule: 0.75pt solid var(--cor-filete-coluna);
-}
-
-.gabarito {
-  break-before: column;
 }
 
 .gabarito h2 {

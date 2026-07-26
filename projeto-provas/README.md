@@ -33,15 +33,25 @@ Ver `CLAUDE.md` para o escopo completo do projeto.
   **negrito** (não só `###`), referência de fonte totalmente em itálico sem
   prefixo "Fonte:", e cabeçalhos de justificativa do gabarito com texto
   extra após o número ("### Questão 1 — Correta: C").
+- ✅ Blocos de cálculo linha a linha (crase tripla ` ``` ` no .md, comuns em
+  questões de exatas) agora viram bloco monoespaçado com quebra de linha
+  preservada (extensão `fenced_code` do markdown + estilo `pre`/`code`).
+- ✅ **Texto-suporte compartilhado por 2+ questões** ("Questões N e M
+  (estímulo comum)") suportado de verdade: rótulo + texto-suporte + fonte
+  aparecem uma vez, em largura cheia, acima das colunas — igual ao padrão
+  das provas oficiais de referência — e as questões do grupo entram depois
+  em 2 colunas só com comando + alternativas. Descoberto e implementado a
+  partir do .md de Sociologia (Marx/Durkheim/Weber), que tinha 3 grupos
+  desse tipo.
 
 ## Próximos passos (dependem de você)
 
 1. Adicionar novos `.md` reais gerados pelo projeto Claude "Bahiana" em
    `questoes-md/` e gerar os PDFs.
 2. Se um `.md` novo tiver texto-suporte em verso/poema (ver
-   `especificacao_visual.md` → caixa de verso) ou texto-suporte
-   compartilhado por várias questões, avisar antes — o parser atual
-   assume uma questão = um texto-suporte de prosa.
+   `especificacao_visual.md` → caixa de verso), avisar antes — isso ainda
+   não é reconhecido automaticamente (precisa da classe CSS `.verso`
+   aplicada manualmente).
 3. Se você tiver o arquivo de imagem do brasão da Bahiana, podemos incluí-lo
    no cabeçalho (hoje ele usa só o nome em texto).
 
