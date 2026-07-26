@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ titulo }}</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+  <header class="cabecalho">
+    <div class="cabecalho-instituicao">{{ instituicao }}</div>
+    <div class="cabecalho-processo">{{ processo_seletivo }}</div>
+  </header>
+
+  <footer class="rodape">
+    <span class="rodape-instituicao">{{ instituicao }} — {{ processo_seletivo }}</span>
+  </footer>
+
+  <main class="conteudo">
+
+    {% if resumo_html %}
+    <section class="resumo">
+      <h2>Resumo</h2>
+      {{ resumo_html | safe }}
+    </section>
+    {% endif %}
+
+    <section class="questoes">
+      {% for q in questoes %}
+      <article class="questao" id="questao-{{ q.numero }}">
+        <div class="questao-numero"><span>QUESTÃO</span> {{ q.numero }}</div>
+
+        {% if q.texto_suporte_html %}
+        <div class="texto-suporte">{{ q.texto_suporte_html | safe }}</div>
+        {% endif %}
+
+        {% if q.fonte %}
+        <div class="fonte-texto-suporte">{{ q.fonte }}</div>
+        {% endif %}
+
+        <div class="comando">{{ q.comando_html | safe }}</div>
+
+        <ol class="alternativas">
+          {% for alt in q.alternativas %}
+          <li><span class="alt-letra">{{ alt.letra }})</span> <span class="alt-texto">{{ alt.texto }}</span></li>
+          {% endfor %}
+        </ol>
+      </article>
+      {% endfor %}
+    </section>
+
+    {% if incluir_gabarito and gabarito %}
+    <section class="gabarito">
+      <h2>Gabarito e Justificativas</h2>
+
+      <table class="tabela-gabarito">
+        <thead>
+          <tr><th>Questão</th><th>Alternativa Correta</th></tr>
+        </thead>
+        <tbody>
+          {% for g in gabarito %}
+          <tr><td>{{ g.numero }}</td><td>{{ g.correta }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      {% for g in gabarito %}
+      <div class="justificativa-questao">
+        <h3>Questão {{ g.numero }}</h3>
+        {{ g.justificativa_html | safe }}
+      </div>
+      {% endfor %}
+    </section>
+    {% endif %}
+
+  </main>
+
+</body>
+</html>

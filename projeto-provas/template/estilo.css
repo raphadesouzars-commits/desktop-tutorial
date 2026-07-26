@@ -1,0 +1,198 @@
+/* =========================================================================
+   Variáveis — PROVISÓRIAS (ver template/especificacao_visual.md).
+   Ajustar aqui assim que a especificação real for extraída de referencia/.
+   ========================================================================= */
+:root {
+  --cor-destaque: #7a1620;
+  --cor-texto: #1a1a1a;
+  --cor-borda: #999999;
+
+  --fonte-corpo: Georgia, "Times New Roman", serif;
+
+  --tamanho-corpo: 10pt;
+  --tamanho-comando: 10pt;
+  --tamanho-alternativa: 10pt;
+  --tamanho-fonte-suporte: 8pt;
+  --tamanho-rodape: 8pt;
+  --tamanho-numero-questao: 9pt;
+  --entrelinha: 1.3;
+
+  --margem-topo: 2cm;
+  --margem-base: 2cm;
+  --margem-lateral: 1.8cm;
+  --gutter-colunas: 0.8cm;
+}
+
+@page {
+  size: A4;
+  margin: var(--margem-topo) var(--margem-lateral) var(--margem-base) var(--margem-lateral);
+
+  @top-center {
+    content: element(cabecalho-corrente);
+  }
+  @bottom-left {
+    content: element(rodape-corrente);
+  }
+  @bottom-center {
+    content: counter(page) " / " counter(pages);
+    font-family: var(--fonte-corpo);
+    font-size: var(--tamanho-rodape);
+    color: var(--cor-texto);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-corpo);
+  font-size: var(--tamanho-corpo);
+  line-height: var(--entrelinha);
+  color: var(--cor-texto);
+}
+
+/* ---------- Cabeçalho / rodapé correntes (repetem em todas as páginas) --- */
+
+.cabecalho {
+  position: running(cabecalho-corrente);
+  text-align: center;
+  border-bottom: 1.5pt solid var(--cor-destaque);
+  padding-bottom: 0.15cm;
+}
+
+.cabecalho-instituicao {
+  font-size: 11pt;
+  font-weight: bold;
+}
+
+.cabecalho-processo {
+  font-size: 9pt;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rodape {
+  position: running(rodape-corrente);
+  font-size: var(--tamanho-rodape);
+  color: var(--cor-texto);
+}
+
+/* ---------- Corpo em colunas ---------------------------------------------- */
+
+.conteudo {
+  column-count: 2;
+  column-gap: var(--gutter-colunas);
+  column-rule: 0.5pt solid #dddddd;
+}
+
+.resumo,
+.gabarito {
+  break-before: column;
+}
+
+.resumo h2,
+.gabarito h2 {
+  font-size: 12pt;
+  margin: 0 0 0.3cm 0;
+}
+
+.resumo table,
+.tabela-gabarito {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  margin-bottom: 0.3cm;
+}
+
+.resumo th,
+.resumo td,
+.tabela-gabarito th,
+.tabela-gabarito td {
+  border: 0.5pt solid var(--cor-borda);
+  padding: 0.1cm 0.2cm;
+  text-align: left;
+}
+
+.tabela-gabarito th,
+.tabela-gabarito td {
+  text-align: center;
+}
+
+/* ---------- Questões ------------------------------------------------------ */
+
+.questao {
+  break-inside: avoid-column;
+  margin-bottom: 0.5cm;
+}
+
+.questao-numero {
+  display: inline-block;
+  background: var(--cor-destaque);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 0.08cm 0.4cm;
+  font-weight: bold;
+  font-size: var(--tamanho-numero-questao);
+  margin-bottom: 0.2cm;
+}
+
+.texto-suporte {
+  margin: 0.2cm 0;
+  text-align: justify;
+}
+
+.texto-suporte img {
+  max-width: 100%;
+  display: block;
+  margin: 0.2cm auto;
+}
+
+.texto-suporte figcaption {
+  font-style: italic;
+  font-size: var(--tamanho-fonte-suporte);
+  text-align: center;
+}
+
+.fonte-texto-suporte {
+  font-style: italic;
+  font-size: var(--tamanho-fonte-suporte);
+  text-align: right;
+  margin-bottom: 0.2cm;
+}
+
+.comando {
+  font-weight: bold;
+  font-size: var(--tamanho-comando);
+  margin-bottom: 0.2cm;
+  text-align: justify;
+}
+
+.alternativas {
+  list-style: none;
+  margin: 0;
+  padding-left: 0.4cm;
+  font-size: var(--tamanho-alternativa);
+}
+
+.alternativas li {
+  margin-bottom: 0.15cm;
+}
+
+.alt-letra {
+  font-weight: bold;
+  margin-right: 0.1cm;
+}
+
+/* ---------- Gabarito -------------------------------------------------------- */
+
+.justificativa-questao {
+  margin-bottom: 0.4cm;
+}
+
+.justificativa-questao h3 {
+  font-size: 10pt;
+  margin: 0 0 0.1cm 0;
+}
