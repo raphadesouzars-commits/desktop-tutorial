@@ -7,14 +7,30 @@
 </head>
 <body>
 
-  <header class="cabecalho">
-    <div class="cabecalho-instituicao">{{ instituicao }}</div>
-    <div class="cabecalho-processo">{{ processo_seletivo }}</div>
-  </header>
-
+  <!-- Rodapé: único elemento textual que se repete em todas as páginas
+       (o filete duplo do topo é desenhado direto na margin-box @page). -->
   <footer class="rodape">
-    <span class="rodape-instituicao">{{ instituicao }} — {{ processo_seletivo }}</span>
+    <span class="rodape-texto">{{ instituicao }} — {{ processo_seletivo }} — {{ titulo }}</span>
   </footer>
+
+  <!-- Cabeçalho institucional: só aparece uma vez, no início do documento,
+       como conteúdo normal de fluxo (não se repete por página — ver
+       especificacao_visual.md). -->
+  <header class="cabecalho-prova">
+    <div class="marca-instituicao">
+      <div class="marca-nome">{{ instituicao }}</div>
+      <div class="marca-subtitulo">{{ subtitulo_instituicao }}</div>
+      {% if processo_seletivo %}<div class="marca-processo">{{ processo_seletivo }}</div>{% endif %}
+    </div>
+    <div class="barra-titulo">
+      ➔ {{ nome_prova }}{% if questoes %} – Questões de {{ questoes[0].numero }} a {{ questoes[-1].numero }}{% endif %}
+    </div>
+    <div class="barra-subtitulo">↺ {{ titulo }}</div>
+    <div class="barra-instrucao">
+      <span class="etiqueta-instrucao">Instrução ▶</span>
+      <span class="texto-instrucao">{{ instrucao }}</span>
+    </div>
+  </header>
 
   <main class="conteudo">
 
@@ -28,7 +44,9 @@
     <section class="questoes">
       {% for q in questoes %}
       <article class="questao" id="questao-{{ q.numero }}">
-        <div class="questao-numero"><span>QUESTÃO</span> {{ q.numero }}</div>
+        <div class="questao-numero">
+          <span class="questao-numero-etiqueta">QUESTÃO</span><span class="questao-numero-valor">{{ q.numero }}</span>
+        </div>
 
         {% if q.texto_suporte_html %}
         <div class="texto-suporte">{{ q.texto_suporte_html | safe }}</div>

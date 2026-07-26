@@ -29,10 +29,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = BASE_DIR / "template"
 OUTPUT_DIR = BASE_DIR / "output"
 
-# Provisório — ajustar quando a especificação visual real (Passo 0) definir
-# os nomes exatos usados no cabeçalho/rodapé das provas oficiais.
-INSTITUICAO_PADRAO = "EBMSP"
+# Ver template/especificacao_visual.md (extraída dos PDFs em referencia/).
+INSTITUICAO_PADRAO = "BAHIANA"
+SUBTITULO_INSTITUICAO_PADRAO = "Escola de Medicina e Saúde Pública"
 PROCESSO_SELETIVO_PADRAO = "PROSEF"
+NOME_PROVA_PADRAO = "Simulado"
+INSTRUCAO_PADRAO = (
+    "Leia atentamente o resumo antes de responder. Assinale apenas uma "
+    "alternativa por questão."
+)
 
 MD_EXTENSIONS = ["tables", "sane_lists"]
 
@@ -289,7 +294,10 @@ def renderizar_pdf(
     caminho_saida: Path,
     incluir_gabarito: bool,
     instituicao: str,
+    subtitulo_instituicao: str,
     processo_seletivo: str,
+    nome_prova: str,
+    instrucao: str,
 ) -> None:
     # Import local para não exigir dependências nativas do weasyprint em
     # quem só quer testar o parsing (ex.: em ambientes sem libpango etc.).
@@ -301,7 +309,10 @@ def renderizar_pdf(
     html_final = template.render(
         titulo=doc.titulo,
         instituicao=instituicao,
+        subtitulo_instituicao=subtitulo_instituicao,
         processo_seletivo=processo_seletivo,
+        nome_prova=nome_prova,
+        instrucao=instrucao,
         resumo_html=doc.resumo_html,
         questoes=doc.questoes,
         incluir_gabarito=incluir_gabarito,
@@ -326,6 +337,18 @@ def main() -> None:
     parser.add_argument(
         "--processo-seletivo", default=PROCESSO_SELETIVO_PADRAO,
         help=f"Nome do processo seletivo no cabeçalho (padrão: {PROCESSO_SELETIVO_PADRAO}).",
+    )
+    parser.add_argument(
+        "--subtitulo-instituicao", default=SUBTITULO_INSTITUICAO_PADRAO,
+        help=f"Subtítulo sob o nome da instituição (padrão: {SUBTITULO_INSTITUICAO_PADRAO}).",
+    )
+    parser.add_argument(
+        "--nome-prova", default=NOME_PROVA_PADRAO,
+        help=f"Nome da prova na barra escura do cabeçalho (padrão: {NOME_PROVA_PADRAO}).",
+    )
+    parser.add_argument(
+        "--instrucao", default=INSTRUCAO_PADRAO,
+        help="Texto da barra de instrução no topo da 1ª página.",
     )
     parser.add_argument(
         "--saida", type=Path, default=None,
@@ -355,7 +378,10 @@ def main() -> None:
         caminho_saida,
         incluir_gabarito=not args.sem_gabarito,
         instituicao=args.instituicao,
+        subtitulo_instituicao=args.subtitulo_instituicao,
         processo_seletivo=args.processo_seletivo,
+        nome_prova=args.nome_prova,
+        instrucao=args.instrucao,
     )
     print(f"PDF gerado: {caminho_saida}")
 
