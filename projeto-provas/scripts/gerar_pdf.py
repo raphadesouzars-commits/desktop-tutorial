@@ -86,15 +86,19 @@ def _md_para_html(texto: str) -> str:
 
 
 HEADER_RE = re.compile(r"^(#{1,6})\s+(.*\S)\s*$", re.MULTILINE)
+BLOCO_RE = re.compile(r"^BLOCO\s+\d+\b", re.IGNORECASE)
 
 
-def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
-    """Retorna as posições (início) dos cabeçalhos de resumo, questões e
-    gabarito, mais o tamanho do texto, para fatiar o documento em 3 blocos."""
+def _varrer_cabecalhos_de_secao(
+    texto: str, exigir_prefixo_bloco: bool
+) -> tuple[int | None, int | None, int | None]:
     resumo_pos = questoes_pos = gabarito_pos = None
 
     for m in HEADER_RE.finditer(texto):
-        titulo_normalizado = _sem_acentos_maiusculo(m.group(2))
+        titulo_bruto = m.group(2).strip()
+        if exigir_prefixo_bloco and not BLOCO_RE.match(titulo_bruto):
+            continue
+        titulo_normalizado = _sem_acentos_maiusculo(titulo_bruto)
         # Um cabeçalho que menciona mais de uma palavra-chave (ex.: um
         # subtítulo descritivo como "Resumo didático + 10 questões
         # objetivas") não é um marcador de seção de verdade — é só texto
@@ -112,6 +116,25 @@ def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
         elif resumo_pos is None and "RESUMO" in titulo_normalizado:
             resumo_pos = m.start()
 
+    return resumo_pos, questoes_pos, gabarito_pos
+
+
+def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
+    """Retorna as posições (início) dos cabeçalhos de resumo, questões e
+    gabarito, mais o tamanho do texto, para fatiar o documento em 3 blocos."""
+    # Os .md reais do projeto "Bahiana" usam cabeçalhos "BLOCO N — ...";
+    # priorizar esse padrão evita confundir um subtítulo qualquer (ex.: "##
+    # 10 questões objetivas inéditas...", logo abaixo do título) com o
+    # marcador de seção de verdade. Só cai para a varredura solta (qualquer
+    # cabeçalho com uma palavra-chave) se não houver cabeçalhos "BLOCO N".
+    resumo_pos, questoes_pos, gabarito_pos = _varrer_cabecalhos_de_secao(
+        texto, exigir_prefixo_bloco=True
+    )
+    if questoes_pos is None or gabarito_pos is None:
+        resumo_pos, questoes_pos, gabarito_pos = _varrer_cabecalhos_de_secao(
+            texto, exigir_prefixo_bloco=False
+        )
+
     if questoes_pos is None:
         raise FormatoInvalidoError(
             "Não encontrei um cabeçalho de seção para as questões "
@@ -127,6 +150,13 @@ def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
         raise FormatoInvalidoError(
             "A seção de gabarito aparece antes da seção de questões no "
             ".md — verifique a ordem das seções (resumo, questões, gabarito)."
+        )
+    if resumo_pos is not None and resumo_pos >= questoes_pos:
+        raise FormatoInvalidoError(
+            "O cabeçalho de resumo que encontrei aparece depois (ou junto) "
+            "do cabeçalho de questões — provavelmente confundi um subtítulo "
+            "descritivo com o marcador de seção. Verifique os cabeçalhos do "
+            ".md (a seção de resumo deve vir antes da de questões)."
         )
     if resumo_pos is None:
         resumo_pos = 0
