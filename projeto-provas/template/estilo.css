@@ -346,3 +346,27 @@ body {
   font-weight: bold;
   margin: 0 0 0.1cm 0;
 }
+
+/* Blocos de cálculo (```...``` no .md, ex.: resolução linha a linha de
+   questões de exatas) — precisam de fonte monoespaçada e preservar quebra
+   de linha, senão o cálculo vira um parágrafo corrido ilegível. */
+pre {
+  font-family: "Courier New", monospace;
+  font-size: 8.5pt;
+  line-height: 1.3;
+  background: #f2f2f2;
+  border-left: 2pt solid var(--cor-borda);
+  padding: 0.2cm 0.3cm;
+  margin: 0.2cm 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+pre code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+code {
+  font-family: "Courier New", monospace;
+}

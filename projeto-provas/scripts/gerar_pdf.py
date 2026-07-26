@@ -39,7 +39,7 @@ INSTRUCAO_PADRAO = (
     "alternativa por questão."
 )
 
-MD_EXTENSIONS = ["tables", "sane_lists"]
+MD_EXTENSIONS = ["tables", "sane_lists", "fenced_code"]
 
 
 class FormatoInvalidoError(Exception):
