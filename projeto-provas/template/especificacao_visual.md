@@ -70,8 +70,20 @@ posição em todas as páginas.
 
 ## Colunas
 
-- 2 colunas por página, separadas por um **filete vertical único** (linha
-  fina) no meio, não apenas espaço em branco.
+- **Resumo: 1 coluna, largura cheia da página.** As provas oficiais não têm
+  seção de resumo (é uma adição nossa, fora do padrão da banca), e o resumo
+  costuma trazer tabelas largas (ex.: comparando vários nutrientes lado a
+  lado) que não cabem numa coluna estreita sem quebrar/transbordar texto.
+  Decisão de projeto: o bloco de **resumo inteiro roda em 1 coluna só**,
+  ocupando toda a largura útil da página; só **questões e gabarito** entram
+  no layout de 2 colunas abaixo.
+  (Nota técnica: `column-span: all` do CSS, que permitiria uma tabela larga
+  "furar" um layout de 2 colunas, não funciona corretamente no WeasyPrint
+  nesta versão — a tabela some ou fica cortada entre as colunas. Por isso a
+  solução foi manter o resumo inteiro fora do container de colunas, e não
+  tentar fazer só a tabela "furar" as colunas.)
+- **Questões e gabarito: 2 colunas**, separadas por um **filete vertical
+  único** (linha fina) no meio, não apenas espaço em branco.
 - Gutter (espaço entre coluna e o filete) pequeno, ~0,4–0,6 cm de cada lado.
 - Quando um texto-suporte é compartilhado por duas ou mais questões (ex.:
   "Questões 6 e 7", "Questões 9 e 10"), ele é diagramado **acima das

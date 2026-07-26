@@ -95,13 +95,19 @@ def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
 
     for m in HEADER_RE.finditer(texto):
         titulo_normalizado = _sem_acentos_maiusculo(m.group(2))
+        # Um cabeçalho que menciona mais de uma palavra-chave (ex.: um
+        # subtítulo descritivo como "Resumo didático + 10 questões
+        # objetivas") não é um marcador de seção de verdade — é só texto
+        # descritivo. Só conta cabeçalho com exatamente uma palavra-chave.
+        palavras_chave_presentes = sum(
+            palavra in titulo_normalizado
+            for palavra in ("RESUMO", "QUESTOES", "GABARITO")
+        )
+        if palavras_chave_presentes != 1:
+            continue
         if gabarito_pos is None and "GABARITO" in titulo_normalizado:
             gabarito_pos = m.start()
-        elif (
-            questoes_pos is None
-            and "QUESTOES" in titulo_normalizado
-            and "GABARITO" not in titulo_normalizado
-        ):
+        elif questoes_pos is None and "QUESTOES" in titulo_normalizado:
             questoes_pos = m.start()
         elif resumo_pos is None and "RESUMO" in titulo_normalizado:
             resumo_pos = m.start()
@@ -129,7 +135,7 @@ def _localizar_secoes(texto: str) -> tuple[int, int, int, int]:
 
 
 QUESTAO_HEADER_RE = re.compile(
-    r"^(?:#{1,6}\s+|\*\*)\s*QUEST[ÃA]O\s*0*([0-9]+)\.?\s*(?:\*\*)?\s*$",
+    r"^(?:#{1,6}\s+|\*\*)\s*QUEST[ÃA]O\s*0*([0-9]+)\b.*$",
     re.IGNORECASE | re.MULTILINE,
 )
 
@@ -141,6 +147,27 @@ FONTE_RE = re.compile(
     r"^[ \t]*[*_]{0,2}\(?\s*Fonte\s*:?\s*(.*?)\s*\)?[*_]{0,2}[ \t]*$",
     re.IGNORECASE | re.MULTILINE,
 )
+
+
+def _extrair_fonte_de_paragrafo(paragrafo: str) -> str | None:
+    """Reconhece tanto o formato explícito ("Fonte: ...") quanto um
+    parágrafo inteiro em itálico simples (*...*), convenção usada para a
+    referência da fonte do texto-suporte em alguns .md reais."""
+    p = paragrafo.strip()
+    m = FONTE_RE.match(p)
+    if m:
+        return m.group(1).strip()
+    if (
+        len(p) >= 2
+        and p.startswith("*")
+        and p.endswith("*")
+        and not p.startswith("**")
+        and not p.endswith("**")
+    ):
+        texto = p[1:-1].strip()
+        texto = re.sub(r"^\(?\s*Fonte\s*:?\s*", "", texto, flags=re.IGNORECASE)
+        return texto.rstrip(")").strip()
+    return None
 
 
 def _dividir_por_questao(bloco: str) -> list[tuple[str, str]]:
@@ -173,14 +200,6 @@ def _parsear_questao(numero: str, conteudo: str) -> Questao:
     inicio_alternativas = alternativas_match[0].start()
     corpo_antes = conteudo[:inicio_alternativas].strip()
 
-    fonte = None
-    fonte_match = FONTE_RE.search(corpo_antes)
-    if fonte_match:
-        fonte = fonte_match.group(1).strip()
-        corpo_antes = (
-            corpo_antes[: fonte_match.start()] + corpo_antes[fonte_match.end():]
-        ).strip()
-
     paragrafos = [p for p in re.split(r"\n\s*\n", corpo_antes) if p.strip()]
     if not paragrafos:
         raise FormatoInvalidoError(
@@ -189,7 +208,19 @@ def _parsear_questao(numero: str, conteudo: str) -> Questao:
         )
 
     comando_md = paragrafos[-1]
-    texto_suporte_md = "\n\n".join(paragrafos[:-1])
+    resto = paragrafos[:-1]
+
+    fonte = None
+    texto_suporte_paragrafos = []
+    for p in resto:
+        if fonte is None:
+            candidato = _extrair_fonte_de_paragrafo(p)
+            if candidato is not None:
+                fonte = candidato
+                continue
+        texto_suporte_paragrafos.append(p)
+
+    texto_suporte_md = "\n\n".join(texto_suporte_paragrafos)
 
     alternativas = [
         Alternativa(letra=m.group(1).upper(), texto=m.group(2).strip())

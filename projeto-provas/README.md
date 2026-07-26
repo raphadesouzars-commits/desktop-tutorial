@@ -19,15 +19,26 @@ Ver `CLAUDE.md` para o escopo completo do projeto.
 - ✅ Comparação lado a lado (Passo 4) feita entre a página gerada e a
   página 3 de `BAHIANA_MED_2021.1_TIPO1.pdf` — proporções de coluna, caixas
   de cabeçalho, selo de questão e tipografia condizentes.
-- ✅ `scripts/gerar_pdf.py` implementado e testado de ponta a ponta com
-  `questoes-md/_exemplo_teste.md` (arquivo sintético, sem valor pedagógico,
-  só para validar o parser e a geração de PDF).
+- ✅ `scripts/gerar_pdf.py` implementado e testado de ponta a ponta, incluindo
+  com um `.md` **real**: `questoes-md/Revisao_Fisiologia_Digestiva_Absorcao_Intestinal.md`
+  (10 questões, PDF de 9 páginas gerado e inspecionado visualmente).
+- ✅ **Resumo roda em 1 coluna de largura cheia** (decisão de projeto — ver
+  `especificacao_visual.md` → seção "Colunas"), enquanto questões e gabarito
+  continuam em 2 colunas. Isso resolveu um bug real encontrado com o .md de
+  fisiologia digestiva: uma tabela de 4 colunas no resumo não cabia numa
+  coluna estreita e transbordava por cima do texto vizinho
+  (`column-span: all` não funciona no WeasyPrint para contornar isso).
+- ✅ Parser ajustado para convenções reais observadas no .md de fisiologia
+  digestiva: cabeçalhos de seção no formato "BLOCO N — ...", questões em
+  **negrito** (não só `###`), referência de fonte totalmente em itálico sem
+  prefixo "Fonte:", e cabeçalhos de justificativa do gabarito com texto
+  extra após o número ("### Questão 1 — Correta: C").
 
 ## Próximos passos (dependem de você)
 
-1. Adicionar os `.md` reais gerados pelo projeto Claude "Bahiana" em
-   `questoes-md/` e gerar os PDFs finais.
-2. Se um `.md` real tiver texto-suporte em verso/poema (ver
+1. Adicionar novos `.md` reais gerados pelo projeto Claude "Bahiana" em
+   `questoes-md/` e gerar os PDFs.
+2. Se um `.md` novo tiver texto-suporte em verso/poema (ver
    `especificacao_visual.md` → caixa de verso) ou texto-suporte
    compartilhado por várias questões, avisar antes — o parser atual
    assume uma questão = um texto-suporte de prosa.

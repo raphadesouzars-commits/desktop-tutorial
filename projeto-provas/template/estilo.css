@@ -149,7 +149,43 @@ body {
   padding: 0.15cm 0.4cm;
 }
 
-/* ---------- Corpo em colunas ---------------------------------------------- */
+/* ---------- Resumo: 1 coluna, largura cheia da página --------------------- */
+/* Decisão de projeto (ver especificacao_visual.md): o resumo não entra no
+   container de 2 colunas porque costuma trazer tabelas largas que não
+   cabem numa coluna estreita — e column-span:all não funciona no
+   WeasyPrint para "furar" só a tabela através das colunas. */
+
+.resumo {
+  font-family: var(--fonte-serifada);
+  font-size: var(--tamanho-texto-suporte);
+  text-align: justify;
+  margin-bottom: 0.5cm;
+}
+
+.resumo h2 {
+  font-family: var(--fonte-sans);
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 0 0 0.3cm 0;
+}
+
+.resumo table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fonte-sans);
+  font-size: 9pt;
+  margin: 0.2cm 0 0.4cm 0;
+}
+
+.resumo th,
+.resumo td {
+  border: 0.5pt solid var(--cor-borda);
+  padding: 0.15cm 0.25cm;
+  text-align: left;
+  overflow-wrap: break-word;
+}
+
+/* ---------- Questões + gabarito: 2 colunas --------------------------------- */
 
 .conteudo {
   column-count: 2;
@@ -157,12 +193,10 @@ body {
   column-rule: 0.75pt solid var(--cor-filete-coluna);
 }
 
-.resumo,
 .gabarito {
   break-before: column;
 }
 
-.resumo h2,
 .gabarito h2 {
   font-family: var(--fonte-sans);
   font-size: 12pt;
@@ -170,33 +204,25 @@ body {
   margin: 0 0 0.3cm 0;
 }
 
-.resumo {
-  font-family: var(--fonte-serifada);
-  font-size: var(--tamanho-texto-suporte);
-  text-align: justify;
-}
-
-.resumo table,
 .tabela-gabarito {
+  /* Coluna estreita (2 colunas por página): table-layout:fixed evita que a
+     tabela cresça além de 100% da largura da coluna. */
+  table-layout: fixed;
   width: 100%;
   border-collapse: collapse;
   font-family: var(--fonte-sans);
-  font-size: 9pt;
-  margin-bottom: 0.3cm;
+  font-size: 8.5pt;
+  margin: 0.2cm 0 0.4cm 0;
+  break-inside: avoid;
 }
 
-.resumo th,
-.resumo td,
 .tabela-gabarito th,
 .tabela-gabarito td {
   border: 0.5pt solid var(--cor-borda);
   padding: 0.1cm 0.2cm;
-  text-align: left;
-}
-
-.tabela-gabarito th,
-.tabela-gabarito td {
   text-align: center;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* ---------- Questões -------------------------------------------------------- */

@@ -32,14 +32,20 @@
     </div>
   </header>
 
-  <main class="conteudo">
+  <main>
 
     {% if resumo_html %}
+    <!-- Resumo roda em 1 coluna de largura cheia — não entra no container
+         de 2 colunas (ver especificacao_visual.md: tabelas largas do
+         resumo não cabem numa coluna estreita, e column-span:all não
+         funciona no WeasyPrint). -->
     <section class="resumo">
       <h2>Resumo</h2>
       {{ resumo_html | safe }}
     </section>
     {% endif %}
+
+    <div class="conteudo">
 
     <section class="questoes">
       {% for q in questoes %}
@@ -90,6 +96,8 @@
       {% endfor %}
     </section>
     {% endif %}
+
+    </div>
 
   </main>
 
