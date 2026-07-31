@@ -5531,7 +5531,7 @@ function buildUI() {
 
   html += '<div class="nav-sec">Programa</div>';
   PHASES.forEach(function(ph) {
-    var pWeeks = WEEKS.filter(function(w){ return w.phase === ph.id; });
+    var pWeeks = WEEKS.filter(function(w){ return w.phase === ph.id; }).sort(function(a,b){ return a.n - b.n; });
     var doneW = pWeeks.filter(function(w){ return weekDone(w); }).length;
     html += '<div class="phase-toggle" onclick="togPhase('+ph.id+')">'
           + '<span class="phase-badge" style="background:'+ph.bg+';color:'+ph.color+'">'+ph.label+'</span>'
@@ -5851,7 +5851,7 @@ function renderDash() {
   PHASES.forEach(function(ph) {
     var pg = document.getElementById('pg-ph'+ph.id);
     if(!pg) return;
-    var pw = WEEKS.filter(function(w){ return w.phase===ph.id; });
+    var pw = WEEKS.filter(function(w){ return w.phase===ph.id; }).sort(function(a,b){ return a.n - b.n; });
     var pdone = pw.filter(function(w){ return weekDone(w); }).length;
     var ppct = Math.round(pdone/pw.length*100);
     var phHtmlInner = '<div class="crumb">'
