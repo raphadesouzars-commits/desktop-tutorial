@@ -943,6 +943,64 @@ button,textarea,input{font-family:inherit;color:inherit}
   .day-dot{width:34px;height:34px}
   .session{padding:14px 16px 16px}
 }
+
+/* ─── FOCO (POMODORO) ────────────────────────────────────────── */
+.focus-widget{
+  position:fixed;right:20px;bottom:20px;z-index:200;
+  width:280px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow);
+  font-family:inherit;
+}
+.focus-hdr{
+  display:flex;align-items:center;gap:8px;
+  padding:12px 14px;cursor:pointer;
+}
+.focus-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.focus-hdr strong{font-size:13px;color:var(--ink)}
+.focus-status{font-size:11.5px;color:var(--subtle);margin-left:auto}
+.focus-arr{font-size:10px;color:var(--subtle);transition:transform .15s}
+.focus-arr.closed{transform:rotate(-90deg)}
+.focus-body{padding:0 16px 16px;border-top:1px solid var(--border)}
+.focus-body.closed{display:none}
+.focus-tip{
+  margin-top:14px;padding:10px 12px;
+  background:var(--accent-tint);color:var(--ink-2);
+  border-radius:var(--radius-sm);
+  font-size:12px;font-style:italic;line-height:1.5;
+}
+.focus-durations{display:flex;gap:8px;justify-content:center;margin:14px 0}
+.focus-dur{
+  padding:6px 16px;font-size:12.5px;font-weight:600;
+  border:1px solid var(--border);border-radius:99px;
+  background:var(--surface);color:var(--muted);cursor:pointer;
+  font-family:inherit;transition:all .12s;
+}
+.focus-dur.active{border-color:var(--positive);color:var(--positive);background:var(--positive-tint)}
+.focus-ring-wrap{position:relative;width:150px;height:150px;margin:4px auto 16px}
+.focus-ring-wrap svg{transform:rotate(-90deg)}
+.focus-ring-bg{fill:none;stroke:var(--surface-2);stroke-width:8}
+.focus-ring-fg{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .3s linear}
+.focus-time{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:26px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;
+}
+.focus-actions{display:flex;gap:8px;justify-content:center;margin-bottom:12px}
+.focus-btn{
+  padding:8px 18px;font-size:12.5px;font-weight:600;
+  border:1px solid var(--border);border-radius:99px;
+  background:var(--surface);color:var(--ink-2);cursor:pointer;
+  font-family:inherit;transition:opacity .12s;
+}
+.focus-btn:hover{opacity:.8}
+.focus-btn.start{background:var(--accent);border-color:var(--accent);color:#fff}
+.focus-count{text-align:center;font-size:11.5px;color:var(--subtle)}
+@media (max-width:640px){
+  .focus-widget{right:10px;bottom:10px;width:240px}
+  .focus-ring-wrap{width:130px;height:130px}
+}
 </style>
 </head>
 <body>
@@ -3694,12 +3752,41 @@ Base: provas de praticagem 2006, 2008, 2011 e 2012 disponíveis neste projeto.</
 </main>
 </div>
 
+<div class="focus-widget" id="focusWidget">
+  <div class="focus-hdr" onclick="toggleFocusWidget()">
+    <span class="focus-dot"></span><strong>Foco</strong>
+    <span class="focus-status" id="focusStatus">parado</span>
+    <span class="focus-arr" id="focusArr">▾</span>
+  </div>
+  <div class="focus-body" id="focusBody">
+    <div class="focus-tip" id="focusTip"></div>
+    <div class="focus-durations">
+      <button class="focus-dur active" id="focusDur25" onclick="setFocusDuration(25)">25 min</button>
+      <button class="focus-dur" id="focusDur50" onclick="setFocusDuration(50)">50 min</button>
+    </div>
+    <div class="focus-ring-wrap">
+      <svg width="150" height="150" viewBox="0 0 150 150">
+        <circle class="focus-ring-bg" cx="75" cy="75" r="66"></circle>
+        <circle class="focus-ring-fg" id="focusRingFg" cx="75" cy="75" r="66" stroke-dasharray="414.7" stroke-dashoffset="0"></circle>
+      </svg>
+      <div class="focus-time" id="focusTime">25:00</div>
+    </div>
+    <div class="focus-actions">
+      <button class="focus-btn start" onclick="startFocus()">Iniciar</button>
+      <button class="focus-btn" onclick="pauseFocus()">Pausar</button>
+      <button class="focus-btn" onclick="resetFocus()">Zerar</button>
+    </div>
+    <div class="focus-count" id="focusCount">0 sessões concluídas hoje</div>
+  </div>
+</div>
+
 <script>
 // ─── PERSISTENCE ─────────────────────────────────────────────────────────────
-var ST = {done:{}, notes:{}, bibManual:{}, exerc:{}};
+var ST = {done:{}, notes:{}, bibManual:{}, exerc:{}, focus:{date:'',count:0}};
 try { var s = localStorage.getItem('pp27'); if(s) ST = JSON.parse(s); } catch(e){}
 if(!ST.bibManual) ST.bibManual = {};
 if(!ST.exerc) ST.exerc = {};
+if(!ST.focus) ST.focus = {date:'',count:0};
 function save(){ try{ localStorage.setItem('pp27', JSON.stringify(ST)); }catch(e){} }
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
@@ -6013,6 +6100,102 @@ function saveExerc(sid, field, val) {
   if(w) document.getElementById('pg-'+w.id).innerHTML = buildWeekPage(w);
 }
 
+// ─── FOCO (POMODORO) ────────────────────────────────────────────────────────
+var FOCUS = {duration:25*60, remaining:25*60, running:false, timerId:null};
+var FOCUS_TIPS = [
+  'Antes de começar: respire três vezes e releia a tarefa mais importante do dia.',
+  'Desligue notificações. 25 minutos de atenção plena valem mais que 2 horas distraído.',
+  'Releia o objetivo desta sessão antes de começar — o que exatamente você vai produzir?',
+  'Sem celular por perto. Se travar em algo, anote e continue — resolva depois.',
+  'Uma tarefa de cada vez. Se vier outro pensamento, anote e volte ao foco.',
+  'Beba água antes de começar. Corpo hidratado, mente mais alerta.',
+  'Nada de abrir e-mail ou redes sociais até o alarme tocar.'
+];
+
+function focusTodayKey() {
+  var d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+}
+
+function initFocusWidget() {
+  if(!ST.focus || ST.focus.date !== focusTodayKey()) {
+    ST.focus = {date: focusTodayKey(), count: 0};
+    save();
+  }
+  document.getElementById('focusTip').textContent = FOCUS_TIPS[Math.floor(Math.random()*FOCUS_TIPS.length)];
+  updateFocusCount();
+  renderFocusTime();
+}
+
+function toggleFocusWidget() {
+  document.getElementById('focusBody').classList.toggle('closed');
+  document.getElementById('focusArr').classList.toggle('closed');
+}
+
+function setFocusDuration(min) {
+  if(FOCUS.running) return;
+  FOCUS.duration = min*60;
+  FOCUS.remaining = min*60;
+  document.getElementById('focusDur25').classList.toggle('active', min===25);
+  document.getElementById('focusDur50').classList.toggle('active', min===50);
+  renderFocusTime();
+}
+
+function renderFocusTime() {
+  var m = Math.floor(FOCUS.remaining/60), s = FOCUS.remaining%60;
+  document.getElementById('focusTime').textContent = String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+  var circ = 2*Math.PI*66;
+  var frac = FOCUS.remaining/FOCUS.duration;
+  var fg = document.getElementById('focusRingFg');
+  fg.setAttribute('stroke-dasharray', circ);
+  fg.setAttribute('stroke-dashoffset', circ*(1-frac));
+}
+
+function startFocus() {
+  if(FOCUS.running) return;
+  FOCUS.running = true;
+  document.getElementById('focusStatus').textContent = 'em foco';
+  FOCUS.timerId = setInterval(function() {
+    FOCUS.remaining--;
+    renderFocusTime();
+    if(FOCUS.remaining <= 0) completeFocus();
+  }, 1000);
+}
+
+function pauseFocus() {
+  FOCUS.running = false;
+  clearInterval(FOCUS.timerId);
+  document.getElementById('focusStatus').textContent = 'pausado';
+}
+
+function resetFocus() {
+  FOCUS.running = false;
+  clearInterval(FOCUS.timerId);
+  FOCUS.remaining = FOCUS.duration;
+  document.getElementById('focusStatus').textContent = 'parado';
+  renderFocusTime();
+}
+
+function completeFocus() {
+  FOCUS.running = false;
+  clearInterval(FOCUS.timerId);
+  document.getElementById('focusStatus').textContent = 'concluído!';
+  if(!ST.focus || ST.focus.date !== focusTodayKey()) ST.focus = {date: focusTodayKey(), count:0};
+  ST.focus.count++;
+  save();
+  updateFocusCount();
+  FOCUS.remaining = FOCUS.duration;
+  renderFocusTime();
+  setTimeout(function(){
+    if(!FOCUS.running) document.getElementById('focusStatus').textContent = 'parado';
+  }, 4000);
+}
+
+function updateFocusCount() {
+  var n = (ST.focus && ST.focus.date === focusTodayKey()) ? ST.focus.count : 0;
+  document.getElementById('focusCount').textContent = n + (n===1?' sessão concluída hoje':' sessões concluídas hoje');
+}
+
 function copyP(sid) {
   var el = document.getElementById('p-'+sid);
   if(!el) return;
@@ -6224,6 +6407,7 @@ function renderBibChecklist() {
 buildUI();
 document.getElementById('weekPages').insertAdjacentHTML('beforeend', '<div class="page" id="pg-bibedital"></div>');
 renderDash();
+initFocusWidget();
 
 // Build phase pages initially
 document.getElementById('pg-ph1').id = 'pg-ph1';
