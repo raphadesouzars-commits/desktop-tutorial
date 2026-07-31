@@ -3681,6 +3681,200 @@ var PHASES = [
   {id:3,label:'F3',title:'Revisão e simulados',period:'02 Ago – 26 Set 2027 (8 semanas)',hours:'~250h',color:'oklch(0.5 0.10 60)',bg:'oklch(0.96 0.03 75)'}
 ];
 
+// ─── ANEXO 2-B: BIBLIOGRAFIA DO EDITAL ─────────────────────────────────────────
+var BIB_CATS = {"I": "Manobrabilidade do Navio", "II": "Arte Naval", "III": "Navegação em Águas Restritas", "IV": "Legislação e Regulamentação", "V": "Meteorologia, Oceanografia e Navegação", "VI": "Comunicações", "VII": "Conhecimentos Gerais"};
+var BIBLIOGRAFIA_EDITAL = [
+  {id:'I.1',cats:['I'],group:null,autor:'CRENSHAW, Russell Sydnor',obra:'Naval Shiphandling',edicao:'4. ed. Annapolis: U.S. Naval Institute, 1975',caps:'Cap. 2 — Forces Affecting the Ship'},
+  {id:'I.2',cats:['I'],group:null,autor:'LEWIS, Edward V.',obra:'Principles of Naval Architecture',edicao:'3. ed. Jersey City: SNAME, 1988-1989',caps:'Vol. II Cap. V (Seções 1,3,4,5) · Cap. VI (Seções 1,2,4,6,7,10) · Vol. III Cap. IX (Seções 1,3,4,5,6,10,12,13,14)'},
+  {id:'I.3',cats:['I'],group:null,autor:'LARSSON, Lars; RAVEN, Hoyte C.',obra:'Ship Resistance and Flow',edicao:'Jersey City: SNAME, 2010',caps:'Caps. 1 a 8'},
+  {id:'I.4',cats:['I'],group:'Propulsão do Navio e Propulsores',autor:'BERTRAM, Volker',obra:'Practical Ship Hydrodynamics',edicao:'2. ed. Oxford: Elsevier, 2012',caps:'Cap. 2 (Propellers) e Cap. 3 (Resistance and Propulsion)'},
+  {id:'I.5',cats:['I'],group:'Superfícies de Controle (lemes)',autor:'BERTRAM, Volker',obra:'Practical Ship Hydrodynamics',edicao:'2. ed. Oxford: Elsevier, 2012',caps:'Cap. 6 (Ship Maneuvering)'},
+  {id:'I.6',cats:['I'],group:'A Dinâmica de Comportamento do Navio e sua Controlabilidade',autor:'IMO',obra:'Explanatory Notes to the Standards for Ship Manoeuvrability',edicao:'London: IMO, 2002. MSC/Circ.1053, 16 Dec. 2002',caps:'Caps. 1 a 3'},
+  {id:'I.7',cats:['I'],group:null,autor:'IMO',obra:'Standards for Ship Manoeuvrability',edicao:'London: IMO, 2002. Resolution MSC.137(76), 4 Dec. 2002',caps:'Annex 6 — itens 1 a 6'},
+  {id:'I.8',cats:['I'],group:null,autor:'SANTOS, Edson Mesquita dos',obra:'A Manobrabilidade do Navio no Século 21',edicao:'1. ed. Rio de Janeiro: CONAPRA, 2021',caps:'Caps. 2 a 11'},
+  {id:'I.9',cats:['I'],group:null,autor:'SANTOS, Edson Mesquita dos',obra:'Princípios de Hidrodinâmica e Ação das Ondas sobre o Movimento do Navio',edicao:'1. ed. Rio de Janeiro: CONAPRA, 2021',caps:'Caps. 3 e 4'},
+  {id:'I.10',cats:['I'],group:null,autor:'IMO',obra:'Revised Guidance to the Master for Avoiding Dangerous Situations in Adverse Weather and Sea Conditions',edicao:'London: IMO, 2007. MSC.1/Circ.1228, 11 Jan. 2007',caps:''},
+  {id:'I.11',cats:['I'],group:null,autor:'IMO',obra:'Provision and Display of Manoeuvring Information on Board Ships',edicao:'London: IMO, 1987. Resolution A.601(15), 19 Nov. 1987',caps:''},
+  {id:'II.1',cats:['II'],group:null,autor:'FONSECA, Maurílio M.',obra:'Arte Naval',edicao:'v. 1. 8. ed. Rio de Janeiro: Marinha do Brasil, 2019',caps:'Caps. 1, 2, 3, 8, 9, 10, 11 e 12'},
+  {id:'II.2',cats:['II'],group:null,autor:'MacELREVEY, Daniel H.',obra:'Shiphandling for the Mariner',edicao:'4. ed. Centreville: Cornell Maritime Press, 2004',caps:''},
+  {id:'II.3',cats:['II'],group:null,autor:'IMO',obra:'International Convention for the Safety of Life at Sea (SOLAS), 1974, as amended',edicao:'London: IMO, 1974. Regulation V/23.3.3',caps:''},
+  {id:'II.4',cats:['II'],group:null,autor:'IMO',obra:'Unified Interpretation of SOLAS Regulation V/23.3.3 on Pilot Transfer Arrangements',edicao:'London: IMO, 2019. MSC.1/Circ.1495/Rev.1',caps:''},
+  {id:'II.5',cats:['II'],group:null,autor:'IMO',obra:'Required Pilot Transfer Arrangements',edicao:'London: IMO, 2012. MSC.1/Circ.1428',caps:''},
+  {id:'II.6',cats:['II'],group:null,autor:'IMO',obra:'Pilot Transfer Arrangements',edicao:'London: IMO, 2011. Resolution A.1045(27), 30 Nov. 2011',caps:''},
+  {id:'II.7',cats:['II'],group:null,autor:'IMO',obra:'Amendments to the Recommendation on Pilot Transfer Arrangements (Res. A.1045(27))',edicao:'London: IMO, 2015. Resolution A.1108(29), 2 Dec. 2015',caps:''},
+  {id:'II.8',cats:['II'],group:null,autor:'NAYAK, Santosha K.',obra:'Theory and Practices of Marine Pilotage',edicao:'Amazon Digital Services LLC – KDP Print US, 2020',caps:'Caps. 3, 4, 13, 14, 15, 16, 17, 18 e 19'},
+  {id:'II.9',cats:['II'],group:null,autor:'HENSEN, Henk',obra:'Tug Use in Port: A Practical Guide',edicao:'4. ed. Rotterdam: STC Publishing, 2021',caps:'Caps. 1, 2, 3, 4, 5, 6, 7 e 9'},
+  {id:'II.10',cats:['II'],group:null,autor:'HENSEN, Henk; VAN DER LAAN, Markus',obra:'Estabilidade dos Rebocadores: um Guia Prático para Operações Seguras',edicao:'Rio de Janeiro: FGMar, 2022',caps:'Cap. 2'},
+  {id:'II.11',cats:['II'],group:null,autor:'CLARK, I. C.',obra:'Mooring and Anchoring Ships: Principles and Practice',edicao:'v. 1. London: The Nautical Institute, 2009',caps:'Cap. 6'},
+  {id:'II.12',cats:['II'],group:null,autor:'FRAGOSO, Otávio; CAJATY, Marcelo',obra:'Rebocadores Portuários',edicao:'Rio de Janeiro: C. I. Editora, 2002',caps:''},
+  {id:'II.13',cats:['II'],group:null,autor:'PIANC',obra:'Ship Dimensions and Data for Design of Marine Infrastructure',edicao:'Brussels: PIANC, 2022',caps:'Caps. 1 e 2'},
+  {id:'III.1',cats:['III'],group:null,autor:'SWIFT, A. J.; BAILEY, T. J.',obra:'Bridge Team Management: a Practical Guide',edicao:'2. ed. London: The Nautical Institute, 2004',caps:'Caps. 1 a 7'},
+  {id:'III.2',cats:['III'],group:null,autor:'MIGUENS, Altineu Pires',obra:'Navegação: a Ciência e a Arte',edicao:'Rio de Janeiro: DHN, [s.d.]. v. 1 e v. 3',caps:'Vol. I: Caps. 1 a 8, 10, 11, 12, 13 e 14 · Vol. III: Caps. 37, 38, 40 e 42'},
+  {id:'III.3',cats:['III'],group:null,autor:'INTERNATIONAL CHAMBER OF SHIPPING',obra:'Bridge Procedures Guide',edicao:'6. ed. London: ICS, 2022',caps:'Caps. 2, 3, 5 e 6'},
+  {id:'III.4',cats:['III'],group:null,autor:'IMO',obra:'International Convention for the Safety of Life at Sea (SOLAS) – Consolidated Edition 2024',edicao:'London, 2024',caps:'Cap. V — Safety of Navigation'},
+  {id:'III.5',cats:['III'],group:null,autor:'BENTO, Carlos Norberto Stumpf',obra:'Navegação Integrada',edicao:'4. ed. Niterói: Claudio Ventura Comunicação, 2013 (e-book desde 2022)',caps:'Caps. 1 a 4'},
+  {id:'III.6',cats:['III'],group:null,autor:'NAYAK, Santosha K.',obra:'Theory and Practices of Marine Pilotage',edicao:'Amazon Digital Services LLC – KDP Print US, 2020',caps:'Caps. 5, 6 e 13'},
+  {id:'III.7',cats:['III'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-202/DPC — Normas da Autoridade Marítima para Embarcações Empregadas na Navegação Interior',edicao:'',caps:'Cap. 11'},
+  {id:'III.8',cats:['III'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-511/DHN — Navegação e Cartas Náuticas',edicao:'',caps:''},
+  {id:'III.9',cats:['III'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-601/DHN — Normas da Autoridade Marítima para Auxílios à Navegação',edicao:'',caps:''},
+  {id:'III.10',cats:['III'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-602/DHN — Serviço de Tráfego de Embarcações (VTS)',edicao:'',caps:''},
+  {id:'III.11',cats:['III'],group:null,autor:'IMO',obra:'Adoption of the Revised Performance Standards for Radar Equipment',edicao:'London: IMO, 2004. Resolution MSC.192(79)',caps:''},
+  {id:'III.12',cats:['III'],group:null,autor:'IMO',obra:'Revised Guidelines for the Onboard Operational Use of Shipborne AIS',edicao:'London: IMO, 2015. Resolution A.1106(29)',caps:''},
+  {id:'III.13',cats:['III'],group:null,autor:'IMO',obra:'Performance Standards for Electronic Chart Display and Information Systems (ECDIS)',edicao:'London: IMO, 2022. Resolution MSC.530(106)',caps:''},
+  {id:'III.14',cats:['III'],group:null,autor:'IMO',obra:'Guidelines for Dynamic Positioning System (DP) Operator Training',edicao:'London: IMO, 2017. MSC.1/Circ.738/Rev.2, 16 June 2017',caps:''},
+  {id:'III.15',cats:['III'],group:null,autor:'IMO',obra:'Guidelines for Vessels with Dynamic Positioning (DP) Systems',edicao:'London: IMO, 2017. MSC.1/Circ.1580, 16 June 2017',caps:''},
+  {id:'III.16',cats:['III'],group:null,autor:'IMO',obra:'Convention on the International Regulations for Preventing Collisions at Sea (COLREG)',edicao:'Consolidated edition 2018. London: IMO, 2003',caps:''},
+  {id:'III.17',cats:['III'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-501/DHN — Normas da Autoridade Marítima para Levantamentos Hidrográficos',edicao:'',caps:''},
+  {id:'IV.1',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-201/DPC — Normas da Autoridade Marítima para Embarcações Empregadas na Navegação de Mar Aberto',edicao:'',caps:'Cap. 7 — Borda-livre e Estabilidade Intacta. Art. 7.1 a 7.3 e 7.10 a 7.14'},
+  {id:'IV.2',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-204/DPC — Normas da Autoridade Marítima para Tráfego e Permanência de Embarcações em Águas Jurisdicionais Brasileiras',edicao:'',caps:''},
+  {id:'IV.3',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-302/DPC — Normas da Autoridade Marítima para Inquéritos Administrativos sobre Acidentes e Fatos da Navegação (IAFN)',edicao:'',caps:''},
+  {id:'IV.4',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-311/DPC — Normas da Autoridade Marítima para o Serviço de Praticagem',edicao:'',caps:''},
+  {id:'IV.5',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-601/DHN — Normas da Autoridade Marítima para Auxílios à Navegação',edicao:'',caps:''},
+  {id:'IV.6',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-112/DPC — Normas da Autoridade Marítima para Cerimonial da Marinha Mercante',edicao:'',caps:''},
+  {id:'IV.7',cats:['IV'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-602/DHN — Serviço de Tráfego de Embarcações (VTS)',edicao:'',caps:''},
+  {id:'IV.8',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 2.180, de 5 de fevereiro de 1954 — Dispõe sobre o Tribunal Marítimo',edicao:'Brasília, DF, 1954',caps:''},
+  {id:'IV.9',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 9.537, de 11 de dezembro de 1997 — LESTA',edicao:'Brasília, DF, 1997 (texto atualizado)',caps:''},
+  {id:'IV.10',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 14.813, de 15 de janeiro de 2024 — Regulamenta a Atividade de Praticagem',edicao:'Brasília, DF, 2024',caps:''},
+  {id:'IV.11',cats:['IV'],group:null,autor:'BRASIL',obra:'Decreto nº 2.596, de 18 de maio de 1998 — Aprova o RLESTA',edicao:'Brasília, DF, 1998',caps:''},
+  {id:'IV.12',cats:['IV'],group:null,autor:'BRASIL. MARINHA DO BRASIL',obra:'Portaria nº 37/MB, de 21 de fevereiro de 2022 — Estrutura da Autoridade Marítima',edicao:'Brasília, DF, 2021',caps:''},
+  {id:'IV.13',cats:['IV'],group:null,autor:'IMO',obra:'Convention on the International Regulations for Preventing Collisions at Sea (COLREG), 1972',edicao:'Consolidated edition 2018. London: IMO, 2003',caps:''},
+  {id:'IV.14',cats:['IV'],group:null,autor:'MARINHA DO BRASIL / DHN',obra:'Publicações Náuticas da DHN',edicao:'Cartas Náuticas · Carta 12.000 · Avisos aos Navegantes · Roteiro · Lista de Faróis · Lista de Auxílios-rádio · Tábuas das Marés · Cartas de Correntes de Maré · Cartas Piloto',caps:''},
+  {id:'IV.15',cats:['IV'],group:null,autor:'BRASIL',obra:'Serviço de Busca e Salvamento Marítimo (SAR) no Brasil',edicao:'www.salvamarbrasil.mar.mil.br',caps:''},
+  {id:'IV.16',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 12.815, de 5 de junho de 2013 — Exploração de Portos e Instalações Portuárias',edicao:'Brasília, DF, 2013',caps:'Caps. I, IV e VIII'},
+  {id:'IV.17',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei Complementar nº 97, de 9 de junho de 1999 — Normas Gerais das Forças Armadas',edicao:'Brasília, DF, 1999 (texto atualizado)',caps:'Cap. VI — Art. 17'},
+  {id:'IV.18',cats:['IV'],group:null,autor:'IMO',obra:'Recommendations on Training and Certification and on Operational Procedures for Maritime Pilots other than Deep-Sea Pilots',edicao:'London: IMO, 2003. Resolution A.960(23), 5 Dec. 2003',caps:''},
+  {id:'IV.19',cats:['IV'],group:null,autor:'BRASIL. MINISTÉRIO DA DEFESA',obra:'Glossário das Forças Armadas: MD35-G-01',edicao:'5. ed. Brasília, DF, 2015',caps:''},
+  {id:'IV.20',cats:['IV'],group:null,autor:'BRASIL. MINISTÉRIO DA DEFESA',obra:'Política Nacional de Defesa',edicao:'Brasília, DF, 2025',caps:''},
+  {id:'IV.21',cats:['IV'],group:null,autor:'BRASIL',obra:'Decreto nº 12.481, de 2 de junho de 2025 — Institui a Política Marítima Nacional',edicao:'Brasília, DF, 2025',caps:''},
+  {id:'IV.22',cats:['IV'],group:null,autor:'BRASIL',obra:'Decreto nº 2.256, de 17 de junho de 1997 — Regulamenta a Lei nº 9.432/1997',edicao:'Brasília, DF, 1997',caps:''},
+  {id:'IV.23',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 7.642, de 18 de dezembro de 1987 — Procuradoria Especial da Marinha (PEM)',edicao:'Brasília, DF, 1987',caps:''},
+  {id:'IV.24',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 7.652, de 3 de fevereiro de 1988 — Registro da Propriedade Marítima',edicao:'Brasília, DF, 1988',caps:''},
+  {id:'IV.25',cats:['IV'],group:null,autor:'BRASIL',obra:'Lei nº 9.432, de 8 de janeiro de 1997 — Ordenação do Transporte Aquaviário',edicao:'Brasília, DF, 1997 (texto atualizado)',caps:''},
+  {id:'V.1',cats:['V'],group:null,autor:'MIGUENS, Altineu Pires',obra:'Navegação: a Ciência e a Arte',edicao:'Rio de Janeiro: DHN, [s.d.]. v. 3',caps:'Cap. 45 — Noções de Meteorologia para Navegantes'},
+  {id:'V.2',cats:['V'],group:null,autor:'YNOUE, R. Y.; REBOITA, M. S.; AMBRIZZI, T.; SILVA, G. A. M.',obra:'Meteorologia: Noções Básicas',edicao:'Oficina de Textos, 2017',caps:''},
+  {id:'V.3',cats:['V'],group:null,autor:'LOBO, P. R. Valgas; SOARES, C. A.',obra:'Meteorologia e Oceanografia',edicao:'4. ed. Rio de Janeiro, 2019',caps:''},
+  {id:'V.4',cats:['V'],group:null,autor:'SANTOS, Edson Mesquita dos',obra:'Princípios de Hidrodinâmica e Ação das Ondas sobre o Movimento do Navio',edicao:'1. ed. Rio de Janeiro: CONAPRA, 2021',caps:''},
+  {id:'V.5',cats:['V'],group:null,autor:'PIANC',obra:'Use of Hydro/Meteo Information for Port Access and Operations',edicao:'Brussels: PIANC, 2012 (Report 117)',caps:'Caps. 2 a 6'},
+  {id:'V.6',cats:['V'],group:null,autor:'MARINHA DO BRASIL',obra:'NORMAM-701/DHN — Normas da Autoridade Marítima para as Atividades de Meteorologia Marítima',edicao:'',caps:''},
+  {id:'VI.1',cats:['VI'],group:null,autor:'IMO',obra:'IMO Standard Marine Communication Phrases (SMCP)',edicao:'London: IMO, 2001. Resolution A.918(22), 29 Nov. 2001',caps:''},
+  {id:'VI.2',cats:['VI'],group:null,autor:'BRASIL. Diretoria de Portos e Costas',obra:'Manual do Curso Especial de Radioperador Geral',edicao:'Rio de Janeiro',caps:''},
+  {id:'VI.3',cats:['VI'],group:null,autor:'IMO',obra:'International Code of Signals',edicao:'London: IMO, 2005',caps:'Caps. I-V, VII, VIII, X, XI, XII · Seção Geral (I-V) · Seção Médica · Apêndices 1, 2 e 4'},
+  {id:'VII.1',cats:['VII'],group:'Planejamento Portuário',autor:'IMO',obra:'Ship/Port Interface: List of Publications Relevant to the Ship/Port Interface',edicao:'London: IMO, 2025. FAL.6/Circ.14/Rev.2, 2 Apr. 2025',caps:''},
+  {id:'VII.2',cats:['VII'],group:'Planejamento Portuário',autor:'CONAPRA',obra:'Planejamento Portuário: Recomendações para Acessos Náuticos',edicao:'',caps:'Caps. 2 e 8'},
+  {id:'VII.3',cats:['VII'],group:'Planejamento Portuário',autor:'PIANC',obra:'Harbour Approach Channels: Design Guidelines',edicao:'Brussels: PIANC, 2014',caps:'Caps. 1, 2 e 3'},
+  {id:'VII.4',cats:['VII'],group:'Planejamento Portuário',autor:'MARINHA DO BRASIL',obra:'NORMAM-224/DPC — Normas da Autoridade Marítima para Folga Dinâmica para Abaixo da Quilha',edicao:'',caps:''},
+  {id:'VII.5',cats:['VII'],group:'Fatores Humanos',autor:'IMO',obra:'Guidelines on Fatigue',edicao:'London: IMO, 2019. MSC.1/Circ.1598',caps:''},
+  {id:'VII.6',cats:['VII'],group:'Fatores Humanos',autor:'LIVINGSTONE, Grant H.; LIVINGSTONE, George H.',obra:'Shiphandling the Beautiful Game',edicao:'v. 1. London: The Nautical Institute, 2025',caps:'Caps. 1, 3, 11 e 12'},
+  {id:'VII.7',cats:['VII'],group:'Fatores Humanos',autor:'ONU',obra:'Declaração Universal dos Direitos Humanos',edicao:'Rio de Janeiro: ONU, 2009',caps:''},
+  {id:'VII.8',cats:['VII'],group:'Meio Ambiente',autor:'BRASIL',obra:'Decreto nº 2.508, de 4 de março de 1998 — Promulga a MARPOL 73/78',edicao:'Brasília, DF, 1998',caps:''},
+  {id:'VII.9',cats:['VII'],group:'Economia Marítima e Amazônia Azul',autor:'STOPFORD, Martin',obra:'Economia Marítima',edicao:'3. ed. São Paulo: Blucher, 2017',caps:'Caps. 1 a 17 (destaque 9.6 — comércio marítimo sul-americano)'},
+  {id:'VII.10',cats:['VII'],group:'Direito Marítimo',autor:'PIMENTA, Matusalém Gonçalves',obra:'Direito Processual Marítimo',edicao:'3. ed. Rio de Janeiro: Lumen Juris, 2020',caps:'Caps. 1 a 5 e 7 a 11'},
+];
+var REF_TO_BIB = {
+  '5 normas IMO pilot transfer': ['II.3','II.4','II.5','II.6','II.7'],
+  'Bento — Navegação integrada': ['III.5'],
+  'CONAPRA — Planejamento Portuario': ['VII.2'],
+  'Clark — Mooring and Anchoring Ships': ['II.11'],
+  'Crenshaw — Naval Shiphandling (USN Institute, 1975)': ['I.1'],
+  'Decreto 12.481/2025 + Política Nacional de Defesa 2025': ['IV.21','IV.20'],
+  'Decreto 2.508/1998 — MARPOL 73/78': ['VII.8'],
+  'Decreto 2.596/1998 — RLESTA': ['IV.11'],
+  'Fonseca — Arte Naval': ['II.1'],
+  'Fonseca — Arte Naval, 8. ed.': ['II.1'],
+  'GMDSS — Manual do Radioperador DPC': ['VI.2'],
+  'Hensen & Van der Laan — Estabilidade dos rebocadores': ['II.10'],
+  'Hensen — Tug Use in Port, 4. ed.': ['II.9'],
+  'Hensen — cap. 7': ['II.9'],
+  'ICS Bridge Procedures Guide, 6. ed.': ['III.3'],
+  'IMO COLREG 2018': ['III.16','IV.13'],
+  'IMO COLREG — Consolidated edition 2018': ['III.16','IV.13'],
+  'IMO FAL.6/Circ.14/Rev.2 (2025)': ['VII.1'],
+  'IMO International Code of Signals 2005': ['VI.3'],
+  'IMO MSC.1/Circ.1228': ['I.10'],
+  'IMO MSC.1/Circ.1598 — Fadiga': ['VII.5'],
+  'IMO MSC.137(76) + MSC/Circ.1053': ['I.7','I.6'],
+  'IMO MSC.137(76) — Standards for ship manoeuvrability': ['I.7'],
+  'IMO MSC/Circ.1053': ['I.6'],
+  'IMO MSC/Circ.1053 — Explanatory notes': ['I.6'],
+  'IMO Res. A.960(23)': ['IV.18'],
+  'IMO SMCP Res. A.918(22)': ['VI.1'],
+  'IMO SMCP — Res. A.918(22)': ['VI.1'],
+  'IMO SOLAS Consolidated 2024': ['III.4'],
+  'Larsson & Raven — Ship resistance and flow (SNAME, 2010)': ['I.3'],
+  'Lei 12.815/2013 + LC 97/1999': ['IV.16','IV.17'],
+  'Lei 14.813/2024 + NORMAM-311': ['IV.10','IV.4'],
+  'Lei 14.813/2024 — Regulamenta a praticagem': ['IV.10'],
+  'Lei 2.180/1954 — Tribunal Marítimo': ['IV.8'],
+  'Lei 9.537/1997 — LESTA (texto atualizado)': ['IV.9'],
+  'Lewis (PNA) Vol. II — Cap. V': ['I.2'],
+  'Lewis (PNA) Vol. II — Cap. VI': ['I.2'],
+  'Lewis (PNA) Vol. III — Cap. IX': ['I.2'],
+  'Livingstone — Shiphandling: the beautiful game': ['VII.6'],
+  'Livingstone — Shiphandling: the beautiful game, v.1 (2025)': ['VII.6'],
+  'Lobo & Soares': ['V.3'],
+  'Lobo & Soares — Meteorologia e oceanografia, 4. ed.': ['V.3'],
+  'Lobo & Soares — Meteorologia e oceanografia, 4. ed. (2019)': ['V.3'],
+  'MacElrevey — Shiphandling for the Mariner': ['II.2'],
+  'Miguens Vol.III': ['III.2'],
+  'Miguens — Navegacao Vol.III': ['III.2'],
+  'Miguens — Navegação Vol.I': ['III.2'],
+  'Miguens — Navegação Vol.III': ['III.2'],
+  'NORMAM-112/DPC': ['IV.6'],
+  'NORMAM-201/DPC': ['IV.1'],
+  'NORMAM-204/DPC': ['IV.2'],
+  'NORMAM-224/DPC — Folga dinamica': ['VII.4'],
+  'NORMAM-302/DPC': ['IV.3'],
+  'NORMAM-311/DPC — Serviço de praticagem': ['IV.4'],
+  'NORMAM-511/DHN': ['III.8'],
+  'NORMAM-601/DHN': ['III.9','IV.5'],
+  'NORMAM-602/DHN — VTS': ['III.10','IV.7'],
+  'NORMAM-701/DHN — Meteorologia maritima': ['V.6'],
+  'Nayak — Marine Pilotage': ['II.8','III.6'],
+  'Nayak — Theory and Practices of Marine Pilotage': ['II.8','III.6'],
+  'ONU — Declaracao Universal dos Direitos Humanos': ['VII.7'],
+  'PIANC Report 117 — Hydro/meteorological information': ['V.5'],
+  'PIANC — Harbour Approach Channels (2014)': ['VII.3'],
+  'PIANC — Ship Dimensions and Data (2022)': ['II.13'],
+  'Pimenta — Direito processual maritimo': ['VII.10'],
+  'Pimenta — Direito processual marítimo': ['VII.10'],
+  'Santos — A manobrabilidade do navio no seculo 21 (CONAPRA, 2021)': ['I.8'],
+  'Santos — Hidrodinamica e acao das ondas': ['I.9','V.4'],
+  'Santos — Manobrabilidade no seculo 21': ['I.8'],
+  'Santos — Manobrabilidade no século 21 (CONAPRA, 2021)': ['I.8'],
+  'Santos — Principios de hidrodinamica e acao das ondas': ['I.9','V.4'],
+  'Stopford — Economia maritima, 3. ed. (Blucher, 2017)': ['VII.9'],
+  'Swift & Bailey + ICS BPG': ['III.1','III.3'],
+  'Swift & Bailey — Bridge Team Management': ['III.1'],
+  'Swift & Bailey — Bridge Team Management, 2. ed.': ['III.1'],
+  'Todo o material produzido na Fase 2': [],
+  'Ynoue et al.': ['V.2'],
+  'Ynoue et al. — Meteorologia: nocoes basicas (Oficina de Textos, 2017)': ['V.2'],
+};
+function getBibIds(ref, caps) {
+  if (ref.indexOf('Bertram') !== -1) {
+    var ids = ['I.4'];
+    if (caps && caps.indexOf('6') !== -1) ids.push('I.5');
+    return ids;
+  }
+  return REF_TO_BIB[ref] || [];
+}
+function computeBibProgress() {
+  var prog = {};
+  BIBLIOGRAFIA_EDITAL.forEach(function(it){ prog[it.id] = {weeks:[]}; });
+  WEEKS.forEach(function(w) {
+    (w.bib||[]).forEach(function(b) {
+      getBibIds(b.ref, b.caps).forEach(function(id) {
+        if(prog[id] && prog[id].weeks.indexOf(w) === -1) prog[id].weeks.push(w);
+      });
+    });
+  });
+  Object.keys(prog).forEach(function(id) {
+    prog[id].done = prog[id].weeks.filter(function(w){ return weekDone(w); }).length;
+  });
+  return prog;
+}
+
+
 // Helper to make a full session object (weeks 1-2)
 function sess(id, badge, bbg, bc, title, hrs, infos, steps, promptTitle, promptText, tip) {
   return {id:id, badge:badge, badgeBg:bbg, badgeC:bc, title:title, hours:hrs,
@@ -5680,15 +5874,15 @@ function go(id) {
   document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
 
-  var pg = document.getElementById('pg-'+id) || document.getElementById(id==='dash'?'pg-dash':null);
-  if(!pg && id==='dash') pg = document.getElementById('pg-dash');
-  if(pg) { pg.innerHTML = id==='dash' ? pg.innerHTML : buildWeekPage(WEEKS.find(function(w){ return w.id===id; })||{}); pg.classList.add('active'); }
-  else { document.getElementById('pg-dash').classList.add('active'); id='dash'; }
+  var pg = document.getElementById('pg-'+id);
+  var w = WEEKS.find(function(w){ return w.id===id; });
+  if(pg) { if(w) pg.innerHTML = buildWeekPage(w); pg.classList.add('active'); }
+  else { pg = document.getElementById('pg-dash'); pg.classList.add('active'); id='dash'; }
 
   var ni = document.getElementById('ni-'+id);
   if(ni) ni.classList.add('active');
   current = id;
-  if(id==='dash') renderDash();
+  if(!w) renderDash();
   window.scrollTo(0,0);
 }
 
@@ -5877,10 +6071,69 @@ function renderDash() {
     phHtmlInner += '</div>';
     pg.innerHTML = phHtmlInner;
   });
+
+  renderBibChecklist();
+}
+
+function renderBibChecklist() {
+  var pg = document.getElementById('pg-bibedital');
+  if(!pg) return;
+  var prog = computeBibProgress();
+  var totalTracked = 0, totalDone = 0, totalUntracked = 0;
+  var catsHtml = '';
+
+  Object.keys(BIB_CATS).forEach(function(cat) {
+    var items = BIBLIOGRAFIA_EDITAL.filter(function(it){ return it.cats.indexOf(cat) !== -1; });
+    var catDone = 0, catTracked = 0;
+    items.forEach(function(it) {
+      var p = prog[it.id];
+      if(p.weeks.length > 0) { catTracked++; if(p.done === p.weeks.length) catDone++; }
+    });
+    var catPct = catTracked>0 ? Math.round(catDone/catTracked*100) : 0;
+    totalTracked += catTracked; totalDone += catDone;
+
+    catsHtml += '<div class="section-h">'+cat+' · '+BIB_CATS[cat]+' <span style="font-weight:400;color:var(--muted)">('+catDone+'/'+catTracked+' rastreados concluídos)</span></div>';
+    catsHtml += '<div class="wk-prog"><div class="wk-prog-fill" style="width:'+catPct+'%;background:#0c447c"></div></div>';
+    catsHtml += '<div class="dash-card">';
+    var lastGroup = null;
+    items.forEach(function(it) {
+      if(it.group !== lastGroup) {
+        if(it.group) catsHtml += '<div class="prog-row" style="opacity:.7;font-style:italic">'+it.group+'</div>';
+        lastGroup = it.group;
+      }
+      var p = prog[it.id];
+      var statusTxt, color;
+      if(p.weeks.length === 0) {
+        statusTxt = 'Não vinculado a semana'; color = 'var(--muted)'; totalUntracked++;
+      } else if(p.done === p.weeks.length) {
+        statusTxt = '✓ Concluído'; color = '#085041';
+      } else if(p.done > 0) {
+        statusTxt = p.done+'/'+p.weeks.length+' semanas'; color = '#633806';
+      } else {
+        statusTxt = 'Não iniciado ('+p.weeks.length+(p.weeks.length>1?' semanas':' semana')+')'; color = 'var(--muted)';
+      }
+      var refTitle = (it.autor+' — '+it.obra+(it.edicao?' ('+it.edicao+')':'')).replace(/"/g,'&quot;');
+      catsHtml += '<div class="prog-row" title="'+refTitle+(it.caps?' · '+it.caps.replace(/"/g,'&quot;'):'')+'">'
+                + '<span class="prog-lbl">'+it.id+' · '+it.autor+' — '+it.obra+'</span>'
+                + '<span class="prog-val" style="color:'+color+'">'+statusTxt+'</span>'
+                + '</div>';
+    });
+    catsHtml += '</div>';
+  });
+
+  var overallPct = totalTracked>0 ? Math.round(totalDone/totalTracked*100) : 0;
+  var html = '<div class="crumb"><span class="crumb-link" onclick="go(\'dash\')">Visão geral</span><span class="crumb-sep">/</span><span>Checklist do Edital</span></div>'
+           + '<div class="pg-title">Checklist Bibliográfico do Edital (Anexo 2-B)</div>'
+           + '<div class="pg-sub">Cada item é marcado automaticamente conforme as semanas do plano que o referenciam são concluídas (todas as sessões daquela semana marcadas como estudadas).</div>'
+           + '<div class="pills"><span class="pill outline">'+totalDone+'/'+totalTracked+' itens rastreados concluídos ('+overallPct+'%)</span><span class="pill outline">'+totalUntracked+' itens do edital sem semana associada no cronograma</span></div>'
+           + '<div class="wk-prog"><div class="wk-prog-fill" style="width:'+overallPct+'%;background:#0c447c"></div></div>'
+           + catsHtml;
+  pg.innerHTML = html;
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 buildUI();
+document.getElementById('weekPages').insertAdjacentHTML('beforeend', '<div class="page" id="pg-bibedital"></div>');
 renderDash();
 
 // Build phase pages initially
@@ -5889,11 +6142,13 @@ document.getElementById('pg-ph2').id = 'pg-ph2';
 document.getElementById('pg-ph3').id = 'pg-ph3';
 
 // Add phase nav items
-document.getElementById('sbBody').insertAdjacentHTML('beforeend', 
+document.getElementById('sbBody').insertAdjacentHTML('beforeend',
   '<div class="nav-sec">Visão por fase</div>'
   +'<div class="nav-item" id="ni-ph1" onclick="go(\'ph1\')"><div class="nav-dot" style="background:oklch(0.45 0.08 195)"></div><span class="nav-item-text">Fase 1 · Fundamentos</span></div>'
   +'<div class="nav-item" id="ni-ph2" onclick="go(\'ph2\')"><div class="nav-dot" style="background:oklch(0.45 0.11 265)"></div><span class="nav-item-text">Fase 2 · Aprofundamento</span></div>'
   +'<div class="nav-item" id="ni-ph3" onclick="go(\'ph3\')"><div class="nav-dot" style="background:oklch(0.5 0.10 60)"></div><span class="nav-item-text">Fase 3 · Revisão</span></div>'
+  +'<div class="nav-sec">Edital</div>'
+  +'<div class="nav-item" id="ni-bibedital" onclick="go(\'bibedital\')"><div class="nav-dot" style="background:#0c447c"></div><span class="nav-item-text">Checklist Bibliográfico (Anexo 2-B)</span></div>'
 );
 </script>
 
