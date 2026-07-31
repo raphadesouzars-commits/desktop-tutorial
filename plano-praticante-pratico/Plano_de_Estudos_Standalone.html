@@ -1034,7 +1034,7 @@ button,textarea,input{font-family:inherit;color:inherit}
     <div class="page active" id="pg-dash">
       <div class="dash-hero">
         <div class="dash-eyebrow">Concurso · Marinha do Brasil</div>
-        <h1 class="dash-title">28 meses<br><em>até a prova.</em></h1>
+        <h1 class="dash-title" id="dashCountdown">—<br><em>até a prova.</em></h1>
         <p class="dash-sub">Programa estruturado para o concurso de Praticante de Prático. Início em 03 de agosto de 2026 · Prova prevista para setembro de 2027.</p>
       </div>
       <div class="stats">
@@ -6117,6 +6117,17 @@ function focusTodayKey() {
   return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 }
 
+function updateExamCountdown() {
+  var el = document.getElementById('dashCountdown');
+  if(!el) return;
+  var now = new Date();
+  var target = new Date(2027, 8, 1); // 01/Set/2027 — janela prevista da prova
+  var months = (target.getFullYear()-now.getFullYear())*12 + (target.getMonth()-now.getMonth());
+  if(target.getDate() < now.getDate()) months--;
+  months = Math.max(0, months);
+  el.innerHTML = months+(months===1?' mês':' meses')+'<br><em>até a prova.</em>';
+}
+
 function initFocusWidget() {
   if(!ST.focus || ST.focus.date !== focusTodayKey()) {
     ST.focus = {date: focusTodayKey(), count: 0};
@@ -6408,6 +6419,7 @@ buildUI();
 document.getElementById('weekPages').insertAdjacentHTML('beforeend', '<div class="page" id="pg-bibedital"></div>');
 renderDash();
 initFocusWidget();
+updateExamCountdown();
 
 // Build phase pages initially
 document.getElementById('pg-ph1').id = 'pg-ph1';
