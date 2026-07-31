@@ -722,6 +722,32 @@ button,textarea,input{font-family:inherit;color:inherit}
   box-shadow:0 0 0 3px var(--accent-tint);
 }
 
+.exerc-box{
+  margin-top:10px;padding:10px 12px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+}
+.exerc-lbl{
+  font-size:10px;font-weight:600;
+  color:var(--subtle);
+  text-transform:uppercase;letter-spacing:.08em;
+  display:block;margin-bottom:8px;
+}
+.exerc-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.exerc-row span{font-size:12px;color:var(--muted)}
+.exerc-row input{
+  width:56px;padding:5px 7px;font-size:13px;
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  background:var(--surface);color:var(--ink);
+  font-family:inherit;
+}
+.exerc-row input:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-tint);
+}
+.exerc-pct{font-size:14px;font-weight:700;margin-left:auto}
+
 /* ─── CHECKLIST & BIB ────────────────────────────────────────── */
 .ck-box, .bib-box{
   background:var(--surface);
@@ -3670,9 +3696,10 @@ Base: provas de praticagem 2006, 2008, 2011 e 2012 disponíveis neste projeto.</
 
 <script>
 // ─── PERSISTENCE ─────────────────────────────────────────────────────────────
-var ST = {done:{}, notes:{}, bibManual:{}};
+var ST = {done:{}, notes:{}, bibManual:{}, exerc:{}};
 try { var s = localStorage.getItem('pp27'); if(s) ST = JSON.parse(s); } catch(e){}
 if(!ST.bibManual) ST.bibManual = {};
+if(!ST.exerc) ST.exerc = {};
 function save(){ try{ localStorage.setItem('pp27', JSON.stringify(ST)); }catch(e){} }
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
@@ -5810,7 +5837,7 @@ function buildWeekPage(w) {
        + '</div>'
        + '<div class="day-body" id="dbody-'+d.id+'">';
 
-    d.sessions.forEach(function(s) {
+    d.sessions.forEach(function(s, sidx) {
       var sdone = ST.done[s.id];
       h += '<div class="session">'
          + '<div class="sess-hdr">'
@@ -5847,6 +5874,22 @@ function buildWeekPage(w) {
 
       if(s.tip) {
         h += '<div class="tip">'+s.tip+'</div>';
+      }
+
+      var qTotal = extractQTotal(s.title) || (sidx===0 ? extractQTotal(d.title) : 0);
+      if(qTotal > 0) {
+        var ex = ST.exerc[s.id] || {};
+        var exTotal = ex.total != null ? ex.total : qTotal;
+        var exAcertos = ex.acertos != null ? ex.acertos : '';
+        var exPct = (exTotal>0 && ex.acertos!=null) ? Math.round(ex.acertos/exTotal*100) : null;
+        var exColor = exPct==null ? 'var(--muted)' : exPct>=70 ? 'var(--positive)' : exPct>=50 ? 'var(--warn)' : 'var(--danger)';
+        h += '<div class="exerc-box" id="ex-'+s.id+'">'
+           + '<label class="exerc-lbl">Registro do exercício</label>'
+           + '<div class="exerc-row">'
+           + '<span>Total</span><input type="number" min="0" value="'+exTotal+'" onchange="saveExerc(\''+s.id+'\',\'total\',this.value)">'
+           + '<span>Acertos</span><input type="number" min="0" value="'+exAcertos+'" onchange="saveExerc(\''+s.id+'\',\'acertos\',this.value)">'
+           + '<span class="exerc-pct" id="expct-'+s.id+'" style="color:'+exColor+'">'+(exPct==null?'—':exPct+'%')+'</span>'
+           + '</div></div>';
       }
 
       h += '<label class="notes-lbl">Anotações</label>'
@@ -5951,6 +5994,23 @@ function togCk(wid, idx) {
 function saveNote(sid, val) {
   ST.notes[sid] = val;
   save();
+}
+
+function extractQTotal(title) {
+  var m = title.match(/(\d+)\s*(?:q\.|questões)/gi);
+  if(!m) return 0;
+  var total = 0;
+  m.forEach(function(x){ total += parseInt(x, 10); });
+  return total;
+}
+
+function saveExerc(sid, field, val) {
+  if(!ST.exerc[sid]) ST.exerc[sid] = {};
+  ST.exerc[sid][field] = val === '' ? null : Number(val);
+  save();
+  var m = sid.match(/^(w\d+)/);
+  var w = m && WEEKS.find(function(x){ return x.id===m[1]; });
+  if(w) document.getElementById('pg-'+w.id).innerHTML = buildWeekPage(w);
 }
 
 function copyP(sid) {
