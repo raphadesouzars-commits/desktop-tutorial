@@ -3670,8 +3670,9 @@ Base: provas de praticagem 2006, 2008, 2011 e 2012 disponíveis neste projeto.</
 
 <script>
 // ─── PERSISTENCE ─────────────────────────────────────────────────────────────
-var ST = {done:{}, notes:{}};
+var ST = {done:{}, notes:{}, bibManual:{}};
 try { var s = localStorage.getItem('pp27'); if(s) ST = JSON.parse(s); } catch(e){}
+if(!ST.bibManual) ST.bibManual = {};
 function save(){ try{ localStorage.setItem('pp27', JSON.stringify(ST)); }catch(e){} }
 
 // ─── DATA ────────────────────────────────────────────────────────────────────
@@ -3781,7 +3782,17 @@ var REF_TO_BIB = {
   'Decreto 2.596/1998 — RLESTA': ['IV.11'],
   'Fonseca — Arte Naval': ['II.1'],
   'Fonseca — Arte Naval, 8. ed.': ['II.1'],
+  'Fragoso & Cajaty': ['II.12'],
+  'Fragoso & Cajaty — Rebocadores portuários': ['II.12'],
   'GMDSS — Manual do Radioperador DPC': ['VI.2'],
+  'IMO MSC.192(79) — Radar': ['III.11'],
+  'IMO MSC.1/Circ.1580 + MSC.1/Circ.738/Rev.2 — DP': ['III.14','III.15'],
+  'IMO MSC.530(106) — ECDIS': ['III.13'],
+  'IMO Res. A.1106(29) — AIS': ['III.12'],
+  'NORMAM-202/DPC — Navegação Interior': ['III.7'],
+  'NORMAM-501/DHN — Levantamentos Hidrográficos': ['III.17'],
+  'Portaria 37/MB + Leis 7.642, 7.652, 9.432 + Decreto 2.256': ['IV.12','IV.22','IV.23','IV.24','IV.25'],
+  'SAR Brasil': ['IV.15'],
   'Hensen & Van der Laan — Estabilidade dos rebocadores': ['II.10'],
   'Hensen — Tug Use in Port, 4. ed.': ['II.9'],
   'Hensen — cap. 7': ['II.9'],
@@ -3855,6 +3866,9 @@ function getBibIds(ref, caps) {
     var ids = ['I.4'];
     if (caps && caps.indexOf('6') !== -1) ids.push('I.5');
     return ids;
+  }
+  if (ref.indexOf('Miguens') !== -1 && ref.indexOf('III') !== -1) {
+    return (caps && caps.indexOf('45') !== -1) ? ['V.1'] : ['III.2'];
   }
   return REF_TO_BIB[ref] || [];
 }
@@ -4214,7 +4228,7 @@ var COMPACT_WEEKS = [
    ['Sáb','#fcebeb','#a32d2d',5,'COLREG Regra 19 + NORMAM-112 + revisão semanal','Visibilidade restrita + cerimonial da Marinha Mercante'],
    ['Dom','#f1efe8','#5f5e5a',1,'Organização e preparo Semana 7','Máximo 1h']],
   ['Miguens Vol.I cap. 14 lido','Bento caps. 1–4 lidos','COLREG Partes A, B Seções I, II, III (Regras 1–19) lidos textualmente','IMO Res. A.1106(29) e MSC.530(106) lidos estruturalmente','NORMAM-112/DPC lida e fichada','Quadro de hierarquia Regra 18 criado'],
-  [['Essencial','IMO COLREG — Consolidated edition 2018','Partes A, B, C, D, E'],['Essencial','Miguens — Navegação Vol.I','Cap. 14'],['Alta','Bento — Navegação integrada','Caps. 1–4'],['Legislação','NORMAM-112/DPC','Integral']]],
+  [['Essencial','IMO COLREG — Consolidated edition 2018','Partes A, B, C, D, E'],['Essencial','Miguens — Navegação Vol.I','Cap. 14'],['Alta','Bento — Navegação integrada','Caps. 1–4'],['Alta','IMO Res. A.1106(29) — AIS','Leitura estrutural'],['Alta','IMO MSC.530(106) — ECDIS','Leitura estrutural'],['Legislação','NORMAM-112/DPC','Integral']]],
 
  ['w7',1,7,'COLREG completo — luzes, sinais e pilot transfer IMO','14–20/Set/2026 · Semana 7','Navegação + Arte Naval',25,
   'COLREG Partes C (Regras 20–31), D (Regras 32–37), E e Anexos I–IV. NORMAM-202 cap. 11 (navegação interior). As 5 normas de pilot transfer: SOLAS V/23.3.3, MSC.1/Circ.1495/Rev.1, MSC.1/Circ.1428, Res.A.1045(27) e A.1108(29). Nayak cap. 3. NORMAM-602 (VTS).',
@@ -4226,7 +4240,7 @@ var COMPACT_WEEKS = [
    ['Sáb','#fcebeb','#a32d2d',5,'NORMAM-602 (VTS) + revisão COLREG + índice de prontidão','VTS + consolidação do COLREG'],
    ['Dom','#f1efe8','#5f5e5a',1,'Organização e preparo Semana 8','Máximo 1h']],
   ['COLREG Partes C, D, E e Anexos I–IV lidos textualmente','NORMAM-202 cap. 11 lido','NORMAM-602/DHN lida e fichada','5 normas de pilot transfer lidas e fichadas','Nayak cap. 3 lido','Bloco 1C Navegação COLREG (50 q.) realizado','Cartões de luzes COLREG criados'],
-  [['Essencial','IMO COLREG 2018','Partes C, D, E + Anexos I–IV'],['Essencial','5 normas IMO pilot transfer','SOLAS V/23.3.3 + 4 circulares/resoluções'],['Essencial','Nayak — Marine Pilotage','Cap. 3'],['Legislação','NORMAM-602/DHN — VTS','Integral']]],
+  [['Essencial','IMO COLREG 2018','Partes C, D, E + Anexos I–IV'],['Essencial','5 normas IMO pilot transfer','SOLAS V/23.3.3 + 4 circulares/resoluções'],['Essencial','Nayak — Marine Pilotage','Cap. 3'],['Legislação','NORMAM-202/DPC — Navegação Interior','Cap. 11'],['Legislação','NORMAM-602/DHN — VTS','Integral']]],
 
  ['w8',1,8,'SOLAS Cap. V, GNSS e Tribunal Marítimo','21–27/Set/2026 · Semana 8','Navegação + Legislação',25,
   'SOLAS 2024 Cap. V (Safety of Navigation) integral — tabela de equipamentos por porte. IMO MSC.192(79) radar, MSC.1/Circ.1580 e MSC.1/Circ.738/Rev.2 (DP). Lei 2.180/1954 (Tribunal Marítimo) + Pimenta caps. 1 e 2. Lei 12.815/2013 (Portos) + LC 97/1999 art. 17. Portaria 37/MB + Leis 7.642, 7.652, 9.432 + Decreto 2.256.',
@@ -4238,7 +4252,7 @@ var COMPACT_WEEKS = [
    ['Sáb','#fcebeb','#a32d2d',5,'Portaria 37/MB + Leis 7.642, 7.652, 9.432 + Decreto 2.256 + revisão','Registro, transporte aquaviário e estrutura da Autoridade Marítima'],
    ['Dom','#f1efe8','#5f5e5a',1,'Organização e preparo Semana 9','Máximo 1h']],
   ['SOLAS 2024 Cap. V lido integral','IMO MSC.192(79) lido','Lei 2.180/1954 lida integral','Pimenta caps. 1 e 2 lidos','Lei 12.815/2013 caps. I, IV, VIII lidos','LC 97/1999 art. 17 lido','Portaria 37/MB + Leis 7.642, 7.652, 9.432 + Decreto 2.256 lidos','Tabela de equipamentos SOLAS por porte criada','Bloco 1A Navegação (20 q.) realizado'],
-  [['Essencial','IMO SOLAS Consolidated 2024','Cap. V (Safety of Navigation)'],['Essencial','Lei 2.180/1954 — Tribunal Marítimo','Integral'],['Alta','Pimenta — Direito processual marítimo','Caps. 1 e 2'],['Legislação','Lei 12.815/2013 + LC 97/1999','Caps. indicados no CP']]],
+  [['Essencial','IMO SOLAS Consolidated 2024','Cap. V (Safety of Navigation)'],['Alta','IMO MSC.192(79) — Radar','Leitura estrutural'],['Alta','IMO MSC.1/Circ.1580 + MSC.1/Circ.738/Rev.2 — DP','Leitura estrutural'],['Legislação','NORMAM-501/DHN — Levantamentos Hidrográficos','Estrutural'],['Essencial','Lei 2.180/1954 — Tribunal Marítimo','Integral'],['Alta','Pimenta — Direito processual marítimo','Caps. 1 e 2'],['Legislação','Lei 12.815/2013 + LC 97/1999','Caps. indicados no CP'],['Legislação','Portaria 37/MB + Leis 7.642, 7.652, 9.432 + Decreto 2.256','Integral']]],
 
  ['w9',1,9,'GNSS, ECDIS e AIS — aprofundamento','28/Set–04/Out/2026 · Semana 9','Navegação + Legislação',25,
   'Miguens Vol.III caps. 37 e 38 aprofundado. IMO Res. A.1106(29) AIS e MSC.530(106) ECDIS aprofundados. Bento caps. 1–4 revisão. Blocos 1B e 1D de Navegação. Revisão de LESTA + Lei 14.813 — pontos fracos. Decreto 12.481/2025 (Política Marítima Nacional) e Política Nacional de Defesa 2025.',
@@ -4262,7 +4276,7 @@ var COMPACT_WEEKS = [
    ['Sáb','#fcebeb','#a32d2d',5,'Bloco 1A Legislação (20 q.) + revisão geral da semana','Integrador de toda a legislação estudada'],
    ['Dom','#f1efe8','#5f5e5a',1,'Organização e preparo Semana 11','Máximo 1h']],
   ['COLREG revisão completa realizada','Miguens Vol.III caps. 40 e 42 lidos','SAR Brasil estudado','IMO Res. A.960(23) lida','Bloco 1C Navegação (60 q. COLREG) realizado','Bloco 1A Legislação (20 q.) realizado'],
-  [['Essencial','Miguens Vol.III','Caps. 40 e 42'],['Essencial','IMO Res. A.960(23)','Integral']]],
+  [['Essencial','Miguens Vol.III','Caps. 40 e 42'],['Legislação','SAR Brasil','Estrutural'],['Essencial','IMO Res. A.960(23)','Integral']]],
 
  ['w11',1,11,'Fonseca cap. 12 — manobra do navio + Nayak caps. 5–6','12–18/Out/2026 · Semana 11','Arte Naval',25,
   'Fonseca cap. 12 (Manobra do navio) integral — governo de 1 e 2 hélices, força lateral da hélice, ponto pivô. Nayak caps. 5 (Entering Pilotage Waters) e 6 (Safe Positioning in Channel). Manobras especiais. Pimenta caps. 3–5. Blocos 1A e 1B Arte Naval.',
@@ -6075,11 +6089,17 @@ function renderDash() {
   renderBibChecklist();
 }
 
+function toggleBibManual(id) {
+  ST.bibManual[id] = !ST.bibManual[id];
+  save();
+  renderBibChecklist();
+}
+
 function renderBibChecklist() {
   var pg = document.getElementById('pg-bibedital');
   if(!pg) return;
   var prog = computeBibProgress();
-  var totalTracked = 0, totalDone = 0, totalUntracked = 0;
+  var totalTracked = 0, totalDone = 0, totalManual = 0, totalManualChecked = 0;
   var catsHtml = '';
 
   Object.keys(BIB_CATS).forEach(function(cat) {
@@ -6102,18 +6122,27 @@ function renderBibChecklist() {
         lastGroup = it.group;
       }
       var p = prog[it.id];
-      var statusTxt, color;
+      var refTitle = (it.autor+' — '+it.obra+(it.edicao?' ('+it.edicao+')':'')).replace(/"/g,'&quot;');
+      var titleAttr = 'title="'+refTitle+(it.caps?' · '+it.caps.replace(/"/g,'&quot;'):'')+'"';
       if(p.weeks.length === 0) {
-        statusTxt = 'Não vinculado a semana'; color = 'var(--muted)'; totalUntracked++;
-      } else if(p.done === p.weeks.length) {
+        totalManual++;
+        var checked = !!ST.bibManual[it.id];
+        if(checked) totalManualChecked++;
+        catsHtml += '<div class="prog-row" style="cursor:pointer" '+titleAttr+' onclick="toggleBibManual(\''+it.id+'\')">'
+                  + '<span class="prog-lbl">'+it.id+' · '+it.autor+' — '+it.obra+'</span>'
+                  + '<span class="prog-val" style="color:'+(checked?'#085041':'var(--muted)')+'">'+(checked?'✓ Marcado manualmente':'Marcar manualmente')+'</span>'
+                  + '</div>';
+        return;
+      }
+      var statusTxt, color;
+      if(p.done === p.weeks.length) {
         statusTxt = '✓ Concluído'; color = '#085041';
       } else if(p.done > 0) {
         statusTxt = p.done+'/'+p.weeks.length+' semanas'; color = '#633806';
       } else {
         statusTxt = 'Não iniciado ('+p.weeks.length+(p.weeks.length>1?' semanas':' semana')+')'; color = 'var(--muted)';
       }
-      var refTitle = (it.autor+' — '+it.obra+(it.edicao?' ('+it.edicao+')':'')).replace(/"/g,'&quot;');
-      catsHtml += '<div class="prog-row" title="'+refTitle+(it.caps?' · '+it.caps.replace(/"/g,'&quot;'):'')+'">'
+      catsHtml += '<div class="prog-row" '+titleAttr+'>'
                 + '<span class="prog-lbl">'+it.id+' · '+it.autor+' — '+it.obra+'</span>'
                 + '<span class="prog-val" style="color:'+color+'">'+statusTxt+'</span>'
                 + '</div>';
@@ -6124,8 +6153,8 @@ function renderBibChecklist() {
   var overallPct = totalTracked>0 ? Math.round(totalDone/totalTracked*100) : 0;
   var html = '<div class="crumb"><span class="crumb-link" onclick="go(\'dash\')">Visão geral</span><span class="crumb-sep">/</span><span>Checklist do Edital</span></div>'
            + '<div class="pg-title">Checklist Bibliográfico do Edital (Anexo 2-B)</div>'
-           + '<div class="pg-sub">Cada item é marcado automaticamente conforme as semanas do plano que o referenciam são concluídas (todas as sessões daquela semana marcadas como estudadas).</div>'
-           + '<div class="pills"><span class="pill outline">'+totalDone+'/'+totalTracked+' itens rastreados concluídos ('+overallPct+'%)</span><span class="pill outline">'+totalUntracked+' itens do edital sem semana associada no cronograma</span></div>'
+           + '<div class="pg-sub">Cada item é marcado automaticamente conforme as semanas do plano que o referenciam são concluídas (todas as sessões daquela semana marcadas como estudadas). Os itens sem semana associada podem ser marcados manualmente clicando na linha.</div>'
+           + '<div class="pills"><span class="pill outline">'+totalDone+'/'+totalTracked+' itens rastreados concluídos ('+overallPct+'%)</span><span class="pill outline">'+totalManualChecked+'/'+totalManual+' itens marcados manualmente</span></div>'
            + '<div class="wk-prog"><div class="wk-prog-fill" style="width:'+overallPct+'%;background:#0c447c"></div></div>'
            + catsHtml;
   pg.innerHTML = html;
