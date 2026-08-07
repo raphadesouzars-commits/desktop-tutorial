@@ -2074,6 +2074,25 @@ function provaById(id){ return doc.provas.find(p=>p.id===id); }
 function normaById(id){ return doc.catalogoNormas.find(n=>n.id===id); }
 function acusadoById(id){ return doc.acusados.find(a=>a.id===id); }
 
+// Rodada Correlação de Fatos: fatos que compartilham ao menos uma prova com f — derivado,
+// não persistido em doc, recalculado a cada chamada (mesmo padrão de computePendencias()).
+// Critério único e auditável: interseção não vazia de provaIds. Sem heurística de pessoa/período.
+function fatosCorrelatos(f){
+  const provasDoFato=new Set(f.provaIds||[]);
+  if(!provasDoFato.size) return [];
+  return doc.fatos.filter(other=>other.id!==f.id
+    && (other.provaIds||[]).some(pid=>provasDoFato.has(pid)));
+}
+// variante que também devolve a(s) prova(s)-ponte, para o modal exibir qual prova gerou o vínculo
+function fatosCorrelatosComProva(f){
+  const provasDoFato=new Set(f.provaIds||[]);
+  if(!provasDoFato.size) return [];
+  return doc.fatos.filter(other=>other.id!==f.id).map(other=>({
+    fato:other,
+    provasComuns:(other.provaIds||[]).filter(pid=>provasDoFato.has(pid)).map(provaById).filter(Boolean)
+  })).filter(x=>x.provasComuns.length>0);
+}
+
 function provaTemP6a(p){
   if(p.tipo!=='emprestada') return false;
   const d=p.detalhe||{};
@@ -3422,6 +3441,7 @@ function excluirProvaFlow(id){
  * ------------------------------------------------------------------ */
 function abrirFormFato(id){
   const novo=!id;
+  let formModalNode=null; // Rodada Correlação de Fatos: guarda o nó do form para o "Voltar" do modal de correlações
   const f = novo ? {id:genId('F'),titulo:'',descricao:'',periodo:{inicio:'',fim:''},local:'',dataCiencia:'',
     ordem:proximaOrdem(), status:'ativo', justificativaArquivamento:'', pautaEnviada:{em:null},
     condutas:[],provaIds:[],pessoasRelacionadas:[],estadoProbatorio:{calculado:'ausente',override:null,justificativaOverride:''},
@@ -3461,12 +3481,18 @@ function abrirFormFato(id){
     if(!doc.provas.length) ms.append(el('div',{class:'hint'},'Nenhuma prova cadastrada ainda.'));
     doc.provas.forEach(p=>{
       const cb=el('input',{type:'checkbox'}); cb.checked=f.provaIds.includes(p.id);
-      cb.addEventListener('change',()=>{ if(cb.checked){if(!f.provaIds.includes(p.id))f.provaIds.push(p.id);} else f.provaIds=f.provaIds.filter(x=>x!==p.id); });
+      cb.addEventListener('change',()=>{ if(cb.checked){if(!f.provaIds.includes(p.id))f.provaIds.push(p.id);} else f.provaIds=f.provaIds.filter(x=>x!==p.id); renderProv(); });
       ms.append(el('label',{class:'ms-item'}, cb, `${p.id} · ${p.titulo||'(sem título)'} — ${p.tipo}`));
     });
-    provBox.append(ms, el('button',{class:'btn small',onclick:()=>abrirFormProva(null,(pid)=>{f.provaIds.push(pid);
-      // reabrir fato preservando edições exige regravar; simplificação: salva fato atual e reabre
-    })},'+ criar prova daqui'));
+    const btnRow=el('div',{style:'display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px'},
+      el('button',{class:'btn small',onclick:()=>abrirFormProva(null,(pid)=>{f.provaIds.push(pid);
+        // reabrir fato preservando edições exige regravar; simplificação: salva fato atual e reabre
+      })},'+ criar prova daqui'));
+    // Rodada Correlação de Fatos: só aparece quando há ao menos um fato correlato (mesma prova em comum)
+    if(fatosCorrelatos(f).length>0){
+      btnRow.append(el('button',{class:'btn small',onclick:()=>abrirModalCorrelacoes(f,formModalNode)},'🔗 Ver correlações'));
+    }
+    provBox.append(ms, btnRow);
   }
   renderProv();
 
@@ -3655,7 +3681,24 @@ function abrirFormFato(id){
       toast('Fato salvo — estado probatório: '+ESTADO_PROB_LABEL[calcEstadoProbatorio(f)]);
     }},'Salvar')
   ];
-  openModal(modalShell(novo?'Novo fato':'Editar fato — '+f.id,'fato',body,foot));
+  formModalNode=modalShell(novo?'Novo fato':'Editar fato — '+f.id,'fato',body,foot);
+  openModal(formModalNode);
+}
+
+// Rodada Correlação de Fatos: modal leve e somente-leitura listando os fatos que compartilham
+// prova com f, e por qual prova. "Voltar" reabre o formulário do fato (formModalNode) sem perder
+// as edições em andamento — o nó DOM do formulário permanece vivo em memória enquanto não é salvo.
+function abrirModalCorrelacoes(f, formModalNode){
+  const corr=fatosCorrelatosComProva(f);
+  const body=[
+    corr.length ? el('div',{class:'hint'},'Fatos que compartilham prova com este — útil para a fundamentação da convicção conjunta.') : null,
+    ...corr.map(({fato,provasComuns})=>el('div',{class:'imp-item'},
+      el('div',{class:'imp-body'},
+        el('div',{class:'imp-tipo'}, `${fato.id} — ${fato.titulo||'(sem título)'}`),
+        el('div',{class:'hint'}, 'via '+provasComuns.map(p=>`${p.id} (${p.titulo||'sem título'})`).join(', ')))))
+  ];
+  const foot=[ el('button',{class:'btn primary',onclick:()=>openModal(formModalNode)},'Voltar') ];
+  openModal(modalShell('🔗 Fatos correlatos — '+(f.titulo||f.id),null,body,foot));
 }
 
 /* ------------------------------------------------------------------ *
