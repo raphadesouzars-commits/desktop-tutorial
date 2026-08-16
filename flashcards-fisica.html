@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Física em Cartas ⚡</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%A1%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg1:#FFF8EC;
+    --bg2:#FDEFF8;
+    --ink:#2B2540;
+    --ink-soft:#6B6483;
+    --card:#FFFFFF;
+    --line:#F0E9FA;
+    --shadow: 0 10px 28px rgba(90, 60, 150, .12);
+    --shadow-sm: 0 4px 14px rgba(90, 60, 150, .10);
+    --green:#2FB380;
+    --green-bg:#E4F9EE;
+    --red:#E8557A;
+    --red-bg:#FFE7EC;
+    --accent:#7C5CFF;
+    --radius:22px;
+    --radius-sm:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background: radial-gradient(1200px 700px at 10% -10%, #FFE9C7 0%, transparent 60%),
+                radial-gradient(1000px 700px at 100% 0%, #E3E4FF 0%, transparent 55%),
+                linear-gradient(180deg, var(--bg1), var(--bg2));
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:40px;
+  }
+  #app{max-width:640px;margin:0 auto;padding:16px 16px 8px;}
+  h1,h2,h3{margin:0 0 6px;}
+  p{margin:0 0 10px;}
+  button{font-family:inherit;cursor:pointer;}
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 2px 18px;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .logo{
+    font-size:28px;line-height:1;
+    filter:drop-shadow(0 2px 3px rgba(0,0,0,.12));
+  }
+  .brand h1{font-size:clamp(18px,5vw,22px);font-weight:800;letter-spacing:-.3px;}
+  .brand .sub{font-size:12px;color:var(--ink-soft);font-weight:600;}
+  .nav-btns{display:flex;gap:8px;}
+  .pill-btn{
+    border:none;border-radius:999px;padding:9px 14px;font-weight:700;font-size:13px;
+    background:var(--card);box-shadow:var(--shadow-sm);color:var(--ink);
+    transition:transform .15s ease;
+  }
+  .pill-btn:active{transform:scale(.94);}
+  .pill-btn.active{background:var(--accent);color:#fff;}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:20px;
+    margin-bottom:16px;
+  }
+  .section-title{
+    font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;
+    color:var(--ink-soft);margin-bottom:10px;
+  }
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+  .chip{
+    border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:9px 15px;font-weight:700;font-size:14px;color:var(--ink);
+    transition:all .15s ease;
+  }
+  .chip:active{transform:scale(.95);}
+  .chip.selected{
+    background:var(--chip-color, var(--accent));
+    border-color:var(--chip-color, var(--accent));
+    color:#fff;
+  }
+
+  .modo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;}
+  .modo-card{
+    border:3px solid var(--line);background:#fff;border-radius:var(--radius-sm);
+    padding:16px 10px;text-align:center;font-weight:800;font-size:14px;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    transition:all .15s ease;
+  }
+  .modo-card .emoji{font-size:30px;}
+  .modo-card:active{transform:scale(.96);}
+  .modo-card.selected{
+    border-color:var(--modo-color,var(--accent));
+    background:var(--modo-color-bg,#F4F1FF);
+    box-shadow:var(--shadow-sm);
+  }
+
+  .count-banner{
+    display:flex;align-items:center;gap:8px;
+    background:#F4F1FF;border-radius:var(--radius-sm);
+    padding:12px 14px;font-weight:700;font-size:14px;color:var(--accent);
+    margin-bottom:14px;
+  }
+
+  .big-btn{
+    width:100%;border:none;border-radius:999px;padding:16px;
+    font-size:17px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#7C5CFF,#B26CFF);
+    box-shadow:0 10px 22px rgba(124,92,255,.35);
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  .big-btn:active{transform:scale(.97);}
+  .big-btn:disabled{opacity:.4;box-shadow:none;}
+  .ghost-btn{
+    width:100%;border:2px solid var(--line);background:#fff;border-radius:999px;
+    padding:14px;font-size:15px;font-weight:800;color:var(--ink);margin-top:10px;
+  }
+  .ghost-btn:active{transform:scale(.97);}
+
+  /* Session top bar */
+  .session-head{
+    display:flex;align-items:center;justify-content:space-between;
+    margin-bottom:14px;
+  }
+  .session-head .exit{
+    border:none;background:#fff;box-shadow:var(--shadow-sm);border-radius:999px;
+    width:36px;height:36px;font-weight:800;font-size:16px;color:var(--ink-soft);
+  }
+  .session-head .info{text-align:right;}
+  .session-head .info b{display:block;font-size:13px;color:var(--ink-soft);}
+  .progress-track{
+    height:8px;border-radius:999px;background:#EFE8FF;overflow:hidden;margin-bottom:18px;
+  }
+  .progress-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#7C5CFF,#FF8CC8);transition:width .35s ease;}
+
+  /* Flashcard */
+  .flash-wrap{perspective:1400px;margin-bottom:18px;}
+  .flash-card{
+    position:relative;width:100%;min-height:280px;
+    transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,.2,.2,1);
+  }
+  .flash-card.flipped{transform:rotateY(180deg);}
+  .flash-face{
+    position:absolute;inset:0;backface-visibility:hidden;
+    border-radius:var(--radius);padding:26px 22px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+    box-shadow:var(--shadow);
+  }
+  .flash-front{
+    background:linear-gradient(135deg,var(--tcolor,#7C5CFF),color-mix(in srgb, var(--tcolor,#7C5CFF) 60%, white));
+    color:#fff;
+  }
+  .flash-front .tag{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;opacity:.85;margin-bottom:10px;}
+  .flash-front .nome{font-size:clamp(20px,6vw,26px);font-weight:800;}
+  .flash-front .hint{margin-top:16px;font-size:12px;opacity:.8;font-weight:700;}
+  .flash-back{
+    background:#fff;transform:rotateY(180deg);border:3px solid var(--tcolor,#7C5CFF);
+  }
+  .flash-back .formula{
+    font-size:clamp(20px,6vw,28px);font-weight:800;color:var(--tcolor,#7C5CFF);
+    margin-bottom:14px;word-break:break-word;
+  }
+  .flash-back .vars{font-size:13.5px;color:var(--ink-soft);line-height:1.6;font-weight:600;}
+  .flash-actions{display:flex;gap:10px;}
+  .flash-actions button{
+    flex:1;border:none;border-radius:999px;padding:15px 8px;font-weight:800;font-size:14px;
+  }
+  .btn-sabe{background:var(--green-bg);color:var(--green);}
+  .btn-revisar{background:var(--red-bg);color:var(--red);}
+  .flash-actions button:active{transform:scale(.96);}
+
+  /* Quiz / completar / unidades */
+  .question-card{
+    background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:22px;margin-bottom:16px;border-top:6px solid var(--tcolor,#7C5CFF);
+  }
+  .question-card .topic-tag{
+    font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+    color:var(--tcolor,#7C5CFF);margin-bottom:8px;
+  }
+  .question-card .enunciado{font-size:clamp(16px,4.6vw,19px);font-weight:800;line-height:1.4;}
+  .question-card .formula-lacuna{
+    font-size:clamp(19px,5.4vw,24px);font-weight:800;color:var(--ink);
+    background:#F8F5FF;border-radius:12px;padding:14px;margin-top:12px;text-align:center;
+  }
+  .opcoes{display:flex;flex-direction:column;gap:10px;}
+  .opcao-btn{
+    text-align:left;border:2.5px solid var(--line);background:#fff;border-radius:14px;
+    padding:14px 16px;font-size:15px;font-weight:700;color:var(--ink);
+    transition:all .12s ease;
+  }
+  .opcao-btn:active{transform:scale(.98);}
+  .opcao-btn.correta{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+  .opcao-btn.errada{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+  .opcao-btn:disabled{opacity:.75;}
+  .opcao-btn.shake{animation:shake .4s;}
+  @keyframes shake{
+    10%,90%{transform:translateX(-2px);}
+    20%,80%{transform:translateX(4px);}
+    30%,50%,70%{transform:translateX(-7px);}
+    40%,60%{transform:translateX(7px);}
+  }
+  .feedback-row{margin-top:14px;display:flex;justify-content:flex-end;}
+  .next-btn{
+    border:none;border-radius:999px;padding:12px 22px;font-weight:800;font-size:14px;color:#fff;
+    background:var(--accent);
+  }
+  .next-btn:active{transform:scale(.95);}
+
+  /* Confetti */
+  .confetti-piece{
+    position:fixed;top:-10px;width:9px;height:14px;z-index:999;pointer-events:none;
+    border-radius:2px;animation:fall 1.1s ease-in forwards;
+  }
+  @keyframes fall{
+    to{transform:translateY(100vh) rotate(400deg);opacity:0;}
+  }
+
+  /* Result */
+  .result-hero{text-align:center;padding:8px 0 4px;}
+  .result-hero .emoji{font-size:52px;}
+  .result-stats{display:flex;gap:10px;margin:16px 0;}
+  .stat{
+    flex:1;border-radius:16px;padding:16px 8px;text-align:center;
+  }
+  .stat .num{font-size:26px;font-weight:800;}
+  .stat .lbl{font-size:11.5px;font-weight:700;color:var(--ink-soft);text-transform:uppercase;}
+  .stat.ok{background:var(--green-bg);}
+  .stat.ok .num{color:var(--green);}
+  .stat.bad{background:var(--red-bg);}
+  .stat.bad .num{color:var(--red);}
+  .stat.pct{background:#F4F1FF;}
+  .stat.pct .num{color:var(--accent);}
+  .review-list{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 4px;}
+  .review-chip{
+    background:var(--red-bg);color:var(--red);font-weight:700;font-size:12.5px;
+    border-radius:999px;padding:7px 12px;
+  }
+
+  /* Progress screen */
+  .overall-card{
+    background:linear-gradient(135deg,#7C5CFF,#FF8CC8);color:#fff;border-radius:var(--radius);
+    padding:22px;margin-bottom:18px;box-shadow:var(--shadow);
+  }
+  .overall-card .num{font-size:38px;font-weight:800;}
+  .overall-card .track{height:12px;background:rgba(255,255,255,.35);border-radius:999px;margin-top:10px;overflow:hidden;}
+  .overall-card .fill{height:100%;background:#fff;border-radius:999px;}
+  .ano-heading{font-size:14px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.6px;margin:18px 4px 8px;}
+  .topic-progress{
+    background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:10px;box-shadow:var(--shadow-sm);
+    border-left:8px solid var(--tcolor,#7C5CFF);
+  }
+  .topic-progress .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .topic-progress h3{font-size:15.5px;font-weight:800;}
+  .topic-progress .pct{font-weight:800;color:var(--tcolor,#7C5CFF);font-size:14px;}
+  .topic-progress .track{height:9px;background:#F0E9FA;border-radius:999px;overflow:hidden;}
+  .topic-progress .fill{height:100%;background:var(--tcolor,#7C5CFF);border-radius:999px;}
+  .topic-progress .detail{margin-top:8px;font-size:12px;color:var(--ink-soft);font-weight:600;}
+
+  .empty-msg{text-align:center;color:var(--ink-soft);font-weight:600;padding:30px 10px;}
+
+  @media (min-width:520px){
+    .modo-grid{grid-template-columns:repeat(4,1fr);}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================
+   DADOS: fórmulas e unidades por ano / tópico
+   ========================================================= */
+const DATA = {
+"1º ano": {
+  "Cinemática": { cor:"#FF6B6B", emoji:"🏃", formulas:[
+    {id:"cin-f01",nome:"Velocidade média",formula:"v = ΔS / Δt",variaveis:"v: velocidade (m/s) | ΔS: deslocamento (m) | Δt: intervalo de tempo (s)"},
+    {id:"cin-f02",nome:"Aceleração média",formula:"a = Δv / Δt",variaveis:"a: aceleração (m/s²) | Δv: variação de velocidade (m/s) | Δt: intervalo de tempo (s)"},
+    {id:"cin-f03",nome:"Função horária da posição (MU)",formula:"S = S0 + v·t",variaveis:"S: posição (m) | S0: posição inicial (m) | v: velocidade (m/s) | t: tempo (s)"},
+    {id:"cin-f04",nome:"Função horária da velocidade (MUV)",formula:"v = v0 + a·t",variaveis:"v: velocidade final (m/s) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
+    {id:"cin-f05",nome:"Função horária da posição (MUV)",formula:"S = S0 + v0·t + (a·t²)/2",variaveis:"S: posição (m) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
+    {id:"cin-f06",nome:"Equação de Torricelli",formula:"v² = v0² + 2·a·ΔS",variaveis:"v: velocidade final (m/s) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | ΔS: deslocamento (m)"},
+    {id:"cin-f07",nome:"Velocidade na queda livre",formula:"v = g·t",variaveis:"v: velocidade (m/s) | g: aceleração da gravidade (m/s²) | t: tempo (s)"},
+    {id:"cin-f08",nome:"Altura na queda livre",formula:"h = (g·t²)/2",variaveis:"h: altura (m) | g: aceleração da gravidade (m/s²) | t: tempo (s)"},
+    {id:"cin-f09",nome:"Alcance no lançamento horizontal",formula:"A = v0·√(2h/g)",variaveis:"A: alcance (m) | v0: velocidade horizontal (m/s) | h: altura (m) | g: gravidade (m/s²)"},
+    {id:"cin-f10",nome:"Tempo de queda no lançamento horizontal",formula:"t = √(2h/g)",variaveis:"t: tempo de queda (s) | h: altura (m) | g: aceleração da gravidade (m/s²)"}
+  ], unidades:[
+    {id:"cin-u01",grandeza:"Velocidade",correta:"m/s",alternativas:["m/s","m/s²","km","s"]},
+    {id:"cin-u02",grandeza:"Aceleração",correta:"m/s²",alternativas:["m/s²","m/s","N","m"]},
+    {id:"cin-u03",grandeza:"Tempo",correta:"s (segundo)",alternativas:["s (segundo)","min","h","m/s"]},
+    {id:"cin-u04",grandeza:"Distância / deslocamento",correta:"m (metro)",alternativas:["m (metro)","m²","m/s","km/h"]},
+    {id:"cin-u05",grandeza:"Aceleração da gravidade",correta:"m/s²",alternativas:["m/s²","N","kg","m/s"]}
+  ]},
+  "Dinâmica": { cor:"#FF922B", emoji:"🚀", formulas:[
+    {id:"din-f01",nome:"2ª Lei de Newton",formula:"F = m·a",variaveis:"F: força resultante (N) | m: massa (kg) | a: aceleração (m/s²)"},
+    {id:"din-f02",nome:"Peso",formula:"P = m·g",variaveis:"P: peso (N) | m: massa (kg) | g: aceleração da gravidade (m/s²)"},
+    {id:"din-f03",nome:"Força de atrito",formula:"Fat = μ·N",variaveis:"Fat: força de atrito (N) | μ: coeficiente de atrito | N: força normal (N)"},
+    {id:"din-f04",nome:"Trabalho de uma força",formula:"τ = F·d·cosθ",variaveis:"τ: trabalho (J) | F: força (N) | d: deslocamento (m) | θ: ângulo entre força e deslocamento"},
+    {id:"din-f05",nome:"Energia cinética",formula:"Ec = (m·v²)/2",variaveis:"Ec: energia cinética (J) | m: massa (kg) | v: velocidade (m/s)"},
+    {id:"din-f06",nome:"Energia potencial gravitacional",formula:"Ep = m·g·h",variaveis:"Ep: energia potencial (J) | m: massa (kg) | g: gravidade (m/s²) | h: altura (m)"},
+    {id:"din-f07",nome:"Energia potencial elástica",formula:"Epe = (k·x²)/2",variaveis:"Epe: energia potencial elástica (J) | k: constante elástica (N/m) | x: deformação (m)"},
+    {id:"din-f08",nome:"Potência",formula:"Pot = τ/Δt",variaveis:"Pot: potência (W) | τ: trabalho (J) | Δt: intervalo de tempo (s)"},
+    {id:"din-f09",nome:"Impulso",formula:"I = F·Δt",variaveis:"I: impulso (N·s) | F: força (N) | Δt: intervalo de tempo (s)"},
+    {id:"din-f10",nome:"Quantidade de movimento",formula:"Q = m·v",variaveis:"Q: quantidade de movimento (kg·m/s) | m: massa (kg) | v: velocidade (m/s)"}
+  ], unidades:[
+    {id:"din-u01",grandeza:"Força",correta:"N (Newton)",alternativas:["N (Newton)","J (Joule)","Pa (Pascal)","W (Watt)"]},
+    {id:"din-u02",grandeza:"Trabalho / Energia",correta:"J (Joule)",alternativas:["J (Joule)","N (Newton)","W (Watt)","cal"]},
+    {id:"din-u03",grandeza:"Potência",correta:"W (Watt)",alternativas:["W (Watt)","J (Joule)","N (Newton)","Pa (Pascal)"]},
+    {id:"din-u04",grandeza:"Quantidade de movimento",correta:"kg·m/s",alternativas:["kg·m/s","N·s","J·s","kg/m³"]},
+    {id:"din-u05",grandeza:"Massa",correta:"kg (quilograma)",alternativas:["kg (quilograma)","N (Newton)","g (grama-força)","m³"]}
+  ]},
+  "Estática e Gravitação": { cor:"#FCC419", emoji:"🪐", formulas:[
+    {id:"est-f01",nome:"Momento de uma força (torque)",formula:"M = F·d",variaveis:"M: momento/torque (N·m) | F: força (N) | d: braço de alavanca (m)"},
+    {id:"est-f02",nome:"Equilíbrio de translação",formula:"ΣF = 0",variaveis:"Σ: soma vetorial das forças que agem no corpo deve ser nula"},
+    {id:"est-f03",nome:"Equilíbrio de rotação",formula:"ΣM = 0",variaveis:"Σ: soma dos momentos (torques) que agem no corpo deve ser nula"},
+    {id:"est-f04",nome:"Lei da gravitação universal",formula:"F = G·(m1·m2)/d²",variaveis:"F: força gravitacional (N) | G: constante gravitacional | m1,m2: massas (kg) | d: distância (m)"},
+    {id:"est-f05",nome:"Gravidade em função da altitude",formula:"g = G·M/d²",variaveis:"g: aceleração da gravidade (m/s²) | G: constante gravitacional | M: massa do planeta (kg) | d: distância ao centro (m)"},
+    {id:"est-f06",nome:"Velocidade de escape",formula:"v = √(2·G·M/R)",variaveis:"v: velocidade de escape (m/s) | G: constante gravitacional | M: massa do planeta (kg) | R: raio (m)"},
+    {id:"est-f07",nome:"3ª Lei de Kepler",formula:"T²/R³ = 4π²/(G·M)",variaveis:"T: período orbital (s) | R: raio da órbita (m) | G: constante gravitacional | M: massa central (kg)"},
+    {id:"est-f08",nome:"Densidade",formula:"d = m/V",variaveis:"d: densidade (kg/m³) | m: massa (kg) | V: volume (m³)"},
+    {id:"est-f09",nome:"Pressão",formula:"P = F/A",variaveis:"P: pressão (Pa) | F: força (N) | A: área (m²)"},
+    {id:"est-f10",nome:"Empuxo",formula:"E = d·V·g",variaveis:"E: empuxo (N) | d: densidade do fluido (kg/m³) | V: volume deslocado (m³) | g: gravidade (m/s²)"}
+  ], unidades:[
+    {id:"est-u01",grandeza:"Torque / Momento de uma força",correta:"N·m",alternativas:["N·m","N","J","Pa"]},
+    {id:"est-u02",grandeza:"Pressão",correta:"Pa (Pascal)",alternativas:["Pa (Pascal)","N","J","W"]},
+    {id:"est-u03",grandeza:"Densidade",correta:"kg/m³",alternativas:["kg/m³","kg/m","g/cm","N/m²"]},
+    {id:"est-u04",grandeza:"Constante gravitacional (G)",correta:"N·m²/kg²",alternativas:["N·m²/kg²","N/kg","m/s²","kg·m/s"]},
+    {id:"est-u05",grandeza:"Empuxo",correta:"N (Newton)",alternativas:["N (Newton)","Pa (Pascal)","kg/m³","J (Joule)"]}
+  ]}
+},
+"2º ano": {
+  "Termologia": { cor:"#F06595", emoji:"🌡️", formulas:[
+    {id:"ter-f01",nome:"Conversão Celsius → Fahrenheit",formula:"C/5 = (F-32)/9",variaveis:"C: temperatura em Celsius | F: temperatura em Fahrenheit"},
+    {id:"ter-f02",nome:"Conversão Celsius → Kelvin",formula:"K = C + 273",variaveis:"K: temperatura em Kelvin | C: temperatura em Celsius"},
+    {id:"ter-f03",nome:"Quantidade de calor sensível",formula:"Q = m·c·ΔT",variaveis:"Q: calor (cal ou J) | m: massa (g) | c: calor específico (cal/g°C) | ΔT: variação de temperatura"},
+    {id:"ter-f04",nome:"Quantidade de calor latente",formula:"Q = m·L",variaveis:"Q: calor (cal ou J) | m: massa (g) | L: calor latente (cal/g)"},
+    {id:"ter-f05",nome:"Capacidade térmica",formula:"C = Q/ΔT",variaveis:"C: capacidade térmica (cal/°C) | Q: calor (cal) | ΔT: variação de temperatura"},
+    {id:"ter-f06",nome:"Dilatação linear",formula:"ΔL = L0·α·ΔT",variaveis:"ΔL: variação do comprimento (m) | L0: comprimento inicial (m) | α: coeficiente de dilatação linear | ΔT: variação de temperatura"},
+    {id:"ter-f07",nome:"Dilatação superficial",formula:"ΔA = A0·β·ΔT",variaveis:"ΔA: variação da área (m²) | A0: área inicial (m²) | β: coeficiente de dilatação superficial | ΔT: variação de temperatura"},
+    {id:"ter-f08",nome:"Dilatação volumétrica",formula:"ΔV = V0·γ·ΔT",variaveis:"ΔV: variação do volume (m³) | V0: volume inicial (m³) | γ: coeficiente de dilatação volumétrica | ΔT: variação de temperatura"},
+    {id:"ter-f09",nome:"Equação geral dos gases",formula:"(P1·V1)/T1 = (P2·V2)/T2",variaveis:"P: pressão | V: volume | T: temperatura absoluta (K) — estados 1 e 2"},
+    {id:"ter-f10",nome:"1ª Lei da Termodinâmica",formula:"ΔU = Q - τ",variaveis:"ΔU: variação de energia interna (J) | Q: calor trocado (J) | τ: trabalho realizado (J)"}
+  ], unidades:[
+    {id:"ter-u01",grandeza:"Temperatura (SI)",correta:"K (Kelvin)",alternativas:["K (Kelvin)","°C (Celsius)","°F (Fahrenheit)","cal"]},
+    {id:"ter-u02",grandeza:"Calor",correta:"J (Joule)",alternativas:["J (Joule)","K (Kelvin)","cal/g°C","Pa"]},
+    {id:"ter-u03",grandeza:"Calor específico",correta:"cal/(g·°C)",alternativas:["cal/(g·°C)","J (Joule)","K (Kelvin)","W (Watt)"]},
+    {id:"ter-u04",grandeza:"Pressão de um gás",correta:"Pa (Pascal)",alternativas:["Pa (Pascal)","atm","J (Joule)","K (Kelvin)"]},
+    {id:"ter-u05",grandeza:"Coeficiente de dilatação linear",correta:"°C⁻¹",alternativas:["°C⁻¹","m/°C","J/°C","K"]}
+  ]},
+  "Óptica": { cor:"#4DABF7", emoji:"👁️", formulas:[
+    {id:"opt-f01",nome:"Lei da reflexão",formula:"θi = θr",variaveis:"θi: ângulo de incidência | θr: ângulo de reflexão (medidos em relação à normal)"},
+    {id:"opt-f02",nome:"Índice de refração absoluto",formula:"n = c/v",variaveis:"n: índice de refração | c: velocidade da luz no vácuo (m/s) | v: velocidade da luz no meio (m/s)"},
+    {id:"opt-f03",nome:"Lei de Snell",formula:"n1·senθ1 = n2·senθ2",variaveis:"n1,n2: índices de refração dos meios | θ1,θ2: ângulos de incidência e refração"},
+    {id:"opt-f04",nome:"Equação de Gauss",formula:"1/f = 1/p + 1/p'",variaveis:"f: distância focal (m) | p: distância do objeto (m) | p': distância da imagem (m)"},
+    {id:"opt-f05",nome:"Aumento linear transversal",formula:"A = -p'/p",variaveis:"A: aumento linear | p': distância da imagem (m) | p: distância do objeto (m)"},
+    {id:"opt-f06",nome:"Vergência de uma lente",formula:"V = 1/f",variaveis:"V: vergência (di) | f: distância focal (m)"},
+    {id:"opt-f07",nome:"Equação dos fabricantes de lentes",formula:"1/f = (n-1)·(1/R1 - 1/R2)",variaveis:"f: distância focal (m) | n: índice de refração da lente | R1,R2: raios de curvatura (m)"},
+    {id:"opt-f08",nome:"Distância focal do espelho esférico",formula:"f = R/2",variaveis:"f: distância focal (m) | R: raio de curvatura do espelho (m)"},
+    {id:"opt-f09",nome:"Velocidade da luz no vácuo",formula:"c = 3×10⁸ m/s",variaveis:"c: velocidade da luz no vácuo, constante universal"},
+    {id:"opt-f10",nome:"Ampliação total de um sistema óptico",formula:"A = A1·A2",variaveis:"A: aumento total | A1, A2: aumentos de cada elemento do sistema"}
+  ], unidades:[
+    {id:"opt-u01",grandeza:"Distância focal",correta:"m (metro)",alternativas:["m (metro)","di (dioptria)","m²","s"]},
+    {id:"opt-u02",grandeza:"Vergência",correta:"di (dioptria)",alternativas:["di (dioptria)","m (metro)","Hz (Hertz)","cd (candela)"]},
+    {id:"opt-u03",grandeza:"Velocidade da luz",correta:"m/s",alternativas:["m/s","m/s²","Hz (Hertz)","m"]},
+    {id:"opt-u04",grandeza:"Índice de refração",correta:"adimensional (sem unidade)",alternativas:["adimensional (sem unidade)","m/s","di (dioptria)","m"]},
+    {id:"opt-u05",grandeza:"Ângulo",correta:"° (grau)",alternativas:["° (grau)","rad (radiano)","di (dioptria)","m"]}
+  ]},
+  "Ondulatória": { cor:"#22B8CF", emoji:"🌊", formulas:[
+    {id:"ond-f01",nome:"Velocidade de propagação da onda",formula:"v = λ·f",variaveis:"v: velocidade (m/s) | λ: comprimento de onda (m) | f: frequência (Hz)"},
+    {id:"ond-f02",nome:"Relação entre período e frequência",formula:"T = 1/f",variaveis:"T: período (s) | f: frequência (Hz)"},
+    {id:"ond-f03",nome:"Equação fundamental da ondulatória",formula:"v = λ/T",variaveis:"v: velocidade (m/s) | λ: comprimento de onda (m) | T: período (s)"},
+    {id:"ond-f04",nome:"Nível sonoro (intensidade)",formula:"β = 10·log(I/I0)",variaveis:"β: nível sonoro (dB) | I: intensidade sonora | I0: intensidade de referência"},
+    {id:"ond-f05",nome:"Efeito Doppler",formula:"f' = f·(v ± vO)/(v ± vF)",variaveis:"f': frequência percebida | f: frequência da fonte | v: velocidade do som | vO,vF: velocidades do observador e da fonte"},
+    {id:"ond-f06",nome:"Velocidade do som no ar (aprox.)",formula:"v ≈ 340 m/s",variaveis:"v: velocidade do som no ar, em condições normais de temperatura"},
+    {id:"ond-f07",nome:"Interferência construtiva",formula:"ΔS = n·λ",variaveis:"ΔS: diferença de caminho | n: número inteiro (0,1,2...) | λ: comprimento de onda (m)"},
+    {id:"ond-f08",nome:"Interferência destrutiva",formula:"ΔS = (n + 1/2)·λ",variaveis:"ΔS: diferença de caminho | n: número inteiro | λ: comprimento de onda (m)"},
+    {id:"ond-f09",nome:"Comprimento de onda em corda vibrante",formula:"λn = 2L/n",variaveis:"λn: comprimento de onda do harmônico n | L: comprimento da corda (m) | n: número do harmônico"},
+    {id:"ond-f10",nome:"Frequência harmônica em tubo aberto",formula:"fn = n·v/(2L)",variaveis:"fn: frequência do harmônico n | v: velocidade do som (m/s) | L: comprimento do tubo (m)"}
+  ], unidades:[
+    {id:"ond-u01",grandeza:"Frequência",correta:"Hz (Hertz)",alternativas:["Hz (Hertz)","s (segundo)","m (metro)","dB (decibel)"]},
+    {id:"ond-u02",grandeza:"Comprimento de onda",correta:"m (metro)",alternativas:["m (metro)","Hz (Hertz)","s (segundo)","m/s"]},
+    {id:"ond-u03",grandeza:"Período",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","m (metro)","m/s"]},
+    {id:"ond-u04",grandeza:"Nível sonoro / intensidade",correta:"dB (decibel)",alternativas:["dB (decibel)","Hz (Hertz)","W (Watt)","m (metro)"]},
+    {id:"ond-u05",grandeza:"Velocidade do som",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","s (segundo)"]}
+  ]}
+},
+"3º ano": {
+  "Eletricidade": { cor:"#845EF7", emoji:"⚡", formulas:[
+    {id:"ele-f01",nome:"Lei de Ohm",formula:"U = R·i",variaveis:"U: tensão / ddp (V) | R: resistência (Ω) | i: corrente elétrica (A)"},
+    {id:"ele-f02",nome:"Potência elétrica",formula:"Pot = U·i",variaveis:"Pot: potência (W) | U: tensão (V) | i: corrente elétrica (A)"},
+    {id:"ele-f03",nome:"Potência (em função da resistência)",formula:"Pot = R·i²",variaveis:"Pot: potência (W) | R: resistência (Ω) | i: corrente elétrica (A)"},
+    {id:"ele-f04",nome:"Energia elétrica consumida",formula:"E = Pot·Δt",variaveis:"E: energia (J ou kWh) | Pot: potência (W) | Δt: intervalo de tempo (s ou h)"},
+    {id:"ele-f05",nome:"Resistores em série",formula:"Req = R1 + R2 + ...",variaveis:"Req: resistência equivalente (Ω) | R1,R2...: resistores associados"},
+    {id:"ele-f06",nome:"Resistores em paralelo",formula:"1/Req = 1/R1 + 1/R2 + ...",variaveis:"Req: resistência equivalente (Ω) | R1,R2...: resistores associados"},
+    {id:"ele-f07",nome:"Lei de Coulomb",formula:"F = k·(q1·q2)/d²",variaveis:"F: força elétrica (N) | k: constante eletrostática | q1,q2: cargas (C) | d: distância (m)"},
+    {id:"ele-f08",nome:"Campo elétrico",formula:"E = F/q",variaveis:"E: campo elétrico (N/C) | F: força elétrica (N) | q: carga de prova (C)"},
+    {id:"ele-f09",nome:"Capacitância",formula:"C = Q/U",variaveis:"C: capacitância (F) | Q: carga armazenada (C) | U: tensão (V)"},
+    {id:"ele-f10",nome:"Energia armazenada em um capacitor",formula:"E = (C·U²)/2",variaveis:"E: energia armazenada (J) | C: capacitância (F) | U: tensão (V)"}
+  ], unidades:[
+    {id:"ele-u01",grandeza:"Corrente elétrica",correta:"A (Ampère)",alternativas:["A (Ampère)","V (Volt)","Ω (Ohm)","C (Coulomb)"]},
+    {id:"ele-u02",grandeza:"Tensão / ddp",correta:"V (Volt)",alternativas:["V (Volt)","A (Ampère)","W (Watt)","Ω (Ohm)"]},
+    {id:"ele-u03",grandeza:"Resistência elétrica",correta:"Ω (Ohm)",alternativas:["Ω (Ohm)","V (Volt)","A (Ampère)","F (Farad)"]},
+    {id:"ele-u04",grandeza:"Carga elétrica",correta:"C (Coulomb)",alternativas:["C (Coulomb)","A (Ampère)","V (Volt)","F (Farad)"]},
+    {id:"ele-u05",grandeza:"Capacitância",correta:"F (Farad)",alternativas:["F (Farad)","C (Coulomb)","Ω (Ohm)","V (Volt)"]}
+  ]},
+  "Magnetismo e Eletromagnetismo": { cor:"#5C7CFA", emoji:"🧲", formulas:[
+    {id:"mag-f01",nome:"Força magnética sobre uma carga",formula:"F = q·v·B·senθ",variaveis:"F: força magnética (N) | q: carga (C) | v: velocidade (m/s) | B: campo magnético (T) | θ: ângulo entre v e B"},
+    {id:"mag-f02",nome:"Força magnética em um fio",formula:"F = B·i·L·senθ",variaveis:"F: força magnética (N) | B: campo magnético (T) | i: corrente (A) | L: comprimento do fio (m)"},
+    {id:"mag-f03",nome:"Campo magnético de um fio retilíneo",formula:"B = (μ0·i)/(2π·d)",variaveis:"B: campo magnético (T) | μ0: permeabilidade magnética do vácuo | i: corrente (A) | d: distância ao fio (m)"},
+    {id:"mag-f04",nome:"Fluxo magnético",formula:"Φ = B·A·cosθ",variaveis:"Φ: fluxo magnético (Wb) | B: campo magnético (T) | A: área (m²) | θ: ângulo entre B e a normal"},
+    {id:"mag-f05",nome:"Lei de Faraday (fem induzida)",formula:"ε = -ΔΦ/Δt",variaveis:"ε: força eletromotriz induzida (V) | ΔΦ: variação do fluxo magnético (Wb) | Δt: intervalo de tempo (s)"},
+    {id:"mag-f06",nome:"Corrente induzida (Lei de Ohm no circuito)",formula:"i = ε/R",variaveis:"i: corrente induzida (A) | ε: força eletromotriz (V) | R: resistência do circuito (Ω)"},
+    {id:"mag-f07",nome:"Autoindutância",formula:"ε = -L·(Δi/Δt)",variaveis:"ε: fem autoinduzida (V) | L: indutância (H) | Δi/Δt: taxa de variação da corrente"},
+    {id:"mag-f08",nome:"Transformadores",formula:"U1/U2 = N1/N2",variaveis:"U1,U2: tensões nos enrolamentos (V) | N1,N2: número de espiras"},
+    {id:"mag-f09",nome:"Campo magnético em um solenoide",formula:"B = μ0·n·i",variaveis:"B: campo magnético (T) | μ0: permeabilidade magnética | n: espiras por metro | i: corrente (A)"},
+    {id:"mag-f10",nome:"Raio da trajetória circular (força magnética)",formula:"R = (m·v)/(q·B)",variaveis:"R: raio da trajetória (m) | m: massa (kg) | v: velocidade (m/s) | q: carga (C) | B: campo magnético (T)"}
+  ], unidades:[
+    {id:"mag-u01",grandeza:"Campo magnético",correta:"T (Tesla)",alternativas:["T (Tesla)","Wb (Weber)","V (Volt)","A (Ampère)"]},
+    {id:"mag-u02",grandeza:"Fluxo magnético",correta:"Wb (Weber)",alternativas:["Wb (Weber)","T (Tesla)","V (Volt)","H (Henry)"]},
+    {id:"mag-u03",grandeza:"Força eletromotriz",correta:"V (Volt)",alternativas:["V (Volt)","T (Tesla)","Wb (Weber)","A (Ampère)"]},
+    {id:"mag-u04",grandeza:"Indutância",correta:"H (Henry)",alternativas:["H (Henry)","T (Tesla)","F (Farad)","Wb (Weber)"]},
+    {id:"mag-u05",grandeza:"Carga elétrica",correta:"C (Coulomb)",alternativas:["C (Coulomb)","A (Ampère)","T (Tesla)","V (Volt)"]}
+  ]},
+  "Física Moderna": { cor:"#20C997", emoji:"⚛️", formulas:[
+    {id:"mod-f01",nome:"Energia do fóton",formula:"E = h·f",variaveis:"E: energia do fóton (J) | h: constante de Planck | f: frequência (Hz)"},
+    {id:"mod-f02",nome:"Energia em função do comprimento de onda",formula:"E = h·c/λ",variaveis:"E: energia do fóton (J) | h: constante de Planck | c: velocidade da luz (m/s) | λ: comprimento de onda (m)"},
+    {id:"mod-f03",nome:"Efeito fotoelétrico",formula:"Ec = h·f - φ",variaveis:"Ec: energia cinética do elétron ejetado (J) | h·f: energia do fóton | φ: função trabalho do material (J)"},
+    {id:"mod-f04",nome:"Equivalência massa-energia",formula:"E = m·c²",variaveis:"E: energia (J) | m: massa (kg) | c: velocidade da luz no vácuo (m/s)"},
+    {id:"mod-f05",nome:"Dilatação temporal (relatividade)",formula:"Δt' = Δt/√(1-v²/c²)",variaveis:"Δt': intervalo de tempo medido em movimento | Δt: intervalo de tempo em repouso | v: velocidade | c: velocidade da luz"},
+    {id:"mod-f06",nome:"Contração do comprimento",formula:"L' = L·√(1-v²/c²)",variaveis:"L': comprimento medido em movimento | L: comprimento em repouso | v: velocidade | c: velocidade da luz"},
+    {id:"mod-f07",nome:"Comprimento de onda de De Broglie",formula:"λ = h/(m·v)",variaveis:"λ: comprimento de onda associado (m) | h: constante de Planck | m: massa (kg) | v: velocidade (m/s)"},
+    {id:"mod-f08",nome:"Decaimento radioativo",formula:"N = N0·2^(-t/T)",variaveis:"N: quantidade atual | N0: quantidade inicial | t: tempo decorrido | T: meia-vida"},
+    {id:"mod-f09",nome:"Constante de Planck",formula:"h = 6,63×10⁻³⁴ J·s",variaveis:"h: constante fundamental que relaciona energia e frequência de um fóton"},
+    {id:"mod-f10",nome:"Energia de ligação nuclear",formula:"ΔE = Δm·c²",variaveis:"ΔE: energia de ligação (J) | Δm: defeito de massa (kg) | c: velocidade da luz (m/s)"}
+  ], unidades:[
+    {id:"mod-u01",grandeza:"Energia do fóton",correta:"J (Joule) ou eV",alternativas:["J (Joule) ou eV","Hz (Hertz)","m (metro)","kg (quilograma)"]},
+    {id:"mod-u02",grandeza:"Constante de Planck",correta:"J·s",alternativas:["J·s","J","Hz (Hertz)","m/s"]},
+    {id:"mod-u03",grandeza:"Massa atômica",correta:"u (unidade de massa atômica)",alternativas:["u (unidade de massa atômica)","kg (quilograma)","g (grama)","N (Newton)"]},
+    {id:"mod-u04",grandeza:"Meia-vida",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","anos-luz","J (Joule)"]},
+    {id:"mod-u05",grandeza:"Velocidade da luz",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","J (Joule)"]}
+  ]}
+}
+};
+
+const MODOS = [
+  {id:"flashcard", nome:"Flashcards", emoji:"🃏"},
+  {id:"quiz", nome:"Quiz", emoji:"🎯"},
+  {id:"completar", nome:"Completar", emoji:"✍️"},
+  {id:"unidades", nome:"Unidades", emoji:"📏"}
+];
+
+/* =========================================================
+   PROGRESSO (localStorage)
+   ========================================================= */
+const LS_KEY = "fisicaEmCartas_progresso_v1";
+let PROGRESS = {};
+try { PROGRESS = JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch(e){ PROGRESS = {}; }
+
+function isDominado(id){ return !!PROGRESS[id]; }
+function setDominado(id, val){
+  PROGRESS[id] = !!val;
+  localStorage.setItem(LS_KEY, JSON.stringify(PROGRESS));
+}
+
+/* =========================================================
+   ESTRUTURAS DERIVADAS
+   ========================================================= */
+function extractTokens(formulaStr){
+  let rhs = formulaStr;
+  const eqIdx = formulaStr.indexOf('=');
+  if (eqIdx !== -1) rhs = formulaStr.slice(eqIdx+1);
+  const raw = rhs.split(/[·×\*\/\+\-\(\)≈±\^\s]+/).map(s=>s.trim()).filter(Boolean);
+  return [...new Set(raw)];
+}
+
+const ALL_FORMULAS = [];
+const ALL_UNIDADES = [];
+Object.entries(DATA).forEach(([ano, topicos])=>{
+  Object.entries(topicos).forEach(([topico, obj])=>{
+    obj.pool = [...new Set(obj.formulas.flatMap(f=>extractTokens(f.formula)))];
+    obj.formulas.forEach(f=>{ f._ano=ano; f._topico=topico; f._cor=obj.cor; f._emoji=obj.emoji; ALL_FORMULAS.push(f); });
+    obj.unidades.forEach(u=>{ u._ano=ano; u._topico=topico; u._cor=obj.cor; u._emoji=obj.emoji; ALL_UNIDADES.push(u); });
+  });
+});
+
+const ANOS = Object.keys(DATA);
+function topicosDe(ano){
+  return ano==="Todos" ? Object.values(DATA).flatMap(t=>Object.keys(t)) : Object.keys(DATA[ano]);
+}
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function esc(str){
+  return String(str).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function spawnConfetti(){
+  const colors = ['#7C5CFF','#FF8CC8','#FCC419','#22B8CF','#2FB380','#FF6B6B'];
+  for (let i=0;i<22;i++){
+    const el = document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left = (Math.random()*100)+'vw';
+    el.style.background = colors[Math.floor(Math.random()*colors.length)];
+    el.style.animationDelay = (Math.random()*0.15)+'s';
+    el.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1400);
+  }
+}
+
+/* =========================================================
+   ESTADO
+   ========================================================= */
+let state = {
+  view: "home",
+  filtroAno: "Todos",
+  filtroTopico: "Todos",
+  modo: null,
+  sessao: null
+};
+
+/* =========================================================
+   FILTRAGEM
+   ========================================================= */
+function getFiltrados(modo, ano, topico){
+  const base = modo === "unidades" ? ALL_UNIDADES : ALL_FORMULAS;
+  return base.filter(it => (ano==="Todos" || it._ano===ano) && (topico==="Todos" || it._topico===topico));
+}
+
+/* =========================================================
+   RENDER — HOME
+   ========================================================= */
+function renderHome(){
+  const topicosDisponiveis = topicosDe(state.filtroAno);
+  if (state.filtroTopico!=="Todos" && !topicosDisponiveis.includes(state.filtroTopico)){
+    state.filtroTopico = "Todos";
+  }
+
+  let count = 0;
+  if (state.modo){
+    count = getFiltrados(state.modo, state.filtroAno, state.filtroTopico).length;
+  }
+
+  const anoChips = ["Todos", ...ANOS].map(a=>{
+    const sel = a===state.filtroAno;
+    return `<button class="chip ${sel?'selected':''}" onclick="selecionarAno('${esc(a)}')">${esc(a)}</button>`;
+  }).join("");
+
+  const topicoChips = ["Todos", ...topicosDisponiveis].map(t=>{
+    const sel = t===state.filtroTopico;
+    let cor = "#7C5CFF";
+    if (t!=="Todos"){
+      const anosParaBuscar = state.filtroAno==="Todos" ? ANOS : [state.filtroAno];
+      for (const a of anosParaBuscar){ if (DATA[a][t]) { cor = DATA[a][t].cor; break; } }
+    }
+    return `<button class="chip ${sel?'selected':''}" style="--chip-color:${cor}" onclick="selecionarTopico('${esc(t)}')">${esc(t)}</button>`;
+  }).join("");
+
+  const modoCards = MODOS.map(m=>{
+    const sel = state.modo===m.id;
+    return `<button class="modo-card ${sel?'selected':''}" style="--modo-color:#7C5CFF;--modo-color-bg:#F4F1FF" onclick="selecionarModo('${m.id}')">
+      <span class="emoji">${m.emoji}</span>${esc(m.nome)}
+    </button>`;
+  }).join("");
+
+  document.getElementById('app').innerHTML = `
+    <div class="topbar">
+      <div class="brand">
+        <span class="logo">⚡</span>
+        <div><h1>Física em Cartas</h1><div class="sub">treine fórmulas &amp; unidades</div></div>
+      </div>
+      <div class="nav-btns">
+        <button class="pill-btn" onclick="irPara('progresso')">📊 Progresso</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Ano</div>
+      <div class="chip-row">${anoChips}</div>
+      <div class="section-title" style="margin-top:14px;">Tópico</div>
+      <div class="chip-row">${topicoChips}</div>
+    </div>
+
+    <div class="card">
+      <div class="section-title">Modo de estudo</div>
+      <div class="modo-grid">${modoCards}</div>
+    </div>
+
+    ${state.modo ? `<div class="count-banner">🔎 ${count} ${state.modo==='unidades' ? 'unidade'+(count===1?'':'s') : 'fórmula'+(count===1?'':'s')} encontrada${count===1?'':'s'} nesta seleção</div>` : ''}
+
+    <button class="big-btn" ${(!state.modo || count===0) ? 'disabled' : ''} onclick="iniciarSessao()">
+      ${state.modo ? '🚀 Começar sessão' : 'Escolha um modo para começar'}
+    </button>
+  `;
+}
+
+window.selecionarAno = function(a){ state.filtroAno=a; renderHome(); };
+window.selecionarTopico = function(t){ state.filtroTopico=t; renderHome(); };
+window.selecionarModo = function(m){ state.modo = (state.modo===m ? null : m); renderHome(); };
+window.irPara = function(view){ state.view=view; render(); };
+
+/* =========================================================
+   SESSÃO — iniciar
+   ========================================================= */
+window.iniciarSessao = function(){
+  const itens = shuffle(getFiltrados(state.modo, state.filtroAno, state.filtroTopico));
+  if (!itens.length) return;
+  state.sessao = {
+    modo: state.modo,
+    itens: itens,
+    indice: 0,
+    acertos: 0,
+    erros: 0,
+    marcSabe: 0,
+    marcRevisar: 0,
+    erroItens: [],
+    perguntaAtual: null,
+    respondida: false
+  };
+  if (state.modo!=="flashcard") gerarPergunta();
+  state.view = "session";
+  render();
+};
+
+function itemAtual(){ return state.sessao.itens[state.sessao.indice]; }
+
+function gerarPergunta(){
+  const s = state.sessao;
+  const item = itemAtual();
+  if (s.modo==="quiz"){
+    const topicObj = DATA[item._ano][item._topico];
+    const outras = shuffle(topicObj.formulas.filter(f=>f.id!==item.id)).slice(0,3).map(f=>f.formula);
+    s.perguntaAtual = {
+      enunciado: `Qual é a fórmula de "${item.nome}"?`,
+      texto: null,
+      opcoes: shuffle([item.formula, ...outras]),
+      correta: item.formula
+    };
+  } else if (s.modo==="completar"){
+    const topicObj = DATA[item._ano][item._topico];
+    const tokens = extractTokens(item.formula);
+    const alvo = tokens[Math.floor(Math.random()*tokens.length)] || "?";
+    const idx = item.formula.indexOf(alvo);
+    const texto = idx===-1 ? item.formula : item.formula.slice(0,idx) + "___" + item.formula.slice(idx+alvo.length);
+    let candidatos = shuffle(topicObj.pool.filter(t=>t!==alvo)).slice(0,3);
+    const generico = ['m','v','t','F','g','a','2','θ','k','d','n','h'];
+    let gi=0;
+    while (candidatos.length<3 && gi<generico.length){
+      const g = generico[gi++];
+      if (g!==alvo && !candidatos.includes(g)) candidatos.push(g);
+    }
+    s.perguntaAtual = {
+      enunciado: `Complete a fórmula de "${item.nome}":`,
+      texto: texto,
+      opcoes: shuffle([alvo, ...candidatos]),
+      correta: alvo
+    };
+  } else if (s.modo==="unidades"){
+    s.perguntaAtual = {
+      enunciado: `Qual a unidade de "${item.grandeza}" no SI?`,
+      texto: null,
+      opcoes: shuffle(item.alternativas),
+      correta: item.correta
+    };
+  }
+  s.respondida = false;
+}
+
+/* =========================================================
+   RENDER — SESSÃO
+   ========================================================= */
+function renderSession(){
+  const s = state.sessao;
+  const item = itemAtual();
+  const total = s.itens.length;
+  const pct = Math.round((s.indice/total)*100);
+
+  const head = `
+    <div class="session-head">
+      <button class="exit" onclick="irPara('home')">✕</button>
+      <div class="info">
+        <b>${esc(item._topico)} · ${esc(item._ano)}</b>
+        Item ${s.indice+1} de ${total}
+      </div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+  `;
+
+  if (s.modo==="flashcard"){
+    renderFlashcard(head, item);
+    return;
+  }
+
+  const p = s.perguntaAtual;
+  const opcoesHtml = p.opcoes.map((op,i)=>{
+    let cls = "";
+    if (s.respondida){
+      if (op===p.correta) cls = "correta";
+      else if (op===s.selecionada) cls = "errada";
+    }
+    return `<button class="opcao-btn ${cls}" ${s.respondida?'disabled':''} onclick="responder(${i})">${esc(op)}</button>`;
+  }).join("");
+
+  document.getElementById('app').innerHTML = `
+    ${head}
+    <div class="question-card" style="--tcolor:${item._cor}">
+      <div class="topic-tag">${item._emoji} ${esc(item._topico)}</div>
+      <div class="enunciado">${esc(p.enunciado)}</div>
+      ${p.texto ? `<div class="formula-lacuna">${esc(p.texto)}</div>` : ''}
+      <div class="opcoes" style="margin-top:16px;">${opcoesHtml}</div>
+      ${s.respondida ? `<div class="feedback-row"><button class="next-btn" onclick="proximaPergunta()">${s.indice+1<total?'Próxima →':'Ver resultado →'}</button></div>` : ''}
+    </div>
+  `;
+}
+
+window.responder = function(i){
+  const s = state.sessao;
+  if (s.respondida) return;
+  const p = s.perguntaAtual;
+  const escolhida = p.opcoes[i];
+  s.selecionada = escolhida;
+  s.respondida = true;
+  const item = itemAtual();
+  const acertou = escolhida === p.correta;
+  if (acertou){
+    s.acertos++;
+    setDominado(item.id, true);
+    spawnConfetti();
+  } else {
+    s.erros++;
+    s.erroItens.push(item);
+    setDominado(item.id, false);
+  }
+  render();
+};
+
+window.proximaPergunta = function(){
+  const s = state.sessao;
+  s.indice++;
+  if (s.indice >= s.itens.length){
+    state.view = "result";
+    render();
+    return;
+  }
+  gerarPergunta();
+  render();
+};
+
+/* Flashcards */
+function renderFlashcard(head, item){
+  const flipped = state.sessao.flipped;
+  document.getElementById('app').innerHTML = `
+    ${head}
+    <div class="flash-wrap">
+      <div class="flash-card ${flipped?'flipped':''}" onclick="flipCard()" style="--tcolor:${item._cor}">
+        <div class="flash-face flash-front">
+          <div class="tag">${item._emoji} ${esc(item._topico)}</div>
+          <div class="nome">${esc(item.nome)}</div>
+          <div class="hint">toque para virar 👆</div>
+        </div>
+        <div class="flash-face flash-back">
+          <div class="formula">${esc(item.formula)}</div>
+          <div class="vars">${esc(item.variaveis)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flash-actions">
+      <button class="btn-sabe" onclick="marcarFlash(true)">✅ Já sei</button>
+      <button class="btn-revisar" onclick="marcarFlash(false)">🔁 Preciso revisar</button>
+    </div>
+  `;
+}
+window.flipCard = function(){
+  state.sessao.flipped = !state.sessao.flipped;
+  renderSession();
+};
+window.marcarFlash = function(sabe){
+  const s = state.sessao;
+  const item = itemAtual();
+  setDominado(item.id, sabe);
+  if (sabe){ s.marcSabe++; spawnConfetti(); } else { s.marcRevisar++; s.erroItens.push(item); }
+  s.indice++;
+  s.flipped = false;
+  if (s.indice >= s.itens.length){
+    state.view = "result";
+    render();
+    return;
+  }
+  render();
+};
+
+/* =========================================================
+   RENDER — RESULTADO
+   ========================================================= */
+function renderResult(){
+  const s = state.sessao;
+  const isFlash = s.modo==="flashcard";
+  const total = s.itens.length;
+  const acertos = isFlash ? s.marcSabe : s.acertos;
+  const erros = isFlash ? s.marcRevisar : s.erros;
+  const pct = total ? Math.round((acertos/total)*100) : 0;
+
+  const emoji = pct>=80 ? "🎉" : pct>=50 ? "💪" : "🌱";
+  const revisarUnicos = [...new Map(s.erroItens.map(it=>[it.id,it])).values()];
+
+  const revisarHtml = revisarUnicos.length ? `
+    <div class="section-title" style="margin-top:6px;">Vale revisar</div>
+    <div class="review-list">
+      ${revisarUnicos.map(it=>`<span class="review-chip">${esc(it.nome || it.grandeza)}</span>`).join("")}
+    </div>
+  ` : "";
+
+  document.getElementById('app').innerHTML = `
+    <div class="topbar">
+      <div class="brand"><span class="logo">⚡</span><div><h1>Resultado</h1></div></div>
+    </div>
+    <div class="card">
+      <div class="result-hero">
+        <div class="emoji">${emoji}</div>
+        <h2>Sessão concluída!</h2>
+        <p style="color:var(--ink-soft);font-weight:600;">${esc(state.filtroTopico)} · ${esc(state.filtroAno)}</p>
+      </div>
+      <div class="result-stats">
+        <div class="stat ok"><div class="num">${acertos}</div><div class="lbl">${isFlash?'Já sei':'Acertos'}</div></div>
+        <div class="stat bad"><div class="num">${erros}</div><div class="lbl">${isFlash?'Revisar':'Erros'}</div></div>
+        <div class="stat pct"><div class="num">${pct}%</div><div class="lbl">Aproveitamento</div></div>
+      </div>
+      ${revisarHtml}
+    </div>
+    <button class="big-btn" onclick="repetirSessao()">🔁 Repetir esta sessão</button>
+    ${revisarUnicos.length ? `<button class="ghost-btn" onclick="repetirErrados()">🎯 Estudar só o que falta revisar</button>` : ''}
+    <button class="ghost-btn" onclick="irPara('progresso')">📊 Ver progresso geral</button>
+    <button class="ghost-btn" onclick="irPara('home')">🏠 Voltar ao início</button>
+  `;
+}
+
+window.repetirSessao = function(){
+  state.modo = state.sessao.modo;
+  iniciarSessao();
+};
+window.repetirErrados = function(){
+  const revisarUnicos = [...new Map(state.sessao.erroItens.map(it=>[it.id,it])).values()];
+  if (!revisarUnicos.length) return;
+  state.sessao = {
+    modo: state.sessao.modo,
+    itens: shuffle(revisarUnicos),
+    indice: 0,
+    acertos: 0,
+    erros: 0,
+    marcSabe: 0,
+    marcRevisar: 0,
+    erroItens: [],
+    perguntaAtual: null,
+    respondida: false
+  };
+  if (state.sessao.modo!=="flashcard") gerarPergunta();
+  state.view = "session";
+  render();
+};
+
+/* =========================================================
+   RENDER — PROGRESSO
+   ========================================================= */
+function renderProgresso(){
+  let totalItens = 0, totalDominados = 0;
+  let anoBlocks = "";
+
+  ANOS.forEach(ano=>{
+    let anoHtml = `<div class="ano-heading">${esc(ano)}</div>`;
+    Object.keys(DATA[ano]).forEach(topico=>{
+      const obj = DATA[ano][topico];
+      const itensTopico = [...obj.formulas, ...obj.unidades];
+      const dominados = itensTopico.filter(it=>isDominado(it.id)).length;
+      const totalT = itensTopico.length;
+      const domF = obj.formulas.filter(it=>isDominado(it.id)).length;
+      const domU = obj.unidades.filter(it=>isDominado(it.id)).length;
+      const pctT = totalT ? Math.round((dominados/totalT)*100) : 0;
+      totalItens += totalT;
+      totalDominados += dominados;
+      anoHtml += `
+        <div class="topic-progress" style="--tcolor:${obj.cor}">
+          <div class="row1">
+            <h3>${obj.emoji} ${esc(topico)}</h3>
+            <span class="pct">${pctT}%</span>
+          </div>
+          <div class="track"><div class="fill" style="width:${pctT}%"></div></div>
+          <div class="detail">Fórmulas: ${domF}/${obj.formulas.length} · Unidades: ${domU}/${obj.unidades.length} · ${dominados}/${totalT} dominados</div>
+        </div>
+      `;
+    });
+    anoBlocks += anoHtml;
+  });
+
+  const pctGeral = totalItens ? Math.round((totalDominados/totalItens)*100) : 0;
+
+  document.getElementById('app').innerHTML = `
+    <div class="topbar">
+      <div class="brand"><span class="logo">⚡</span><div><h1>Meu Progresso</h1></div></div>
+      <div class="nav-btns"><button class="pill-btn" onclick="irPara('home')">🏠 Início</button></div>
+    </div>
+
+    <div class="overall-card">
+      <div class="sub" style="opacity:.85;font-weight:700;">Progresso geral</div>
+      <div class="num">${totalDominados}/${totalItens} <span style="font-size:18px;">itens dominados</span></div>
+      <div class="track"><div class="fill" style="width:${pctGeral}%"></div></div>
+    </div>
+
+    ${anoBlocks}
+
+    <button class="ghost-btn" onclick="confirmarReset()" style="margin-top:14px;">🗑️ Resetar todo o progresso</button>
+  `;
+}
+
+window.confirmarReset = function(){
+  if (confirm("Tem certeza que deseja apagar todo o progresso salvo? Essa ação não pode ser desfeita.")){
+    PROGRESS = {};
+    localStorage.setItem(LS_KEY, JSON.stringify(PROGRESS));
+    renderProgresso();
+  }
+};
+
+/* =========================================================
+   ROTEAMENTO / INIT
+   ========================================================= */
+function render(){
+  if (state.view==="home") renderHome();
+  else if (state.view==="session") renderSession();
+  else if (state.view==="result") renderResult();
+  else if (state.view==="progresso") renderProgresso();
+}
+
+render();
+</script>
+</body>
+</html>
