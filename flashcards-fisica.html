@@ -248,7 +248,6 @@
   .overall-card .num{font-size:38px;font-weight:800;}
   .overall-card .track{height:12px;background:rgba(255,255,255,.35);border-radius:999px;margin-top:10px;overflow:hidden;}
   .overall-card .fill{height:100%;background:#fff;border-radius:999px;}
-  .ano-heading{font-size:14px;font-weight:800;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.6px;margin:18px 4px 8px;}
   .topic-progress{
     background:#fff;border-radius:16px;padding:16px 18px;margin-bottom:10px;box-shadow:var(--shadow-sm);
     border-left:8px solid var(--tcolor,#7C5CFF);
@@ -272,10 +271,9 @@
 
 <script>
 /* =========================================================
-   DADOS: fórmulas e unidades por ano / tópico
+   DADOS: fórmulas e unidades por tópico
    ========================================================= */
 const DATA = {
-"1º ano": {
   "Cinemática": { cor:"#FF6B6B", emoji:"🏃", formulas:[
     {id:"cin-f01",nome:"Velocidade média",formula:"v = ΔS / Δt",variaveis:"v: velocidade (m/s) | ΔS: deslocamento (m) | Δt: intervalo de tempo (s)"},
     {id:"cin-f02",nome:"Aceleração média",formula:"a = Δv / Δt",variaveis:"a: aceleração (m/s²) | Δv: variação de velocidade (m/s) | Δt: intervalo de tempo (s)"},
@@ -329,9 +327,7 @@ const DATA = {
     {id:"est-u03",grandeza:"Densidade",correta:"kg/m³",alternativas:["kg/m³","kg/m","g/cm","N/m²"]},
     {id:"est-u04",grandeza:"Constante gravitacional (G)",correta:"N·m²/kg²",alternativas:["N·m²/kg²","N/kg","m/s²","kg·m/s"]},
     {id:"est-u05",grandeza:"Empuxo",correta:"N (Newton)",alternativas:["N (Newton)","Pa (Pascal)","kg/m³","J (Joule)"]}
-  ]}
-},
-"2º ano": {
+  ]},
   "Termologia": { cor:"#F06595", emoji:"🌡️", formulas:[
     {id:"ter-f01",nome:"Conversão Celsius → Fahrenheit",formula:"C/5 = (F-32)/9",variaveis:"C: temperatura em Celsius | F: temperatura em Fahrenheit"},
     {id:"ter-f02",nome:"Conversão Celsius → Kelvin",formula:"K = C + 273",variaveis:"K: temperatura em Kelvin | C: temperatura em Celsius"},
@@ -385,9 +381,7 @@ const DATA = {
     {id:"ond-u03",grandeza:"Período",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","m (metro)","m/s"]},
     {id:"ond-u04",grandeza:"Nível sonoro / intensidade",correta:"dB (decibel)",alternativas:["dB (decibel)","Hz (Hertz)","W (Watt)","m (metro)"]},
     {id:"ond-u05",grandeza:"Velocidade do som",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","s (segundo)"]}
-  ]}
-},
-"3º ano": {
+  ]},
   "Eletricidade": { cor:"#845EF7", emoji:"⚡", formulas:[
     {id:"ele-f01",nome:"Lei de Ohm",formula:"U = R·i",variaveis:"U: tensão / ddp (V) | R: resistência (Ω) | i: corrente elétrica (A)"},
     {id:"ele-f02",nome:"Potência elétrica",formula:"Pot = U·i",variaveis:"Pot: potência (W) | U: tensão (V) | i: corrente elétrica (A)"},
@@ -442,7 +436,6 @@ const DATA = {
     {id:"mod-u04",grandeza:"Meia-vida",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","anos-luz","J (Joule)"]},
     {id:"mod-u05",grandeza:"Velocidade da luz",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","J (Joule)"]}
   ]}
-}
 };
 
 const MODOS = [
@@ -478,18 +471,13 @@ function extractTokens(formulaStr){
 
 const ALL_FORMULAS = [];
 const ALL_UNIDADES = [];
-Object.entries(DATA).forEach(([ano, topicos])=>{
-  Object.entries(topicos).forEach(([topico, obj])=>{
-    obj.pool = [...new Set(obj.formulas.flatMap(f=>extractTokens(f.formula)))];
-    obj.formulas.forEach(f=>{ f._ano=ano; f._topico=topico; f._cor=obj.cor; f._emoji=obj.emoji; ALL_FORMULAS.push(f); });
-    obj.unidades.forEach(u=>{ u._ano=ano; u._topico=topico; u._cor=obj.cor; u._emoji=obj.emoji; ALL_UNIDADES.push(u); });
-  });
+Object.entries(DATA).forEach(([topico, obj])=>{
+  obj.pool = [...new Set(obj.formulas.flatMap(f=>extractTokens(f.formula)))];
+  obj.formulas.forEach(f=>{ f._topico=topico; f._cor=obj.cor; f._emoji=obj.emoji; ALL_FORMULAS.push(f); });
+  obj.unidades.forEach(u=>{ u._topico=topico; u._cor=obj.cor; u._emoji=obj.emoji; ALL_UNIDADES.push(u); });
 });
 
-const ANOS = Object.keys(DATA);
-function topicosDe(ano){
-  return ano==="Todos" ? Object.values(DATA).flatMap(t=>Object.keys(t)) : Object.keys(DATA[ano]);
-}
+const TOPICOS = Object.keys(DATA);
 
 /* =========================================================
    HELPERS
@@ -524,7 +512,6 @@ function spawnConfetti(){
    ========================================================= */
 let state = {
   view: "home",
-  filtroAno: "Todos",
   filtroTopico: "Todos",
   modo: null,
   sessao: null
@@ -533,37 +520,23 @@ let state = {
 /* =========================================================
    FILTRAGEM
    ========================================================= */
-function getFiltrados(modo, ano, topico){
+function getFiltrados(modo, topico){
   const base = modo === "unidades" ? ALL_UNIDADES : ALL_FORMULAS;
-  return base.filter(it => (ano==="Todos" || it._ano===ano) && (topico==="Todos" || it._topico===topico));
+  return base.filter(it => topico==="Todos" || it._topico===topico);
 }
 
 /* =========================================================
    RENDER — HOME
    ========================================================= */
 function renderHome(){
-  const topicosDisponiveis = topicosDe(state.filtroAno);
-  if (state.filtroTopico!=="Todos" && !topicosDisponiveis.includes(state.filtroTopico)){
-    state.filtroTopico = "Todos";
-  }
-
   let count = 0;
   if (state.modo){
-    count = getFiltrados(state.modo, state.filtroAno, state.filtroTopico).length;
+    count = getFiltrados(state.modo, state.filtroTopico).length;
   }
 
-  const anoChips = ["Todos", ...ANOS].map(a=>{
-    const sel = a===state.filtroAno;
-    return `<button class="chip ${sel?'selected':''}" onclick="selecionarAno('${esc(a)}')">${esc(a)}</button>`;
-  }).join("");
-
-  const topicoChips = ["Todos", ...topicosDisponiveis].map(t=>{
+  const topicoChips = ["Todos", ...TOPICOS].map(t=>{
     const sel = t===state.filtroTopico;
-    let cor = "#7C5CFF";
-    if (t!=="Todos"){
-      const anosParaBuscar = state.filtroAno==="Todos" ? ANOS : [state.filtroAno];
-      for (const a of anosParaBuscar){ if (DATA[a][t]) { cor = DATA[a][t].cor; break; } }
-    }
+    const cor = t==="Todos" ? "#7C5CFF" : DATA[t].cor;
     return `<button class="chip ${sel?'selected':''}" style="--chip-color:${cor}" onclick="selecionarTopico('${esc(t)}')">${esc(t)}</button>`;
   }).join("");
 
@@ -586,9 +559,7 @@ function renderHome(){
     </div>
 
     <div class="card">
-      <div class="section-title">Ano</div>
-      <div class="chip-row">${anoChips}</div>
-      <div class="section-title" style="margin-top:14px;">Tópico</div>
+      <div class="section-title">Tópico</div>
       <div class="chip-row">${topicoChips}</div>
     </div>
 
@@ -605,7 +576,6 @@ function renderHome(){
   `;
 }
 
-window.selecionarAno = function(a){ state.filtroAno=a; renderHome(); };
 window.selecionarTopico = function(t){ state.filtroTopico=t; renderHome(); };
 window.selecionarModo = function(m){ state.modo = (state.modo===m ? null : m); renderHome(); };
 window.irPara = function(view){ state.view=view; render(); };
@@ -614,7 +584,7 @@ window.irPara = function(view){ state.view=view; render(); };
    SESSÃO — iniciar
    ========================================================= */
 window.iniciarSessao = function(){
-  const itens = shuffle(getFiltrados(state.modo, state.filtroAno, state.filtroTopico));
+  const itens = shuffle(getFiltrados(state.modo, state.filtroTopico));
   if (!itens.length) return;
   state.sessao = {
     modo: state.modo,
@@ -639,7 +609,7 @@ function gerarPergunta(){
   const s = state.sessao;
   const item = itemAtual();
   if (s.modo==="quiz"){
-    const topicObj = DATA[item._ano][item._topico];
+    const topicObj = DATA[item._topico];
     const outras = shuffle(topicObj.formulas.filter(f=>f.id!==item.id)).slice(0,3).map(f=>f.formula);
     s.perguntaAtual = {
       enunciado: `Qual é a fórmula de "${item.nome}"?`,
@@ -648,7 +618,7 @@ function gerarPergunta(){
       correta: item.formula
     };
   } else if (s.modo==="completar"){
-    const topicObj = DATA[item._ano][item._topico];
+    const topicObj = DATA[item._topico];
     const tokens = extractTokens(item.formula);
     const alvo = tokens[Math.floor(Math.random()*tokens.length)] || "?";
     const idx = item.formula.indexOf(alvo);
@@ -690,7 +660,7 @@ function renderSession(){
     <div class="session-head">
       <button class="exit" onclick="irPara('home')">✕</button>
       <div class="info">
-        <b>${esc(item._topico)} · ${esc(item._ano)}</b>
+        <b>${esc(item._topico)}</b>
         Item ${s.indice+1} de ${total}
       </div>
     </div>
@@ -829,7 +799,7 @@ function renderResult(){
       <div class="result-hero">
         <div class="emoji">${emoji}</div>
         <h2>Sessão concluída!</h2>
-        <p style="color:var(--ink-soft);font-weight:600;">${esc(state.filtroTopico)} · ${esc(state.filtroAno)}</p>
+        <p style="color:var(--ink-soft);font-weight:600;">${state.filtroTopico==="Todos" ? "Todos os tópicos" : esc(state.filtroTopico)}</p>
       </div>
       <div class="result-stats">
         <div class="stat ok"><div class="num">${acertos}</div><div class="lbl">${isFlash?'Já sei':'Acertos'}</div></div>
@@ -874,32 +844,28 @@ window.repetirErrados = function(){
    ========================================================= */
 function renderProgresso(){
   let totalItens = 0, totalDominados = 0;
-  let anoBlocks = "";
+  let topicBlocks = "";
 
-  ANOS.forEach(ano=>{
-    let anoHtml = `<div class="ano-heading">${esc(ano)}</div>`;
-    Object.keys(DATA[ano]).forEach(topico=>{
-      const obj = DATA[ano][topico];
-      const itensTopico = [...obj.formulas, ...obj.unidades];
-      const dominados = itensTopico.filter(it=>isDominado(it.id)).length;
-      const totalT = itensTopico.length;
-      const domF = obj.formulas.filter(it=>isDominado(it.id)).length;
-      const domU = obj.unidades.filter(it=>isDominado(it.id)).length;
-      const pctT = totalT ? Math.round((dominados/totalT)*100) : 0;
-      totalItens += totalT;
-      totalDominados += dominados;
-      anoHtml += `
-        <div class="topic-progress" style="--tcolor:${obj.cor}">
-          <div class="row1">
-            <h3>${obj.emoji} ${esc(topico)}</h3>
-            <span class="pct">${pctT}%</span>
-          </div>
-          <div class="track"><div class="fill" style="width:${pctT}%"></div></div>
-          <div class="detail">Fórmulas: ${domF}/${obj.formulas.length} · Unidades: ${domU}/${obj.unidades.length} · ${dominados}/${totalT} dominados</div>
+  TOPICOS.forEach(topico=>{
+    const obj = DATA[topico];
+    const itensTopico = [...obj.formulas, ...obj.unidades];
+    const dominados = itensTopico.filter(it=>isDominado(it.id)).length;
+    const totalT = itensTopico.length;
+    const domF = obj.formulas.filter(it=>isDominado(it.id)).length;
+    const domU = obj.unidades.filter(it=>isDominado(it.id)).length;
+    const pctT = totalT ? Math.round((dominados/totalT)*100) : 0;
+    totalItens += totalT;
+    totalDominados += dominados;
+    topicBlocks += `
+      <div class="topic-progress" style="--tcolor:${obj.cor}">
+        <div class="row1">
+          <h3>${obj.emoji} ${esc(topico)}</h3>
+          <span class="pct">${pctT}%</span>
         </div>
-      `;
-    });
-    anoBlocks += anoHtml;
+        <div class="track"><div class="fill" style="width:${pctT}%"></div></div>
+        <div class="detail">Fórmulas: ${domF}/${obj.formulas.length} · Unidades: ${domU}/${obj.unidades.length} · ${dominados}/${totalT} dominados</div>
+      </div>
+    `;
   });
 
   const pctGeral = totalItens ? Math.round((totalDominados/totalItens)*100) : 0;
@@ -916,7 +882,7 @@ function renderProgresso(){
       <div class="track"><div class="fill" style="width:${pctGeral}%"></div></div>
     </div>
 
-    ${anoBlocks}
+    ${topicBlocks}
 
     <button class="ghost-btn" onclick="confirmarReset()" style="margin-top:14px;">🗑️ Resetar todo o progresso</button>
   `;
