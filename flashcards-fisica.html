@@ -275,88 +275,109 @@
    ========================================================= */
 const DATA = {
   "Cinemática": { cor:"#FF6B6B", emoji:"🏃", formulas:[
-    {id:"cin-f01",nome:"Velocidade média",formula:"v = ΔS / Δt",variaveis:"v: velocidade (m/s) | ΔS: deslocamento (m) | Δt: intervalo de tempo (s)"},
-    {id:"cin-f02",nome:"Aceleração média",formula:"a = Δv / Δt",variaveis:"a: aceleração (m/s²) | Δv: variação de velocidade (m/s) | Δt: intervalo de tempo (s)"},
-    {id:"cin-f03",nome:"Função horária da posição (MU)",formula:"S = S0 + v·t",variaveis:"S: posição (m) | S0: posição inicial (m) | v: velocidade (m/s) | t: tempo (s)"},
-    {id:"cin-f04",nome:"Função horária da velocidade (MUV)",formula:"v = v0 + a·t",variaveis:"v: velocidade final (m/s) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
-    {id:"cin-f05",nome:"Função horária da posição (MUV)",formula:"S = S0 + v0·t + (a·t²)/2",variaveis:"S: posição (m) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
-    {id:"cin-f06",nome:"Equação de Torricelli",formula:"v² = v0² + 2·a·ΔS",variaveis:"v: velocidade final (m/s) | v0: velocidade inicial (m/s) | a: aceleração (m/s²) | ΔS: deslocamento (m)"},
-    {id:"cin-f07",nome:"Velocidade na queda livre",formula:"v = g·t",variaveis:"v: velocidade (m/s) | g: aceleração da gravidade (m/s²) | t: tempo (s)"},
-    {id:"cin-f08",nome:"Altura na queda livre",formula:"h = (g·t²)/2",variaveis:"h: altura (m) | g: aceleração da gravidade (m/s²) | t: tempo (s)"},
-    {id:"cin-f09",nome:"Alcance no lançamento horizontal",formula:"A = v0·√(2h/g)",variaveis:"A: alcance (m) | v0: velocidade horizontal (m/s) | h: altura (m) | g: gravidade (m/s²)"},
-    {id:"cin-f10",nome:"Tempo de queda no lançamento horizontal",formula:"t = √(2h/g)",variaveis:"t: tempo de queda (s) | h: altura (m) | g: aceleração da gravidade (m/s²)"}
+    {id:"cin-f01",nome:"Velocidade média",formula:"v = ΔS / Δt",variaveis:"v: velocidade média (m/s) | ΔS: deslocamento (m) | Δt: intervalo de tempo (s)"},
+    {id:"cin-f02",nome:"Aceleração média",formula:"a = Δv / Δt",variaveis:"a: aceleração média (m/s²) | Δv: variação de velocidade (m/s) | Δt: intervalo de tempo (s)"},
+    {id:"cin-f03",nome:"Função horária da posição (MU)",formula:"S = S₀ + v·t",variaveis:"S: posição (m) | S₀: posição inicial (m) | v: velocidade (m/s) | t: tempo (s)"},
+    {id:"cin-f04",nome:"Função horária da posição (MUV)",formula:"S = S₀ + v₀·t + (a·t²)/2",variaveis:"S: posição (m) | S₀: posição inicial (m) | v₀: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
+    {id:"cin-f05",nome:"Função horária da velocidade (MUV)",formula:"v = v₀ + a·t",variaveis:"v: velocidade final (m/s) | v₀: velocidade inicial (m/s) | a: aceleração (m/s²) | t: tempo (s)"},
+    {id:"cin-f06",nome:"Equação de Torricelli",formula:"v² = v₀² + 2·a·ΔS",variaveis:"v: velocidade final (m/s) | v₀: velocidade inicial (m/s) | a: aceleração (m/s²) | ΔS: deslocamento (m)"},
+    {id:"cin-f07",nome:"Queda livre — velocidade",formula:"v = g·t",variaveis:"v: velocidade (m/s) | g: aceleração da gravidade (m/s²) | t: tempo de queda (s)"},
+    {id:"cin-f08",nome:"Queda livre — altura",formula:"h = (g·t²)/2",variaveis:"h: altura de queda (m) | g: aceleração da gravidade (m/s²) | t: tempo de queda (s)"},
+    {id:"cin-f09",nome:"Lançamento horizontal — alcance",formula:"x = v₀·t",variaveis:"x: alcance horizontal (m) | v₀: velocidade horizontal inicial (m/s) | t: tempo (s)"},
+    {id:"cin-f10",nome:"Lançamento horizontal — altura",formula:"y = (g·t²)/2",variaveis:"y: altura de queda (m) | g: aceleração da gravidade (m/s²) | t: tempo (s)"},
+    {id:"cin-f11",nome:"Lançamento oblíquo — alcance",formula:"A = (v₀²·sen 2θ)/g",variaveis:"A: alcance horizontal (m) | v₀: velocidade inicial (m/s) | θ: ângulo de lançamento | g: aceleração da gravidade (m/s²)"},
+    {id:"cin-f12",nome:"Lançamento oblíquo — altura máxima",formula:"Hmáx = (v₀²·sen²θ)/(2g)",variaveis:"Hmáx: altura máxima (m) | v₀: velocidade inicial (m/s) | θ: ângulo de lançamento | g: aceleração da gravidade (m/s²)"},
+    {id:"cin-f13",nome:"Movimento circular — velocidade angular",formula:"ω = Δθ/Δt",variaveis:"ω: velocidade angular (rad/s) | Δθ: variação angular (rad) | Δt: intervalo de tempo (s)"},
+    {id:"cin-f14",nome:"Relação entre velocidade linear e angular",formula:"v = ω·R",variaveis:"v: velocidade linear (m/s) | ω: velocidade angular (rad/s) | R: raio da trajetória (m)"},
+    {id:"cin-f15",nome:"Aceleração centrípeta",formula:"acp = v²/R",variaveis:"acp: aceleração centrípeta (m/s²) | v: velocidade linear (m/s) | R: raio da trajetória (m)"},
+    {id:"cin-f16",nome:"Período e frequência",formula:"T = 1/f",variaveis:"T: período (s) | f: frequência (Hz)"}
   ], unidades:[
-    {id:"cin-u01",grandeza:"Velocidade",correta:"m/s",alternativas:["m/s","m/s²","km","s"]},
-    {id:"cin-u02",grandeza:"Aceleração",correta:"m/s²",alternativas:["m/s²","m/s","N","m"]},
-    {id:"cin-u03",grandeza:"Tempo",correta:"s (segundo)",alternativas:["s (segundo)","min","h","m/s"]},
-    {id:"cin-u04",grandeza:"Distância / deslocamento",correta:"m (metro)",alternativas:["m (metro)","m²","m/s","km/h"]},
-    {id:"cin-u05",grandeza:"Aceleração da gravidade",correta:"m/s²",alternativas:["m/s²","N","kg","m/s"]}
+    {id:"cin-u01",grandeza:"Velocidade",correta:"m/s",alternativas:["m/s","m/s²","km/h","rad/s"]},
+    {id:"cin-u02",grandeza:"Aceleração",correta:"m/s²",alternativas:["m/s²","m/s","N","rad/s²"]},
+    {id:"cin-u03",grandeza:"Velocidade angular",correta:"rad/s",alternativas:["rad/s","m/s","Hz","s"]},
+    {id:"cin-u04",grandeza:"Aceleração centrípeta",correta:"m/s²",alternativas:["m/s²","N","rad/s","m"]},
+    {id:"cin-u05",grandeza:"Período",correta:"s (segundo)",alternativas:["s (segundo)","Hz","m/s","rad/s"]},
+    {id:"cin-u06",grandeza:"Frequência",correta:"Hz (Hertz)",alternativas:["Hz (Hertz)","s (segundo)","rad/s","m/s"]}
   ]},
   "Dinâmica": { cor:"#FF922B", emoji:"🚀", formulas:[
-    {id:"din-f01",nome:"2ª Lei de Newton",formula:"F = m·a",variaveis:"F: força resultante (N) | m: massa (kg) | a: aceleração (m/s²)"},
-    {id:"din-f02",nome:"Peso",formula:"P = m·g",variaveis:"P: peso (N) | m: massa (kg) | g: aceleração da gravidade (m/s²)"},
-    {id:"din-f03",nome:"Força de atrito",formula:"Fat = μ·N",variaveis:"Fat: força de atrito (N) | μ: coeficiente de atrito | N: força normal (N)"},
-    {id:"din-f04",nome:"Trabalho de uma força",formula:"τ = F·d·cosθ",variaveis:"τ: trabalho (J) | F: força (N) | d: deslocamento (m) | θ: ângulo entre força e deslocamento"},
-    {id:"din-f05",nome:"Energia cinética",formula:"Ec = (m·v²)/2",variaveis:"Ec: energia cinética (J) | m: massa (kg) | v: velocidade (m/s)"},
-    {id:"din-f06",nome:"Energia potencial gravitacional",formula:"Ep = m·g·h",variaveis:"Ep: energia potencial (J) | m: massa (kg) | g: gravidade (m/s²) | h: altura (m)"},
-    {id:"din-f07",nome:"Energia potencial elástica",formula:"Epe = (k·x²)/2",variaveis:"Epe: energia potencial elástica (J) | k: constante elástica (N/m) | x: deformação (m)"},
-    {id:"din-f08",nome:"Potência",formula:"Pot = τ/Δt",variaveis:"Pot: potência (W) | τ: trabalho (J) | Δt: intervalo de tempo (s)"},
-    {id:"din-f09",nome:"Impulso",formula:"I = F·Δt",variaveis:"I: impulso (N·s) | F: força (N) | Δt: intervalo de tempo (s)"},
-    {id:"din-f10",nome:"Quantidade de movimento",formula:"Q = m·v",variaveis:"Q: quantidade de movimento (kg·m/s) | m: massa (kg) | v: velocidade (m/s)"}
+    {id:"din-f01",nome:"1ª Lei de Newton (Inércia)",formula:"ΣF = 0",variaveis:"ΣF: resultante das forças (N) — se nula, o corpo permanece em repouso ou em Movimento Retilíneo Uniforme"},
+    {id:"din-f02",nome:"2ª Lei de Newton",formula:"F = m·a",variaveis:"F: força resultante (N) | m: massa (kg) | a: aceleração (m/s²)"},
+    {id:"din-f03",nome:"3ª Lei de Newton (Ação-Reação)",formula:"F₁₂ = −F₂₁",variaveis:"F₁₂: força que o corpo 1 faz no corpo 2 (N) | F₂₁: força que o corpo 2 faz no corpo 1 (N) — mesma intensidade, sentido oposto"},
+    {id:"din-f04",nome:"Peso",formula:"P = m·g",variaveis:"P: peso (N) | m: massa (kg) | g: aceleração da gravidade (m/s²)"},
+    {id:"din-f05",nome:"Força de atrito",formula:"Fat = μ·N",variaveis:"Fat: força de atrito (N) | μ: coeficiente de atrito | N: força normal (N)"},
+    {id:"din-f06",nome:"Força elástica (Lei de Hooke)",formula:"F = k·x",variaveis:"F: força elástica (N) | k: constante elástica da mola (N/m) | x: deformação da mola (m)"},
+    {id:"din-f07",nome:"Força centrípeta",formula:"Fcp = (m·v²)/R",variaveis:"Fcp: força centrípeta (N) | m: massa (kg) | v: velocidade (m/s) | R: raio da trajetória (m)"},
+    {id:"din-f08",nome:"Trabalho de uma força",formula:"τ = F·d·cos θ",variaveis:"τ: trabalho (J) | F: força (N) | d: deslocamento (m) | θ: ângulo entre força e deslocamento"},
+    {id:"din-f09",nome:"Potência",formula:"Pot = τ/Δt",variaveis:"Pot: potência (W) | τ: trabalho (J) | Δt: intervalo de tempo (s)"},
+    {id:"din-f10",nome:"Energia cinética",formula:"Ec = (m·v²)/2",variaveis:"Ec: energia cinética (J) | m: massa (kg) | v: velocidade (m/s)"},
+    {id:"din-f11",nome:"Energia potencial gravitacional",formula:"Ep = m·g·h",variaveis:"Ep: energia potencial gravitacional (J) | m: massa (kg) | g: aceleração da gravidade (m/s²) | h: altura (m)"},
+    {id:"din-f12",nome:"Energia potencial elástica",formula:"Ep = (k·x²)/2",variaveis:"Ep: energia potencial elástica (J) | k: constante elástica (N/m) | x: deformação (m)"},
+    {id:"din-f13",nome:"Teorema da energia cinética",formula:"τ = ΔEc",variaveis:"τ: trabalho da força resultante (J) | ΔEc: variação da energia cinética (J)"},
+    {id:"din-f14",nome:"Conservação de energia mecânica",formula:"Em = Ec + Ep",variaveis:"Em: energia mecânica (J) | Ec: energia cinética (J) | Ep: energia potencial (J) — soma constante em sistema conservativo"},
+    {id:"din-f15",nome:"Quantidade de movimento (momento linear)",formula:"Q = m·v",variaveis:"Q: quantidade de movimento (kg·m/s) | m: massa (kg) | v: velocidade (m/s)"},
+    {id:"din-f16",nome:"Impulso",formula:"I = F·Δt",variaveis:"I: impulso (N·s) | F: força (N) | Δt: intervalo de tempo (s)"},
+    {id:"din-f17",nome:"Teorema do impulso",formula:"I = ΔQ",variaveis:"I: impulso (N·s) | ΔQ: variação da quantidade de movimento (kg·m/s)"},
+    {id:"din-f18",nome:"Conservação da quantidade de movimento",formula:"Qantes = Qdepois",variaveis:"Qantes: quantidade de movimento total antes (kg·m/s) | Qdepois: quantidade de movimento total depois (kg·m/s) — válida em sistemas isolados"}
   ], unidades:[
     {id:"din-u01",grandeza:"Força",correta:"N (Newton)",alternativas:["N (Newton)","J (Joule)","Pa (Pascal)","W (Watt)"]},
-    {id:"din-u02",grandeza:"Trabalho / Energia",correta:"J (Joule)",alternativas:["J (Joule)","N (Newton)","W (Watt)","cal"]},
-    {id:"din-u03",grandeza:"Potência",correta:"W (Watt)",alternativas:["W (Watt)","J (Joule)","N (Newton)","Pa (Pascal)"]},
+    {id:"din-u02",grandeza:"Trabalho / Energia",correta:"J (Joule)",alternativas:["J (Joule)","N (Newton)","W (Watt)","N·s"]},
+    {id:"din-u03",grandeza:"Potência",correta:"W (Watt)",alternativas:["W (Watt)","J (Joule)","N (Newton)","kg·m/s"]},
     {id:"din-u04",grandeza:"Quantidade de movimento",correta:"kg·m/s",alternativas:["kg·m/s","N·s","J·s","kg/m³"]},
-    {id:"din-u05",grandeza:"Massa",correta:"kg (quilograma)",alternativas:["kg (quilograma)","N (Newton)","g (grama-força)","m³"]}
+    {id:"din-u05",grandeza:"Impulso",correta:"N·s",alternativas:["N·s","kg·m/s","J","W"]},
+    {id:"din-u06",grandeza:"Constante elástica (mola)",correta:"N/m",alternativas:["N/m","N","J","N·m"]}
   ]},
-  "Estática e Gravitação": { cor:"#FCC419", emoji:"🪐", formulas:[
-    {id:"est-f01",nome:"Momento de uma força (torque)",formula:"M = F·d",variaveis:"M: momento/torque (N·m) | F: força (N) | d: braço de alavanca (m)"},
-    {id:"est-f02",nome:"Equilíbrio de translação",formula:"ΣF = 0",variaveis:"Σ: soma vetorial das forças que agem no corpo deve ser nula"},
-    {id:"est-f03",nome:"Equilíbrio de rotação",formula:"ΣM = 0",variaveis:"Σ: soma dos momentos (torques) que agem no corpo deve ser nula"},
-    {id:"est-f04",nome:"Lei da gravitação universal",formula:"F = G·(m1·m2)/d²",variaveis:"F: força gravitacional (N) | G: constante gravitacional | m1,m2: massas (kg) | d: distância (m)"},
-    {id:"est-f05",nome:"Gravidade em função da altitude",formula:"g = G·M/d²",variaveis:"g: aceleração da gravidade (m/s²) | G: constante gravitacional | M: massa do planeta (kg) | d: distância ao centro (m)"},
-    {id:"est-f06",nome:"Velocidade de escape",formula:"v = √(2·G·M/R)",variaveis:"v: velocidade de escape (m/s) | G: constante gravitacional | M: massa do planeta (kg) | R: raio (m)"},
-    {id:"est-f07",nome:"3ª Lei de Kepler",formula:"T²/R³ = 4π²/(G·M)",variaveis:"T: período orbital (s) | R: raio da órbita (m) | G: constante gravitacional | M: massa central (kg)"},
-    {id:"est-f08",nome:"Densidade",formula:"d = m/V",variaveis:"d: densidade (kg/m³) | m: massa (kg) | V: volume (m³)"},
-    {id:"est-f09",nome:"Pressão",formula:"P = F/A",variaveis:"P: pressão (Pa) | F: força (N) | A: área (m²)"},
-    {id:"est-f10",nome:"Empuxo",formula:"E = d·V·g",variaveis:"E: empuxo (N) | d: densidade do fluido (kg/m³) | V: volume deslocado (m³) | g: gravidade (m/s²)"}
+  "Estática": { cor:"#FCC419", emoji:"⚖️", formulas:[
+    {id:"est-f01",nome:"Condição de equilíbrio (translação)",formula:"ΣF = 0",variaveis:"ΣF: soma vetorial das forças que agem no corpo — deve ser nula para equilíbrio de translação"},
+    {id:"est-f02",nome:"Condição de equilíbrio (rotação)",formula:"ΣM = 0",variaveis:"ΣM: soma dos momentos/torques que agem no corpo — deve ser nula para equilíbrio de rotação"},
+    {id:"est-f03",nome:"Momento de uma força (torque)",formula:"M = F·d",variaveis:"M: momento/torque (N·m) | F: força aplicada (N) | d: braço de alavanca (m)"}
   ], unidades:[
-    {id:"est-u01",grandeza:"Torque / Momento de uma força",correta:"N·m",alternativas:["N·m","N","J","Pa"]},
-    {id:"est-u02",grandeza:"Pressão",correta:"Pa (Pascal)",alternativas:["Pa (Pascal)","N","J","W"]},
-    {id:"est-u03",grandeza:"Densidade",correta:"kg/m³",alternativas:["kg/m³","kg/m","g/cm","N/m²"]},
-    {id:"est-u04",grandeza:"Constante gravitacional (G)",correta:"N·m²/kg²",alternativas:["N·m²/kg²","N/kg","m/s²","kg·m/s"]},
-    {id:"est-u05",grandeza:"Empuxo",correta:"N (Newton)",alternativas:["N (Newton)","Pa (Pascal)","kg/m³","J (Joule)"]}
+    {id:"est-u01",grandeza:"Força",correta:"N (Newton)",alternativas:["N (Newton)","N·m","J (Joule)","Pa (Pascal)"]},
+    {id:"est-u02",grandeza:"Torque / Momento de uma força",correta:"N·m",alternativas:["N·m","N","J (Joule)","W (Watt)"]},
+    {id:"est-u03",grandeza:"Braço de alavanca (distância)",correta:"m (metro)",alternativas:["m (metro)","N","N·m","s"]}
+  ]},
+  "Gravitação": { cor:"#7048E8", emoji:"🪐", formulas:[
+    {id:"gra-f01",nome:"Lei da Gravitação Universal",formula:"F = G·(m₁·m₂)/d²",variaveis:"F: força gravitacional (N) | G: constante de gravitação universal | m₁,m₂: massas (kg) | d: distância entre os centros (m)"},
+    {id:"gra-f02",nome:"Aceleração da gravidade em função da altura",formula:"g = G·M/d²",variaveis:"g: aceleração da gravidade (m/s²) | G: constante de gravitação universal | M: massa do planeta (kg) | d: distância ao centro do planeta (m)"},
+    {id:"gra-f03",nome:"3ª Lei de Kepler",formula:"T²/R³ = constante",variaveis:"T: período orbital (s) | R: raio médio da órbita (m) — a razão é constante para corpos que orbitam o mesmo astro"}
+  ], unidades:[
+    {id:"gra-u01",grandeza:"Força gravitacional",correta:"N (Newton)",alternativas:["N (Newton)","N·m²/kg²","m/s²","s"]},
+    {id:"gra-u02",grandeza:"Constante de gravitação universal (G)",correta:"N·m²/kg²",alternativas:["N·m²/kg²","N/kg","m/s²","kg·m/s"]},
+    {id:"gra-u03",grandeza:"Aceleração da gravidade",correta:"m/s²",alternativas:["m/s²","N","N·m²/kg²","m"]},
+    {id:"gra-u04",grandeza:"Período orbital",correta:"s (segundo)",alternativas:["s (segundo)","m","N","m/s²"]}
   ]},
   "Termologia": { cor:"#F06595", emoji:"🌡️", formulas:[
-    {id:"ter-f01",nome:"Conversão Celsius → Fahrenheit",formula:"C/5 = (F-32)/9",variaveis:"C: temperatura em Celsius | F: temperatura em Fahrenheit"},
-    {id:"ter-f02",nome:"Conversão Celsius → Kelvin",formula:"K = C + 273",variaveis:"K: temperatura em Kelvin | C: temperatura em Celsius"},
-    {id:"ter-f03",nome:"Quantidade de calor sensível",formula:"Q = m·c·ΔT",variaveis:"Q: calor (cal ou J) | m: massa (g) | c: calor específico (cal/g°C) | ΔT: variação de temperatura"},
-    {id:"ter-f04",nome:"Quantidade de calor latente",formula:"Q = m·L",variaveis:"Q: calor (cal ou J) | m: massa (g) | L: calor latente (cal/g)"},
-    {id:"ter-f05",nome:"Capacidade térmica",formula:"C = Q/ΔT",variaveis:"C: capacidade térmica (cal/°C) | Q: calor (cal) | ΔT: variação de temperatura"},
-    {id:"ter-f06",nome:"Dilatação linear",formula:"ΔL = L0·α·ΔT",variaveis:"ΔL: variação do comprimento (m) | L0: comprimento inicial (m) | α: coeficiente de dilatação linear | ΔT: variação de temperatura"},
-    {id:"ter-f07",nome:"Dilatação superficial",formula:"ΔA = A0·β·ΔT",variaveis:"ΔA: variação da área (m²) | A0: área inicial (m²) | β: coeficiente de dilatação superficial | ΔT: variação de temperatura"},
-    {id:"ter-f08",nome:"Dilatação volumétrica",formula:"ΔV = V0·γ·ΔT",variaveis:"ΔV: variação do volume (m³) | V0: volume inicial (m³) | γ: coeficiente de dilatação volumétrica | ΔT: variação de temperatura"},
-    {id:"ter-f09",nome:"Equação geral dos gases",formula:"(P1·V1)/T1 = (P2·V2)/T2",variaveis:"P: pressão | V: volume | T: temperatura absoluta (K) — estados 1 e 2"},
-    {id:"ter-f10",nome:"1ª Lei da Termodinâmica",formula:"ΔU = Q - τ",variaveis:"ΔU: variação de energia interna (J) | Q: calor trocado (J) | τ: trabalho realizado (J)"}
+    {id:"ter-f01",nome:"Conversão de temperaturas (Celsius/Fahrenheit)",formula:"C/5 = (F−32)/9",variaveis:"C: temperatura em graus Celsius | F: temperatura em graus Fahrenheit"},
+    {id:"ter-f02",nome:"Conversão de temperaturas (Celsius/Kelvin)",formula:"K = C + 273",variaveis:"K: temperatura em Kelvin | C: temperatura em graus Celsius"},
+    {id:"ter-f03",nome:"Dilatação linear",formula:"ΔL = L₀·α·Δθ",variaveis:"ΔL: variação do comprimento (m) | L₀: comprimento inicial (m) | α: coeficiente de dilatação linear | Δθ: variação de temperatura"},
+    {id:"ter-f04",nome:"Dilatação superficial",formula:"ΔA = A₀·β·Δθ",variaveis:"ΔA: variação da área (m²) | A₀: área inicial (m²) | β: coeficiente de dilatação superficial (β = 2α) | Δθ: variação de temperatura"},
+    {id:"ter-f05",nome:"Dilatação volumétrica",formula:"ΔV = V₀·γ·Δθ",variaveis:"ΔV: variação do volume (m³) | V₀: volume inicial (m³) | γ: coeficiente de dilatação volumétrica (γ = 3α) | Δθ: variação de temperatura"},
+    {id:"ter-f06",nome:"Quantidade de calor sensível",formula:"Q = m·c·Δθ",variaveis:"Q: quantidade de calor (cal ou J) | m: massa (g) | c: calor específico (cal/g°C) | Δθ: variação de temperatura"},
+    {id:"ter-f07",nome:"Quantidade de calor latente",formula:"Q = m·L",variaveis:"Q: quantidade de calor (cal ou J) | m: massa (g) | L: calor latente (cal/g)"},
+    {id:"ter-f08",nome:"Capacidade térmica",formula:"C = Q/Δθ",variaveis:"C: capacidade térmica (cal/°C) | Q: quantidade de calor (cal) | Δθ: variação de temperatura"},
+    {id:"ter-f09",nome:"Equilíbrio térmico (calorimetria)",formula:"ΣQ = 0",variaveis:"ΣQ: soma das quantidades de calor trocadas entre os corpos — nula quando o sistema atinge o equilíbrio térmico"},
+    {id:"ter-f10",nome:"Equação geral dos gases",formula:"(P₁·V₁)/T₁ = (P₂·V₂)/T₂",variaveis:"P: pressão | V: volume | T: temperatura absoluta (K) — estados 1 e 2 de uma mesma massa de gás"},
+    {id:"ter-f11",nome:"Equação de Clapeyron",formula:"P·V = n·R·T",variaveis:"P: pressão (Pa) | V: volume (m³) | n: número de mols | R: constante universal dos gases | T: temperatura absoluta (K)"},
+    {id:"ter-f12",nome:"1ª Lei da Termodinâmica",formula:"ΔU = Q − τ",variaveis:"ΔU: variação de energia interna (J) | Q: calor trocado (J) | τ: trabalho realizado pelo gás (J)"},
+    {id:"ter-f13",nome:"Trabalho em transformação isobárica",formula:"τ = P·ΔV",variaveis:"τ: trabalho (J) | P: pressão constante (Pa) | ΔV: variação de volume (m³)"},
+    {id:"ter-f14",nome:"Rendimento de máquina térmica",formula:"η = τ/Qquente = 1 − (Qfrio/Qquente)",variaveis:"η: rendimento da máquina térmica | τ: trabalho realizado (J) | Qquente: calor recebido da fonte quente (J) | Qfrio: calor cedido à fonte fria (J)"},
+    {id:"ter-f15",nome:"Rendimento de Carnot",formula:"η = 1 − (Tfrio/Tquente)",variaveis:"η: rendimento máximo (ciclo de Carnot) | Tfrio: temperatura absoluta da fonte fria (K) | Tquente: temperatura absoluta da fonte quente (K)"},
+    {id:"ter-f16",nome:"Propagação de calor (condução)",formula:"Φ = (k·A·Δθ)/L",variaveis:"Φ: fluxo de calor (W) | k: condutividade térmica do material | A: área da seção transversal (m²) | Δθ: diferença de temperatura | L: espessura (m)"}
   ], unidades:[
     {id:"ter-u01",grandeza:"Temperatura (SI)",correta:"K (Kelvin)",alternativas:["K (Kelvin)","°C (Celsius)","°F (Fahrenheit)","cal"]},
     {id:"ter-u02",grandeza:"Calor",correta:"J (Joule)",alternativas:["J (Joule)","K (Kelvin)","cal/g°C","Pa"]},
     {id:"ter-u03",grandeza:"Calor específico",correta:"cal/(g·°C)",alternativas:["cal/(g·°C)","J (Joule)","K (Kelvin)","W (Watt)"]},
     {id:"ter-u04",grandeza:"Pressão de um gás",correta:"Pa (Pascal)",alternativas:["Pa (Pascal)","atm","J (Joule)","K (Kelvin)"]},
-    {id:"ter-u05",grandeza:"Coeficiente de dilatação linear",correta:"°C⁻¹",alternativas:["°C⁻¹","m/°C","J/°C","K"]}
+    {id:"ter-u05",grandeza:"Quantidade de matéria",correta:"mol",alternativas:["mol","K (Kelvin)","Pa (Pascal)","J (Joule)"]},
+    {id:"ter-u06",grandeza:"Fluxo de calor (condução)",correta:"W (Watt)",alternativas:["W (Watt)","J (Joule)","K (Kelvin)","cal"]}
   ]},
   "Óptica": { cor:"#4DABF7", emoji:"👁️", formulas:[
-    {id:"opt-f01",nome:"Lei da reflexão",formula:"θi = θr",variaveis:"θi: ângulo de incidência | θr: ângulo de reflexão (medidos em relação à normal)"},
-    {id:"opt-f02",nome:"Índice de refração absoluto",formula:"n = c/v",variaveis:"n: índice de refração | c: velocidade da luz no vácuo (m/s) | v: velocidade da luz no meio (m/s)"},
-    {id:"opt-f03",nome:"Lei de Snell",formula:"n1·senθ1 = n2·senθ2",variaveis:"n1,n2: índices de refração dos meios | θ1,θ2: ângulos de incidência e refração"},
-    {id:"opt-f04",nome:"Equação de Gauss",formula:"1/f = 1/p + 1/p'",variaveis:"f: distância focal (m) | p: distância do objeto (m) | p': distância da imagem (m)"},
-    {id:"opt-f05",nome:"Aumento linear transversal",formula:"A = -p'/p",variaveis:"A: aumento linear | p': distância da imagem (m) | p: distância do objeto (m)"},
-    {id:"opt-f06",nome:"Vergência de uma lente",formula:"V = 1/f",variaveis:"V: vergência (di) | f: distância focal (m)"},
-    {id:"opt-f07",nome:"Equação dos fabricantes de lentes",formula:"1/f = (n-1)·(1/R1 - 1/R2)",variaveis:"f: distância focal (m) | n: índice de refração da lente | R1,R2: raios de curvatura (m)"},
-    {id:"opt-f08",nome:"Distância focal do espelho esférico",formula:"f = R/2",variaveis:"f: distância focal (m) | R: raio de curvatura do espelho (m)"},
-    {id:"opt-f09",nome:"Velocidade da luz no vácuo",formula:"c = 3×10⁸ m/s",variaveis:"c: velocidade da luz no vácuo, constante universal"},
-    {id:"opt-f10",nome:"Ampliação total de um sistema óptico",formula:"A = A1·A2",variaveis:"A: aumento total | A1, A2: aumentos de cada elemento do sistema"}
+    {id:"opt-f01",nome:"Leis da reflexão",formula:"ângulo de incidência = ângulo de reflexão",variaveis:"ângulos medidos em relação à reta normal à superfície refletora"},
+    {id:"opt-f02",nome:"Índice de refração absoluto",formula:"n = c/v",variaveis:"n: índice de refração absoluto | c: velocidade da luz no vácuo (m/s) | v: velocidade da luz no meio (m/s)"},
+    {id:"opt-f03",nome:"Lei de Snell (refração)",formula:"n₁·sen θ₁ = n₂·sen θ₂",variaveis:"n₁,n₂: índices de refração dos meios | θ₁,θ₂: ângulos de incidência e de refração"},
+    {id:"opt-f04",nome:"Equação de Gauss (espelhos e lentes)",formula:"1/f = 1/p + 1/p'",variaveis:"f: distância focal (m) | p: distância do objeto (m) | p': distância da imagem (m)"},
+    {id:"opt-f05",nome:"Aumento linear transversal",formula:"A = −p'/p = i/o",variaveis:"A: aumento linear transversal | p': distância da imagem (m) | p: distância do objeto (m) | i: altura da imagem | o: altura do objeto"},
+    {id:"opt-f06",nome:"Vergência de uma lente",formula:"V = 1/f",variaveis:"V: vergência (di) | f: distância focal (m) — vergência em dioptrias exige f em metros"},
+    {id:"opt-f07",nome:"Equação dos fabricantes de lentes",formula:"1/f = (n−1)·(1/R₁ − 1/R₂)",variaveis:"f: distância focal (m) | n: índice de refração da lente | R₁,R₂: raios de curvatura das faces (m)"}
   ], unidades:[
     {id:"opt-u01",grandeza:"Distância focal",correta:"m (metro)",alternativas:["m (metro)","di (dioptria)","m²","s"]},
     {id:"opt-u02",grandeza:"Vergência",correta:"di (dioptria)",alternativas:["di (dioptria)","m (metro)","Hz (Hertz)","cd (candela)"]},
@@ -365,76 +386,66 @@ const DATA = {
     {id:"opt-u05",grandeza:"Ângulo",correta:"° (grau)",alternativas:["° (grau)","rad (radiano)","di (dioptria)","m"]}
   ]},
   "Ondulatória": { cor:"#22B8CF", emoji:"🌊", formulas:[
-    {id:"ond-f01",nome:"Velocidade de propagação da onda",formula:"v = λ·f",variaveis:"v: velocidade (m/s) | λ: comprimento de onda (m) | f: frequência (Hz)"},
-    {id:"ond-f02",nome:"Relação entre período e frequência",formula:"T = 1/f",variaveis:"T: período (s) | f: frequência (Hz)"},
-    {id:"ond-f03",nome:"Equação fundamental da ondulatória",formula:"v = λ/T",variaveis:"v: velocidade (m/s) | λ: comprimento de onda (m) | T: período (s)"},
-    {id:"ond-f04",nome:"Nível sonoro (intensidade)",formula:"β = 10·log(I/I0)",variaveis:"β: nível sonoro (dB) | I: intensidade sonora | I0: intensidade de referência"},
-    {id:"ond-f05",nome:"Efeito Doppler",formula:"f' = f·(v ± vO)/(v ± vF)",variaveis:"f': frequência percebida | f: frequência da fonte | v: velocidade do som | vO,vF: velocidades do observador e da fonte"},
-    {id:"ond-f06",nome:"Velocidade do som no ar (aprox.)",formula:"v ≈ 340 m/s",variaveis:"v: velocidade do som no ar, em condições normais de temperatura"},
-    {id:"ond-f07",nome:"Interferência construtiva",formula:"ΔS = n·λ",variaveis:"ΔS: diferença de caminho | n: número inteiro (0,1,2...) | λ: comprimento de onda (m)"},
-    {id:"ond-f08",nome:"Interferência destrutiva",formula:"ΔS = (n + 1/2)·λ",variaveis:"ΔS: diferença de caminho | n: número inteiro | λ: comprimento de onda (m)"},
-    {id:"ond-f09",nome:"Comprimento de onda em corda vibrante",formula:"λn = 2L/n",variaveis:"λn: comprimento de onda do harmônico n | L: comprimento da corda (m) | n: número do harmônico"},
-    {id:"ond-f10",nome:"Frequência harmônica em tubo aberto",formula:"fn = n·v/(2L)",variaveis:"fn: frequência do harmônico n | v: velocidade do som (m/s) | L: comprimento do tubo (m)"}
+    {id:"ond-f01",nome:"Equação fundamental da ondulatória",formula:"v = λ·f",variaveis:"v: velocidade de propagação (m/s) | λ: comprimento de onda (m) | f: frequência (Hz)"},
+    {id:"ond-f02",nome:"Frequência de corda vibrante",formula:"f = (n/2L)·√(F/μ)",variaveis:"f: frequência do harmônico n (Hz) | n: número do harmônico | L: comprimento da corda (m) | F: força de tração na corda (N) | μ: densidade linear da corda (kg/m)"},
+    {id:"ond-f03",nome:"Efeito Doppler",formula:"f' = f·(v ± vobs)/(v ± vfonte)",variaveis:"f': frequência percebida pelo observador | f: frequência emitida pela fonte | v: velocidade do som no meio | vobs: velocidade do observador | vfonte: velocidade da fonte"},
+    {id:"ond-f04",nome:"Interferência — diferença de caminho (fenda dupla)",formula:"Δx = d·senθ",variaveis:"Δx: diferença de caminho óptico (m) | d: distância entre as fendas (m) | θ: ângulo de observação"}
   ], unidades:[
-    {id:"ond-u01",grandeza:"Frequência",correta:"Hz (Hertz)",alternativas:["Hz (Hertz)","s (segundo)","m (metro)","dB (decibel)"]},
+    {id:"ond-u01",grandeza:"Frequência",correta:"Hz (Hertz)",alternativas:["Hz (Hertz)","s (segundo)","m (metro)","kg/m"]},
     {id:"ond-u02",grandeza:"Comprimento de onda",correta:"m (metro)",alternativas:["m (metro)","Hz (Hertz)","s (segundo)","m/s"]},
-    {id:"ond-u03",grandeza:"Período",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","m (metro)","m/s"]},
-    {id:"ond-u04",grandeza:"Nível sonoro / intensidade",correta:"dB (decibel)",alternativas:["dB (decibel)","Hz (Hertz)","W (Watt)","m (metro)"]},
-    {id:"ond-u05",grandeza:"Velocidade do som",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","s (segundo)"]}
+    {id:"ond-u03",grandeza:"Velocidade de propagação",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","kg/m"]},
+    {id:"ond-u04",grandeza:"Densidade linear (corda)",correta:"kg/m",alternativas:["kg/m","kg/m³","N","Hz (Hertz)"]},
+    {id:"ond-u05",grandeza:"Diferença de caminho",correta:"m (metro)",alternativas:["m (metro)","Hz (Hertz)","s (segundo)","kg/m"]}
   ]},
   "Eletricidade": { cor:"#845EF7", emoji:"⚡", formulas:[
-    {id:"ele-f01",nome:"Lei de Ohm",formula:"U = R·i",variaveis:"U: tensão / ddp (V) | R: resistência (Ω) | i: corrente elétrica (A)"},
-    {id:"ele-f02",nome:"Potência elétrica",formula:"Pot = U·i",variaveis:"Pot: potência (W) | U: tensão (V) | i: corrente elétrica (A)"},
-    {id:"ele-f03",nome:"Potência (em função da resistência)",formula:"Pot = R·i²",variaveis:"Pot: potência (W) | R: resistência (Ω) | i: corrente elétrica (A)"},
-    {id:"ele-f04",nome:"Energia elétrica consumida",formula:"E = Pot·Δt",variaveis:"E: energia (J ou kWh) | Pot: potência (W) | Δt: intervalo de tempo (s ou h)"},
-    {id:"ele-f05",nome:"Resistores em série",formula:"Req = R1 + R2 + ...",variaveis:"Req: resistência equivalente (Ω) | R1,R2...: resistores associados"},
-    {id:"ele-f06",nome:"Resistores em paralelo",formula:"1/Req = 1/R1 + 1/R2 + ...",variaveis:"Req: resistência equivalente (Ω) | R1,R2...: resistores associados"},
-    {id:"ele-f07",nome:"Lei de Coulomb",formula:"F = k·(q1·q2)/d²",variaveis:"F: força elétrica (N) | k: constante eletrostática | q1,q2: cargas (C) | d: distância (m)"},
-    {id:"ele-f08",nome:"Campo elétrico",formula:"E = F/q",variaveis:"E: campo elétrico (N/C) | F: força elétrica (N) | q: carga de prova (C)"},
-    {id:"ele-f09",nome:"Capacitância",formula:"C = Q/U",variaveis:"C: capacitância (F) | Q: carga armazenada (C) | U: tensão (V)"},
-    {id:"ele-f10",nome:"Energia armazenada em um capacitor",formula:"E = (C·U²)/2",variaveis:"E: energia armazenada (J) | C: capacitância (F) | U: tensão (V)"}
+    {id:"ele-f01",nome:"Lei de Coulomb",formula:"F = k·(q₁·q₂)/d²",variaveis:"F: força elétrica (N) | k: constante eletrostática | q₁,q₂: cargas elétricas (C) | d: distância entre as cargas (m)"},
+    {id:"ele-f02",nome:"Campo elétrico",formula:"E = F/q",variaveis:"E: campo elétrico (N/C) | F: força elétrica (N) | q: carga de prova (C)"},
+    {id:"ele-f03",nome:"Campo elétrico de carga puntiforme",formula:"E = k·|Q|/d²",variaveis:"E: campo elétrico (N/C) | k: constante eletrostática | Q: carga geradora (C) | d: distância até o ponto (m)"},
+    {id:"ele-f04",nome:"Potencial elétrico",formula:"V = k·Q/d",variaveis:"V: potencial elétrico (V) | k: constante eletrostática | Q: carga geradora (C) | d: distância até o ponto (m)"},
+    {id:"ele-f05",nome:"Diferença de potencial (ddp)",formula:"U = W/q",variaveis:"U: diferença de potencial (V) | W: trabalho da força elétrica (J) | q: carga (C)"},
+    {id:"ele-f06",nome:"Corrente elétrica",formula:"i = ΔQ/Δt",variaveis:"i: corrente elétrica (A) | ΔQ: carga que atravessa a seção (C) | Δt: intervalo de tempo (s)"},
+    {id:"ele-f07",nome:"1ª Lei de Ohm",formula:"U = R·i",variaveis:"U: tensão / ddp (V) | R: resistência elétrica (Ω) | i: corrente elétrica (A)"},
+    {id:"ele-f08",nome:"2ª Lei de Ohm (resistência de um fio)",formula:"R = ρ·L/A",variaveis:"R: resistência elétrica (Ω) | ρ: resistividade do material (Ω·m) | L: comprimento do fio (m) | A: área da seção transversal (m²)"},
+    {id:"ele-f09",nome:"Potência elétrica",formula:"Pot = U·i = R·i² = U²/R",variaveis:"Pot: potência elétrica (W) | U: tensão (V) | i: corrente elétrica (A) | R: resistência (Ω)"},
+    {id:"ele-f10",nome:"Energia elétrica consumida",formula:"E = Pot·t",variaveis:"E: energia elétrica (J ou kWh) | Pot: potência (W) | t: tempo (s ou h)"},
+    {id:"ele-f11",nome:"Associação de resistores em série",formula:"Req = R₁ + R₂ + ... + Rn",variaveis:"Req: resistência equivalente (Ω) | R₁,R₂,...,Rn: resistores associados em série"},
+    {id:"ele-f12",nome:"Associação de resistores em paralelo",formula:"1/Req = 1/R₁ + 1/R₂ + ... + 1/Rn",variaveis:"Req: resistência equivalente (Ω) | R₁,R₂,...,Rn: resistores associados em paralelo"},
+    {id:"ele-f13",nome:"Capacitância",formula:"C = Q/U",variaveis:"C: capacitância (F) | Q: carga armazenada (C) | U: tensão (V)"},
+    {id:"ele-f14",nome:"Energia armazenada em capacitor",formula:"E = (C·U²)/2",variaveis:"E: energia armazenada (J) | C: capacitância (F) | U: tensão (V)"},
+    {id:"ele-f15",nome:"Capacitores em série",formula:"1/Ceq = 1/C₁ + 1/C₂ + ...",variaveis:"Ceq: capacitância equivalente (F) | C₁,C₂,...: capacitores associados em série"},
+    {id:"ele-f16",nome:"Capacitores em paralelo",formula:"Ceq = C₁ + C₂ + ...",variaveis:"Ceq: capacitância equivalente (F) | C₁,C₂,...: capacitores associados em paralelo"}
   ], unidades:[
     {id:"ele-u01",grandeza:"Corrente elétrica",correta:"A (Ampère)",alternativas:["A (Ampère)","V (Volt)","Ω (Ohm)","C (Coulomb)"]},
-    {id:"ele-u02",grandeza:"Tensão / ddp",correta:"V (Volt)",alternativas:["V (Volt)","A (Ampère)","W (Watt)","Ω (Ohm)"]},
+    {id:"ele-u02",grandeza:"Tensão / ddp / potencial elétrico",correta:"V (Volt)",alternativas:["V (Volt)","A (Ampère)","W (Watt)","Ω (Ohm)"]},
     {id:"ele-u03",grandeza:"Resistência elétrica",correta:"Ω (Ohm)",alternativas:["Ω (Ohm)","V (Volt)","A (Ampère)","F (Farad)"]},
     {id:"ele-u04",grandeza:"Carga elétrica",correta:"C (Coulomb)",alternativas:["C (Coulomb)","A (Ampère)","V (Volt)","F (Farad)"]},
-    {id:"ele-u05",grandeza:"Capacitância",correta:"F (Farad)",alternativas:["F (Farad)","C (Coulomb)","Ω (Ohm)","V (Volt)"]}
+    {id:"ele-u05",grandeza:"Capacitância",correta:"F (Farad)",alternativas:["F (Farad)","C (Coulomb)","Ω (Ohm)","V (Volt)"]},
+    {id:"ele-u06",grandeza:"Resistividade",correta:"Ω·m",alternativas:["Ω·m","Ω","Ω/m","F"]}
   ]},
   "Magnetismo e Eletromagnetismo": { cor:"#5C7CFA", emoji:"🧲", formulas:[
-    {id:"mag-f01",nome:"Força magnética sobre uma carga",formula:"F = q·v·B·senθ",variaveis:"F: força magnética (N) | q: carga (C) | v: velocidade (m/s) | B: campo magnético (T) | θ: ângulo entre v e B"},
-    {id:"mag-f02",nome:"Força magnética em um fio",formula:"F = B·i·L·senθ",variaveis:"F: força magnética (N) | B: campo magnético (T) | i: corrente (A) | L: comprimento do fio (m)"},
-    {id:"mag-f03",nome:"Campo magnético de um fio retilíneo",formula:"B = (μ0·i)/(2π·d)",variaveis:"B: campo magnético (T) | μ0: permeabilidade magnética do vácuo | i: corrente (A) | d: distância ao fio (m)"},
-    {id:"mag-f04",nome:"Fluxo magnético",formula:"Φ = B·A·cosθ",variaveis:"Φ: fluxo magnético (Wb) | B: campo magnético (T) | A: área (m²) | θ: ângulo entre B e a normal"},
-    {id:"mag-f05",nome:"Lei de Faraday (fem induzida)",formula:"ε = -ΔΦ/Δt",variaveis:"ε: força eletromotriz induzida (V) | ΔΦ: variação do fluxo magnético (Wb) | Δt: intervalo de tempo (s)"},
-    {id:"mag-f06",nome:"Corrente induzida (Lei de Ohm no circuito)",formula:"i = ε/R",variaveis:"i: corrente induzida (A) | ε: força eletromotriz (V) | R: resistência do circuito (Ω)"},
-    {id:"mag-f07",nome:"Autoindutância",formula:"ε = -L·(Δi/Δt)",variaveis:"ε: fem autoinduzida (V) | L: indutância (H) | Δi/Δt: taxa de variação da corrente"},
-    {id:"mag-f08",nome:"Transformadores",formula:"U1/U2 = N1/N2",variaveis:"U1,U2: tensões nos enrolamentos (V) | N1,N2: número de espiras"},
-    {id:"mag-f09",nome:"Campo magnético em um solenoide",formula:"B = μ0·n·i",variaveis:"B: campo magnético (T) | μ0: permeabilidade magnética | n: espiras por metro | i: corrente (A)"},
-    {id:"mag-f10",nome:"Raio da trajetória circular (força magnética)",formula:"R = (m·v)/(q·B)",variaveis:"R: raio da trajetória (m) | m: massa (kg) | v: velocidade (m/s) | q: carga (C) | B: campo magnético (T)"}
+    {id:"mag-f01",nome:"Força magnética sobre carga em movimento",formula:"F = q·v·B·senθ",variaveis:"F: força magnética (N) | q: carga (C) | v: velocidade da carga (m/s) | B: campo magnético (T) | θ: ângulo entre v e B"},
+    {id:"mag-f02",nome:"Força magnética sobre condutor",formula:"F = B·i·L·senθ",variaveis:"F: força magnética (N) | B: campo magnético (T) | i: corrente elétrica (A) | L: comprimento do condutor (m) | θ: ângulo entre o condutor e B"},
+    {id:"mag-f03",nome:"Campo magnético de um fio retilíneo",formula:"B = (μ₀·i)/(2π·d)",variaveis:"B: campo magnético (T) | μ₀: permeabilidade magnética do vácuo | i: corrente elétrica (A) | d: distância ao fio (m)"},
+    {id:"mag-f04",nome:"Fluxo magnético",formula:"Φ = B·A·cosθ",variaveis:"Φ: fluxo magnético (Wb) | B: campo magnético (T) | A: área da espira (m²) | θ: ângulo entre B e a normal à área"},
+    {id:"mag-f05",nome:"Lei de Faraday (fem induzida)",formula:"ε = −ΔΦ/Δt",variaveis:"ε: força eletromotriz induzida (V) | ΔΦ: variação do fluxo magnético (Wb) | Δt: intervalo de tempo (s)"},
+    {id:"mag-f06",nome:"Lei de Lenz",formula:"A corrente induzida se opõe à variação do fluxo magnético",variaveis:"Princípio qualitativo — decorre da conservação de energia; define o sentido da corrente induzida pela Lei de Faraday"}
   ], unidades:[
     {id:"mag-u01",grandeza:"Campo magnético",correta:"T (Tesla)",alternativas:["T (Tesla)","Wb (Weber)","V (Volt)","A (Ampère)"]},
     {id:"mag-u02",grandeza:"Fluxo magnético",correta:"Wb (Weber)",alternativas:["Wb (Weber)","T (Tesla)","V (Volt)","H (Henry)"]},
     {id:"mag-u03",grandeza:"Força eletromotriz",correta:"V (Volt)",alternativas:["V (Volt)","T (Tesla)","Wb (Weber)","A (Ampère)"]},
-    {id:"mag-u04",grandeza:"Indutância",correta:"H (Henry)",alternativas:["H (Henry)","T (Tesla)","F (Farad)","Wb (Weber)"]},
+    {id:"mag-u04",grandeza:"Permeabilidade magnética",correta:"T·m/A",alternativas:["T·m/A","T","Wb","A/m"]},
     {id:"mag-u05",grandeza:"Carga elétrica",correta:"C (Coulomb)",alternativas:["C (Coulomb)","A (Ampère)","T (Tesla)","V (Volt)"]}
   ]},
   "Física Moderna": { cor:"#20C997", emoji:"⚛️", formulas:[
-    {id:"mod-f01",nome:"Energia do fóton",formula:"E = h·f",variaveis:"E: energia do fóton (J) | h: constante de Planck | f: frequência (Hz)"},
-    {id:"mod-f02",nome:"Energia em função do comprimento de onda",formula:"E = h·c/λ",variaveis:"E: energia do fóton (J) | h: constante de Planck | c: velocidade da luz (m/s) | λ: comprimento de onda (m)"},
-    {id:"mod-f03",nome:"Efeito fotoelétrico",formula:"Ec = h·f - φ",variaveis:"Ec: energia cinética do elétron ejetado (J) | h·f: energia do fóton | φ: função trabalho do material (J)"},
-    {id:"mod-f04",nome:"Equivalência massa-energia",formula:"E = m·c²",variaveis:"E: energia (J) | m: massa (kg) | c: velocidade da luz no vácuo (m/s)"},
-    {id:"mod-f05",nome:"Dilatação temporal (relatividade)",formula:"Δt' = Δt/√(1-v²/c²)",variaveis:"Δt': intervalo de tempo medido em movimento | Δt: intervalo de tempo em repouso | v: velocidade | c: velocidade da luz"},
-    {id:"mod-f06",nome:"Contração do comprimento",formula:"L' = L·√(1-v²/c²)",variaveis:"L': comprimento medido em movimento | L: comprimento em repouso | v: velocidade | c: velocidade da luz"},
-    {id:"mod-f07",nome:"Comprimento de onda de De Broglie",formula:"λ = h/(m·v)",variaveis:"λ: comprimento de onda associado (m) | h: constante de Planck | m: massa (kg) | v: velocidade (m/s)"},
-    {id:"mod-f08",nome:"Decaimento radioativo",formula:"N = N0·2^(-t/T)",variaveis:"N: quantidade atual | N0: quantidade inicial | t: tempo decorrido | T: meia-vida"},
-    {id:"mod-f09",nome:"Constante de Planck",formula:"h = 6,63×10⁻³⁴ J·s",variaveis:"h: constante fundamental que relaciona energia e frequência de um fóton"},
-    {id:"mod-f10",nome:"Energia de ligação nuclear",formula:"ΔE = Δm·c²",variaveis:"ΔE: energia de ligação (J) | Δm: defeito de massa (kg) | c: velocidade da luz (m/s)"}
+    {id:"mod-f01",nome:"Efeito fotoelétrico — energia do fóton",formula:"E = h·f",variaveis:"E: energia do fóton (J) | h: constante de Planck | f: frequência da radiação (Hz)"},
+    {id:"mod-f02",nome:"Equação do efeito fotoelétrico",formula:"Ec = h·f − φ",variaveis:"Ec: energia cinética máxima do elétron ejetado (J) | h·f: energia do fóton incidente | φ: função trabalho do material (J)"},
+    {id:"mod-f03",nome:"Relação massa-energia (Einstein)",formula:"E = m·c²",variaveis:"E: energia (J) | m: massa (kg) | c: velocidade da luz no vácuo (m/s)"},
+    {id:"mod-f04",nome:"Comprimento de onda de De Broglie",formula:"λ = h/(m·v)",variaveis:"λ: comprimento de onda associado (m) | h: constante de Planck | m: massa da partícula (kg) | v: velocidade da partícula (m/s)"}
   ], unidades:[
     {id:"mod-u01",grandeza:"Energia do fóton",correta:"J (Joule) ou eV",alternativas:["J (Joule) ou eV","Hz (Hertz)","m (metro)","kg (quilograma)"]},
     {id:"mod-u02",grandeza:"Constante de Planck",correta:"J·s",alternativas:["J·s","J","Hz (Hertz)","m/s"]},
-    {id:"mod-u03",grandeza:"Massa atômica",correta:"u (unidade de massa atômica)",alternativas:["u (unidade de massa atômica)","kg (quilograma)","g (grama)","N (Newton)"]},
-    {id:"mod-u04",grandeza:"Meia-vida",correta:"s (segundo)",alternativas:["s (segundo)","Hz (Hertz)","anos-luz","J (Joule)"]},
-    {id:"mod-u05",grandeza:"Velocidade da luz",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","J (Joule)"]}
+    {id:"mod-u03",grandeza:"Velocidade da luz",correta:"m/s",alternativas:["m/s","Hz (Hertz)","m (metro)","J (Joule)"]},
+    {id:"mod-u04",grandeza:"Massa",correta:"kg (quilograma)",alternativas:["kg (quilograma)","N (Newton)","J (Joule)","m/s"]}
   ]}
 };
 
@@ -610,7 +621,13 @@ function gerarPergunta(){
   const item = itemAtual();
   if (s.modo==="quiz"){
     const topicObj = DATA[item._topico];
-    const outras = shuffle(topicObj.formulas.filter(f=>f.id!==item.id)).slice(0,3).map(f=>f.formula);
+    let outras = shuffle(topicObj.formulas.filter(f=>f.id!==item.id)).slice(0,3).map(f=>f.formula);
+    if (outras.length < 3){
+      const usadas = new Set([item.formula, ...outras]);
+      const extras = shuffle(ALL_FORMULAS.filter(f=>f._topico!==item._topico && !usadas.has(f.formula)))
+        .slice(0, 3 - outras.length).map(f=>f.formula);
+      outras = [...outras, ...extras];
+    }
     s.perguntaAtual = {
       enunciado: `Qual é a fórmula de "${item.nome}"?`,
       texto: null,
