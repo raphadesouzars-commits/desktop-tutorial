@@ -261,6 +261,38 @@
 
   .empty-msg{text-align:center;color:var(--ink-soft);font-weight:600;padding:30px 10px;}
 
+  /* Preview lateral de fórmulas por tópico */
+  .preview-overlay{
+    position:fixed;inset:0;background:rgba(43,37,64,.45);z-index:40;
+    animation:previewFadeIn .25s ease;
+  }
+  @keyframes previewFadeIn{from{opacity:0;}to{opacity:1;}}
+  .preview-drawer{
+    position:fixed;top:0;right:0;bottom:0;width:min(88vw,400px);
+    background:#fff;z-index:41;box-shadow:-14px 0 34px rgba(43,37,64,.28);
+    display:flex;flex-direction:column;
+    animation:previewSlideIn .32s cubic-bezier(.2,.8,.3,1);
+  }
+  @keyframes previewSlideIn{from{transform:translateX(100%);}to{transform:translateX(0);}}
+  .preview-drawer-head{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+    padding:18px 16px 16px;border-bottom:2px solid var(--line);
+    background:var(--tcolor,#7C5CFF);color:#fff;flex-shrink:0;
+  }
+  .preview-drawer-head h2{font-size:17px;font-weight:800;}
+  .preview-drawer-head .count{font-size:11.5px;opacity:.85;font-weight:700;margin-top:4px;}
+  .preview-close{
+    border:none;background:rgba(255,255,255,.25);color:#fff;border-radius:999px;
+    width:44px;height:44px;min-height:44px;font-weight:800;font-size:16px;flex-shrink:0;
+  }
+  .preview-close:active{transform:scale(.94);}
+  .preview-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 18px 24px;}
+  .preview-item{padding:14px 0;border-bottom:1px solid var(--line);}
+  .preview-item:last-child{border-bottom:none;}
+  .preview-item .nome{font-size:13px;font-weight:800;color:var(--ink-soft);margin-bottom:4px;}
+  .preview-item .formula{font-size:15.5px;font-weight:800;color:var(--tcolor,#7C5CFF);margin-bottom:4px;word-break:break-word;}
+  .preview-item .vars{font-size:11.5px;color:var(--ink-soft);line-height:1.5;font-weight:600;}
+
   @media (min-width:520px){
     .modo-grid{grid-template-columns:repeat(4,1fr);}
   }
@@ -524,6 +556,7 @@ function spawnConfetti(){
 let state = {
   view: "home",
   filtroTopico: "Todos",
+  previewTopico: null,
   modo: null,
   sessao: null
 };
@@ -584,10 +617,43 @@ function renderHome(){
     <button class="big-btn" ${(!state.modo || count===0) ? 'disabled' : ''} onclick="iniciarSessao()">
       ${state.modo ? '🚀 Começar sessão' : 'Escolha um modo para começar'}
     </button>
+
+    ${renderPreviewDrawer()}
   `;
 }
 
-window.selecionarTopico = function(t){ state.filtroTopico=t; renderHome(); };
+function renderPreviewDrawer(){
+  if (!state.previewTopico) return "";
+  const topico = state.previewTopico;
+  const obj = DATA[topico];
+  const itens = obj.formulas.map(f => `
+    <div class="preview-item">
+      <div class="nome">${esc(f.nome)}</div>
+      <div class="formula">${esc(f.formula)}</div>
+      <div class="vars">${esc(f.variaveis)}</div>
+    </div>
+  `).join("");
+  return `
+    <div class="preview-overlay" onclick="fecharPreview()"></div>
+    <div class="preview-drawer" style="--tcolor:${obj.cor}">
+      <div class="preview-drawer-head">
+        <div>
+          <h2>${obj.emoji} ${esc(topico)}</h2>
+          <div class="count">${obj.formulas.length} fórmula${obj.formulas.length===1?'':'s'} — toque num tópico pra trocar</div>
+        </div>
+        <button class="preview-close" onclick="fecharPreview()">✕</button>
+      </div>
+      <div class="preview-list">${itens}</div>
+    </div>
+  `;
+}
+
+window.selecionarTopico = function(t){
+  state.filtroTopico = t;
+  state.previewTopico = (t === "Todos") ? null : t;
+  renderHome();
+};
+window.fecharPreview = function(){ state.previewTopico = null; renderHome(); };
 window.selecionarModo = function(m){ state.modo = (state.modo===m ? null : m); renderHome(); };
 window.irPara = function(view){ state.view=view; render(); };
 
