@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ titulo }}</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+  <!-- Rodapé: único elemento textual que se repete em todas as páginas
+       (o filete duplo do topo é desenhado direto na margin-box @page). -->
+  <footer class="rodape">
+    <span class="rodape-texto">{{ instituicao }} — {{ processo_seletivo }} — {{ titulo }}</span>
+  </footer>
+
+  <!-- Cabeçalho institucional: só aparece uma vez, no início do documento,
+       como conteúdo normal de fluxo (não se repete por página — ver
+       especificacao_visual.md). -->
+  <header class="cabecalho-prova">
+    <div class="marca-instituicao">
+      <div class="marca-nome">{{ instituicao }}</div>
+      <div class="marca-subtitulo">{{ subtitulo_instituicao }}</div>
+      {% if processo_seletivo %}<div class="marca-processo">{{ processo_seletivo }}</div>{% endif %}
+    </div>
+    <div class="barra-titulo">
+      ➔ {{ nome_prova }}{% if primeira_questao %} – Questões de {{ primeira_questao }} a {{ ultima_questao }}{% endif %}
+    </div>
+    <div class="barra-subtitulo">↺ {{ titulo }}</div>
+    <div class="barra-instrucao">
+      <span class="etiqueta-instrucao">Instrução ▶</span>
+      <span class="texto-instrucao">{{ instrucao }}</span>
+    </div>
+  </header>
+
+  <main>
+
+    {% if resumo_html %}
+    <!-- Resumo roda em 1 coluna de largura cheia — não entra no container
+         de 2 colunas (ver especificacao_visual.md: tabelas largas do
+         resumo não cabem numa coluna estreita, e column-span:all não
+         funciona no WeasyPrint). -->
+    <section class="resumo">
+      <h2>Resumo</h2>
+      {{ resumo_html | safe }}
+    </section>
+    {% endif %}
+
+    {% for unidade in unidades_questoes %}
+      {% if unidade.tipo == "estimulo_grupo" %}
+      <!-- Texto-suporte compartilhado por 2+ questões: largura cheia,
+           fora do container de 2 colunas — mesma lógica do resumo (ver
+           especificacao_visual.md). -->
+      <section class="estimulo-grupo">
+        <div class="estimulo-grupo-rotulo">{{ unidade.rotulo_grupo }}</div>
+        {% if unidade.texto_suporte_html %}
+        <div class="texto-suporte">{{ unidade.texto_suporte_html | safe }}</div>
+        {% endif %}
+        {% if unidade.fonte %}
+        <div class="fonte-texto-suporte">{{ unidade.fonte }}</div>
+        {% endif %}
+      </section>
+      {% else %}
+      <div class="conteudo">
+        <section class="questoes">
+          {% for q in unidade.questoes %}
+          <article class="questao" id="questao-{{ q.numero }}">
+            <div class="questao-numero">
+              <span class="questao-numero-etiqueta">QUESTÃO</span><span class="questao-numero-valor">{{ q.numero }}</span>
+            </div>
+
+            {% if q.texto_suporte_html %}
+            <div class="texto-suporte">{{ q.texto_suporte_html | safe }}</div>
+            {% endif %}
+
+            {% if q.fonte %}
+            <div class="fonte-texto-suporte">{{ q.fonte }}</div>
+            {% endif %}
+
+            <div class="comando">{{ q.comando_html | safe }}</div>
+
+            <ol class="alternativas">
+              {% for alt in q.alternativas %}
+              <li><span class="alt-letra">{{ alt.letra }})</span> <span class="alt-texto">{{ alt.texto }}</span></li>
+              {% endfor %}
+            </ol>
+          </article>
+          {% endfor %}
+        </section>
+      </div>
+      {% endif %}
+    {% endfor %}
+
+    {% if incluir_gabarito and gabarito %}
+    <div class="conteudo">
+      <section class="gabarito">
+        <h2>Gabarito e Justificativas</h2>
+
+        <table class="tabela-gabarito">
+          <thead>
+            <tr><th>Questão</th><th>Alternativa Correta</th></tr>
+          </thead>
+          <tbody>
+            {% for g in gabarito %}
+            <tr><td>{{ g.numero }}</td><td>{{ g.correta }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% for g in gabarito %}
+        <div class="justificativa-questao">
+          <h3>Questão {{ g.numero }}</h3>
+          {{ g.justificativa_html | safe }}
+        </div>
+        {% endfor %}
+      </section>
+    </div>
+    {% endif %}
+
+  </main>
+
+</body>
+</html>
