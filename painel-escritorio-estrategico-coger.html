@@ -1,0 +1,1034 @@
+<title>Painel EE-COGER</title>
+<style>
+:root{
+  --navy-950:#081633;
+  --navy-900:#0a1f44;
+  --navy-800:#0f2a5c;
+  --navy-700:#173a78;
+  --navy-600:#22509e;
+  --gold:#c9a227;
+  --gold-light:#e8c766;
+  --bg:#f2f4f7;
+  --surface:#ffffff;
+  --surface-alt:#f8f9fb;
+  --text:#1b2330;
+  --muted:#5b6472;
+  --border:#e1e5ec;
+  --green:#1f9d55;
+  --green-bg:#e6f7ec;
+  --amber:#b8860b;
+  --amber-bg:#fdf3d9;
+  --red:#c0392b;
+  --red-bg:#fbe6e3;
+  --font-display:'Barlow Condensed','Oswald','Arial Narrow',sans-serif;
+  --font-body:'Inter',-apple-system,'Segoe UI',Roboto,sans-serif;
+  --font-mono:'JetBrains Mono','SFMono-Regular',Consolas,monospace;
+  --radius:10px;
+  --shadow:0 1px 2px rgba(10,20,50,.06),0 4px 14px rgba(10,20,50,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1526; --surface:#101c33; --surface-alt:#0d1a30; --text:#e8ecf3; --muted:#93a0b8;
+    --border:#223252; --green-bg:#0f2a1c; --amber-bg:#2c2205; --red-bg:#2c1310;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1526; --surface:#101c33; --surface-alt:#0d1a30; --text:#e8ecf3; --muted:#93a0b8;
+  --border:#223252; --green-bg:#0f2a1c; --amber-bg:#2c2205; --red-bg:#2c1310;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.5}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;letter-spacing:.01em;margin:0}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
+.mono{font-family:var(--font-mono)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 60px}
+.hidden{display:none!important}
+
+/* ---------- Header ---------- */
+header.topbar{background:linear-gradient(135deg,var(--navy-950),var(--navy-800));color:#fff;padding:22px 0;box-shadow:var(--shadow)}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;flex-wrap:wrap;align-items:center;gap:16px;justify-content:space-between}
+.brand{display:flex;flex-direction:column;gap:2px}
+.brand-title{font-size:30px;letter-spacing:.03em;color:#fff}
+.brand-title b{color:var(--gold-light)}
+.brand-sub{font-size:13px;color:#c7d3ea;font-weight:500}
+.meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:#c7d3ea}
+.stale-badge{background:var(--amber);color:#241a00;font-weight:700;padding:3px 10px;border-radius:20px;font-size:12px}
+.mode-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.06);color:#fff;padding:8px 16px;border-radius:8px;font-weight:600;font-size:14px;transition:.15s}
+.mode-btn:hover{background:rgba(255,255,255,.16)}
+.mode-btn.is-edit{background:var(--gold);border-color:var(--gold);color:#241a00}
+
+/* ---------- Tabs ---------- */
+nav.tabs{background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.tabs-inner{max-width:1180px;margin:0 auto;padding:0 20px;display:flex;gap:4px;overflow-x:auto}
+.tab-btn{border:none;background:none;padding:14px 16px;font-weight:600;font-size:14px;color:var(--muted);border-bottom:3px solid transparent;white-space:nowrap}
+.tab-btn.active{color:var(--navy-800);border-bottom-color:var(--gold)}
+:root[data-theme="dark"] .tab-btn.active,:root:not([data-theme="light"]) .tab-btn.active{color:var(--gold-light)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tab-btn.active{color:var(--gold-light)}}
+
+main{padding-top:24px}
+section.view{display:none}
+section.view.active{display:block}
+
+.section-title{font-size:24px;color:var(--navy-800);margin-bottom:4px}
+:root[data-theme="dark"] .section-title{color:var(--gold-light)}
+.section-desc{color:var(--muted);font-size:14px;margin-bottom:16px}
+
+/* ---------- Blocks / cards ---------- */
+.block{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:22px}
+.block-title{font-size:18px;color:var(--navy-800);display:flex;align-items:center;gap:8px;margin-bottom:12px}
+:root[data-theme="dark"] .block-title{color:var(--gold-light)}
+.decision-item,.agenda-item{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:12px 0;border-bottom:1px solid var(--border)}
+.decision-item:last-child,.agenda-item:last-child{border-bottom:none}
+.decision-item .txt b{color:var(--navy-800)}
+:root[data-theme="dark"] .decision-item .txt b{color:var(--gold-light)}
+.empty-msg{color:var(--muted);font-size:14px;font-style:italic;padding:6px 0}
+
+.mark-row{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.mark-row input[type=text]{width:120px;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px;background:var(--surface-alt)}
+.btn{border:1px solid var(--navy-700);background:var(--navy-800);color:#fff;border-radius:7px;padding:7px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.btn:hover{background:var(--navy-700)}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:#241a00}
+.btn.gold:hover{background:var(--gold-light)}
+.btn.ghost{background:transparent;color:var(--navy-800);border:1px solid var(--border)}
+:root[data-theme="dark"] .btn.ghost{color:var(--gold-light)}
+.btn.danger{background:transparent;color:var(--red);border:1px solid var(--red)}
+.btn.sm{padding:4px 9px;font-size:12px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-left:6px solid var(--muted);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;cursor:pointer;transition:transform .1s}
+.card:hover{transform:translateY(-2px)}
+.card.status-verde{border-left-color:var(--green)}
+.card.status-amarelo{border-left-color:var(--amber)}
+.card.status-vermelho{border-left-color:var(--red)}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.card-name{font-size:19px;color:var(--navy-800);line-height:1.15}
+:root[data-theme="dark"] .card-name{color:var(--gold-light)}
+.tipo-badge{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:700}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;padding:3px 9px;border-radius:20px}
+.status-pill.status-verde{background:var(--green-bg);color:var(--green)}
+.status-pill.status-amarelo{background:var(--amber-bg);color:var(--amber)}
+.status-pill.status-vermelho{background:var(--red-bg);color:var(--red)}
+.card-field{font-size:13px;margin-top:8px;color:var(--text)}
+.card-field .lbl{color:var(--muted);font-weight:600;display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em}
+.card-decisao{margin-top:10px;background:var(--surface-alt);border:1px dashed var(--border);border-radius:7px;padding:8px 10px;font-size:12.5px}
+
+/* ---------- Detail ---------- */
+.detail-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.field-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;margin-bottom:18px}
+.field label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted);font-weight:700;margin-bottom:4px}
+.field input[type=text],.field input[type=date],.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:14px;background:var(--surface-alt)}
+.field textarea{min-height:64px;resize:vertical}
+.field .readval{font-size:14px;padding:4px 0;min-height:22px}
+
+.timeline{border-left:2px solid var(--border);margin-left:6px;padding-left:18px}
+.tl-item{position:relative;padding-bottom:16px}
+.tl-item::before{content:'';position:absolute;left:-23px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--gold)}
+.tl-meta{font-size:12px;color:var(--muted);display:flex;gap:8px;align-items:center;margin-bottom:2px}
+.tl-tipo{background:var(--surface-alt);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:10.5px;text-transform:uppercase;font-weight:700;color:var(--navy-700)}
+:root[data-theme="dark"] .tl-tipo{color:var(--gold-light)}
+.tl-txt{font-size:14px}
+
+/* ---------- Agenda ---------- */
+.agenda-item{align-items:center}
+.agenda-item.vencido{background:var(--red-bg)}
+.agenda-item.proximo{background:var(--amber-bg)}
+.agenda-item.concluido .agenda-title{text-decoration:line-through;color:var(--muted)}
+.agenda-title{font-weight:600;font-size:14px}
+.agenda-sub{font-size:12px;color:var(--muted)}
+.tag-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.tag-dot.vencido{background:var(--red)}
+.tag-dot.proximo{background:var(--amber)}
+.tag-dot.futuro{background:var(--green)}
+.tag-dot.concluido{background:var(--muted)}
+
+/* ---------- forms ---------- */
+.form-inline{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end;background:var(--surface-alt);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:6px}
+.form-inline .full{grid-column:1/-1}
+.form-inline label{display:block;font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:700;margin-bottom:3px}
+.form-inline input,.form-inline select,.form-inline textarea{width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 9px;font-size:13.5px;background:var(--surface)}
+
+.log-item{padding:12px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-bottom:3px}
+.chip{background:var(--surface-alt);border:1px solid var(--border);border-radius:20px;padding:2px 10px;font-size:11.5px;font-weight:600;color:var(--navy-700)}
+:root[data-theme="dark"] .chip{color:var(--gold-light)}
+.filter-row{display:flex;gap:8px;margin-bottom:14px}
+.filter-row select{border:1px solid var(--border);border-radius:7px;padding:7px 10px;background:var(--surface)}
+
+.persist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.persist-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:var(--surface)}
+.persist-card h4{font-size:16px;color:var(--navy-800);margin-bottom:6px}
+:root[data-theme="dark"] .persist-card h4{color:var(--gold-light)}
+.persist-card p{font-size:13px;color:var(--muted);margin:0 0 12px}
+.file-btn{display:inline-block}
+.file-btn input[type=file]{display:none}
+
+.banner{background:var(--gold-light);color:#241a00;padding:10px 20px;font-size:13px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.banner button{background:none;border:1px solid #241a00;border-radius:6px;padding:3px 9px;font-size:12px;font-weight:700}
+
+.edit-only{display:none}
+body.modo-edicao .edit-only{display:block}
+body.modo-edicao .edit-only.inline{display:inline-flex}
+body.modo-edicao .read-only{display:none}
+footer.app-footer{text-align:center;color:var(--muted);font-size:12px;padding:26px 20px 10px}
+</style>
+
+<div id="draftBanner" class="banner hidden">
+  <span>📝 Rascunho desta sessão restaurado automaticamente (cache local do navegador).</span>
+  <button id="btnDescartarRascunho" type="button">Descartar e recarregar do arquivo</button>
+</div>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="brand-title"><b>EE</b>-COGER</div>
+      <div class="brand-sub">Painel do Escritório Estratégico &middot; Portfólio Estratégico Coger/RFB</div>
+    </div>
+    <div class="meta-row">
+      <span id="geradoEmTxt">—</span>
+      <span id="staleBadge" class="stale-badge hidden"></span>
+      <button id="btnModo" class="mode-btn" type="button">🔓 Editar</button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner">
+    <button class="tab-btn" data-tab="cockpit" type="button">Cockpit</button>
+    <button class="tab-btn" data-tab="agenda" type="button">Agenda 90 dias</button>
+    <button class="tab-btn" data-tab="radar" type="button">RADAR Coger</button>
+    <button class="tab-btn" data-tab="integracao" type="button">Integração &amp; Embaixador</button>
+    <button class="tab-btn" data-tab="persistencia" type="button">Dados</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="view-cockpit" class="view">
+    <div class="block">
+      <div class="block-title">⚠️ Decisões que precisam de você</div>
+      <div id="decisoesPendentesList"></div>
+    </div>
+    <div class="block">
+      <div class="block-title">📅 Próximos 7 dias</div>
+      <div id="proximos7List"></div>
+    </div>
+    <h2 class="section-title" style="margin-top:26px">Portfólio Estratégico</h2>
+    <p class="section-desc">Clique em um card para ver o detalhe completo e o histórico do projeto.</p>
+    <div id="cardsGrid" class="cards-grid"></div>
+  </section>
+
+  <section id="view-detalhe" class="view">
+    <button class="btn ghost sm" id="btnVoltarCockpit" type="button">← Voltar ao Cockpit</button>
+    <div id="detalheConteudo" style="margin-top:14px"></div>
+  </section>
+
+  <section id="view-agenda" class="view">
+    <h2 class="section-title">Agenda Estratégica de 90 dias</h2>
+    <p class="section-desc">Ordenada por prazo. Vermelho = vencido · Amarelo = próximos 7 dias · Verde = futuro.</p>
+    <div class="block"><div id="agendaList"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo item de agenda</div>
+      <form id="formAgenda" class="form-inline">
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div><label>Prazo</label><input type="date" name="prazo" required></div>
+        <div><label>Projeto relacionado</label><select name="projeto_relacionado"><option value="">— Nenhum —</option></select></div>
+        <div><button class="btn gold" type="submit">Adicionar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-radar" class="view">
+    <h2 class="section-title">RADAR Coger</h2>
+    <p class="section-desc">Registro cronológico de notas estratégicas e briefings entregues ao Corregedor. Não editável em Modo Leitura.</p>
+    <div class="edit-only block">
+      <div class="block-title">➕ Nova nota / briefing</div>
+      <form id="formRadar" class="form-inline">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"><option value="briefing">Briefing</option><option value="nota">Nota estratégica</option><option value="alerta">Alerta</option></select></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Resumo</label><textarea name="resumo" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+    <div class="block"><div id="radarList"></div></div>
+  </section>
+
+  <section id="view-integracao" class="view">
+    <h2 class="section-title">Integração &amp; Articulação Institucional</h2>
+    <p class="section-desc">Interlocuções do 3º Chapéu (integração interna) e 4º Chapéu (articulação externa).</p>
+    <div class="filter-row">
+      <select id="filtroChapeu">
+        <option value="todos">Todos os chapéus</option>
+        <option value="integracao">3º Chapéu — Integração</option>
+        <option value="institucional">4º Chapéu — Institucional</option>
+      </select>
+    </div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Nova interlocução</div>
+      <form id="formIntegracao" class="form-inline">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Chapéu</label><select name="chapeu"><option value="integracao">3º — Integração</option><option value="institucional">4º — Institucional</option></select></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Resumo</label><textarea name="resumo" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+    <div class="block"><div id="integracaoList"></div></div>
+  </section>
+
+  <section id="view-persistencia" class="view">
+    <h2 class="section-title">Persistência de dados</h2>
+    <p class="section-desc">Arquivo único, offline, sem rede. Use estas ações para manter o painel-mestre e distribuir versões atualizadas.</p>
+    <div class="persist-grid">
+      <div class="persist-card">
+        <h4>⬇️ Exportar JSON completo</h4>
+        <p>Baixa um <span class="mono">.json</span> com todo o estado atual do painel — use como backup periódico.</p>
+        <button id="btnExportJson" class="btn" type="button">Exportar JSON</button>
+      </div>
+      <div class="persist-card">
+        <h4>⬆️ Importar JSON</h4>
+        <p>Carrega um <span class="mono">.json</span> completo, <b>substituindo</b> todo o estado atual. Ação destrutiva.</p>
+        <label class="file-btn"><span class="btn ghost">Selecionar arquivo…</span><input type="file" id="inputImportJson" accept="application/json,.json"></label>
+      </div>
+      <div class="persist-card">
+        <h4>🧾 Gerar HTML atualizado</h4>
+        <p>Gera um novo <span class="mono">.html</span> autocontido com o estado atual embutido, pronto para envio ao Corregedor.</p>
+        <button id="btnGerarHtml" class="btn gold" type="button">Gerar HTML</button>
+      </div>
+      <div class="persist-card">
+        <h4>📤 Exportar minhas marcações</h4>
+        <p>Gera um <span class="mono">.json</span> reduzido só com as decisões marcadas como tomadas nesta sessão. Perfil Corregedor.</p>
+        <button id="btnExportMarcacoes" class="btn ghost" type="button">Exportar marcações (<span id="qtdMarcacoes">0</span>)</button>
+      </div>
+      <div class="persist-card">
+        <h4>🔄 Importar marcações do Corregedor</h4>
+        <p>Faz o merge seletivo: atualiza apenas <span class="mono">decisao_pendente</span> dos projetos indicados, sem tocar em outros campos.</p>
+        <label class="file-btn"><span class="btn ghost">Selecionar marcações…</span><input type="file" id="inputImportMarcacoes" accept="application/json,.json"></label>
+      </div>
+      <div class="persist-card">
+        <h4>⚙️ Configurações</h4>
+        <p>Limite de dias para considerar o painel desatualizado, e autor padrão dos registros.</p>
+        <div class="form-inline" style="background:none;border:none;padding:0">
+          <div><label>Dias p/ desatualização</label><input type="text" id="cfgStaleDays" value="10"></div>
+          <div><label>Autor padrão</label><input type="text" id="cfgAutor" value="Assessor"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">Escritório Estratégico Coger/RFB — instrumento executivo de uso restrito. Não substitui Ariel, SigPlan ou sistemas da Codis/Secac.</footer>
+
+<script type="application/json" id="painel-data">
+{
+  "meta": {
+    "versao_schema": "1.0",
+    "gerado_em": "2026-09-05T13:00:00Z",
+    "gerado_por": "assessor"
+  },
+  "projetos": [
+    {
+      "id": "pacto",
+      "nome": "PACTO — Painel Correcional Técnico",
+      "tipo": "evento_anual",
+      "responsavel": "Assessoria Estratégica Coger",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "Edição 2027 — programação a definir",
+      "beneficio_gerado": "Ampliação da articulação interinstitucional com CGU, PGFN e MF na edição 2026.",
+      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "historico": [
+        { "data": "2026-03-19", "autor": "Assessor", "tipo": "status", "texto": "Edição 2026 realizada em Vitória/ES, com CGU, PGFN e MF." },
+        { "data": "2026-04-02", "autor": "Assessor", "tipo": "beneficio", "texto": "Benefício registrado: \"Ampliação da articulação interinstitucional com CGU, PGFN e MF na edição 2026.\"" },
+        { "data": "2026-07-30", "autor": "Assessor", "tipo": "nota", "texto": "Iniciado levantamento de sedes candidatas para a edição 2027." }
+      ]
+    },
+    {
+      "id": "proteger",
+      "nome": "PROTEGER",
+      "tipo": "sistema",
+      "responsavel": "Coordenação de Sistemas Coger",
+      "status": "amarelo",
+      "risco": "Atraso na homologação do módulo de notificações pode postergar o início do piloto.",
+      "proxima_entrega": "Piloto em unidade-teste — 30/10/2026",
+      "beneficio_gerado": "Redução estimada de 20% no tempo de tramitação de notificações na simulação em ambiente de testes.",
+      "decisao_pendente": { "texto": "Definir se o piloto será estendido para mais duas unidades antes da avaliação de resultados.", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "historico": [
+        { "data": "2026-06-05", "autor": "Assessor", "tipo": "status", "texto": "Status alterado de verde para amarelo. Homologação do módulo de notificações atrasou em relação ao cronograma inicial." },
+        { "data": "2026-06-05", "autor": "Assessor", "tipo": "risco", "texto": "Risco atualizado: \"Atraso na homologação do módulo de notificações pode postergar o início do piloto.\"" },
+        { "data": "2026-08-12", "autor": "Assessor", "tipo": "beneficio", "texto": "Benefício registrado: \"Redução estimada de 20% no tempo de tramitação de notificações na simulação em ambiente de testes.\"" },
+        { "data": "2026-08-28", "autor": "Assessor", "tipo": "decisao", "texto": "Nova decisão pendente registrada: \"Definir se o piloto será estendido para mais duas unidades antes da avaliação de resultados.\"" }
+      ]
+    },
+    {
+      "id": "integritas",
+      "nome": "INTEGRITAS",
+      "tipo": "sistema",
+      "responsavel": "Coordenação de Integridade Coger",
+      "status": "vermelho",
+      "risco": "Dependência de integração com o SEI ainda não formalizada; risco relevante de atraso no cronograma.",
+      "proxima_entrega": "Especificação técnica de integração — 15/09/2026",
+      "beneficio_gerado": "",
+      "decisao_pendente": { "texto": "Autorizar tratativa formal com a área de TI para priorização da integração com o SEI.", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "historico": [
+        { "data": "2026-07-10", "autor": "Assessor", "tipo": "status", "texto": "Status alterado de amarelo para vermelho. Integração com o SEI segue sem tratativa formal com a área de TI." },
+        { "data": "2026-07-10", "autor": "Assessor", "tipo": "risco", "texto": "Risco atualizado: \"Dependência de integração com o SEI ainda não formalizada; risco relevante de atraso no cronograma.\"" },
+        { "data": "2026-08-25", "autor": "Assessor", "tipo": "decisao", "texto": "Nova decisão pendente registrada: \"Autorizar tratativa formal com a área de TI para priorização da integração com o SEI.\"" }
+      ]
+    },
+    {
+      "id": "capacitacao",
+      "nome": "Plano de Capacitação Correcional 2026",
+      "tipo": "iniciativa",
+      "responsavel": "Escritório Estratégico Coger",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "Turma 2 — outubro/2026",
+      "beneficio_gerado": "120 servidores capacitados na Turma 1, com 92% de avaliação de satisfação.",
+      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "historico": [
+        { "data": "2026-05-20", "autor": "Assessor", "tipo": "nota", "texto": "Turma 1 concluída com 120 servidores capacitados." },
+        { "data": "2026-05-22", "autor": "Assessor", "tipo": "beneficio", "texto": "Benefício registrado: \"120 servidores capacitados na Turma 1, com 92% de avaliação de satisfação.\"" }
+      ]
+    }
+  ],
+  "agenda_90_dias": [
+    { "id": "a1", "titulo": "Reunião de alinhamento do Portfólio com o Corregedor", "prazo": "2026-09-10", "projeto_relacionado": "", "concluido": false },
+    { "id": "a2", "titulo": "Homologação do módulo de notificações (PROTEGER)", "prazo": "2026-09-12", "projeto_relacionado": "proteger", "concluido": false },
+    { "id": "a3", "titulo": "Envio da especificação técnica de integração (INTEGRITAS)", "prazo": "2026-09-15", "projeto_relacionado": "integritas", "concluido": false },
+    { "id": "a4", "titulo": "Início da Turma 2 do Plano de Capacitação", "prazo": "2026-10-01", "projeto_relacionado": "capacitacao", "concluido": false },
+    { "id": "a5", "titulo": "Avaliação de resultados do piloto PROTEGER", "prazo": "2026-11-05", "projeto_relacionado": "proteger", "concluido": false },
+    { "id": "a6", "titulo": "Confirmar pauta da reunião de portfólio de agosto", "prazo": "2026-08-30", "projeto_relacionado": "", "concluido": false }
+  ],
+  "radar_coger": [
+    { "id": "r1", "data": "2026-09-01", "titulo": "Briefing: panorama do Portfólio Estratégico para reunião de setembro", "tipo": "briefing", "resumo": "Síntese do andamento de PACTO, PROTEGER e INTEGRITAS, com destaque para o risco de integração do INTEGRITAS com o SEI." },
+    { "id": "r2", "data": "2026-08-15", "titulo": "Nota estratégica: oportunidades de integração com a CGU", "tipo": "nota", "resumo": "Mapeamento de pontos de contato entre o PACTO e iniciativas de integridade da CGU, com proposta de agenda conjunta." }
+  ],
+  "integracao_embaixador": [
+    { "id": "i1", "data": "2026-09-01", "chapeu": "integracao", "titulo": "Reunião com Coordenação de Sistemas sobre priorização do PROTEGER", "resumo": "Alinhamento interno sobre cronograma do piloto e disponibilidade de equipe técnica." },
+    { "id": "i2", "data": "2026-08-20", "chapeu": "institucional", "titulo": "Interlocução com a CGU sobre cooperação técnica em integridade", "resumo": "Primeira conversa exploratória sobre cooperação técnica entre INTEGRITAS e sistemas de integridade da CGU." }
+  ]
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= Estado ================= */
+var STATE = null;
+var VIEW = { tab:'cockpit', detailId:null, editMode:false, integracaoFiltro:'todos' };
+var sessionMarkings = [];
+var STALE_DAYS = 10;
+var DEFAULT_AUTOR = 'Assessor';
+var DRAFT_KEY = 'eecoger_draft_v1';
+var MARKINGS_KEY = 'eecoger_marcacoes_sessao_v1';
+
+var MESES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+/* ================= Utilidades ================= */
+function uid(prefix){ return prefix + Date.now().toString(36) + Math.floor(Math.random()*1000); }
+function todayISO(){ return new Date().toISOString().slice(0,10); }
+function escapeHtml(s){
+  if(s===null||s===undefined) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function parseDateOnly(str){
+  if(!str) return null;
+  var parts = str.slice(0,10).split('-');
+  return new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+}
+function daysBetween(a,b){
+  var MS = 24*60*60*1000;
+  var da = new Date(a.getFullYear(),a.getMonth(),a.getDate());
+  var db = new Date(b.getFullYear(),b.getMonth(),b.getDate());
+  return Math.round((db-da)/MS);
+}
+function formatDatePT(dateStr, comHora){
+  if(!dateStr) return '—';
+  var d = new Date(dateStr);
+  if(isNaN(d.getTime())) return dateStr;
+  var isDateOnly = /^\d{4}-\d{2}-\d{2}$/.test(dateStr);
+  var dd, mesIdx, yyyy;
+  if(isDateOnly){
+    var dt = parseDateOnly(dateStr);
+    dd = dt.getDate(); mesIdx = dt.getMonth(); yyyy = dt.getFullYear();
+    return dd + ' de ' + MESES[mesIdx] + ' de ' + yyyy;
+  }
+  dd = d.getDate(); mesIdx = d.getMonth(); yyyy = d.getFullYear();
+  var base = dd + ' de ' + MESES[mesIdx] + ' de ' + yyyy;
+  if(comHora){
+    var hh = String(d.getHours()).padStart(2,'0');
+    var mi = String(d.getMinutes()).padStart(2,'0');
+    base += ', ' + hh + 'h' + mi;
+  }
+  return base;
+}
+function downloadFile(content, filename, mime){
+  var blob = new Blob([content], {type: mime});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+}
+function statusInfo(status){
+  return {
+    verde:{label:'Verde', icon:'🟢'},
+    amarelo:{label:'Amarelo', icon:'🟡'},
+    vermelho:{label:'Vermelho', icon:'🔴'}
+  }[status] || {label:status, icon:'⚪'};
+}
+function tipoProjetoLabel(tipo){
+  return {sistema:'Sistema', evento_anual:'Evento anual', iniciativa:'Iniciativa'}[tipo] || tipo;
+}
+function proximaEntregaLabel(tipo){
+  return {sistema:'Próxima entrega', evento_anual:'Próxima edição', iniciativa:'Próximo marco'}[tipo] || 'Próxima entrega';
+}
+function tipoHistoricoLabel(tipo){
+  return {status:'Status', risco:'Risco', beneficio:'Benefício', decisao:'Decisão', nota:'Nota'}[tipo] || tipo;
+}
+function findProjeto(id){
+  return STATE.projetos.find(function(p){ return p.id===id; });
+}
+function addHistorico(projeto, tipo, texto, autor, data){
+  if(!texto) return;
+  projeto.historico.push({ data: data || todayISO(), autor: autor || DEFAULT_AUTOR, tipo: tipo, texto: texto });
+}
+
+/* ================= Persistência de rascunho (sessão) ================= */
+function saveDraft(){
+  try{
+    sessionStorage.setItem(DRAFT_KEY, JSON.stringify(STATE));
+    sessionStorage.setItem(MARKINGS_KEY, JSON.stringify(sessionMarkings));
+  }catch(e){ /* sessionStorage indisponível: segue sem cache de rascunho */ }
+}
+function loadDraftIfAny(){
+  try{
+    var raw = sessionStorage.getItem(DRAFT_KEY);
+    if(!raw) return false;
+    STATE = JSON.parse(raw);
+    var m = sessionStorage.getItem(MARKINGS_KEY);
+    sessionMarkings = m ? JSON.parse(m) : [];
+    return true;
+  }catch(e){ return false; }
+}
+function discardDraft(){
+  try{ sessionStorage.removeItem(DRAFT_KEY); sessionStorage.removeItem(MARKINGS_KEY); }catch(e){}
+  location.reload();
+}
+
+/* ================= Inicialização ================= */
+function init(){
+  var embutido = JSON.parse(document.getElementById('painel-data').textContent);
+  var restaurouRascunho = loadDraftIfAny();
+  if(restaurouRascunho){
+    document.getElementById('draftBanner').classList.remove('hidden');
+  } else {
+    STATE = embutido;
+  }
+
+  document.getElementById('btnDescartarRascunho').addEventListener('click', discardDraft);
+  document.getElementById('btnModo').addEventListener('click', toggleModo);
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
+  });
+  document.getElementById('btnVoltarCockpit').addEventListener('click', function(){ switchTab('cockpit'); });
+
+  document.getElementById('btnExportJson').addEventListener('click', exportarJsonCompleto);
+  document.getElementById('inputImportJson').addEventListener('change', importarJsonCompleto);
+  document.getElementById('btnGerarHtml').addEventListener('click', gerarHtmlAtualizado);
+  document.getElementById('btnExportMarcacoes').addEventListener('click', exportarMarcacoes);
+  document.getElementById('inputImportMarcacoes').addEventListener('change', importarMarcacoesCorregedor);
+
+  document.getElementById('cfgStaleDays').addEventListener('change', function(e){
+    var v = parseInt(e.target.value,10); if(!isNaN(v) && v>0){ STALE_DAYS = v; renderHeader(); }
+  });
+  document.getElementById('cfgAutor').addEventListener('change', function(e){
+    DEFAULT_AUTOR = e.target.value.trim() || 'Assessor';
+  });
+
+  document.getElementById('formAgenda').addEventListener('submit', onSubmitAgenda);
+  document.getElementById('formRadar').addEventListener('submit', onSubmitRadar);
+  document.getElementById('formIntegracao').addEventListener('submit', onSubmitIntegracao);
+  document.getElementById('filtroChapeu').addEventListener('change', function(e){
+    VIEW.integracaoFiltro = e.target.value; renderIntegracao();
+  });
+  document.getElementById('formRadar').data.value = todayISO();
+  document.getElementById('formIntegracao').data.value = todayISO();
+
+  renderAll();
+  switchTab('cockpit');
+}
+
+function renderAll(){
+  renderHeader();
+  populaSelectProjetos();
+  renderCockpit();
+  renderAgenda();
+  renderRadar();
+  renderIntegracao();
+  atualizaContadorMarcacoes();
+  document.body.classList.toggle('modo-edicao', VIEW.editMode);
+  document.body.classList.toggle('modo-leitura', !VIEW.editMode);
+}
+
+/* ================= Header ================= */
+function renderHeader(){
+  document.getElementById('geradoEmTxt').textContent = 'Painel gerado em ' + formatDatePT(STATE.meta.gerado_em, true);
+  var dias = daysBetween(new Date(STATE.meta.gerado_em), new Date());
+  var badge = document.getElementById('staleBadge');
+  if(dias > STALE_DAYS){
+    badge.textContent = '⚠️ Painel gerado há ' + dias + ' dias';
+    badge.classList.remove('hidden');
+  } else {
+    badge.classList.add('hidden');
+  }
+}
+function toggleModo(){
+  VIEW.editMode = !VIEW.editMode;
+  var btn = document.getElementById('btnModo');
+  btn.textContent = VIEW.editMode ? '🔒 Modo Leitura' : '🔓 Editar';
+  btn.classList.toggle('is-edit', VIEW.editMode);
+  document.body.classList.toggle('modo-edicao', VIEW.editMode);
+  document.body.classList.toggle('modo-leitura', !VIEW.editMode);
+  if(VIEW.tab==='detalhe' && VIEW.detailId) renderDetalhe(VIEW.detailId);
+}
+
+/* ================= Navegação ================= */
+function switchTab(tab, detailId){
+  VIEW.tab = tab;
+  if(detailId) VIEW.detailId = detailId;
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
+  document.querySelectorAll('section.view').forEach(function(s){ s.classList.remove('active'); });
+  if(tab==='detalhe'){
+    renderDetalhe(VIEW.detailId);
+    document.getElementById('view-detalhe').classList.add('active');
+  } else {
+    var el = document.getElementById('view-'+tab);
+    if(el) el.classList.add('active');
+  }
+  window.scrollTo({top:0, behavior:'instant' in window ? 'instant' : 'auto'});
+}
+
+/* ================= Cockpit ================= */
+function renderCockpit(){
+  var pendentes = STATE.projetos.filter(function(p){ return p.decisao_pendente && p.decisao_pendente.texto && !p.decisao_pendente.tomada; });
+  var elDec = document.getElementById('decisoesPendentesList');
+  if(pendentes.length===0){
+    elDec.innerHTML = '<div class="empty-msg">Nenhuma decisão pendente no momento.</div>';
+  } else {
+    elDec.innerHTML = pendentes.map(function(p){
+      return '<div class="decision-item">'
+        + '<div class="txt"><b>'+escapeHtml(p.nome)+'</b><br>'+escapeHtml(p.decisao_pendente.texto)+'</div>'
+        + marcarDecisaoHtml(p.id)
+        + '</div>';
+    }).join('');
+  }
+  ligaBotoesMarcar();
+
+  var hoje = new Date();
+  var proximos = STATE.agenda_90_dias.filter(function(a){
+    if(a.concluido) return false;
+    var d = parseDateOnly(a.prazo);
+    var diff = daysBetween(hoje, d);
+    return diff>=0 && diff<=7;
+  }).sort(function(a,b){ return a.prazo.localeCompare(b.prazo); });
+  var elProx = document.getElementById('proximos7List');
+  if(proximos.length===0){
+    elProx.innerHTML = '<div class="empty-msg">Nenhum item da Agenda 90 dias vence nos próximos 7 dias.</div>';
+  } else {
+    elProx.innerHTML = proximos.map(function(a){
+      var proj = a.projeto_relacionado ? findProjeto(a.projeto_relacionado) : null;
+      return '<div class="agenda-item"><div><div class="agenda-title">'+escapeHtml(a.titulo)+'</div>'
+        + '<div class="agenda-sub">'+formatDatePT(a.prazo)+(proj?' · '+escapeHtml(proj.nome):'')+'</div></div></div>';
+    }).join('');
+  }
+
+  var ordem = {vermelho:0, amarelo:1, verde:2};
+  var projetosOrdenados = STATE.projetos.slice().sort(function(a,b){
+    return (ordem[a.status]!==undefined?ordem[a.status]:9) - (ordem[b.status]!==undefined?ordem[b.status]:9);
+  });
+  document.getElementById('cardsGrid').innerHTML = projetosOrdenados.map(renderCardHtml).join('');
+  document.querySelectorAll('.card').forEach(function(c){
+    c.addEventListener('click', function(){ switchTab('detalhe', c.dataset.id); });
+  });
+}
+
+function marcarDecisaoHtml(projetoId){
+  return '<div class="mark-row">'
+    + '<input type="text" class="marcado-por-input" data-id="'+projetoId+'" value="Corregedor" title="Marcado por">'
+    + '<button class="btn gold sm btn-marcar" data-id="'+projetoId+'" type="button">✅ Marcar como tomada</button>'
+    + '</div>';
+}
+function ligaBotoesMarcar(){
+  document.querySelectorAll('.btn-marcar').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var id = btn.dataset.id;
+      var input = document.querySelector('.marcado-por-input[data-id="'+id+'"]');
+      marcarDecisaoTomada(id, input ? input.value.trim() : 'Corregedor');
+    });
+  });
+}
+function marcarDecisaoTomada(projetoId, marcadoPor){
+  var projeto = findProjeto(projetoId);
+  if(!projeto || !projeto.decisao_pendente || projeto.decisao_pendente.tomada) return;
+  marcadoPor = marcadoPor || 'Corregedor';
+  var nowISO = new Date().toISOString();
+  projeto.decisao_pendente.tomada = true;
+  projeto.decisao_pendente.data_marcacao = nowISO;
+  projeto.decisao_pendente.marcado_por = marcadoPor;
+  addHistorico(projeto, 'decisao', 'Decisão marcada como tomada por '+marcadoPor+': "'+projeto.decisao_pendente.texto+'"', marcadoPor);
+  sessionMarkings.push({ projeto_id: projeto.id, data_marcacao: nowISO, marcado_por: marcadoPor });
+  saveDraft();
+  renderCockpit();
+  if(VIEW.tab==='detalhe' && VIEW.detailId===projetoId) renderDetalhe(projetoId);
+  atualizaContadorMarcacoes();
+}
+
+function renderCardHtml(p){
+  var si = statusInfo(p.status);
+  var decisaoHtml = '';
+  if(p.decisao_pendente && p.decisao_pendente.texto){
+    if(p.decisao_pendente.tomada){
+      decisaoHtml = '<div class="card-decisao">✅ Decisão tomada por '+escapeHtml(p.decisao_pendente.marcado_por||'')+' em '+formatDatePT(p.decisao_pendente.data_marcacao)+'</div>';
+    } else {
+      decisaoHtml = '<div class="card-decisao">⚠️ Decisão pendente: '+escapeHtml(p.decisao_pendente.texto)+'</div>';
+    }
+  }
+  return '<div class="card status-'+p.status+'" data-id="'+p.id+'">'
+    + '<div class="card-top"><div><div class="tipo-badge">'+tipoProjetoLabel(p.tipo)+'</div><div class="card-name">'+escapeHtml(p.nome)+'</div></div>'
+    + '<span class="status-pill status-'+p.status+'">'+si.icon+' '+si.label+'</span></div>'
+    + (p.responsavel ? '<div class="card-field"><span class="lbl">Responsável</span>'+escapeHtml(p.responsavel)+'</div>' : '')
+    + (p.risco ? '<div class="card-field"><span class="lbl">Risco</span>'+escapeHtml(p.risco)+'</div>' : '')
+    + (p.proxima_entrega ? '<div class="card-field"><span class="lbl">'+proximaEntregaLabel(p.tipo)+'</span>'+escapeHtml(p.proxima_entrega)+'</div>' : '')
+    + (p.beneficio_gerado ? '<div class="card-field"><span class="lbl">Benefício gerado</span>'+escapeHtml(p.beneficio_gerado)+'</div>' : '')
+    + decisaoHtml
+    + '</div>';
+}
+
+/* ================= Detalhe ================= */
+function populaSelectProjetos(){
+  var sel = document.querySelector('#formAgenda select[name=projeto_relacionado]');
+  var atual = sel.value;
+  sel.innerHTML = '<option value="">— Nenhum —</option>' + STATE.projetos.map(function(p){
+    return '<option value="'+p.id+'">'+escapeHtml(p.nome)+'</option>';
+  }).join('');
+  sel.value = atual;
+}
+function renderDetalhe(id){
+  var projeto = findProjeto(id);
+  var el = document.getElementById('detalheConteudo');
+  if(!projeto){ el.innerHTML = '<div class="empty-msg">Projeto não encontrado.</div>'; return; }
+  var si = statusInfo(projeto.status);
+
+  var camposHtml;
+  if(VIEW.editMode){
+    camposHtml = ''
+      + '<form id="formDetalhe" data-id="'+projeto.id+'">'
+      + '<div class="field-grid">'
+      + campoEdit('Nome do projeto', 'nome', projeto.nome, 'text', true)
+      + campoSelectEdit('Status', 'status', projeto.status, [['verde','🟢 Verde'],['amarelo','🟡 Amarelo'],['vermelho','🔴 Vermelho']])
+      + campoEdit('Responsável', 'responsavel', projeto.responsavel, 'text')
+      + campoEdit(proximaEntregaLabel(projeto.tipo), 'proxima_entrega', projeto.proxima_entrega, 'text')
+      + '</div>'
+      + '<div class="field-grid">'
+      + campoTextareaEdit('Risco', 'risco', projeto.risco)
+      + campoTextareaEdit('Benefício gerado', 'beneficio_gerado', projeto.beneficio_gerado)
+      + campoTextareaEdit('Decisão pendente (texto)', 'decisao_texto', projeto.decisao_pendente.texto)
+      + '</div>'
+      + '<div class="field-grid">'
+      + campoEdit('Autor desta edição', 'autor', DEFAULT_AUTOR, 'text')
+      + campoEdit('Complemento ao histórico (opcional)', 'complemento', '', 'text')
+      + '</div>'
+      + '<button class="btn gold" type="submit">💾 Salvar alterações</button>'
+      + '</form>';
+  } else {
+    camposHtml = '<div class="field-grid">'
+      + campoRead('Responsável', projeto.responsavel)
+      + campoRead(proximaEntregaLabel(projeto.tipo), projeto.proxima_entrega)
+      + campoRead('Risco', projeto.risco)
+      + campoRead('Benefício gerado', projeto.beneficio_gerado)
+      + '</div>';
+  }
+
+  var decisaoBloco = '';
+  if(projeto.decisao_pendente && projeto.decisao_pendente.texto){
+    if(projeto.decisao_pendente.tomada){
+      decisaoBloco = '<div class="block"><div class="block-title">✅ Decisão pendente — tomada</div>'
+        + '<p>'+escapeHtml(projeto.decisao_pendente.texto)+'</p>'
+        + '<p class="agenda-sub">Marcada por '+escapeHtml(projeto.decisao_pendente.marcado_por||'')+' em '+formatDatePT(projeto.decisao_pendente.data_marcacao, true)+'</p></div>';
+    } else {
+      decisaoBloco = '<div class="block"><div class="block-title">⚠️ Decisão pendente</div>'
+        + '<p>'+escapeHtml(projeto.decisao_pendente.texto)+'</p>'
+        + marcarDecisaoHtml(projeto.id) + '</div>';
+    }
+  }
+
+  var historicoOrdenado = projeto.historico.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
+  var timelineHtml = historicoOrdenado.map(function(h){
+    return '<div class="tl-item"><div class="tl-meta"><span class="tl-tipo">'+tipoHistoricoLabel(h.tipo)+'</span>'
+      + '<span>'+formatDatePT(h.data)+'</span><span>· '+escapeHtml(h.autor)+'</span></div>'
+      + '<div class="tl-txt">'+escapeHtml(h.texto)+'</div></div>';
+  }).join('') || '<div class="empty-msg">Sem entradas no histórico ainda.</div>';
+
+  var novoHistoricoForm = '<form id="formNovoHistorico" data-id="'+projeto.id+'" class="form-inline edit-only">'
+    + '<div><label>Tipo</label><select name="tipo"><option value="nota">Nota</option><option value="status">Status</option><option value="risco">Risco</option><option value="beneficio">Benefício</option><option value="decisao">Decisão</option></select></div>'
+    + '<div><label>Data</label><input type="date" name="data" value="'+todayISO()+'"></div>'
+    + '<div><label>Autor</label><input type="text" name="autor" value="'+escapeHtml(DEFAULT_AUTOR)+'"></div>'
+    + '<div class="full"><label>Texto</label><textarea name="texto" rows="2" required></textarea></div>'
+    + '<div><button class="btn gold" type="submit">➕ Adicionar ao histórico</button></div>'
+    + '</form>';
+
+  el.innerHTML = '<div class="detail-header"><div><div class="tipo-badge">'+tipoProjetoLabel(projeto.tipo)+'</div>'
+    + '<h2 class="section-title">'+escapeHtml(projeto.nome)+'</h2></div>'
+    + '<span class="status-pill status-'+projeto.status+'">'+si.icon+' '+si.label+'</span></div>'
+    + camposHtml + decisaoBloco
+    + '<h3 style="margin:20px 0 10px;color:var(--navy-800)">📜 Linha do tempo (diário de bordo)</h3>'
+    + novoHistoricoForm
+    + '<div class="timeline" style="margin-top:16px">'+timelineHtml+'</div>';
+
+  document.body.classList.toggle('modo-edicao', VIEW.editMode);
+  ligaBotoesMarcar();
+
+  var formDet = document.getElementById('formDetalhe');
+  if(formDet) formDet.addEventListener('submit', onSubmitDetalhe);
+  var formHist = document.getElementById('formNovoHistorico');
+  if(formHist) formHist.addEventListener('submit', onSubmitNovoHistorico);
+}
+function campoEdit(label, name, value, type, required){
+  return '<div class="field"><label>'+label+'</label><input type="'+(type||'text')+'" name="'+name+'" value="'+escapeHtml(value||'')+'"'+(required?' required':'')+'></div>';
+}
+function campoTextareaEdit(label, name, value){
+  return '<div class="field full" style="grid-column:1/-1"><label>'+label+'</label><textarea name="'+name+'">'+escapeHtml(value||'')+'</textarea></div>';
+}
+function campoSelectEdit(label, name, value, opcoes){
+  return '<div class="field"><label>'+label+'</label><select name="'+name+'">'+opcoes.map(function(o){
+    return '<option value="'+o[0]+'"'+(o[0]===value?' selected':'')+'>'+o[1]+'</option>';
+  }).join('')+'</select></div>';
+}
+function campoRead(label, value){
+  return '<div class="field"><label>'+label+'</label><div class="readval">'+(value?escapeHtml(value):'<span class="empty-msg">—</span>')+'</div></div>';
+}
+
+function onSubmitDetalhe(e){
+  e.preventDefault();
+  var form = e.target;
+  var projeto = findProjeto(form.dataset.id);
+  if(!projeto) return;
+  var autor = form.autor.value.trim() || DEFAULT_AUTOR;
+  var complemento = form.complemento.value.trim();
+
+  var novoNome = form.nome.value.trim();
+  if(novoNome) projeto.nome = novoNome;
+
+  var novoStatus = form.status.value;
+  if(novoStatus !== projeto.status){
+    addHistorico(projeto, 'status', 'Status alterado de '+statusInfo(projeto.status).label+' para '+statusInfo(novoStatus).label+'.'+(complemento?' '+complemento:''), autor);
+    projeto.status = novoStatus;
+  }
+  var novoRisco = form.risco.value.trim();
+  if(novoRisco !== (projeto.risco||'')){
+    addHistorico(projeto, 'risco', novoRisco ? 'Risco atualizado: "'+novoRisco+'"' : 'Risco removido/encerrado.', autor);
+    projeto.risco = novoRisco;
+  }
+  var novoBeneficio = form.beneficio_gerado.value.trim();
+  if(novoBeneficio !== (projeto.beneficio_gerado||'')){
+    addHistorico(projeto, 'beneficio', novoBeneficio ? 'Benefício registrado: "'+novoBeneficio+'"' : 'Registro de benefício removido.', autor);
+    projeto.beneficio_gerado = novoBeneficio;
+  }
+  var novaDecisaoTexto = form.decisao_texto.value.trim();
+  if(novaDecisaoTexto !== (projeto.decisao_pendente.texto||'')){
+    if(novaDecisaoTexto && (!projeto.decisao_pendente.texto || projeto.decisao_pendente.tomada)){
+      addHistorico(projeto, 'decisao', 'Nova decisão pendente registrada: "'+novaDecisaoTexto+'"', autor);
+      projeto.decisao_pendente.tomada = false;
+      projeto.decisao_pendente.data_marcacao = null;
+      projeto.decisao_pendente.marcado_por = null;
+    }
+    projeto.decisao_pendente.texto = novaDecisaoTexto;
+  }
+  projeto.responsavel = form.responsavel.value.trim();
+  projeto.proxima_entrega = form.proxima_entrega.value.trim();
+
+  saveDraft();
+  renderCockpit();
+  renderDetalhe(projeto.id);
+}
+function onSubmitNovoHistorico(e){
+  e.preventDefault();
+  var form = e.target;
+  var projeto = findProjeto(form.dataset.id);
+  if(!projeto) return;
+  addHistorico(projeto, form.tipo.value, form.texto.value.trim(), form.autor.value.trim()||DEFAULT_AUTOR, form.data.value||todayISO());
+  saveDraft();
+  renderDetalhe(projeto.id);
+}
+
+/* ================= Agenda ================= */
+function renderAgenda(){
+  var hoje = new Date();
+  var itens = STATE.agenda_90_dias.slice().sort(function(a,b){ return a.prazo.localeCompare(b.prazo); });
+  var el = document.getElementById('agendaList');
+  if(itens.length===0){ el.innerHTML = '<div class="empty-msg">Nenhum item cadastrado na Agenda 90 dias.</div>'; return; }
+  el.innerHTML = itens.map(function(a){
+    var d = parseDateOnly(a.prazo);
+    var diff = daysBetween(hoje, d);
+    var estado = a.concluido ? 'concluido' : (diff<0 ? 'vencido' : (diff<=7 ? 'proximo' : 'futuro'));
+    var proj = a.projeto_relacionado ? findProjeto(a.projeto_relacionado) : null;
+    var editCtrls = '<span class="edit-only inline" style="gap:6px">'
+      + '<button class="btn ghost sm btn-toggle-concl" data-id="'+a.id+'" type="button">'+(a.concluido?'↺ Reabrir':'✔ Concluir')+'</button>'
+      + '<button class="btn danger sm btn-del-agenda" data-id="'+a.id+'" type="button">🗑</button></span>';
+    return '<div class="agenda-item '+estado+'"><div><span class="tag-dot '+estado+'"></span>'
+      + '<span class="agenda-title">'+escapeHtml(a.titulo)+'</span><div class="agenda-sub">'+formatDatePT(a.prazo)+(proj?' · '+escapeHtml(proj.nome):'')+'</div></div>'
+      + editCtrls + '</div>';
+  }).join('');
+  document.querySelectorAll('.btn-toggle-concl').forEach(function(b){
+    b.addEventListener('click', function(){
+      var item = STATE.agenda_90_dias.find(function(a){ return a.id===b.dataset.id; });
+      if(item){ item.concluido = !item.concluido; saveDraft(); renderAgenda(); renderCockpit(); }
+    });
+  });
+  document.querySelectorAll('.btn-del-agenda').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(!confirm('Remover este item da Agenda 90 dias?')) return;
+      STATE.agenda_90_dias = STATE.agenda_90_dias.filter(function(a){ return a.id!==b.dataset.id; });
+      saveDraft(); renderAgenda(); renderCockpit();
+    });
+  });
+}
+function onSubmitAgenda(e){
+  e.preventDefault();
+  var form = e.target;
+  STATE.agenda_90_dias.push({
+    id: uid('a'), titulo: form.titulo.value.trim(), prazo: form.prazo.value,
+    projeto_relacionado: form.projeto_relacionado.value, concluido: false
+  });
+  saveDraft(); form.reset(); renderAgenda(); renderCockpit();
+}
+
+/* ================= RADAR Coger ================= */
+function renderRadar(){
+  var itens = STATE.radar_coger.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
+  var el = document.getElementById('radarList');
+  el.innerHTML = itens.length ? itens.map(function(r){
+    return '<div class="log-item"><div class="log-top"><span class="chip">'+escapeHtml(r.tipo)+'</span><span>'+formatDatePT(r.data)+'</span></div>'
+      + '<b>'+escapeHtml(r.titulo)+'</b><div>'+escapeHtml(r.resumo)+'</div></div>';
+  }).join('') : '<div class="empty-msg">Nenhuma nota registrada.</div>';
+}
+function onSubmitRadar(e){
+  e.preventDefault();
+  var form = e.target;
+  STATE.radar_coger.push({ id: uid('r'), data: form.data.value||todayISO(), titulo: form.titulo.value.trim(), tipo: form.tipo.value, resumo: form.resumo.value.trim() });
+  saveDraft(); form.reset(); form.data.value = todayISO(); renderRadar();
+}
+
+/* ================= Integração / Embaixador ================= */
+function renderIntegracao(){
+  var itens = STATE.integracao_embaixador.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
+  if(VIEW.integracaoFiltro!=='todos') itens = itens.filter(function(i){ return i.chapeu===VIEW.integracaoFiltro; });
+  var el = document.getElementById('integracaoList');
+  el.innerHTML = itens.length ? itens.map(function(i){
+    var chapeuLabel = i.chapeu==='integracao' ? '3º · Integração' : '4º · Institucional';
+    return '<div class="log-item"><div class="log-top"><span class="chip">'+chapeuLabel+'</span><span>'+formatDatePT(i.data)+'</span></div>'
+      + '<b>'+escapeHtml(i.titulo)+'</b><div>'+escapeHtml(i.resumo)+'</div></div>';
+  }).join('') : '<div class="empty-msg">Nenhuma interlocução registrada para este filtro.</div>';
+}
+function onSubmitIntegracao(e){
+  e.preventDefault();
+  var form = e.target;
+  STATE.integracao_embaixador.push({ id: uid('i'), data: form.data.value||todayISO(), chapeu: form.chapeu.value, titulo: form.titulo.value.trim(), resumo: form.resumo.value.trim() });
+  saveDraft(); form.reset(); form.data.value = todayISO(); renderIntegracao();
+}
+
+/* ================= Persistência ================= */
+function exportarJsonCompleto(){
+  downloadFile(JSON.stringify(STATE, null, 2), 'painel-coger-'+todayISO()+'.json', 'application/json');
+}
+function importarJsonCompleto(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var parsed = JSON.parse(ev.target.result);
+      if(!parsed.meta || !Array.isArray(parsed.projetos)) throw new Error('Estrutura inválida');
+      if(!confirm('Importar este JSON substituirá TODO o estado atual do painel. Deseja continuar?')) return;
+      STATE = parsed;
+      if(!STATE.agenda_90_dias) STATE.agenda_90_dias = [];
+      if(!STATE.radar_coger) STATE.radar_coger = [];
+      if(!STATE.integracao_embaixador) STATE.integracao_embaixador = [];
+      saveDraft();
+      renderAll();
+      switchTab('cockpit');
+      alert('JSON importado com sucesso.');
+    }catch(err){
+      alert('Falha ao importar: arquivo não é um JSON de painel válido.\n'+err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+function gerarHtmlAtualizado(){
+  STATE.meta.gerado_em = new Date().toISOString();
+  STATE.meta.gerado_por = 'assessor';
+  saveDraft();
+  var docClone = document.documentElement.cloneNode(true);
+  var dataScript = docClone.querySelector('#painel-data');
+  dataScript.textContent = JSON.stringify(STATE, null, 2);
+  var banner = docClone.querySelector('#draftBanner');
+  if(banner) banner.classList.add('hidden');
+  var html = '<!DOCTYPE html>\n' + docClone.outerHTML;
+  downloadFile(html, 'painel-coger-atualizado-'+todayISO()+'.html', 'text/html');
+}
+function atualizaContadorMarcacoes(){
+  document.getElementById('qtdMarcacoes').textContent = sessionMarkings.length;
+}
+function exportarMarcacoes(){
+  if(sessionMarkings.length===0){ alert('Nenhuma decisão foi marcada como tomada nesta sessão ainda.'); return; }
+  var reduzido = {
+    meta: { versao_schema: STATE.meta.versao_schema, gerado_em: new Date().toISOString(), gerado_por: 'corregedor' },
+    marcacoes: sessionMarkings.map(function(m){
+      return { projeto_id: m.projeto_id, decisao_pendente: { tomada: true, data_marcacao: m.data_marcacao, marcado_por: m.marcado_por } };
+    })
+  };
+  downloadFile(JSON.stringify(reduzido, null, 2), 'marcacoes-corregedor-'+todayISO()+'.json', 'application/json');
+}
+function importarMarcacoesCorregedor(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var parsed = JSON.parse(ev.target.result);
+      if(!Array.isArray(parsed.marcacoes)) throw new Error('Arquivo não contém "marcacoes".');
+      var count = 0;
+      parsed.marcacoes.forEach(function(m){
+        var projeto = findProjeto(m.projeto_id);
+        if(!projeto || !m.decisao_pendente || !m.decisao_pendente.tomada) return;
+        if(projeto.decisao_pendente.tomada) return; // já mesclado anteriormente
+        projeto.decisao_pendente.tomada = true;
+        projeto.decisao_pendente.data_marcacao = m.decisao_pendente.data_marcacao || new Date().toISOString();
+        projeto.decisao_pendente.marcado_por = m.decisao_pendente.marcado_por || 'Corregedor';
+        addHistorico(projeto, 'decisao', 'Decisão marcada como tomada por '+projeto.decisao_pendente.marcado_por+' (mesclado de marcações do Corregedor).', 'sistema');
+        count++;
+      });
+      saveDraft();
+      renderAll();
+      alert(count+' marcação(ões) mesclada(s) com sucesso. Nenhum outro campo dos projetos foi alterado.');
+    }catch(err){
+      alert('Falha ao importar marcações: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
