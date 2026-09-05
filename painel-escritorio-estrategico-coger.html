@@ -170,8 +170,15 @@ button.btn{border:1px solid var(--border);background:#fff;color:var(--navy-900);
 
 .log-item{padding:12px 0;border-bottom:1px solid var(--border)}
 .log-item:last-child{border-bottom:none}
+.log-item.log-edit{padding-bottom:16px}
 .log-top{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted-2);margin-bottom:3px}
 .chip{background:var(--surface-alt);border:1px solid var(--border);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;color:var(--navy-700)}
+.rd-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+.rd-row .rd-del{margin-left:auto}
+.rd-in{border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;background:var(--surface-alt);font-family:inherit}
+.rd-in:focus{outline:none;border-color:var(--gold-light);box-shadow:0 0 0 2px var(--gold-100)}
+input.rd-in.rd-titulo{width:100%;font-weight:600;margin-bottom:6px}
+textarea.rd-in.rd-resumo{width:100%;resize:vertical;min-height:52px}
 .filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .filter-row select{border:1px solid var(--border);border-radius:7px;padding:7px 10px;background:var(--surface);font-family:inherit}
 
@@ -593,6 +600,13 @@ function init(){
       saveDraft();
       renderTarefaDependentViews();
     }
+    if(e.target.classList && e.target.classList.contains('rd-in')){
+      var r = STATE.radar_coger.find(function(x){ return x.id===e.target.dataset.id; });
+      if(!r) return;
+      r[e.target.dataset.field] = e.target.value;
+      saveDraft();
+      renderRadar();
+    }
   });
   document.addEventListener('click', function(e){
     if(e.target.classList && e.target.classList.contains('tf-del')){
@@ -600,6 +614,12 @@ function init(){
       STATE.tarefas = STATE.tarefas.filter(function(t){ return t.id!==e.target.dataset.id; });
       saveDraft();
       renderTarefaDependentViews();
+    }
+    if(e.target.classList && e.target.classList.contains('rd-del')){
+      if(!confirm('Remover este registro do RADAR Coger?')) return;
+      STATE.radar_coger = STATE.radar_coger.filter(function(r){ return r.id!==e.target.dataset.id; });
+      saveDraft();
+      renderRadar();
     }
     if(e.target.classList && e.target.classList.contains('btn-marcar')){
       var id = e.target.dataset.id;
@@ -647,6 +667,7 @@ function toggleModo(){
   document.body.classList.toggle('modo-edicao', VIEW.editMode);
   document.body.classList.toggle('modo-leitura', !VIEW.editMode);
   renderTarefasTab();
+  renderRadar();
   if(VIEW.tab==='detalhe' && VIEW.detailId) renderDetalhe(VIEW.detailId);
 }
 
@@ -1059,10 +1080,24 @@ function renderRadar(){
   renderTabCounts();
   var itens = STATE.radar_coger.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
   var el = document.getElementById('radarList');
-  el.innerHTML = itens.length ? itens.map(function(r){
-    return '<div class="log-item"><div class="log-top"><span class="chip">'+escapeHtml(r.tipo)+'</span><span>'+formatDatePT(r.data)+'</span></div>'
-      + '<b>'+escapeHtml(r.titulo)+'</b><div>'+escapeHtml(r.resumo)+'</div></div>';
-  }).join('') : '<div class="empty-msg">Nenhuma nota registrada.</div>';
+  el.innerHTML = itens.length ? itens.map(renderRadarLinhaHtml).join('') : '<div class="empty-msg">Nenhuma nota registrada.</div>';
+}
+function renderRadarLinhaHtml(r){
+  if(VIEW.editMode){
+    return '<div class="log-item log-edit">'
+      + '<div class="rd-row">'
+      + '<input type="date" class="rd-in" data-id="'+r.id+'" data-field="data" value="'+r.data+'">'
+      + '<select class="rd-in" data-id="'+r.id+'" data-field="tipo">'
+        + ['briefing','nota','alerta'].map(function(t){ return '<option value="'+t+'"'+(t===r.tipo?' selected':'')+'>'+(t==='briefing'?'Briefing':t==='nota'?'Nota estratégica':'Alerta')+'</option>'; }).join('')
+      + '</select>'
+      + '<button class="btn danger sm rd-del" data-id="'+r.id+'" type="button">🗑</button>'
+      + '</div>'
+      + '<input type="text" class="rd-in rd-titulo" data-id="'+r.id+'" data-field="titulo" value="'+escapeHtml(r.titulo)+'" placeholder="Título">'
+      + '<textarea class="rd-in rd-resumo" data-id="'+r.id+'" data-field="resumo" rows="2" placeholder="Resumo">'+escapeHtml(r.resumo)+'</textarea>'
+      + '</div>';
+  }
+  return '<div class="log-item"><div class="log-top"><span class="chip">'+escapeHtml(r.tipo)+'</span><span>'+formatDatePT(r.data)+'</span></div>'
+    + '<b>'+escapeHtml(r.titulo)+'</b><div>'+escapeHtml(r.resumo)+'</div></div>';
 }
 function onSubmitRadar(e){
   e.preventDefault();
