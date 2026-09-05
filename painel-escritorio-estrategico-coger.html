@@ -62,11 +62,11 @@ header.hero::before{
 .mode-btn.is-edit{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
 
 /* ---------- Tabs (dentro do hero) ---------- */
-.tab-switch{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tab-switch{display:flex;flex-wrap:wrap;gap:10px}
 .tab-btn{
   background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;
-  padding:12px 16px;cursor:pointer;transition:.15s;text-align:left;color:#dfe4ee;
-  font-weight:700;font-size:12.5px;letter-spacing:.01em;
+  padding:10px 14px;cursor:pointer;transition:.15s;text-align:left;color:#dfe4ee;
+  font-weight:700;font-size:12px;letter-spacing:.01em;flex:1 1 150px;min-width:130px;
 }
 .tab-btn:hover{background:rgba(255,255,255,.11)}
 .tab-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
@@ -173,14 +173,24 @@ button.btn{border:1px solid var(--border);background:#fff;color:var(--navy-900);
 .log-item.log-edit{padding-bottom:16px}
 .log-top{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted-2);margin-bottom:3px}
 .chip{background:var(--surface-alt);border:1px solid var(--border);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;color:var(--navy-700)}
-.rd-row{display:flex;gap:8px;align-items:center;margin-bottom:8px}
-.rd-row .rd-del{margin-left:auto}
-.rd-in{border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;background:var(--surface-alt);font-family:inherit}
-.rd-in:focus{outline:none;border-color:var(--gold-light);box-shadow:0 0 0 2px var(--gold-100)}
-input.rd-in.rd-titulo{width:100%;font-weight:600;margin-bottom:6px}
-textarea.rd-in.rd-resumo{width:100%;resize:vertical;min-height:52px}
+.rd-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.rd-row .rd-del,.rd-row .rg-del,.rd-row .bf-del{margin-left:auto}
+.rd-in,.rg-in,.bf-in{border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;background:var(--surface-alt);font-family:inherit}
+.rd-in:focus,.rg-in:focus,.bf-in:focus{outline:none;border-color:var(--gold-light);box-shadow:0 0 0 2px var(--gold-100)}
+input.rd-in.rd-titulo,input.rg-in.rd-titulo,input.bf-in.rd-titulo{width:100%;font-weight:600;margin-bottom:6px;font-size:14px}
+textarea.rd-in.rd-resumo,textarea.rg-in.rd-resumo{width:100%;resize:vertical;min-height:52px}
+.rg-extra{width:100%;max-width:320px;margin-top:6px}
 .filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .filter-row select{border:1px solid var(--border);border-radius:7px;padding:7px 10px;background:var(--surface);font-family:inherit}
+.produto-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:4px}
+.bf-card{margin-bottom:16px}
+.bf-card textarea.bf-in{width:100%;resize:vertical;min-height:44px;margin-top:3px}
+.bf-campo-label{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted-2);font-weight:700;margin-top:8px}
+.bf-campo-read{margin-top:6px;font-size:13px}
+.bf-campo-read b{font-size:10.5px;text-transform:uppercase;letter-spacing:.03em;color:var(--muted-2);font-weight:700}
+.bf-decisao{margin-top:12px;border-radius:7px;padding:10px 12px;font-size:13px}
+.bf-decisao.pend{background:var(--amber-bg);border:1px solid #f0d9a8;color:#6b4d0f}
+.bf-decisao.ok{background:var(--green-bg);border:1px solid #bfe3cb;color:#1c5236}
 
 .persist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
 .persist-card{border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:var(--surface);border-top:3px solid var(--navy-700)}
@@ -222,6 +232,12 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       <button class="tab-btn" data-tab="cockpit" type="button"><span class="t-label">Cockpit</span><span class="t-count" id="tabCountCockpit"></span></button>
       <button class="tab-btn" data-tab="tarefas" type="button"><span class="t-label">Tarefas</span><span class="t-count" id="tabCountTarefas"></span></button>
       <button class="tab-btn" data-tab="radar" type="button"><span class="t-label">RADAR Coger</span><span class="t-count" id="tabCountRadar"></span></button>
+      <button class="tab-btn" data-tab="briefing_corregedor" type="button"><span class="t-label">Briefing do Corregedor</span><span class="t-count" id="tabCountBriefing"></span></button>
+      <button class="tab-btn" data-tab="integra_coger" type="button"><span class="t-label">Integra Coger</span><span class="t-count" id="tabCountIntegraCoger"></span></button>
+      <button class="tab-btn" data-tab="coger_solutions" type="button"><span class="t-label">Coger Solutions</span><span class="t-count" id="tabCountCogerSolutions"></span></button>
+      <button class="tab-btn" data-tab="memoria_coger" type="button"><span class="t-label">Memória Coger</span><span class="t-count" id="tabCountMemoriaCoger"></span></button>
+      <button class="tab-btn" data-tab="coger_lab" type="button"><span class="t-label">Coger Lab</span><span class="t-count" id="tabCountCogerLab"></span></button>
+      <button class="tab-btn" data-tab="correicao_em_foco" type="button"><span class="t-label">Correição em Foco</span><span class="t-count" id="tabCountCorreicaoEmFoco"></span></button>
       <button class="tab-btn" data-tab="persistencia" type="button"><span class="t-label">Dados</span></button>
     </div>
   </div>
@@ -290,8 +306,10 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
   </section>
 
   <section id="view-radar" class="view">
-    <h2 class="section-title">RADAR Coger</h2>
-    <p class="section-desc">Registro cronológico de notas estratégicas e briefings entregues ao Corregedor. Não editável em Modo Leitura.</p>
+    <div class="produto-header">
+      <div><h2 class="section-title">RADAR Coger</h2><p class="section-desc">Antecipação de riscos e oportunidades — registro cronológico de notas estratégicas e briefings entregues ao Corregedor. Não editável em Modo Leitura.</p></div>
+      <button class="btn ghost sm" id="btnExportarRadar" type="button">📤 Exportar este produto</button>
+    </div>
     <div class="edit-only block">
       <div class="block-title">➕ Nova nota / briefing</div>
       <form id="formRadar" class="form-inline">
@@ -303,6 +321,130 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       </form>
     </div>
     <div class="block"><div id="radarList"></div></div>
+  </section>
+
+  <section id="view-briefing_corregedor" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Briefing do Corregedor</h2><p class="section-desc">Apoio à tomada de decisão — para temas relevantes: problema → contexto → evidências → alternativas → riscos → recomendação → decisão necessária.</p></div>
+      <button class="btn ghost sm" id="btnExportarBriefing" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo briefing</div>
+      <form id="formBriefing" class="form-inline">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Autor</label><input type="text" name="autor"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Problema</label><textarea name="problema" rows="2"></textarea></div>
+        <div class="full"><label>Contexto</label><textarea name="contexto" rows="2"></textarea></div>
+        <div class="full"><label>Evidências</label><textarea name="evidencias" rows="2"></textarea></div>
+        <div class="full"><label>Alternativas</label><textarea name="alternativas" rows="2"></textarea></div>
+        <div class="full"><label>Riscos</label><textarea name="riscos" rows="2"></textarea></div>
+        <div class="full"><label>Recomendação</label><textarea name="recomendacao" rows="2"></textarea></div>
+        <div class="full"><label>Decisão necessária</label><textarea name="decisao_necessaria" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar briefing</button></div>
+      </form>
+    </div>
+    <div id="list-briefing_corregedor"></div>
+  </section>
+
+  <section id="view-integra_coger" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Integra Coger</h2><p class="section-desc">Integração das Subcorregedorias — fórum/metodologia permanente para transformar experiências isoladas em soluções institucionais.</p></div>
+      <button class="btn ghost sm btn-export-produto" data-collection="integra_coger" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="block"><div id="list-integra_coger"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo registro</div>
+      <form id="form-integra_coger" class="form-inline" data-collection="integra_coger">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"></select></div>
+        <div><label>Status</label><select name="status"></select></div>
+        <div><label>Responsável</label><input type="text" name="responsavel"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-coger_solutions" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Coger Solutions</h2><p class="section-desc">Solução de problemas complexos apresentados pelo Gabinete.</p></div>
+      <button class="btn ghost sm btn-export-produto" data-collection="coger_solutions" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="block"><div id="list-coger_solutions"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo registro</div>
+      <form id="form-coger_solutions" class="form-inline" data-collection="coger_solutions">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"></select></div>
+        <div><label>Status</label><select name="status"></select></div>
+        <div><label>Responsável</label><input type="text" name="responsavel"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-memoria_coger" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Memória Coger</h2><p class="section-desc">Gestão do conhecimento — repositório vivo da experiência acumulada pela instituição.</p></div>
+      <button class="btn ghost sm btn-export-produto" data-collection="memoria_coger" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="block"><div id="list-memoria_coger"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo registro</div>
+      <form id="form-memoria_coger" class="form-inline" data-collection="memoria_coger">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"></select></div>
+        <div><label>Status</label><select name="status"></select></div>
+        <div><label>Responsável</label><input type="text" name="responsavel"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-coger_lab" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Coger Lab</h2><p class="section-desc">Inovação e experimentação — laboratório de inovação correcional destinado a testar e desenvolver soluções antes de sua eventual expansão institucional.</p></div>
+      <button class="btn ghost sm btn-export-produto" data-collection="coger_lab" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="block"><div id="list-coger_lab"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo registro</div>
+      <form id="form-coger_lab" class="form-inline" data-collection="coger_lab">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"></select></div>
+        <div><label>Status</label><select name="status"></select></div>
+        <div><label>Responsável</label><input type="text" name="responsavel"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
+  </section>
+
+  <section id="view-correicao_em_foco" class="view">
+    <div class="produto-header">
+      <div><h2 class="section-title">Correição em Foco</h2><p class="section-desc">Formação e disseminação — programa permanente de disseminação de conhecimento e discussão de temas estratégicos.</p></div>
+      <button class="btn ghost sm btn-export-produto" data-collection="correicao_em_foco" type="button">📤 Exportar este produto</button>
+    </div>
+    <div class="block"><div id="list-correicao_em_foco"></div></div>
+    <div class="edit-only block">
+      <div class="block-title">➕ Novo registro</div>
+      <form id="form-correicao_em_foco" class="form-inline" data-collection="correicao_em_foco">
+        <div><label>Data</label><input type="date" name="data" required></div>
+        <div><label>Tipo</label><select name="tipo"></select></div>
+        <div><label>Status</label><select name="status"></select></div>
+        <div><label>Responsável</label><input type="text" name="responsavel"></div>
+        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
+        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
+        <div><button class="btn gold" type="submit">Registrar</button></div>
+      </form>
+    </div>
   </section>
 
   <section id="view-persistencia" class="view">
@@ -325,6 +467,11 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
         <button id="btnGerarHtml" class="btn gold" type="button">Gerar HTML</button>
       </div>
       <div class="persist-card">
+        <h4>🔀 Importar produto/projeto (mesclar)</h4>
+        <p>Recebe o <span class="mono">.json</span> exportado por um responsável (um projeto do Portfólio ou uma das abas de produto) e atualiza <b>somente aquele item</b> no seu painel-mestre — os demais não são afetados.</p>
+        <label class="file-btn"><span class="btn ghost">Selecionar arquivo…</span><input type="file" id="inputImportUnidade" accept="application/json,.json"></label>
+      </div>
+      <div class="persist-card">
         <h4>⚙️ Configurações</h4>
         <p>Limite de dias para considerar o painel desatualizado, e autor padrão dos registros.</p>
         <div class="form-inline" style="background:none;border:none;padding:0">
@@ -342,7 +489,7 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
 <script type="application/json" id="painel-data">
 {
   "meta": {
-    "versao_schema": "1.1",
+    "versao_schema": "1.2",
     "gerado_em": "2026-09-05T15:00:00Z",
     "gerado_por": "assessor"
   },
@@ -422,7 +569,13 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
   "radar_coger": [
     { "id": "r1", "data": "2026-09-01", "titulo": "Briefing: panorama do Portfólio Estratégico para reunião de setembro", "tipo": "briefing", "resumo": "Síntese do andamento de PACTO, PROTEGER e INTEGRITAS para a reunião com o Corregedor." },
     { "id": "r2", "data": "2026-03-20", "titulo": "Nota estratégica: repercussões do PACTO 2026", "tipo": "nota", "resumo": "Síntese dos principais temas debatidos na 3ª edição do PACTO, em Vitória/ES, e desdobramentos para o Portfólio Estratégico." }
-  ]
+  ],
+  "briefing_corregedor": [],
+  "integra_coger": [],
+  "coger_solutions": [],
+  "memoria_coger": [],
+  "coger_lab": [],
+  "correicao_em_foco": []
 }
 </script>
 
@@ -583,6 +736,20 @@ function init(){
   document.getElementById('formTarefa').addEventListener('submit', onSubmitTarefa);
   document.getElementById('formRadar').addEventListener('submit', onSubmitRadar);
   document.getElementById('formRadar').data.value = todayISO();
+  document.getElementById('btnExportarRadar').addEventListener('click', function(){ exportarProduto('radar_coger'); });
+
+  document.getElementById('formBriefing').addEventListener('submit', onSubmitBriefing);
+  document.getElementById('formBriefing').data.value = todayISO();
+  document.getElementById('btnExportarBriefing').addEventListener('click', function(){ exportarProduto('briefing_corregedor'); });
+
+  Object.keys(REGISTRO_CONFIGS).forEach(function(col){
+    var form = document.getElementById('form-'+col);
+    form.addEventListener('submit', onSubmitRegistro);
+    form.data.value = todayISO();
+  });
+  populaSelectsRegistro();
+
+  document.getElementById('inputImportUnidade').addEventListener('change', importarESmesclarUnidade);
 
   document.getElementById('filtroTarefaStatus').addEventListener('change', function(e){
     VIEW.tarefaFiltroStatus = e.target.value; renderTarefasTab();
@@ -607,6 +774,21 @@ function init(){
       saveDraft();
       renderRadar();
     }
+    if(e.target.classList && e.target.classList.contains('rg-in')){
+      var col = e.target.dataset.collection;
+      var item = STATE[col].find(function(x){ return x.id===e.target.dataset.id; });
+      if(!item) return;
+      item[e.target.dataset.field] = e.target.value;
+      saveDraft();
+      renderRegistroTab(col);
+    }
+    if(e.target.classList && e.target.classList.contains('bf-in')){
+      var b = STATE.briefing_corregedor.find(function(x){ return x.id===e.target.dataset.id; });
+      if(!b) return;
+      b[e.target.dataset.field] = e.target.value;
+      saveDraft();
+      renderBriefingTab();
+    }
   });
   document.addEventListener('click', function(e){
     if(e.target.classList && e.target.classList.contains('tf-del')){
@@ -624,7 +806,29 @@ function init(){
     if(e.target.classList && e.target.classList.contains('btn-marcar')){
       var id = e.target.dataset.id;
       var input = document.querySelector('.marcado-por-input[data-id="'+id+'"]');
-      marcarDecisaoTomada(id, input ? input.value.trim() : 'Corregedor');
+      var marcadoPor = input ? input.value.trim() : 'Corregedor';
+      if(e.target.dataset.tipo==='briefing'){
+        var txtInput = document.querySelector('.bf-texto-decisao-input[data-id="'+id+'"]');
+        marcarDecisaoBriefingTomada(id, marcadoPor, txtInput ? txtInput.value.trim() : '');
+      } else {
+        marcarDecisaoTomada(id, marcadoPor);
+      }
+    }
+    if(e.target.classList && e.target.classList.contains('rg-del')){
+      if(!confirm('Remover este registro?')) return;
+      var col = e.target.dataset.collection;
+      STATE[col] = STATE[col].filter(function(x){ return x.id!==e.target.dataset.id; });
+      saveDraft();
+      renderRegistroTab(col);
+    }
+    if(e.target.classList && e.target.classList.contains('bf-del')){
+      if(!confirm('Remover este briefing?')) return;
+      STATE.briefing_corregedor = STATE.briefing_corregedor.filter(function(b){ return b.id!==e.target.dataset.id; });
+      saveDraft();
+      renderBriefingTab();
+    }
+    if(e.target.classList && e.target.classList.contains('btn-export-produto')){
+      exportarProduto(e.target.dataset.collection);
     }
   });
 
@@ -638,6 +842,8 @@ function renderAll(){
   renderCockpit();
   renderTarefasTab();
   renderRadar();
+  renderBriefingTab();
+  Object.keys(REGISTRO_CONFIGS).forEach(renderRegistroTab);
   document.body.classList.toggle('modo-edicao', VIEW.editMode);
   document.body.classList.toggle('modo-leitura', !VIEW.editMode);
 }
@@ -668,6 +874,8 @@ function toggleModo(){
   document.body.classList.toggle('modo-leitura', !VIEW.editMode);
   renderTarefasTab();
   renderRadar();
+  renderBriefingTab();
+  Object.keys(REGISTRO_CONFIGS).forEach(renderRegistroTab);
   if(VIEW.tab==='detalhe' && VIEW.detailId) renderDetalhe(VIEW.detailId);
 }
 
@@ -750,7 +958,9 @@ function criarTarefa(dados){
 function renderTabCounts(){
   var elC = document.getElementById('tabCountCockpit');
   if(elC){
-    var n = STATE.projetos.filter(function(p){ return p.decisao_pendente && p.decisao_pendente.texto && !p.decisao_pendente.tomada; }).length;
+    var nProj = STATE.projetos.filter(function(p){ return p.decisao_pendente && p.decisao_pendente.texto && !p.decisao_pendente.tomada; }).length;
+    var nBrief = STATE.briefing_corregedor.filter(function(b){ return b.decisao_necessaria && !b.decisao.tomada; }).length;
+    var n = nProj + nBrief;
     elC.textContent = n>0 ? (n+' decisão(ões) pendente(s)') : '';
   }
   var elT = document.getElementById('tabCountTarefas');
@@ -762,18 +972,40 @@ function renderTabCounts(){
   if(elR){
     elR.textContent = STATE.radar_coger.length ? (STATE.radar_coger.length+' registro(s)') : '';
   }
+  var elB = document.getElementById('tabCountBriefing');
+  if(elB){
+    var nb = STATE.briefing_corregedor.filter(function(b){ return b.decisao_necessaria && !b.decisao.tomada; }).length;
+    elB.textContent = STATE.briefing_corregedor.length ? (STATE.briefing_corregedor.length+' registro(s)'+(nb>0?' · '+nb+' pendente(s)':'')) : '';
+  }
+  var contadorSimples = [
+    ['tabCountIntegraCoger','integra_coger'],
+    ['tabCountCogerSolutions','coger_solutions'],
+    ['tabCountMemoriaCoger','memoria_coger'],
+    ['tabCountCogerLab','coger_lab'],
+    ['tabCountCorreicaoEmFoco','correicao_em_foco']
+  ];
+  contadorSimples.forEach(function(par){
+    var el = document.getElementById(par[0]);
+    if(!el) return;
+    var arr = STATE[par[1]];
+    el.textContent = arr.length ? (arr.length+' registro(s)') : '';
+  });
 }
 function renderCockpit(){
   renderTabCounts();
-  var pendentes = STATE.projetos.filter(function(p){ return p.decisao_pendente && p.decisao_pendente.texto && !p.decisao_pendente.tomada; });
+  var pendentesProjetos = STATE.projetos.filter(function(p){ return p.decisao_pendente && p.decisao_pendente.texto && !p.decisao_pendente.tomada; })
+    .map(function(p){ return { tipo:'projeto', id:p.id, titulo:p.nome, texto:p.decisao_pendente.texto }; });
+  var pendentesBriefing = STATE.briefing_corregedor.filter(function(b){ return b.decisao_necessaria && !b.decisao.tomada; })
+    .map(function(b){ return { tipo:'briefing', id:b.id, titulo:'Briefing: '+b.titulo, texto:b.decisao_necessaria }; });
+  var pendentes = pendentesProjetos.concat(pendentesBriefing);
   var elDec = document.getElementById('decisoesPendentesList');
   if(pendentes.length===0){
     elDec.innerHTML = '<div class="empty-msg">Nenhuma decisão pendente no momento.</div>';
   } else {
     elDec.innerHTML = pendentes.map(function(p){
       return '<div class="decision-item">'
-        + '<div class="txt"><b>'+escapeHtml(p.nome)+'</b><br>'+escapeHtml(p.decisao_pendente.texto)+'</div>'
-        + marcarDecisaoHtml(p.id)
+        + '<div class="txt"><b>'+escapeHtml(p.titulo)+'</b><br>'+escapeHtml(p.texto)+'</div>'
+        + marcarDecisaoHtml(p.tipo, p.id)
         + '</div>';
     }).join('');
   }
@@ -798,10 +1030,11 @@ function renderCockpit(){
   });
 }
 
-function marcarDecisaoHtml(projetoId){
+function marcarDecisaoHtml(tipo, id){
   return '<div class="mark-row">'
-    + '<input type="text" class="marcado-por-input" data-id="'+projetoId+'" value="Corregedor" title="Marcado por">'
-    + '<button class="btn gold sm btn-marcar" data-id="'+projetoId+'" type="button">✅ Marcar como tomada</button>'
+    + '<input type="text" class="marcado-por-input" data-id="'+id+'" value="Corregedor" title="Marcado por">'
+    + (tipo==='briefing' ? '<input type="text" class="bf-texto-decisao-input" data-id="'+id+'" placeholder="O que foi decidido (opcional)" style="flex:1;border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12px">' : '')
+    + '<button class="btn gold sm btn-marcar" data-tipo="'+tipo+'" data-id="'+id+'" type="button">✅ Marcar como tomada</button>'
     + '</div>';
 }
 function marcarDecisaoTomada(projetoId, marcadoPor){
@@ -889,7 +1122,7 @@ function renderDetalhe(id){
     } else {
       decisaoBloco = '<div class="block"><div class="block-title">⚠️ Decisão pendente</div>'
         + '<p>'+escapeHtml(projeto.decisao_pendente.texto)+'</p>'
-        + marcarDecisaoHtml(projeto.id) + '</div>';
+        + marcarDecisaoHtml('projeto', projeto.id) + '</div>';
     }
   }
 
@@ -920,7 +1153,8 @@ function renderDetalhe(id){
 
   el.innerHTML = '<div class="detail-header"><div><div class="tipo-badge">'+tipoProjetoLabel(projeto.tipo)+'</div>'
     + '<h2 class="section-title">'+escapeHtml(projeto.nome)+'</h2></div>'
-    + '<span class="status-pill status-'+projeto.status+'">'+si.icon+' '+si.label+'</span></div>'
+    + '<div style="display:flex;align-items:center;gap:10px"><span class="status-pill status-'+projeto.status+'">'+si.icon+' '+si.label+'</span>'
+    + '<button class="btn ghost sm" id="btnExportarProjeto" type="button">📤 Exportar este projeto</button></div></div>'
     + '<h3 class="section-sub-title">📁 Dados do projeto</h3>'
     + camposHtml + decisaoBloco
     + '<h3 class="section-sub-title">🧭 Etapas planejadas</h3>'
@@ -936,6 +1170,8 @@ function renderDetalhe(id){
   if(formDet) formDet.addEventListener('submit', onSubmitDetalhe);
   var btnDel = document.getElementById('btnRemoverProjeto');
   if(btnDel) btnDel.addEventListener('click', function(){ removerProjeto(projeto.id); });
+  var btnExpProj = document.getElementById('btnExportarProjeto');
+  if(btnExpProj) btnExpProj.addEventListener('click', function(){ exportarProjetoUnico(projeto.id); });
   var formEtapa = document.getElementById('formEtapaProjeto');
   if(formEtapa) formEtapa.addEventListener('submit', onSubmitEtapaProjeto);
   var formHist = document.getElementById('formNovoHistorico');
@@ -1106,6 +1342,164 @@ function onSubmitRadar(e){
   saveDraft(); form.reset(); form.data.value = todayISO(); renderRadar();
 }
 
+/* ================= Produtos do Escritório (registros genéricos) ================= */
+/* Vocabulário de tipo/status extraído literalmente da Proposta v2 (seção 25 e descrições de cada produto). */
+var REGISTRO_CONFIGS = {
+  integra_coger: {
+    label: 'Integra Coger',
+    tipoOptions: [['problema_recorrente','Problema recorrente'],['boa_pratica','Boa prática compartilhável'],['redundancia','Redundância identificada'],['lacuna','Lacuna identificada'],['padronizacao','Oportunidade de padronização'],['projeto_transversal','Projeto que depende de várias unidades']],
+    statusOptions: [['identificado','Identificado'],['em_analise','Em análise'],['implementado','Implementado']]
+  },
+  coger_solutions: {
+    label: 'Coger Solutions',
+    tipoOptions: [['gargalo','Gargalo operacional'],['fila_crescente','Fila/estoque crescente'],['procedimento_lento','Procedimento demorado'],['benchmark','Como outras corregedorias resolvem'],['solucao_tecnologica','Possível solução tecnológica']],
+    statusOptions: [['em_analise','Em análise'],['solucao_proposta','Solução proposta'],['implementado','Implementado']]
+  },
+  memoria_coger: {
+    label: 'Memória Coger',
+    tipoOptions: [['wiki','Wiki Coger'],['decisao_paradigmatica','Decisão paradigmática'],['boa_pratica','Banco de boas práticas'],['licao_aprendida','Lição aprendida'],['glossario','Glossário técnico'],['jurisprudencia','Coletânea de jurisprudência'],['modelo','Banco de modelos'],['caso_historico','Caso histórico'],['especialista','Mapeamento de especialista'],['historia_oral','História oral']],
+    statusOptions: [['aberto','Em elaboração'],['concluido','Disponível']]
+  },
+  coger_lab: {
+    label: 'Coger Lab',
+    tipoOptions: [['ia','Inteligência artificial'],['ciencia_dados','Ciência de dados'],['automacao','Automação'],['analise_preditiva','Análise preditiva'],['dashboards','Dashboards'],['novo_modelo_gestao','Novo modelo de gestão'],['transformacao_digital','Transformação digital'],['melhoria_processos','Melhoria de processos']],
+    statusOptions: [['ideacao','Ideação'],['prototipagem','Prototipagem'],['teste','Teste'],['expansao','Expansão'],['encerrado','Encerrado']]
+  },
+  correicao_em_foco: {
+    label: 'Correição em Foco',
+    tipoOptions: [['clinica_casos','Clínica de casos'],['webinar','Webinar'],['palestra','Palestra'],['estudo_caso','Estudo de caso'],['simulacao','Simulação'],['onboarding','Onboarding'],['mentoria','Mentoria'],['intercambio','Intercâmbio entre Subcorregedorias'],['encontro_tecnico','Encontro técnico']],
+    statusOptions: [['planejado','Planejado'],['realizado','Realizado']]
+  }
+};
+function populaSelectsRegistro(){
+  Object.keys(REGISTRO_CONFIGS).forEach(function(col){
+    var cfg = REGISTRO_CONFIGS[col];
+    var form = document.getElementById('form-'+col);
+    if(!form) return;
+    if(form.tipo.options.length===0) form.tipo.innerHTML = cfg.tipoOptions.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
+    if(form.status.options.length===0) form.status.innerHTML = cfg.statusOptions.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
+  });
+}
+function optionLabel(options, value){
+  var found = options.find(function(o){ return o[0]===value; });
+  return found ? found[1] : value;
+}
+function renderRegistroTab(col){
+  renderTabCounts();
+  var cfg = REGISTRO_CONFIGS[col];
+  var el = document.getElementById('list-'+col);
+  if(!el) return;
+  var itens = STATE[col].slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
+  el.innerHTML = itens.length ? itens.map(function(it){ return renderRegistroLinhaHtml(col, cfg, it); }).join('') : '<div class="empty-msg">Nenhum registro ainda.</div>';
+}
+function renderRegistroLinhaHtml(col, cfg, it){
+  if(VIEW.editMode){
+    return '<div class="log-item log-edit">'
+      + '<div class="rd-row">'
+      + '<input type="date" class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="data" value="'+it.data+'">'
+      + '<select class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="tipo">'
+        + cfg.tipoOptions.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===it.tipo?' selected':'')+'>'+o[1]+'</option>'; }).join('')
+      + '</select>'
+      + '<select class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="status">'
+        + cfg.statusOptions.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===it.status?' selected':'')+'>'+o[1]+'</option>'; }).join('')
+      + '</select>'
+      + '<button class="btn danger sm rg-del" data-collection="'+col+'" data-id="'+it.id+'" type="button">🗑</button>'
+      + '</div>'
+      + '<input type="text" class="rg-in rd-titulo" data-collection="'+col+'" data-id="'+it.id+'" data-field="titulo" value="'+escapeHtml(it.titulo)+'" placeholder="Título">'
+      + '<input type="text" class="rg-in rg-extra" data-collection="'+col+'" data-id="'+it.id+'" data-field="responsavel" value="'+escapeHtml(it.responsavel)+'" placeholder="Responsável">'
+      + '<textarea class="rg-in rd-resumo" data-collection="'+col+'" data-id="'+it.id+'" data-field="descricao" rows="2" placeholder="Descrição">'+escapeHtml(it.descricao)+'</textarea>'
+      + '</div>';
+  }
+  return '<div class="log-item"><div class="log-top"><span class="chip">'+escapeHtml(optionLabel(cfg.tipoOptions, it.tipo))+'</span><span class="chip">'+escapeHtml(optionLabel(cfg.statusOptions, it.status))+'</span><span>'+formatDatePT(it.data)+'</span></div>'
+    + '<b>'+escapeHtml(it.titulo)+'</b>'
+    + (it.responsavel ? '<div class="tf-sub">Responsável: '+escapeHtml(it.responsavel)+'</div>' : '')
+    + (it.descricao ? '<div>'+escapeHtml(it.descricao)+'</div>' : '')
+    + '</div>';
+}
+function onSubmitRegistro(e){
+  e.preventDefault();
+  var form = e.target;
+  var col = form.dataset.collection;
+  STATE[col].push({
+    id: uid(col.slice(0,3)), data: form.data.value||todayISO(), titulo: form.titulo.value.trim(),
+    tipo: form.tipo.value, status: form.status.value, responsavel: form.responsavel.value.trim(), descricao: form.descricao.value.trim()
+  });
+  saveDraft(); form.reset(); form.data.value = todayISO(); renderRegistroTab(col);
+}
+
+/* ================= Briefing do Corregedor ================= */
+function renderBriefingTab(){
+  renderTabCounts();
+  var el = document.getElementById('list-briefing_corregedor');
+  var itens = STATE.briefing_corregedor.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
+  el.innerHTML = itens.length ? itens.map(renderBriefingCardHtml).join('') : '<div class="empty-msg">Nenhum briefing registrado ainda.</div>';
+}
+function bfCampoEdit(id, field, label, value){
+  return '<label class="bf-campo-label">'+label+'</label>'
+    + '<textarea class="bf-in" data-id="'+id+'" data-field="'+field+'" rows="2">'+escapeHtml(value||'')+'</textarea>';
+}
+function bfCampoRead(label, value){
+  if(!value) return '';
+  return '<div class="bf-campo-read"><b>'+label+':</b> '+escapeHtml(value)+'</div>';
+}
+function renderBriefingCardHtml(b){
+  var decisaoBloco = '';
+  if(b.decisao_necessaria){
+    if(b.decisao.tomada){
+      decisaoBloco = '<div class="bf-decisao ok">✅ Decisão tomada por '+escapeHtml(b.decisao.marcado_por||'')+' em '+formatDatePT(b.decisao.data_marcacao, true)+(b.decisao.texto_decisao?': "'+escapeHtml(b.decisao.texto_decisao)+'"':'')+'</div>';
+    } else {
+      decisaoBloco = '<div class="bf-decisao pend"><b>⚠️ Decisão necessária:</b> '+escapeHtml(b.decisao_necessaria)+marcarDecisaoHtml('briefing', b.id)+'</div>';
+    }
+  }
+  if(VIEW.editMode){
+    return '<div class="block bf-card">'
+      + '<div class="rd-row">'
+      + '<input type="date" class="bf-in" data-id="'+b.id+'" data-field="data" value="'+b.data+'">'
+      + '<input type="text" class="bf-in" data-id="'+b.id+'" data-field="autor" value="'+escapeHtml(b.autor)+'" placeholder="Autor" style="max-width:160px">'
+      + '<button class="btn danger sm bf-del" data-id="'+b.id+'" type="button">🗑</button>'
+      + '</div>'
+      + '<input type="text" class="bf-in rd-titulo" data-id="'+b.id+'" data-field="titulo" value="'+escapeHtml(b.titulo)+'" placeholder="Título do briefing">'
+      + bfCampoEdit(b.id,'problema','Problema',b.problema)
+      + bfCampoEdit(b.id,'contexto','Contexto',b.contexto)
+      + bfCampoEdit(b.id,'evidencias','Evidências',b.evidencias)
+      + bfCampoEdit(b.id,'alternativas','Alternativas',b.alternativas)
+      + bfCampoEdit(b.id,'riscos','Riscos',b.riscos)
+      + bfCampoEdit(b.id,'recomendacao','Recomendação',b.recomendacao)
+      + bfCampoEdit(b.id,'decisao_necessaria','Decisão necessária',b.decisao_necessaria)
+      + '</div>';
+  }
+  return '<div class="block bf-card"><div class="log-top"><span>'+formatDatePT(b.data)+'</span><span>· '+escapeHtml(b.autor||'')+'</span></div>'
+    + '<b style="font-size:15px">'+escapeHtml(b.titulo)+'</b>'
+    + bfCampoRead('Problema', b.problema) + bfCampoRead('Contexto', b.contexto) + bfCampoRead('Evidências', b.evidencias)
+    + bfCampoRead('Alternativas', b.alternativas) + bfCampoRead('Riscos', b.riscos) + bfCampoRead('Recomendação', b.recomendacao)
+    + decisaoBloco
+    + '</div>';
+}
+function marcarDecisaoBriefingTomada(id, marcadoPor, textoDecisao){
+  var b = STATE.briefing_corregedor.find(function(x){ return x.id===id; });
+  if(!b || b.decisao.tomada) return;
+  marcadoPor = marcadoPor || 'Corregedor';
+  b.decisao.tomada = true;
+  b.decisao.data_marcacao = new Date().toISOString();
+  b.decisao.marcado_por = marcadoPor;
+  b.decisao.texto_decisao = textoDecisao || '';
+  saveDraft();
+  renderBriefingTab();
+  renderCockpit();
+}
+function onSubmitBriefing(e){
+  e.preventDefault();
+  var form = e.target;
+  STATE.briefing_corregedor.push({
+    id: uid('bf'), data: form.data.value||todayISO(), autor: form.autor.value.trim()||DEFAULT_AUTOR, titulo: form.titulo.value.trim(),
+    problema: form.problema.value.trim(), contexto: form.contexto.value.trim(), evidencias: form.evidencias.value.trim(),
+    alternativas: form.alternativas.value.trim(), riscos: form.riscos.value.trim(), recomendacao: form.recomendacao.value.trim(),
+    decisao_necessaria: form.decisao_necessaria.value.trim(),
+    decisao: { tomada:false, texto_decisao:'', data_marcacao:null, marcado_por:null }
+  });
+  saveDraft(); form.reset(); form.data.value = todayISO(); renderBriefingTab(); renderCockpit();
+}
+
 /* ================= Persistência ================= */
 function exportarJsonCompleto(){
   downloadFile(JSON.stringify(STATE, null, 2), 'painel-coger-'+todayISO()+'.json', 'application/json');
@@ -1122,6 +1516,8 @@ function importarJsonCompleto(e){
       STATE = parsed;
       if(!STATE.tarefas) STATE.tarefas = [];
       if(!STATE.radar_coger) STATE.radar_coger = [];
+      if(!STATE.briefing_corregedor) STATE.briefing_corregedor = [];
+      Object.keys(REGISTRO_CONFIGS).forEach(function(col){ if(!STATE[col]) STATE[col] = []; });
       saveDraft();
       renderAll();
       switchTab('cockpit');
@@ -1144,6 +1540,74 @@ function gerarHtmlAtualizado(){
   if(banner) banner.classList.add('hidden');
   var html = '<!DOCTYPE html>\n' + docClone.outerHTML;
   downloadFile(html, 'painel-coger-atualizado-'+todayISO()+'.html', 'text/html');
+}
+
+/* ================= Exportação/mesclagem seletiva por projeto ou produto ================= */
+/* Cada responsável recebe o arquivo, edita só o seu card/aba (Modo Edição) e exporta um .json
+   reduzido daquele item. O Assessor importa esse arquivo (card "Importar produto/projeto") e
+   só aquele item é atualizado no painel-mestre — os demais permanecem intocados. */
+function exportarProjetoUnico(projetoId){
+  var projeto = findProjeto(projetoId);
+  if(!projeto) return;
+  var tarefasVinculadas = STATE.tarefas.filter(function(t){ return t.projeto_relacionado===projetoId; });
+  var envelope = {
+    meta: { tipo_exportado: 'projeto', id: projetoId, exportado_em: new Date().toISOString(), exportado_por: DEFAULT_AUTOR },
+    dados: projeto,
+    tarefas_vinculadas: tarefasVinculadas
+  };
+  downloadFile(JSON.stringify(envelope, null, 2), 'projeto-'+projetoId+'-'+todayISO()+'.json', 'application/json');
+}
+function exportarProduto(col){
+  var cfg = REGISTRO_CONFIGS[col];
+  var label = cfg ? cfg.label : (col==='radar_coger' ? 'RADAR Coger' : col==='briefing_corregedor' ? 'Briefing do Corregedor' : col);
+  var envelope = {
+    meta: { tipo_exportado: col, exportado_em: new Date().toISOString(), exportado_por: DEFAULT_AUTOR },
+    dados: STATE[col]
+  };
+  downloadFile(JSON.stringify(envelope, null, 2), col+'-'+todayISO()+'.json', 'application/json');
+}
+function importarESmesclarUnidade(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var parsed = JSON.parse(ev.target.result);
+      var tipo = parsed.meta && parsed.meta.tipo_exportado;
+      if(!tipo) throw new Error('Arquivo não identifica o tipo exportado (meta.tipo_exportado ausente). Use um arquivo gerado pelos botões "Exportar este projeto/produto".');
+      if(tipo==='projeto'){
+        var novoProjeto = parsed.dados;
+        if(!novoProjeto || !novoProjeto.id) throw new Error('Dados do projeto inválidos.');
+        var existente = findProjeto(novoProjeto.id);
+        var msg = existente
+          ? 'Importar o projeto "'+novoProjeto.nome+'"? Isso substituirá os dados desse projeto específico no seu painel-mestre. Os demais projetos e abas não são afetados.'
+          : 'Este projeto ("'+novoProjeto.nome+'") ainda não existe no seu painel — será adicionado ao Portfólio. Continuar?';
+        if(!confirm(msg)) return;
+        var idx = STATE.projetos.findIndex(function(p){ return p.id===novoProjeto.id; });
+        if(idx>=0) STATE.projetos[idx] = novoProjeto; else STATE.projetos.push(novoProjeto);
+        var tarefasVinc = Array.isArray(parsed.tarefas_vinculadas) ? parsed.tarefas_vinculadas : [];
+        tarefasVinc.forEach(function(t){
+          var ti = STATE.tarefas.findIndex(function(x){ return x.id===t.id; });
+          if(ti>=0) STATE.tarefas[ti] = t; else STATE.tarefas.push(t);
+        });
+        saveDraft(); renderAll();
+        alert('Projeto "'+novoProjeto.nome+'" importado/atualizado com sucesso ('+tarefasVinc.length+' etapa(s) vinculada(s)). Nenhum outro projeto foi alterado.');
+      } else if(tipo==='radar_coger' || tipo==='briefing_corregedor' || REGISTRO_CONFIGS[tipo]){
+        if(!Array.isArray(parsed.dados)) throw new Error('Dados do produto inválidos (esperava uma lista de registros).');
+        var label = REGISTRO_CONFIGS[tipo] ? REGISTRO_CONFIGS[tipo].label : (tipo==='radar_coger'?'RADAR Coger':'Briefing do Corregedor');
+        if(!confirm('Importar os dados de "'+label+'"? Isso substituirá TODOS os registros atuais dessa aba pelos do arquivo importado. As demais abas não são afetadas.')) return;
+        STATE[tipo] = parsed.dados;
+        saveDraft(); renderAll();
+        alert('"'+label+'" atualizado com '+parsed.dados.length+' registro(s).');
+      } else {
+        throw new Error('Tipo exportado desconhecido: "'+tipo+'".');
+      }
+    }catch(err){
+      alert('Falha ao importar: '+err.message);
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
 }
 
 document.addEventListener('DOMContentLoaded', init);
