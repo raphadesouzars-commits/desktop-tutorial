@@ -67,6 +67,8 @@ section.view.active{display:block}
 .status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
 .status-badge.disponivel{background:var(--green-bg);color:var(--green)}
 .status-badge.pendente{background:var(--amber-bg);color:var(--amber)}
+.status-badge.parcial{background:var(--amber-bg);color:var(--amber)}
+.progresso-nota{background:var(--surface-alt);border:1px solid var(--border);border-left:3px solid var(--amber);border-radius:8px;padding:10px 14px;font-size:12.5px;color:var(--muted);margin-bottom:20px}
 
 .apostila-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px}
 .apostila-meta{font-size:12.5px;color:var(--muted-2);margin-bottom:20px}
@@ -104,7 +106,7 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
     <div class="tab-switch" id="tabSwitch" style="margin-top:14px">
       <button class="tab-btn" data-tab="1" type="button"><span class="t-label">Apostila 1 — Consolidação de Normas</span><span class="t-count" id="count1"></span></button>
       <button class="tab-btn" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count" id="count2"></span></button>
-      <button class="tab-btn pendente" data-tab="3" type="button"><span class="t-label">Apostila 3 — Legislação Complementar</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn" data-tab="3" type="button"><span class="t-label">Apostila 3 — Legislação Complementar</span><span class="t-count" id="count3"></span></button>
       <button class="tab-btn pendente" data-tab="4" type="button"><span class="t-label">Apostila 4 — Jurisprudência</span><span class="t-count">Pendente</span></button>
       <button class="tab-btn pendente" data-tab="5" type="button"><span class="t-label">Apostila 5 — AGU, CGU e Dasp</span><span class="t-count">Pendente</span></button>
     </div>
@@ -135,8 +137,13 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
   </section>
 
   <section id="view-3" class="view">
-    <div class="apostila-header"><h2 class="section-title">Apostila nº 3 — Legislação Complementar</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
-    <div class="pendente-card"><b>Ainda não processada</b>Demais fontes do Direito Administrativo Disciplinar (Constituição Federal, Código Penal, Código de Processo Penal, Lei nº 9.784/1999, Código Civil, Código de Processo Civil, convenções internacionais e outras normas correlatas) — aprox. 561 mil palavras, a maior das cinco apostilas depois da nº 5.</div>
+    <div class="apostila-header">
+      <div><h2 class="section-title" id="tituloApostila3"></h2></div>
+      <span class="status-badge parcial">🔶 Em elaboração</span>
+    </div>
+    <p class="apostila-meta" id="metaApostila3"></p>
+    <div class="progresso-nota" id="progressoApostila3"></div>
+    <div id="conteudoApostila3"></div>
   </section>
 
   <section id="view-4" class="view">
@@ -249,6 +256,47 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
         ]
       }
     ]
+  },
+  "apostila3": {
+    "titulo": "Apostila nº 3 — Legislação Complementar",
+    "edicao": "Maio de 2026",
+    "prefixoItem": "Tópico ",
+    "progresso": "🔶 Em elaboração — 13 dos 26 tópicos do índice já resumidos (Tópicos 1 a 13, as fontes gerais e as normas orgânicas/procedimentais mais centrais à atividade correcional). Faltam os Tópicos 14 a 26 (Mandado de Segurança, Jornada de Trabalho, PGD, Diárias e Passagens, licenças, dano a bem público, cargos em comissão, Processo Administrativo de Responsabilização, Ética Pública e normas já revogadas), a serem incluídos nas próximas atualizações.",
+    "secoes": [
+      {
+        "titulo": "Fontes Gerais e Convenções Internacionais",
+        "verbetes": [
+          {"numero":"1","titulo":"Fontes do Direito Administrativo Disciplinar","ref":"p. 40-117","resumo":"Reúne os diplomas gerais que fundamentam o Direito Administrativo Disciplinar: a Constituição Federal, promulgada em 5 de outubro de 1988 (arts. 1º, 5º — incisos sobre legalidade, devido processo legal, ampla defesa e contraditório, individualização da pena e vedação de provas ilícitas — e 37, entre outros, sobre os princípios da Administração Pública); o Código Penal (Decreto-Lei nº 2.848, de 7 de dezembro de 1940), com os crimes contra a Administração Pública praticados por funcionário público (peculato, corrupção, prevaricação, condescendência criminosa) e as regras gerais de dolo, culpa e erro; o Código de Processo Penal (Decreto-Lei nº 3.689, de 3 de outubro de 1941), subsidiário na produção de provas, oitivas e perícias do PAD; a Lei nº 9.784, de 29 de janeiro de 1999, que rege o processo administrativo federal subsidiariamente ao PAD (prazos, princípios, impedimento e suspeição); o Código Civil (Lei nº 10.406, de 10 de janeiro de 2002), aplicável à responsabilidade civil e à prescrição de pretensões patrimoniais; e o Código de Processo Civil (Lei nº 13.105, de 16 de março de 2015), subsidiário nos aspectos processuais não regulados pela Lei nº 8.112, de 1990, ou pela Lei nº 9.784, de 1999."},
+          {"numero":"2","titulo":"Convenções Internacionais","ref":"p. 118-175","resumo":"Reúne os tratados internacionais de combate à corrupção internalizados pelo Brasil e relevantes à atuação correcional: a Convenção sobre o Combate da Corrupção de Funcionários Públicos Estrangeiros em Transações Comerciais Internacionais, da OCDE, de 17 de dezembro de 1997 (promulgada pelo Decreto nº 3.678, de 30 de novembro de 2000); a Convenção Interamericana contra a Corrupção, da OEA, de 29 de março de 1996 (Decreto nº 4.410, de 7 de outubro de 2002); e a Convenção das Nações Unidas contra a Corrupção, de 31 de outubro de 2003 (Decreto nº 5.687, de 31 de janeiro de 2006). Servem de referência principiológica para a interpretação de normas internas sobre integridade, prevenção à corrupção e cooperação internacional em investigações."}
+        ]
+      },
+      {
+        "titulo": "Ilícitos, Estrutura Correcional e Procedimentos",
+        "verbetes": [
+          {"numero":"3","titulo":"Normas Definidoras de Ilícitos","ref":"p. 176-221","resumo":"Reúne as leis que tipificam condutas com repercussão disciplinar direta: a Lei nº 8.137, de 27 de dezembro de 1990, que define os crimes contra a ordem tributária, econômica e as relações de consumo; a Lei nº 8.429, de 2 de junho de 1992, sobre atos de improbidade administrativa (enriquecimento ilícito, dano ao erário e atentado aos princípios da administração pública), com sanções que se somam, sem se confundir, à penalidade disciplinar; a Lei nº 9.613, de 3 de março de 1998, sobre lavagem de dinheiro; a Lei nº 13.869, de 5 de setembro de 2019, sobre os crimes de abuso de autoridade, que também baliza os limites de atuação da própria comissão de inquérito; e a Portaria MPDG/SEGEP nº 6, de 15 de junho de 2018, sobre o impedimento ao exercício de administração e gerência de sociedade privada por servidor público federal."},
+          {"numero":"4","titulo":"Normas Orgânicas do MPF, da AGU, da CGU, da Coger-MF e da Coger","ref":"p. 222-378","resumo":"Reúne as normas que estruturam os órgãos com atuação correcional e de controle correlata à RFB: as leis orgânicas da AGU (Lei Complementar nº 73, de 10 de fevereiro de 1993) e do Ministério Público Federal (Lei Complementar nº 75, de 20 de maio de 1993); as leis de organização básica da Presidência da República e dos Ministérios (Lei nº 13.844, de 18 de junho de 2019, e Lei nº 14.600, de 19 de junho de 2023); o Decreto nº 2.331, de 1º de outubro de 1997, sobre a Corregedoria-Geral da então SRF; o Decreto nº 5.480, de 30 de junho de 2005, que institui o Sistema de Correição do Poder Executivo Federal; e uma extensa série de portarias internas da Coger que criam seus grupos nacionais de trabalho — Investigação (Portaria Coger nº 168, de 2019), Pareceristas (nº 171, de 2019), Comissões (nº 128, de 2020), Investigações Especiais (nº 41, de 2023), Tecnologia da Informação (nº 42, de 2023), Controle da Atividade Correcional (nº 50, de 2023) e Subcorregedorias (nº 61, de 2023) —, além do Integritas, núcleo de prevenção ao assédio e à discriminação instituído pela Portaria Coger nº 590, de 11 de abril de 2024."},
+          {"numero":"5","titulo":"Normas Procedimentais da Atuação Correcional","ref":"p. 379-549","resumo":"O tópico mais extenso e operacional da apostila, reunindo as normas que regulam o dia a dia dos procedimentos correcionais: o Decreto nº 5.480, de 2005, e a Portaria Normativa CGU nº 27, de 11 de outubro de 2022 (referência central para institutos já tratados na Apostila nº 1, como a admissibilidade, o TAC e os procedimentos investigativos); as portarias que criam os sistemas informatizados obrigatórios de gestão de processos disciplinares — CGU-PAD (Portaria CGU nº 1.043, de 24 de julho de 2007) e ePAD (Portaria CGU/CRG nº 2.463, de 19 de outubro de 2020); a Instrução Normativa CGU nº 24, de 3 de agosto de 2023, sobre critérios de priorização de apurações; e portarias internas da Coger sobre convocação de servidores para comissões (Portaria Coger nº 23, de 2014), tratamento de evidências e cadeia de custódia (Portaria Coger nº 897, de 2024), critérios de priorização (Portaria Coger nº 372, de 2024) e uso de matriz de responsabilização (Ordem de Serviço Coger nº 1, de 25 de junho de 2021)."},
+          {"numero":"6","titulo":"Normas Internas da RFB e da Carreira TARFB","ref":"p. 550-631","resumo":"Reúne as normas sobre a Carreira Tributária e Aduaneira da Receita Federal do Brasil (Lei nº 10.593, de 6 de dezembro de 2002, e Lei nº 11.457, de 16 de março de 2007), normas de segurança institucional e da informação (Portaria SRF nº 1.700, de 12 de dezembro de 2003, e Portaria SRF nº 450, de 28 de abril de 2004), regras de remoção da carreira (Portaria RFB nº 340, de 14 de agosto de 2023), tratamento de dados de acesso restrito e termo de confidencialidade (Portaria RFB nº 405, de 25 de março de 2024) e regras sobre atuação de agentes públicos da RFB em redes sociais e mídias digitais (Portaria RFB nº 660, de 11 de março de 2026) — normas de perfil funcional que frequentemente aparecem como pano de fundo de apurações envolvendo vazamento de informação, uso irregular de sistemas ou conduta em mídias sociais."}
+        ]
+      },
+      {
+        "titulo": "Sigilo, Patrimônio e Acesso a Informações",
+        "verbetes": [
+          {"numero":"7","titulo":"Conflito de Interesses","ref":"p. 632-662","resumo":"A Lei nº 12.813, de 16 de maio de 2013, é a norma central sobre conflito de interesses no exercício de cargo ou emprego do Poder Executivo federal, definindo as situações de conflito (efetivo e potencial) e os impedimentos posteriores ao exercício do cargo (quarentena). É regulamentada, quanto à consulta prévia e ao pedido de autorização para atividade privada, pela Portaria Interministerial MPOG/CGU nº 333, de 19 de setembro de 2013, e pela Portaria CGU nº 1.911, de 4 de outubro de 2013 (competências para apreciar consultas e julgar recursos). A Resolução Interpretativa CEP nº 8, de 25 de setembro de 2003, identifica situações que suscitam conflito de interesses, e a Portaria RFB nº 444, de 23 de março de 2015, indica atividades incompatíveis com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil."},
+          {"numero":"8","titulo":"Sigilo Fiscal","ref":"p. 663-692","resumo":"O art. 198 do Código Tributário Nacional (Lei nº 5.172, de 25 de outubro de 1966) veda a divulgação de informações sobre a situação econômica ou financeira do sujeito passivo obtidas em razão do ofício, ressalvado o fornecimento a autoridade administrativa no interesse da Administração, desde que comprovada a instauração de processo — base legal para o compartilhamento de dados sigilosos com a atividade correcional. O Decreto nº 10.209, de 22 de janeiro de 2020, e a Portaria RFB nº 2.344, de 24 de março de 2011, disciplinam a requisição e o acesso a essas informações; a Portaria RFB nº 3.541, de 7 de outubro de 2011, aprova o Manual do Sigilo Fiscal da RFB; e a Portaria RFB nº 551, de 30 de abril de 2013, trata do tratamento de expedientes de terceiros que solicitem dados protegidos por sigilo fiscal."},
+          {"numero":"9","titulo":"Sigilo Bancário","ref":"p. 693-708","resumo":"A Lei Complementar nº 105, de 10 de janeiro de 2001, disciplina o sigilo das operações de instituições financeiras e as hipóteses em que pode ser afastado, inclusive por requisição da RFB no exercício de sua competência fiscalizatória. O Decreto nº 3.724, de 10 de janeiro de 2001, regulamenta a requisição, o acesso e o uso dessas informações pela RFB, e a Portaria RFB nº 2.047, de 26 de novembro de 2014, dispõe sobre a Requisição de Informações sobre Movimentação Financeira (RMF) por ele instituída — instrumento eventualmente necessário à instrução de procedimentos correcionais com apuração patrimonial."},
+          {"numero":"10","titulo":"Análise Patrimonial e Declaração de Bens e Rendimentos","ref":"p. 709-726","resumo":"A Lei nº 8.730, de 10 de novembro de 1993, estabelece a obrigatoriedade da declaração de bens e rendas para o exercício de cargos, empregos e funções públicas, hoje operacionalizada pelo Sistema Eletrônico de Informações Patrimoniais e de Conflito de Interesses (e-Patri), regido pela Portaria Normativa CGU nº 10, de 13 de maio de 2022, e pelo Decreto nº 10.571, de 9 de dezembro de 2020, que trata da apresentação e análise das declarações de bens e de situações que possam gerar conflito de interesses. No âmbito interno, a Portaria Coger-MF nº 26, de 30 de outubro de 2013, e a Portaria Coger nº 32, de 26 de abril de 2016, regulamentam a matéria na RFB — normas centrais para a Sindicância Patrimonial (Sinpa) tratada na Apostila nº 1."},
+          {"numero":"11","titulo":"Acesso a Informações","ref":"p. 727-783","resumo":"A Lei nº 12.527, de 18 de novembro de 2011 (Lei de Acesso à Informação), regula o acesso a informações públicas e classifica seus graus de sigilo, sendo regulamentada pelo Decreto nº 7.724, de 16 de maio de 2012; o Decreto nº 7.845, de 14 de novembro de 2012, disciplina o credenciamento de segurança e o tratamento de informação classificada; e a Portaria RFB nº 1.277, de 9 de julho de 2012, delega competência para classificação de informação sigilosa no grau reservado. Somam-se normas mais antigas sobre expedição de certidões para defesa de direitos (Lei nº 9.051, de 18 de maio de 1995) e sobre gratuidade de pedidos de informação para instruir defesa ou denúncia (Lei nº 9.265, de 12 de fevereiro de 1996) — relevantes ao direito de acesso do investigado e de terceiros aos autos do PAD, já tratado sob a ótica correcional na Nota Técnica Coger nº 2021/14 (Apostila nº 1)."}
+        ]
+      },
+      {
+        "titulo": "Integridade e Normas Incidentais",
+        "verbetes": [
+          {"numero":"12","titulo":"Assédios e Discriminação","ref":"p. 784-823","resumo":"A Lei nº 14.540, de 3 de abril de 2023, institui o Programa de Prevenção e Enfrentamento ao Assédio Sexual e demais Crimes contra a Dignidade Sexual na administração pública; o Decreto nº 12.122, de 30 de julho de 2024, e a Portaria MGI nº 6.719, de 13 de setembro de 2024, instituem, respectivamente, o Programa e o Plano Federal de Prevenção e Enfrentamento do Assédio e da Discriminação. No âmbito próprio, a Portaria MF nº 201, de 31 de janeiro de 2025, e a Portaria RFB nº 575, de 9 de setembro de 2025, aprovam os planos correspondentes do Ministério da Fazenda e da RFB — base normativa direta do Integritas, núcleo da Coger criado pela Portaria Coger nº 590, de 2024 (Tópico 4)."},
+          {"numero":"13","titulo":"Normas de Interesse Incidental para o Direito Administrativo Disciplinar","ref":"p. 824-873","resumo":"Reúne normas gerais frequentemente invocadas de forma incidental na instrução do PAD: a Lei de Introdução às Normas do Direito Brasileiro (Decreto-Lei nº 4.657, de 4 de setembro de 1942), sobre vigência, eficácia e interpretação das normas; o Decreto-Lei nº 200, de 25 de fevereiro de 1967, sobre a organização da Administração Federal; o Estatuto da Advocacia (Lei nº 8.906, de 4 de julho de 1994), quanto às prerrogativas do procurador do indiciado; a Lei nº 9.296, de 24 de julho de 1996, sobre interceptação telefônica; a Lei nº 9.800, de 26 de maio de 1999, sobre transmissão eletrônica de atos processuais; e o Decreto nº 20.910, de 6 de janeiro de 1932, que regula a prescrição quinquenal contra a Fazenda Pública."}
+        ]
+      }
+    ]
   }
 }
 </script>
@@ -279,6 +327,8 @@ function renderApostila(n){
   document.getElementById('metaApostila'+n).textContent = 'Edição: ' + apostila.edicao;
   var totalVerbetes = apostila.secoes.reduce(function(sum, s){ return sum + s.verbetes.length; }, 0);
   document.getElementById('count'+n).textContent = totalVerbetes + ' verbetes';
+  var progressoEl = document.getElementById('progressoApostila'+n);
+  if(progressoEl){ progressoEl.textContent = apostila.progresso || ''; progressoEl.classList.toggle('hidden', !apostila.progresso); }
 
   var prefixo = (apostila.prefixoItem !== undefined) ? apostila.prefixoItem : 'Item ';
   var el = document.getElementById('conteudoApostila'+n);
