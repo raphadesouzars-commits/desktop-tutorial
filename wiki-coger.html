@@ -1,0 +1,298 @@
+<title>Wiki Coger</title>
+<style>
+:root{
+  --navy-900:#0b1830;
+  --navy-800:#122140;
+  --navy-700:#1a2d52;
+  --navy-600:#22396a;
+  --gold:#c9a13b;
+  --gold-light:#d9b654;
+  --gold-100:#f5ecd4;
+  --bg:#f4f5f7;
+  --surface:#ffffff;
+  --surface-alt:#fbfbfc;
+  --text:#1b2333;
+  --muted:#4b5468;
+  --muted-2:#8792a3;
+  --border:#e2e5ec;
+  --green:#2f7a4f;
+  --green-bg:#e7f4ec;
+  --amber:#c9821a;
+  --amber-bg:#fbf1e0;
+  --red:#b5342a;
+  --red-bg:#f8e6e3;
+  --font-display:"Georgia",serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --radius:12px;
+  --shadow:0 1px 2px rgba(16,24,40,.04),0 4px 14px rgba(16,24,40,.06);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-weight:700;letter-spacing:.01em;margin:0}
+button,input,select,textarea{font-family:inherit;color:inherit}
+button{cursor:pointer}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px 60px}
+.hidden{display:none!important}
+
+header.hero{background:linear-gradient(120deg,var(--navy-900) 0%,var(--navy-700) 55%,var(--navy-600) 100%);color:#fff;padding:30px 0 22px;position:relative;overflow:hidden}
+header.hero::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 26px);pointer-events:none}
+.hero-inner{max-width:1180px;margin:0 auto;padding:0 20px;position:relative}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;color:var(--gold-light);font-weight:600;margin:0 0 8px}
+.hero-top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:20px}
+.brand-title{font-family:var(--font-display);font-size:28px;font-weight:700;margin:0 0 4px}
+.brand-sub{margin:0;color:#c7d0e3;font-size:13.5px;max-width:640px}
+.search-row{display:flex;gap:10px;flex-wrap:wrap}
+.search-row input{flex:1;min-width:220px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:8px;padding:10px 14px;font-size:13.5px}
+.search-row input::placeholder{color:#b9c3da}
+.search-row input:focus{outline:none;border-color:var(--gold-light)}
+
+.tab-switch{display:flex;flex-wrap:wrap;gap:10px}
+.tab-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;cursor:pointer;transition:.15s;text-align:left;color:#dfe4ee;font-weight:700;font-size:12px;flex:1 1 190px;min-width:170px}
+.tab-btn:hover{background:rgba(255,255,255,.11)}
+.tab-btn.active{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
+.tab-btn .t-count{display:block;font-size:11px;font-weight:600;color:#b9c3da;margin-top:3px}
+.tab-btn.active .t-count{color:var(--navy-800)}
+.tab-btn.pendente{opacity:.75}
+
+main{padding-top:28px}
+section.view{display:none}
+section.view.active{display:block}
+
+.section-title{font-size:19px;color:var(--navy-900);margin-bottom:4px;font-weight:700}
+.section-desc{color:var(--muted-2);font-size:13px;margin-bottom:16px;line-height:1.6}
+
+.disclaimer{background:var(--amber-bg);border:1px solid #f0d9a8;color:#6b4d0f;border-radius:var(--radius);padding:14px 18px;font-size:13px;line-height:1.6;margin-bottom:22px}
+.disclaimer b{color:#4a3609}
+
+.status-badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap}
+.status-badge.disponivel{background:var(--green-bg);color:var(--green)}
+.status-badge.pendente{background:var(--amber-bg);color:var(--amber)}
+
+.apostila-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.apostila-meta{font-size:12.5px;color:var(--muted-2);margin-bottom:20px}
+
+.pendente-card{background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--muted-2)}
+.pendente-card b{display:block;color:var(--navy-800);font-size:15px;margin-bottom:8px}
+
+.subsecao-title{font-size:15px;color:var(--navy-900);margin:26px 0 12px;padding-bottom:8px;border-bottom:2px solid var(--navy-900);font-weight:700}
+.verbetes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px}
+.verbete-card{background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--navy-700);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px}
+.verbete-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px}
+.verbete-num{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted-2);font-weight:700}
+.verbete-titulo{font-size:14.5px;color:var(--navy-900);font-weight:700;line-height:1.3;margin-top:2px}
+.verbete-pagina{font-size:11px;color:var(--muted-2);white-space:nowrap;background:var(--surface-alt);border:1px solid var(--border);border-radius:20px;padding:2px 9px;flex-shrink:0}
+.verbete-resumo{font-size:13px;color:var(--text);line-height:1.6}
+.verbete-card.match-hidden{display:none}
+.hit-mark{background:var(--gold-100);color:var(--navy-900);border-radius:3px;padding:0 1px}
+
+.empty-msg{color:var(--muted-2);font-size:14px;font-style:italic;padding:20px 0;text-align:center}
+footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:22px 20px 10px}
+</style>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="eyebrow">Corregedoria da Receita Federal do Brasil · Escritório Estratégico</p>
+    <div class="hero-top">
+      <div>
+        <h1 class="brand-title">Wiki <span style="color:var(--gold-light)">Coger</span></h1>
+        <p class="brand-sub">Índice de referência cruzada das Apostilas Orientadoras da Aplicação do Processo e do Regime Disciplinar — resumos executivos por tema, com indicação de apostila e página de origem.</p>
+      </div>
+    </div>
+    <div class="search-row">
+      <input type="text" id="buscaInput" placeholder="🔎 Buscar por tema, norma ou palavra-chave nesta apostila…">
+    </div>
+    <div class="tab-switch" id="tabSwitch" style="margin-top:14px">
+      <button class="tab-btn" data-tab="1" type="button"><span class="t-label">Apostila 1 — Consolidação de Normas</span><span class="t-count" id="count1"></span></button>
+      <button class="tab-btn pendente" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn pendente" data-tab="3" type="button"><span class="t-label">Apostila 3 — Legislação Complementar</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn pendente" data-tab="4" type="button"><span class="t-label">Apostila 4 — Jurisprudência</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn pendente" data-tab="5" type="button"><span class="t-label">Apostila 5 — AGU, CGU e Dasp</span><span class="t-count">Pendente</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="disclaimer">
+    ⚠️ <b>Instrumento de referência rápida, não substitui a consulta à apostila original.</b> Os resumos abaixo são executivos — sintetizam o conteúdo normativo para localização rápida do tema e da base legal principal, mas podem omitir exceções, incisos ou atualizações posteriores relevantes para um caso concreto. Antes de fundamentar qualquer decisão ou peça processual, confira o texto integral na respectiva Apostila Orientadora da Corregedoria (Portaria Coger nº 41, de 5 de julho de 2012).
+  </div>
+
+  <section id="view-1" class="view">
+    <div class="apostila-header">
+      <div><h2 class="section-title" id="tituloApostila1"></h2></div>
+      <span class="status-badge disponivel">✅ Disponível</span>
+    </div>
+    <p class="apostila-meta" id="metaApostila1"></p>
+    <div id="conteudoApostila1"></div>
+  </section>
+
+  <section id="view-2" class="view">
+    <div class="apostila-header"><h2 class="section-title">Apostila nº 2 — Legislação Básica</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
+    <div class="pendente-card"><b>Ainda não processada</b>Reúne a legislação de aplicação direta e cotidiana ao PAD (Lei nº 8.112/1990, Regimento Interno da RFB e a portaria estruturante da atividade correcional, inclusive versões revogadas) — aprox. 117 mil palavras. Peça para eu continuar a partir desta apostila quando quiser.</div>
+  </section>
+
+  <section id="view-3" class="view">
+    <div class="apostila-header"><h2 class="section-title">Apostila nº 3 — Legislação Complementar</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
+    <div class="pendente-card"><b>Ainda não processada</b>Demais fontes do Direito Administrativo Disciplinar (Constituição Federal, Código Penal, Código de Processo Penal, Lei nº 9.784/1999, Código Civil, Código de Processo Civil, convenções internacionais e outras normas correlatas) — aprox. 561 mil palavras, a maior das cinco apostilas depois da nº 5.</div>
+  </section>
+
+  <section id="view-4" class="view">
+    <div class="apostila-header"><h2 class="section-title">Apostila nº 4 — Jurisprudência (Decisões Judiciais)</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
+    <div class="pendente-card"><b>Ainda não processada</b>Ementário de julgados organizado por tema em ordem alfabética (ex.: Abandono de Cargo, Acareação, Improbidade Administrativa) — aprox. 245 mil palavras.</div>
+  </section>
+
+  <section id="view-5" class="view">
+    <div class="apostila-header"><h2 class="section-title">Apostila nº 5 — Manifestações da AGU, da CGU e do Dasp</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
+    <div class="pendente-card"><b>Ainda não processada</b>Pareceres da AGU, enunciados da CGU e formulações do Dasp organizados por tema — aprox. 669 mil palavras, a maior das cinco apostilas (1.424 páginas).</div>
+  </section>
+</main>
+
+<footer class="app-footer">Wiki Coger — Escritório Estratégico Coger/RFB. Elaborado a partir das Apostilas Orientadoras da Aplicação do Processo e do Regime Disciplinar (Portaria Coger nº 41, de 2012). Uso interno.</footer>
+
+<script type="application/json" id="wiki-data">
+{
+  "apostila1": {
+    "titulo": "Apostila nº 1 — Consolidação de Normas e Manifestações Vinculantes Aplicáveis ao PAD e Notas Técnicas Coger",
+    "edicao": "Fevereiro de 2026",
+    "secoes": [
+      {
+        "titulo": "Consolidação de Normas e Manifestações Vinculantes Aplicáveis ao PAD",
+        "verbetes": [
+          {"numero":"1","titulo":"Prospecção e Auditoria Correcionais, Representação e Denúncia","pagina":8,"resumo":"Define prospecção correcional (sondagem preventiva e impessoal) e auditoria correcional (exame aprofundado para identificar indícios de ilícito), ambas disciplinadas pela Portaria Coger nº 43, de 15 de setembro de 2023. Trata do dever do servidor de representar contra irregularidades (art. 116, Lei nº 8.112, de 11 de dezembro de 1990) e do trâmite de denúncias pela unidade de Ouvidoria, com pseudonimização do denunciante, prazos de análise preliminar e resposta conclusiva, e proteção da identidade por cem anos (Decreto nº 10.153, de 2019; Portaria MF/SE nº 1.554, de 2023; Portaria Normativa CGU nº 116, de 2024)."},
+          {"numero":"2","titulo":"Dispositivos Aplicáveis a Toda Procedimentalização Correcional","pagina":11,"resumo":"Critérios de priorização de apurações — prazo prescricional, gravidade da conduta e nível hierárquico (Portaria Coger nº 372, de 2024); forma dos atos e contagem de prazos processuais (Lei nº 9.784, de 1999); comunicação processual preferencialmente eletrônica; admissibilidade e vedação de provas ilícitas; cadeia de custódia de evidências; matriz de responsabilização (MR) como elemento norteador da apuração; e restrição de acesso aos autos e tratamento de dados pessoais (Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"3","titulo":"Fase de Admissibilidade e Procedimentos Investigativos","pagina":24,"resumo":"O juízo de admissibilidade decide entre arquivamento, celebração de TAC, instauração de procedimento investigativo ou de processo correcional. Descreve o fluxo interno da Coger (GNCAC, GNS, GNP, GNI) e os três procedimentos investigativos preparatórios, não contraditórios e de acesso restrito: Investigação Preliminar Sumária – IPS (até 180 dias), Sindicância Investigativa – Sinve (até 60 dias, prorrogável) e Sindicância Patrimonial – Sinpa (até 30 dias, prorrogável), esta destinada a apurar enriquecimento ilícito (Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"4","titulo":"Competência para Determinar Investigação e Decidir pelo Arquivamento, Celebração de TAC ou Instauração e Avocação de PAD","pagina":31,"resumo":"Define as competências, no âmbito da RFB, da Coger-MF e da CGU, para instaurar, avocar e arquivar procedimentos correcionais. O Secretário Especial da RFB e o Corregedor podem avocar a qualquer tempo; a CGU tem competência concorrente para instaurar e julgar, podendo avocar procedimentos em curso no Poder Executivo federal para exame de regularidade (Portaria RFB nº 4.505, de 2020; Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"5","titulo":"TAC","pagina":33,"resumo":"O Termo de Ajustamento de Conduta resolve consensualmente infrações de menor potencial ofensivo (puníveis com advertência ou suspensão de até 30 dias), condicionado a não haver penalidade vigente nem TAC celebrado nos últimos dois anos, e ao ressarcimento (ou compromisso de ressarcir) de eventual dano. Define conteúdo obrigatório, obrigações possíveis (reparação, retratação, cursos, metas de desempenho), prazo máximo de cumprimento de dois anos, publicação de extrato e suspensão da prescrição até a declaração de cumprimento (Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"6","titulo":"Sindicância Disciplinar","pagina":36,"resumo":"Processo (não mero procedimento investigativo) destinado a apurar infração de menor potencial ofensivo quando não cabível o TAC, podendo resultar em arquivamento, aplicação de advertência ou suspensão de até 30 dias, ou instauração de PAD; segue, no que couber, o rito do PAD, com prazo de conclusão de 30 dias, prorrogável por igual período (arts. 145 e 146 da Lei nº 8.112, de 1990)."},
+          {"numero":"7","titulo":"Conceito e Abrangência do PAD","pagina":38,"resumo":"Define o processo disciplinar e suas três fases — instauração, inquérito administrativo (instrução, defesa e relatório) e julgamento (art. 151, Lei nº 8.112, de 1990). Esclarece exclusões de escopo (dano a bem público ou desaparecimento de mercadorias apreendidas sem indício de responsabilidade de servidor) e a inaplicabilidade do regime estatutário a empregados de terceiros em atividade na RFB, como os do Serpro, salvo investidura comissionada (Nota Técnica Coger nº 2021/13)."},
+          {"numero":"8","titulo":"Fase de Instauração do PAD e Designação da Comissão Disciplinar","pagina":39,"resumo":"A instauração ocorre com a publicação do ato que constitui a comissão, composta por três servidores estáveis. Trata da convocação irrecusável de servidores de qualquer unidade para compor comissões (Portaria Coger nº 23, de 2014) e das hipóteses de impedimento e suspeição — interesse direto na matéria, parentesco até o terceiro grau, amizade íntima ou inimizade notória (arts. 18 a 20 da Lei nº 9.784, de 1999, e art. 149 da Lei nº 8.112, de 1990)."},
+          {"numero":"9","titulo":"Prazos do PAD","pagina":43,"resumo":"O prazo de conclusão do PAD não excede 60 dias, contados da publicação do ato que constituir a comissão, admitida prorrogação por igual período quando as circunstâncias exigirem (art. 152, Lei nº 8.112, de 1990)."},
+          {"numero":"10","titulo":"Início da Fase de Inquérito Administrativo","pagina":43,"resumo":"Trata da notificação inicial do acusado, que pode acompanhar o processo pessoalmente ou por procurador, e das restrições decorrentes dessa condição (remoção, férias e afastamentos discricionários só após o julgamento, salvo autorização da autoridade instauradora). Disciplina também o afastamento cautelar do cargo por até 60 dias, prorrogável por igual período, sem prejuízo da remuneração (art. 147, Lei nº 8.112, de 1990; Portaria RFB nº 4.505, de 2020)."},
+          {"numero":"11","titulo":"Aspectos Específicos de Instrução Probatória Contraditória na Fase de Inquérito","pagina":46,"resumo":"Regula a produção de provas em contraditório, admitindo o uso de recursos tecnológicos de transmissão de sons e imagens em tempo real (videoconferência) para intimações, depoimentos e demais atos processuais, sempre resguardado o caráter reservado dos trabalhos da comissão (Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"12","titulo":"Audiências, Reuniões e Provas Orais com Uso de Recurso Tecnológico","pagina":48,"resumo":"Detalha o procedimento de audiências por videoconferência: intimação com antecedência mínima de três dias úteis, participação de secretário \"ad hoc\" quando necessário, e registro audiovisual do ato, que dispensa a transcrição em ata (Portaria Normativa CGU nº 27, de 2022)."},
+          {"numero":"13","titulo":"Inquirição das Testemunhas","pagina":50,"resumo":"Disciplina quem pode e quem pode se recusar a depor (parentes próximos, sigilo profissional), a inquirição separada e sem comunicação entre testemunhas, a advertência sobre o falso testemunho (art. 342, Código Penal) e a redução do depoimento a termo, vedada sua apresentação por escrito pela testemunha."},
+          {"numero":"14","titulo":"Acareação","pagina":52,"resumo":"Cabível quando depoimentos de acusados, testemunhas ou ofendidos divergem sobre fatos ou circunstâncias relevantes; pode ser realizada por videoconferência ou outro recurso tecnológico de transmissão de sons e imagens em tempo real."},
+          {"numero":"15","titulo":"Diligência","pagina":53,"resumo":"Disciplina inspeções em local ou coisa e sua formalização em auto circunstanciado, podendo ser instruído com desenho, gráfico ou fotografia. Diligências em domicílio de contribuintes conduzidas por servidores da Coger e dos Escor exigem autorização prévia do Corregedor ou Chefe de Escor, com emissão de Termo de Distribuição de Procedimento Fiscal de Diligência (TDPF-D)."},
+          {"numero":"16","titulo":"Perícia, Assessoria Técnica e Assistência Técnica","pagina":54,"resumo":"Distingue perícia (realizada por servidor com atribuição legal e fé pública), assessoria técnica (agente com conhecimento especializado, preferencialmente servidor) e assistência técnica (apoio à apreciação de provas já existentes, sem produzir prova nova) — Nota Técnica Coger nº 2021/4. Também trata de tradução de documentos estrangeiros por tradutor público (ou \"ad hoc\") e de exame pericial grafotécnico para verificação de autenticidade de escritos."},
+          {"numero":"17","titulo":"Requisições e Envios de Informações e Documentos","pagina":56,"resumo":"Regula o envio de informações e documentos sigilosos da Coger e dos Escor a outras unidades da RFB e a órgãos externos (Judiciário, Ministério Público, autoridades administrativas), sempre observado o sigilo fiscal, econômico ou patrimonial (Portaria RFB nº 4.505, de 2020)."},
+          {"numero":"18","titulo":"Interrogatório do Acusado","pagina":58,"resumo":"Em regra o último ato da instrução, realizado após a inquirição das testemunhas; assegura ao acusado o direito ao silêncio, sem prejuízo à defesa, e a assistência (facultativa) do procurador, cuja ausência não gera nulidade. Admite-se por videoconferência (Nota Técnica Coger nº 2021/11)."},
+          {"numero":"19","titulo":"Incidente de Sanidade Mental","pagina":59,"resumo":"Havendo dúvida sobre a sanidade mental do acusado, a comissão propõe exame por junta médica oficial (presencial, telessaúde ou análise documental). Se a doença mental sobrevier à infração, o processo fica suspenso até o restabelecimento do acusado, que poderá reinquirir testemunhas ouvidas em sua ausência."},
+          {"numero":"20","titulo":"Indiciação","pagina":61,"resumo":"Trata da tipificação da infração e do enquadramento nos deveres funcionais (art. 116), nas proibições (art. 117) e nas infrações expulsivas (art. 132) da Lei nº 8.112, de 1990. O dolo é imprescindível para o enquadramento em infração expulsiva; somente a desídia admite conduta culposa (Nota Técnica Coger nº 2021/7)."},
+          {"numero":"21","titulo":"Citação, Defesa e Revelia","pagina":65,"resumo":"O indiciado é citado para apresentar defesa escrita em dez dias (vinte dias e prazo comum, se houver mais de um indiciado; prorrogável em dobro para diligências indispensáveis). A citação por edital se aplica quando o indiciado está em local incerto. A revelia é declarada por termo e enseja a designação de defensor dativo, servidor de nível igual ou superior ao do indiciado."},
+          {"numero":"22","titulo":"Fim da Fase do Inquérito Administrativo","pagina":66,"resumo":"O relatório final da comissão deve ser sempre conclusivo quanto à inocência ou à responsabilidade do servidor, indicando o dispositivo transgredido e as circunstâncias agravantes ou atenuantes. Concluídos os trabalhos, o processo é devolvido ao Subcorregedor e encaminhado ao GNP para elaboração de parecer que subsidiará o julgamento."},
+          {"numero":"23","titulo":"Julgamento","pagina":67,"resumo":"A autoridade julgadora decide em vinte dias; deve acatar o relatório da comissão salvo se contrário às provas dos autos, podendo então, motivadamente, agravar, abrandar ou isentar de responsabilidade. A demissão por determinadas infrações gera indisponibilidade de bens e inabilitação para nova investidura em cargo público federal por cinco ou oito anos, conforme a hipótese (arts. 136 e 137, Lei nº 8.112, de 1990; Orientação Normativa AGU nº 86, de 2024)."},
+          {"numero":"24","titulo":"Aplicação das Penalidades e Competência Julgadora","pagina":69,"resumo":"As cinco penalidades disciplinares são advertência, suspensão, demissão, cassação de aposentadoria/disponibilidade e destituição de cargo em comissão (art. 127, Lei nº 8.112, de 1990). A dosimetria considera natureza e gravidade, dano, agravantes/atenuantes e antecedentes, calculada com apoio da Calculadora de Penalidade Administrativa (art. 141, Portaria Normativa CGU nº 27, de 2022); a aplicação de penalidade expulsiva é ato vinculado, sem margem de discricionariedade (Pareceres AGU nº GQ-183 e GQ-177)."},
+          {"numero":"25","titulo":"Rito Sumário","pagina":72,"resumo":"Aplicável à acumulação ilegal de cargos, à inassiduidade habitual e ao abandono de cargo, com instrução sumária (indiciação, defesa e relatório) e sem notificação prévia. Prazo de conclusão de 30 dias, prorrogável por até 15 dias; julgamento em 5 dias a contar do recebimento do processo (arts. 133 e 140, Lei nº 8.112, de 1990)."},
+          {"numero":"26","titulo":"Nulidades","pagina":75,"resumo":"Vícios insanáveis levam à declaração de nulidade, total ou parcial, e à constituição de nova comissão. A nulidade exige demonstração de efetivo prejuízo à acusação ou à defesa — o cerceamento de defesa não se presume, cabendo a quem o alega comprovar o dano concreto sofrido (Parecer AGU nº GQ-177)."},
+          {"numero":"27","titulo":"Extinção de Punibilidade e Prescrição","pagina":76,"resumo":"A ação disciplinar prescreve em cinco anos (demissão, cassação ou destituição), dois anos (suspensão) ou 180 dias (advertência), contados da ciência do fato pela autoridade correcional. A instauração de sindicância disciplinar ou PAD interrompe a prescrição uma única vez; sanção prescrita não pode ser registrada nos assentamentos funcionais (Nota Técnica Coger nº 2021/8)."},
+          {"numero":"28","titulo":"Responsabilidades Civil e Penal","pagina":78,"resumo":"As responsabilidades civil, penal e administrativa são independentes e cumuláveis. A absolvição criminal só afasta a responsabilidade administrativa quando negar a existência do fato ou a autoria (art. 126, Lei nº 8.112, de 1990)."},
+          {"numero":"29","titulo":"Pedido de Reconsideração e Recurso Hierárquico","pagina":79,"resumo":"Prazo de trinta dias para pedido de reconsideração ou recurso hierárquico, sem efeito suspensivo em regra (salvo decisão em contrário da autoridade competente). O provimento do pedido retroage os efeitos à data do ato impugnado (arts. 106 a 109, Lei nº 8.112, de 1990)."},
+          {"numero":"30","titulo":"Revisão Processual e Reexame","pagina":80,"resumo":"A revisão processual cabe a qualquer tempo diante de fatos novos ou circunstâncias que justifiquem a inocência ou a inadequação da pena, com ônus da prova do requerente, e não pode agravar a penalidade. O reexame pela CGU pode ser requisitado em até cinco anos do julgamento, podendo resultar em declaração de nulidade de atos viciados (art. 174, Lei nº 8.112, de 1990; Portaria Normativa CGU nº 27, de 2022)."}
+        ]
+      },
+      {
+        "titulo": "Notas Técnicas Coger",
+        "verbetes": [
+          {"numero":"2021/1","titulo":"Advertência ou suspensão em PAD sumário","pagina":83,"resumo":"O PAD submetido ao rito sumário, ainda que não resulte em demissão, pode culminar na aplicação de advertência ou suspensão, desde que o fundamento legal da penalidade guarde conexão com o motivo da instauração do PAD."},
+          {"numero":"2021/2","titulo":"Aplicação de penalidades (dosimetria)","pagina":87,"resumo":"Trata da dosimetria da pena disciplinar: distingue circunstâncias agravantes/atenuantes (condicionantes da conduta em si) dos antecedentes funcionais (registros pretéritos); esclarece que a penalidade deve ser publicada logo após o julgamento, sem aguardar o prazo recursal, e que punibilidade prescrita não pode ser registrada nos assentamentos funcionais do servidor."},
+          {"numero":"2021/3","titulo":"Irregularidade disciplinar cometida por ex-servidor apenado com sanção expulsiva","pagina":99,"resumo":"Com base nos princípios da eficiência, economicidade e indisponibilidade do interesse público, a autoridade competente pode decidir, motivadamente, pela não instauração de PAD em desfavor de ex-servidor já apenado com sanção expulsiva."},
+          {"numero":"2021/4","titulo":"Perícia, assessoria técnica e assistência técnica","pagina":103,"resumo":"Distingue os três institutos técnicos à disposição da comissão de inquérito: perícia (por servidor-perito, com fé pública), assessoria técnica (por agente com conhecimento especializado, preferencialmente servidor) e assistência técnica (apoio à apreciação de provas já existentes). Não há previsão legal de o acusado indicar assistente técnico próprio para acompanhar tais atos."},
+          {"numero":"2021/5","titulo":"Competência para julgamento","pagina":108,"resumo":"A penalidade proposta pela comissão de inquérito no relatório final é que define a autoridade competente para o julgamento, salvo quando a proposta for contrária às provas dos autos."},
+          {"numero":"2021/6","titulo":"Procurador e defensor dativo","pagina":114,"resumo":"O exercício da defesa durante a instrução é uma faculdade do acusado, não uma imposição — a comissão apenas deve oportunizá-la, sem exigi-la ou obstruí-la. Não cabe designar defensor dativo ou \"ad hoc\" para atos de instrução realizados sem a participação do acusado ou procurador regularmente notificados, nem quando a peça defensória apresentada for considerada inepta."},
+          {"numero":"2021/7","titulo":"Dolo","pagina":121,"resumo":"O dolo é imprescindível para a caracterização de infrações disciplinares que ensejam penalidade expulsiva; apenas a desídia, entre as infrações graves, admite-se por conduta culposa."},
+          {"numero":"2021/8","titulo":"Prescrição — início do prazo","pagina":125,"resumo":"O prazo prescricional inicia-se na data em que a irregularidade foi comunicada ou detectada na unidade de correição (Gabinete, Coger ou Escor), presumindo-se o conhecimento da autoridade instauradora independentemente de ciência pessoal; se a notícia chegar primeiro à CGU/CRG, o prazo corre a partir desse momento. A instauração de sindicância disciplinar ou PAD interrompe a prescrição uma única vez, e a redesignação de comissão para os mesmos fatos não gera nova interrupção."},
+          {"numero":"2021/9","titulo":"Membro de comissão de inquérito nomeado autoridade instauradora","pagina":135,"resumo":"A nomeação de servidor que tenha sido membro de comissão de inquérito para exercer o encargo de autoridade instauradora do PAD não configura impedimento ou suspeição, mas impede-o de atuar como autoridade julgadora."},
+          {"numero":"2021/10","titulo":"Tradução","pagina":139,"resumo":"A análise de documentos estrangeiros em língua de origem integra a rotina de agentes públicos da RFB, sobretudo na área aduaneira, podendo ser anexados ao PAD como prova prescindindo de tradução, sem prejuízo à defesa. Quando necessária, a tradução só deve ser providenciada pela autoridade instauradora em caso de real necessidade, por tradutor público habilitado ou \"ad hoc\"."},
+          {"numero":"2021/11","titulo":"Interrogatório","pagina":143,"resumo":"O interrogatório deve ser, em regra, o último ato da instrução, só podendo ser dispensado se a comissão já estiver convencida da inocência do acusado; deve ser refeito se novas provas desfavoráveis forem juntadas após o último ato instrutório. O acusado pode renunciar a essa prova oral (inclusive tacitamente) sem gerar nulidade; a ausência do procurador no ato também não a gera."},
+          {"numero":"2021/12","titulo":"Erro escusável","pagina":150,"resumo":"Não cabe instaurar PAD contra agente público que, no desempenho de suas atribuições, tenha cometido erro escusável — culposo, eventual e de ínfima ofensa a normas e bens jurídicos tutelados, cumulativamente."},
+          {"numero":"2021/13","titulo":"Irregularidades praticadas por celetistas, terceirizados e estagiários","pagina":154,"resumo":"O regime disciplinar estatutário da Lei nº 8.112, de 1990, não se aplica a empregados de terceiros em atividade na RFB (como do Serpro) nem a qualquer outra pessoa física prestadora de serviços, salvo investidura comissionada; nesses casos cabe investigação e, excepcionalmente, rito contraditório próprio, mas não o regime estatutário."},
+          {"numero":"2021/14","titulo":"Acesso a procedimentos correcionais acusatórios","pagina":159,"resumo":"O acesso à sindicância disciplinar ou ao PAD deve ser garantido de forma irrestrita ao acusado; ao procurador, mediante procuração específica. Terceiros têm acesso restrito até o julgamento, ressalva excepcional quando comprovarem, fundamentadamente, direito ou interesse legítimo — limitado ao estritamente necessário e nunca ao ponto de acompanhar o procedimento."},
+          {"numero":"2021/15","titulo":"Acesso a procedimentos correcionais na fase de admissibilidade","pagina":164,"resumo":"Na fase de admissibilidade, a autoridade só deve permitir acesso de terceiro que comprove, fundamentadamente, direito ou interesse legítimo, limitado ao necessário; mesmo o representante ou denunciante não tem acesso irrestrito, cabendo-lhe apenas ser comunicado das providências adotadas. Não é necessário notificar o investigado da abertura de procedimento investigativo, mas pedido de acesso por ele não deve ser negado, sob pena de abuso de autoridade."},
+          {"numero":"2021/16","titulo":"Exercício de atividade incompatível com as atribuições de cargo público","pagina":169,"resumo":"O ilícito de exercício de atividade incompatível com o cargo pode ter natureza culposa (inciso XVIII do art. 117 da Lei nº 8.112, de 1990, gerando suspensão) ou dolosa (configurando conflito de interesses e improbidade administrativa nos termos da Lei nº 12.813, de 16 de maio de 2013, gerando demissão). O elemento subjetivo do desvio é o critério determinante para o enquadramento correto — a improbidade exige dolo, não se admitindo modalidade culposa na esfera disciplinar."}
+        ]
+      }
+    ]
+  }
+}
+</script>
+
+<script>
+(function(){
+"use strict";
+var WIKI = JSON.parse(document.getElementById('wiki-data').textContent);
+var VIEW = { tab: '1' };
+
+function escapeHtml(s){
+  if(s===null||s===undefined) return '';
+  return String(s).replace(/[&<>"']/g, function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function highlight(text, termo){
+  if(!termo) return escapeHtml(text);
+  var esc = escapeHtml(text);
+  var escTermo = escapeHtml(termo).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return esc.replace(new RegExp('('+escTermo+')','ig'), '<span class="hit-mark">$1</span>');
+}
+
+function renderApostila1(){
+  var a1 = WIKI.apostila1;
+  document.getElementById('tituloApostila1').textContent = a1.titulo;
+  document.getElementById('metaApostila1').textContent = 'Edição: ' + a1.edicao;
+  var totalVerbetes = a1.secoes.reduce(function(sum, s){ return sum + s.verbetes.length; }, 0);
+  document.getElementById('count1').textContent = totalVerbetes + ' verbetes';
+
+  var el = document.getElementById('conteudoApostila1');
+  el.innerHTML = a1.secoes.map(function(secao){
+    return '<h3 class="subsecao-title">'+escapeHtml(secao.titulo)+'</h3>'
+      + '<div class="verbetes-grid">'
+      + secao.verbetes.map(renderVerbeteHtml).join('')
+      + '</div>';
+  }).join('');
+}
+function renderVerbeteHtml(v){
+  return '<div class="verbete-card" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
+    + '<div class="verbete-top"><div><div class="verbete-num">Item '+escapeHtml(v.numero)+'</div><div class="verbete-titulo">'+escapeHtml(v.titulo)+'</div></div>'
+    + '<span class="verbete-pagina">p. '+v.pagina+'</span></div>'
+    + '<div class="verbete-resumo">'+escapeHtml(v.resumo)+'</div>'
+    + '</div>';
+}
+
+function aplicarBusca(){
+  var termo = document.getElementById('buscaInput').value.trim().toLowerCase();
+  var cards = document.querySelectorAll('#view-'+VIEW.tab+' .verbete-card');
+  var visiveis = 0;
+  cards.forEach(function(card){
+    var alvo = card.dataset.titulo + ' ' + card.dataset.resumo;
+    var ok = !termo || alvo.indexOf(termo) !== -1;
+    card.classList.toggle('match-hidden', !ok);
+    if(ok) visiveis++;
+  });
+  document.querySelectorAll('#view-'+VIEW.tab+' .subsecao-title').forEach(function(titleEl){
+    var grid = titleEl.nextElementSibling;
+    if(!grid) return;
+    var algumVisivel = Array.prototype.some.call(grid.querySelectorAll('.verbete-card'), function(c){ return !c.classList.contains('match-hidden'); });
+    titleEl.classList.toggle('hidden', !algumVisivel);
+    grid.classList.toggle('hidden', !algumVisivel);
+  });
+}
+
+function switchTab(tab){
+  VIEW.tab = tab;
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
+  document.querySelectorAll('section.view').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('view-'+tab).classList.add('active');
+  document.getElementById('buscaInput').value = '';
+  window.scrollTo(0,0);
+}
+
+function init(){
+  renderApostila1();
+  document.querySelectorAll('.tab-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
+  });
+  document.getElementById('buscaInput').addEventListener('input', aplicarBusca);
+  switchTab('1');
+}
+document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
