@@ -134,7 +134,9 @@ button.btn{border:1px solid var(--border);background:#fff;color:var(--navy-900);
 .tl-item::before{content:'';position:absolute;left:-23px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--gold)}
 .tl-meta{font-size:11.5px;color:var(--muted-2);display:flex;gap:8px;align-items:center;margin-bottom:2px}
 .tl-tipo{background:var(--surface-alt);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:10px;text-transform:uppercase;font-weight:700;color:var(--navy-700)}
-.tl-txt{font-size:13.5px}
+.tl-txt{font-size:13.5px;white-space:pre-line}
+.tl-del{margin-left:auto;background:none;border:none;color:var(--muted-2);font-size:12px;padding:2px 4px;border-radius:5px}
+.tl-del:hover{color:var(--red);background:var(--red-bg)}
 
 /* ---------- Tarefas / Etapas ---------- */
 .tarefa-row{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border);flex-wrap:wrap}
@@ -174,12 +176,11 @@ button.btn{border:1px solid var(--border);background:#fff;color:var(--navy-900);
 .log-top{display:flex;justify-content:space-between;gap:8px;font-size:11.5px;color:var(--muted-2);margin-bottom:3px}
 .chip{background:var(--surface-alt);border:1px solid var(--border);border-radius:99px;padding:2px 10px;font-size:11px;font-weight:600;color:var(--navy-700)}
 .rd-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
-.rd-row .rd-del,.rd-row .rg-del,.rd-row .bf-del{margin-left:auto}
-.rd-in,.rg-in,.bf-in{border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;background:var(--surface-alt);font-family:inherit}
-.rd-in:focus,.rg-in:focus,.bf-in:focus{outline:none;border-color:var(--gold-light);box-shadow:0 0 0 2px var(--gold-100)}
-input.rd-in.rd-titulo,input.rg-in.rd-titulo,input.bf-in.rd-titulo{width:100%;font-weight:600;margin-bottom:6px;font-size:14px}
-textarea.rd-in.rd-resumo,textarea.rg-in.rd-resumo{width:100%;resize:vertical;min-height:52px}
-.rg-extra{width:100%;max-width:320px;margin-top:6px}
+.rd-row .rd-del,.rd-row .bf-del{margin-left:auto}
+.rd-in,.bf-in{border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-size:12.5px;background:var(--surface-alt);font-family:inherit}
+.rd-in:focus,.bf-in:focus{outline:none;border-color:var(--gold-light);box-shadow:0 0 0 2px var(--gold-100)}
+input.rd-in.rd-titulo,input.bf-in.rd-titulo{width:100%;font-weight:600;margin-bottom:6px;font-size:14px}
+textarea.rd-in.rd-resumo{width:100%;resize:vertical;min-height:52px}
 .filter-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .filter-row select{border:1px solid var(--border);border-radius:7px;padding:7px 10px;background:var(--surface);font-family:inherit}
 .produto-header{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:4px}
@@ -233,11 +234,6 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       <button class="tab-btn" data-tab="tarefas" type="button"><span class="t-label">Tarefas</span><span class="t-count" id="tabCountTarefas"></span></button>
       <button class="tab-btn" data-tab="radar" type="button"><span class="t-label">RADAR Coger</span><span class="t-count" id="tabCountRadar"></span></button>
       <button class="tab-btn" data-tab="briefing_corregedor" type="button"><span class="t-label">Briefing do Corregedor</span><span class="t-count" id="tabCountBriefing"></span></button>
-      <button class="tab-btn" data-tab="integra_coger" type="button"><span class="t-label">Integra Coger</span><span class="t-count" id="tabCountIntegraCoger"></span></button>
-      <button class="tab-btn" data-tab="coger_solutions" type="button"><span class="t-label">Coger Solutions</span><span class="t-count" id="tabCountCogerSolutions"></span></button>
-      <button class="tab-btn" data-tab="memoria_coger" type="button"><span class="t-label">Memória Coger</span><span class="t-count" id="tabCountMemoriaCoger"></span></button>
-      <button class="tab-btn" data-tab="coger_lab" type="button"><span class="t-label">Coger Lab</span><span class="t-count" id="tabCountCogerLab"></span></button>
-      <button class="tab-btn" data-tab="correicao_em_foco" type="button"><span class="t-label">Correição em Foco</span><span class="t-count" id="tabCountCorreicaoEmFoco"></span></button>
       <button class="tab-btn" data-tab="persistencia" type="button"><span class="t-label">Dados</span></button>
     </div>
   </div>
@@ -262,7 +258,7 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       <div class="block-title">➕ Novo projeto no Portfólio</div>
       <form id="formNovoProjeto" class="form-inline">
         <div class="full"><label>Nome do projeto</label><input type="text" name="nome" required placeholder="Ex.: PACTO — Painel Correcional Técnico"></div>
-        <div><label>Tipo</label><select name="tipo"><option value="sistema">Sistema</option><option value="evento_anual">Evento anual</option><option value="iniciativa">Iniciativa</option></select></div>
+        <div><label>Tipo</label><select name="tipo"><option value="sistema">Sistema</option><option value="evento_anual">Evento anual</option><option value="iniciativa">Iniciativa</option><option value="produto">Produto</option></select></div>
         <div><label>Responsável</label><input type="text" name="responsavel"></div>
         <div><button class="btn gold" type="submit">Adicionar projeto</button></div>
       </form>
@@ -347,106 +343,6 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
     <div id="list-briefing_corregedor"></div>
   </section>
 
-  <section id="view-integra_coger" class="view">
-    <div class="produto-header">
-      <div><h2 class="section-title">Integra Coger</h2><p class="section-desc">Integração das Subcorregedorias — fórum/metodologia permanente para transformar experiências isoladas em soluções institucionais.</p></div>
-      <button class="btn ghost sm btn-export-produto" data-collection="integra_coger" type="button">📤 Exportar este produto</button>
-    </div>
-    <div class="block"><div id="list-integra_coger"></div></div>
-    <div class="edit-only block">
-      <div class="block-title">➕ Novo registro</div>
-      <form id="form-integra_coger" class="form-inline" data-collection="integra_coger">
-        <div><label>Data</label><input type="date" name="data" required></div>
-        <div><label>Tipo</label><select name="tipo"></select></div>
-        <div><label>Status</label><select name="status"></select></div>
-        <div><label>Responsável</label><input type="text" name="responsavel"></div>
-        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
-        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
-        <div><button class="btn gold" type="submit">Registrar</button></div>
-      </form>
-    </div>
-  </section>
-
-  <section id="view-coger_solutions" class="view">
-    <div class="produto-header">
-      <div><h2 class="section-title">Coger Solutions</h2><p class="section-desc">Solução de problemas complexos apresentados pelo Gabinete.</p></div>
-      <button class="btn ghost sm btn-export-produto" data-collection="coger_solutions" type="button">📤 Exportar este produto</button>
-    </div>
-    <div class="block"><div id="list-coger_solutions"></div></div>
-    <div class="edit-only block">
-      <div class="block-title">➕ Novo registro</div>
-      <form id="form-coger_solutions" class="form-inline" data-collection="coger_solutions">
-        <div><label>Data</label><input type="date" name="data" required></div>
-        <div><label>Tipo</label><select name="tipo"></select></div>
-        <div><label>Status</label><select name="status"></select></div>
-        <div><label>Responsável</label><input type="text" name="responsavel"></div>
-        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
-        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
-        <div><button class="btn gold" type="submit">Registrar</button></div>
-      </form>
-    </div>
-  </section>
-
-  <section id="view-memoria_coger" class="view">
-    <div class="produto-header">
-      <div><h2 class="section-title">Memória Coger</h2><p class="section-desc">Gestão do conhecimento — repositório vivo da experiência acumulada pela instituição.</p></div>
-      <button class="btn ghost sm btn-export-produto" data-collection="memoria_coger" type="button">📤 Exportar este produto</button>
-    </div>
-    <div class="block"><div id="list-memoria_coger"></div></div>
-    <div class="edit-only block">
-      <div class="block-title">➕ Novo registro</div>
-      <form id="form-memoria_coger" class="form-inline" data-collection="memoria_coger">
-        <div><label>Data</label><input type="date" name="data" required></div>
-        <div><label>Tipo</label><select name="tipo"></select></div>
-        <div><label>Status</label><select name="status"></select></div>
-        <div><label>Responsável</label><input type="text" name="responsavel"></div>
-        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
-        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
-        <div><button class="btn gold" type="submit">Registrar</button></div>
-      </form>
-    </div>
-  </section>
-
-  <section id="view-coger_lab" class="view">
-    <div class="produto-header">
-      <div><h2 class="section-title">Coger Lab</h2><p class="section-desc">Inovação e experimentação — laboratório de inovação correcional destinado a testar e desenvolver soluções antes de sua eventual expansão institucional.</p></div>
-      <button class="btn ghost sm btn-export-produto" data-collection="coger_lab" type="button">📤 Exportar este produto</button>
-    </div>
-    <div class="block"><div id="list-coger_lab"></div></div>
-    <div class="edit-only block">
-      <div class="block-title">➕ Novo registro</div>
-      <form id="form-coger_lab" class="form-inline" data-collection="coger_lab">
-        <div><label>Data</label><input type="date" name="data" required></div>
-        <div><label>Tipo</label><select name="tipo"></select></div>
-        <div><label>Status</label><select name="status"></select></div>
-        <div><label>Responsável</label><input type="text" name="responsavel"></div>
-        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
-        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
-        <div><button class="btn gold" type="submit">Registrar</button></div>
-      </form>
-    </div>
-  </section>
-
-  <section id="view-correicao_em_foco" class="view">
-    <div class="produto-header">
-      <div><h2 class="section-title">Correição em Foco</h2><p class="section-desc">Formação e disseminação — programa permanente de disseminação de conhecimento e discussão de temas estratégicos.</p></div>
-      <button class="btn ghost sm btn-export-produto" data-collection="correicao_em_foco" type="button">📤 Exportar este produto</button>
-    </div>
-    <div class="block"><div id="list-correicao_em_foco"></div></div>
-    <div class="edit-only block">
-      <div class="block-title">➕ Novo registro</div>
-      <form id="form-correicao_em_foco" class="form-inline" data-collection="correicao_em_foco">
-        <div><label>Data</label><input type="date" name="data" required></div>
-        <div><label>Tipo</label><select name="tipo"></select></div>
-        <div><label>Status</label><select name="status"></select></div>
-        <div><label>Responsável</label><input type="text" name="responsavel"></div>
-        <div class="full"><label>Título</label><input type="text" name="titulo" required></div>
-        <div class="full"><label>Descrição</label><textarea name="descricao" rows="2"></textarea></div>
-        <div><button class="btn gold" type="submit">Registrar</button></div>
-      </form>
-    </div>
-  </section>
-
   <section id="view-persistencia" class="view">
     <h2 class="section-title">Persistência de dados</h2>
     <p class="section-desc">Arquivo único, offline, sem rede. Uso exclusivo do Escritório — o Corregedor apenas visualiza o arquivo recebido.</p>
@@ -489,8 +385,8 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
 <script type="application/json" id="painel-data">
 {
   "meta": {
-    "versao_schema": "1.2",
-    "gerado_em": "2026-09-05T15:00:00Z",
+    "versao_schema": "1.3",
+    "gerado_em": "2026-09-06T11:15:24.020Z",
     "gerado_por": "assessor"
   },
   "projetos": [
@@ -503,10 +399,25 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       "risco": "",
       "proxima_entrega": "Próxima edição — sede e data a definir",
       "beneficio_gerado": "Consolidação como espaço de referência para reflexão estratégica sobre integridade, controle e governança pública, reunindo RFB, CGU, PGFN e Corregedoria do Ministério da Fazenda.",
-      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
       "historico": [
-        { "data": "2024-09-15", "autor": "Assessor", "tipo": "nota", "texto": "PACTO 2024 realizado em Foz do Iguaçu/PR, com participação de RFB, CGU, AGU, PGFN e Corregedoria do Ministério da Fazenda." },
-        { "data": "2026-03-19", "autor": "Assessor", "tipo": "nota", "texto": "PACTO 2026 (3ª edição) realizado em Vitória/ES, entre os dias 17 e 19 de março, com abertura contando com a secretária especial adjunta Adriana Gomes Rego, além de CGU, PGFN e Ministério da Fazenda." }
+        {
+          "data": "2024-09-15",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "PACTO 2024 realizado em Foz do Iguaçu/PR, com participação de RFB, CGU, AGU, PGFN e Corregedoria do Ministério da Fazenda."
+        },
+        {
+          "data": "2026-03-19",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "PACTO 2026 (3ª edição) realizado em Vitória/ES, entre os dias 17 e 19 de março, com abertura contando com a secretária especial adjunta Adriana Gomes Rego, além de CGU, PGFN e Ministério da Fazenda."
+        }
       ]
     },
     {
@@ -517,11 +428,32 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       "status": "verde",
       "risco": "",
       "proxima_entrega": "",
-      "beneficio_gerado": "Palestras de prevenção realizadas em unidades da RFB, esclarecendo dúvidas sobre a atuação correcional e reforçando a proteção do servidor de boa-fé — ex.: \"PROTEGER INTEGRITAS MANAUS\", em março de 2026.",
-      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "beneficio_gerado": "Palestras de prevenção realizadas em unidades da RFB, esclarecendo dúvidas sobre a atuação correcional e reforçando a proteção do servidor de boa-fé.",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
       "historico": [
-        { "data": "2023-05-01", "autor": "Assessor", "tipo": "nota", "texto": "Elaborado material de referência das palestras do Projeto Proteger (\"A Atuação da Corregedoria da RFB\"), de autoria de Marcos Salles Teixeira, sob a Corregedoria de Guilherme Bibiani Neto." },
-        { "data": "2026-03-12", "autor": "Assessor", "tipo": "nota", "texto": "Realizada palestra conjunta \"PROTEGER INTEGRITAS MANAUS\", em unidade da RFB no Amazonas." }
+        {
+          "data": "2023-05-01",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Elaborado material de referência das palestras do Projeto Proteger (\"A Atuação da Corregedoria da RFB\"), de autoria de Marcos Salles Teixeira, sob a Corregedoria de Guilherme Bibiani Neto."
+        },
+        {
+          "data": "2026-03-12",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Realizada palestra conjunta \"PROTEGER INTEGRITAS MANAUS\", em unidade da RFB no Amazonas."
+        },
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "beneficio",
+          "texto": "Benefício registrado: \"Palestras de prevenção realizadas em unidades da RFB, esclarecendo dúvidas sobre a atuação correcional e reforçando a proteção do servidor de boa-fé.\""
+        }
       ]
     },
     {
@@ -533,13 +465,43 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       "risco": "",
       "proxima_entrega": "",
       "beneficio_gerado": "Canais de acolhimento e denúncia em funcionamento (\"Fala, Mulher!\" e \"Espaço da Fala\"), além de cartilhas, cursos e materiais de apoio disponíveis, como o Guia Lilás 2024.",
-      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
       "historico": [
-        { "data": "2023-12-05", "autor": "Assessor", "tipo": "nota", "texto": "Realizado o Seminário Integritas 2023." },
-        { "data": "2024-04-11", "autor": "Assessor", "tipo": "nota", "texto": "Núcleo de Prevenção e Enfrentamento do Assédio Sexual, do Assédio Moral e da Discriminação (Integritas) instituído pela Portaria Coger nº 590, de 11 de abril de 2024." },
-        { "data": "2026-03-12", "autor": "Assessor", "tipo": "nota", "texto": "Realizada a palestra conjunta \"PROTEGER INTEGRITAS MANAUS\"." },
-        { "data": "2026-03-18", "autor": "Assessor", "tipo": "nota", "texto": "Apresentada palestra do Integritas durante o PACTO 2026, em Vitória/ES." },
-        { "data": "2026-04-07", "autor": "Assessor", "tipo": "nota", "texto": "Participação no I Seminário de Ouvidoria RFB." }
+        {
+          "data": "2023-12-05",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Realizado o Seminário Integritas 2023."
+        },
+        {
+          "data": "2024-04-11",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Núcleo de Prevenção e Enfrentamento do Assédio Sexual, do Assédio Moral e da Discriminação (Integritas) instituído pela Portaria Coger nº 590, de 11 de abril de 2024."
+        },
+        {
+          "data": "2026-03-12",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Realizada a palestra conjunta \"PROTEGER INTEGRITAS MANAUS\"."
+        },
+        {
+          "data": "2026-03-18",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Apresentada palestra do Integritas durante o PACTO 2026, em Vitória/ES."
+        },
+        {
+          "data": "2026-04-07",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Participação no I Seminário de Ouvidoria RFB."
+        }
       ]
     },
     {
@@ -550,32 +512,231 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       "status": "verde",
       "risco": "",
       "proxima_entrega": "",
-      "beneficio_gerado": "",
-      "decisao_pendente": { "texto": "", "tomada": false, "data_marcacao": null, "marcado_por": null },
+      "beneficio_gerado": "O Processo Administrativo de Responsabilização (PAR) exige rigor aritmético e fundamentação jurídica na dosimetria das multas para que as sanções sejam válidas e duradouras.\nElaborado pela Corregedoria da Receita Federal, o Manual integra teoria e prática para orientar os operadores na correta quantificação das penalidades.\nA Parte I detalha os fundamentos normativos e econômicos da anticorrupção, o rito do PAR, os regimes de prova e as interfaces com legislações correlatas.\nA Parte II estabelece a metodologia prática do cálculo conforme o Decreto nº 11.129/2022, fornecendo fórmulas, fluxos de decisão e estudos de caso.",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
       "historico": [
-        { "data": "2026-09-05", "autor": "Assessor", "tipo": "nota", "texto": "Projeto cadastrado no Portfólio Estratégico." }
+        {
+          "data": "2026-09-05",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Projeto cadastrado no Portfólio Estratégico."
+        },
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "beneficio",
+          "texto": "Benefício registrado: \"O Processo Administrativo de Responsabilização — o PAR — é o instrumento pelo qual esse regime se realiza. E seu momento de maior densidade técnica é a dosimetria da multa: a operação que traduz em cifra precisa o grau de reprovabilidade de uma conduta, ponderando faturamento, vantagens auferidas, agravantes, atenuantes e limites legais. É uma operação exigente em duas direções ao mesmo tempo. Exige rigor aritmético, porque um erro de cálculo contamina a sanção inteira; e exige rigor de motivação, porque cada percentual aplicado — e cada percentual expressamente afastado — é um ato decisório que a defesa impugnará e que o Poder Judiciário poderá rever. A dosimetria malfeita não é apenas uma sanção errada: é uma sanção que não sobrevive.\nEste Manual nasceu na Corregedoria da Receita Federal do Brasil para enfrentar essa dupla exigência, e foi escrito a partir de uma convicção metodológica: o operador que domina apenas a mecânica do cálculo opera no escuro, e o que domina apenas a teoria não chega ao número. Por isso a obra se organiza em dois planos deliberadamente integrados. A Parte I expõe os fundamentos: o fenômeno econômico da corrupção e suas distorções documentadas; a trajetória normativa que desembocou na Lei nº 12.846, de 2013, do FCPA norte-americano à Convenção da OCDE e ao Bribery Act britânico; os sujeitos alcançados, a sucessão e a desconsideração da personalidade jurídica; a tipologia dos atos lesivos e suas implicações dosimétricas; o rito completo do processo, da admissibilidade ao julgamento e à fase recursal; os regimes de sigilo que governam a prova — fiscal, bancário, de inteligência financeira — e as cautelas no aproveitamento de acervos de operações especiais; a prescrição em suas hipóteses difíceis; a execução da multa; o acordo de leniência; os cadastros de sanções; e as interfaces com a Lei nº 14.133, de 1º de abril de 2021 e com a Lei de Improbidade Administrativa. A Parte II traduz esse arcabouço em procedimento: etapa por etapa, a metodologia de cálculo da multa e da publicação extraordinária do Decreto nº 11.129, de 11 de julho de 2022, com fórmulas, tabelas legais, fluxos de decisão, casos especiais e estudos de caso comentados com memória de cálculo completa.\""
+        },
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "beneficio",
+          "texto": "Benefício registrado: \"O Processo Administrativo de Responsabilização (PAR) exige rigor aritmético e fundamentação jurídica na dosimetria das multas para que as sanções sejam válidas e duradouras.\nElaborado pela Corregedoria da Receita Federal, o Manual integra teoria e prática para orientar os operadores na correta quantificação das penalidades.\nA Parte I detalha os fundamentos normativos e econômicos da anticorrupção, o rito do PAR, os regimes de prova e as interfaces com legislações correlatas.\nA Parte II estabelece a metodologia prática do cálculo conforme o Decreto nº 11.129/2022, fornecendo fórmulas, fluxos de decisão e estudos de caso.\""
+        }
+      ]
+    },
+    {
+      "id": "integra-coger",
+      "nome": "Integra Coger",
+      "tipo": "produto",
+      "responsavel": "",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "",
+      "beneficio_gerado": "",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
+      "historico": [
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Produto Integra Coger, conforme a Proposta de Criação do Escritório Estratégico Coger/RFB: Fórum ou metodologia permanente destinada a transformar experiências isoladas em soluções institucionais (3º Chapéu — Integração da Coger)."
+        }
+      ]
+    },
+    {
+      "id": "coger-solutions",
+      "nome": "Coger Solutions",
+      "tipo": "produto",
+      "responsavel": "",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "",
+      "beneficio_gerado": "",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
+      "historico": [
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Produto Coger Solutions, conforme a Proposta de Criação do Escritório Estratégico Coger/RFB: Abordagem orientada à solução de problemas complexos apresentados pelo Gabinete (3º Chapéu — Integração da Coger)."
+        }
+      ]
+    },
+    {
+      "id": "memoria-coger",
+      "nome": "Memória Coger",
+      "tipo": "produto",
+      "responsavel": "",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "",
+      "beneficio_gerado": "",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
+      "historico": [
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Produto Memória Coger, conforme a Proposta de Criação do Escritório Estratégico Coger/RFB: Repositório vivo da experiência acumulada pela instituição (3º Chapéu — Integração da Coger)."
+        }
+      ]
+    },
+    {
+      "id": "coger-lab",
+      "nome": "Coger Lab",
+      "tipo": "produto",
+      "responsavel": "",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "",
+      "beneficio_gerado": "",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
+      "historico": [
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Produto Coger Lab, conforme a Proposta de Criação do Escritório Estratégico Coger/RFB: Laboratório de inovação correcional destinado a testar e desenvolver soluções antes de sua eventual expansão institucional (3º Chapéu — Integração da Coger)."
+        }
+      ]
+    },
+    {
+      "id": "correicao-em-foco",
+      "nome": "Correição em Foco",
+      "tipo": "produto",
+      "responsavel": "",
+      "status": "verde",
+      "risco": "",
+      "proxima_entrega": "",
+      "beneficio_gerado": "",
+      "decisao_pendente": {
+        "texto": "",
+        "tomada": false,
+        "data_marcacao": null,
+        "marcado_por": null
+      },
+      "historico": [
+        {
+          "data": "2026-09-06",
+          "autor": "Assessor",
+          "tipo": "nota",
+          "texto": "Produto Correição em Foco, conforme a Proposta de Criação do Escritório Estratégico Coger/RFB: Programa permanente de disseminação de conhecimento e discussão de temas estratégicos (3º Chapéu — Integração da Coger)."
+        }
       ]
     }
   ],
   "tarefas": [
-    { "id": "t1", "titulo": "Reunião de alinhamento do Portfólio com o Corregedor", "responsavel": "Assessor Estratégico", "prazo": "2026-09-10", "projeto_relacionado": "", "status": "pendente" },
-    { "id": "t2", "titulo": "Planejar pauta e sedes candidatas da próxima edição do PACTO", "responsavel": "Corregedoria da RFB (Coger)", "prazo": "2026-11-15", "projeto_relacionado": "pacto", "status": "pendente" },
-    { "id": "t3", "titulo": "Agendar novas palestras do Projeto Proteger em unidades regionais", "responsavel": "Coordenação Disciplinar / Coger", "prazo": "2026-10-15", "projeto_relacionado": "proteger", "status": "em_andamento" },
-    { "id": "t4", "titulo": "Atualizar cartilhas e materiais de apoio do Integritas", "responsavel": "Coordenadoras do Integritas", "prazo": "2026-09-30", "projeto_relacionado": "integritas", "status": "pendente" },
-    { "id": "t5", "titulo": "Consolidar relatório trimestral do Portfólio Estratégico", "responsavel": "Assessor Estratégico", "prazo": "2026-08-20", "projeto_relacionado": "", "status": "pendente" },
-    { "id": "t6", "titulo": "Realizar PACTO 2026 em Vitória/ES", "responsavel": "Corregedoria da RFB (Coger)", "prazo": "2026-03-19", "projeto_relacionado": "pacto", "status": "concluida" },
-    { "id": "t7", "titulo": "Instituir o Núcleo Integritas (Portaria Coger nº 590, de 2024)", "responsavel": "Coordenadoras do Integritas", "prazo": "2024-04-11", "projeto_relacionado": "integritas", "status": "concluida" }
+    {
+      "id": "t1",
+      "titulo": "Reunião de alinhamento do Portfólio com o Corregedor",
+      "responsavel": "Assessor Estratégico",
+      "prazo": "2026-09-10",
+      "projeto_relacionado": "",
+      "status": "pendente"
+    },
+    {
+      "id": "t2",
+      "titulo": "Planejar pauta e sedes candidatas da próxima edição do PACTO",
+      "responsavel": "Corregedoria da RFB (Coger)",
+      "prazo": "2026-11-15",
+      "projeto_relacionado": "pacto",
+      "status": "pendente"
+    },
+    {
+      "id": "t3",
+      "titulo": "Montar planejamento de novas palestras do Projeto Proteger em unidades regionais",
+      "responsavel": "Marcos Salles",
+      "prazo": "2026-10-15",
+      "projeto_relacionado": "proteger",
+      "status": "em_andamento"
+    },
+    {
+      "id": "t4",
+      "titulo": "Atualizar cartilhas e materiais de apoio do Integritas",
+      "responsavel": "Coordenadoras do Integritas",
+      "prazo": "2026-09-30",
+      "projeto_relacionado": "integritas",
+      "status": "pendente"
+    },
+    {
+      "id": "t5",
+      "titulo": "Consolidar relatório trimestral do Portfólio Estratégico",
+      "responsavel": "Assessor Estratégico",
+      "prazo": "2026-08-20",
+      "projeto_relacionado": "",
+      "status": "pendente"
+    },
+    {
+      "id": "t6",
+      "titulo": "Realizar PACTO 2026 em Vitória/ES",
+      "responsavel": "Corregedoria da RFB (Coger)",
+      "prazo": "2026-03-19",
+      "projeto_relacionado": "pacto",
+      "status": "concluida"
+    },
+    {
+      "id": "t7",
+      "titulo": "Instituir o Núcleo Integritas (Portaria Coger nº 590, de 2024)",
+      "responsavel": "Coordenadoras do Integritas",
+      "prazo": "2024-04-11",
+      "projeto_relacionado": "integritas",
+      "status": "concluida"
+    },
+    {
+      "id": "tmtppatjl396",
+      "titulo": "Prêmio Melhores Práticas RFB",
+      "responsavel": "Coordenadoras do Integritas",
+      "prazo": "2026-09-30",
+      "projeto_relacionado": "integritas",
+      "status": "pendente"
+    }
   ],
   "radar_coger": [
-    { "id": "r1", "data": "2026-09-01", "titulo": "Briefing: panorama do Portfólio Estratégico para reunião de setembro", "tipo": "briefing", "resumo": "Síntese do andamento de PACTO, PROTEGER e INTEGRITAS para a reunião com o Corregedor." },
-    { "id": "r2", "data": "2026-03-20", "titulo": "Nota estratégica: repercussões do PACTO 2026", "tipo": "nota", "resumo": "Síntese dos principais temas debatidos na 3ª edição do PACTO, em Vitória/ES, e desdobramentos para o Portfólio Estratégico." }
+    {
+      "id": "r1",
+      "data": "2026-09-01",
+      "titulo": "Briefing: panorama do Portfólio Estratégico para reunião de setembro",
+      "tipo": "briefing",
+      "resumo": "Síntese do andamento de PACTO, PROTEGER e INTEGRITAS para a reunião com o Corregedor."
+    }
   ],
-  "briefing_corregedor": [],
-  "integra_coger": [],
-  "coger_solutions": [],
-  "memoria_coger": [],
-  "coger_lab": [],
-  "correicao_em_foco": []
+  "briefing_corregedor": []
 }
 </script>
 
@@ -648,10 +809,10 @@ function statusInfo(status){
   }[status] || {label:status, icon:'⚪'};
 }
 function tipoProjetoLabel(tipo){
-  return {sistema:'Sistema', evento_anual:'Evento anual', iniciativa:'Iniciativa'}[tipo] || tipo;
+  return {sistema:'Sistema', evento_anual:'Evento anual', iniciativa:'Iniciativa', produto:'Produto'}[tipo] || tipo;
 }
 function proximaEntregaLabel(tipo){
-  return {sistema:'Próxima entrega', evento_anual:'Próxima edição', iniciativa:'Próximo marco'}[tipo] || 'Próxima entrega';
+  return {sistema:'Próxima entrega', evento_anual:'Próxima edição', iniciativa:'Próximo marco', produto:'Próximo destaque'}[tipo] || 'Próxima entrega';
 }
 function tipoHistoricoLabel(tipo){
   return {status:'Status', risco:'Risco', beneficio:'Benefício', decisao:'Decisão', nota:'Nota'}[tipo] || tipo;
@@ -742,13 +903,6 @@ function init(){
   document.getElementById('formBriefing').data.value = todayISO();
   document.getElementById('btnExportarBriefing').addEventListener('click', function(){ exportarProduto('briefing_corregedor'); });
 
-  Object.keys(REGISTRO_CONFIGS).forEach(function(col){
-    var form = document.getElementById('form-'+col);
-    form.addEventListener('submit', onSubmitRegistro);
-    form.data.value = todayISO();
-  });
-  populaSelectsRegistro();
-
   document.getElementById('inputImportUnidade').addEventListener('change', importarESmesclarUnidade);
 
   document.getElementById('filtroTarefaStatus').addEventListener('change', function(e){
@@ -773,14 +927,6 @@ function init(){
       r[e.target.dataset.field] = e.target.value;
       saveDraft();
       renderRadar();
-    }
-    if(e.target.classList && e.target.classList.contains('rg-in')){
-      var col = e.target.dataset.collection;
-      var item = STATE[col].find(function(x){ return x.id===e.target.dataset.id; });
-      if(!item) return;
-      item[e.target.dataset.field] = e.target.value;
-      saveDraft();
-      renderRegistroTab(col);
     }
     if(e.target.classList && e.target.classList.contains('bf-in')){
       var b = STATE.briefing_corregedor.find(function(x){ return x.id===e.target.dataset.id; });
@@ -814,12 +960,15 @@ function init(){
         marcarDecisaoTomada(id, marcadoPor);
       }
     }
-    if(e.target.classList && e.target.classList.contains('rg-del')){
-      if(!confirm('Remover este registro?')) return;
-      var col = e.target.dataset.collection;
-      STATE[col] = STATE[col].filter(function(x){ return x.id!==e.target.dataset.id; });
+    if(e.target.classList && e.target.classList.contains('tl-del')){
+      var projetoId = e.target.dataset.projeto;
+      var idx = parseInt(e.target.dataset.idx, 10);
+      var projeto = findProjeto(projetoId);
+      if(!projeto || isNaN(idx)) return;
+      if(!confirm('Remover esta entrada do histórico? Esta ação não pode ser desfeita.')) return;
+      projeto.historico.splice(idx, 1);
       saveDraft();
-      renderRegistroTab(col);
+      renderDetalhe(projetoId);
     }
     if(e.target.classList && e.target.classList.contains('bf-del')){
       if(!confirm('Remover este briefing?')) return;
@@ -843,7 +992,6 @@ function renderAll(){
   renderTarefasTab();
   renderRadar();
   renderBriefingTab();
-  Object.keys(REGISTRO_CONFIGS).forEach(renderRegistroTab);
   document.body.classList.toggle('modo-edicao', VIEW.editMode);
   document.body.classList.toggle('modo-leitura', !VIEW.editMode);
 }
@@ -875,7 +1023,6 @@ function toggleModo(){
   renderTarefasTab();
   renderRadar();
   renderBriefingTab();
-  Object.keys(REGISTRO_CONFIGS).forEach(renderRegistroTab);
   if(VIEW.tab==='detalhe' && VIEW.detailId) renderDetalhe(VIEW.detailId);
 }
 
@@ -1138,8 +1285,11 @@ function renderDetalhe(id){
 
   var historicoOrdenado = projeto.historico.slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
   var timelineHtml = historicoOrdenado.map(function(h){
+    var idxOriginal = projeto.historico.indexOf(h);
     return '<div class="tl-item"><div class="tl-meta"><span class="tl-tipo">'+tipoHistoricoLabel(h.tipo)+'</span>'
-      + '<span>'+formatDatePT(h.data)+'</span><span>· '+escapeHtml(h.autor)+'</span></div>'
+      + '<span>'+formatDatePT(h.data)+'</span><span>· '+escapeHtml(h.autor)+'</span>'
+      + '<button class="tl-del edit-only inline" data-projeto="'+projeto.id+'" data-idx="'+idxOriginal+'" type="button" title="Remover esta entrada">🗑</button>'
+      + '</div>'
       + '<div class="tl-txt">'+escapeHtml(h.texto)+'</div></div>';
   }).join('') || '<div class="empty-msg">Sem entradas no histórico ainda.</div>';
 
@@ -1342,91 +1492,6 @@ function onSubmitRadar(e){
   saveDraft(); form.reset(); form.data.value = todayISO(); renderRadar();
 }
 
-/* ================= Produtos do Escritório (registros genéricos) ================= */
-/* Vocabulário de tipo/status extraído literalmente da Proposta v2 (seção 25 e descrições de cada produto). */
-var REGISTRO_CONFIGS = {
-  integra_coger: {
-    label: 'Integra Coger',
-    tipoOptions: [['problema_recorrente','Problema recorrente'],['boa_pratica','Boa prática compartilhável'],['redundancia','Redundância identificada'],['lacuna','Lacuna identificada'],['padronizacao','Oportunidade de padronização'],['projeto_transversal','Projeto que depende de várias unidades']],
-    statusOptions: [['identificado','Identificado'],['em_analise','Em análise'],['implementado','Implementado']]
-  },
-  coger_solutions: {
-    label: 'Coger Solutions',
-    tipoOptions: [['gargalo','Gargalo operacional'],['fila_crescente','Fila/estoque crescente'],['procedimento_lento','Procedimento demorado'],['benchmark','Como outras corregedorias resolvem'],['solucao_tecnologica','Possível solução tecnológica']],
-    statusOptions: [['em_analise','Em análise'],['solucao_proposta','Solução proposta'],['implementado','Implementado']]
-  },
-  memoria_coger: {
-    label: 'Memória Coger',
-    tipoOptions: [['wiki','Wiki Coger'],['decisao_paradigmatica','Decisão paradigmática'],['boa_pratica','Banco de boas práticas'],['licao_aprendida','Lição aprendida'],['glossario','Glossário técnico'],['jurisprudencia','Coletânea de jurisprudência'],['modelo','Banco de modelos'],['caso_historico','Caso histórico'],['especialista','Mapeamento de especialista'],['historia_oral','História oral']],
-    statusOptions: [['aberto','Em elaboração'],['concluido','Disponível']]
-  },
-  coger_lab: {
-    label: 'Coger Lab',
-    tipoOptions: [['ia','Inteligência artificial'],['ciencia_dados','Ciência de dados'],['automacao','Automação'],['analise_preditiva','Análise preditiva'],['dashboards','Dashboards'],['novo_modelo_gestao','Novo modelo de gestão'],['transformacao_digital','Transformação digital'],['melhoria_processos','Melhoria de processos']],
-    statusOptions: [['ideacao','Ideação'],['prototipagem','Prototipagem'],['teste','Teste'],['expansao','Expansão'],['encerrado','Encerrado']]
-  },
-  correicao_em_foco: {
-    label: 'Correição em Foco',
-    tipoOptions: [['clinica_casos','Clínica de casos'],['webinar','Webinar'],['palestra','Palestra'],['estudo_caso','Estudo de caso'],['simulacao','Simulação'],['onboarding','Onboarding'],['mentoria','Mentoria'],['intercambio','Intercâmbio entre Subcorregedorias'],['encontro_tecnico','Encontro técnico']],
-    statusOptions: [['planejado','Planejado'],['realizado','Realizado']]
-  }
-};
-function populaSelectsRegistro(){
-  Object.keys(REGISTRO_CONFIGS).forEach(function(col){
-    var cfg = REGISTRO_CONFIGS[col];
-    var form = document.getElementById('form-'+col);
-    if(!form) return;
-    if(form.tipo.options.length===0) form.tipo.innerHTML = cfg.tipoOptions.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
-    if(form.status.options.length===0) form.status.innerHTML = cfg.statusOptions.map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join('');
-  });
-}
-function optionLabel(options, value){
-  var found = options.find(function(o){ return o[0]===value; });
-  return found ? found[1] : value;
-}
-function renderRegistroTab(col){
-  renderTabCounts();
-  var cfg = REGISTRO_CONFIGS[col];
-  var el = document.getElementById('list-'+col);
-  if(!el) return;
-  var itens = STATE[col].slice().sort(function(a,b){ return b.data.localeCompare(a.data); });
-  el.innerHTML = itens.length ? itens.map(function(it){ return renderRegistroLinhaHtml(col, cfg, it); }).join('') : '<div class="empty-msg">Nenhum registro ainda.</div>';
-}
-function renderRegistroLinhaHtml(col, cfg, it){
-  if(VIEW.editMode){
-    return '<div class="log-item log-edit">'
-      + '<div class="rd-row">'
-      + '<input type="date" class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="data" value="'+it.data+'">'
-      + '<select class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="tipo">'
-        + cfg.tipoOptions.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===it.tipo?' selected':'')+'>'+o[1]+'</option>'; }).join('')
-      + '</select>'
-      + '<select class="rg-in" data-collection="'+col+'" data-id="'+it.id+'" data-field="status">'
-        + cfg.statusOptions.map(function(o){ return '<option value="'+o[0]+'"'+(o[0]===it.status?' selected':'')+'>'+o[1]+'</option>'; }).join('')
-      + '</select>'
-      + '<button class="btn danger sm rg-del" data-collection="'+col+'" data-id="'+it.id+'" type="button">🗑</button>'
-      + '</div>'
-      + '<input type="text" class="rg-in rd-titulo" data-collection="'+col+'" data-id="'+it.id+'" data-field="titulo" value="'+escapeHtml(it.titulo)+'" placeholder="Título">'
-      + '<input type="text" class="rg-in rg-extra" data-collection="'+col+'" data-id="'+it.id+'" data-field="responsavel" value="'+escapeHtml(it.responsavel)+'" placeholder="Responsável">'
-      + '<textarea class="rg-in rd-resumo" data-collection="'+col+'" data-id="'+it.id+'" data-field="descricao" rows="2" placeholder="Descrição">'+escapeHtml(it.descricao)+'</textarea>'
-      + '</div>';
-  }
-  return '<div class="log-item"><div class="log-top"><span class="chip">'+escapeHtml(optionLabel(cfg.tipoOptions, it.tipo))+'</span><span class="chip">'+escapeHtml(optionLabel(cfg.statusOptions, it.status))+'</span><span>'+formatDatePT(it.data)+'</span></div>'
-    + '<b>'+escapeHtml(it.titulo)+'</b>'
-    + (it.responsavel ? '<div class="tf-sub">Responsável: '+escapeHtml(it.responsavel)+'</div>' : '')
-    + (it.descricao ? '<div>'+escapeHtml(it.descricao)+'</div>' : '')
-    + '</div>';
-}
-function onSubmitRegistro(e){
-  e.preventDefault();
-  var form = e.target;
-  var col = form.dataset.collection;
-  STATE[col].push({
-    id: uid(col.slice(0,3)), data: form.data.value||todayISO(), titulo: form.titulo.value.trim(),
-    tipo: form.tipo.value, status: form.status.value, responsavel: form.responsavel.value.trim(), descricao: form.descricao.value.trim()
-  });
-  saveDraft(); form.reset(); form.data.value = todayISO(); renderRegistroTab(col);
-}
-
 /* ================= Briefing do Corregedor ================= */
 function renderBriefingTab(){
   renderTabCounts();
@@ -1517,7 +1582,6 @@ function importarJsonCompleto(e){
       if(!STATE.tarefas) STATE.tarefas = [];
       if(!STATE.radar_coger) STATE.radar_coger = [];
       if(!STATE.briefing_corregedor) STATE.briefing_corregedor = [];
-      Object.keys(REGISTRO_CONFIGS).forEach(function(col){ if(!STATE[col]) STATE[col] = []; });
       saveDraft();
       renderAll();
       switchTab('cockpit');
@@ -1558,8 +1622,6 @@ function exportarProjetoUnico(projetoId){
   downloadFile(JSON.stringify(envelope, null, 2), 'projeto-'+projetoId+'-'+todayISO()+'.json', 'application/json');
 }
 function exportarProduto(col){
-  var cfg = REGISTRO_CONFIGS[col];
-  var label = cfg ? cfg.label : (col==='radar_coger' ? 'RADAR Coger' : col==='briefing_corregedor' ? 'Briefing do Corregedor' : col);
   var envelope = {
     meta: { tipo_exportado: col, exportado_em: new Date().toISOString(), exportado_por: DEFAULT_AUTOR },
     dados: STATE[col]
@@ -1592,9 +1654,9 @@ function importarESmesclarUnidade(e){
         });
         saveDraft(); renderAll();
         alert('Projeto "'+novoProjeto.nome+'" importado/atualizado com sucesso ('+tarefasVinc.length+' etapa(s) vinculada(s)). Nenhum outro projeto foi alterado.');
-      } else if(tipo==='radar_coger' || tipo==='briefing_corregedor' || REGISTRO_CONFIGS[tipo]){
+      } else if(tipo==='radar_coger' || tipo==='briefing_corregedor'){
         if(!Array.isArray(parsed.dados)) throw new Error('Dados do produto inválidos (esperava uma lista de registros).');
-        var label = REGISTRO_CONFIGS[tipo] ? REGISTRO_CONFIGS[tipo].label : (tipo==='radar_coger'?'RADAR Coger':'Briefing do Corregedor');
+        var label = tipo==='radar_coger' ? 'RADAR Coger' : 'Briefing do Corregedor';
         if(!confirm('Importar os dados de "'+label+'"? Isso substituirá TODOS os registros atuais dessa aba pelos do arquivo importado. As demais abas não são afetadas.')) return;
         STATE[tipo] = parsed.dados;
         saveDraft(); renderAll();
