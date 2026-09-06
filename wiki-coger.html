@@ -103,7 +103,7 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
     </div>
     <div class="tab-switch" id="tabSwitch" style="margin-top:14px">
       <button class="tab-btn" data-tab="1" type="button"><span class="t-label">Apostila 1 — Consolidação de Normas</span><span class="t-count" id="count1"></span></button>
-      <button class="tab-btn pendente" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count" id="count2"></span></button>
       <button class="tab-btn pendente" data-tab="3" type="button"><span class="t-label">Apostila 3 — Legislação Complementar</span><span class="t-count">Pendente</span></button>
       <button class="tab-btn pendente" data-tab="4" type="button"><span class="t-label">Apostila 4 — Jurisprudência</span><span class="t-count">Pendente</span></button>
       <button class="tab-btn pendente" data-tab="5" type="button"><span class="t-label">Apostila 5 — AGU, CGU e Dasp</span><span class="t-count">Pendente</span></button>
@@ -126,8 +126,12 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
   </section>
 
   <section id="view-2" class="view">
-    <div class="apostila-header"><h2 class="section-title">Apostila nº 2 — Legislação Básica</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
-    <div class="pendente-card"><b>Ainda não processada</b>Reúne a legislação de aplicação direta e cotidiana ao PAD (Lei nº 8.112/1990, Regimento Interno da RFB e a portaria estruturante da atividade correcional, inclusive versões revogadas) — aprox. 117 mil palavras. Peça para eu continuar a partir desta apostila quando quiser.</div>
+    <div class="apostila-header">
+      <div><h2 class="section-title" id="tituloApostila2"></h2></div>
+      <span class="status-badge disponivel">✅ Disponível</span>
+    </div>
+    <p class="apostila-meta" id="metaApostila2"></p>
+    <div id="conteudoApostila2"></div>
   </section>
 
   <section id="view-3" class="view">
@@ -211,6 +215,40 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
         ]
       }
     ]
+  },
+  "apostila2": {
+    "titulo": "Apostila nº 2 — Legislação Básica",
+    "edicao": "Abril de 2026",
+    "prefixoItem": "",
+    "secoes": [
+      {
+        "titulo": "Lei nº 8.112, de 11 de dezembro de 1990 — Regime Jurídico dos Servidores Públicos Civis Federais",
+        "verbetes": [
+          {"numero":"Título I","titulo":"Disposições Preliminares","ref":"arts. 1º a 4º","resumo":"Abre a Lei nº 8.112, de 11 de dezembro de 1990, fixando seu âmbito de aplicação — os servidores públicos civis da União, das autarquias e das fundações públicas federais — e os conceitos básicos de cargo público, servidor e categorias funcionais organizadas em carreira ou isoladas. É o marco estatutário de que decorre todo o regime disciplinar tratado nos Títulos IV e V, aplicável ao servidor da RFB investigado em PAD."},
+          {"numero":"Título II","titulo":"Do Provimento, Vacância, Remoção, Redistribuição e Substituição","ref":"arts. 5º a 39","resumo":"Disciplina as formas de provimento (nomeação, art. 9º), o concurso público, a posse e o exercício, e a estabilidade após três anos de efetivo exercício (arts. 21 e 22). Trata das hipóteses de vacância — entre elas a demissão e a destituição de cargo em comissão (art. 33), penalidades expulsivas aplicadas ao final do PAD — e da readaptação, reversão, reintegração e recondução (arts. 24 a 29), relevantes quando um PAD é anulado ou revisado e o servidor precisa retornar ao cargo."},
+          {"numero":"Título III","titulo":"Dos Direitos e Vantagens","ref":"arts. 40 a 115","resumo":"Regula vencimento, remuneração, indenizações, gratificações, adicionais, férias, licenças, afastamentos, concessões, tempo de serviço e o direito de petição do servidor (Capítulo VIII, arts. 104 a 115). É referência para aferir, durante o PAD, a manutenção da remuneração no afastamento preventivo (que remete ao art. 147, do Título V) e para instruir pedidos de reconsideração e recursos contra decisões que afetem o servidor."},
+          {"numero":"Título IV","titulo":"Do Regime Disciplinar","ref":"arts. 116 a 142","resumo":"Núcleo do direito disciplinar estatutário: lista os deveres funcionais (art. 116), as proibições (art. 117) e as regras de acumulação de cargos (arts. 118 a 120); define as responsabilidades civil, penal e administrativa e sua independência (arts. 121 a 126); e enumera as cinco penalidades — advertência, suspensão, demissão, cassação de aposentadoria ou disponibilidade e destituição de cargo em comissão — com seus fundamentos e a prescrição da ação disciplinar (arts. 127 a 142). É o dispositivo mais diretamente aplicado na indiciação e no julgamento do PAD, detalhado na Apostila nº 1."},
+          {"numero":"Título V","titulo":"Do Processo Administrativo Disciplinar","ref":"arts. 143 a 182","resumo":"Regula o rito do PAD propriamente dito: disposições gerais e sindicância (arts. 143 a 146), o afastamento preventivo por até 60 dias prorrogáveis (art. 147), a instauração e as fases de inquérito — instrução, defesa e relatório (arts. 148 a 166) —, o julgamento (arts. 167 a 173) e a revisão do processo disciplinar (arts. 174 a 182). É o dispositivo estatutário-base de todo o rito descrito com mais detalhe na Apostila nº 1."},
+          {"numero":"Título VI","titulo":"Da Seguridade Social do Servidor","ref":"arts. 183 a 230 (art. 231 revogado)","resumo":"Trata de aposentadoria, auxílio-natalidade, salário-família, licença para tratamento de saúde, licença-gestante, licença por acidente em serviço, pensão, auxílio-funeral, auxílio-reclusão e assistência à saúde. Tem relevância correcional indireta, por exemplo no exame de compatibilidade entre afastamento por saúde e andamento do PAD, e na apuração de eventual irregularidade na percepção de benefício; o Capítulo IV — Do Custeio (art. 231) está revogado."},
+          {"numero":"Título VII","titulo":"Da Contratação Temporária de Excepcional Interesse Público (revogado)","ref":"arts. 232 a 235 (revogados)","resumo":"Tratava da contratação temporária de excepcional interesse público no âmbito federal; teve seus artigos revogados, matéria hoje disciplinada em lei própria, a Lei nº 8.745, de 9 de dezembro de 1993, citada entre as normas que consolidam a redação atual da Lei nº 8.112, de 1990."},
+          {"numero":"Título VIII","titulo":"Das Disposições Gerais","ref":"arts. 236 a 242","resumo":"Reúne regras gerais complementares de aplicação da Lei nº 8.112, de 1990, incluindo normas sobre prazos e contagem de tempo de serviço para fins diversos, fechando a parte substantiva do Estatuto antes das disposições de transição."},
+          {"numero":"Título IX","titulo":"Das Disposições Transitórias e Finais","ref":"arts. 243 a 253","resumo":"Encerra a Lei nº 8.112, de 1990, com regras de transição do regime celetista para o estatutário e disposições finais sobre sua entrada em vigor e a revogação da legislação estatutária anterior."}
+        ]
+      },
+      {
+        "titulo": "Regimento Interno da RFB e Portaria Estruturante da Atividade Correcional",
+        "verbetes": [
+          {"numero":"R1","titulo":"Regimento Interno da RFB — Estrutura da Coger e Atribuições dos Dirigentes","ref":"arts. 16, 234 e 354 a 366","resumo":"O Regimento Interno da Secretaria Especial da Receita Federal do Brasil, aprovado pela Portaria ME nº 284, de 27 de julho de 2020, situa a Corregedoria (Coger) entre as unidades de assessoramento direto da RFB (art. 16) e lhe atribui competências comuns às unidades centrais (art. 234). O Capítulo IV do Regimento (arts. 350 a 366) detalha as atribuições dos dirigentes: ao Corregedor incumbe planejar, dirigir, normatizar e coordenar as atividades correcionais e de responsabilização de entidades privadas, instaurar ou avocar procedimentos disciplinares, julgar e aplicar advertência ou suspensão a servidores da RFB, declarar a nulidade de procedimentos viciados, convocar servidores para comissões e decidir recursos contra decisões dos Chefes de Escor (art. 354, incisos I a XI); ao Corregedor-Adjunto incumbe assistir e substituir o Corregedor e gerenciar os Escor (art. 355); e aos Chefes de Escor incumbem, em sua circunscrição, atribuições análogas às do Corregedor, inclusive julgar advertência ou suspensão de até 30 dias (art. 356). Essas atribuições não alcançam atos praticados pelas próprias autoridades da alta administração da RFB, hipótese em que a competência é de instância superior (parágrafo único dos arts. 354 e 356)."},
+          {"numero":"R2","titulo":"Portaria Estruturante e Consolidadora da Atividade Correcional","ref":"Portaria RFB nº 4.505, de 2020","resumo":"A Portaria RFB nº 4.505, de 6 de outubro de 2020, é a norma estruturante e consolidadora vigente da apuração de irregularidades funcionais no âmbito da RFB, citada ao longo da Apostila nº 1 como fundamento imediato de institutos como a admissibilidade, os procedimentos investigativos preparatórios (IPS, Sinve e Sinpa), o afastamento cautelar e o compartilhamento de informações sigilosas entre unidades. Consolida em texto único o que antes era tratado por sucessivas portarias estruturantes editadas desde 1999."}
+        ]
+      },
+      {
+        "titulo": "Histórico Normativo da Estrutura Correcional",
+        "verbetes": [
+          {"numero":"H1","titulo":"Cadeia de Regimentos Internos e de Portarias Estruturantes Revogados","ref":"1969-2020","resumo":"Desde o regimento aprovado pela Portaria MF nº 18, de 23 de janeiro de 1969, a estrutura organizacional da então Secretaria da Receita Federal — e, dentro dela, a unidade correcional — foi sucessivamente reorganizada por regimentos internos posteriores (Portarias MF nº 653, de 1977; MEFP nº 606, de 1992; MF nº 227, de 1998; MF nº 259, de 2001; MF nº 30, de 2005; MF nº 275, de 2005 — que perdeu eficácia junto com a Medida Provisória nº 258, de 2005 —; MF nº 95, de 2007; MF nº 125, de 2009; MF nº 587, de 2010; MF nº 203, de 2012; e MF nº 430, de 2017), até a vigente Portaria ME nº 284, de 2020. Paralelamente, a apuração de irregularidades funcionais foi disciplinada, em sequência, pelas Portarias SRF nº 699, de 1999; SRF nº 825, de 2000; RFB nº 4.491, de 2005; RFB nº 3.131, de 2011; RFB nº 136, de 2013; Coger nº 14, de 2014; e RFB nº 6.483, de 2017 — cada uma revogando expressa ou tacitamente a anterior —, até a vigente Portaria RFB nº 4.505, de 2020. O conhecimento dessa cadeia é relevante para a análise de fatos pretéritos, cuja regularidade se afere pela norma em vigor à época dos fatos, não pela atualmente vigente."}
+        ]
+      }
+    ]
   }
 }
 </script>
@@ -234,25 +272,28 @@ function highlight(text, termo){
   return esc.replace(new RegExp('('+escTermo+')','ig'), '<span class="hit-mark">$1</span>');
 }
 
-function renderApostila1(){
-  var a1 = WIKI.apostila1;
-  document.getElementById('tituloApostila1').textContent = a1.titulo;
-  document.getElementById('metaApostila1').textContent = 'Edição: ' + a1.edicao;
-  var totalVerbetes = a1.secoes.reduce(function(sum, s){ return sum + s.verbetes.length; }, 0);
-  document.getElementById('count1').textContent = totalVerbetes + ' verbetes';
+function renderApostila(n){
+  var apostila = WIKI['apostila'+n];
+  if(!apostila) return;
+  document.getElementById('tituloApostila'+n).textContent = apostila.titulo;
+  document.getElementById('metaApostila'+n).textContent = 'Edição: ' + apostila.edicao;
+  var totalVerbetes = apostila.secoes.reduce(function(sum, s){ return sum + s.verbetes.length; }, 0);
+  document.getElementById('count'+n).textContent = totalVerbetes + ' verbetes';
 
-  var el = document.getElementById('conteudoApostila1');
-  el.innerHTML = a1.secoes.map(function(secao){
+  var prefixo = (apostila.prefixoItem !== undefined) ? apostila.prefixoItem : 'Item ';
+  var el = document.getElementById('conteudoApostila'+n);
+  el.innerHTML = apostila.secoes.map(function(secao){
     return '<h3 class="subsecao-title">'+escapeHtml(secao.titulo)+'</h3>'
       + '<div class="verbetes-grid">'
-      + secao.verbetes.map(renderVerbeteHtml).join('')
+      + secao.verbetes.map(function(v){ return renderVerbeteHtml(v, prefixo); }).join('')
       + '</div>';
   }).join('');
 }
-function renderVerbeteHtml(v){
+function renderVerbeteHtml(v, prefixo){
+  var badge = v.ref ? escapeHtml(v.ref) : ('p. '+v.pagina);
   return '<div class="verbete-card" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
-    + '<div class="verbete-top"><div><div class="verbete-num">Item '+escapeHtml(v.numero)+'</div><div class="verbete-titulo">'+escapeHtml(v.titulo)+'</div></div>'
-    + '<span class="verbete-pagina">p. '+v.pagina+'</span></div>'
+    + '<div class="verbete-top"><div><div class="verbete-num">'+escapeHtml((prefixo||'')+v.numero)+'</div><div class="verbete-titulo">'+escapeHtml(v.titulo)+'</div></div>'
+    + '<span class="verbete-pagina">'+badge+'</span></div>'
     + '<div class="verbete-resumo">'+escapeHtml(v.resumo)+'</div>'
     + '</div>';
 }
@@ -286,7 +327,10 @@ function switchTab(tab){
 }
 
 function init(){
-  renderApostila1();
+  Object.keys(WIKI).forEach(function(key){
+    var n = key.replace('apostila','');
+    renderApostila(n);
+  });
   document.querySelectorAll('.tab-btn').forEach(function(btn){
     btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
   });
