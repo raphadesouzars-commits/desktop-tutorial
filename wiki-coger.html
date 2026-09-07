@@ -46,6 +46,14 @@ header.hero::before{content:"";position:absolute;inset:0;background-image:repeat
 .search-row input::placeholder{color:#b9c3da}
 .search-row input:focus{outline:none;border-color:var(--gold-light)}
 
+.busca-resumo{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px}
+.busca-resumo-total{font-size:12px;font-weight:700;color:#b9c3da;margin-right:2px}
+.busca-resumo-item{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;color:#dfe4ee;cursor:pointer;transition:.15s}
+.busca-resumo-item:hover:not(:disabled){background:rgba(255,255,255,.13)}
+.busca-resumo-item.active{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
+.busca-resumo-item:disabled{opacity:.4;cursor:default}
+.busca-resumo-item b{font-weight:800}
+
 .tab-switch{display:flex;flex-wrap:wrap;gap:10px}
 .tab-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;cursor:pointer;transition:.15s;text-align:left;color:#dfe4ee;font-weight:700;font-size:12px;flex:1 1 190px;min-width:170px}
 .tab-btn:hover{background:rgba(255,255,255,.11)}
@@ -101,8 +109,9 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       </div>
     </div>
     <div class="search-row">
-      <input type="text" id="buscaInput" placeholder="🔎 Buscar por tema, norma ou palavra-chave nesta apostila…">
+      <input type="text" id="buscaInput" placeholder="🔎 Buscar por tema, norma ou palavra-chave em todas as apostilas…">
     </div>
+    <div class="busca-resumo hidden" id="buscaResumo"></div>
     <div class="tab-switch" id="tabSwitch" style="margin-top:14px">
       <button class="tab-btn" data-tab="1" type="button"><span class="t-label">Apostila 1 — Consolidação de Normas</span><span class="t-count" id="count1"></span></button>
       <button class="tab-btn" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count" id="count2"></span></button>
@@ -566,22 +575,46 @@ function renderVerbeteHtml(v, prefixo){
     + '</div>';
 }
 
+var APOSTILA_LABELS = {1:'Apostila 1', 2:'Apostila 2', 3:'Apostila 3', 4:'Apostila 4'};
+
 function aplicarBusca(){
   var termo = document.getElementById('buscaInput').value.trim().toLowerCase();
-  var cards = document.querySelectorAll('#view-'+VIEW.tab+' .verbete-card');
-  var visiveis = 0;
-  cards.forEach(function(card){
+  var counts = {1:0, 2:0, 3:0, 4:0};
+  document.querySelectorAll('.view .verbete-card').forEach(function(card){
     var alvo = card.dataset.titulo + ' ' + card.dataset.resumo;
     var ok = !termo || alvo.indexOf(termo) !== -1;
     card.classList.toggle('match-hidden', !ok);
-    if(ok) visiveis++;
+    if(ok){
+      var viewEl = card.closest('.view');
+      var n = viewEl ? viewEl.id.replace('view-','') : null;
+      if(n && counts[n] !== undefined) counts[n]++;
+    }
   });
-  document.querySelectorAll('#view-'+VIEW.tab+' .subsecao-title').forEach(function(titleEl){
+  document.querySelectorAll('.view .subsecao-title').forEach(function(titleEl){
     var grid = titleEl.nextElementSibling;
     if(!grid) return;
     var algumVisivel = Array.prototype.some.call(grid.querySelectorAll('.verbete-card'), function(c){ return !c.classList.contains('match-hidden'); });
     titleEl.classList.toggle('hidden', !algumVisivel);
     grid.classList.toggle('hidden', !algumVisivel);
+  });
+  renderBuscaResumo(termo, counts);
+}
+
+function renderBuscaResumo(termo, counts){
+  var el = document.getElementById('buscaResumo');
+  if(!termo){ el.classList.add('hidden'); el.innerHTML = ''; return; }
+  var total = counts[1] + counts[2] + counts[3] + counts[4];
+  var html = '<span class="busca-resumo-total">'+total+' resultado'+(total===1?'':'s')+' em todas as apostilas:</span>';
+  [1,2,3,4].forEach(function(n){
+    var isActive = (VIEW.tab === String(n));
+    var isEmpty = counts[n] === 0;
+    html += '<button type="button" class="busca-resumo-item'+(isActive?' active':'')+'" data-tab="'+n+'"'+(isEmpty?' disabled':'')+'>'
+      + APOSTILA_LABELS[n] + ': <b>' + counts[n] + '</b></button>';
+  });
+  el.innerHTML = html;
+  el.classList.remove('hidden');
+  el.querySelectorAll('.busca-resumo-item').forEach(function(btn){
+    btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
   });
 }
 
@@ -590,8 +623,8 @@ function switchTab(tab){
   document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b.dataset.tab===tab); });
   document.querySelectorAll('section.view').forEach(function(s){ s.classList.remove('active'); });
   document.getElementById('view-'+tab).classList.add('active');
-  document.getElementById('buscaInput').value = '';
   window.scrollTo(0,0);
+  aplicarBusca();
 }
 
 function init(){
