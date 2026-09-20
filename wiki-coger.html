@@ -100,6 +100,14 @@ section.view.active{display:block}
 .verbete-resumo{font-size:13px;color:var(--text);line-height:1.6}
 .verbete-card.match-hidden{display:none}
 .hit-mark{background:var(--gold-100);color:var(--navy-900);border-radius:3px;padding:0 1px}
+.verbete-resumo a.ver-tambem-link{color:var(--navy-700);font-weight:600;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:2px;cursor:pointer}
+.verbete-resumo a.ver-tambem-link:hover{color:var(--gold);text-decoration-style:solid}
+.verbete-actions{margin-top:10px;padding-top:8px;border-top:1px solid var(--border);display:flex;justify-content:flex-end}
+.copiar-citacao-btn{background:none;border:1px solid var(--border);border-radius:7px;color:var(--muted);font-size:11px;font-weight:600;padding:5px 10px;transition:.15s}
+.copiar-citacao-btn:hover{border-color:var(--navy-700);color:var(--navy-900);background:var(--surface-alt)}
+.copiar-citacao-btn.copiado{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+@keyframes verbeteFlash{0%{box-shadow:0 0 0 3px var(--gold-light)}100%{box-shadow:var(--shadow)}}
+.verbete-card.verbete-flash{animation:verbeteFlash 1.8s ease-out}
 
 .empty-msg{color:var(--muted-2);font-size:14px;font-style:italic;padding:20px 0;text-align:center}
 footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:22px 20px 10px}
@@ -611,6 +619,9 @@ function highlight(text, termo){
   return esc.replace(new RegExp('('+escTermo+')','ig'), '<span class="hit-mark">$1</span>');
 }
 
+var TITLE_INDEX = {};
+var VERBETE_LOOKUP = {};
+
 function renderApostila(n){
   var apostila = WIKI['apostila'+n];
   if(!apostila) return;
@@ -621,21 +632,78 @@ function renderApostila(n){
   var progressoEl = document.getElementById('progressoApostila'+n);
   if(progressoEl){ progressoEl.textContent = apostila.progresso || ''; progressoEl.classList.toggle('hidden', !apostila.progresso); }
 
+  var indexList = [];
+  apostila.secoes.forEach(function(secao){
+    secao.verbetes.forEach(function(v){
+      indexList.push({titulo:v.titulo, numero:v.numero});
+      VERBETE_LOOKUP[n+':'+v.numero] = v;
+    });
+  });
+  TITLE_INDEX[n] = indexList;
+
   var prefixo = (apostila.prefixoItem !== undefined) ? apostila.prefixoItem : 'Item ';
   var el = document.getElementById('conteudoApostila'+n);
   el.innerHTML = apostila.secoes.map(function(secao){
     return '<h3 class="subsecao-title">'+escapeHtml(secao.titulo)+'</h3>'
       + '<div class="verbetes-grid">'
-      + secao.verbetes.map(function(v){ return renderVerbeteHtml(v, prefixo); }).join('')
+      + secao.verbetes.map(function(v){ return renderVerbeteHtml(v, prefixo, n); }).join('')
       + '</div>';
   }).join('');
 }
-function renderVerbeteHtml(v, prefixo){
+
+function normTitle(s){
+  return String(s).toLowerCase()
+    .replace(/[()]/g,' ')
+    .replace(/[-–—,]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function normTitleStrict(s){
+  return normTitle(s).replace(/\be\b/g,' ').replace(/\s+/g,' ').trim();
+}
+function findVerbeteByTitle(quoted, apNum){
+  var list = TITLE_INDEX[apNum];
+  if(!list) return null;
+  var nq = normTitleStrict(quoted);
+  if(nq.length < 4) return null;
+  var i, item;
+  for(i=0;i<list.length;i++){ if(list[i].titulo === quoted) return list[i]; }
+  for(i=0;i<list.length;i++){ if(normTitleStrict(list[i].titulo) === nq) return list[i]; }
+  for(i=0;i<list.length;i++){
+    var nt = normTitleStrict(list[i].titulo);
+    if(nt.indexOf(nq) === 0 || nq.indexOf(nt) === 0) return list[i];
+  }
+  return null;
+}
+function linkifyResumo(resumo, apNum){
+  var idx = resumo.search(/ver também/i);
+  if(idx === -1) return escapeHtml(resumo);
+  var before = resumo.slice(0, idx);
+  var after = resumo.slice(idx);
+  var parts = [];
+  var lastEnd = 0;
+  var re = /"([^"]+)"/g;
+  var m;
+  while((m = re.exec(after))){
+    parts.push(escapeHtml(after.slice(lastEnd, m.index)));
+    var match = findVerbeteByTitle(m[1], apNum);
+    if(match){
+      parts.push('"<a href="#" class="ver-tambem-link" data-apostila="'+apNum+'" data-numero="'+escapeHtml(match.numero)+'">'+escapeHtml(m[1])+'</a>"');
+    } else {
+      parts.push('"'+escapeHtml(m[1])+'"');
+    }
+    lastEnd = re.lastIndex;
+  }
+  parts.push(escapeHtml(after.slice(lastEnd)));
+  return escapeHtml(before) + parts.join('');
+}
+function renderVerbeteHtml(v, prefixo, apNum){
   var badge = v.ref ? escapeHtml(v.ref) : ('p. '+v.pagina);
-  return '<div class="verbete-card" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
+  return '<div class="verbete-card" id="v-'+apNum+'-'+escapeHtml(v.numero)+'" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
     + '<div class="verbete-top"><div><div class="verbete-num">'+escapeHtml((prefixo||'')+v.numero)+'</div><div class="verbete-titulo">'+escapeHtml(v.titulo)+'</div></div>'
     + '<span class="verbete-pagina">'+badge+'</span></div>'
-    + '<div class="verbete-resumo">'+escapeHtml(v.resumo)+'</div>'
+    + '<div class="verbete-resumo">'+linkifyResumo(v.resumo, apNum)+'</div>'
+    + '<div class="verbete-actions"><button type="button" class="copiar-citacao-btn" data-apostila="'+apNum+'" data-numero="'+escapeHtml(v.numero)+'">📋 Copiar citação</button></div>'
     + '</div>';
 }
 
@@ -691,6 +759,58 @@ function switchTab(tab){
   aplicarBusca();
 }
 
+function navegarParaVerbete(apNum, numero){
+  var input = document.getElementById('buscaInput');
+  if(input.value){ input.value = ''; }
+  if(VIEW.tab !== String(apNum)){
+    switchTab(String(apNum));
+  } else {
+    aplicarBusca();
+  }
+  requestAnimationFrame(function(){
+    var el = document.getElementById('v-'+apNum+'-'+numero);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    el.classList.add('verbete-flash');
+    setTimeout(function(){ el.classList.remove('verbete-flash'); }, 1800);
+  });
+}
+
+function copiarTexto(text){
+  function fallback(){
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext){
+    return navigator.clipboard.writeText(text).catch(fallback);
+  }
+  fallback();
+  return Promise.resolve();
+}
+
+function copiarCitacao(apNum, numero, btn){
+  var apostila = WIKI['apostila'+apNum];
+  var v = VERBETE_LOOKUP[apNum+':'+numero];
+  if(!apostila || !v) return;
+  var anoMatch = String(apostila.edicao||'').match(/\d{4}/);
+  var ano = anoMatch ? anoMatch[0] : '';
+  var pagina = v.ref || ('p. '+v.pagina);
+  var texto = apostila.titulo+', tema "'+v.titulo+'", '+pagina+' (COGER/RFB'+(ano ? ', '+ano : '')+').';
+  copiarTexto(texto).then(function(){
+    var original = btn.textContent;
+    btn.textContent = '✓ Copiado';
+    btn.classList.add('copiado');
+    setTimeout(function(){ btn.textContent = original; btn.classList.remove('copiado'); }, 1600);
+  });
+}
+
 function init(){
   Object.keys(WIKI).forEach(function(key){
     var n = key.replace('apostila','');
@@ -700,6 +820,18 @@ function init(){
     btn.addEventListener('click', function(){ switchTab(btn.dataset.tab); });
   });
   document.getElementById('buscaInput').addEventListener('input', aplicarBusca);
+  document.addEventListener('click', function(e){
+    var link = e.target.closest('.ver-tambem-link');
+    if(link){
+      e.preventDefault();
+      navegarParaVerbete(link.dataset.apostila, link.dataset.numero);
+      return;
+    }
+    var btn = e.target.closest('.copiar-citacao-btn');
+    if(btn){
+      copiarCitacao(btn.dataset.apostila, btn.dataset.numero, btn);
+    }
+  });
   switchTab('1');
 }
 document.addEventListener('DOMContentLoaded', init);
