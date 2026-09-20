@@ -612,11 +612,15 @@ function escapeHtml(s){
     return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
   });
 }
-function highlight(text, termo){
-  if(!termo) return escapeHtml(text);
-  var esc = escapeHtml(text);
+function highlightHtml(html, termo){
+  if(!termo) return html;
   var escTermo = escapeHtml(termo).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return esc.replace(new RegExp('('+escTermo+')','ig'), '<span class="hit-mark">$1</span>');
+  if(!escTermo) return html;
+  var re = new RegExp('('+escTermo+')','ig');
+  return html.split(/(<[^>]+>)/).map(function(chunk){
+    if(chunk.charAt(0) === '<') return chunk;
+    return chunk.replace(re, '<span class="hit-mark">$1</span>');
+  }).join('');
 }
 
 var TITLE_INDEX = {};
@@ -699,7 +703,7 @@ function linkifyResumo(resumo, apNum){
 }
 function renderVerbeteHtml(v, prefixo, apNum){
   var badge = v.ref ? escapeHtml(v.ref) : ('p. '+v.pagina);
-  return '<div class="verbete-card" id="v-'+apNum+'-'+escapeHtml(v.numero)+'" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
+  return '<div class="verbete-card" id="v-'+apNum+'-'+escapeHtml(v.numero)+'" data-apostila="'+apNum+'" data-numero="'+escapeHtml(v.numero)+'" data-titulo="'+escapeHtml(v.titulo.toLowerCase())+'" data-resumo="'+escapeHtml(v.resumo.toLowerCase())+'">'
     + '<div class="verbete-top"><div><div class="verbete-num">'+escapeHtml((prefixo||'')+v.numero)+'</div><div class="verbete-titulo">'+escapeHtml(v.titulo)+'</div></div>'
     + '<span class="verbete-pagina">'+badge+'</span></div>'
     + '<div class="verbete-resumo">'+linkifyResumo(v.resumo, apNum)+'</div>'
@@ -709,13 +713,25 @@ function renderVerbeteHtml(v, prefixo, apNum){
 
 var APOSTILA_LABELS = {1:'Apostila 1', 2:'Apostila 2', 3:'Apostila 3', 4:'Apostila 4', 5:'Apostila 5'};
 
+function aplicarHighlightNoCard(card, termoRaw){
+  var ap = card.dataset.apostila, numero = card.dataset.numero;
+  var v = VERBETE_LOOKUP[ap+':'+numero];
+  if(!v) return;
+  var tituloEl = card.querySelector('.verbete-titulo');
+  var resumoEl = card.querySelector('.verbete-resumo');
+  if(tituloEl) tituloEl.innerHTML = highlightHtml(escapeHtml(v.titulo), termoRaw);
+  if(resumoEl) resumoEl.innerHTML = highlightHtml(linkifyResumo(v.resumo, ap), termoRaw);
+}
+
 function aplicarBusca(){
-  var termo = document.getElementById('buscaInput').value.trim().toLowerCase();
+  var termoRaw = document.getElementById('buscaInput').value.trim();
+  var termo = termoRaw.toLowerCase();
   var counts = {1:0, 2:0, 3:0, 4:0, 5:0};
   document.querySelectorAll('.view .verbete-card').forEach(function(card){
     var alvo = card.dataset.titulo + ' ' + card.dataset.resumo;
     var ok = !termo || alvo.indexOf(termo) !== -1;
     card.classList.toggle('match-hidden', !ok);
+    aplicarHighlightNoCard(card, termoRaw);
     if(ok){
       var viewEl = card.closest('.view');
       var n = viewEl ? viewEl.id.replace('view-','') : null;
