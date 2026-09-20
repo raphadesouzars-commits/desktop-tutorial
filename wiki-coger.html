@@ -117,7 +117,7 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
       <button class="tab-btn" data-tab="2" type="button"><span class="t-label">Apostila 2 — Legislação Básica</span><span class="t-count" id="count2"></span></button>
       <button class="tab-btn" data-tab="3" type="button"><span class="t-label">Apostila 3 — Legislação Complementar</span><span class="t-count" id="count3"></span></button>
       <button class="tab-btn" data-tab="4" type="button"><span class="t-label">Apostila 4 — Jurisprudência</span><span class="t-count" id="count4"></span></button>
-      <button class="tab-btn pendente" data-tab="5" type="button"><span class="t-label">Apostila 5 — AGU, CGU e Dasp</span><span class="t-count">Pendente</span></button>
+      <button class="tab-btn" data-tab="5" type="button"><span class="t-label">Apostila 5 — AGU, CGU e Dasp</span><span class="t-count" id="count5"></span></button>
     </div>
   </div>
 </header>
@@ -166,8 +166,13 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
   </section>
 
   <section id="view-5" class="view">
-    <div class="apostila-header"><h2 class="section-title">Apostila nº 5 — Manifestações da AGU, da CGU e do Dasp</h2><span class="status-badge pendente">⏳ Pendente de elaboração</span></div>
-    <div class="pendente-card"><b>Ainda não processada</b>Pareceres da AGU, enunciados da CGU e formulações do Dasp organizados por tema — aprox. 669 mil palavras, a maior das cinco apostilas (1.424 páginas).</div>
+    <div class="apostila-header">
+      <div><h2 class="section-title" id="tituloApostila5"></h2></div>
+      <span class="status-badge parcial">🔶 Em elaboração</span>
+    </div>
+    <p class="apostila-meta" id="metaApostila5"></p>
+    <div class="progresso-nota" id="progressoApostila5"></div>
+    <div id="conteudoApostila5"></div>
   </section>
 </main>
 
@@ -524,6 +529,19 @@ footer.app-footer{text-align:center;color:var(--muted-2);font-size:11px;padding:
         ]
       }
     ]
+  },
+  "apostila5": {
+    "titulo": "Apostila nº 5 — Manifestações da AGU, da CGU e do Dasp",
+    "edicao": "Setembro de 2026",
+    "prefixoItem": "",
+    "progresso": "🔶 Em elaboração — 0 dos 33 temas do índice já resumidos. O índice completo tem 33 entradas: 27 temas de Pareceres da AGU (em ordem alfabética), mais Orientações Normativas da AGU, Enunciados da AGU, Enunciados da CGU, Formulações do Dasp, Pareceres do Dasp e Orientações Normativas do Dasp. Cada verbete sintetiza os pareceres/enunciados/formulações do tema, citando os atos administrativos de origem — não substitui a leitura da ementa ou do texto integral do parecer.",
+    "secoes": [
+      {
+        "titulo": "Temas em elaboração",
+        "verbetes": [
+        ]
+      }
+    ]
   }
 }
 </script>
@@ -575,11 +593,11 @@ function renderVerbeteHtml(v, prefixo){
     + '</div>';
 }
 
-var APOSTILA_LABELS = {1:'Apostila 1', 2:'Apostila 2', 3:'Apostila 3', 4:'Apostila 4'};
+var APOSTILA_LABELS = {1:'Apostila 1', 2:'Apostila 2', 3:'Apostila 3', 4:'Apostila 4', 5:'Apostila 5'};
 
 function aplicarBusca(){
   var termo = document.getElementById('buscaInput').value.trim().toLowerCase();
-  var counts = {1:0, 2:0, 3:0, 4:0};
+  var counts = {1:0, 2:0, 3:0, 4:0, 5:0};
   document.querySelectorAll('.view .verbete-card').forEach(function(card){
     var alvo = card.dataset.titulo + ' ' + card.dataset.resumo;
     var ok = !termo || alvo.indexOf(termo) !== -1;
@@ -603,9 +621,9 @@ function aplicarBusca(){
 function renderBuscaResumo(termo, counts){
   var el = document.getElementById('buscaResumo');
   if(!termo){ el.classList.add('hidden'); el.innerHTML = ''; return; }
-  var total = counts[1] + counts[2] + counts[3] + counts[4];
+  var total = counts[1] + counts[2] + counts[3] + counts[4] + counts[5];
   var html = '<span class="busca-resumo-total">'+total+' resultado'+(total===1?'':'s')+' em todas as apostilas:</span>';
-  [1,2,3,4].forEach(function(n){
+  [1,2,3,4,5].forEach(function(n){
     var isActive = (VIEW.tab === String(n));
     var isEmpty = counts[n] === 0;
     html += '<button type="button" class="busca-resumo-item'+(isActive?' active':'')+'" data-tab="'+n+'"'+(isEmpty?' disabled':'')+'>'
