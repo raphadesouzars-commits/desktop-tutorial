@@ -1,0 +1,386 @@
+/* =========================================================================
+   Variáveis — extraídas da inspeção real de referencia/ (ver
+   template/especificacao_visual.md). Ajustar aqui para afinar o resultado.
+   ========================================================================= */
+:root {
+  --cor-texto: #1a1a1a;
+  --cor-selo-inicio: #4a4a4a;
+  --cor-selo-fim: #1a1a1a;
+  --cor-caixa-titulo: #cfcfcf;
+  --cor-caixa-subtitulo: #e6e6e6;
+  --cor-borda: #999999;
+  --cor-filete-coluna: #333333;
+  --cor-verso-inicio: #f2f2f2;
+  --cor-verso-fim: #d9d9d9;
+
+  --fonte-serifada: Georgia, "Times New Roman", serif;
+  --fonte-sans: Arial, Helvetica, sans-serif;
+
+  --tamanho-corpo: 10pt;
+  --tamanho-texto-suporte: 10.5pt;
+  --tamanho-comando: 10pt;
+  --tamanho-alternativa: 10pt;
+  --tamanho-fonte-suporte: 8pt;
+  --tamanho-rodape: 8pt;
+  --tamanho-numero-questao: 9pt;
+  --entrelinha: 1.35;
+  --recuo-paragrafo: 1.2cm;
+
+  --margem-topo: 1.3cm;
+  --margem-base: 1.8cm;
+  --margem-lateral: 1.8cm;
+  --gutter-colunas: 1.1cm;
+}
+
+@page {
+  size: A4;
+  margin: var(--margem-topo) var(--margem-lateral) var(--margem-base) var(--margem-lateral);
+
+  /* Filete duplo: único elemento que se repete em toda página (ver
+     especificacao_visual.md) — sem texto, só duas linhas finas. */
+  @top-center {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2pt;
+    border-top: 0.75pt solid #000000;
+    border-bottom: 0.75pt solid #000000;
+  }
+  @bottom-left {
+    content: element(rodape-corrente);
+  }
+  @bottom-right {
+    content: counter(page) " / " counter(pages);
+    font-family: var(--fonte-sans);
+    font-size: var(--tamanho-rodape);
+    color: var(--cor-texto);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-sans);
+  font-size: var(--tamanho-corpo);
+  line-height: var(--entrelinha);
+  color: var(--cor-texto);
+}
+
+/* ---------- Rodapé corrente (repete em todas as páginas) ------------------ */
+
+.rodape {
+  position: running(rodape-corrente);
+  font-family: var(--fonte-sans);
+  font-size: var(--tamanho-rodape);
+  color: var(--cor-texto);
+}
+
+/* ---------- Cabeçalho institucional: só na 1ª página, fluxo normal -------- */
+
+.cabecalho-prova {
+  margin-bottom: 0.5cm;
+}
+
+.marca-instituicao {
+  text-align: center;
+  margin-bottom: 0.4cm;
+}
+
+.marca-nome {
+  font-family: var(--fonte-sans);
+  font-size: 20pt;
+  font-weight: bold;
+  letter-spacing: 0.03em;
+}
+
+.marca-subtitulo {
+  font-family: var(--fonte-sans);
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.marca-processo {
+  font-family: var(--fonte-sans);
+  font-size: 9pt;
+  font-weight: bold;
+  margin-top: 0.1cm;
+}
+
+.barra-titulo {
+  background: var(--cor-caixa-titulo);
+  font-family: var(--fonte-sans);
+  font-weight: bold;
+  font-size: 12pt;
+  padding: 0.25cm 0.4cm;
+  text-align: center;
+}
+
+.barra-subtitulo {
+  background: var(--cor-caixa-subtitulo);
+  font-family: var(--fonte-sans);
+  font-weight: bold;
+  font-size: 10.5pt;
+  padding: 0.2cm 0.4cm;
+  border-top: 0.5pt solid #ffffff;
+}
+
+.barra-instrucao {
+  display: flex;
+  align-items: stretch;
+  border: 0.5pt solid var(--cor-borda);
+  border-top: none;
+  font-family: var(--fonte-sans);
+  font-size: 8.5pt;
+}
+
+.etiqueta-instrucao {
+  background: #000000;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 0.15cm 0.4cm;
+  white-space: nowrap;
+}
+
+.texto-instrucao {
+  padding: 0.15cm 0.4cm;
+}
+
+/* ---------- Resumo: 1 coluna, largura cheia da página --------------------- */
+/* Decisão de projeto (ver especificacao_visual.md): o resumo não entra no
+   container de 2 colunas porque costuma trazer tabelas largas que não
+   cabem numa coluna estreita — e column-span:all não funciona no
+   WeasyPrint para "furar" só a tabela através das colunas. */
+
+.resumo {
+  font-family: var(--fonte-serifada);
+  font-size: var(--tamanho-texto-suporte);
+  text-align: justify;
+  margin-bottom: 0.5cm;
+}
+
+.resumo h2 {
+  font-family: var(--fonte-sans);
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 0 0 0.3cm 0;
+}
+
+.resumo table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fonte-sans);
+  font-size: 9pt;
+  margin: 0.2cm 0 0.4cm 0;
+}
+
+.resumo th,
+.resumo td {
+  border: 0.5pt solid var(--cor-borda);
+  padding: 0.15cm 0.25cm;
+  text-align: left;
+  overflow-wrap: break-word;
+}
+
+/* ---------- Texto-suporte compartilhado por 2+ questões -------------------- */
+/* Decisão de projeto análoga à do resumo: fica fora do container de 2
+   colunas, ocupando a largura cheia da página (ver especificacao_visual.md
+   → "Colunas"). Cada bloco de estímulo compartilhado interrompe o
+   .conteudo corrente; um novo .conteudo recomeça logo depois, só com as
+   questões daquele grupo. */
+
+.estimulo-grupo {
+  margin-bottom: 0.3cm;
+}
+
+.estimulo-grupo-rotulo {
+  font-family: var(--fonte-sans);
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 0.15cm;
+}
+
+/* ---------- Questões + gabarito: 2 colunas --------------------------------- */
+
+.conteudo {
+  column-count: 2;
+  column-gap: var(--gutter-colunas);
+  column-rule: 0.75pt solid var(--cor-filete-coluna);
+}
+
+.gabarito h2 {
+  font-family: var(--fonte-sans);
+  font-size: 12pt;
+  font-weight: bold;
+  margin: 0 0 0.3cm 0;
+}
+
+.tabela-gabarito {
+  /* Coluna estreita (2 colunas por página): table-layout:fixed evita que a
+     tabela cresça além de 100% da largura da coluna. */
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--fonte-sans);
+  font-size: 8.5pt;
+  margin: 0.2cm 0 0.4cm 0;
+  break-inside: avoid;
+}
+
+.tabela-gabarito th,
+.tabela-gabarito td {
+  border: 0.5pt solid var(--cor-borda);
+  padding: 0.1cm 0.2cm;
+  text-align: center;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* ---------- Questões -------------------------------------------------------- */
+
+.questao {
+  break-inside: avoid-column;
+  margin-bottom: 0.5cm;
+  font-family: var(--fonte-sans);
+}
+
+.questao-numero {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25cm;
+}
+
+.questao-numero-etiqueta {
+  background: linear-gradient(135deg, var(--cor-selo-inicio), var(--cor-selo-fim));
+  color: #ffffff;
+  font-weight: bold;
+  font-size: var(--tamanho-numero-questao);
+  letter-spacing: 0.03em;
+  padding: 0.1cm 0.55cm 0.1cm 0.35cm;
+  border-radius: 999px;
+}
+
+.questao-numero-valor {
+  background: #000000;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 12pt;
+  width: 0.75cm;
+  height: 0.75cm;
+  border-radius: 50%;
+  margin-left: -0.3cm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.texto-suporte {
+  font-family: var(--fonte-serifada);
+  font-size: var(--tamanho-texto-suporte);
+  margin: 0.2cm 0;
+  text-align: justify;
+}
+
+.texto-suporte p {
+  text-indent: var(--recuo-paragrafo);
+  margin: 0 0 0.2cm 0;
+}
+
+.texto-suporte img {
+  max-width: 100%;
+  display: block;
+  margin: 0.2cm auto;
+}
+
+.texto-suporte figcaption {
+  font-family: var(--fonte-sans);
+  font-size: var(--tamanho-fonte-suporte);
+  text-align: center;
+}
+
+/* Caixa para texto-suporte em verso (poema/letra de música) — opcional,
+   aplicar a classe "verso" além de "texto-suporte" quando o conteúdo for
+   poético em vez de prosa. */
+.texto-suporte.verso {
+  font-family: var(--fonte-sans);
+  text-align: left;
+  background: linear-gradient(160deg, var(--cor-verso-inicio), var(--cor-verso-fim));
+  border-radius: 0.3cm;
+  padding: 0.4cm 0.5cm;
+}
+
+.texto-suporte.verso p {
+  text-indent: 0;
+}
+
+.fonte-texto-suporte {
+  font-family: var(--fonte-sans);
+  font-size: var(--tamanho-fonte-suporte);
+  text-align: left;
+  margin-bottom: 0.25cm;
+}
+
+.comando {
+  font-weight: bold;
+  font-size: var(--tamanho-comando);
+  margin-bottom: 0.2cm;
+  text-align: justify;
+}
+
+.alternativas {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--tamanho-alternativa);
+}
+
+.alternativas li {
+  margin-bottom: 0.15cm;
+  padding-left: 0.6cm;
+  text-indent: -0.6cm;
+}
+
+.alt-letra {
+  font-weight: bold;
+  margin-right: 0.1cm;
+}
+
+/* ---------- Gabarito -------------------------------------------------------- */
+
+.justificativa-questao {
+  margin-bottom: 0.4cm;
+}
+
+.justificativa-questao h3 {
+  font-family: var(--fonte-sans);
+  font-size: 10pt;
+  font-weight: bold;
+  margin: 0 0 0.1cm 0;
+}
+
+/* Blocos de cálculo (```...``` no .md, ex.: resolução linha a linha de
+   questões de exatas) — precisam de fonte monoespaçada e preservar quebra
+   de linha, senão o cálculo vira um parágrafo corrido ilegível. */
+pre {
+  font-family: "Courier New", monospace;
+  font-size: 8.5pt;
+  line-height: 1.3;
+  background: #f2f2f2;
+  border-left: 2pt solid var(--cor-borda);
+  padding: 0.2cm 0.3cm;
+  margin: 0.2cm 0;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+
+pre code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+code {
+  font-family: "Courier New", monospace;
+}
