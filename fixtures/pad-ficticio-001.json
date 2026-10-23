@@ -1,0 +1,61 @@
+{
+  "_descricao": "PAD fictício completo, usado por test-fluxo-integrado.js (Rodada 7) para exercitar de ponta a ponta os quatro contratos entre Veritas, Nexo Coger e Oitiva 360 (Rodadas 3-6) sem precisar de navegador. Todos os nomes, matrículas, textos e hashes são fictícios. Reexecute `node test-fluxo-integrado.js` sempre que alguma das Rodadas 1-6 mudar, para confirmar que os contratos continuam funcionando.",
+  "_comoReexecutar": "node test-fluxo-integrado.js na raiz do projeto. Não precisa de browser nem de servidor — o script carrega os três ferramentas/*.html via Node vm e chama as funções puras expostas em cada uma (ver seção 7.1 do CHANGELOG-catalogo.md).",
+
+  "processo": {
+    "numero": "10000.999999/2026-77",
+    "objetoApuracao": "Apuração fictícia de possível valimento do cargo e desídia, para fins de teste automatizado."
+  },
+
+  "acusado": {
+    "nome": "Fulano Fictício de Teste",
+    "matricula": "9999999",
+    "cargo": "Auditor-Fiscal",
+    "lotacao": "Unidade de Teste"
+  },
+
+  "fatos": [
+    {
+      "chaveLocal": "F1",
+      "titulo": "Pagamento processado sem cobertura contratual (fato fictício 1)",
+      "normaId": "N-116-III",
+      "normaCanonica": "NORMA.L8112.ART116_III",
+      "temProvaInicial": true,
+      "_observacao": "Este fato recebe a prova inicial do Veritas (passo 1-2) — não deve gerar lacuna de pauta."
+    },
+    {
+      "chaveLocal": "F2",
+      "titulo": "Possível valimento do cargo em benefício próprio (fato fictício 2)",
+      "normaId": "N-117-IX",
+      "normaCanonica": "NORMA.L8112.ART117_IX",
+      "temProvaInicial": false,
+      "_observacao": "Fato sem nenhuma prova vinculada — é a lacuna (tipo_lacuna: sem_prova) que gera o ponto de pauta usado pelos passos 3-7."
+    },
+    {
+      "chaveLocal": "F3",
+      "titulo": "Possível desídia no acompanhamento de processos (fato fictício 3)",
+      "normaId": "N-117-XV",
+      "normaCanonica": "NORMA.L8112.ART117_XV",
+      "temProvaInicial": false,
+      "_observacao": "Segundo fato sem prova, incluído só para o fixture cobrir '2 ou 3 fatos apurados' — o teste usa apenas a lacuna de F2 no fluxo principal, mas F3 confirma que analisarLacunasPauta() detecta mais de uma lacuna quando existir."
+    }
+  ],
+
+  "provaInicialVeritas": {
+    "titulo": "Extrato financeiro fictício anexado ao processo",
+    "categoria": "documento_financeiro",
+    "categoriaCanonica": "PROVA.DOCUMENTO_FINANCEIRO",
+    "conteudoFicticio": "Extrato financeiro fictício nº 001/2026 — documento de teste sem valor probatório real, usado apenas para validar o contrato Veritas -> Nexo Coger (Rodada 3).",
+    "sigilo": "acesso_restrito",
+    "vinculadaAoFatoChaveLocal": "F1"
+  },
+
+  "depoente": {
+    "identificacao": "Ciclana Testemunha Fictícia",
+    "papel": "testemunha",
+    "infracaoPrincipal": "N-117-IX",
+    "elementosBuscados": "Testemunha fictícia com conhecimento direto do fato F2 (valimento do cargo) — fixture de teste automatizado.",
+    "respostaPadrao": "Resposta fictícia de teste: presenciei parte dos fatos e posso confirmar os elementos apontados na pergunta.",
+    "_observacao": "A mesma respostaPadrao é aplicada a toda pergunta do roteiro gerado (papel testemunha + infração N-117-IX) — o fixture não fixa o banco de perguntas em si, porque esse banco já é gerado deterministicamente pelo próprio Oitiva 360 a partir do papel/infração/pauta. O ponto de pauta abordado (F2, sem_prova) é respondido sem preencher 'acusado alternativo', o que resulta em acusado_vinculo:\"padrao\" — vínculo automático ao único acusado do processo, exercitando o critério de aceite 1 da Rodada 6."
+  }
+}

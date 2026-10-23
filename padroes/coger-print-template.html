@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>COGER Print Standard — Template</title>
+  <style>
+    /* Minimal screen styles for demo */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .screen-demo {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .note {
+      background: #e3f2fd;
+      border-left: 4px solid #1976d2;
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="screen-demo">
+  <h1>COGER Print Standard — Estrutura de Modelo</h1>
+  <p>Este arquivo demonstra a estrutura HTML esperada quando uma ferramenta adota o padrão COGER Print.</p>
+  <p><strong>Copiar este markup para cada ferramenta (Veritas, Nexo Coger, Oitiva 360) e adaptar IDs/conteúdo conforme necessário.</strong></p>
+
+  <div class="note">
+    <strong>📌 Nota:</strong> O CSS real vem do arquivo <code>coger-print-standard.css</code> (embarcado em <code>@media print</code>).
+    Este arquivo HTML é só um exemplo de estrutura; a estilização ocorre via media query de impressão.
+  </div>
+</div>
+
+<!-- ─ ESTA É A ESTRUTURA ESPERADA ─ -->
+
+<!------- Header Fixo ------->
+<header class="coger-print-header" style="display:none">
+  <!-- Logos e institucional -->
+  <div class="coger-print-header-logos">
+    <!-- Logo do Ministério da Fazenda (data URI SVG) -->
+    <svg class="coger-logo-mf" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+      <text x="50" y="25" text-anchor="middle" font-size="12" fill="#0B2F5F" font-weight="bold">
+        Ministério
+      </text>
+    </svg>
+    <!-- Logo da Receita Federal (data URI SVG) -->
+    <svg class="coger-logo-rfb" viewBox="0 0 100 40" xmlns="http://www.w3.org/2000/svg">
+      <text x="50" y="25" text-anchor="middle" font-size="12" fill="#0B2F5F" font-weight="bold">
+        Receita Federal
+      </text>
+    </svg>
+  </div>
+
+  <!-- Título do documento -->
+  <div class="coger-print-header-title">
+    <h1 class="coger-print-doc-title">RELATÓRIO DE ANÁLISE DE CONDUTA FUNCIONAL</h1>
+    <p class="coger-print-doc-subtitle">Ferramentas COGER · Condutas Funcionais — Integritas</p>
+  </div>
+
+  <!-- Linha de metadados -->
+  <div class="coger-print-header-meta">
+    <span>Referência: <strong id="coger-print-ref">INT-20260713-0001</strong></span>
+    <span>Data: <strong id="coger-print-date">13 de julho de 2026</strong></span>
+    <span>Hora: <strong id="coger-print-time">18:35</strong></span>
+  </div>
+
+  <!-- Linha separadora -->
+  <div class="coger-print-header-divider"></div>
+</header>
+
+<!------- Conteúdo Principal ------->
+<main id="printPage" style="display:none">
+
+  <!-- SEÇÃO 1 -->
+  <section class="coger-print-section">
+    <h2 class="coger-print-section-title">1 — IDENTIFICAÇÃO DO OBJETO DE ANÁLISE</h2>
+    <div class="coger-print-section-body">
+      <p>
+        Esta seção descreve a identificação e contextualização do objeto de análise.
+        Exemplos de conteúdo podem incluir dados do processo, investigado, atos praticados, etc.
+      </p>
+
+      <!-- Info Box com dados estruturados -->
+      <div class="coger-print-infobox">
+        <div class="coger-print-infobox-row">
+          <span class="coger-print-infobox-label">Processo:</span>
+          <span class="coger-print-infobox-value">1</span>
+        </div>
+        <div class="coger-print-infobox-row">
+          <span class="coger-print-infobox-label">Data dos fatos:</span>
+          <span class="coger-print-infobox-value">—</span>
+        </div>
+        <div class="coger-print-infobox-row">
+          <span class="coger-print-infobox-label">Investigado:</span>
+          <span class="coger-print-infobox-value">João da Silva Santos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 2 —Tabelas -->
+  <section class="coger-print-section">
+    <h2 class="coger-print-section-title">2 — MAPA DE FATOS, PROVAS E NORMAS</h2>
+    <div class="coger-print-section-body">
+      <p>
+        Tabelas devem seguir o padrão de coloração (cabeçalho navy-900, linhas alternadas em gray-100).
+      </p>
+
+      <table class="coger-print-table">
+        <thead class="coger-print-table-head">
+          <tr>
+            <th>Fato</th>
+            <th>Prova</th>
+            <th>Norma Legal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Servidor faltou ao trabalho sem justificativa</td>
+            <td>Folha de ponto, atestado médico</td>
+            <td>Lei 8.112/90, Art. 116, I</td>
+          </tr>
+          <tr>
+            <td>Servidor chegou atrasado em 5 ocasiões</td>
+            <td>Registros de entrada do SIGA</td>
+            <td>Lei 8.112/90, Art. 117, I</td>
+          </tr>
+          <tr>
+            <td>Comportamento inadequado com colegas</td>
+            <td>Relato de testemunhas, e-mails</td>
+            <td>Lei 8.112/90, Art. 116, V</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 3 — Legislação -->
+  <section class="coger-print-section">
+    <h2 class="coger-print-section-title">3 — FUNDAMENTAÇÃO LEGAL</h2>
+    <div class="coger-print-section-body">
+      <p>
+        Blocos de legislação devem ser citados usando a classe <code>.coger-print-legal-block</code>.
+      </p>
+
+      <div class="coger-print-legal-block">
+        <div class="coger-print-legal-label">LEI Nº 8.112/90 — ART. 116, IX</div>
+        <blockquote class="coger-print-legal-quote">
+          "São deveres do servidor: […] IX — manter conduta compatível com a moralidade administrativa."
+        </blockquote>
+      </div>
+
+      <div class="coger-print-legal-block">
+        <div class="coger-print-legal-label">LEI Nº 8.112/90 — ART. 117, I</div>
+        <blockquote class="coger-print-legal-quote">
+          "São proibidas ao servidor: […] I — o repouso remunerado, exceto nos casos e condições estabelecidos em lei."
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEÇÃO 4 — Padrão com quebra de página -->
+  <section class="coger-print-section coger-print-page-break-before">
+    <h2 class="coger-print-section-title">4 — CONSIDERAÇÕES FINAIS</h2>
+    <div class="coger-print-section-body">
+      <p>
+        Esta seção demonstra como usar a classe <code>.coger-print-page-break-before</code> para forçar quebra de página antes de um elemento.
+      </p>
+      <p>
+        O CSS padrão garante que títulos, seções inteiras e tabelas nunca sejam quebradas no meio,
+        preservando a legibilidade do documento impresso.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<!------- Footer Fixo ------->
+<footer class="coger-print-footer" style="display:none">
+  <div class="coger-print-footer-divider"></div>
+  <div class="coger-print-footer-content">
+    <div class="coger-print-footer-left">
+      <span id="coger-print-footer-ref">INT-20260713-0001</span>
+    </div>
+    <div class="coger-print-footer-center">
+      <span>Página <span class="page-number">1</span> de <span class="page-count">5</span></span>
+    </div>
+    <div class="coger-print-footer-right">
+      <span>USO INTERNO · FERRAMENTAS COGER</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Incluir o arquivo CSS de print aqui (ou embarcado inline no <style> da ferramenta) -->
+<link rel="stylesheet" href="coger-print-standard.css">
+
+</body>
+</html>
