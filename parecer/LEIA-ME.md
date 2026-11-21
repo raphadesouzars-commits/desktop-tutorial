@@ -17,3 +17,15 @@ Marcadores aceitos no texto: `{{nome}}`, `{{cargo}}`, `{{cargo_sigla}}`, `{{unid
 
 Os modelos não contêm dados pessoais: nomes, matrículas, processos e entidades dos casos concretos foram
 substituídos por campos.
+
+## Precedentes da CGU
+
+`precedentes_cgu.json` guarda as ementas públicas da Busca de Precedentes do SeCI (https://seci.cgu.gov.br/busca/)
+para a RFB, respondidas nos últimos 3 anos. Para atualizar:
+
+    python3 parecer/atualizar_precedentes.py && python3 parecer/build.py
+
+## Formulário SeCI
+
+A tela separa o texto colado nas 10 perguntas do formulário SeCI. A pergunta 10 define se a demanda é consulta ou
+pedido de autorização; as respostas 7, 8 e 4 geram alertas sobre os incisos I, II e VII do art. 5º da Lei 12.813/2013.
