@@ -1,0 +1,117 @@
+{
+ "id": "tradutor",
+ "nome": "Tradutor e revisor de textos",
+ "descricao": "Use quando o servidor pretende prestar serviços de tradução de língua estrangeira e/ou revisão de livros e textos, como autônomo, para pessoas físicas ou jurídicas.",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "palavrasChave": [
+  "tradutor",
+  "tradução",
+  "revisor",
+  "revisão de livros",
+  "revisão de textos",
+  "língua estrangeira",
+  "tradução de obras",
+  "tradutor juramentado",
+  "tradutor público",
+  "manuais",
+  "papers",
+  "freelancer de tradução",
+  "tradução pro bono"
+ ],
+ "variantes": [
+  {
+   "id": "tradutor_autonomo",
+   "rotulo": "Tradutor autônomo (inclusive pro bono e de obras de domínio público) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende prestar serviços de tradução como autônomo, traduzir pro bono para instituições sem fins lucrativos ou traduzir obras para publicação própria; inclui ressalvas sobre o art. 966 do Código Civil (comércio) e sobre tradutor público/juramentado.",
+   "fonte": "PAR 212/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE DE TRADUTOR.",
+   "ementa": [
+    "Consulta para o exercício concomitante da atividade de {{g:tradutor|tradutora}} com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813/2013 estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida lei, opina-se que o exercício da atividade descrita {{g:pelo|pela}} consulente, realizar serviços de tradução de língua estrangeira, é materialmente compatível com o cargo de {{cargo_sigla}}. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, caso venha a exercer atividade de {{g:tradutor|tradutora}} para instituições privadas, com ou sem fins lucrativos, chamamos a atenção para o fato de que {{g:o|a}} consulente não deve atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo tais instituições."
+    },
+    {
+     "t": "p",
+     "x": "Cabe observar ainda que a atividade de {{g:tradutor|tradutora}} pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do artigo 966 da Lei nº 10.406, de 10 de janeiro de 2002 (novo Código Civil), para que não se configure a infração disciplinar de exercício de comércio e de gerência ou administração de sociedade privada, prevista no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, em análise que extrapola o escopo do conflito de interesses, cabe referência ao disposto no artigo 37, inciso XVI, da Constituição Federal (CF), o qual veda a acumulação remunerada de cargos públicos, caso {{g:o|a}} consulente pretenda atuar como {{g:tradutor|tradutora}} público/juramentado."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento desta Corregedoria, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "tradutor_revisor_livros",
+   "rotulo": "Tradutor e revisor de livros e afins (modelo curto) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende exercer atividades remuneradas de tradução e revisão de livros, manuais, papers e catálogos para pessoas físicas ou jurídicas de qualquer ramo; ressalva de abstenção em processos dos clientes.",
+   "fonte": "PAR 262/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SeCI",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de {{g:tradutor e revisor|tradutora e revisora}} de livros com o cargo de {{cargo}} ({{cargo_sigla}}). Não configura conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verifica-se, sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 2013, que o exercício da atividade privada de {{g:tradutor e revisor|tradutora e revisora}} de livros e afins, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Posto isso, não há óbice a que {{g:o|a}} consulente desempenhe a atividade privada de {{g:tradutor e revisor|tradutora e revisora}} de livros e afins."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o servidor|a servidora}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais preste os serviços de tradução / revisão."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir a sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

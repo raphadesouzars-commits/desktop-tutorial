@@ -1,0 +1,71 @@
+{
+ "id": "cooperativa_credito",
+ "nome": "Diretoria de cooperativa de crédito",
+ "grupo": "Entidades privadas sem fins lucrativos (A.8)",
+ "descricao": "Usar quando o servidor, cooperado de cooperativa de crédito, consulta se pode integrar a diretoria da cooperativa sem identificar a entidade nem as atribuições do cargo (pedido de complementação).",
+ "palavrasChave": [
+  "cooperativa de crédito",
+  "cooperado",
+  "diretoria de cooperativa",
+  "diretor de cooperativa",
+  "sicoob",
+  "sicredi",
+  "unicred",
+  "uniprime",
+  "chapa",
+  "associados",
+  "cooperativismo",
+  "conselho de administração de cooperativa"
+ ],
+ "variantes": [
+  {
+   "id": "informacoes_insuficientes_diretoria_cooperativa",
+   "rotulo": "Diretoria de cooperativa de crédito – informações insuficientes; retorno à Cogep para complementação",
+   "resultado": "outro",
+   "quandoUsar": "A consulta é sucinta/genérica: não informa o nome da cooperativa de crédito nem as atribuições da diretoria. Pede-se complementação e juntada do estatuto. Não há, neste lote, parecer de mérito sobre o tema.",
+   "fonte": "INF 051/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "DIRETORIA DE COOPERATIVA DE CRÉDITO.",
+   "ementa": [
+    "Consulta sobre possibilidade de atuar como diretor de cooperativa de crédito. Necessidade de complementação de informações."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, faz-se necessário salientar que a Portaria Interministerial MPOG/CGU Nº 333, de 19 de setembro de 2013, disciplina os procedimentos para a consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada por servidor ou empregado público do Poder Executivo federal, no âmbito de competência atribuída à Controladoria-Geral da União (CGU) pelo § 1º do art. 4º e pelo art. 8º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "A referida Portaria Interministerial definiu em seu artigo 2º, inciso I, que a consulta é “um instrumento à disposição de servidor ou empregado público pelo qual ele pode solicitar, a qualquer momento, orientação acerca de situação concreta, individualizada, que lhe diga respeito e que possa suscitar dúvidas quanto à ocorrência de conflito de interesses”."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, a mesma Portaria, em seu art. 3º, inciso II, determina que é necessário que a consulta contenha “referência a objeto determinado e diretamente vinculado ao interessado”, e em seu parágrafo único esclarece que “Não será apreciada a consulta ou pedido de autorização formulada em tese ou com referência a fato genérico”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, as informações prestadas {{g:pelo servidor|pela servidora}} são bastante sucintas e, portanto, insuficientes para embasar uma análise do pleito. Como exemplo, {{g:o consulente|a consulente}} sequer especifica o nome da cooperativa de crédito e tampouco as atribuições da diretoria a que estaria {{g:vinculado|vinculada}}."
+    },
+    {
+     "t": "p",
+     "x": "Assim, é necessário que {{g:o interessado|a interessada}} complemente as informações prestadas e traga mais detalhes sobre as atividades que pretende exercer, acompanhada do estatuto da cooperativa de crédito."
+    },
+    {
+     "t": "p",
+     "x": "Tal previsão encontra amparo na {{portaria_curta}}:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 10. Caso considerem insuficientes as informações recebidas, as Comissões de Ética e Corregedorias poderão solicitar informações adicionais às unidades de Recursos Humanos por meio do sistema Comprotdoc."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Feitas estas considerações, propõe-se que o dossiê retorne à Coordenação-Geral de Gestão de Pessoas (Cogep), para que {{g:o interessado|a interessada}} complemente as informações."
+    }
+   ]
+  }
+ ]
+}

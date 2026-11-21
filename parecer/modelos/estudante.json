@@ -1,0 +1,320 @@
+{
+ "id": "estudante",
+ "nome": "Estudante (curso de graduação, inclusive no exterior) e estágio",
+ "grupo": "Outras situações",
+ "descricao": "Usar quando o servidor consulta se pode frequentar curso de graduação (inclusive em país vizinho, sem afastamento) ou realizar estágio vinculado a curso que frequenta.",
+ "palavrasChave": [
+  "estudante",
+  "estudar",
+  "graduação",
+  "curso de graduação",
+  "faculdade",
+  "estudar no exterior",
+  "paraguai",
+  "estágio",
+  "estagiário",
+  "estagiária",
+  "estágio curricular",
+  "gastronomia",
+  "cozinheira",
+  "horário especial",
+  "servidor estudante",
+  "lei 11.788/2008"
+ ],
+ "variantes": [
+  {
+   "id": "graduacao_exterior_fora_escopo",
+   "rotulo": "Cursar graduação (inclusive no exterior) – fora do escopo da Lei de Conflito de Interesses",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pergunta se há impedimento para cursar graduação, em especial em instituição de país vizinho, sem pedir afastamento; a condição de estudante não é atividade privada e a consulta é remetida à Coordenação-Geral de Gestão de Pessoas.",
+   "fonte": "PAR 228/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ESTUDANTE NO EXTERIOR.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de {{resumo_consulta}}. Questão fora do escopo da Lei de Conflito de Interesses."
+   ],
+   "campos": [
+    {
+     "id": "resumo_consulta",
+     "rotulo": "Resumo da consulta para a ementa (iniciando por verbo no infinitivo)",
+     "exemplo": "fazer graduação no exterior estando em exercício em unidade de fronteira",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_objetivo",
+     "rotulo": "Objetivo do consulente (completa a frase \"tem por objetivo ...\")",
+     "exemplo": "fazer uma graduação em cidade do país vizinho que faz fronteira com o município onde exerce suas atividades",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "local_instituicao",
+     "rotulo": "Local da instituição de ensino (com a preposição)",
+     "exemplo": "no Paraguai",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "local_exercicio",
+     "rotulo": "Unidade em que continuará exercendo suas funções (com a preposição)",
+     "exemplo": "na Alfândega de Foz do Iguaçu",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo {{descricao_objetivo}}."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha dado maiores detalhes no questionamento, tais como qual curso pretende cursar, se é do interesse da Administração ou somente particular, nos parece que não se trata de pedido de afastamento da função pública para estudo no exterior, dando a entender que pretende fazer o curso com idas e vindas, diárias ou esporádicas, ao local onde se encontra a instituição de ensino {{local_instituicao}}, continuando a exercer normalmente suas funções {{local_exercicio}}, pois sequer é mencionado qualquer pedido de compensação de horário ou redução de jornada de trabalho.",
+     "opc": {
+      "id": "estudo_exterior",
+      "rotulo": "Curso em instituição no exterior, sem pedido de afastamento (art. 95 da Lei nº 8.112/1990 e Decreto nº 9.991/2019)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Caso a graduação seja de interesse estritamente particular, o que parece ser o caso, ficaria afastada a aplicação do Decreto nº 9.991, de 28 de agosto de 2019, que dispõe sobre a Política Nacional de Desenvolvimento de Pessoas da administração pública federal direta, autárquica e fundacional.",
+     "opc": {
+      "id": "estudo_exterior",
+      "rotulo": "Curso em instituição no exterior, sem pedido de afastamento (art. 95 da Lei nº 8.112/1990 e Decreto nº 9.991/2019)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Da mesma forma, nos parece que ao presente caso não se aplica o disposto no artigo 95, da Lei nº 8.112, de 11 de dezembro de 1990:",
+     "opc": {
+      "id": "estudo_exterior",
+      "rotulo": "Curso em instituição no exterior, sem pedido de afastamento (art. 95 da Lei nº 8.112/1990 e Decreto nº 9.991/2019)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 95. O servidor não poderá ausentar-se do País para estudo ou missão oficial, sem autorização do Presidente da República, Presidente dos Órgãos do Poder Legislativo e Presidente do Supremo Tribunal Federal.",
+      "§ 1º A ausência não excederá a 4 (quatro) anos, e finda a missão ou estudo, somente decorrido igual período, será permitida nova ausência.",
+      "§ 2º Ao servidor beneficiado pelo disposto neste artigo não será concedida exoneração ou licença para tratar de interesse particular antes de decorrido período igual ao do afastamento, ressalvada a hipótese de ressarcimento da despesa havida com seu afastamento.",
+      "§ 3º O disposto neste artigo não se aplica aos servidores da carreira diplomática.",
+      "§ 4º As hipóteses, condições e formas para a autorização de que trata este artigo, inclusive no que se refere à remuneração do servidor, serão disciplinadas em regulamento. (Incluído pela Lei nº 9.527, de 10.12.97)"
+     ],
+     "opc": {
+      "id": "estudo_exterior",
+      "rotulo": "Curso em instituição no exterior, sem pedido de afastamento (art. 95 da Lei nº 8.112/1990 e Decreto nº 9.991/2019)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ademais, cabe registrar que a condição de estudante não caracteriza exercício de atividade privada e, portanto, não há que se falar em atividade incompatível, inviabilizando-se a análise sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Da mesma forma, o fato de estudar, seja no Brasil ou no exterior, não encontra pertinência, salvo melhor juízo, com nenhum dos demais incisos citados no artigo 5º da Lei nº 12.813/2013, que define o conceito de configuração de conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Assim, entende-se que a presente consulta encontra-se fora do escopo da Lei nº 12.813/2013, enquadrando-se genericamente em assuntos de gestão de pessoal, motivo pelo qual se propõe que os autos sejam encaminhados para a Coordenação-Geral de Gestão de Pessoas, de forma que esta unidade esclareça as dúvidas {{g:do servidor|da servidora}} e faça as devidas orientações, se for o caso."
+    }
+   ]
+  },
+  {
+   "id": "estagio_curso_sem_conflito",
+   "rotulo": "Estágio vinculado a curso frequentado pelo servidor – não há conflito; observar as Leis nº 8.112/1990 e nº 11.788/2008",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor matriculado em curso sem correlação com as atribuições do cargo (ex.: gastronomia) pede autorização para realizar estágio na área; o parecer também orienta sobre horário especial do servidor estudante e a Lei do Estágio.",
+   "fonte": "PAR 017/2020",
+   "assunto": "Pedido de autorização para exercício de atividade privada formulado por meio do SeCI.",
+   "ementaTitulo": "ESTÁGIO EM {{area_estagio}}.",
+   "ementa": [
+    "O pedido de autorização é analisado com o objetivo de verificar se há configuração de conflito de interesses entre a função pública e a atividade privada a ser exercida. Não há impedimento legal, com base na Lei nº 12.813, de 16 de maio de 2013, para realizar estágio em {{area_estagio}}. O estágio deve seguir as regras previstas nas Leis nº 8.112, de 11 de dezembro de 1990, e nº 11.788, de 25 de setembro de 2008."
+   ],
+   "campos": [
+    {
+     "id": "area_estagio",
+     "rotulo": "Área do curso/estágio",
+     "exemplo": "Gastronomia",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiramente, cabe esclarecer que os pedidos de autorização para exercício de atividade privada formulados por meio do SeCI visam verificar a possível existência de um conflito de interesses entre a função pública e a atividade privada a ser exercida {{g:pelo requerente|pela requerente}}, bem como objetivam discutir sobre a necessidade de resguardo, por {{g:ele|ela}}, de informações privilegiadas obtidas em razão do exercício da função pública. Em resumo, deve ser verificado na análise desses pedidos: se há conflito de interesses entre a função pública e a atividade privada, e se há necessidade de resguardo de informações privilegiadas."
+    },
+    {
+     "t": "p",
+     "x": "O art. 3º, I da Lei nº 12.813, de 16 de maio de 2013 (Lei nº 12.813/2013) traz a definição de conflito de interesses:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 4º, § 2º, da Lei em comento,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º, § 2º A ocorrência de conflito de interesses independe da existência de lesão ao patrimônio público, bem como do recebimento de qualquer vantagem ou ganho pelo agente público ou por terceiro."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em síntese, o conflito de interesses repercute no comprometimento do interesse público ou na influência, de maneira imprópria, do desempenho da função pública. Prescinde de lesão ao patrimônio público, do recebimento de qualquer vantagem ou do ganho pelo agente público ou por terceiro."
+    },
+    {
+     "t": "p",
+     "x": "Por informação privilegiada, o art. 3º, II da Lei nº 12.813/2013 assim define:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "(…)",
+      "II – informação privilegiada: a que diz respeito a assuntos sigilosos ou aquela relevante ao processo de decisão no âmbito do Poder Executivo federal que tenha repercussão econômica ou financeira e que não seja de amplo conhecimento público."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A informação privilegiada diz respeito, portanto, a assuntos sigilosos. Pode-se incluir, nessa descrição, o sigilo fiscal, cuja previsão, regras e exceções estão dispostas no art. 198 do Código Tributário Nacional (CTN). Segundo o caput deste artigo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 198. Sem prejuízo do disposto na legislação criminal, é vedada a divulgação, por parte da Fazenda Pública ou de seus servidores, de informação obtida em razão do ofício sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades. (Redação dada pela Lcp nº 104, de 2001)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme o art. 2º da Portaria RFB nº 2.344, de 24 de março de 2011,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º São protegidas por sigilo fiscal as informações sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades, obtidas em razão do ofício para fins de arrecadação e fiscalização de tributos, inclusive aduaneiros, tais como:",
+      "I - as relativas a rendas, rendimentos, patrimônio, débitos, créditos, dívidas e movimentação financeira ou patrimonial;",
+      "II - as que revelem negócios, contratos, relacionamentos comerciais, fornecedores, clientes e volumes ou valores de compra e venda;",
+      "III - as relativas a projetos, processos industriais, fórmulas, composição e fatores de produção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que o acesso a dados protegidos por sigilo fiscal faz parte das tarefas cotidianas dos servidores ocupantes de cargo junto à RFB. Esta é uma das situações para a qual a Lei nº 12.813/2013 foi publicada: a necessidade de resguardo de informações privilegiadas; em específico, de informações protegidas pelo sigilo fiscal."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 12 da Lei nº 12.813/2013, o servidor público que praticar atos que configuram conflito de interesses incorrem no cometimento de improbidade administrativa na forma do art. 11 da Lei nº 8.429, de 2 de junho de 1992, quando não caracterizada qualquer das condutas descritas nos arts. 9º e 10 daquela Lei."
+    },
+    {
+     "t": "p",
+     "x": "Considerando as informações preliminares acerca da Lei nº 12.813/2013, passa-se para a análise da consulta formulada por meio do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O requerente|A requerente}} descreveu, no item 2 de seu pedido de autorização para exercício de atividade privada, que está {{g:matriculado|matriculada}} em um curso de {{area_estagio}} e pretende realizar um estágio na área."
+    },
+    {
+     "t": "p",
+     "x": "Dado que o estágio é na área de {{area_estagio}}, não se verifica conflito de interesses com base no art. 5º, III, da Lei nº 12.813/2013, considerando a ausência de correlação de matérias entre a referida atividade principal e a função pública por {{g:ele|ela}} exercida. Embora tenha acesso a informações privilegiadas, estas não limitam, *per se*, o exercício de atividade privada, já que apenas se configura conflito de interesses quando há possibilidade de uso dessas informações em atividade de natureza incompatível com as atribuições do cargo, inclusive, em área ou matéria correlata."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV a VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao demandante|à demandante}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "O objetivo {{g:do requerente|da requerente}} é estagiar na área de {{area_estagio}}. De acordo com o já explicitado neste Parecer, o pedido de autorização formulado por intermédio do SeCI é analisado com a finalidade de verificar se há, ou não, conflito de interesses de acordo com a Lei nº 12.813/2013. Entretanto, dada à correlação com a área disciplinar e considerando os princípios do formalismo moderado e da economia processual (previstos na Lei nº 9.784, de 29 de janeiro de 1999), o referido pedido também será analisado como uma consulta a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "A frequência de servidor público em cursos de educação superior ou profissional e, consequentemente, realização de estágios, pode resultar em solicitação de horário especial. A Lei nº 8.112, de 11 de dezembro de 1990 (Lei nº 8.112/1990), estatui no art. 98 que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 98. Será concedido horário especial ao servidor estudante, quando comprovada a incompatibilidade entre o horário escolar e o da repartição, sem prejuízo do exercício do cargo.",
+      "§ 1º Para efeito do disposto neste artigo, será exigida a compensação de horário no órgão ou entidade que tiver exercício, respeitada a duração semanal do trabalho. (Parágrafo renumerado e alterado pela Lei nº 9.527, de 10.12.97)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dessa maneira, a Lei em comento estabelece a possibilidade de concessão de horário especial para o servidor estudante quando comprovada a incompatibilidade entre o horário escolar e o da repartição, desde que não haja prejuízo ao exercício do cargo e seja compensado o horário no órgão ou entidade que tiver exercício."
+    },
+    {
+     "t": "p",
+     "x": "No Parecer PGFN/CJU/COJPN nº 1091/2016, de 12 de julho de 2016, ao analisar as consequências legais do art. 98 da Lei nº 8.112/1990 na compensação de horário, a Procuradoria-Geral da Fazenda Nacional (PGFN) entende que é obrigatório, ao servidor estudante, cumprir os intervalos intra e interjornada no horário a ser cumprido, bem como observar o horário de repouso. De acordo com o referido documento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“a excepcionalidade que reveste o horário do servidor estudante não é capaz de afastar normas de ordem pública, que visam ao seu próprio bem-estar, preservam sua higidez física e mental, e refletem diretamente na qualidade do serviço prestado, não sendo permitido, por isso, a dispensa dos intervalos inter e intrajornada;” (p. 19)",
+      "“considerando que os intervalos de repouso do servidor são fundamentais à preservação da sua higidez física e mental, e consequentemente, ao regular exercício das atribuições do seu cargo, não se entende possível a sua supressão;” (p. 19)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Além disso, a PGFN, no referido Parecer, explica que o requisito para a concessão do horário especial para o servidor estudante é a observância à duração semanal do trabalho, permitindo a flexibilização de horários. Portanto, eventual quantidade de horas realizadas a maior em determinado dia da semana não caracteriza prestação de serviço extraordinário, já que a adesão a esse regime especial de horários afasta a incidência dos arts. 73 e 74 da Lei nº 8.112/1990."
+    },
+    {
+     "t": "p",
+     "x": "Na RFB, a decisão a respeito da concessão de horário especial compete ao Coordenador-Geral de Gestão de Pessoas, aos Superintendentes da Receita Federal e aos Delegados da Receita Federal de Julgamento (Portaria nº 1.235, de 11 de dezembro de 2006).",
+     "opc": {
+      "id": "competencia_horario_especial",
+      "rotulo": "Indicar a autoridade competente para conceder horário especial (conferir a vigência da Portaria nº 1.235/2006)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Cabe evidenciar que {{g:o consulente|a consulente}} não esclarece se o curso de {{area_estagio}} frequentado tem grau de formação profissional ou superior, se há reconhecimento do curso pelo Ministério da Educação, se a realização do estágio ocorrerá em horário diverso ao da jornada de trabalho preestabelecida e se o estágio estará em conformidade com a Lei nº 11.788, de 25 de setembro de 2008 (Lei nº 11.788/2008).",
+     "opc": {
+      "id": "falta_esclarecimento_curso",
+      "rotulo": "Consulente não esclareceu grau/reconhecimento do curso, horário e conformidade do estágio",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 11.788, de 25 de setembro de 2008 (Lei nº 11.788/2008), prevê normas e regras sobre como se dá o estágio de estudantes, dentre outras providências. De acordo com o art. 1º,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Estágio é ato educativo escolar supervisionado, desenvolvido no ambiente de trabalho, que visa à preparação para o trabalho produtivo de educandos que estejam frequentando o ensino regular em instituições de educação superior, de educação profissional, de ensino médio, da educação especial e dos anos finais do ensino fundamental, na modalidade profissional da educação de jovens e adultos.",
+      "§ 1º O estágio faz parte do projeto pedagógico do curso, além de integrar o itinerário formativo do educando.",
+      "§ 2º O estágio visa ao aprendizado de competências próprias da atividade profissional e à contextualização curricular, objetivando o desenvolvimento do educando para a vida cidadã e para o trabalho."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nessa medida, observa-se que a legislação brasileira não prevê estágio com “vínculo informal”, conforme apontado {{g:pelo peticionante|pela peticionante}} no item 3 do pedido de autorização. O estágio segue as regras previstas na Lei nº 11.788/2008.",
+     "opc": {
+      "id": "vinculo_informal",
+      "rotulo": "Consulente menciona estágio com \"vínculo informal\"",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que não se verifica conflito de interesses, com base no art. 5º, III da Lei nº 12.813/2013, entre o exercício da função pública de {{cargo}} e a realização de estágio em {{area_estagio}} {{g:pelo servidor|pela servidora}} {{nome}}; quanto aos demais incisos do referido artigo, evidencia-se a necessidade {{g:do servidor|da servidora}} evitar a ocorrência do conflito de interesses. Ressalta-se a obrigatoriedade da realização do estágio de acordo com as regras previstas nas Leis nº 8.112/90 e nº 11.788/2008."
+    }
+   ]
+  }
+ ]
+}

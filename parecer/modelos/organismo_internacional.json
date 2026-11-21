@@ -1,0 +1,99 @@
+{
+ "id": "organismo_internacional",
+ "nome": "Cargo em organismo internacional (Organização Mundial das Aduanas)",
+ "descricao": "Use quando o servidor pretende, em licença para tratar de interesses particulares, exercer cargo na Organização Mundial das Aduanas (OMA) ou em organismo internacional de que o Brasil seja membro.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "organização mundial das aduanas",
+  "oma",
+  "wco",
+  "organismo internacional",
+  "organização internacional",
+  "bruxelas",
+  "especialista",
+  "licença para tratar de interesses particulares",
+  "exterior",
+  "programa de integridade",
+  "missões de assistência técnica",
+  "aduana",
+  "cooperação internacional"
+ ],
+ "variantes": [
+  {
+   "id": "cargo_oma_em_licenca",
+   "rotulo": "Cargo na Organização Mundial das Aduanas durante licença para tratar de interesses particulares – compatibilidade material",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor(a) que solicitará licença para tratar de interesses particulares (art. 91 da Lei nº 8.112/1990) para exercer cargo na OMA. O texto descreve especificamente a OMA; para outro organismo, adaptar os parágrafos descritivos.",
+   "fonte": "PAR 236/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE CARGO NA ORGANIZAÇÃO MUNDIAL DAS ADUANAS.",
+   "ementa": [
+    "Pedido de autorização para exercer cargo na Organização Mundial das Aduanas (OMA). {{g:Servidor|Servidora}} solicitará licença para tratar de interesses particulares. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "cargo_pretendido",
+     "rotulo": "Cargo a ser exercido na OMA",
+     "exemplo": "especialista",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado {{g:pelo servidor|pela servidora}}, há a pretensão de exercer um cargo de {{cargo_pretendido}} na Organização Mundial das Aduanas (OMA) enquanto estiver em licença para tratar de interesses particulares."
+    },
+    {
+     "t": "p",
+     "x": "Informa que existem precedentes de servidores da RFB que exerceram funções na OMA e que pretende, ao retornar ao Brasil, contribuir nessa área na RFB.",
+     "opc": {
+      "id": "precedentes",
+      "rotulo": "Consulente informa precedentes de servidores na OMA e intenção de retornar à RFB",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Preliminarmente, é importante registrar que o afastamento para tratar de interesses particulares não descaracteriza o vínculo jurídico com a administração, conforme entendimento jurisprudencial firmado no âmbito do Supremo Tribunal Federal, já que a referida licença somente é concedida a critério da administração e pelo prazo fixado em lei, podendo, inclusive, ser interrompida, a qualquer tempo, no interesse do serviço ou a pedido do servidor."
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, cabe fazer um breve resumo do que é a Organização Mundial das Aduanas."
+    },
+    {
+     "t": "p",
+     "x": "Trata-se de uma organização internacional e tem como missão aumentar a eficiência e eficácia da administração das aduanas no mundo através de diretrizes e regras comuns. É a única organização mundial que trata de assuntos aduaneiros e trabalha em conjunto com a Organização Mundial do Comércio para facilitar o comércio internacional. Sua sede está localizada em Bruxelas e possui 183 países membros, os quais representam cerca de 98% das operações de comércio mundial. Os países membros cooperam para desenvolver regras e diretrizes técnicas a serem aplicadas por todas as aduanas, garantindo qualidade, segurança e facilitação nas operações de comércio exterior. O Brasil é membro da Organização Mundial das Aduanas desde 1981 e a Receita Federal o órgão que detém a competência para atuar na área aduaneira em todo o território nacional. Informações mais detalhadas podem ser obtidas no endereço eletrônico http://www.wcoomd.org."
+    },
+    {
+     "t": "p",
+     "x": "No caso do Brasil, cabe ao país seguir as diretrizes da Organização Mundial das Aduanas na sua legislação aduaneira, além de gradativamente aplicar as exigências de facilitação do comércio através da diminuição de burocracia alfandegária. Essas exigências são aplicadas pelo setor privado e pelo Governo. A parceria na aplicação de regras de segurança no gerenciamento da cadeia logística internacional, tecnologia integrada entre a Receita Federal e as empresas no acompanhamento da carga, transparência de informações, etc., são algumas das medidas recomendadas pela Organização Mundial das Aduanas."
+    },
+    {
+     "t": "p",
+     "x": "Em uma análise perfunctória, se pode afirmar que o exercício da atividade pretendida resultaria em potencial conflito de interesses, com base no inciso III do artigo 5º da Lei nº 12.813/2013, por se tratar de exercício de atividade que em razão da sua natureza seria incompatível com as atribuições do cargo, por ser desenvolvida em áreas e matérias correlatas."
+    },
+    {
+     "t": "p",
+     "x": "Contudo, salvo melhor juízo, não se trata aqui de atividade a ser exercida para determinada empresa privada, que poderia ter interesses conflitantes com o interesse público, mas sim de uma respeitada organização internacional, cujo objetivo é justamente de regular as práticas de comércio internacional, estabelecendo procedimentos, regras, diretrizes, critérios, etc., com a missão de \"desenvolver padrões internacionais, fomentar a cooperação e construir capacidade para facilitar o comércio legítimo, garantindo uma cobrança justa de receitas e proteção da sociedade, fornecendo liderança, orientação e apoio às administrações aduaneiras\" (texto adaptado extraído do site da OMA)."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, resta evidenciado que os interesses {{g:do servidor|da servidora}} e da administração são convergentes, uma vez que o Brasil e, em especial, a Receita Federal, tem interesse nas decisões provenientes da atuação da Organização Mundial das Aduanas, sendo importante que um dos seus servidores exerça um cargo de relevância na entidade."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do servidor|da servidora}} quando do exercício efetivo da atividade, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, feitas as considerações acima e analisando-se o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade pretendida {{g:pelo|pela}} consulente é compatível materialmente com o cargo ocupado."
+    }
+   ]
+  }
+ ]
+}

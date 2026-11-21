@@ -1,0 +1,88 @@
+{
+ "id": "fora_ambito_cargo_publico",
+ "nome": "Cargo em comissão em outro ente ou bolsa de curso de formação (fora do âmbito da Lei nº 12.813)",
+ "descricao": "Use quando a consulta não trata de atividade privada, mas de exercício de cargo em comissão em Estado ou Município ou de recebimento de bolsa-auxílio em curso de formação de concurso público.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "cargo em comissão",
+  "cargo comissionado municipal",
+  "prefeitura",
+  "superintendente",
+  "secretário municipal",
+  "cessão",
+  "bolsa-auxílio",
+  "curso de formação",
+  "concurso público",
+  "outro ente federativo",
+  "acúmulo de remuneração",
+  "fora do âmbito"
+ ],
+ "variantes": [
+  {
+   "id": "cargo_comissao_outro_ente",
+   "rotulo": "Cargo em comissão municipal/estadual – fora do âmbito da Lei nº 12.813/2013 (restituição à Cogep)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor(a) que consulta sobre exercer cargo em comissão em Município (ou outro ente): não é atividade privada; o caso é de cessão e os autos são restituídos à Cogep para ciência.",
+   "fonte": "INF 038/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE CARGO EM COMISSÃO EM OUTRO ENTE FEDERATIVO.",
+   "ementa": [
+    "Consulta sobre o exercício de cargo em comissão municipal. Objeto fora do âmbito da Lei nº 12.813, de 2013. Restituição à Coordenação-Geral de Gestão de Pessoas (Cogep)."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Ora, conforme disposto no artigo 3º, inciso I, da Lei nº 12.813, de 2013:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública; e”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, tendo em vista que {{g:o|a}} consulente pretende exercer um cargo em comissão municipal, verifica-se que o presente caso está fora do âmbito da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Salientando-se que provavelmente este caso deve ser analisado no âmbito do Decreto nº 4.050, de 12 de dezembro de 2001, que regulamenta o art. 93 da Lei nº 8.112, de 11 de dezembro de 1990, que dispõe sobre a cessão de servidores de órgãos e entidades da Administração Pública Federal, direta, autárquica e fundacional, e dá outras providências.",
+     "opc": {
+      "id": "decreto_cessao",
+      "rotulo": "Incluir remissão ao Decreto nº 4.050/2001 (cessão) – norma revogada, atualizar a referência",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, propomos a restituição dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do|da}} consulente de que o objeto desta consulta se encontra fora do âmbito da Lei nº 12.813, de 2013."
+    }
+   ]
+  },
+  {
+   "id": "bolsa_auxilio_curso_formacao",
+   "rotulo": "Bolsa-auxílio de curso de formação de concurso público – não é atividade privada (retorno à Cogep)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor(a) que consulta se pode receber bolsa-auxílio de curso de formação de concurso de outro ente concomitantemente à remuneração do cargo: matéria de remuneração e afastamento, de competência da Cogep.",
+   "fonte": "INF 080/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "BOLSA-AUXÍLIO DE CURSO DE FORMAÇÃO.",
+   "ementa": [
+    "Consulta sobre a possibilidade de recebimento de bolsa-auxílio de curso de formação concomitantemente à remuneração do cargo. Não caracteriza exercício de atividade privada. Retorno à Coordenação-Geral de Gestão de Pessoas (Cogep)."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Impende destacar que o recebimento de bolsa-auxílio em curso de formação de cargo da Administração Pública não caracteriza exercício de atividade privada e, portanto, não há que se falar em atividade incompatível, inviabilizando a análise sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, em vista de sua competência regimental para pronunciar-se acerca de matéria ligada à remuneração e afastamento de servidor, retorne-se o processo à Cogep para providências a seu cargo."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,67 @@
+{
+ "id": "nutricionista",
+ "nome": "Nutricionista",
+ "descricao": "Use quando o servidor pretende exercer a profissão de nutricionista, com atendimento a pacientes, concomitantemente ao cargo.",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "palavrasChave": [
+  "nutricionista",
+  "nutrição",
+  "graduação em nutrição",
+  "consultório de nutrição",
+  "atendimento nutricional",
+  "pacientes",
+  "dieta",
+  "plano alimentar",
+  "profissão da área de saúde",
+  "consultas nutricionais"
+ ],
+ "variantes": [
+  {
+   "id": "nutricionista_ressalvas",
+   "rotulo": "Exercício da profissão de nutricionista – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende exercer a profissão de nutricionista em caráter privado, atendendo pacientes, fora do horário de expediente.",
+   "fonte": "PAR 186/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA PROFISSÃO DE NUTRICIONISTA",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da profissão de nutricionista com o cargo de {{cargo}}.",
+    "Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…) III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} questiona se poderia acumular o cargo público de {{cargo}} ({{cargo_sigla}}) com o exercício da profissão de nutricionista. Analisando o pleito sob o prisma do inciso III da referida lei, opina-se que o exercício da citada profissão é materialmente compatível com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo seus eventuais pacientes."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se, ainda, que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar que a opinada inexistência de incompatibilidade material do exercício da profissão ora pretendida, com o cargo e a função ocupados {{g:pelo servidor|pela servidora}} condiciona-se à observância de todas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

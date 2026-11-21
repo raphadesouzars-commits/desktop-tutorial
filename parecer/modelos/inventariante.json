@@ -1,0 +1,92 @@
+{
+ "id": "inventariante",
+ "nome": "Inventariante",
+ "grupo": "Outras situações",
+ "descricao": "Usar quando o servidor pretende exercer (ou pode vir a ser nomeado para) a função de inventariante de espólio de familiar.",
+ "palavrasChave": [
+  "inventariante",
+  "inventário",
+  "espólio",
+  "herança",
+  "bens herdados",
+  "herdeiros",
+  "partilha",
+  "inventário judicial",
+  "representar o espólio",
+  "falecimento"
+ ],
+ "variantes": [
+  {
+   "id": "inventariante_ressalvas",
+   "rotulo": "Inventariante – não configura conflito, desde que nomeie procurador para atos perante órgãos públicos",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como inventariante dos bens de familiar; ressalva de que a representação do espólio perante órgãos e entidades da administração pública (inclusive a RFB) deve ser feita por procurador nomeado (art. 5º, IV, da Lei nº 12.813/2013).",
+   "fonte": "PAR 150/2018; PAR 201/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE A ATIVIDADE DE INVENTARIANTE.",
+   "ementa": [
+    "Consulta sobre o possível conflito de interesses entre o exercício do cargo de {{cargo}} e a função de inventariante. Não configura conflito de interesses exercício concomitante da função de inventariante com o cargo de {{cargo}}, desde que observadas as ressalvas expostas."
+   ],
+   "campos": [
+    {
+     "id": "espolio",
+     "rotulo": "De quem é o espólio (com a preposição)",
+     "exemplo": "da sua irmã",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme descrito no item 2 do formulário, {{g:o servidor|a servidora}} pretende, se {{g:nomeado|nomeada}} pelo juiz, ser inventariante do espólio {{espolio}}.",
+     "opc": {
+      "id": "nomeacao_futura",
+      "rotulo": "Nomeação como inventariante ainda é hipótese futura (se nomeado pelo juiz)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "No caso descrito {{g:pelo servidor|pela servidora}} – a atuação como inventariante – não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público. Todavia, é necessário ressalvar a possível atuação junto aos órgãos públicos federais, estaduais e municipais."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da referida lei, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, em relação à obrigação de representar o espólio, de acordo com o previsto no inciso I, art. 618, da Lei nº 13.105, de 16 de março de 2015 (Código de Processo Civil), quando se tratar de atos praticados perante os órgãos ou entidades acima referenciados, o inventariante deverá nomear um procurador."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de inventariante praticada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

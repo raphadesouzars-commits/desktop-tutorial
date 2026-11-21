@@ -1,0 +1,327 @@
+{
+ "id": "presidente_entidade",
+ "nome": "Presidência de igreja, partido político, rádio comunitária e observatório social",
+ "descricao": "Use quando o servidor pretende presidir (ou fundar e integrar conselho de) instituição religiosa, partido político, associação de radiodifusão comunitária ou observatório social.",
+ "grupo": "Entidades privadas sem fins lucrativos (A.8)",
+ "palavrasChave": [
+  "presidente de igreja",
+  "instituição religiosa",
+  "organização religiosa",
+  "igreja evangélica",
+  "responsável legal",
+  "partido político",
+  "presidente estadual de partido",
+  "diretório partidário",
+  "rádio comunitária",
+  "radiodifusão comunitária",
+  "apoio cultural",
+  "observatório social",
+  "sócio fundador",
+  "conselho de administração",
+  "terceiro setor",
+  "cidadania fiscal",
+  "representar a entidade",
+  "sem fins lucrativos"
+ ],
+ "variantes": [
+  {
+   "id": "presidente_instituicao_religiosa",
+   "rotulo": "Presidente (responsável legal) de instituição religiosa – possibilidade de forma condicionada",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende ser presidente/responsável legal de organização religiosa (igreja) sem fins lucrativos, sem ter anexado o estatuto da entidade.",
+   "fonte": "PAR 225/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESIDENTE DE INSTITUIÇÃO RELIGIOSA.",
+   "ementa": [
+    "Consulta sobre possibilidade para atuar como Presidente de instituição religiosa. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha anexado o estatuto da entidade religiosa, entende-se que não se vislumbra qualquer característica que, a princípio, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, registre-se que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com a publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o|a}} consulente venha a exercer a Presidência da Instituição Religiosa, deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se, ainda, que {{g:o servidor|a servidora}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, é importante ressaltar que {{g:o|a}} consulente não deve se apresentar nessa empreitada particular como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB, de forma a sugerir que o órgão público a que está {{g:vinculado|vinculada}} sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade descrita {{g:pelo servidor|pela servidora}} consulente é materialmente compatível com o cargo, desde que sejam observadas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "presidente_igreja_representacao_estatutaria",
+   "rotulo": "Presidente de igreja com atribuição estatutária de representá-la em juízo e fora dele – autorização condicionada (mitigação)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pede autorização para presidir entidade religiosa cujo estatuto atribui ao presidente a representação da entidade em juízo e fora dele; fundamentação mais extensa, com referência a precedentes da CGU de autorização condicionada (art. 7º, parágrafo único, da Portaria Interministerial nº 333/2013).",
+   "fonte": "INF 104/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESIDÊNCIA DE ENTIDADE RELIGIOSA.",
+   "ementa": [
+    "Pedido de autorização para exercer a Presidência de Igreja. Atribuição de representação da entidade. Atividade compatível, desde que respeitadas as condicionantes."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nos termos do inciso I do art. 3º da Lei nº 12.813, de 2013, conflito de interesses é a situação gerada pelo confronto entre interesses públicos e privados que possam comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. Sua verificação, portanto, deve ser realizada caso a caso, levando-se em consideração as especificidades de cada situação concreta."
+    },
+    {
+     "t": "p",
+     "x": "A preocupação do legislador, ao estabelecer as restrições dispostas no art. 5º da norma, não é tolher a liberdade dos agentes públicos, mas evitar abusos que possam comprometer o interesse geral ou o desempenho da função pública. Assim, para que se configure uma situação de conflito de interesses, há que se demonstrar, no caso concreto, como e em que medida as atividades privadas do agente público podem causar prejuízo, seja ao órgão ou entidade ao qual esteja vinculado, seja ao desempenho de suas funções, seja ao público em geral."
+    },
+    {
+     "t": "p",
+     "x": "No caso em tela, verifica-se que a atividade de Presidente da entidade religiosa não é, por si mesma, incompatível com o exercício do cargo de {{cargo}}. Contudo, entre as atribuições do Presidente está a função de representar a entidade em juízo e fora dele."
+    },
+    {
+     "t": "p",
+     "x": "Assim, o exercício da atividade privada envolve responsabilidades que colocam o agente público na posição de representante de interesses particulares junto a órgãos e entidades públicos, entre eles a própria RFB, situação que contraria o disposto no inciso XI do art. 117 da Lei n° 8.112/1990, e também o inciso IV do art. 5º da Lei n° 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em situações análogas já submetidas à análise da Controladoria-Geral da União, em que o servidor tem a missão de representar a entidade perante órgãos públicos, houve manifestação no sentido de concessão de autorização condicionada, com base no parágrafo único do art. 7º da Portaria Interministerial MP/CGU n° 333/2013, com determinação de medidas para eliminação ou mitigação do conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Assim, entende-se que o potencial conflito de interesses pode ser mitigado caso {{g:o servidor|a servidora}} transfira essa função de representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios. Salientando-se que, no exercício de seu cargo público, {{g:o|a}} consulente deve se abster de participar de processos decisórios que possam ser do interesse da referida entidade. E, ainda, não deve se apresentar como {{g:servidor público|servidora pública}} nem se valer do vínculo com a RFB para resolver questões da entidade religiosa perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, {{g:o|a}} consulente deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Assim, respeitadas todas as condicionantes acima e diante das informações e do contexto apresentado {{g:pelo|pela}} consulente, entende-se compatível a atividade pretendida."
+    }
+   ]
+  },
+  {
+   "id": "presidente_partido_politico",
+   "rotulo": "Presidente de diretório de partido político (sem remuneração) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) convidado(a) a presidir órgão partidário (estadual, municipal) sem remuneração, com estatuto do partido juntado aos autos.",
+   "fonte": "INF 177/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESIDÊNCIA DE PARTIDO POLÍTICO.",
+   "ementa": [
+    "Consulta. Conflito de interesses com o exercício da função de {{funcao_partido}} de partido político. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "funcao_partido",
+     "rotulo": "Função partidária pretendida",
+     "exemplo": "presidente estadual",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "partido",
+     "rotulo": "Sigla/nome do partido político",
+     "exemplo": "XYZ",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor|pela servidora}} – a atividade de {{funcao_partido}} do partido político {{partido}} – não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público. Observando-se que {{g:o servidor|a servidora}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios, devendo, nesses casos, incumbir outro membro da diretoria a executar tal mister."
+    },
+    {
+     "t": "p",
+     "x": "Cumpre ressaltar que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que os servidores públicos federais são proibidos de atuarem como procuradores junto às repartições públicas."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, é vedada a atuação {{g:do servidor|da servidora}} como {{g:procurador|procuradora}} junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o servidor|a servidora}} venha a ocupar o cargo de {{funcao_partido}} do partido político {{partido}} e necessite representar o referido partido em juízo ou fora dele, deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência. Salientando-se que {{g:o|a}} solicitante não deve atuar em qualquer procedimento em trâmite na RFB em que qualquer partido político, inclusive o {{partido}}, seja parte ou tenha interesse."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{funcao_partido}} do partido político {{partido}}, informado {{g:pelo servidor|pela servidora}}, não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "presidente_radio_comunitaria",
+   "rotulo": "Presidente de associação de radiodifusão comunitária – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende presidir associação sem fins lucrativos mantenedora de rádio comunitária (distribuição de horários, recebimento e aplicação de apoios culturais).",
+   "fonte": "PAR 199/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "{{g:Servidor|Servidora}} solicita autorização para atuar como presidente de Rádio Comunitária. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Preliminarmente, consigne-se que as atribuições dos Assistentes Técnico-Administrativos estão diretamente ligadas às competências do órgão ou entidade da Administração Pública no qual o servidor está lotado e em exercício.",
+     "opc": {
+      "id": "ata",
+      "rotulo": "Servidor ocupante do cargo de Assistente Técnico-Administrativo (ATA)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Na página da internet da Associação Gaúcha de Emissoras de Rádio e Televisão (www.agert.org.br), encontramos maiores informações sobre rádios comunitárias:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "O Serviço de Radiodifusão Comunitária foi criado pela Lei 9.612, de 1998, regulamentada pelo Decreto 2.615 do mesmo ano. Trata-se de radiodifusão sonora, em frequência modulada (FM), de baixa potência (25 Watts) e cobertura restrita a um raio de 1 km a partir da antena transmissora. Podem explorar esse serviço somente associações e fundações comunitárias sem fins lucrativos, com sede na localidade da prestação do serviço. As estações de rádio comunitárias devem ter uma programação pluralista, sem qualquer tipo de censura, e devem ser abertas à expressão de todos os habitantes da região atendida.",
+      "A programação diária de uma rádio comunitária deve conter informação, lazer, manifestações culturais, artísticas, folclóricas e tudo aquilo que possa contribuir para o desenvolvimento da comunidade, sem discriminação de raça, religião, sexo, convicções político-partidárias e condições sociais. A programação deve respeitar sempre os valores éticos e sociais da pessoa e da família, prestar serviços de utilidade pública e contribuir para o aperfeiçoamento profissional nas áreas de atuação dos jornalistas e radialistas. Além disso, qualquer cidadão da comunidade beneficiada terá o direito de emitir opiniões sobre quaisquer assuntos abordados na programação da emissora, bem como manifestar ideias, propostas, sugestões, reclamações ou reivindicações.",
+      "As prestadoras do Serviço de Radiodifusão Comunitária podem transmitir patrocínio sob a forma de apoio cultural, desde que restritos aos estabelecimentos situados na área da comunidade atendida. Entende-se por apoio cultural o pagamento dos custos relativos à transmissão da programação ou de um programa específico, sendo permitida, por parte da emissora que recebe o apoio, apenas veicular mensagens institucionais da entidade apoiadora, sem qualquer menção aos seus produtos ou serviços.",
+      "É proibido a uma rádio comunitária utilizar a programação de qualquer outra emissora simultaneamente, a não ser quando houver expressa determinação do Governo Federal. Não poderá ela, também, em hipótese alguma: veicular qualquer tipo de defesa de doutrinas, ideias ou sistemas sectários; e inserir propaganda comercial, a não ser sob a forma de apoio cultural, de estabelecimentos localizados na sua área de cobertura."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor|pela servidora}} consulente, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "É importante ressaltar que {{g:o|a}} consulente não deve se apresentar como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB para resolver questões da rádio comunitária perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência. Merece destaque, todavia, o disposto no inciso IV do citado artigo, o qual proíbe {{g:o interessado|a interessada}} de atuar como {{g:procurador, consultor, assessor ou intermediário|procuradora, consultora, assessora ou intermediária}} de interesses privados nos órgãos ou entidades da administração pública de qualquer dos poderes da União, Estados, do Distrito Federal e dos Municípios. Nesse contexto, {{g:o|a}} consulente, na condição de presidente da rádio, não poderá representar os interesses desta perante os órgãos públicos, devendo referida atribuição ser delegada a uma terceira pessoa."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade descrita {{g:pelo|pela}} consulente não é materialmente incompatível com o cargo."
+    },
+    {
+     "t": "p",
+     "x": "É necessário frisar que a opinada inexistência de incompatibilidade material da atividade pretendida com o cargo condiciona-se a que sejam observadas as ressalvas acima. Ademais, a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  },
+  {
+   "id": "observatorio_social",
+   "rotulo": "Sócio fundador e membro de conselho de Observatório Social – permitido, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende ser sócio fundador e integrar o Conselho de Administração (presidente ou vice) ou o Conselho Fiscal de Observatório Social (associação do terceiro setor, apartidária, voltada à cidadania fiscal e à gestão de recursos públicos), em atividade voluntária, com minuta de estatuto apresentada.",
+   "fonte": "INF 094/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CRIAÇÃO DE OBSERVATÓRIO SOCIAL.",
+   "ementa": [
+    "Pedido de autorização. Criação de Observatório Social. Participação como sócio fundador e em Conselho de Administração ou Conselho Fiscal. Permitida, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiramente, a partir da análise da minuta do Estatuto Social verifica-se que os “objetivos e finalidades” da entidade que se pretende criar dizem respeito a “cidadania fiscal” e a “gestão de recursos públicos”, ou seja, a natureza da atividade social não se mostra incompatível com o exercício do cargo de {{cargo_sigla}}, sendo inclusive louvável."
+    },
+    {
+     "t": "p",
+     "x": "Observamos que, com relação ao disposto nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, as situações neles descritas em regra só podem ser aferidas quando do efetivo exercício da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Desde já chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em qualquer processo de interesse do “Observatório Social”, que porventura tramite no âmbito da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Registramos que o entendimento exposto acima se fundamenta na minuta de Estatuto Social, de forma que eventuais alterações em seu teor tornarão necessária a realização de nova consulta pelo SeCi."
+    },
+    {
+     "t": "p",
+     "x": "Assim, respondendo às perguntas {{g:do|da}} consulente: não há vedação a que {{g:ele|ela}} seja {{g:sócio fundador|sócia fundadora}} da entidade; é permitida a participação {{g:do|da}} consulente no Conselho Fiscal, bem como Presidente ou Vice-Presidente do Conselho de Administração da entidade, desde que se abstenha de atuar na elaboração de demonstrações contábeis e de outros documentos que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios, e não atue como representante da entidade perante a União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    }
+   ]
+  }
+ ]
+}

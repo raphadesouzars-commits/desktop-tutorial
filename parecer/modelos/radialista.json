@@ -1,0 +1,57 @@
+{
+ "id": "radialista",
+ "nome": "Radialista / comentarista de notícias em rádio",
+ "descricao": "Use quando o servidor pretende apresentar programa ou quadro em emissora de rádio, com leitura e comentário de notícias, inclusive sobre normas tributárias e previdenciárias publicadas pela imprensa.",
+ "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+ "palavrasChave": [
+  "radialista",
+  "rádio",
+  "programa de rádio",
+  "locutor",
+  "apresentador",
+  "comentarista",
+  "notícias",
+  "jornais e revistas",
+  "mídia",
+  "emissora",
+  "imprensa",
+  "comunicador"
+ ],
+ "variantes": [
+  {
+   "id": "radialista_ressalvas",
+   "rotulo": "Radialista (leitura e esclarecimento de notícias) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que atua ou pretende atuar em rádio, fora do horário de expediente, selecionando e esclarecendo fatos publicados em jornais e revistas, inclusive normas da Previdência ou da Receita Federal divulgadas pela imprensa.",
+   "fonte": "INF 016/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE DE RADIALISTA.",
+   "ementa": [
+    "Consulta sobre atividade de radialista. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando a atividade narrada {{g:pelo|pela}} consulente, que se restringe a esclarecimentos de publicações de jornais e de revistas, inclusive relacionadas a normas sancionadas pela Previdência Social ou pela Receita Federal, não se vislumbra incompatibilidade material com o cargo ocupado, sob a ressalva de que observe o dever de sigilo, ou seja, não divulgue conhecimentos, dados, informações e/ou procedimentos internos da RFB que não sejam de conhecimento público, bem como que não se utilize de vantagens decorrentes de sua situação funcional."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, vale lembrar que {{g:o servidor|a servidora}} deve apresentar conduta equilibrada e isenta, não participando de quaisquer transações ou atividades que possam comprometer a sua dignidade profissional ou desabonar sua imagem pública, bem como a Instituição. Ressalta-se também que sua conduta deve ser norteada, dentre outros, pelo princípio da lealdade à Instituição."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O|A}} consulente também não poderá veicular o nome da Instituição como forma de propaganda ou de divulgação, e não poderá utilizar nem permitir o uso do seu cargo ou função, ou do nome da Instituição, de forma que possibilite a interpretação de que a Instituição sanciona ou respalda suas atividades pessoais ou a de terceiros, ou avaliza qualquer opinião/esclarecimento que emita. Sendo dever {{g:do|da}} consulente registrar que suas opiniões veiculadas na rádio são de caráter pessoal e não refletem posicionamento da Instituição."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade descrita {{g:pelo servidor|pela servidora}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

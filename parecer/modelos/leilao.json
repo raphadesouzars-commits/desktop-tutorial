@@ -1,0 +1,196 @@
+{
+ "id": "leilao",
+ "nome": "Participação em leilões (da RFB, judiciais e extrajudiciais)",
+ "descricao": "Use quando o servidor consulta sobre participar de leilão de mercadorias promovido pela RFB ou arrematar bens (imóveis) em leilões judiciais ou extrajudiciais, para uso próprio ou investimento.",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "palavrasChave": [
+  "leilão",
+  "leilões da rfb",
+  "leilão judicial",
+  "leilão extrajudicial",
+  "arrematação",
+  "arrematar imóvel",
+  "hasta pública",
+  "mercadorias apreendidas",
+  "e-cac",
+  "certificado digital",
+  "lance",
+  "imóveis de leilão",
+  "investimento em imóveis",
+  "execução fiscal",
+  "fazenda nacional",
+  "revenda de bens"
+ ],
+ "variantes": [
+  {
+   "id": "leilao_rfb_impossibilidade",
+   "rotulo": "Participação em leilão de mercadorias realizado pela RFB – impossibilidade",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor(a) em exercício na RFB que consulta se pode participar, com certificado digital próprio, de leilões eletrônicos de mercadorias apreendidas ou abandonadas realizados pela RFB. Atenção: o texto transcreve as Portarias RFB nº 2.206/2010 e nº 3.010/2011 – conferir a vigência e a redação atual antes de usar.",
+   "fonte": "PAR 227/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PARTICIPAÇÃO EM LEILÃO DE MERCADORIA REALIZADO PELA RECEITA FEDERAL.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de participar em leilão realizado pela RFB. Impossibilidade."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado, {{g:o servidor|a servidora}} tem a pretensão de participar nos leilões eletrônicos realizados pela Receita Federal do Brasil, com a utilização de certificado digital próprio."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se pela impossibilidade de {{g:o servidor|a servidora}} participar dos referidos leilões. A participação de um servidor da Receita Federal em leilões dessa natureza poderia acarretar desconfianças quanto a possíveis vantagens desfrutadas por este no pleito. Nessa linha, qualquer fato que provoque dúvida a respeito da integridade, moralidade e clareza de posições da RFB e de seus servidores e deixem transparecer uma possível sobreposição do interesse particular ao interesse público deve ser repelido, podendo ser considerado uma afronta ao princípio da moralidade administrativa."
+    },
+    {
+     "t": "p",
+     "x": "Além do exposto no item anterior, importante ressaltar que a Portaria RFB nº 2206, de 11 de novembro de 2010, que regulamenta o leilão, na forma eletrônica, para venda de mercadorias apreendidas ou abandonadas, assim dispõe:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º A abertura da Sessão Pública se dará com a verificação da regularidade fiscal, da regularidade jurídica, esta mediante consulta à situação cadastral da pessoa jurídica e da pessoa física, e de eventuais impossibilidades decorrentes de restrição ao direito de participar em licitações e, por último, com o ordenamento das propostas de valor de compra para cada lote, em data fixada no edital, nos termos deste artigo. (Redação dada pela Portaria RFB nº 707, de 17 de fevereiro de 2014)",
+      "§ 1º Será desclassificada a proposta apresentada por proponente, que: (Redação dada pela Portaria RFB nº 2347, de 08 de novembro de 2012)",
+      "(…)",
+      "II – Tratando-se de Pessoa Física: (Redação dada pela Portaria RFB nº 1827, de 21 de outubro de 2014)",
+      "(...)",
+      "d) Exerça, mesmo que transitoriamente ou sem remuneração, cargo, função ou emprego público na Secretaria da Receita Federal do Brasil; ou que possuam qualquer outro vínculo de natureza trabalhista com a Secretaria da Receita Federal do Brasil. (Incluído pela Portaria RFB nº 707, de 17 de fevereiro de 2014)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A Portaria RFB nº 3010, de 29 de junho de 2011, que estabelece critérios e condições para destinação de mercadorias abandonadas, entregues à Fazenda Nacional ou objeto de pena de perdimento e dá outras providências, assim dispõe:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 20. Não poderão participar dos leilões os servidores ou funcionários que exerçam, mesmo que transitoriamente ou sem remuneração, cargo, função ou emprego público na Secretaria da Receita Federal do Brasil; ou que possuam qualquer outro vínculo de natureza trabalhista com a Secretaria da Receita Federal do Brasil. (Redação dada pela Portaria RFB nº 78, de 18 de janeiro de 2016)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Desta forma, resta clara a impossibilidade de participação em leilões eletrônicos realizados pela Receita Federal do Brasil."
+    }
+   ]
+  },
+  {
+   "id": "leilao_judicial_uso_proprio",
+   "rotulo": "Arrematação de imóvel para uso próprio em leilão judicial/extrajudicial – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende participar de arrematações em leilões judiciais e extrajudiciais, sem esclarecer se os bens são para uso próprio ou para revenda: autoriza-se a hipótese de uso próprio e exige-se nova consulta para a de revenda.",
+   "fonte": "PAR 197/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "LEILÃO JUDICIAL.",
+   "ementa": [
+    "Pedido de autorização para participação em leilão judicial. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Pelo teor da consulta, depreende-se que {{g:o servidor|a servidora}} pretende arrematar imóvel em leilão judicial e extrajudicial, no entanto, não restou claro se a finalidade do leilão é para aquisição de bens para uso próprio ou bens para revenda."
+    },
+    {
+     "t": "p",
+     "x": "Analisando a primeira hipótese sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, verifica-se que não se vislumbra incompatibilidade material entre a atividade pretendida {{g:pelo|pela}} consulente, qual seja, a arrematação de imóvel para uso próprio em leilão judicial e extrajudicial, e o exercício do cargo por {{g:ele|ela}} ocupado, desde que não sejam utilizados conhecimentos, informações ou qualquer outra vantagem decorrente de sua condição funcional."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, o art. 497 da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil), ao regular o tema, estabelece:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 497. Sob pena de nulidade, não podem ser comprados, ainda que em hasta pública:",
+      "(...)",
+      "II – pelos servidores públicos, em geral, bens ou direitos da pessoa jurídica a que servirem, ou que estejam sob sua administração direta ou indireta:"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, a atividade pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no art. 497 do Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "É igualmente necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público. Os assuntos referentes ao exercício dessa atividade privada não podem ser tratados no horário de trabalho, assim como não devem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação à segunda hipótese, ou seja, de o leilão ter como finalidade a aquisição de bens para revenda, {{g:o servidor|a servidora}} deve fazer nova consulta, esclarecendo qual tipo de bem, qual a periodicidade de operações e outros detalhes que se fizerem necessários."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}} (arrematação de imóvel para uso próprio em leilão judicial e extrajudicial), não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "leilao_judicial_investimento",
+   "rotulo": "Arrematação de imóveis em leilão judicial como investimento (frequência informada) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que descreve concretamente a arrematação de imóveis em leilões judiciais ou extrajudiciais a título de investimento (inclusive com terceiros), informando a frequência das operações, ou a arrematação eventual de imóvel em execução promovida pela Fazenda Nacional (INF 015/2016, de redação equivalente).",
+   "fonte": "PAR 048/2018; INF 015/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "LEILÃO JUDICIAL.",
+   "ementa": [
+    "Consulta quanto à participação em leilão judicial. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade exatamente como descrita na consulta",
+     "exemplo": "arrematar imóveis em leilões judiciais numa frequência de até oito imóveis em cinco anos",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade exatamente como foi descrita {{g:pelo|pela}} consulente, qual seja, {{descricao_atividade}}, não se vislumbra incompatibilidade material com o exercício do cargo por {{g:ele|ela}} ocupado, desde que não utilize conhecimentos, informações ou qualquer outra vantagem decorrente de sua condição funcional."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, o art. 497 da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil), ao regular o tema, estabelece:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 497. Sob pena de nulidade, não podem ser comprados, ainda que em hasta pública:",
+      "(...)",
+      "II – pelos servidores públicos, em geral, bens ou direitos da pessoa jurídica a que servirem, ou que estejam sob sua administração direta ou indireta:"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, a atividade pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no art. 497 do Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "É igualmente necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público. Os assuntos referentes ao exercício dessa atividade privada não podem ser tratados no horário de trabalho, assim como não devem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo|pela}} consulente, de forma que eventuais alterações na situação apresentada devem ser objeto de nova consulta."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

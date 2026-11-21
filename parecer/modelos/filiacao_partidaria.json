@@ -1,0 +1,74 @@
+{
+ "id": "filiacao_partidaria",
+ "nome": "Filiação a partido político",
+ "grupo": "Outras situações",
+ "descricao": "Usar quando o servidor consulta apenas sobre a possibilidade de se filiar a partido político, sem descrever atividades partidárias ou cargo de direção.",
+ "palavrasChave": [
+  "filiação a partido político",
+  "filiação partidária",
+  "partido político",
+  "filiado",
+  "filiar-se",
+  "atividade partidária",
+  "política",
+  "candidatura",
+  "cargo eletivo",
+  "eleições"
+ ],
+ "variantes": [
+  {
+   "id": "filiacao_nao_e_atividade",
+   "rotulo": "Mera filiação a partido político – não é atividade privada; consulta fora do trâmite de conflito de interesses",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pergunta somente se pode filiar-se a partido político. A filiação é ato, não atividade; a consulta é devolvida à Cogep para ciência. Se houver atividades partidárias ou cargo de direção no partido, exige-se nova consulta detalhada (não usar este modelo).",
+   "fonte": "INF 133/2016",
+   "assunto": "Filiação a partido político.",
+   "ementaTitulo": "FILIAÇÃO A PARTIDO POLÍTICO.",
+   "ementa": [
+    "Consulta sobre a existência de conflito de interesses entre as atribuições do cargo de {{cargo}} e a filiação a partido político. A filiação partidária, por si só, não constitui uma atividade particular, mas sim apenas um ato. Consulta que não diz respeito a conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "No site do Tribunal Superior Eleitoral – TSE (http://www.tse.jus.br/partidos/filiacao-partidaria/filiacao-partidaria) constam as seguintes informações:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“A filiação partidária é o ato pelo qual um eleitor aceita, adota o programa e passa a integrar um partido político. Esse vínculo que se estabelece entre o cidadão e o partido é condição de elegibilidade, conforme disposto no art. 14, § 3º, V, da Constituição Federal”; e",
+      "Qualquer pessoa pode se filiar a partido político?",
+      "“Não, somente as que estiverem em pleno gozo dos direitos políticos, ressalvada a possibilidade de filiação do eleitor considerado inelegível (Res.-TSE nº 23.117, de 20.8.2009, art. 1º).",
+      "Além disso, os militares, os magistrados, os membros dos tribunais de contas e os do Ministério Público devem observar as disposições legais próprias sobre prazos de filiação, nos termos do § 2º do art. 2º da referida resolução.",
+      "Segundo entendimento do Tribunal Superior Eleitoral (TSE), são incompatíveis a condição de servidor da Justiça Eleitoral e a filiação partidária. Assim, o servidor dos quadros da Justiça Eleitoral que pretenda filiar-se a partido político deve se exonerar do cargo ocupado (Recurso Especial Eleitoral nº 35.354/AM, DJE de 21.9.2009, rel. Min. Fernando Gonçalves; Consulta nº 1.164/DF, DJ de 7.10.2005, rel. Min. Cesar Asfor Rocha) (...)”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme esclarecido pelo TSE, a filiação partidária constitui um ato pelo qual um cidadão se vincula a um partido político. Ou seja, por si só, a filiação partidária não constitui uma atividade particular, mas sim apenas um ato."
+    },
+    {
+     "t": "p",
+     "x": "Assim, nesse aspecto a dúvida apresentada {{g:pelo consulente|pela consulente}} não tem relação com o exercício de atividade incompatível."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, a partir da filiação, {{g:o consulente|a consulente}} poderá vir a desejar realizar atividades partidárias. Se isso ocorrer, cabe {{g:ao consulente|à consulente}} formular consulta SeCi, esclarecendo pormenorizadamente as atividades pretendidas."
+    },
+    {
+     "t": "p",
+     "x": "Além do mais a filiação partidária é condição para que o servidor concorra a cargo eletivo, respeitado os prazos mínimos de desincompatibilização previsto em lei (artigo 2º da Resolução TSE n.º 23.117, de 20 de agosto de 2009; Artigo 20, caput da Lei 9.096, de 19 de setembro de 1995 c/c Lei Complementar n.º 64, de 18 de maio de 1990).",
+     "opc": {
+      "id": "condicao_elegibilidade",
+      "rotulo": "Registrar que a filiação é condição para concorrer a cargo eletivo (trecho de redação incerta no original)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, como a consulta não diz respeito a conflito de interesse, não deve seguir o trâmite previsto pela {{portaria_curta}}. Dito isso, propõe-se encaminhá-la à Coordenação-Geral de Gestão de Pessoas (Cogep), para ciência {{g:do servidor|da servidora}}."
+    }
+   ]
+  }
+ ]
+}

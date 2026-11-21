@@ -1,0 +1,80 @@
+{
+ "id": "modelo_publicitario",
+ "nome": "Modelo publicitário",
+ "descricao": "Use quando o servidor pretende atuar como modelo em peças publicitárias, diretamente ou por intermédio de agência de modelos.",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "palavrasChave": [
+  "modelo",
+  "modelo publicitário",
+  "modelo publicitária",
+  "peças publicitárias",
+  "agência de modelos",
+  "publicidade",
+  "campanha publicitária",
+  "comercial",
+  "fotos publicitárias",
+  "desfile"
+ ],
+ "variantes": [
+  {
+   "id": "modelo_publicitario_ressalvas",
+   "rotulo": "Modelo publicitário – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende participar de peças publicitárias como modelo; se os trabalhos forem repassados por agência de modelos, marque a ressalva de abstenção quanto a processos da agência.",
+   "fonte": "INF 097/2016; INF 208/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE MODELO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de modelo {{g:publicitário|publicitária}} com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "agencia",
+     "rotulo": "Nome da agência de modelos (se houver)",
+     "exemplo": "Agência X",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, com relação à possível atuação {{g:do servidor|da servidora}} como modelo {{g:publicitário|publicitária}}, não se vislumbra incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Quanto aos incisos I, II, IV, V, VI e VII, do art. 5°, da mesma lei, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Desde já chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em qualquer processo de interesse da empresa “{{agencia}}”, que porventura tramite no âmbito da Receita Federal do Brasil.",
+     "opc": {
+      "id": "agencia",
+      "rotulo": "Incluir abstenção quanto a processos da agência de modelos",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

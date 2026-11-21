@@ -1,0 +1,168 @@
+{
+ "id": "eireli",
+ "nome": "Constituição de EIRELI / empresa individual (art. 117, X, da Lei nº 8.112/1990)",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor consulta se pode constituir empresa individual de responsabilidade limitada (EIRELI) – por exemplo para ministrar aulas ou ceder direitos autorais – diante da proibição de gerência ou administração do art. 117, X, da Lei nº 8.112/1990.",
+ "palavrasChave": [
+  "eireli",
+  "empresa individual de responsabilidade limitada",
+  "abrir cnpj",
+  "constituir empresa",
+  "pessoa jurídica",
+  "administração terceirizada",
+  "art. 117, x",
+  "gerência ou administração",
+  "direitos autorais",
+  "cessão de direitos autorais",
+  "direitos patrimoniais",
+  "sociedade unipessoal",
+  "titular de empresa"
+ ],
+ "variantes": [
+  {
+   "id": "eireli_possivel_administrador_terceiro",
+   "rotulo": "EIRELI – proibição do art. 117, X, aplica-se; possível constituir se terceiro for o administrador",
+   "resultado": "outro",
+   "quandoUsar": "Entendimento de 2020: o servidor pode constituir EIRELI desde que contrate terceiro para a gerência/administração; tratado como requerimento disciplinar à Corregedoria. Há bloco opcional para pedir complementação quando a finalidade é a docência. Atenção: a EIRELI foi extinta (a Lei nº 14.195/2021 transformou as existentes em sociedade limitada unipessoal e a Lei nº 14.382/2022 revogou o art. 980-A do Código Civil); adapte antes de usar.",
+   "fonte": "PAR 026/2020",
+   "assunto": "Consulta formulada por meio do SeCI.",
+   "ementaTitulo": "CONSTITUIR EIRELI.",
+   "ementa": [
+    "A proibição do art. 117, inciso X, da Lei nº 8.112/1990 é aplicada à Empresa Individual de Responsabilidade Limitada – EIRELI. É possível contratação de terceiro para a função de administrador ou gerente na EIRELI, em virtude da aplicação do art. 980-A, § 6º, do Código Civil de 2002."
+   ],
+   "campos": [
+    {
+     "id": "finalidade_eireli",
+     "rotulo": "Finalidade da EIRELI (completa a frase \"constituir uma ... EIRELI para ...\")",
+     "exemplo": "ministrar aula em um Centro de Treinamento",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "{{g:O requerente|A requerente}} objetiva saber, no item 2, se é permitido constituir uma Empresa Individual de Responsabilidade Limitada - EIRELI para {{finalidade_eireli}}."
+    },
+    {
+     "t": "p",
+     "x": "A pergunta, portanto, refere-se à possibilidade de constituir uma EIRELI e se, ao figurar como {{g:administrador|administradora}} ou gerente desta empresa individual, incorre na situação proibitiva prevista no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990 (Lei n° 8.112/1990)."
+    },
+    {
+     "t": "p",
+     "x": "Cabe esclarecer que a consulta formulada {{g:pelo peticionante|pela peticionante}} por meio do SeCI visa verificar a possível existência de um conflito de interesses entre a função pública e a atividade privada a ser exercida, bem como objetiva discutir sobre a necessidade de resguardo, por {{g:ele|ela}}, de informações privilegiadas obtidas em razão do exercício da função pública, com base na Lei n° 12.813, de 16 de maio de 2013 (Lei n° 12.813/2013); entretanto, o conteúdo do questionamento trata de tema disciplinar e busca uma resposta desta Corregedoria. Portanto, dada à correlação com a área disciplinar e considerando os princípios do formalismo moderado e da economia processual (previstos na Lei nº 9.784, de 29 de janeiro de 1999), esta consulta será tratada como um requerimento a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "A EIRELI é uma espécie de pessoa jurídica de direito privado, de responsabilidade limitada e está prevista no Título I-A da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil de 2002), conforme disposição que se segue:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "TÍTULO I-A (Incluído pela Lei nº 12.441, de 2011)",
+      "DA EMPRESA INDIVIDUAL DE RESPONSABILIDADE LIMITADA",
+      "Art. 980-A. A empresa individual de responsabilidade limitada será constituída por uma única pessoa titular da totalidade do capital social, devidamente integralizado, que não será inferior a 100 (cem) vezes o maior salário-mínimo vigente no País. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 1º O nome empresarial deverá ser formado pela inclusão da expressão \"EIRELI\" após a firma ou a denominação social da empresa individual de responsabilidade limitada. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 2º A pessoa natural que constituir empresa individual de responsabilidade limitada somente poderá figurar em uma única empresa dessa modalidade. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 3º A empresa individual de responsabilidade limitada também poderá resultar da concentração das quotas de outra modalidade societária num único sócio, independentemente das razões que motivaram tal concentração. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 4º (VETADO) (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 5º Poderá ser atribuída à empresa individual de responsabilidade limitada constituída para a prestação de serviços de qualquer natureza a remuneração decorrente da cessão de direitos patrimoniais de autor ou de imagem, nome, marca ou voz de que seja detentor o titular da pessoa jurídica, vinculados à atividade profissional. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 6º Aplicam-se à empresa individual de responsabilidade limitada, no que couber, as regras previstas para as sociedades limitadas. (Incluído pela Lei nº 12.441, de 2011)",
+      "§ 7º Somente o patrimônio social da empresa responderá pelas dívidas da empresa individual de responsabilidade limitada, hipótese em que não se confundirá, em qualquer situação, com o patrimônio do titular que a constitui, ressalvados os casos de fraude. (Incluído pela Lei nº 13.874, de 2019)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por ter caráter pessoal, a figura do empresário na EIRELI é mais relevante que o capital trazido pelo mesmo, gerando mútua confiança (intuitu persona). Tal característica é relevante tendo em vista que, no caso de EIRELI constituída por servidor público, ele contribui com a imagem e com o prestígio decorrente do cargo público para o resultado financeiro da sociedade privada com fins lucrativos."
+    },
+    {
+     "t": "p",
+     "x": "Considerando as características da EIRELI, a situação proibitiva prevista no inciso X do art. 117 da Lei nº 8.112/1990 é aplicada a esse tipo de entidade. Nessa medida, o servidor público não pode ser gerente ou administrador desta pessoa jurídica de direito privado, de responsabilidade limitada."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o § 6º do art. 980-A do Código Civil de 2002, à EIRELI se aplicam, no que couber, as regras previstas às sociedades limitadas. Nesta espécie de sociedade personificada, a administração da sociedade é realizada por meio de um gerente ou um administrador, restando ao servidor público a possibilidade de ser sócio da empresa. Essa situação também pode ser aplicada à EIRELI: é possível ao servidor público a constituição desta espécie de pessoa jurídica, desde que contrate terceiro para desempenhar as funções de gerência ou administração."
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que a situação proibitiva prevista no inciso X do art. 117 da Lei nº 8.112/1990 também é aplicada à EIRELI, considerando as suas características. O servidor público pode constituir uma empresa individual de responsabilidade limitada, desde que contrate terceiro para desempenhar as funções de gerência ou administração."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, observa-se que {{g:o requerente|a requerente}} não especificou matéria e público-alvo da atividade privada de docência que pretende exercer. Matéria e público-alvo são elementos concretos necessários para analisar se há conflito de interesses, com base na Lei nº 12.813/2013, entre a atividade privada e o exercício da função pública na RFB, ao qual é inerente o acesso a informações privilegiadas e a realização de atribuições remuneradas, que contemplam proceder orientação do sujeito passivo concernente à legislação tributária (art. 6º da Lei nº 10.593, de 6 de dezembro de 2002). Recomenda-se a complementação, por parte {{g:do consulente|da consulente}}, a respeito desses elementos concretos para avaliação da existência de conflito de interesses.",
+     "opc": {
+      "id": "docencia_complementacao",
+      "rotulo": "A EIRELI serviria à docência e o consulente não informou matéria e público-alvo (pedir complementação)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Essa determinação encontra amparo no art. 10 da {{portaria_curta}}: “Art. 10. Caso considerem insuficientes as informações recebidas, as Comissões de Ética e Corregedorias poderão solicitar informações adicionais às unidades de Recursos Humanos por meio do sistema Comprotdoc.”",
+     "opc": {
+      "id": "docencia_complementacao",
+      "rotulo": "A EIRELI serviria à docência e o consulente não informou matéria e público-alvo (pedir complementação)",
+      "padrao": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "eireli_vedada_materia_disciplinar",
+   "rotulo": "EIRELI com administração terceirizada – vedada; matéria estritamente disciplinar (entendimento de 2017)",
+   "resultado": "outro",
+   "quandoUsar": "Entendimento de 2017, mais restritivo e posteriormente superado pelo PAR 026/2020: a EIRELI caracteriza sociedade empresária vedada pelo art. 117, X, da Lei nº 8.112/1990, e a contratação de administrador não atenua a situação; consulta devolvida à Cogep. Atenção: a EIRELI foi extinta (a Lei nº 14.195/2021 transformou as existentes em sociedade limitada unipessoal e a Lei nº 14.382/2022 revogou o art. 980-A do Código Civil); adapte antes de usar.",
+   "fonte": "INF 083/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EIRELI COM ADMINISTRAÇÃO TERCEIRIZADA.",
+   "ementa": [
+    "Pedido de autorização para atuar como sócio de EIRELI com administração terceirizada para {{finalidade_eireli}}. Matéria estritamente disciplinar, fora do âmbito da Lei de Conflito de Interesses."
+   ],
+   "campos": [
+    {
+     "id": "finalidade_eireli",
+     "rotulo": "Finalidade da EIRELI (para a ementa)",
+     "exemplo": "cessão onerosa de seus direitos autorais/patrimoniais",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "De acordo com o art. 980-A do Código Civil:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“DA EMPRESA INDIVIDUAL DE RESPONSABILIDADE LIMITADA",
+      "Art. 980-A. A empresa individual de responsabilidade limitada será constituída por uma única pessoa titular da totalidade do capital social, devidamente integralizado, que não será inferior a 100 (cem) vezes o maior salário-mínimo vigente no País.",
+      "§ 1º O nome empresarial deverá ser formado pela inclusão da expressão \"EIRELI\" após a firma ou a denominação social da empresa individual de responsabilidade limitada.",
+      "(...)",
+      "§ 6º Aplicam-se à empresa individual de responsabilidade limitada, no que couber, as regras previstas para as sociedades limitadas”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme disposto no artigo acima, a Eireli é uma pessoa jurídica de titularidade unipessoal, com responsabilidade limitada ao patrimônio do capital social. Assim, uma Eireli congrega todos os elementos elencados no artigo 966 do Código Civil, com organização econômica para a produção e circulação de bens e de serviços, caracterizando, assim, uma sociedade empresária, o que contraria a vedação disposta no art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, compete salientar que o objeto da consulta (pedido de autorização) se encontra fora do âmbito da Lei de Conflito de Interesses, dizendo respeito à legislação disciplinar, mais precisamente ao artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, que estabelece que ao servidor é proibido “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "Salientando-se que eventual contratação de funcionário para o exercício de funções administrativas e gerenciais em nada atenua a situação, uma vez que quem tem poder de mando sobre o gerente é o empresário dono da Eireli, que invariavelmente acaba sendo o administrador e gerente de todo o negócio."
+    },
+    {
+     "t": "p",
+     "x": "Assim, com base nas informações prestadas {{g:pelo servidor|pela servidora}}, conclui-se que na situação apresentada {{g:o consulente|a consulente}} poderia estar {{g:sujeito|sujeita}} à aplicação de sanção disciplinar por infringir a vedação prevista no art. 117, inciso X, da Lei nº 8.112/1990."
+    },
+    {
+     "t": "p",
+     "x": "Logo, tratando-se de uma consulta acerca de matéria estritamente disciplinar, propõe-se o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do servidor|da servidora}} consulente."
+    }
+   ]
+  }
+ ]
+}
