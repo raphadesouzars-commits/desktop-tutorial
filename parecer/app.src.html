@@ -94,6 +94,9 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
       <button id="btnIdent">Identificar tema</button>
       <button class="sec" id="btnUsarForm" title="Separa o texto colado nas 10 perguntas do formulário SeCI (passo 3)">Distribuir nas 10 perguntas</button>
     </div>
+    <label for="arqForm">Ou envie o formulário preenchido pelo servidor (PDF, DOCX, ODT ou TXT)</label>
+    <input type="file" id="arqForm" accept=".pdf,.docx,.odt,.txt,application/pdf,text/plain">
+    <p class="hint" id="arqInfo">O arquivo é lido aqui mesmo no navegador, sem internet. PDF digitalizado (imagem) não tem texto para ler.</p>
     <div id="sugestoes"></div>
   </div>
 
@@ -199,6 +202,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
 const MODELOS = /*__MODELOS__*/[];
 const LOGO_PADRAO = "/*__LOGO__*/";
 const LOGO_DIM = /*__LOGO_DIM__*/[1300,137];
+const PDFJS_GZ = "/*__PDFJS__*/", PDFW_GZ = "/*__PDFW__*/"; // leitor de PDF (pdf.js, Apache-2.0), compactado
 const PRECEDENTES = /*__PRECEDENTES__*/{"itens":[]};
 
 // Perguntas do formulário SeCI (redação transcrita nos pareceres de 2021 e 2022)
@@ -296,21 +300,127 @@ function identificar(){
   listarPrecedentes();
 }
 /* separa o texto colado nas 10 perguntas do SeCI */
-function distribuir(){
-  const linhas = $("consulta").value.replace(/\r/g,"").split("\n");
-  const resp = {}; let atual = 0, achou = false;
+// trechos que identificam cada pergunta, na redação atual e na do manual
+const CHAVES = [
+  ["sua duvida tem relacao"],
+  ["descreva a atividade que voce pretende"],
+  ["voce estaria vinculado"],
+  ["essa pessoa fisica ou juridica","mantem algum vinculo","mantenha algum vinculo"],
+  ["quais sao as atribuicoes","atribuicoes de seu cargo"],
+  ["quais atividades","atividades voce exerce efetivamente","atividades que exerce especificamente"],
+  ["voce lida","informacoes sigilosas"],
+  ["no desempenho de sua funcao publica","seu poder decisorio","poder decisorio"],
+  ["descreva como a situacao","poderia gerar um conflito","qual o possivel conflito"],
+  ["a partir das informacoes prestadas","a partir dessas informacoes","voce gostaria de receber","seu interesse e receber"]
+];
+function separarPerguntas(texto){
+  const linhas = texto.replace(/\r/g,"").split("\n");
+  const resp = {}; let atual = 0, naPergunta = false;
   for (const ln of linhas){
-    const m = ln.match(/^\s*(\d{1,2})\s*[-–—.)]\s*(.*)$/);
-    if (m && +m[1] >= 1 && +m[1] <= 10 && +m[1] >= atual){
-      atual = +m[1]; achou = true; resp[atual] = [];
-      // resposta na mesma linha, depois do "?" ou ":" final da pergunta
-      const r = m[2].match(/^.*[?:]\s+(\S.*)$/); if (r && m[2].length > 60) resp[atual].push(r[1]);
-    } else if (atual) resp[atual].push(ln);
+    const mn = ln.match(/^\s*(\d{1,2})\s*[-–—.)]/), num = mn ? +mn[1] : 0;
+    const semNum = norm(ln).replace(/^\s*\d{1,2}\s*[-–—.)]*\s*/,"");
+    let q = 0;
+    // com numeração, o número tem de bater; sem numeração, a frase da pergunta tem de abrir a linha
+    for (let i = atual; i < 10 && !q; i++) if (CHAVES[i].some(k => { const p = semNum.indexOf(k); return num ? (num === i + 1 && p >= 0) : (p >= 0 && p <= 4); })) q = i + 1;
+    if (q){
+      atual = q; resp[q] = []; naPergunta = !/[?:.]\s*$/.test(ln);
+      const r = ln.match(/^.{40,}[?:]\s+(\S.*)$/); if (r && !naPergunta && !/[?:]\s*$/.test(ln) && !/^se sim/i.test(r[1])) resp[q].push(r[1]);
+    }
+    else if (naPergunta){ if (/[?:.]\s*$/.test(ln)) naPergunta = false; }
+    else if (atual) resp[atual].push(ln);
   }
-  if (!achou){ if ($("consulta").value.trim()) $("q2").value = $("consulta").value.trim(); }
-  else for (let i = 1; i <= 9; i++) if (resp[i]) $("q" + i).value = resp[i].join("\n").trim();
-  if (resp[10]){ const t = norm(resp[10].join(" ")); if (/autoriza/.test(t)) $("tipo").value = "pedido"; else if (/consulta|simples/.test(t)) $("tipo").value = "consulta"; $("tipo").onchange(); }
+  if (Object.keys(resp).length >= 2) return resp;
+  // sem as frases das perguntas: tenta só pela numeração
+  const r2 = {}; atual = 0;
+  for (const ln of linhas){
+    const m = ln.match(/^\s*(\d{1,2})\s*[-–—.)]\s*\S/);
+    if (m && +m[1] >= 1 && +m[1] <= 10 && +m[1] > atual){ atual = +m[1]; r2[atual] = []; }
+    else if (atual) r2[atual].push(ln);
+  }
+  return Object.keys(r2).length >= 2 ? r2 : null;
+}
+function distribuir(){
+  const txt = $("consulta").value, resp = separarPerguntas(txt);
+  if (!resp){ if (txt.trim()) $("q2").value = txt.trim(); }
+  else for (let i = 1; i <= 9; i++) if (resp[i]) $("q" + i).value = resp[i].join("\n").replace(/\n{3,}/g,"\n\n").trim();
+  if (resp && resp[10]){ const t = norm(resp[10].join(" ")); if (/autoriza/.test(t)) $("tipo").value = "pedido"; else if (/consulta|simples/.test(t)) $("tipo").value = "consulta"; $("tipo").onchange(); }
   avisos(); render();
+  return resp ? Object.keys(resp).length : 0;
+}
+/* ---------- leitura de arquivo enviado (offline) ---------- */
+async function gunzipB64(b64, tipo){
+  const st = new Blob([b64bytes(b64)]).stream().pipeThrough(new DecompressionStream("gzip"));
+  return URL.createObjectURL(new Blob([await new Response(st).arrayBuffer()], {type: tipo}));
+}
+let pdfPronto = null;
+function carregarPdfjs(){
+  return pdfPronto || (pdfPronto = (async () => {
+    const [u1, u2] = await Promise.all([gunzipB64(PDFJS_GZ, "text/javascript"), gunzipB64(PDFW_GZ, "text/javascript")]);
+    await new Promise((ok, erro) => { const sc = document.createElement("script"); sc.src = u1; sc.onload = ok; sc.onerror = erro; document.head.appendChild(sc); });
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = u2;
+    return window.pdfjsLib;
+  })());
+}
+async function textoPdf(buf){
+  const lib = await carregarPdfjs();
+  const doc = await lib.getDocument({data: buf, isEvalSupported: false}).promise;
+  const out = [];
+  for (let n = 1; n <= doc.numPages; n++){
+    const tc = await (await doc.getPage(n)).getTextContent();
+    // agrupa os trechos em linhas pela posição vertical
+    const linhas = [];
+    for (const it of tc.items){
+      if (!it.str) continue;
+      const y = it.transform[5], x = it.transform[4];
+      let l = linhas.find(l => Math.abs(l.y - y) < 3);
+      if (!l){ l = {y, ps: []}; linhas.push(l); }
+      l.ps.push({x, s: it.str});
+    }
+    linhas.sort((a,b) => b.y - a.y);
+    for (const l of linhas) out.push(l.ps.sort((a,b) => a.x - b.x).map(p => p.s).join(" ").replace(/\s+/g," ").trim());
+  }
+  return out.join("\n");
+}
+async function arquivoDoZip(buf, nome){
+  const dv = new DataView(buf), u8 = new Uint8Array(buf);
+  let e = buf.byteLength - 22; while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
+  if (e < 0) throw new Error("arquivo inválido");
+  let p = dv.getUint32(e + 16, true); const n = dv.getUint16(e + 10, true);
+  for (let i = 0; i < n; i++){
+    const metodo = dv.getUint16(p + 10, true), tam = dv.getUint32(p + 20, true), ln = dv.getUint16(p + 28, true), le = dv.getUint16(p + 30, true), lc = dv.getUint16(p + 32, true), off = dv.getUint32(p + 42, true);
+    const nm = new TextDecoder().decode(u8.subarray(p + 46, p + 46 + ln));
+    if (nm === nome){
+      const ini = off + 30 + dv.getUint16(off + 26, true) + dv.getUint16(off + 28, true), dados = u8.subarray(ini, ini + tam);
+      if (metodo === 0) return new TextDecoder().decode(dados);
+      return await new Response(new Blob([dados]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text();
+    }
+    p += 46 + ln + le + lc;
+  }
+  throw new Error("conteúdo não encontrado no arquivo");
+}
+function textoXml(xml, fimPar){
+  return xml.replace(new RegExp(fimPar, "g"), "\n").replace(/<w:tab\/>|<text:tab\/>/g, " ").replace(/<w:br\/>|<text:line-break\/>/g, "\n").replace(/<[^>]+>/g, "")
+    .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,"&");
+}
+async function lerArquivo(f){
+  const info = $("arqInfo"), ext = (f.name.split(".").pop() || "").toLowerCase();
+  info.textContent = "Lendo " + f.name + "…";
+  try {
+    let t;
+    if (ext === "pdf" || f.type === "application/pdf") t = await textoPdf(await f.arrayBuffer());
+    else if (ext === "docx") t = textoXml(await arquivoDoZip(await f.arrayBuffer(), "word/document.xml"), "</w:p>");
+    else if (ext === "odt") t = textoXml(await arquivoDoZip(await f.arrayBuffer(), "content.xml"), "</text:(p|h)>");
+    else if (ext === "txt" || f.type.startsWith("text/")) t = await f.text();
+    else throw new Error("formato não aceito (use PDF, DOCX, ODT ou TXT; arquivos .doc antigos devem ser salvos como DOCX ou PDF)");
+    t = t.replace(/ /g, " ").split("\n").map(l => l.trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim();
+    if (t.length < 20) throw new Error("não há texto no arquivo – provavelmente é um PDF digitalizado (imagem)");
+    $("consulta").value = t;
+    for (let i = 1; i <= 9; i++) $("q" + i).value = "";
+    const n = distribuir();
+    identificar();
+    info.textContent = n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
+                         : `${f.name}: texto lido, mas as perguntas do SeCI não foram reconhecidas; o conteúdo foi colocado na pergunta 2. Confira no passo 3.`;
+  } catch (e){ info.textContent = "Não foi possível ler " + f.name + ": " + (e.message || e); }
 }
 function avisos(){
   const sim = i => /^\s*sim\b/i.test($("q" + i).value);
@@ -652,6 +762,7 @@ $("logoFile").onchange = e => {
 $("btnIdent").onclick = identificar;
 $("btnUsarForm").onclick = distribuir;
 $("precBusca").oninput = listarPrecedentes;
+$("arqForm").onchange = e => { if (e.target.files[0]) lerArquivo(e.target.files[0]); };
 $("busca").oninput = listarAtividades;
 $("atividade").onchange = e => selecionarAtividade(e.target.value);
 $("cargoSel").onchange = () => { $("cargoOutro").style.display = $("cargoSel").value === "outro" ? "" : "none"; render(); };

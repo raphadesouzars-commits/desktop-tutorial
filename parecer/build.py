@@ -3,10 +3,11 @@
    parecer/app.src.html  (interface e lógica)
    parecer/modelos/*.json (um arquivo por atividade)
    parecer/cabecalho.jpg  (imagem do cabeçalho do parecer)
+   parecer/vendor/pdf*.js (pdf.js 3.11.174, para ler o formulário em PDF sem internet)
    parecer/precedentes_cgu.json (ementas da CGU; atualize com atualizar_precedentes.py)
 Uso:  python3 parecer/build.py
 """
-import base64, json, pathlib, struct, sys
+import base64, gzip, json, pathlib, struct, sys
 
 AQUI = pathlib.Path(__file__).resolve().parent
 SAIDA = AQUI.parent / "gerador-parecer-conflito.html"
@@ -40,6 +41,9 @@ def main():
     prec = json.loads((AQUI / "precedentes_cgu.json").read_text(encoding="utf8"))
     html = html.replace('/*__PRECEDENTES__*/{"itens":[]}',
                         json.dumps(prec, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+    for marca, arq in (("/*__PDFJS__*/", "pdf.min.js"), ("/*__PDFW__*/", "pdf.worker.min.js")):
+        gz = gzip.compress((AQUI / "vendor" / arq).read_bytes(), 9, mtime=0)
+        html = html.replace(marca, base64.b64encode(gz).decode())
     html = html.replace("/*__LOGO__*/", base64.b64encode(logo).decode())
     html = html.replace("/*__LOGO_DIM__*/[1300,137]", json.dumps(dim_jpeg(logo)))
     SAIDA.write_text(html, encoding="utf8")

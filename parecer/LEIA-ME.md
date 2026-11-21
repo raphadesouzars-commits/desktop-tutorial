@@ -29,3 +29,9 @@ para a RFB, respondidas nos últimos 3 anos. Para atualizar:
 
 A tela separa o texto colado nas 10 perguntas do formulário SeCI. A pergunta 10 define se a demanda é consulta ou
 pedido de autorização; as respostas 7, 8 e 4 geram alertas sobre os incisos I, II e VII do art. 5º da Lei 12.813/2013.
+
+## Envio do formulário preenchido
+
+No passo 1 é possível enviar o formulário do servidor em PDF, DOCX, ODT ou TXT. A leitura é feita no navegador,
+sem internet. O PDF é lido com a biblioteca pdf.js 3.11.174 (licença Apache-2.0, em `vendor/`), embutida no HTML.
+PDF digitalizado (imagem) e arquivos `.doc` antigos não são lidos.
