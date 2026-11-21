@@ -1,0 +1,108 @@
+{
+ "id": "economista",
+ "nome": "Economista",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor pretende exercer a profissão de economista (elaboração e análise econômica e financeira de projetos, estudos de viabilidade), sem vínculo empregatício.",
+ "palavrasChave": [
+  "economista",
+  "análise econômica",
+  "análise financeira de projetos",
+  "elaboração de projetos",
+  "viabilidade econômica",
+  "corecon",
+  "estudos econômicos",
+  "projetos",
+  "consultoria econômica",
+  "profissional liberal",
+  "autônomo"
+ ],
+ "variantes": [
+  {
+   "id": "economista_ressalvas",
+   "rotulo": "Economista (elaboração e análise econômica e financeira de projetos) – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende exercer, sem vínculo empregatício e fora do expediente, atividade remunerada de economista (elaboração e análise econômica e financeira de projetos), sem atuar em contabilidade nem em matéria tributária. Atenção: a CGU negou contabilidade e consultoria empresarial/tributária em 2024-2025 (art. 5º, I, III e IV); o modelo só se sustenta com as ressalvas que vedam contabilidade e qualquer viés tributário. Verificar a vigência da Portaria RFB nº 444/2015, citada no texto.",
+   "fonte": "PAR 254/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE DE ECONOMISTA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de economista com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813/2013 estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida Lei, opina-se que o exercício da atividade descrita {{g:pelo servidor interessado|pela servidora interessada}}, ocupação como economista, é materialmente compatível com o cargo de {{cargo_sigla}}. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, caso venha a exercer atividade de economista para instituições privadas, com ou sem fins lucrativos, chamamos a atenção para o fato de que {{g:o consulente|a consulente}} não deve atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo tais instituições."
+    },
+    {
+     "t": "p",
+     "x": "Cabe observar também que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador ou intermediário foi ampliada. A determinação contida no artigo 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador ou intermediário perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios. Posto isso, {{g:o servidor|a servidora}} consulente não poderá atuar, junto a órgãos públicos, como {{g:procurador|procuradora}} ou intermediário das entidades para as quais eventualmente preste seus serviços de economista."
+    },
+    {
+     "t": "p",
+     "x": "Outra ressalva importante a ser feita, face a descrição de uma das atividades a ser exercida {{g:pelo interessado|pela interessada}}, qual seja, análise financeira de projetos, diz respeito a eventual exercício da contabilidade, atividade considerada incompatível com as desenvolvidas pelos ocupantes do cargo de {{cargo_sigla}}, conforme dispõe o artigo 1º, inciso II, da Portaria RFB nº 444, de 23 de março de 2015:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "(...)",
+      "II – contabilidade;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, {{g:o servidor interessado|a servidora interessada}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Cabe ressalvar ainda, apesar de não ter sido especificamente mencionado {{g:pelo servidor interessado|pela servidora interessada}} na consulta, que a atividade pleiteada não poderá abranger qualquer viés tributário e tampouco envolver conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Além disso, {{g:o servidor|a servidora}} não poderá se valer em suas análises de informações obtidas em razão de sua função pública. Esta ressalva é importante em razão de os servidores desta RFB possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira das empresas, e de eventuais procedimentos fiscais e/ou aduaneiros a que estas podem estar submetidas em determinado momento."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

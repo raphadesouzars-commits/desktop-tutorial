@@ -1,0 +1,69 @@
+{
+ "id": "milhas_aereas",
+ "nome": "Aquisição e venda de milhas aéreas",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor pretende comprar e vender milhas aéreas ou pontos de programas de fidelidade como pessoa física.",
+ "palavrasChave": [
+  "milhas",
+  "milhas aéreas",
+  "programa de fidelidade",
+  "pontos",
+  "venda de milhas",
+  "compra de milhas",
+  "passagens aéreas",
+  "companhias aéreas",
+  "maxmilhas",
+  "hotmilhas",
+  "pontos de cartão"
+ ],
+ "variantes": [
+  {
+   "id": "milhas_pessoa_fisica_ressalvas",
+   "rotulo": "Aquisição e venda de milhas aéreas como pessoa física – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende adquirir milhas aéreas (passagens, compra de pontos em programas de fidelidade) e vendê-las por meio de sites especializados, de forma eletrônica, como pessoa física e fora do horário de trabalho.",
+   "fonte": "PAR 296/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "AQUISIÇÃO E VENDA DE MILHAS AÉREAS.",
+   "ementa": [
+    "Pedido de autorização para aquisição e venda de milhas aéreas. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Pelo teor da consulta, depreende-se que {{g:o servidor|a servidora}} pretende adquirir milhas aéreas, por aquisição de passagens aéreas ou por compra de pontos em programas de fidelidade das companhias aéreas, e, posteriormente, vendê-las a pessoas físicas, por meio de sites especializados. Segundo {{g:o servidor|a servidora}}, essas aquisições e vendas seriam todas realizadas de forma eletrônica, fora do horário de trabalho e sem qualquer contato com os compradores."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} acrescenta que a atividade seria muito similar a operações realizadas em bolsa de valores e que ofertará os ganhos da atividade à tributação, de acordo com a legislação vigente.",
+     "opc": {
+      "id": "similaridade_bolsa",
+      "rotulo": "Incluir registro de que o servidor compara a atividade a operações em bolsa e ofertará os ganhos à tributação",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Inicialmente, cumpre ressalvar que, como {{g:o consulente|a consulente}} diz não estar {{g:relacionado|relacionada}} com qualquer pessoa física ou jurídica na prática da atividade, presumir-se-á, para efeitos da análise feita, que esta será realizada como pessoa física. Caso {{g:o consulente|a consulente}} pretenda realizar a atividade como pessoa jurídica, será necessária a formalização de novo pedido, para ser analisada a atividade sob nova condição."
+    },
+    {
+     "t": "p",
+     "x": "Analisando a atividade sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, não se vislumbra incompatibilidade material entre a atividade pretendida {{g:pelo consulente|pela consulente}}, qual seja, a aquisição e venda de milhas aéreas como pessoa física e o exercício do cargo por {{g:ele|ela}} ocupado, desde que não sejam utilizados conhecimentos, informações ou qualquer outra vantagem decorrente de sua condição funcional. Os assuntos referentes ao exercício dessa atividade privada tampouco devem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Em que pese o fato de {{g:o consulente|a consulente}} informar que a atividade ocorrerá fora do horário de trabalho, por ser realizada de forma totalmente eletrônica, deve-se reforçar este ponto, no sentido de que o volume de operações praticadas se mantenha dentro de parâmetros razoáveis. Isto porque a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público e, portanto, não se admite e viola o entendimento aqui exarado, caso a atividade privada, ainda que compatível materialmente, assuma volume que imponha a sobreposição da atividade privada ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}} (aquisição e venda de milhas aéreas como pessoa física), não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

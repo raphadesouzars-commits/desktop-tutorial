@@ -1,0 +1,359 @@
+{
+ "id": "consultoria_organismo_internacional",
+ "nome": "Consultoria para organismo internacional (BID, FMI)",
+ "grupo": "Consultoria e procuração (A.2)",
+ "descricao": "Usar quando o servidor pretende prestar consultoria, estudo ou pesquisa remunerada para organismo internacional (BID, FMI, Banco Mundial etc.) ou, a convite deste, para governo estrangeiro.",
+ "palavrasChave": [
+  "bid",
+  "banco interamericano de desenvolvimento",
+  "fmi",
+  "fundo monetário internacional",
+  "organismo internacional",
+  "consultoria internacional",
+  "pesquisa remunerada",
+  "estudo",
+  "termos de referência",
+  "governo estrangeiro",
+  "administração aduaneira",
+  "missão no exterior",
+  "licença para tratar de interesses particulares",
+  "consultor",
+  "banco mundial",
+  "ocde",
+  "fundo monetário",
+  "banco interamericano",
+  "missão técnica"
+ ],
+ "variantes": [
+  {
+   "id": "organismo_internacional_dados_publicos_ressalvas",
+   "rotulo": "Consultoria/pesquisa remunerada para organismo internacional (ex.: BID) com dados públicos – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende prestar consultoria ou desenvolver pesquisa remunerada, por prazo certo e fora do expediente, para organismo internacional de que o Brasil participa (BID e semelhantes), utilizando apenas dados públicos. Atenção: a CGU tem negado consultoria em matéria tributária/aduaneira (art. 5º, I, III e IV); este modelo pressupõe estudo com dados públicos e controle da Comissão de Ética sobre os dados e relatórios.",
+   "fonte": "PAR 15/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTORIA PRESTADA A ORGANISMO INTERNACIONAL.",
+   "ementa": [
+    "Consulta sobre prestação de {{objeto_consultoria}} para o {{organismo}}. Não há incompatibilidade em relação ao cargo de {{cargo}}, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "organismo",
+     "rotulo": "Organismo internacional contratante",
+     "exemplo": "Banco Interamericano de Desenvolvimento (BID)",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "objeto_consultoria",
+     "rotulo": "Objeto, em resumo (completa \"prestação de ...\")",
+     "exemplo": "consultoria remunerada, por 4 meses, sobre o setor de tabaco",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "funcao_consultoria",
+     "rotulo": "Função na consultoria",
+     "exemplo": "Consultor de Análise de Microdados",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "documento_anexo",
+     "rotulo": "Nome do documento anexado (bloco opcional)",
+     "exemplo": "Termos de Referência - Anexo A",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "trecho_documento",
+     "rotulo": "Trechos relevantes do documento anexado (bloco opcional)",
+     "exemplo": "Atividades principais: ... Produtos a entregar: (A) plano de trabalho e enfoque metodológico; (B) minuta do relatório; (C) relatório final ...",
+     "obrigatorio": false,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Foi também anexado à consulta o documento “{{documento_anexo}}”, que detalha alguns aspectos da consultoria. Deste documento, transcrevem-se as partes de relevância para a análise da atividade consultada:",
+     "opc": {
+      "id": "termos_referencia",
+      "rotulo": "Incluir transcrição do documento (termos de referência) anexado à consulta",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "{{trecho_documento}}"
+     ],
+     "opc": {
+      "id": "termos_referencia",
+      "rotulo": "Incluir transcrição do documento (termos de referência) anexado à consulta",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Neste diapasão, vejamos, inicialmente, o que o dispõe o art. 5º, da Lei nº 12.813, de 16 de maio de 2013, que trata sobre o conflito de interesses entre atividade privada e pública:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - divulgar ou fazer uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas;",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Quando se coloca em perspectiva as atividades da consultoria ({{funcao_consultoria}}) e os bens jurídicos tutelados pela Lei n° 12.813, de 2013, não se identificam elementos que possam gerar conflito de interesses com o cargo de {{cargo}}, desde que algumas ressalvas sejam observadas."
+    },
+    {
+     "t": "p",
+     "x": "No que se refere aos estudos a serem realizados, é essencial que a consultoria seja realizada apenas em análise de dados disponíveis a qualquer pessoa (dados públicos e gerais) e que não sejam obtidos em razão do cargo de {{cargo}}. Nesse contexto, {{g:o consulente|a consulente}} deve submeter à apreciação da Comissão de Ética os dados que pretende utilizar para realização do trabalho, bem como os relatórios oriundos da consultoria realizada. Sugere-se a disponibilização do plano de trabalho e enfoque metodológico, da minuta do relatório e do relatório final."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se ainda que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Em que pese o fato de {{g:o consulente|a consulente}} informar que a atividade ocorrerá fora do horário de trabalho, deve-se reforçar este ponto, no sentido de que o volume dos estudos se mantenha dentro de parâmetros razoáveis. Isto porque a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público e, portanto, não se admite e viola o entendimento aqui exarado, caso a atividade privada, ainda que compatível materialmente, assuma volume que imponha a sobreposição da atividade privada ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses com o cargo de {{cargo}}, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "organismo_internacional_reanalise_esclarecimentos",
+   "rotulo": "Consultoria para organismo internacional – revisão de parecer anterior desfavorável após esclarecimentos do servidor",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Pedido já analisado com conclusão pela existência de conflito (risco de uso de informações internas); o servidor apresentou esclarecimentos declarando que só utilizará informações públicas, e o entendimento é revisto, com ressalvas. Atenção: a CGU tem negado consultoria em matéria tributária/aduaneira (art. 5º, I, III e IV).",
+   "fonte": "PAR 17/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTORIA PRESTADA A ORGANISMO INTERNACIONAL.",
+   "ementa": [
+    "Consulta sobre prestação de {{objeto_consultoria}} para o {{organismo}}. Considerada a manifestação ulterior {{g:do servidor|da servidora}} e, desde que cumpridas as ressalvas elencadas, firma-se entendimento de que não há configuração de conflito material de interesses."
+   ],
+   "campos": [
+    {
+     "id": "organismo",
+     "rotulo": "Organismo internacional contratante",
+     "exemplo": "Banco Interamericano de Desenvolvimento (BID)",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "objeto_consultoria",
+     "rotulo": "Objeto, em resumo (completa \"prestação de ...\")",
+     "exemplo": "consultoria remunerada, por 4 meses, sobre o setor de tabaco",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "parecer_anterior",
+     "rotulo": "Número do parecer anterior",
+     "exemplo": "297/2018",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "esclarecimentos",
+     "rotulo": "Esclarecimentos adicionais apresentados pelo servidor (transcrição)",
+     "exemplo": "1 – Todas as informações a serem utilizadas na pesquisa objeto da consultoria são informações públicas. ...",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Este pedido de autorização já havia sido analisado por intermédio do Parecer Coger/Codis/Diaco n° {{parecer_anterior}}. No parecer, fora proferido entendimento pela existência de conflito de interesses, tendo em vista a natureza de determinadas informações e dados internos que seriam necessários à consecução da consultoria."
+    },
+    {
+     "t": "p",
+     "x": "Tendo tomado ciência do Parecer Coger/Codis/Diaco n° {{parecer_anterior}}, {{g:o servidor|a servidora}} apresentou esclarecimentos adicionais, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "{{esclarecimentos}}"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Vejamos, inicialmente, o que o dispõe o art. 5º, da Lei nº 12.813, de 16 de maio de 2013, que trata sobre o conflito de interesses entre atividade privada e pública:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - divulgar ou fazer uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas;",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Tendo em vista que o Parecer Coger/Codis/Diaco n° {{parecer_anterior}} havia tecido considerações em relação aos riscos de divulgação de informações internas, estratégicas ou sigilosas na prática da consultoria, e, que, {{g:o servidor|a servidora}}, expressamente declarou que não só não utilizará informações não públicas, bem como sequer irá acessá-las para a realização da consultoria ao {{organismo}}, entende-se que o posicionamento pretérito deve ser revisto."
+    },
+    {
+     "t": "p",
+     "x": "Diante do novo quadro instrutivo para a consulta, para que o potencial conflito de interesses seja superado é essencial que a consultoria seja realizada apenas em análise de informações disponíveis a qualquer pessoa (dados públicos e gerais) e que não sejam obtidos em razão do cargo de {{cargo}} ou de funções exercidas {{g:pelo servidor|pela servidora}}. Nesse contexto, {{g:o consulente|a consulente}} deve submeter à apreciação da Comissão de Ética os dados que pretende utilizar para realização do trabalho, bem como os relatórios oriundos da consultoria realizada. Sugere-se a disponibilização do plano de trabalho e enfoque metodológico, da minuta do relatório e do relatório final."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se ainda que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Em que pese o fato de {{g:o consulente|a consulente}} informar que a atividade ocorrerá fora do horário de expediente, deve-se reforçar este ponto, no sentido de que o volume dos estudos se mantenha dentro de parâmetros razoáveis. Isto porque a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público e, portanto, não se admite e viola o entendimento aqui exarado, caso a atividade privada, ainda que compatível materialmente, assuma volume que imponha a sobreposição da atividade privada ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de consultoria ao {{organismo}}, nos termos descritos no formulário e adicionados posteriormente {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses com o cargo de {{cargo}}, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "consultoria_administracao_estrangeira_conflito",
+   "rotulo": "Consultoria em matéria aduaneira/tributária a governo estrangeiro, a convite de organismo internacional (ex.: FMI) – incompatível",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor é convidado individualmente por organismo internacional (FMI e semelhantes) para prestar consultoria, em matéria fortemente correlata às suas atribuições na RFB, a administração tributária/aduaneira de outro país, em geral durante licença para tratar de interesses particulares. Entendimento alinhado à CGU, que nega consultoria em área correlata (art. 5º, I, III e IV).",
+   "fonte": "INF 151/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTORIA A CONVITE DE ORGANISMO INTERNACIONAL.",
+   "ementa": [
+    "Consulta quanto à prestação de consultoria em matéria {{materia}} a convite de organismo internacional. Atividade materialmente incompatível com o cargo e a função ocupados."
+   ],
+   "campos": [
+    {
+     "id": "contratante_projeto",
+     "rotulo": "Para quem/qual projeto (completa \"consultoria ... para ...\")",
+     "exemplo": "o Fundo Monetário Internacional, no âmbito de um projeto de modernização da administração aduaneira de país estrangeiro",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "materia",
+     "rotulo": "Matéria da consultoria (adjetivo)",
+     "exemplo": "aduaneira",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Descrição da atividade nas palavras do servidor",
+     "exemplo": "consultoria junto à administração aduaneira de outro país, no âmbito de um projeto de modernização, especificamente no desenvolvimento de procedimentos e processos aduaneiros simplificados",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Pelo teor das informações prestadas, depreende-se que {{g:o servidor|a servidora}} pretende prestar atividade de consultoria em matéria {{materia}} para {{contratante_projeto}}."
+    },
+    {
+     "t": "p",
+     "x": "Considerando as atribuições exercidas {{g:pelo servidor|pela servidora}} na Secretaria da Receita Federal do Brasil (RFB), e tendo em vista as atividades de consultoria que pretende exercer, percebe-se uma forte correlação entre as mesmas."
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que {{g:o servidor|a servidora}} não teceu nenhuma consideração acerca de como se deu o convite, nos parecendo se tratar de escolha de caráter exclusivamente individual, sem qualquer participação da instituição Receita Federal do Brasil.",
+     "opc": {
+      "id": "convite_individual",
+      "rotulo": "Incluir registro de que o convite parece ser de caráter individual, sem participação da RFB",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Da mesma forma, {{g:o servidor|a servidora}} não delimitou se a atividade seria prestada somente no período em que solicitou licença para tratar de interesses particulares, ou se haveriam viagens e outras atividades fora desse período.",
+     "opc": {
+      "id": "periodo_nao_delimitado",
+      "rotulo": "Incluir registro de que o servidor não delimitou se a atividade ocorrerá apenas durante licença para tratar de interesses particulares",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} também não especificou nada acerca da remuneração a ser percebida pelo trabalho realizado, o que dificultaria sobremaneira a resposta à consulta formulada, caso não se tratasse de atividade de consultoria.",
+     "opc": {
+      "id": "remuneracao_nao_informada",
+      "rotulo": "Incluir registro de que o servidor não informou a remuneração",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "De antemão, observa-se que a atividade de consultoria se trata de atividade econômica regular, quando desempenhada nos limites da livre iniciativa privada. Esta atividade assume contornos infracionais quando é exercida por agente público em área de conhecimento ou de atuação relacionada com as atribuições legais do cargo que ocupa ou com sua condição de servidor, conferindo a tal prática a mácula de incompatibilidade por conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Em outras palavras, a prática da consultoria privada pode ser compreendida como uma espécie qualificada das atividades incompatíveis com o cargo público e que, diante do elevado grau de deslealdade institucional, mereceu do legislador o tratamento diferenciado e mais gravoso como espécie de improbidade administrativa."
+    },
+    {
+     "t": "p",
+     "x": "Ainda que se trate de prestação de serviços para um governo estrangeiro e, portanto, um ente não contribuinte, a atividade de consultoria privada pode ser compreendida como toda conduta por meio da qual o servidor presta, ao particular, serviços com qualquer grau de associação com as tutelas e com os controles exercidos pelo órgão a que serve."
+    },
+    {
+     "t": "p",
+     "x": "E no presente caso, verifica-se que a arregimentação {{g:do servidor|da servidora}} ocorreu com fundamento na capacitação e nos conhecimentos técnicos que se presumem ou que efetivamente se detectam auferidos à custa do cargo que ocupa, ainda que aprimorados com suas pessoais formações acadêmicas e, também, pela habitualidade com as rotinas administrativas em geral."
+    },
+    {
+     "t": "p",
+     "x": "Há condutas que, somente de serem praticadas, ainda que com absoluta boa-fé por parte do servidor, se demonstram incompatíveis com o múnus público."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O próprio servidor|A própria servidora}} afirma se tratar de:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“{{descricao_atividade}}”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Verifica-se, no presente caso, que os conhecimentos {{g:do servidor|da servidora}}, muitos deles adquiridos em função das atribuições do cargo que ocupa e das atividades exercidas rotineiramente, além de poder ser {{g:detentor|detentora}} de informações privilegiadas, poderão ser usados na prestação dos serviços de consultoria para um Governo estrangeiro. Ademais, {{g:o consulente|a consulente}} detém conhecimento de informações sigilosas, e pretende exercer atividade de consultoria {{materia}} sem que a Administração Tributária brasileira tenha qualquer controle acerca das informações que seriam difundidas, podendo ocorrer revelações de segredos institucionais e estratégicos."
+    },
+    {
+     "t": "p",
+     "x": "Compete salientar, ainda, que casos como o da presente consulta normalmente são objeto de solicitação de “Afastamento para Estudo ou Missão no Exterior”, conforme previsto nos artigos 95 e 96 da Lei nº 8.112, de 11 de dezembro de 1990:",
+     "opc": {
+      "id": "afastamento_exterior",
+      "rotulo": "Incluir observação sobre afastamento para estudo ou missão no exterior (arts. 95 e 96 da Lei nº 8.112/1990)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 95. O servidor não poderá ausentar-se do País para estudo ou missão oficial, sem autorização do Presidente da República, Presidente dos Órgãos do Poder Legislativo e Presidente do Supremo Tribunal Federal.",
+      "§ 1º A ausência não excederá a 4 (quatro) anos, e finda a missão ou estudo, somente decorrido igual período, será permitida nova ausência.",
+      "§ 2º Ao servidor beneficiado pelo disposto neste artigo não será concedida exoneração ou licença para tratar de interesse particular antes de decorrido período igual ao do afastamento, ressalvada a hipótese de ressarcimento da despesa havida com seu afastamento.",
+      "§ 3º O disposto neste artigo não se aplica aos servidores da carreira diplomática.",
+      "§ 4º As hipóteses, condições e formas para a autorização de que trata este artigo, inclusive no que se refere à remuneração do servidor, serão disciplinadas em regulamento. (Incluído pela Lei nº 9.527, de 10.12.97)",
+      "Art. 96. O afastamento de servidor para servir em organismo internacional de que o Brasil participe ou com o qual coopere dar-se-á com perda total da remuneração. (Vide Decreto nº 3.456, de 2000)”."
+     ],
+     "opc": {
+      "id": "afastamento_exterior",
+      "rotulo": "Incluir observação sobre afastamento para estudo ou missão no exterior (arts. 95 e 96 da Lei nº 8.112/1990)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante das informações e do contexto apresentado {{g:pelo consulente|pela consulente}}, opina-se que, analisando-se sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 16 de maio de 2013, o exercício da atividade descrita {{g:pelo servidor|pela servidora}} é materialmente incompatível com o cargo e a função ocupados."
+    }
+   ]
+  }
+ ]
+}

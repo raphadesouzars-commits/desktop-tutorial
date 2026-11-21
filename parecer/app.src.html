@@ -319,8 +319,10 @@ function pontuar(texto){
       const k = k0.replace(/[^a-z0-9]+/g," ").trim(); if (!k) continue;
       // casa a palavra inteira ou com flexão simples (plural/feminino)
       const re = new RegExp(" " + k.replace(/ /g," +") + "(s|es|a|as)? ");
-      if (re.test(t)){ sc += k.includes(" ") ? 3 : (k.length >= 6 ? 2 : 1.2); hits.push(k0); }
+      if (re.test(t)){ sc += k.includes(" ") ? 3 : (k.length >= 6 ? 2 : (k.length <= 4 ? 2.5 : 1.2)); hits.push(k0); }
     }
+    // bônus quando o próprio nome da atividade aparece no texto
+    for (const w of norm(m.nome).split(/[^a-z0-9]+/).filter(w => w.length >= 7)) if (t.includes(" " + w)){ sc += 1.5; break; }
     if (sc > 0) res.push({m, sc, hits});
   }
   return res.sort((a,b) => b.sc - a.sc);

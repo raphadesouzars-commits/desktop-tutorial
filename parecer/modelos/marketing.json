@@ -1,0 +1,227 @@
+{
+ "id": "marketing",
+ "nome": "Marketing e publicidade",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor pretende exercer atividade de marketing, marketing digital ou publicidade (em empresa familiar de que é cotista, como autônomo/afiliado ou como diretor de marketing de clube ou entidade).",
+ "palavrasChave": [
+  "marketing",
+  "marketing digital",
+  "publicidade",
+  "propaganda",
+  "afiliado",
+  "comissão de vendas",
+  "divulgação de produtos",
+  "redes sociais",
+  "empresa familiar",
+  "sócio cotista",
+  "diretor de marketing",
+  "clube de futebol",
+  "promover produtos",
+  "e-commerce",
+  "comunicação"
+ ],
+ "variantes": [
+  {
+   "id": "marketing_empresa_familiar_cotista",
+   "rotulo": "Marketing digital em empresa familiar da qual é sócio cotista – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor é sócio cotista (sem administração) de empresa familiar, em geral com o cônjuge como administrador, e pretende exercer nela a atividade de marketing/marketing digital, sem representar a empresa perante o poder público.",
+   "fonte": "PAR 059/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "MARKETING DIGITAL.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de marketing digital com o cargo de {{cargo}}. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "empresa",
+     "rotulo": "Nome da empresa",
+     "exemplo": "XYZ Comércio Ltda.",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "cnae_empresa",
+     "rotulo": "CNAE da empresa (bloco opcional)",
+     "exemplo": "4773-3-00 – Comércio varejista de artigos médicos e ortopédicos",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso concreto, conforme relatado {{g:pelo consulente|pela consulente}}, {{g:ele|ela}} pretende exercer atividade de marketing em empresa familiar que detém com seu cônjuge, na qualidade de {{g:sócio|sócia}} cotista, sem poderes de administração e sem poderes de representação contra o poder público."
+    },
+    {
+     "t": "p",
+     "x": "A atividade de marketing digital abrange ações de comunicação que as empresas podem utilizar por meio da internet, da telefonia celular e outros meios digitais, para assim divulgar e comercializar seus produtos, conquistando novos clientes e melhorando a sua rede de relacionamentos."
+    },
+    {
+     "t": "p",
+     "x": "Pesquisando no sistema da Receita, o CNPJ informado {{g:pelo postulante|pela postulante}} refere-se à empresa {{empresa}}, constando {{g:o consulente|a consulente}} como {{g:sócio|sócia}}, e CNAE {{cnae_empresa}}.",
+     "opc": {
+      "id": "pesquisa_cnpj",
+      "rotulo": "Incluir resultado da pesquisa do CNPJ (CNAE da empresa)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, opina-se que o exercício da atividade descrita {{g:pelo servidor|pela servidora}}, não é materialmente incompatível com o cargo por {{g:ele|ela}} ocupado. Não se vislumbra na atividade pleiteada qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo público em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O consulente|A consulente}} informou que não irá participar da gerência ou administração da empresa {{empresa}} e que a atividade que pretende exercer (marketing) não exige representação contra o poder público. Em relação ao primeiro ponto, cabe destacar que o artigo 117, inciso X, da lei 8112/90 veda taxativamente a participação de servidores públicos na gerência ou administração de empresas privadas. Assim, em hipótese alguma {{g:o servidor|a servidora}} poderá vir a exercer tais funções. Em relação ao segundo ponto, cabe salientar que tanto a lei 8112/90 quanto a lei 12813/2013 estabelecem proibições expressas em relação a atuação de servidores públicos como procurador junto a repartições públicas."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "diretor_marketing_clube_futebol",
+   "rotulo": "Diretor de marketing de clube de futebol (não estatutário, sem representação) – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor é convidado para ser diretor de marketing de clube de futebol ou entidade semelhante, em cargo não remunerado e não estatutário, sem poderes para representar a entidade perante órgãos públicos. Para conselhos e presidência de clube, ver o modelo clube_futebol.",
+   "fonte": "PAR 251/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "DIRETOR DE MARKETING DE CLUBE DE FUTEBOL.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de diretoria de marketing de clube de futebol com o cargo de {{cargo}}. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso concreto, conforme relatado {{g:pelo consulente|pela consulente}}, {{g:ele|ela}} pretende exercer atividade de marketing em diretoria de clube de futebol sem poderes de representação contra o poder público."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, opina-se que o exercício da atividade descrita {{g:pelo servidor|pela servidora}}, não é materialmente incompatível com o cargo por {{g:ele|ela}} ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Não se vislumbra na atividade pleiteada qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo público em circunstâncias que prejudiquem a moralidade ou interesse público. Reforçando este entendimento, {{g:o consulente|a consulente}} informou que não teria poderes para representar o clube perante outros órgãos. Em relação a este tema, cabe salientar que tanto a lei 8112/90 quanto a lei 12813/2013 estabelecem proibições expressas em relação a atuação de servidores públicos como procurador junto a repartições públicas."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "marketing_digital_autonomo",
+   "rotulo": "Marketing digital como autônomo/afiliado (comissão por vendas) – materialmente compatível",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor pretende promover na internet produtos de outras pessoas físicas ou jurídicas (marketing digital/afiliado), remunerado por comissão sobre vendas, sem representar a empresa; modelo curto. Para canal próprio, cursos e afiliação com análise mais completa, ver o modelo conteudo_digital (PAR 522/2023).",
+   "fonte": "INF 250/2015",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "MARKETING DIGITAL.",
+   "ementa": [
+    "Consulta sobre a possibilidade do exercício concomitante da atividade de marketing digital por {{cargo}}. Atividade materialmente compatível com o cargo."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Com base nas informações prestadas {{g:pelo consulente|pela consulente}}, não se vislumbra na atividade particular pretendida qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou o interesse públicos. Entende-se, portanto, que não há conflito de interesses na atividade pleiteada possível de comprometer o interesse coletivo ou o desempenho da função pública {{g:do consulente|da consulente}}, uma vez que não guarda relação direta com as finalidades precípuas da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Quanto ao questionamento sobre {{g:o servidor|a servidora}} trabalhar para uma pessoa jurídica, chama-se a atenção para o fato de que {{g:o consulente|a consulente}} deve se abster de atuar em qualquer processo de interesse da referida empresa que tramite perante a Receita Federal do Brasil.",
+     "opc": {
+      "id": "trabalho_para_pj",
+      "rotulo": "Incluir ressalva para o caso de o servidor trabalhar para pessoa jurídica",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, portanto, que o exercício da atividade privada na forma descrita {{g:pelo consulente|pela consulente}}, sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, que é materialmente compatível com o cargo."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    }
+   ]
+  }
+ ]
+}
