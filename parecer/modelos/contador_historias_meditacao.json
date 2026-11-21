@@ -1,0 +1,74 @@
+{
+ "id": "contador_historias_meditacao",
+ "nome": "Contador de histórias e professor de meditação",
+ "descricao": "Usar quando o servidor pretende atuar como contador de histórias e/ou professor de meditação, de forma remunerada, fora do expediente.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "contador de histórias",
+  "contação de histórias",
+  "contador de estórias",
+  "meditação",
+  "professor de meditação",
+  "aulas de meditação",
+  "mindfulness",
+  "narração de histórias",
+  "atividade cultural"
+ ],
+ "variantes": [
+  {
+   "id": "contador_historias_professor_meditacao",
+   "rotulo": "Contador de histórias e professor de meditação – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende exercer, de forma remunerada e fora do expediente, atividade cultural ou de bem-estar sem relação com o cargo (contação de histórias, aulas de meditação).",
+   "fonte": "PAR 128/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE DE CONTADOR DE HISTÓRIAS E PROFESSOR DE MEDITAÇÃO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{atividade}} com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "atividade",
+     "rotulo": "Atividade pretendida",
+     "exemplo": "contador de histórias e professor de meditação",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida Lei, opina-se que o exercício da atividade descrita {{g:pelo servidor interessado|pela servidora interessada}}, desempenhar papéis como {{atividade}}, é materialmente compatível com o cargo de {{cargo}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o servidor consulente|a servidora consulente}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais exerça o ofício de {{atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

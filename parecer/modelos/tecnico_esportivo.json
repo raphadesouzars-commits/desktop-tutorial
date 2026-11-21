@@ -1,0 +1,96 @@
+{
+ "id": "tecnico_esportivo",
+ "nome": "Técnico / treinador esportivo (inclusive com bolsa de incentivo ao esporte)",
+ "descricao": "Usar quando o servidor pretende atuar como técnico ou treinador de modalidade esportiva, inclusive recebendo bolsa-técnico de ente público.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "técnico esportivo",
+  "treinador",
+  "treinos",
+  "rugby",
+  "educação física",
+  "bolsa técnico",
+  "bolsa-auxílio",
+  "bolsa atleta",
+  "incentivo ao esporte",
+  "secretaria de esportes",
+  "time",
+  "equipe esportiva"
+ ],
+ "variantes": [
+  {
+   "id": "tecnico_esportivo_bolsa",
+   "rotulo": "Técnico/treinador esportivo, com bolsa de incentivo ao esporte – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor dá treinos de modalidade esportiva e consulta se pode receber bolsa-técnico/bolsa-auxílio de incentivo ao esporte concedida por ente público (ex.: prefeitura), cuja norma declara não gerar vínculo de trabalho.",
+   "fonte": "INF 058/2017",
+   "assunto": "Consulta quanto ao exercício concomitante da atividade de técnico esportivo com recebimento de bolsa-técnico.",
+   "ementaTitulo": "TÉCNICO ESPORTIVO. RECEBIMENTO DE BOLSA-TÉCNICO.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de técnico de {{modalidade}}, com recebimento de bolsa-técnico, com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "modalidade",
+     "rotulo": "Modalidade esportiva",
+     "exemplo": "rugby",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "ente_concedente",
+     "rotulo": "Ente que concede a bolsa (completa \"bolsa-auxílio concedida pela ...\")",
+     "exemplo": "Prefeitura Municipal de X",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "norma_bolsa",
+     "rotulo": "Norma que disciplina a bolsa (completa \"nos moldes do ...\")",
+     "exemplo": "decreto municipal nº 00.000/15",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, opina-se que o exercício da atividade de dar treinos de {{modalidade}} é materialmente compatível com o cargo e a função ocupados, uma vez que os assuntos não envolvem conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil (RFB)."
+    },
+    {
+     "t": "p",
+     "x": "Quanto ao recebimento da bolsa-auxílio concedida pela {{ente_concedente}}, nos moldes do {{norma_bolsa}}, não constitui irregularidade ou fator de impedimento para o exercício da atividade de técnico de {{modalidade}} {{g:pelo consulente|pela consulente}}, pois possui natureza indenizatória, tendo em vista que não gera vínculo de trabalho de qualquer natureza entre o técnico beneficiado e a Administração Pública.",
+     "opc": {
+      "id": "bolsa_tecnico",
+      "rotulo": "Servidor receberá bolsa de incentivo ao esporte (bolsa-técnico) de ente público",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários, no caso em que {{g:o servidor|a servidora}} esteja no exercício do cargo, e não em licença para tratar de interesses particulares, é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}}, de dar treinos de {{modalidade}}, não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

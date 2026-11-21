@@ -816,7 +816,7 @@ function blocos(){
   if (cfg.secoes) B.push({k:"h", x:"II. FUNDAMENTOS"});
   for (const b of fund){
     if (b.t === "p") P(b.x);
-    else { for (const ln of b.x) B.push({k:"cit", x: ln}); B.push({k:"gap"}); }
+    else { for (const ln of b.x) for (const l2 of ln.split("\n")) B.push({k:"cit", x: l2}); B.push({k:"gap"}); } // campo de várias linhas vira várias linhas
   }
   for (const p of (PRECEDENTES.itens||[]).filter(p => citados.has(p.n))){
     P(`Registre-se, a propósito, a manifestação da Controladoria-Geral da União no Protocolo SeCI nº ${p.n}, respondido em ${dmy(p.d)} (resultado: “${p.r}”), assim ementada:`);
