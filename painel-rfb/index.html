@@ -1,0 +1,503 @@
+<title>Painel Conflito de Interesses RFB</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+/* Layout: barra lateral de filtros fixa no topo, abas (fluxograma, temas, histórico, ementário), dados em data.json + edições no db */
+:root{
+  --bg:#eef1f5; --surface:#fff; --surface2:#f5f7fa; --ink:#14202e; --ink2:#46566a; --muted:#6f7e91; --line:#d8dee6;
+  --navy:#0b2a4a; --navy-ink:#fff; --accent:#0b5cad; --accent-soft:#e3eefa;
+  --c-rel:#b42f2f; --c-mit:#c98200; --c-ok:#23814a; --c-imp:#3d6fa6; --c-perda:#8993a1; --c-nadm:#b8c0cb; --c-pend:#d9dee5;
+  --warn-bg:#fff4dc; --warn-ink:#6a4a00;
+  --f-body:'Inter',system-ui,sans-serif; --f-head:'Space Grotesk','Inter',system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c141e; --surface:#142030; --surface2:#1a2a3d; --ink:#e8eef5; --ink2:#b4c0cf; --muted:#8998ab; --line:#2a3b50;
+  --navy:#07192d; --accent:#6aaef2; --accent-soft:#17324f;
+  --c-rel:#e2625f; --c-mit:#e0a53a; --c-ok:#4cb87c; --c-imp:#6aa0da; --c-perda:#8f9bab; --c-nadm:#5d6b7d; --c-pend:#33445a;
+  --warn-bg:#3a2e10; --warn-ink:#f1d48a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0c141e; --surface:#142030; --surface2:#1a2a3d; --ink:#e8eef5; --ink2:#b4c0cf; --muted:#8998ab; --line:#2a3b50;
+  --navy:#07192d; --accent:#6aaef2; --accent-soft:#17324f;
+  --c-rel:#e2625f; --c-mit:#e0a53a; --c-ok:#4cb87c; --c-imp:#6aa0da; --c-perda:#8f9bab; --c-nadm:#5d6b7d; --c-pend:#33445a;
+  --warn-bg:#3a2e10; --warn-ink:#f1d48a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 40px}
+.wrap{max-width:1180px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-head);margin:0;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header.top{background:var(--navy);color:var(--navy-ink);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));
+  padding:18px max(16px,env(safe-area-inset-left,0px)) 0;margin-right:calc(-1*max(16px,env(safe-area-inset-right,0px)));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top-row{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+h1{font-size:24px;font-weight:700}
+.top-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 12px;font-weight:500}
+.btn:hover{background:var(--surface2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.08);background:var(--accent)}
+:root[data-theme="dark"] .btn.primary{color:#07192d}
+.top .btn{background:transparent;color:#fff;border-color:rgba(255,255,255,.35)}
+.top .btn.primary{background:#fff;color:var(--navy);border-color:#fff}
+.btn.danger{color:var(--c-rel);border-color:var(--c-rel)}
+.btn.sm{padding:3px 8px;font-size:12px}
+nav.tabs{display:flex;gap:2px;margin-top:16px;overflow-x:auto}
+nav.tabs button{background:transparent;border:0;color:rgba(255,255,255,.75);padding:10px 16px;border-bottom:3px solid transparent;white-space:nowrap;font-weight:500}
+nav.tabs button[aria-selected="true"]{color:#fff;border-bottom-color:#5fd08b}
+.notice{background:var(--warn-bg);color:var(--warn-ink);padding:8px 12px;border-radius:6px;margin-top:12px;font-size:13px}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;margin-top:16px;display:grid;gap:12px}
+.frow{display:flex;flex-wrap:wrap;gap:12px 16px;align-items:flex-end}
+.field{display:grid;gap:3px;min-width:0}
+.field label,.lbl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+input[type=text],input[type=date],input[type=search],select,textarea{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 9px;min-width:0;width:100%}
+.field.grow{flex:1 1 240px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:4px 10px;font-size:12.5px;color:var(--ink2)}
+.chip .n{color:var(--muted);margin-left:4px;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .chip[aria-pressed="true"]{color:#07192d}
+.chip[aria-pressed="true"] .n{color:inherit;opacity:.8}
+.summary{font-size:13px;color:var(--ink2)}
+.summary b{color:var(--ink)}
+section.view{margin-top:20px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:18px}
+.panel+.panel{margin-top:16px}
+h2{font-size:18px;margin-bottom:4px}
+.sub{color:var(--muted);font-size:13px;margin:0 0 14px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:20px 32px}
+.stage-h{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.stage-n{width:30px;height:30px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-family:var(--f-head);font-weight:700;flex:none}
+.kpis{display:flex;flex-wrap:wrap;gap:8px 28px}
+.kpi{min-width:0}
+.kpi .v{font-family:var(--f-head);font-size:34px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi .v.sm{font-size:24px}
+.kpi .l{font-size:12.5px;color:var(--ink2);max-width:190px}
+.kpi.rel .v{color:var(--c-rel)}
+.bars{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:minmax(110px,190px) 1fr 44px;gap:10px;align-items:center;font-size:13px}
+.bar .t{height:14px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.bar .f{height:100%;border-radius:0 4px 4px 0;min-width:2px}
+.bar .v{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.bar.click{cursor:pointer;background:none;border:0;padding:2px 0;text-align:left;width:100%}
+.bar.click:hover .lab{text-decoration:underline}
+.lab{display:flex;gap:6px;align-items:center;min-width:0}
+.sw{width:10px;height:10px;border-radius:2px;flex:none}
+.split{display:flex;height:16px;gap:2px;border-radius:3px;overflow:hidden;width:100%}
+.split>i{display:block;min-width:2px}
+.mini{display:grid;gap:10px;align-content:start}
+table{border-collapse:collapse;width:100%}
+.scroll{overflow-x:auto}
+th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:left;padding:6px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.tema:hover{background:var(--surface2)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--ink2);margin:10px 0}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.case{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--surface);display:grid;gap:8px}
+.case+.case{margin-top:10px}
+.case-h{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.nup{font-variant-numeric:tabular-nums;font-weight:600}
+.dt{color:var(--muted);font-size:12.5px}
+.case .em{color:var(--ink2);font-size:13.5px;max-width:105ch;overflow-wrap:anywhere}
+.case .em.clamp{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.tagrow{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--accent-soft);color:var(--accent);border-radius:4px;padding:1px 7px;font-size:12px}
+.case-f{display:flex;gap:8px;flex-wrap:wrap}
+.hint{background:var(--accent-soft);border-radius:6px;padding:8px 12px;margin-bottom:14px;font-size:13px}
+.empty{padding:28px;text-align:center;color:var(--muted)}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 9px;border-radius:5px;font-size:12px;z-index:30;max-width:260px}
+.modal{position:fixed;inset:0;background:rgba(5,12,22,.6);z-index:40;display:grid;place-items:start center;padding:24px 12px;overflow:auto}
+.sheet{background:var(--surface);border-radius:10px;width:100%;max-width:720px;padding:20px;display:grid;gap:14px;border:1px solid var(--line)}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+textarea{min-height:170px;resize:vertical}
+.err{color:var(--c-rel);font-size:13px}
+.toast{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:6px;z-index:50}
+.more{display:flex;justify-content:center;margin-top:14px}
+svg text{fill:var(--ink2);font-family:var(--f-body)}
+@media(max-width:760px){.stage{grid-template-columns:1fr}.bar{grid-template-columns:minmax(90px,130px) 1fr 38px}.kpi .v{font-size:28px}}
+@media(prefers-reduced-motion:no-preference){.bar .f{transition:width .3s}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="top-row">
+    <div>
+      <div class="eyebrow">Prevenção de Conflito de Interesses · CGU</div>
+      <h1>Consultas da Receita Federal (RFB)</h1>
+    </div>
+    <div class="top-actions">
+      <button class="btn" id="btn-export">Exportar CSV</button>
+      <button class="btn primary" id="btn-new">+ Novo caso</button>
+    </div>
+  </div>
+  <nav class="tabs" role="tablist" id="tabs">
+    <button role="tab" data-v="fluxograma">Fluxograma</button>
+    <button role="tab" data-v="temas">Temas</button>
+    <button role="tab" data-v="historico">Análise histórica</button>
+    <button role="tab" data-v="ementario">Ementário</button>
+  </nav>
+</header>
+
+<div id="notice"></div>
+
+<div class="filters" aria-label="Filtros">
+  <div class="frow">
+    <div class="field"><label for="f-from">Submissão de</label><input type="date" id="f-from"></div>
+    <div class="field"><label for="f-to">até</label><input type="date" id="f-to"></div>
+    <div class="field"><label for="f-res">Resultado</label>
+      <select id="f-res"><option value="">Todos</option></select></div>
+    <div class="field grow"><label for="f-q">Buscar na ementa ou NUP</label><input type="search" id="f-q" placeholder="ex.: advocacia, cursos, 00096.000129/2014-18"></div>
+    <button class="btn" id="btn-clear">Limpar filtros</button>
+  </div>
+  <div class="field"><span class="lbl">Tema (escolha um ou mais)</span><div class="chips" id="chips"></div></div>
+  <div class="summary" id="summary"></div>
+</div>
+
+<main id="main"></main>
+</div>
+<div id="modal-root"></div>
+<div id="tip" class="tip" hidden></div>
+
+<script>
+const RESULTS=[
+ {k:'Há risco de CI relevante',c:'--c-rel',s:'Risco relevante'},
+ {k:'Risco de CI mitigável',c:'--c-mit',s:'Risco mitigável'},
+ {k:'Não há risco de CI relevante',c:'--c-ok',s:'Sem risco relevante'},
+ {k:'Impedimento de outra ordem',c:'--c-imp',s:'Impedimento de outra ordem'},
+ {k:'Perda de objeto',c:'--c-perda',s:'Perda de objeto'},
+ {k:'Consulta não admitida',c:'--c-nadm',s:'Consulta não admitida'},
+ {k:'Em revisão pela CGU',c:'--c-pend',s:'Em revisão pela CGU'},
+ {k:'Em análise no órgão',c:'--c-pend',s:'Em análise no órgão'}];
+const RMAP=Object.fromEntries(RESULTS.map(r=>[r.k,r]));
+const THEME_RULES=[["Advocacia","ADVOC|ADVOGAD|JURÍDIC|JURIDIC|INVENTÁRIO"],
+["Magistério, cursos e palestras","MAGIST|CURSO|PALESTR|AULA|PROFESSOR|INSTRUTOR|LECIONAR|MINISTRAR|TREINAMENTO"],
+["Investimentos e mercado financeiro","INVESTIMENT|VALORES MOBILI|BOLSA|AÇÕES|PLANEJA(DOR|MENTO) FINANCEIRO|CONSULTORIA FINANCEIRA|RECURSOS DE TERCEIROS|ANALISTA FINANCEIRO|PLANEJAMENTO PREVIDENCI"],
+["Contabilidade e perícia","CONTAD|CONTÁBIL|CONTABIL|PERÍCIA|PERICIA|PERITO"],
+["Sociedade e participação em empresa","SÓCI|SOCI|EMPRESA|CONSELHO FISCAL|ESCRITÓRIO"],
+["Consultoria e assessoria","CONSULTOR|ASSESSOR"],
+["Representação de terceiros","PROCURADOR|DESPACHANTE|PARENTE|GENITOR|AMIGOS|ESPOSA|CÔNJUGE|IMPOSTO DE RENDA|LEILÃO|LEILÕES"],
+["Mídias sociais e conteúdo digital","YOUTUBE|MÍDIAS|MIDIAS|VÍDEOS|E-BOOK|SITE"],
+["Atividade marítima, portuária e aviação","PRÁTICO|MARINHA|PORTUÁRI|PILOTAGEM|AERONAVE"],
+["Saúde, artes, esporte e religião","PSIC|MÉDIC|TERAPEUTA|HIPN|TEATR|ATRIZ|ARTES|RELIGIOS|ESPORTIV|MAÇÔN|PRODUTOR RURAL"]];
+const OUTRAS='Outras atividades';
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fold=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const fmtD=d=>d?d.split('-').reverse().join('/'):'—';
+const pct=(a,b)=>b?(100*a/b).toFixed(1).replace('.',',')+'%':'—';
+const nf=n=>n.toLocaleString('pt-BR');
+const dd=(a,b)=>(a&&b)?Math.round((Date.parse(b)-Date.parse(a))/864e5):null;
+const mean=a=>{a=a.filter(x=>x!=null&&x>=0);return a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):null};
+const idOf=n=>String(n).replace(/[^0-9A-Za-z]/g,'_');
+const cssv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+let BASE=[],OVR={},DB=null,persistMode='local',F={from:'',to:'',res:'',q:'',tags:new Set()},VIEW='fluxograma',SHOW_ALL=false,LIMIT=30;
+
+/* ---------- dados ---------- */
+function finalRes(c){
+  if(c.rc) return normRes(c.rr)||'Em revisão pela CGU';
+  if(c.ra==='Há risco de CI relevante') return 'Em revisão pela CGU';
+  return normRes(c.ra)||'Em análise no órgão';
+}
+function normRes(r){return r==='Perda de Objeto'?'Perda de objeto':r}
+function allCases(){
+  const m=new Map(BASE.map(c=>[idOf(c.n),c]));
+  for(const [id,o] of Object.entries(OVR)){ if(o._del) m.delete(id); else m.set(id,{...(m.get(id)||{}),...o}); }
+  return [...m.values()].map(c=>({...c,fr:finalRes(c)}));
+}
+function suggestTags(em){
+  const head=String(em||'').split(/AN[ÁA]LISE PRELIMINAR/i)[0].slice(0,500).toUpperCase();
+  const t=THEME_RULES.filter(([,p])=>new RegExp(p).test(head)).map(x=>x[0]);
+  return t;
+}
+function passes(c,skip){
+  if(F.from&&(!c.s||c.s<F.from))return false;
+  if(F.to&&(!c.s||c.s>F.to))return false;
+  if(F.res&&c.fr!==F.res)return false;
+  if(F.q){const q=fold(F.q);if(!fold(c.n+' '+(c.em||'')).includes(q))return false}
+  if(skip!=='tags'&&F.tags.size&&!(c.tg||[]).some(t=>F.tags.has(t)))return false;
+  return true;
+}
+let ALL=[],VIS=[];
+function recompute(){ALL=allCases();VIS=ALL.filter(c=>passes(c))}
+
+/* ---------- persistência ---------- */
+async function initDb(){
+  try{
+    const db=await claude.use('db'); if(!db) throw 0;
+    DB=db.collection('casos'); persistMode='shared';
+    let first=true;
+    DB.onSnapshot(s=>{OVR={};s.docs.forEach(d=>OVR[d.id]=d.data());
+      try{const l=JSON.parse(localStorage.getItem('casos-local')||'{}');for(const k in l)if(!(k in OVR))OVR[k]=l[k]}catch(e){}
+      first=false;draw()},
+      ()=>{fallbackLocal()});
+  }catch(e){fallbackLocal()}
+}
+function fallbackLocal(){
+  DB=null;persistMode='local';
+  try{OVR=JSON.parse(localStorage.getItem('casos-local')||'{}')}catch(e){OVR={}}
+  draw();
+}
+async function saveCase(c){
+  const id=idOf(c.n);
+  if(DB){
+    try{await DB.doc(id).set(c);toast('Caso salvo para todos que abrem o painel');return}
+    catch(e){persistMode='local'}
+  }
+  OVR[id]=c;
+  try{const l=JSON.parse(localStorage.getItem('casos-local')||'{}');l[id]=c;localStorage.setItem('casos-local',JSON.stringify(l))}catch(e){}
+  toast('Salvo só neste navegador (sem permissão para gravar no painel compartilhado)');draw();
+}
+async function removeCase(c){
+  const id=idOf(c.n),isBase=BASE.some(b=>idOf(b.n)===id);
+  if(DB){try{ if(isBase) await DB.doc(id).set({n:c.n,_del:true}); else await DB.doc(id).delete(); toast('Caso excluído');return}catch(e){}}
+  if(isBase)OVR[id]={n:c.n,_del:true};else delete OVR[id];
+  try{const l=JSON.parse(localStorage.getItem('casos-local')||'{}');if(isBase)l[id]=OVR[id];else delete l[id];localStorage.setItem('casos-local',JSON.stringify(l))}catch(e){}
+  toast('Caso excluído (só neste navegador)');draw();
+}
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+
+/* ---------- filtros ---------- */
+function allTags(){const s=new Set();ALL.forEach(c=>(c.tg||[]).forEach(t=>s.add(t)));return [...s]}
+function drawFilters(){
+  const sel=$('#f-res');const cur=F.res;
+  sel.innerHTML='<option value="">Todos</option>'+RESULTS.map(r=>`<option ${r.k===cur?'selected':''}>${esc(r.k)}</option>`).join('');
+  const counts={};ALL.filter(c=>passes(c,'tags')).forEach(c=>(c.tg||[]).forEach(t=>counts[t]=(counts[t]||0)+1));
+  const tags=allTags().sort((a,b)=>(counts[b]||0)-(counts[a]||0));
+  $('#chips').innerHTML=tags.map(t=>`<button class="chip" aria-pressed="${F.tags.has(t)}" data-tag="${esc(t)}">${esc(t)}<span class="n">${counts[t]||0}</span></button>`).join('');
+  const n=VIS.length,tot=ALL.length;
+  $('#summary').innerHTML=`Mostrando <b>${nf(n)}</b> de ${nf(tot)} consultas`+(F.tags.size?` · tema: <b>${esc([...F.tags].join(' ou '))}</b>`:'')
+    +(F.tags.size?'<br>Os temas vêm das ementas; consultas sem ementa publicada não têm tema e ficam fora quando um tema está selecionado.':'');
+  $('#f-from').value=F.from;$('#f-to').value=F.to;
+}
+
+/* ---------- componentes ---------- */
+function bars(items,{clickKey}={}){
+  const max=Math.max(1,...items.map(i=>i.v));
+  return `<div class="bars">`+items.map(i=>{
+    const inner=`<div class="lab"><i class="sw" style="background:var(${i.c})"></i><span>${esc(i.l)}</span></div><div class="t"><div class="f" style="width:${100*i.v/max}%;background:var(${i.c})"></div></div><div class="v">${nf(i.v)}</div>`;
+    return clickKey?`<button class="bar click" data-res="${esc(i.k)}" title="Filtrar por este resultado">${inner}</button>`:`<div class="bar">${inner}</div>`}).join('')+`</div>`;
+}
+function pill(r){const m=RMAP[r]||{c:'--c-pend',s:r};return `<span class="pill" style="color:var(${m.c==='--c-pend'?'--muted':m.c})"><i></i>${esc(m.s)}</span>`}
+function resCount(list){const o={};list.forEach(c=>o[c.fr]=(o[c.fr]||0)+1);return o}
+function yesno(list,f,k='Sim'){const a=list.filter(c=>c[f]);return {y:a.filter(c=>c[f]===k).length,n:a.length}}
+
+/* ---------- fluxograma ---------- */
+function vFlux(){
+  const L=VIS,tot=L.length;
+  if(!tot)return `<div class="panel empty">Nenhuma consulta com os filtros atuais.</div>`;
+  const an=L.filter(c=>c.ra),aguard=tot-an.length;
+  const rel=L.filter(c=>c.ra==='Há risco de CI relevante');
+  const po=yesno(an,'po');
+  const oc={};an.forEach(c=>{const r=normRes(c.ra);oc[r]=(oc[r]||0)+1});
+  const orgBars=RESULTS.filter(r=>oc[r.k]).map(r=>({k:r.k,l:r.s,v:oc[r.k],c:r.c})).sort((a,b)=>b.v-a.v);
+  const info=rel.filter(c=>c.ia==='Sim'),infoAg=info.filter(c=>c.ida&&!c.ira).length;
+  const cg=L.filter(c=>c.rc),cgAg=rel.length-cg.length;
+  const cc={};cg.forEach(c=>{const r=normRes(c.rr);if(r)cc[r]=(cc[r]||0)+1});
+  const cgBars=RESULTS.filter(r=>cc[r.k]).map(r=>({k:r.k,l:r.s,v:cc[r.k],c:r.c})).sort((a,b)=>b.v-a.v);
+  const pc=yesno(cg,'pc');
+  const rec=cg.filter(c=>c.rec==='Sim'),rc={};rec.forEach(c=>{const r=c.rrec||'Em análise';rc[r]=(rc[r]||0)+1});
+  const fin=L.filter(c=>c.rc||(c.ra&&c.ra!=='Há risco de CI relevante'));
+  const tAll=mean(fin.map(c=>dd(c.s,c.rc||c.ro)));
+  const d=v=>v==null?'—':nf(v)+' dias';
+  return `
+  <div class="panel"><div class="stage">
+    <div><div class="stage-h"><span class="stage-n">1</span><h2>Análise do órgão</h2></div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">${nf(tot)}</div><div class="l">solicitações submetidas</div></div>
+        <div class="kpi"><div class="v">${nf(an.length)}</div><div class="l">analisadas pelo órgão (${pct(an.length,tot)})</div></div>
+        <div class="kpi"><div class="v">${nf(aguard)}</div><div class="l">aguardando análise do órgão</div></div>
+      </div>
+      <p class="sub" style="margin-top:14px">Respondidas dentro do prazo: <b>${pct(po.y,po.n)}</b> · tempo médio de resposta do órgão: <b>${d(mean(an.map(c=>dd(c.s,c.ro))))}</b> (dias corridos)</p>
+    </div>
+    <div><h3 style="font-size:14px;margin-bottom:8px">Resultado da análise do órgão <span class="dt">(clique para filtrar)</span></h3>${bars(orgBars,{clickKey:1})}</div>
+    <div class="kpis"><div class="kpi rel"><div class="v">${nf(rel.length)}</div><div class="l">com risco de CI relevante, ${pct(rel.length,an.length)} do total analisado</div></div></div>
+  </div></div>
+  <div class="panel"><div class="stage">
+    <div><div class="stage-h"><span class="stage-n">2</span><h2>Revisão da CGU</h2></div>
+      <div class="kpis">
+        <div class="kpi"><div class="v">${nf(info.length)}</div><div class="l">precisaram de informações adicionais (${pct(info.length,rel.length)} dos casos de risco)</div></div>
+        <div class="kpi"><div class="v">${nf(infoAg)}</div><div class="l">aguardando resposta do órgão</div></div>
+      </div>
+      <p class="sub" style="margin-top:14px">Tempo médio de resposta às informações adicionais: <b>${d(mean(info.map(c=>dd(c.ida,c.ira))))}</b></p>
+      <div class="kpis"><div class="kpi"><div class="v">${nf(cg.length)}</div><div class="l">respondidas pela CGU</div></div>
+        <div class="kpi"><div class="v">${nf(cgAg)}</div><div class="l">aguardando resposta da CGU</div></div></div>
+      <p class="sub" style="margin-top:14px">Dentro do prazo: <b>${pct(pc.y,pc.n)}</b> · tempo médio da CGU: <b>${d(mean(cg.map(c=>dd(c.env,c.rc))))}</b></p>
+    </div>
+    <div><h3 style="font-size:14px;margin-bottom:8px">Resultado da revisão da CGU <span class="dt">(clique para filtrar)</span></h3>${bars(cgBars,{clickKey:1})}</div>
+  </div></div>
+  <div class="panel"><div class="stage">
+    <div><div class="stage-h"><span class="stage-n">3</span><h2>Análise de recurso</h2></div>
+      <div class="kpis"><div class="kpi"><div class="v">${nf(rec.length)}</div><div class="l">processos com recurso, ${pct(rec.length,cg.length)} das manifestações da CGU</div></div>
+      <div class="kpi"><div class="v sm">${d(mean(rec.map(c=>dd(c.drec,c.dres))))}</div><div class="l">tempo médio de resposta ao recurso</div></div></div>
+      ${rec.length?'<div style="margin-top:14px">'+bars(Object.entries(rc).map(([l,v])=>({l,v,c:'--c-imp'})))+'</div>':''}
+    </div>
+    <div class="kpis"><div class="kpi"><div class="v">${d(tAll)}</div><div class="l">tempo médio das consultas desde a submissão até a resposta final</div></div></div>
+  </div></div>`;
+}
+
+/* ---------- temas ---------- */
+function vTemas(){
+  const base=ALL.filter(c=>passes(c,'tags')&&(c.tg||[]).length);
+  const rows=allTags().map(t=>{
+    const l=base.filter(c=>c.tg.includes(t)),rc=resCount(l);
+    const dec=l.map(c=>c.rc||c.ro||c.s).filter(Boolean).sort().pop();
+    return {t,l,rc,n:l.length,dec}}).filter(r=>r.n).sort((a,b)=>b.n-a.n);
+  const legend=RESULTS.slice(0,6).map(r=>`<span><i class="sw" style="background:var(${r.c})"></i>${esc(r.s)}</span>`).join('');
+  const tr=rows.map(r=>{
+    const seg=RESULTS.filter(x=>r.rc[x.k]).map(x=>`<i style="flex:${r.rc[x.k]};background:var(${x.c})" data-tip="${esc(x.s)}: ${r.rc[x.k]}"></i>`).join('');
+    const rel=r.rc['Há risco de CI relevante']||0,mit=r.rc['Risco de CI mitigável']||0,ok=r.rc['Não há risco de CI relevante']||0;
+    return `<tr class="tema"><td><b>${esc(r.t)}</b></td><td class="num">${r.n}</td><td style="min-width:200px"><div class="split">${seg}</div></td>
+      <td class="num">${pct(rel,r.n)}</td><td class="num">${pct(mit,r.n)}</td><td class="num">${pct(ok,r.n)}</td><td class="num">${fmtD(r.dec)}</td>
+      <td><button class="btn sm" data-gotema="${esc(r.t)}">Ver casos</button></td></tr>`}).join('');
+  return `<div class="panel"><h2>Temas já tratados</h2>
+    <p class="sub">Antes de abrir uma nova consulta, veja como a CGU decidiu casos do mesmo tema. Os temas vêm das ementas e podem ser corrigidos em cada caso.</p>
+    <div class="legend">${legend}</div>
+    <div class="scroll"><table><thead><tr><th>Tema</th><th class="num">Casos</th><th>Resultados</th><th class="num">Risco relevante</th><th class="num">Mitigável</th><th class="num">Sem risco</th><th class="num">Última decisão</th><th></th></tr></thead>
+    <tbody>${tr||'<tr><td colspan="8" class="empty">Nenhum caso com tema nos filtros atuais.</td></tr>'}</tbody></table></div></div>`;
+}
+
+/* ---------- histórico ---------- */
+function vHist(){
+  const L=VIS.filter(c=>c.s);
+  if(!L.length)return `<div class="panel empty">Nenhuma consulta com os filtros atuais.</div>`;
+  const ys=L.map(c=>+c.s.slice(0,4)),y0=Math.min(...ys),y1=Math.max(...ys);
+  const years=[];for(let y=y0;y<=y1;y++)years.push(y);
+  const by={};years.forEach(y=>by[y]={});
+  L.forEach(c=>{const y=+c.s.slice(0,4);by[y][c.fr]=(by[y][c.fr]||0)+1});
+  const tot=years.map(y=>Object.values(by[y]).reduce((a,b)=>a+b,0)),max=Math.max(...tot);
+  const step=[10,20,25,50,100].find(s=>max/s<=6)||100,top=Math.ceil(max/step)*step;
+  const W=760,H=300,ml=36,mr=8,mt=22,mb=28,pw=W-ml-mr,ph=H-mt-mb,bw=pw/years.length;
+  let g='';
+  for(let v=0;v<=top;v+=step){const y=mt+ph-ph*v/top;g+=`<line x1="${ml}" x2="${W-mr}" y1="${y}" y2="${y}" stroke="${cssv('--line')}"/><text x="${ml-6}" y="${y+4}" text-anchor="end" font-size="11">${v}</text>`}
+  years.forEach((y,i)=>{
+    let acc=0;const x=ml+i*bw+bw*.16,w=bw*.68;
+    RESULTS.forEach(r=>{const v=by[y][r.k];if(!v)return;const h=ph*v/top;acc+=h;
+      g+=`<rect x="${x}" y="${mt+ph-acc}" width="${w}" height="${Math.max(h-1,1)}" fill="${cssv(r.c)}" data-tip="${y} · ${esc(r.s)}: ${v}"/>`});
+    g+=`<text x="${x+w/2}" y="${mt+ph-acc-5}" text-anchor="middle" font-size="11" font-weight="600">${tot[i]}</text><text x="${x+w/2}" y="${H-9}" text-anchor="middle" font-size="11">${y}</text>`});
+  const legend=RESULTS.map(r=>`<span><i class="sw" style="background:var(${r.c})"></i>${esc(r.s)}</span>`).join('');
+  return `<div class="panel"><h2>Solicitações por ano de submissão</h2><p class="sub">Cada barra mostra o resultado atual das consultas submetidas no ano (2026 está incompleto).</p>
+    <div class="legend">${legend}</div>
+    <svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Solicitações por ano, de ${y0} a ${y1}">${g}</svg>
+    <details style="margin-top:10px"><summary>Ver tabela</summary><div class="scroll"><table><thead><tr><th>Ano</th><th class="num">Total</th>${RESULTS.slice(0,6).map(r=>`<th class="num">${esc(r.s)}</th>`).join('')}</tr></thead><tbody>
+    ${years.map((y,i)=>`<tr><td>${y}</td><td class="num">${tot[i]}</td>${RESULTS.slice(0,6).map(r=>`<td class="num">${by[y][r.k]||0}</td>`).join('')}</tr>`).join('')}</tbody></table></div></details></div>`;
+}
+
+/* ---------- ementário ---------- */
+function vEm(){
+  let L=VIS.filter(c=>SHOW_ALL||c.em).sort((a,b)=>(b.s||'').localeCompare(a.s||''));
+  const n=L.length;L=L.slice(0,LIMIT);
+  const hint=F.tags.size?`<div class="hint">Antes de consultar a CGU sobre <b>${esc([...F.tags].join(' ou '))}</b>, leia as ${nf(n)} decisões abaixo. Se o caso já estiver coberto, a consulta pode ser dispensada.</div>`:'';
+  const cards=L.map(c=>`<article class="case" id="c-${idOf(c.n)}">
+    <div class="case-h"><span class="nup">${esc(c.n)}</span>${pill(c.fr)}<span class="dt">Submetida em ${fmtD(c.s)}${c.rc?' · CGU respondeu em '+fmtD(c.rc):''}${c.rec==='Sim'?' · houve recurso'+(c.rrec?' ('+esc(c.rrec)+')':''):''}</span></div>
+    ${(c.tg||[]).length?`<div class="tagrow">${c.tg.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`:''}
+    ${c.em?`<div class="em clamp" data-em>${esc(c.em)}</div>`:'<div class="em dt">Sem ementa publicada.</div>'}
+    <div class="case-f">${c.em?'<button class="btn sm" data-expand>Ler ementa completa</button>':''}<button class="btn sm" data-edit="${esc(c.n)}">Editar</button></div></article>`).join('');
+  return `<div class="panel"><div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;align-items:center;margin-bottom:12px"><div><h2>Ementário</h2><p class="sub" style="margin:0">${nf(n)} casos nos filtros atuais</p></div>
+    <label style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="show-all" ${SHOW_ALL?'checked':''}> incluir consultas sem ementa</label></div>
+    ${hint}${cards||'<div class="empty">Nenhum caso encontrado.</div>'}
+    ${n>LIMIT?`<div class="more"><button class="btn" id="btn-more">Mostrar mais (${nf(n-LIMIT)} restantes)</button></div>`:''}</div>`;
+}
+
+/* ---------- formulário ---------- */
+function openForm(nup){
+  const cur=nup?ALL.find(c=>c.n===nup):null;
+  const c=cur?{...cur}:{n:'',s:new Date().toISOString().slice(0,10),ra:null,rr:null,rc:null,rec:'Não',rrec:null,em:'',tg:[]};
+  const tags=new Set(c.tg||[]);
+  const optsRes=(v)=>`<option value="">—</option>`+RESULTS.slice(0,6).map(r=>`<option ${r.k===v?'selected':''}>${esc(r.k)}</option>`).join('');
+  const root=$('#modal-root');
+  root.innerHTML=`<div class="modal" id="modal"><form class="sheet" id="form" role="dialog" aria-label="${cur?'Editar caso':'Novo caso'}">
+    <h2>${cur?'Editar caso':'Novo caso'}</h2>
+    <div class="grid2">
+      <div class="field"><label for="m-n">NUP</label><input id="m-n" type="text" value="${esc(c.n)}" ${cur?'readonly':''} placeholder="00096.000000/2026-00"></div>
+      <div class="field"><label for="m-s">Data de submissão</label><input id="m-s" type="date" value="${c.s||''}"></div>
+      <div class="field"><label for="m-ra">Resultado da análise do órgão</label><select id="m-ra">${optsRes(normRes(c.ra))}</select></div>
+      <div class="field"><label for="m-ro">Data da resposta do órgão</label><input id="m-ro" type="date" value="${c.ro||''}"></div>
+      <div class="field"><label for="m-rr">Resultado da revisão da CGU</label><select id="m-rr">${optsRes(normRes(c.rr))}</select></div>
+      <div class="field"><label for="m-rc">Data da resposta da CGU</label><input id="m-rc" type="date" value="${c.rc||''}"></div>
+      <div class="field"><label for="m-rec">Houve recurso?</label><select id="m-rec"><option ${c.rec!=='Sim'?'selected':''}>Não</option><option ${c.rec==='Sim'?'selected':''}>Sim</option></select></div>
+      <div class="field"><label for="m-rrec">Resultado do recurso</label><select id="m-rrec"><option value="">—</option>${['Recurso Negado','Decisão Reconsiderada','Recurso Provido','Recurso em análise'].map(x=>`<option ${x===c.rrec?'selected':''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <div class="field"><label for="m-em">Ementa</label><textarea id="m-em">${esc(c.em||'')}</textarea></div>
+    <div class="field"><span class="lbl">Temas</span><div class="chips" id="m-tags"></div>
+      <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap"><input id="m-newtag" type="text" placeholder="Novo tema" style="max-width:240px"><button type="button" class="btn sm" id="m-addtag">Adicionar tema</button><button type="button" class="btn sm" id="m-sug">Sugerir temas pela ementa</button></div></div>
+    <div class="err" id="m-err" role="alert"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between"><div>${cur?'<button type="button" class="btn danger" id="m-del">Excluir caso</button>':''}</div>
+      <div style="display:flex;gap:8px"><button type="button" class="btn" id="m-cancel">Cancelar</button><button class="btn primary" type="submit">Salvar</button></div></div>
+  </form></div>`;
+  const drawTags=()=>{const all=[...new Set([...allTags(),...tags])];
+    $('#m-tags').innerHTML=all.map(t=>`<button type="button" class="chip" aria-pressed="${tags.has(t)}" data-mt="${esc(t)}">${esc(t)}</button>`).join('')};
+  drawTags();
+  $('#m-tags').onclick=e=>{const b=e.target.closest('[data-mt]');if(!b)return;const t=b.dataset.mt;tags.has(t)?tags.delete(t):tags.add(t);drawTags()};
+  $('#m-addtag').onclick=()=>{const v=$('#m-newtag').value.trim();if(v){tags.add(v);$('#m-newtag').value='';drawTags()}};
+  $('#m-sug').onclick=()=>{const s=suggestTags($('#m-em').value);(s.length?s:[OUTRAS]).forEach(t=>tags.add(t));drawTags()};
+  $('#m-cancel').onclick=()=>root.innerHTML='';
+  $('#modal').onclick=e=>{if(e.target.id==='modal')root.innerHTML=''};
+  if(cur){let armed=false;$('#m-del').onclick=function(){if(!armed){armed=true;this.textContent='Confirmar exclusão';return}removeCase(cur);root.innerHTML=''}}
+  $('#form').onsubmit=async e=>{e.preventDefault();
+    const n=$('#m-n').value.trim(),s=$('#m-s').value;
+    if(!/^\d{5}\.\d{6}\/\d{4}-\d{2}$/.test(n)){$('#m-err').textContent='Informe o NUP no formato 00096.000000/2026-00.';return}
+    if(!cur&&ALL.some(x=>idOf(x.n)===idOf(n))){$('#m-err').textContent='Já existe um caso com este NUP. Edite o caso existente.';return}
+    if(!s){$('#m-err').textContent='Informe a data de submissão.';return}
+    const v=i=>$(i).value||null;
+    const out={...(cur||{}),n,s,ra:v('#m-ra'),ro:v('#m-ro'),rr:v('#m-rr'),rc:v('#m-rc'),rec:$('#m-rec').value,rrec:v('#m-rrec'),em:$('#m-em').value.trim()||null,tg:[...tags]};
+    delete out.fr;
+    if(out.em&&!out.tg.length)out.tg=suggestTags(out.em).length?suggestTags(out.em):[OUTRAS];
+    root.innerHTML='';await saveCase(out)};
+  $('#m-n').focus();
+}
+
+/* ---------- exportar ---------- */
+async function exportCsv(){
+  const cols=[['NUP','n'],['Data de submissão','s'],['Resultado','fr'],['Resultado órgão','ra'],['Resultado CGU','rr'],['Resposta CGU','rc'],['Recurso','rec'],['Resultado recurso','rrec'],['Temas','tg'],['Ementa','em']];
+  const q=v=>'"'+String(Array.isArray(v)?v.join('; '):(v??'')).replace(/"/g,'""')+'"';
+  const csv='﻿'+cols.map(c=>q(c[0])).join(',')+'\n'+VIS.map(r=>cols.map(c=>q(r[c[1]])).join(',')).join('\n');
+  try{const dl=await claude.use('downloads');if(!dl)throw 0;await dl.save({filename:'consultas-rfb.csv',data:csv});toast('CSV pronto')}
+  catch(e){toast('Este ambiente não permite baixar arquivos')}
+}
+
+/* ---------- desenho ---------- */
+function draw(){
+  recompute();drawFilters();
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.v===VIEW));
+  $('#main').innerHTML='<section class="view">'+({fluxograma:vFlux,temas:vTemas,historico:vHist,ementario:vEm}[VIEW]())+'</section>';
+  $('#notice').innerHTML=persistMode==='local'?'<div class="notice">Edições e novos casos ficam salvos só neste navegador. Entre com uma conta com permissão de edição para gravar no painel compartilhado.</div>':'';
+}
+function setView(v){VIEW=v;LIMIT=30;if(location.hash!=='#'+v)history.replaceState(null,'','#'+v);draw()}
+
+document.addEventListener('click',e=>{
+  const t=e.target;let b;
+  if(b=t.closest('#tabs button'))return setView(b.dataset.v);
+  if(b=t.closest('[data-tag]')){const g=b.dataset.tag;F.tags.has(g)?F.tags.delete(g):F.tags.add(g);return draw()}
+  if(b=t.closest('[data-res]')){F.res=b.dataset.res;return draw()}
+  if(b=t.closest('[data-gotema]')){F.tags=new Set([b.dataset.gotema]);return setView('ementario')}
+  if(b=t.closest('[data-edit]'))return openForm(b.dataset.edit);
+  if(b=t.closest('[data-expand]')){const em=b.closest('.case').querySelector('[data-em]');const c=em.classList.toggle('clamp');b.textContent=c?'Ler ementa completa':'Recolher';return}
+  if(t.closest('#btn-more')){LIMIT+=30;return draw()}
+  if(t.closest('#btn-new'))return openForm();
+  if(t.closest('#btn-export'))return exportCsv();
+  if(t.closest('#btn-clear')){F={from:'',to:'',res:'',q:'',tags:new Set()};$('#f-q').value='';return draw()}
+});
+document.addEventListener('change',e=>{
+  const i=e.target.id;
+  if(i==='f-from'){F.from=e.target.value;draw()}else if(i==='f-to'){F.to=e.target.value;draw()}
+  else if(i==='f-res'){F.res=e.target.value;draw()}else if(i==='show-all'){SHOW_ALL=e.target.checked;draw()}
+});
+let qt;$('#f-q').addEventListener('input',e=>{clearTimeout(qt);qt=setTimeout(()=>{F.q=e.target.value.trim();draw()},200)});
+const tip=$('#tip');
+document.addEventListener('mousemove',e=>{const el=e.target.closest&&e.target.closest('[data-tip]');
+  if(!el){tip.hidden=true;return}tip.textContent=el.dataset.tip;tip.hidden=false;tip.style.left=Math.min(e.clientX+12,innerWidth-270)+'px';tip.style.top=(e.clientY+14)+'px'});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('#modal-root').innerHTML=''});
+window.addEventListener('hashchange',()=>{const v=location.hash.slice(1);if(['fluxograma','temas','historico','ementario'].includes(v)&&v!==VIEW){VIEW=v;draw()}});
+
+(async()=>{
+  const h=location.hash.slice(1);if(['fluxograma','temas','historico','ementario'].includes(h))VIEW=h;
+  try{BASE=await (await fetch('data.json')).json()}catch(e){$('#main').innerHTML='<div class="panel empty">Não foi possível carregar os dados.</div>';return}
+  draw();initDb();
+})();
+</script>
