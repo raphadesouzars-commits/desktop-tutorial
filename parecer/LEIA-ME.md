@@ -48,3 +48,10 @@ No passo 2, "Adicionar outra atividade ao mesmo parecer" junta os fundamentos de
 composta, cada atividade ganha um parágrafo de abertura, fundamentos idênticos entram uma vez só e as conclusões
 ficam em sequência na seção III. O painel "Conferência", acima da prévia, aponta incoerências entre as respostas
 do formulário, o modelo escolhido, os precedentes da CGU e as opções marcadas (função `conferir` em `app.src.html`).
+
+## Termo de Compromisso
+
+Em conclusões que autorizam com ressalvas, o parecer condiciona a autorização à assinatura de Termo de Compromisso
+e o botão "Gerar Termo de Compromisso" produz o documento (.docx) pronto para assinatura: identificação do servidor,
+deveres gerais marcados, compromissos específicos digitados no passo 3, ciência da chefia e recebimento pela
+Comissão de Ética. A redação do Termo está na função `blocosTermo`, em `app.src.html`.

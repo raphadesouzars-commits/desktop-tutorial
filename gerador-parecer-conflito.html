@@ -157,7 +157,13 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
     <label class="chk"><input type="checkbox" id="incluirEnc" checked> Incluir encaminhamento à Comissão de Ética (linha da ementa e parágrafo final)</label>
     <label>Enquadramento no art. 5º da Lei nº 12.813/2013 (opcional – entra na ementa e no encaminhamento)</label>
     <div id="incisos" style="display:flex;gap:12px;flex-wrap:wrap"></div>
-    <label class="chk" id="lblTermo"><input type="checkbox" id="termo"> Incluir parágrafo de autorização condicionada a termo de compromisso perante a Comissão de Ética e a chefia imediata (padrão das decisões da CGU de 2024 a 2026 para risco mitigável)</label>
+    <div id="lblTermo">
+      <label class="chk"><input type="checkbox" id="termo"> Condicionar a autorização à assinatura de Termo de Compromisso perante a Comissão de Ética e a chefia imediata (entra na conclusão do parecer e habilita a geração do Termo)</label>
+      <label for="compromissos">Compromissos específicos desta autorização (um por linha; entram no Termo depois dos deveres gerais)</label>
+      <textarea id="compromissos" rows="3" placeholder="abster-se de atuar em processos de interesse da instituição em que leciona&#10;não atuar como representante do condomínio perante órgãos públicos"></textarea>
+      <div class="row"><div><label for="cidade">Cidade (local de assinatura do Termo)</label><input type="text" id="cidade" placeholder="Salvador/BA"></div>
+      <div><label for="protocoloSeci">Protocolo SeCI (opcional)</label><input type="text" id="protocoloSeci" placeholder="00096.000000/2026-00"></div></div>
+    </div>
     <details id="resumoBox">
       <summary>Ressalvas gerais – “Em resumo, o servidor deve…” (item-padrão do parecer)</summary>
       <label class="chk"><input type="checkbox" id="resumo" checked> Incluir a lista de deveres antes da conclusão</label>
@@ -209,6 +215,7 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
 <div>
   <div class="actions">
     <button id="btnDocx">⬇ Gerar Word (.docx)</button>
+    <button class="sec" id="btnTermo" style="display:none">⬇ Gerar Termo de Compromisso</button>
     <button class="sec" id="btnCopiar">Copiar texto</button>
     <button class="sec" id="btnLimpar" title="Zera a consulta, os dados do servidor e o modelo escolhido; mantém as configurações da unidade">↺ Nova análise</button>
     <span class="pend" id="pend"></span>
@@ -414,6 +421,8 @@ function extrairDados(texto){
     if (/auditor/.test(c)){ $("cargoSel").value = "AFRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
     else if (/analista.{0,3}tribut/.test(c)){ $("cargoSel").value = "ATRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
   }
+  const pr = texto.match(/Protocolo\s*:\s*(\d{5}\.\d{6}\/\d{4}-\d{2})/i);
+  if (pr) por("protocoloSeci", pr[1], "protocolo SeCI");
   const ts = texto.match(/Tipo de Solicita[çc][ãa]o\s*:\s*(Pedido|Consulta)/i);
   if (ts){ $("tipo").value = /pedido/i.test(ts[1]) ? "pedido" : "consulta"; $("tipo").onchange(); achados.push("tipo de demanda"); }
   const nome = valorRotulo(L, /^\s*(?:nome(?: completo| civil| do (?:solicitante|servidor|agente p[úu]blico|requerente|interessado))?|solicitante|requerente|interessad[oa]|servidora?)\s*[:\-–]\s*(.*)$/i);
@@ -578,6 +587,10 @@ function conferir(B, d){
   if (PS.length > 1 && new Set(res).size > 1) A.push("As atividades escolhidas têm conclusões diferentes; revise a ementa e a seção de conclusão para que cada atividade fique com o seu resultado.");
   if (PS.length > 1) A.push("Parecer com mais de uma atividade: fundamentos repetidos foram unificados; leia a sequência dos parágrafos antes de assinar.");
   if (/\b(nos|dos|no|do|aos) (par[áa]grafos?|ite(m|ns)) \d+/i.test(texto)) A.push("O texto cita parágrafos ou itens pelo número; confira se a numeração final corresponde.");
+  if ($("termo").checked && libera){
+    if (!$("compromissos").value.trim()) A.push("Termo de Compromisso sem compromissos específicos: se o parecer traz ressalvas próprias da atividade, liste-as no campo “Compromissos específicos” para que constem do Termo.");
+    if (!$("cidade").value.trim()) A.push("Informe a cidade para o local de assinatura do Termo de Compromisso.");
+  }
   if (!$("q2").value.trim()) A.push("A pergunta 2 do formulário (descrição da atividade) está vazia.");
   if (cfg.sigs.some(sg => !sg.nome)) A.push("Há signatário sem nome; preencha em “Configurações da unidade”.");
   return A;
@@ -610,7 +623,7 @@ function listarAtividades(){
   const f = norm($("busca").value);
   const sel = $("atividade"); sel.innerHTML = "";
   const lista = MODELOS.slice().sort((a,b) => (a.id==="generico") - (b.id==="generico") || a.nome.localeCompare(b.nome,"pt"));
-  const grupoDe = id => Object.keys(GRUPOS).find(g => GRUPOS[g].includes(id)) || "Outras situações";
+  const grupoDe = id => { const m = MODELOS.find(m => m.id === id); return (m && m.grupo) || Object.keys(GRUPOS).find(g => GRUPOS[g].includes(id)) || "Outras situações"; };
   const og = {};
   for (const m of lista){
     if (f && !norm(m.nome + " " + (m.palavrasChave||[]).join(" ")).includes(f)) continue;
@@ -620,7 +633,8 @@ function listarAtividades(){
     if (!og[g]){ og[g] = document.createElement("optgroup"); og[g].label = g; }
     og[g].appendChild(o);
   }
-  for (const g of [...Object.keys(GRUPOS), "Outras situações"]) if (og[g]) sel.appendChild(og[g]);
+  const ordemG = ["Atuar ou interagir com o mercado (A.1)", "Consultoria e procuração (A.2)", ...Object.keys(GRUPOS).slice(1), "Outras situações"];
+  for (const g of [...ordemG, ...Object.keys(og).filter(g => !ordemG.includes(g))]) if (og[g]){ sel.appendChild(og[g]); delete og[g]; }
 }
 function selecionarAtividade(id){
   atv = MODELOS.find(m => m.id === id) || null;
@@ -648,8 +662,10 @@ function selecionarVariante(id){
 function ajustarPadroes(){
   const res = partes().map(p => p.v.resultado);
   $("incluirEnc").checked = res.some(r => r !== "outro");
-  $("lblTermo").style.display = res.includes("sem_conflito_ressalvas") ? "" : "none";
-  $("resumo").checked = res.some(r => r.startsWith("sem_"));
+  const autoriza = res.some(r => r.startsWith("sem_"));
+  $("lblTermo").style.display = autoriza ? "" : "none";
+  $("termo").checked = res.includes("sem_conflito_ressalvas"); // autorização com ressalvas sempre pede Termo
+  $("resumo").checked = autoriza;
 }
 /* ---------- outras atividades no mesmo parecer ---------- */
 function adicionarExtra(id){
@@ -813,8 +829,8 @@ function blocos(){
   if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
   if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
   concs.forEach(x => P(x));
-  if (PS.some(pt => pt.v.resultado === "sem_conflito_ressalvas") && $("termo").checked)
-    P(preencher("Registre-se que os riscos de conflito de interesses identificados podem ser mitigados caso {{g:o interessado|a interessada}}, mediante assinatura de termo de compromisso perante a Comissão de Ética Pública da RFB e sua chefia imediata, se obrigue a observar as ressalvas acima expostas.", d));
+  if (PS.some(pt => pt.v.resultado.startsWith("sem_")) && $("termo").checked)
+    P(preencher("Registre-se que a autorização fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.", d));
   const encTxt = (conf ? cfg.encaminhaConflito : cfg.encaminha) || "";
   if (enc && encTxt) P(preencher(encTxt.replace("{{enquadramento}}", inc.length ? `, nos termos do${inc.length > 1 ? "s incisos" : " inciso"} ${incTxt} do art. 5º da Lei nº 12.813/2013` : ""), d));
   for (const s of cfg.sigs){
@@ -846,6 +862,7 @@ const limpo = x => x.replace(/[\u0001\u0002]/g,"").replace(/\*\*/g,"").replace(/
 function render(){
   const {B, d} = blocos();
   const A = conferir(B, d);
+  $("btnTermo").style.display = vari && $("termo").checked && partes().some(pt => pt.v.resultado.startsWith("sem_")) ? "" : "none";
   $("conf").className = vari ? "conf" + (A.length ? "" : " ok") : "";
   $("conf").innerHTML = !vari ? "" : A.length ? `<b>Conferência: ${A.length} ponto(s) de atenção</b><ul>${A.map(a => "<li>" + escH(a) + "</li>").join("")}</ul>` : "<b>Conferência:</b> nenhum ponto de atenção encontrado.";
   const inl = x => trechos(x).map(r => { let s = escH(r.t); if (r.h) s = "<mark>"+s+"</mark>"; if (r.i) s = "<i>"+s+"</i>"; if (r.b) s = "<b>"+s+"</b>"; return s; }).join("");
@@ -872,6 +889,47 @@ function runsXml(x, base){
   }).join("");
 }
 function paraXml(ppr, inner){ return `<w:p><w:pPr>${ppr}</w:pPr>${inner}</w:p>`; }
+/* ---------- Termo de Compromisso ---------- */
+function blocosTermo(){
+  const d = dados(), PS = partes(), T = [];
+  const meu = t => t.replace(/\bseus\b/g,"meus").replace(/\bsuas\b/g,"minhas").replace(/\bseu\b/g,"meu").replace(/\bsua\b/g,"minha");
+  const ativ = PS.filter(pt => pt.v.resultado.startsWith("sem_")).map(pt => pt.rot || rotPadrao(pt.a));
+  const lista = ativ.length > 1 ? ativ.slice(0,-1).join(", ") + " e " + ativ[ativ.length-1] : (ativ[0] || falta("atividade"));
+  const par = `Parecer ${cfg.sigla} nº ${d.numero || falta("nº")}/${d.ano || falta("ano")}`;
+  const prot = $("protocoloSeci").value.trim();
+  T.push({k:"tit", x:"TERMO DE COMPROMISSO"});
+  T.push({k:"cab", x:`Processo nº ${d.processo || falta("processo")}`});
+  if (prot) T.push({k:"cab", x:`Protocolo SeCI nº ${prot}`});
+  T.push({k:"cab", x:`Referência: ${par}`});
+  T.push({k:"gap"});
+  T.push({k:"par", x: preencher(`Eu, **{{nome}}**, {{cargo}} ({{cargo_sigla}}), matrícula Siape nº {{matricula}}, {{g:lotado|lotada}} na {{unidade}}${d.equipe ? " e em exercício na " + d.equipe : ""}, tendo em vista o ${d.tipo === "pedido" ? "pedido de autorização" : "a consulta"} que formulei por meio do Sistema Eletrônico de Prevenção de Conflito de Interesses (SeCI) para o exercício ${ativ.length > 1 ? "das atividades privadas" : "da atividade privada"} de ${lista}, e o disposto no ${par}, que concluiu pela inexistência de conflito de interesses desde que observadas as ressalvas nele expostas, **comprometo-me**, perante a Comissão de Ética da RFB e minha chefia imediata, nos termos da Lei nº 12.813, de 16 de maio de 2013, a:`, d)});
+  const itens = DEVERES.filter((_, j) => $("dev" + j).checked).map(meu);
+  for (const ln of $("compromissos").value.split("\n").map(l => l.trim()).filter(Boolean)) itens.push(ln.replace(/[.;]+$/,"") + ";");
+  itens.push(`observar as demais ressalvas constantes do ${par};`);
+  itens.push("comunicar à Comissão de Ética da RFB qualquer alteração na situação informada, formulando nova consulta ou novo pedido de autorização, se for o caso.");
+  itens.forEach((t, j) => T.push({k:"it", x: `**${String.fromCharCode(97 + j)})** ${t}`}));
+  T.push({k:"gap"});
+  T.push({k:"par", x:"Declaro estar ciente de que o descumprimento dos compromissos ora assumidos pode caracterizar situação de conflito de interesses, nos termos do art. 5º da Lei nº 12.813, de 2013, sujeitando-me ao disposto no art. 12 da mesma Lei, sem prejuízo das demais sanções cabíveis."});
+  T.push({k:"gap"});
+  T.push({k:"par", x: `${$("cidade").value.trim() || falta("cidade")}, ${d.dataExt || falta("data")}.`});
+  const assin = (l1, l2, l3) => { T.push({k:"sgl", x:"_______________________________________________"}); T.push({k:"sg", x: l1}); if (l2) T.push({k:"sg", x: l2}); if (l3) T.push({k:"sg", x: l3}); };
+  assin(d.nome || falta("nome do servidor"), d.cargo, d.matricula ? "Matrícula Siape nº " + d.matricula : "");
+  T.push({k:"desp", x:"Ciente."});
+  assin("Chefia imediata", "(nome, cargo e matrícula)");
+  T.push({k:"desp", x:"Recebido pela Comissão de Ética da RFB."});
+  assin("Comissão de Ética da RFB", "(nome e matrícula)");
+  return {T, d};
+}
+function baixarTermo(){
+  const {T, d} = blocosTermo();
+  const {blob} = montarDocx(T);
+  const nome = `TERMO DE COMPROMISSO - PAR ${d.numero || "xxx"}-${d.ano || "xxxx"} - ${d.nome || "Servidor"}`.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^\x20-\x7e]/g,"").replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim() + ".docx";
+  salvar(blob, nome);
+}
+function salvar(blob, nome){
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nome; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+}
 function documentXml(B){
   let x = "";
   const tabRun = '<w:r><w:rPr><w:rFonts w:ascii="Calibri" w:hAnsi="Calibri" w:cs="Calibri"/><w:sz w:val="24"/><w:szCs w:val="24"/></w:rPr><w:tab/></w:r>';
@@ -888,6 +946,9 @@ function documentXml(B){
       case "cit": x += paraXml('<w:spacing w:before="0" w:after="0"/><w:ind w:left="1410"/><w:jc w:val="both"/>', runsXml(b.x,{sz:22,i:true})); break;
       case "desp": x += paraXml('<w:spacing w:before="240" w:after="0"/><w:ind w:firstLine="1418"/><w:jc w:val="both"/>', runsXml(b.x,{sz:24})); break;
       case "sgi": x += paraXml('<w:keepNext/><w:spacing w:before="480" w:after="0"/><w:jc w:val="center"/>', runsXml(b.x,{sz:22,i:true})); break;
+      case "tit": x += paraXml('<w:spacing w:before="240" w:after="360"/><w:jc w:val="center"/>', runsXml(b.x,{sz:28,b:true})); break;
+      case "par": x += paraXml('<w:spacing w:before="0" w:after="240"/><w:ind w:firstLine="1418"/><w:jc w:val="both"/>', runsXml(b.x,{sz:24})); break;
+      case "sgl": x += paraXml('<w:keepNext/><w:spacing w:before="720" w:after="0"/><w:jc w:val="center"/>', runsXml(b.x,{sz:24})); break;
       case "sg": x += paraXml('<w:keepNext/><w:spacing w:before="0" w:after="0"/><w:jc w:val="center"/>', runsXml(b.x,{sz:24})); break;
     }
   }
@@ -923,8 +984,9 @@ function zip(arqs){ // [{nome, dados:Uint8Array}] – sem compressão
   return new Blob([...partes, ...central, new Uint8Array(e.buffer)], {type:"application/vnd.openxmlformats-officedocument.wordprocessingml.document"});
 }
 function b64bytes(b64){ const s = atob(b64), u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; }
-function montarDocx(){
-  const {B, d} = blocos();
+function montarDocx(Bx){
+  const {B: B0, d} = blocos();
+  const B = Bx || B0;
   const enc = new TextEncoder();
   let img, ext, dim;
   if (cfg.logo){ const m = cfg.logo.match(/^data:image\/(png|jpeg);base64,(.*)$/); ext = m[1] === "png" ? "png" : "jpeg"; img = b64bytes(m[2]); dim = cfg.logoDim || LOGO_DIM; }
@@ -994,12 +1056,13 @@ $("busca").oninput = listarAtividades;
 $("atividade").onchange = e => selecionarAtividade(e.target.value);
 $("cargoSel").onchange = () => { $("cargoOutro").style.display = $("cargoSel").value === "outro" ? "" : "none"; render(); };
 $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "consulta" ? "" : "none"; render(); };
-for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta"]) $(id).addEventListener("input", render);
+for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta","compromissos","cidade","protocoloSeci"]) $(id).addEventListener("input", render);
 $("btnDocx").onclick = baixar;
+$("btnTermo").onclick = baixarTermo;
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
 const hoje = () => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; };
 function novaAnalise(){
-  const ids = ["consulta","numero","processo","nome","matricula","unidade","equipe","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"];
+  const ids = ["consulta","numero","processo","nome","matricula","unidade","equipe","compromissos","cidade","protocoloSeci","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"];
   const temDados = ids.some(id => $(id).value.trim()) || atv;
   if (temDados && !confirm("Iniciar uma nova análise? Os dados do servidor, as respostas do formulário e o modelo escolhido serão apagados. As configurações da unidade (assinaturas, normas, cabeçalho) são mantidas.")) return;
   for (const id of ids) $(id).value = "";
