@@ -35,3 +35,9 @@ pedido de autorização; as respostas 7, 8 e 4 geram alertas sobre os incisos I,
 No passo 1 é possível enviar o formulário do servidor em PDF, DOCX, ODT ou TXT. A leitura é feita no navegador,
 sem internet. O PDF é lido com a biblioteca pdf.js 3.11.174 (licença Apache-2.0, em `vendor/`), embutida no HTML.
 PDF digitalizado (imagem) e arquivos `.doc` antigos não são lidos.
+
+## Estrutura do parecer
+
+Segue o padrão dos pareceres Coger/GNP de 2023: I. Relatório (parágrafos iniciais e formulário, com as respostas
+entre aspas), II. Fundamentos (modelo da atividade, lista "Em resumo, o servidor deve" e registro de nova consulta)
+e III. Conclusão (conclusão e encaminhamento). A lista de deveres está em `DEVERES`, em `app.src.html`.

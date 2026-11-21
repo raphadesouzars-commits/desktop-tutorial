@@ -58,10 +58,12 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
 .paper .em{margin-left:50%}
 .paper .em.first{margin-top:14px}
 .paper .p{margin-bottom:14px}
-.paper .p .num{display:inline-block;min-width:36px}
+.paper .p .num{display:inline-block;min-width:70px}
+.paper .h{font-weight:700;margin:18px 0 14px;text-align:left}
+.paper .it{margin-left:24%;margin-bottom:10px}
 .paper .fq,.paper .fa{margin-left:24%;font-size:11pt}
 .paper .fq{font-weight:700}
-.paper .cit{margin-left:15%;font-size:11pt}
+.paper .cit{margin-left:15%;font-size:11pt;font-style:italic}
 .paper .gap{height:14px}
 .paper .desp{text-indent:70px;margin:18px 0 14px}
 .paper .sg{text-align:center}
@@ -136,8 +138,10 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
       <div><label for="cargoTxt">Cargo por extenso</label><input type="text" id="cargoTxt" placeholder="Técnico do Seguro Social"></div>
       <div><label for="cargoSig">Sigla</label><input type="text" id="cargoSig" placeholder="TSS"></div>
     </div>
-    <label for="unidade">Unidade de exercício (como aparece após “em exercício na …”)</label>
-    <input type="text" id="unidade" placeholder="Delegacia da Receita Federal do Brasil em Recife (DRF/REC)">
+    <label for="unidade">Unidade de lotação (como aparece após “lotado na …”) – não consta do PDF do SeCI</label>
+    <input type="text" id="unidade" placeholder="Delegacia da Receita Federal do Brasil em Salvador (DRF/SDR)">
+    <label for="equipe">Equipe/setor de exercício (opcional; entra como “e em exercício na …”)</label>
+    <input type="text" id="equipe" placeholder="Equipe de Gestão do Crédito Tributário e do Direito Creditório 2">
     <label for="tipo">Tipo de demanda (pergunta 10 do SeCI)</label>
     <select id="tipo"><option value="pedido">Pedido de autorização</option><option value="consulta">Consulta</option></select>
     <label class="chk" id="lblConv"><input type="checkbox" id="converter"> Incluir parágrafo informando que a consulta será tratada como pedido de autorização (atividade de natureza continuada)</label>
@@ -145,6 +149,12 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
     <label>Enquadramento no art. 5º da Lei nº 12.813/2013 (opcional – entra na ementa e no encaminhamento)</label>
     <div id="incisos" style="display:flex;gap:12px;flex-wrap:wrap"></div>
     <label class="chk" id="lblTermo"><input type="checkbox" id="termo"> Incluir parágrafo de autorização condicionada a termo de compromisso perante a Comissão de Ética e a chefia imediata (padrão das decisões da CGU de 2024 a 2026 para risco mitigável)</label>
+    <details id="resumoBox">
+      <summary>Ressalvas gerais – “Em resumo, o servidor deve…” (item-padrão do parecer)</summary>
+      <label class="chk"><input type="checkbox" id="resumo" checked> Incluir a lista de deveres antes da conclusão</label>
+      <div id="resumoItens" style="margin-left:18px"></div>
+      <label class="chk"><input type="checkbox" id="novaConsulta" checked> Incluir o registro de que alteração na situação exige nova consulta</label>
+    </details>
     <details id="seciBox" open>
       <summary>Formulário SeCI – respostas do servidor (transcritas no parecer)</summary>
       <div id="seciPerguntas"></div>
@@ -173,6 +183,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
       <textarea id="encaminhaConflito" rows="3" data-cfg></textarea>
       <label for="ementaEncConflito">Última linha da ementa quando há risco relevante</label>
       <input type="text" id="ementaEncConflito" data-cfg>
+      <label class="chk"><input type="checkbox" id="secoes"> Dividir o parecer em I. Relatório, II. Fundamentos e III. Conclusão</label>
       <label>Assinaturas e despachos</label>
       <div id="sigs"></div>
       <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
@@ -219,12 +230,26 @@ const SECI = [
   "A partir das informações prestadas, você gostaria de receber:"
 ];
 const ROMANOS = ["I","II","III","IV","V","VI","VII"];
+// Item-padrão de deveres (Parecer Coger/GNP nº 522/2023, item 13) e registro final (item 14)
+const DEVERES = [
+  "não divulgar ou fazer uso, em proveito próprio ou de terceiros, de informação privilegiada e/ou sigilosa obtida em razão do exercício do seu cargo, ainda que a título exemplificativo para fins didáticos;",
+  "não vincular sua atuação privada ao nome e/ou à imagem da RFB, não utilizando o nome de seu cargo ou o nome do órgão em suas apresentações pessoais, a não ser quando acompanhados de outras informações biográficas igualmente relevantes;",
+  "não praticar atos que possam transmitir à opinião pública dúvida a respeito da integridade, moralidade, clareza de posições e decoro de seu cargo público;",
+  "não utilizar as instalações, equipamentos, rotinas e materiais de trabalho, processos, sistemas de informação e rede eletrônica de comunicações da RFB para assuntos diversos aos do exercício de suas atribuições no órgão;",
+  "deixar claro, em seus vídeos e publicações, que as opiniões ali expostas são de caráter pessoal e não refletem, necessariamente, a posição oficial da RFB sobre os mesmos assuntos;",
+  "não se utilizar de sua condição de agente público para proveito próprio ou de terceiros;",
+  "impedir a ocorrência das hipóteses conflitivas dispostas nos incisos I, II, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, pois só podem ser aferidas quando do exercício efetivo da atividade privada;",
+  "respeitar a compatibilidade de horários para a realização de qualquer atividade privada concomitante com o cargo público, com primazia para o último;"
+];
+const NOVA_CONSULTA = "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo consulente|pela consulente}}, de forma que eventual alteração na situação apresentada deve ser objeto de nova consulta.";
+// parágrafos dos modelos que repetem os deveres "g" e "h" e saem quando a lista está ligada
+const REPETE_DEVER = x => x.length < 520 && (/s[óo] pode[m]? ser aferid/i.test(x) || /compatibilidade de hor[áa]rios? [ée] requisito imprescind[íi]vel/i.test(x));
 // Agrupamento das atividades segundo a tipologia usada pela CGU no SeCI
 const GRUPOS = {
   "Atuar ou interagir com o mercado (A.1)": ["socio_cotista","empresa_privada","comercio","corretor_imoveis","motorista_aplicativo","software","engenheiro","atividade_rural","medicina","terapia_alternativa","coaching","fotografia","pratico"],
   "Advocacia, perícia e mediação (A.3 e A.4)": ["advocacia","perito_judicial","mediador_conciliador"],
   "Entidades privadas sem fins lucrativos (A.8)": ["sindico","tesoureiro","filantropia","conselho_fiscal_sem_fins_lucrativos","direcao_associacao","clube_futebol"],
-  "Magistério, palestras e publicações (A.10 e A.15)": ["magisterio","palestras","escritor"]
+  "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)": ["magisterio","palestras","escritor","conteudo_digital"]
 };
 
 /* ---------- utilidades ---------- */
@@ -237,22 +262,23 @@ const M1="\u0001", M2="\u0002"; // delimitam campo ainda não preenchido
 
 const CFG_PADRAO = {
   sigla: "Coger/GNP",
-  portariaLonga: "Portaria SE/ME n° 15.966, de 06 de junho de 2020 (Portaria SE/ME nº 15.966/2020), que estabelece procedimentos a serem adotados no âmbito do Ministério da Economia",
+  portariaLonga: "Portaria n° 15.966, de 06 de junho de 2020, da Secretaria Executiva do Ministério da Economia (atual Ministério da Fazenda - MF), que estabeleceu procedimentos a serem adotados no âmbito do MF",
   portariaCurta: "Portaria SE/ME nº 15.966/2020",
-  orgao: "Corregedoria da Secretaria Especial da Receita Federal do Brasil",
-  encaminha: "Por fim, propõe-se o encaminhamento à Comissão de Ética Pública da Secretaria da Receita Federal do Brasil para prosseguimento, conforme o disposto na {{portaria_curta}}.",
-  ementaEnc: "Encaminhamento à Comissão de Ética Pública da RFB para prosseguimento.",
-  encaminhaConflito: "Por fim, considerando a identificação de potencial conflito de interesses{{enquadramento}}, propõe-se o encaminhamento à Comissão de Ética Pública da Secretaria da Receita Federal do Brasil para prosseguimento e remessa da solicitação à Controladoria-Geral da União, por meio do SeCI, acompanhada desta manifestação, conforme o disposto na Portaria Interministerial nº 333, de 19 de setembro de 2013, e na {{portaria_curta}}.",
-  ementaEncConflito: "Encaminhamento à Comissão de Ética Pública da RFB para prosseguimento e remessa à Controladoria-Geral da União.",
+  orgao: "Corregedoria da Receita Federal do Brasil",
+  encaminha: "Propõe-se o encaminhamento à Comissão de Ética da RFB.",
+  ementaEnc: "Encaminhamento à Comissão de Ética da RFB para prosseguimento.",
+  encaminhaConflito: "Considerando a identificação de potencial conflito de interesses{{enquadramento}}, propõe-se o encaminhamento à Comissão de Ética da RFB para prosseguimento e remessa da solicitação à Controladoria-Geral da União, por meio do SeCI, acompanhada desta manifestação, conforme o disposto na Portaria Interministerial nº 333, de 19 de setembro de 2013.",
+  ementaEncConflito: "Encaminhamento à Comissão de Ética da RFB para prosseguimento e remessa à Controladoria-Geral da União.",
+  secoes: true,
   sigs: [
-    {despacho:"", nome:"", cargo:"Auditor-Fiscal da Receita Federal do Brasil", funcao:"Grupo Nacional de Pareceristas - GNP"},
-    {despacho:"De acordo.\nEncaminhe-se à autoridade competente.", nome:"", cargo:"Auditor-Fiscal da Receita Federal do Brasil", funcao:"Coordenador do Grupo Nacional de Pareceristas"}
+    {despacho:"", nome:"", cargo:"Auditor-Fiscal da Receita Federal do Brasil", funcao:"Membro do Grupo Nacional dos Pareceristas"},
+    {despacho:"De acordo. Encaminhe-se à autoridade competente para decisão.", nome:"", cargo:"Auditor-Fiscal da Receita Federal do Brasil", funcao:"Coordenador do Grupo Nacional dos Pareceristas"}
   ],
   logo: null, logoDim: null
 };
 let cfg = JSON.parse(JSON.stringify(CFG_PADRAO));
-try { const s = localStorage.getItem("parecerCfg"); if (s) cfg = Object.assign(cfg, JSON.parse(s)); } catch(e){}
-const salvarCfg = () => { try { localStorage.setItem("parecerCfg", JSON.stringify(cfg)); } catch(e){} };
+try { const s = localStorage.getItem("parecerCfg2"); if (s) cfg = Object.assign(cfg, JSON.parse(s)); } catch(e){}
+const salvarCfg = () => { try { localStorage.setItem("parecerCfg2", JSON.stringify(cfg)); } catch(e){} };
 
 let atv = null, vari = null;
 const valoresCampos = {}; // por id de campo
@@ -361,12 +387,25 @@ function valorRotulo(linhas, re){
 function extrairDados(texto){
   const L = texto.split("\n"), achados = [];
   const por = (id, v, rot) => { if (v && !$(id).value.trim()){ $(id).value = v; achados.push(rot); } };
+  const titulo = t => t.toLowerCase().replace(/(^|[\s'’-])([a-zà-ÿ])/g, (m, a, b) => a + b.toUpperCase()).replace(/\b(De|Da|Do|Das|Dos|E)\b/g, m => m.toLowerCase());
+  // layout do PDF emitido pelo SeCI: "CPF: ... Nome Completo: FULANO", "Matrícula: ...  Cargo emprego: ..."
+  const nc = texto.match(/Nome\s+Completo\s*:\s*([^\n]+)/i);
+  if (nc) por("nome", titulo(nc[1].replace(/\s+/g," ").trim()), "nome");
+  const fimCab = texto.search(/Dados da solicita/i), cab = norm(fimCab > 0 ? texto.slice(0, fimCab) : texto.slice(0, 1500));
+  const ic = cab.search(/cargo\s*\/?\s*emprego\s*:/);
+  if (ic >= 0){
+    const c = cab.slice(ic, ic + 400).replace(/\s+/g," ");
+    if (/auditor/.test(c)){ $("cargoSel").value = "AFRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
+    else if (/analista.{0,3}tribut/.test(c)){ $("cargoSel").value = "ATRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
+  }
+  const ts = texto.match(/Tipo de Solicita[çc][ãa]o\s*:\s*(Pedido|Consulta)/i);
+  if (ts){ $("tipo").value = /pedido/i.test(ts[1]) ? "pedido" : "consulta"; $("tipo").onchange(); achados.push("tipo de demanda"); }
   const nome = valorRotulo(L, /^\s*(?:nome(?: completo| civil| do (?:solicitante|servidor|agente p[úu]blico|requerente|interessado))?|solicitante|requerente|interessad[oa]|servidora?)\s*[:\-–]\s*(.*)$/i);
   if (nome && /^[A-Za-zÀ-ÿ'’. ]{5,}$/.test(nome) && nome.trim().includes(" ")) por("nome", nome.replace(/\s+/g," "), "nome");
   const mat = texto.match(/(?:matr[íi]cula(?:\s+(?:siape|funcional))?|siape)\s*(?:n[ºo°.]*)?\s*[:\-–]?\s*(\d[\d.\-]{3,11}\d)/i);
   if (mat) por("matricula", mat[1], "matrícula");
   const cargo = valorRotulo(L, /^\s*cargo(?:\s*\/\s*emprego| efetivo| ou emprego(?: p[úu]blico)?| p[úu]blico)?\s*[:\-–]\s*(.*)$/i);
-  if (cargo){
+  if (cargo && ic < 0){
     const c = norm(cargo);
     if (/auditor/.test(c)) $("cargoSel").value = "AFRFB";
     else if (/analista/.test(c) && /tribut/.test(c)) $("cargoSel").value = "ATRFB";
@@ -387,7 +426,7 @@ const CAMPO_DE_PERGUNTA = {descricao_atividade:2, descricao_pretensao:2, descric
 function sugestaoCampo(id){
   const q = CAMPO_DE_PERGUNTA[id]; if (!q || !$("q" + q)) return "";
   let t = $("q" + q).value.replace(/\s+/g," ").trim().replace(/[.;]+$/,"");
-  if (!t) return "";
+  if (!t || t.length > 160) return ""; // respostas longas não encaixam na frase do modelo
   if (!/^[A-ZÀ-Ý]{2}/.test(t)) t = t[0].toLowerCase() + t.slice(1);
   return t;
 }
@@ -456,13 +495,19 @@ async function lerArquivo(f){
     else if (ext === "odt") t = textoXml(await arquivoDoZip(await f.arrayBuffer(), "content.xml"), "</text:(p|h)>");
     else if (ext === "txt" || f.type.startsWith("text/")) t = await f.text();
     else throw new Error("formato não aceito (use PDF, DOCX, ODT ou TXT; arquivos .doc antigos devem ser salvos como DOCX ou PDF)");
-    t = t.replace(/ /g, " ").split("\n").map(l => l.trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim();
+    t = t.replace(/ /g, " ").split("\n").map(l => l.replace(/[\u0000-\u0008\u000b-\u001f]/g, "").replace(/^\s*±\s*/, "").trim()).join("\n").replace(/\n{3,}/g, "\n\n").trim();
     if (t.length < 20) throw new Error("não há texto no arquivo – provavelmente é um PDF digitalizado (imagem)");
+    const bruto = t;
+    // retira cabeçalho/rodapé de página e o histórico do PDF do SeCI
+    let ls = t.split("\n").filter(l => !/^(Controladoria[- ]Geral da Uni[ãa]o|Sistema Eletr[ôo]nico de (Preven[çc][ãa]o de )?Conflitos? de Interesses|Emitido em|P[áa]gina \d+ de \d+)/i.test(l) && !/^\d{2}\/\d{2}\/\d{4}$/.test(l));
+    const ih = ls.findIndex(l => /^Hist[óo]rico$/i.test(l)); if (ih > 0) ls = ls.slice(0, ih);
+    const iq = ls.findIndex(l => /^\s*1\s*[-–]\s*Sua d[úu]vida/i.test(l)); if (iq > 0) ls = ls.slice(iq);
+    t = ls.join("\n").replace(/\n{3,}/g, "\n\n").trim();
     $("consulta").value = t;
     for (let i = 1; i <= 9; i++) $("q" + i).value = "";
     const n = distribuir();
     for (const k in CAMPO_DE_PERGUNTA) delete valoresCampos[k];
-    const ach = extrairDados(t);
+    const ach = extrairDados(bruto);
     identificar();
     const extra = ach.length ? " Dados preenchidos a partir do arquivo: " + ach.join(", ") + "." : " Nenhum dado de identificação (nome, matrícula, cargo, unidade) foi localizado no arquivo.";
     info.textContent = (n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
@@ -539,6 +584,7 @@ function selecionarVariante(id){
   document.querySelectorAll("#variantes .var").forEach(l => { const on = l.querySelector("input").value === id; l.classList.toggle("on", on); l.querySelector("input").checked = on; });
   $("incluirEnc").checked = vari.resultado !== "outro";
   $("lblTermo").style.display = vari.resultado === "sem_conflito_ressalvas" ? "" : "none";
+  $("resumo").checked = vari.resultado === "sem_conflito" || vari.resultado === "sem_conflito_ressalvas";
   montarCampos(); render();
 }
 function montarCampos(){
@@ -577,7 +623,7 @@ function dados(){
   const d = $("data").value;
   if (d){ const [y,m,dd] = d.split("-").map(Number); dataExt = `${dd === 1 ? "1º" : dd} de ${MESES[m-1]} de ${y}`; ano = String(y); }
   return {fem, cargo, sigla, dataExt, ano,
-    nome: $("nome").value.trim(), matricula: $("matricula").value.trim(), unidade: $("unidade").value.trim(),
+    nome: $("nome").value.trim(), matricula: $("matricula").value.trim(), unidade: $("unidade").value.trim(), equipe: $("equipe").value.trim(),
     numero: $("numero").value.trim(), processo: $("processo").value.trim(), tipo: $("tipo").value};
 }
 const falta = rot => M1 + "[" + rot.toUpperCase() + "]" + M2;
@@ -604,7 +650,7 @@ function blocos(){
   B.push({k:"cab", x:`${g("Servidor","Servidora")}: ${d.nome || falta("nome do servidor")}`});
   if (!vari) return {B, d};
   const pedido = d.tipo === "pedido";
-  B.push({k:"em", first:true, x:"Assunto: " + (pedido ? "Pedido de autorização formulado por meio do SeCI." : (vari.assunto || "Consulta SeCI."))});
+  B.push({k:"em", first:true, x:"Assunto: " + (pedido ? "Pedido de autorização para exercício de atividade privada formulado por meio do SeCI." : (vari.assunto || "Consulta SeCI."))});
   B.push({k:"em", x: preencher(vari.ementaTitulo, d)});
   for (const e of vari.ementa) B.push({k:"em", x: preencher(e, d)});
   const enc = $("incluirEnc").checked, conf = vari.resultado === "conflito";
@@ -616,23 +662,38 @@ function blocos(){
   B.push({k:"gap"});
   let n = 0;
   const P = x => B.push({k:"p", n: ++n, x});
+  if (cfg.secoes) B.push({k:"h", x:"I. RELATÓRIO"});
   P(`Trata-se de ${pedido ? "pedido de autorização para exercício de atividade privada formulado" : "consulta sobre o exercício de atividade privada, formulada"} por meio do Sistema Eletrônico de Prevenção de Conflito de Interesses (SeCI) e ${pedido ? "encaminhado" : "encaminhada"} a esta Corregedoria, conforme disciplina a ${cfg.portariaLonga}, para atender o disposto no art. 8° da Lei n° 12.813, de 16 de maio de 2013, e na Portaria Interministerial n° 333, de 19 de setembro de 2013.`);
-  P(preencher(`{{g:O servidor|A servidora}} **{{nome}}**, {{cargo}} ({{cargo_sigla}}), matrícula Siape nº {{matricula}}, em exercício na {{unidade}}, formalizou ${pedido ? "o pedido" : "consulta"} nos seguintes termos:`, d));
+  P(preencher(`${pedido ? "{{g:O peticionante|A peticionante}}" : "{{g:O servidor|A servidora}}"} **{{nome}}**, {{cargo}} ({{cargo_sigla}}), matrícula Siape nº {{matricula}}, {{g:lotado|lotada}} na {{unidade}}${d.equipe ? " e em exercício na " + d.equipe : ""}, formalizou ${pedido ? "o pedido" : "consulta"} nos seguintes termos:`, d));
   let temResp = false;
   for (let i = 1; i <= 9; i++){
     const r = $("q" + i).value.replace(/\r/g,"").trim(); if (!r) continue;
     temResp = true;
     B.push({k:"fq", x: `${i} – ${SECI[i-1]}`});
-    for (const ln of r.split("\n")) B.push({k:"fa", x: ln.trim()});
+    const ls = r.split("\n").map(l => l.trim()); ls[0] = "“" + ls[0]; ls[ls.length-1] += /[.!?…]$/.test(ls[ls.length-1]) ? "”" : ".”";
+    for (const ln of ls) B.push({k:"fa", x: ln});
   }
   if (!temResp) B.push({k:"fa", x: falta("respostas do formulário SeCI")});
-  else { B.push({k:"fq", x: `10 – ${SECI[9]}`}); B.push({k:"fa", x: pedido ? "Pedido de autorização." : "Consulta."}); }
+  else { B.push({k:"fq", x: `10 – ${SECI[9]}`}); B.push({k:"fa", x: pedido ? "“Autorização.”" : "“Consulta.”"}); }
   B.push({k:"gap"});
   if (!pedido && $("converter").checked)
     P("A despeito de constar no formulário que a presente demanda trata-se de uma consulta sobre a existência de conflito de interesses, por haver pretensão do exercício de uma atividade privada, de natureza continuada, o requerimento será tratado como um pedido de autorização para fins de análise sobre a existência de conflito de interesses, nos termos do art. 2º, II, da Portaria Interministerial nº 333, de 19 de setembro de 2013.");
-  const corpo = vari.corpo.filter(b => !b.opc || valoresOpc[atv.id + "/" + vari.id + "/" + b.opc.id]);
+  const comResumo = $("resumo").checked;
+  let corpo = vari.corpo.filter(b => !b.opc || valoresOpc[atv.id + "/" + vari.id + "/" + b.opc.id]);
   let iConc = -1; corpo.forEach((b, i) => { if (b.t === "p") iConc = i; });
+  const conclusao = corpo[iConc];
+  if (comResumo) corpo = corpo.filter(b => b === conclusao || b.t !== "p" || !REPETE_DEVER(b.x));
+  iConc = corpo.indexOf(conclusao);
+  if (cfg.secoes) B.push({k:"h", x:"II. FUNDAMENTOS"});
   corpo.forEach((b, i) => {
+    if (i === iConc){
+      if (comResumo){
+        const its = DEVERES.filter((_, j) => $("dev" + j).checked);
+        if (its.length){ P(preencher("Em resumo, em qualquer caso, {{g:o servidor|a servidora}} deve:", d)); its.forEach((t, j) => B.push({k:"it", x: `**${String.fromCharCode(97 + j)})** ${t}`})); B.push({k:"gap"}); }
+      }
+      if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
+      if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
+    }
     if (i === iConc) for (const p of (PRECEDENTES.itens||[]).filter(p => citados.has(p.n))){
       // precedentes citados entram imediatamente antes da conclusão
       P(`Registre-se, a propósito, a manifestação da Controladoria-Geral da União no Protocolo SeCI nº ${p.n}, respondido em ${dmy(p.d)} (resultado: “${p.r}”), assim ementada:`);
@@ -647,8 +708,8 @@ function blocos(){
   if (enc && encTxt) P(preencher(encTxt.replace("{{enquadramento}}", inc.length ? `, nos termos do${inc.length > 1 ? "s incisos" : " inciso"} ${incTxt} do art. 5º da Lei nº 12.813/2013` : ""), d));
   for (const s of cfg.sigs){
     if (s.despacho) for (const ln of s.despacho.split("\n")) B.push({k:"desp", x: ln});
-    B.push({k:"sgi", x:"Assinado digitalmente"});
-    B.push({k:"sg", x: (s.nome || "").toUpperCase() || falta("nome do signatário")});
+    B.push({k:"sgi", x:"Assinado Digitalmente"});
+    B.push({k:"sg", x: s.nome || falta("nome do signatário")});
     if (s.cargo) B.push({k:"sg", x: s.cargo});
     if (s.funcao) B.push({k:"sg", x: s.funcao});
   }
@@ -705,10 +766,12 @@ function documentXml(B){
       case "cab": x += paraXml('<w:spacing w:before="0" w:after="0" w:line="312" w:lineRule="atLeast"/><w:jc w:val="both"/>', runsXml(b.x,{sz:24,b:true})); break;
       case "em": x += paraXml(`<w:spacing w:before="${b.first?240:0}" w:after="0"/><w:ind w:left="5103"/><w:jc w:val="both"/>`, runsXml(b.x,{sz:24})); break;
       case "gap": x += paraXml('<w:spacing w:before="0" w:after="0"/>', ""); break;
-      case "p": x += paraXml('<w:tabs><w:tab w:val="left" w:pos="708"/></w:tabs><w:spacing w:before="0" w:after="280"/><w:jc w:val="both"/>', runsXml(b.n + ".",{sz:24}) + tabRun + runsXml(b.x,{sz:24})); break;
+      case "h": x += paraXml('<w:keepNext/><w:spacing w:before="360" w:after="240"/><w:jc w:val="left"/>', runsXml(b.x,{sz:24,b:true})); break;
+      case "it": x += paraXml('<w:spacing w:before="0" w:after="200"/><w:ind w:left="2268"/><w:jc w:val="both"/>', runsXml(b.x,{sz:24})); break;
+      case "p": x += paraXml('<w:tabs><w:tab w:val="left" w:pos="1418"/></w:tabs><w:spacing w:before="0" w:after="280"/><w:jc w:val="both"/>', runsXml(b.n + ".",{sz:24}) + tabRun + runsXml(b.x,{sz:24})); break;
       case "fq": x += paraXml('<w:spacing w:before="0" w:after="0"/><w:ind w:left="2268"/><w:jc w:val="both"/>', runsXml(b.x,{sz:22,b:true})); break;
       case "fa": x += paraXml('<w:spacing w:before="0" w:after="0"/><w:ind w:left="2268"/><w:jc w:val="both"/>', runsXml(b.x,{sz:22})); break;
-      case "cit": x += paraXml('<w:spacing w:before="0" w:after="0"/><w:ind w:left="1410"/><w:jc w:val="both"/>', runsXml(b.x,{sz:22})); break;
+      case "cit": x += paraXml('<w:spacing w:before="0" w:after="0"/><w:ind w:left="1410"/><w:jc w:val="both"/>', runsXml(b.x,{sz:22,i:true})); break;
       case "desp": x += paraXml('<w:spacing w:before="240" w:after="0"/><w:ind w:firstLine="1418"/><w:jc w:val="both"/>', runsXml(b.x,{sz:24})); break;
       case "sgi": x += paraXml('<w:keepNext/><w:spacing w:before="480" w:after="0"/><w:jc w:val="center"/>', runsXml(b.x,{sz:22,i:true})); break;
       case "sg": x += paraXml('<w:keepNext/><w:spacing w:before="0" w:after="0"/><w:jc w:val="center"/>', runsXml(b.x,{sz:24})); break;
@@ -815,12 +878,12 @@ $("busca").oninput = listarAtividades;
 $("atividade").onchange = e => selecionarAtividade(e.target.value);
 $("cargoSel").onchange = () => { $("cargoOutro").style.display = $("cargoSel").value === "outro" ? "" : "none"; render(); };
 $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "consulta" ? "" : "none"; render(); };
-for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo"]) $(id).addEventListener("input", render);
+for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta"]) $(id).addEventListener("input", render);
 $("btnDocx").onclick = baixar;
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
 $("btnLimpar").onclick = () => {
   if (!confirm("Limpar os dados do servidor e da consulta? (As configurações da unidade são mantidas.)")) return;
-  for (const id of ["consulta","numero","processo","nome","matricula","unidade","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"]) $(id).value = "";
+  for (const id of ["consulta","numero","processo","nome","matricula","unidade","equipe","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"]) $(id).value = "";
   citados.clear(); ROMANOS.forEach((_, i) => $("inc" + i).checked = false); avisos(); listarPrecedentes();
   for (const k in valoresCampos) delete valoresCampos[k];
   $("sugestoes").innerHTML = ""; montarCampos(); render();
@@ -833,6 +896,10 @@ $("seciPerguntas").innerHTML = SECI.slice(0,9).map((q, i) => `<label for="q${i+1
 for (let i = 1; i <= 9; i++) $("q" + i).addEventListener("input", () => { avisos(); render(); if (i === 2) listarPrecedentes(); });
 $("incisos").innerHTML = ROMANOS.map((r, i) => `<label class="chk" style="margin:0"><input type="checkbox" id="inc${i}"> ${r}</label>`).join("");
 ROMANOS.forEach((_, i) => $("inc" + i).addEventListener("input", render));
+$("resumoItens").innerHTML = DEVERES.map((t, j) => `<label class="chk"><input type="checkbox" id="dev${j}" checked> ${escH(t.length > 110 ? t.slice(0,108) + "…" : t)}</label>`).join("");
+DEVERES.forEach((_, j) => $("dev" + j).addEventListener("input", render));
+$("secoes").checked = cfg.secoes !== false;
+$("secoes").oninput = e => { cfg.secoes = e.target.checked; salvarCfg(); render(); };
 listarPrecedentes();
 montarCfg(); listarAtividades(); render();
 </script>
