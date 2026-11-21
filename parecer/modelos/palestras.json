@@ -1,0 +1,407 @@
+{
+ "id": "palestras",
+ "nome": "Palestras e palestrante",
+ "descricao": "Use quando o servidor consulta ou pede autorização para proferir palestras, conferências, treinamentos ou cursos avulsos para público externo.",
+ "palavrasChave": [
+  "palestra",
+  "palestras",
+  "palestrante",
+  "conferência",
+  "seminário",
+  "evento externo",
+  "treinamento",
+  "curso",
+  "cursos e palestras",
+  "instrutor",
+  "expositor",
+  "coaching",
+  "matéria tributária",
+  "público externo",
+  "contadores",
+  "sindicato",
+  "associação de classe",
+  "procedimentos da rfb"
+ ],
+ "variantes": [
+  {
+   "id": "palestra_evento_externo_ressalvas",
+   "rotulo": "Palestra em evento externo – sem incompatibilidade material, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pede autorização para proferir palestra (tema geral/teórico) em evento externo promovido por entidade identificada, sem público com interesse em decisão do servidor.",
+   "fonte": "PAR 270/2018",
+   "assunto": "Pedido de autorização para ministrar palestra em evento externo.",
+   "ementaTitulo": "PALESTRA EM EVENTO EXTERNO.",
+   "ementa": [
+    "Pedido de autorização para ministrar palestra em evento externo. Não se vislumbra incompatibilidade material da palestra com o cargo ocupado, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nos termos do inciso I do art. 3º da Lei nº 12.813, de 2013, conflito de interesses é a situação gerada pelo confronto entre interesses públicos e privados que possam comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. Sua verificação, portanto, deve ser realizada caso a caso, levando-se em consideração as especificidades de cada situação concreta."
+    },
+    {
+     "t": "p",
+     "x": "O exercício do magistério por agentes públicos do Poder Executivo Federal é tratado na Orientação Normativa CGU nº 2, de 9 de setembro de 2014. De acordo com o artigo 2º dessa Orientação, o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813/2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente. O artigo 2º da Orientação também nos traz todas aquelas atividades que são consideradas magistério, dentre elas “capacitação ou treinamento, mediante cursos, palestras ou conferências”."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, compete {{g:ao servidor|à servidora}} a estrita observância das restrições impostas pela norma supracitada, conforme a 2ª parte do caput do art. 2º; os parágrafos 2º, 3º, 4º e 5º do mesmo artigo; assim como os artigos 3º, 4º, 5º e o parágrafo único do art. 6º da referida Orientação Normativa."
+    },
+    {
+     "t": "p",
+     "x": "Cabe registrar que é fundamental que a palestra a ser proferida {{g:pelo|pela}} consulente se restrinja apenas a aspectos gerais e teóricos sobre o tema. Esta ressalva é importante em razão de os servidores desta Secretaria da Receita Federal do Brasil (RFB) possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira de empresas, bem como de eventuais procedimentos fiscais ou aduaneiros a que estas podem estar ou ter sido submetidas."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, há o dever de guardar sigilo sobre as informações a que {{g:o servidor|a servidora}} teve acesso e conhecimento em função de seu cargo."
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, não se vislumbra incompatibilidade material da palestra ora pretendida com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que os assuntos tratados nela não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público, e desde que sejam observadas todas as ressalvas acima."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público.",
+     "opc": {
+      "id": "compat_horarios",
+      "rotulo": "Incluir parágrafo sobre compatibilidade de horários (após a conclusão, como no original)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência.",
+     "opc": {
+      "id": "demais_incisos",
+      "rotulo": "Incluir parágrafo sobre os demais incisos do art. 5º (após a conclusão, como no original)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente fica {{g:impedido|impedida}} de atuar em processo de interesse da entidade promotora do evento.",
+     "opc": {
+      "id": "impedimento_entidade",
+      "rotulo": "Incluir impedimento de atuar em processo da entidade promotora (após a conclusão, como no original)",
+      "padrao": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "cursos_palestras_procedimentos_rfb_conflito",
+   "rotulo": "Palestras/cursos sobre sistemas e procedimentos da RFB para público específico – configura conflito",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende ministrar, mediante remuneração, palestras, cursos ou treinamentos (e assessoria) sobre sistemas, rotinas e procedimentos da RFB, dirigidos a público específico (escritórios, contadores, empresas, usuários dos serviços) – atividade com caráter de consultoria.",
+   "fonte": "PAR 581/2021",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "PALESTRAS E CURSOS SOBRE MATÉRIAS INERENTES À RFB.",
+   "ementa": [
+    "Pedido de autorização para ministrar palestras e cursos sobre sistemas e procedimentos da RFB. Atividades incompatíveis. Configura conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Intenção descrita pelo servidor (completa a frase \"sua intenção é ...\")",
+     "exemplo": "ministrar cursos e palestras e, ainda, fornecer assessoria, tudo dirigido aos escritórios e pessoas físicas que são usuários das plataformas colocadas à disposição pela Receita Federal do Brasil",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "publico_alvo",
+     "rotulo": "Público a que se dirigem os eventos",
+     "exemplo": "escritórios profissionais e pessoas físicas",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "funcao_exercida",
+     "rotulo": "Função de chefia/confiança exercida (se houver)",
+     "exemplo": "Chefe do Centro de Atendimento",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública."
+    },
+    {
+     "t": "p",
+     "x": "A referida lei também estabelece as situações que configuram situação de conflito de interesse durante o exercício de cargo ou emprego no âmbito do Poder Executivo federal:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - divulgar ou fazer uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas;",
+      "II - exercer atividade que implique a prestação de serviços ou a manutenção de relação de negócio com pessoa física ou jurídica que tenha interesse em decisão do agente público ou de colegiado do qual este participe;",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;",
+      "V - praticar ato em benefício de interesse de pessoa jurídica de que participe o agente público, seu cônjuge, companheiro ou parentes, consanguíneos ou afins, em linha reta ou colateral, até o terceiro grau, e que possa ser por ele beneficiada ou influir em seus atos de gestão;",
+      "VI - receber presente de quem tenha interesse em decisão do agente público ou de colegiado do qual este participe fora dos limites e condições estabelecidos em regulamento; e",
+      "VII - prestar serviços, ainda que eventuais, a empresa cuja atividade seja controlada, fiscalizada ou regulada pelo ente ao qual o agente público está vinculado."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme descrito {{g:pelo servidor|pela servidora}}, sua intenção é {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "O exercício do magistério por agentes públicos do Poder Executivo Federal é tratado na Orientação Normativa CGU nº 2, de 9 de setembro de 2014. De acordo com o artigo 2º dessa Orientação, o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813/2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente. O artigo 2º da Orientação também nos traz todas aquelas atividades que são consideradas magistério, dentre elas “capacitação ou treinamento, mediante cursos, palestras ou conferências”."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o|a}} consulente da estrita observância das restrições impostas pela própria norma supracitada, conforme a 2ª parte do caput do art. 2º; os parágrafos 2º, 3º, 4º e 5º do mesmo artigo; artigos 3º, 4º, 5º e o parágrafo único do art. 6º da referida Orientação Normativa."
+    },
+    {
+     "t": "p",
+     "x": "Importante destacar alguns trechos da Orientação Normativa CGU nº 2/2014:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "[...]",
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "[...]",
+      "§ 4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "[...]",
+      "Art. 3º Quando a atividade de magistério ocorrer no interesse institucional do órgão ou entidade a que pertence o agente público indicado, é vedado o recebimento de remuneração de origem privada, ressalvada a possibilidade de indenização por transporte, alimentação e hospedagem paga, total ou parcialmente, pela instituição promotora.",
+      "[...]",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3º da Lei nº 12.813, de 2013.",
+      "Art. 6º As atividades referidas nesta Orientação Normativa dispensam a consulta acerca da existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada, previstos na Lei nº 12.813, de 2013.",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com as informações prestadas {{g:pelo servidor|pela servidora}}, os eventos serão direcionados a {{publico_alvo}}, transmitindo o conhecimento de informações publicadas ou disponibilizadas para o público externo."
+    },
+    {
+     "t": "p",
+     "x": "Ocorre que {{g:o|a}} consulente, além de ocupar o cargo de {{cargo}}, também exerce função administrativa, como {{funcao_exercida}}. Nessa qualidade, {{g:o servidor|a servidora}} é {{g:detentor|detentora}} de informações sigilosas, privilegiadas e estratégicas.",
+     "opc": {
+      "id": "funcao_chefia",
+      "rotulo": "Servidor também exerce função de chefia/confiança",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "As informações de que {{g:o servidor|a servidora}} é {{g:detentor|detentora}}, em razão das atribuições de seu cargo e da função de confiança, podem representar uma indevida vantagem competitiva aos demais concorrentes e um benefício ilícito para terceiros, situação que suscita potencial conflito de interesses entre a atividade pública e a atividade privada."
+    },
+    {
+     "t": "p",
+     "x": "Desse modo, tem-se que as informações privilegiadas a que {{g:o servidor|a servidora}} possui acesso, aliadas às atribuições desempenhadas no âmbito da RFB, quando contrapostas à natureza da atividade privada pretendida, representam um alto risco de que sua atuação privada se desenvolva com o comprometimento da instituição, podendo favorecer interesses próprios e de terceiros, em detrimento do interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Importante observar que a atividade pretendida, por não se tratar de eventos abertos ao público geral, sendo direcionado para {{publico_alvo}}, com interesses específicos nos procedimentos colocados à disposição pela RFB, passa a ter o caráter de consultoria, principalmente por ser sobre assunto relacionado ao cargo que {{g:o servidor|a servidora}} ocupa no serviço público federal."
+    },
+    {
+     "t": "p",
+     "x": "Para que a atividade de magistério não implique risco de conflito de interesses, há que se afastar a especificidade do público a que se dirige, que não deve ser composto por pessoas, físicas ou jurídicas, que tenham interesse inequívoco em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe."
+    },
+    {
+     "t": "p",
+     "x": "Também há que se considerar a instituição contratante do serviço de magistério, que, igualmente, não deve ter interesse em processos decisórios em que o agente público participe, tenha participado ou venha a participar."
+    },
+    {
+     "t": "p",
+     "x": "Há que se promover, ainda, a abstenção de ações de orientação e consultoria calcadas em situações concretas decorrentes da expertise profissional {{g:do interessado|da interessada}}, bem como do acesso a informações ínsitas ao ambiente institucional da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, conforme explanado acima, deve-se evitar atividades de consultoria sobre sistemas, rotinas e processos de trabalho inerentes às atividades tributária e aduaneira conduzidas pela RFB, pois não se constituem em atividade típica de magistério."
+    },
+    {
+     "t": "p",
+     "x": "Ressaltamos, nesse contexto, nos termos do art. 4º da Lei nº 12.813/2013, que cabe ao agente público federal o ônus de prevenir ou impedir situações de conflito de interesses, bem como de resguardar informação privilegiada, devendo o agente público resolver o interesse privado de forma a não prejudicar o desempenho da função pública ou o interesse coletivo."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, entende-se que o exercício das atividades pretendidas não se incluem nas atividades de magistério, conforme o disposto no § 2º, do art. 2º da ON CGU nº 2, de 09/09/2014, tornando-se incompatível, por haver conflito de interesses com o cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, ainda cabível no tema, tem-se que, de acordo com a Portaria SRF nº 695, de 21/07/1999, a participação de {{cargo_sigla}} como palestrante, mesmo fora de horário de trabalho, sobre matéria fiscal de competência legal ou regimental da Secretaria da Receita Federal do Brasil e destinados para público externo, depende de prévia autorização da Administração:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Depende de prévia autorização, a participação ativa de servidores da Secretaria da Receita Federal do Brasil (RFB), ainda que fora do horário de trabalho, em cursos, aulas, treinamentos, seminários, palestras, conferências, congressos e outros eventos similares relativos a matéria de competência da RFB, destinados a público externo, que não constituam curso regular reconhecido pelo Poder Público ou curso preparatório para concursos, na qualidade de professor, instrutor, palestrante, conferencista, expositor ou moderador. (Redação dada pelo(a) Portaria RFB nº 66, de 16 de janeiro de 2018)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício das atividades descritas {{g:pelo|pela}} consulente são materialmente incompatíveis com o cargo ocupado."
+    }
+   ]
+  },
+  {
+   "id": "palestras_publico_especifico_conflito",
+   "rotulo": "Palestras remuneradas sobre matéria tributária para público específico – configura conflito",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende ministrar palestras remuneradas sobre matéria tributária para público específico com interesse em decisões da RFB (associações de classe, sindicatos, conselhos profissionais), não abertas ao público em geral.",
+   "fonte": "INF 099/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PALESTRAS SOBRE MATÉRIA TRIBUTÁRIA.",
+   "ementa": [
+    "Consulta sobre o exercício de palestras sobre matéria tributária. Público específico. Configura conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "publico_alvo",
+     "rotulo": "Público-alvo das palestras",
+     "exemplo": "associações de classe, sindicatos e conselhos profissionais",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "temas",
+     "rotulo": "Temas abordados",
+     "exemplo": "questões tributárias federais e o cumprimento de obrigações acessórias",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nos termos do inciso I do art. 3º da Lei nº 12.813, de 2013, conflito de interesses é a situação gerada pelo confronto entre interesses públicos e privados que possam comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. Sua verificação, portanto, deve ser realizada caso a caso, levando-se em consideração as especificidades de cada situação concreta."
+    },
+    {
+     "t": "p",
+     "x": "O exercício do magistério por agentes públicos do Poder Executivo Federal é tratado na Orientação Normativa CGU nº 2, de 9 de setembro de 2014. De acordo com o artigo 2º dessa Orientação, o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813/2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente. O artigo 2º da Orientação também nos traz todas aquelas atividades que são consideradas magistério, dentre elas “capacitação ou treinamento, mediante cursos, palestras ou conferências”."
+    },
+    {
+     "t": "p",
+     "x": "O artigo 6º, parágrafo único, da ON CGU nº 2 dispõe sobre a obrigatoriedade de realização de consulta sobre o conflito de interesses quando o magistério for direcionado para público específico e que possa ter interesse em decisão do agente ou da instituição ou de colegiado do qual o agente participe."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, {{g:o servidor|a servidora}} informa que o público alvo são {{publico_alvo}} e que os temas abordados envolvem {{temas}}."
+    },
+    {
+     "t": "p",
+     "x": "Nota-se que as palestras em tela não seriam colocadas à disposição do público em geral, e sim direcionadas a um público específico que têm interesses nas decisões tomadas pela RFB e que, eventualmente, poderão ser atendidos na unidade em que {{g:o servidor|a servidora}} exerce suas atividades ({{unidade}})."
+    },
+    {
+     "t": "p",
+     "x": "Tendo em vista o exposto, no entendimento da {{orgao_corregedoria}}, a atividade pretendida {{g:pelo servidor|pela servidora}} configura conflito de interesses nos termos do inciso III do art. 5º da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Contudo, caso a Comissão de Ética Pública da Secretaria da Receita Federal do Brasil tenha entendimento diferente e conceda autorização, salientamos que é preciso verificar quais informações serão divulgadas nestas palestras, já que também há preocupação do ponto de vista disciplinar quanto à divulgação e utilização de informações de acesso restrito de forma a privilegiar interesses privados em detrimento do interesse público.",
+     "opc": {
+      "id": "ressalva_ceps",
+      "rotulo": "Incluir ressalva para o caso de a Comissão de Ética entender de forma diversa",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ainda cabível no tema, tem-se que, de acordo com a Portaria SRF nº 695, de 21/07/99, a participação de {{cargo_sigla}} como palestrante, mesmo fora de horário de trabalho, sobre matéria fiscal de competência legal ou regimental da Secretaria da Receita Federal do Brasil e destinados para público externo, depende de prévia autorização da Administração.",
+     "opc": {
+      "id": "portaria_695",
+      "rotulo": "Incluir menção à Portaria SRF nº 695/1999 (autorização prévia da Administração)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Destaca-se que, em razão de decisão judicial ainda não transitada em julgado, as obrigatoriedades contidas nesta portaria são inaplicáveis aos Auditores-Fiscais da RFB filiados ao Sindicato Nacional dos Auditores-Fiscais da RFB.",
+     "opc": {
+      "id": "decisao_judicial_sindifisco",
+      "rotulo": "Incluir nota sobre decisão judicial que afasta a Portaria SRF nº 695/1999 para AFRFB filiados ao sindicato (verificar situação atual)",
+      "padrao": false
+     }
+    }
+   ]
+  },
+  {
+   "id": "consulta_em_tese_nao_apreciada",
+   "rotulo": "Consulta genérica/em tese sobre cursos, palestras e coaching – encerramento por não preencher requisitos",
+   "resultado": "outro",
+   "quandoUsar": "A consulta não descreve situação concreta e individualizada (hipóteses abstratas, temas e público-alvo imprecisos), não atendendo à Portaria Interministerial MP/CGU nº 333/2013.",
+   "fonte": "INF 179/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA RELACIONADA À MINISTRAÇÃO DE CURSOS E PALESTRAS.",
+   "ementa": [
+    "Consulta relacionada à ministração de cursos e palestras. Consulta em tese e com referência a fatos genéricos. Não preenchimento dos requisitos estabelecidos na Portaria Interministerial MP/CGU nº 333, de 2013."
+   ],
+   "campos": [
+    {
+     "id": "atividades",
+     "rotulo": "Atividades consultadas não regulamentadas por normas específicas",
+     "exemplo": "coaching e palestras",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, faz-se necessário esclarecer que a Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013, disciplina os procedimentos para a consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada por servidor ou empregado público do Poder Executivo federal, no âmbito da competência atribuída à Controladoria-Geral da União (CGU) pelo § 1º do art. 4º e pelo art. 8º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Em seu art. 2º, inciso I, a referida Portaria estabelece que a consulta sobre a existência de conflito de interesses deve envolver situação concreta e individualizada. A mesma Portaria, em seu art. 3º, estabelece que a consulta deve sempre identificar o interessado, fazer referência a objeto determinado e descrever de forma contextualizada os elementos que suscitam a dúvida. O parágrafo único do mesmo artigo reforça esse ponto ao vedar a formulação de consultas em tese ou com referência a fatos genéricos."
+    },
+    {
+     "t": "p",
+     "x": "Essas restrições são necessárias tendo em vista a própria natureza da matéria. Nos termos do inciso I do art. 3º da Lei nº 12.813, de 2013, conflito de interesses é a situação gerada pelo confronto entre interesses públicos e privados que possam comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. Sua verificação, portanto, deve ser realizada caso a caso, levando-se em consideração as especificidades de cada situação concreta."
+    },
+    {
+     "t": "p",
+     "x": "A partir da consulta inicial e das informações complementares apresentadas {{g:pelo|pela}} consulente, verifica-se que não nos foi apresentada uma situação concreta, um caso específico, com objeto determinado e com descrição contextualizada dos elementos que suscitam dúvidas, mas sim uma consulta em tese e com referência a fatos genéricos."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O|A}} consulente especula diversas hipóteses/teses em sua consulta, que chamam a atenção não somente pelo seu elevado grau de abstração, como também pela constante imprecisão e incerteza ao nos informar sobre as diversas atividades consultadas, o que afronta gravemente a natureza das consultas sobre existência conflito de interesses disciplinada na Portaria Interministerial MP/CGU nº 333, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, chamamos a atenção para o fato de que a presente consulta remete a atividades, tais como {{atividades}}, que não são regulamentadas por normas específicas que por si só permitam a esta Corregedoria ter concretude do que elas abrangem, tal como ocorre, a título de exemplo, com os médicos, dentistas, psicólogos e engenheiros."
+    },
+    {
+     "t": "p",
+     "x": "Ou seja, em casos como o da presente consulta é fundamental e necessário que nos seja apresentado um caso concreto, determinado e contextualizado."
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, entendemos que a presente consulta deve ser encerrada por não preencher os requisitos estabelecidos na Portaria Interministerial MP/CGU nº 333, de 2013."
+    }
+   ]
+  }
+ ]
+}

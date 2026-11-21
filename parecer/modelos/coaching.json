@@ -1,0 +1,525 @@
+{
+ "id": "coaching",
+ "nome": "Coaching e mentoria",
+ "descricao": "Use quando o servidor pretende atuar como coach ou mentor (life coaching, coaching para concursos, palestras e treinamentos de desenvolvimento pessoal), como pessoa física, contratado ou sócio cotista de empresa.",
+ "palavrasChave": [
+  "coaching",
+  "coach",
+  "life coaching",
+  "life coach",
+  "mentoria",
+  "mentor",
+  "coaching para concursos",
+  "coachee",
+  "desenvolvimento pessoal",
+  "palestrante",
+  "palestras",
+  "treinamentos",
+  "orientação de estudos",
+  "concursos públicos",
+  "programação neurolinguística",
+  "pnl",
+  "produtividade",
+  "emagrecimento",
+  "mei",
+  "sócio cotista"
+ ],
+ "variantes": [
+  {
+   "id": "coaching_pessoa_fisica",
+   "rotulo": "Coaching pessoal (life coaching) como pessoa física – não configura conflito, desde que observadas as ressalvas (com análise opcional sobre MEI)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende atuar em nome próprio como coach (life coaching, saúde, carreira etc.); marque o bloco MEI se houver dúvida sobre atuar como MEI ou por pessoa jurídica própria.",
+   "fonte": "PAR 058/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "COACHING.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de {{descricao_atividade}} concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Modalidade de coaching",
+     "exemplo": "life coaching para saúde e emagrecimento",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III do artigo 5º da Lei nº 12.813/2013, verifica-se que o exercício da atividade descrita {{g:pelo consulente|pela consulente}}, {{descricao_atividade}}, por si só, não é materialmente incompatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais exerça o ofício de coaching."
+    },
+    {
+     "t": "p",
+     "x": "Em análise mais detida da normatização pertinente, observamos que a Lei nº 12.813/2013, em seu artigo 3º, inciso I, dispõe que não só a atividade, mas de uma forma mais genérica a situação por ela ocasionada, pode ser ensejadora de conflito de interesses se, de alguma forma, comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública, senão vejamos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I – conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública; e"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, além das hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, que só podem ser aferidas quando do exercício efetivo da atividade privada e cuja ocorrência deve {{g:o servidor interessado|a servidora interessada}} impedir, cabem ainda cautelas adicionais pertinentes ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Frise-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, conforme estatuído na lista de proibições passíveis de penalidades administrativas elencadas no artigo 117, inciso XVIII, da Lei nº 8.112/90:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XVIII – exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ademais, tendo em vista o princípio da lealdade, e como imperativo à prevenção da utilização do prestígio do cargo público na atividade privada, é proibido o uso da imagem e dos símbolos institucionais de forma privada na atividade de coaching, por estar dissociada do interesse público do trabalho. O que se tutelam aqui são a imagem e a credibilidade externa da instituição, que não podem estar sujeitas a uso de interesse unicamente privado, pela própria impossibilidade de se dispor do interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, no que diz respeito à forma através da qual a atividade pleiteada pode ser exercida, cabe salientar que o pedido de autorização formulado por intermédio do SeCI é analisado com a finalidade de verificar se há, ou não, conflito de interesses de acordo com a Lei nº 12.813. Entretanto, dada a correlação com a área disciplinar e considerando os princípios do formalismo moderado e da economia processual (previstos na Lei nº 9.784, de 29 de janeiro de 1999), o referido pedido também será analisado como uma consulta a esta Corregedoria.",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990 (Lei nº 8.112/1990), define que:",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "X – participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário; (Redação dada pela Lei nº 11.784, de 2008) (grifo nosso)."
+     ],
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Dessa maneira, a Lei em comento proíbe ao servidor público participar de gerência ou exercer administração de sociedade privada, personificada ou não, e exercer o comércio. Dado que o objetivo da norma é coibir o desvio de comprometimento do servidor e evitar que o cargo público o beneficie indevidamente, ou à sociedade da qual ele participe, essa previsão legal abrange o Microempreendedor Individual (MEI).",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Resolução CGSN nº 140, de 22 de maio de 2018, define como Microempreendedor Individual (MEI):",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 100. Considera-se MEI o empresário a que se refere o art. 966 do Código Civil ou o empreendedor que exerça as atividades de industrialização, comercialização e prestação de serviços no âmbito rural, optante pelo Simples Nacional, que tenha auferido receita bruta acumulada nos anos-calendário anteriores e em curso de até R$ 81.000,00 (oitenta e um mil reais) e que: (Lei Complementar nº 123, de 2006, art. 18-A, § 1º e § 7º, inciso III)",
+      "I – exerça, de forma independente, apenas as ocupações constantes do Anexo XI desta Resolução; (Lei Complementar nº 123, de 2006, art. 18-A, §§ 4º-B e 14) (Redação dada pelo(a) Resolução CGSN nº 145, de 11 de junho de 2019).",
+      "II – possua um único estabelecimento; (Lei Complementar nº 123, art. 18-A, §4º, inciso II)",
+      "III – não participe de outra empresa como titular, sócio ou administrador; (Lei Complementar nº 123, de 2006, art. 18-A, § 4º, inciso III); e",
+      "IV – não contrate mais de um empregado, observado o disposto no art. 105. (Lei Complementar nº 123, de 2006, art. 18-C) (grifo nosso)"
+     ],
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "De acordo com a Resolução, o MEI é o empresário a que se refere o art. 966 do Código Civil de 2002. A referida legislação assim disciplina:",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Código Civil de 2002, art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços."
+     ],
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Além disso, a Resolução CGSN nº 140, de 22 de maio de 2018, permite ao MEI apenas contratar um empregado, observado o disposto no art. 105, que estabelece:",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 105. O MEI poderá contratar um único empregado que receba exclusivamente 1 (um) salário mínimo previsto em lei federal ou estadual ou o piso salarial da categoria profissional, definido em lei federal ou por convenção coletiva da categoria (Lei Complementar nº 123, de 2006, art. 18-C, § 1º)",
+      "I – deverá reter e recolher a contribuição previdenciária devida pelo segurado a seu serviço, na forma estabelecida pela lei, observados prazo e condições estabelecidos pela RFB;",
+      "II – ficará obrigado a prestar informações, relativas ao segurado a seu serviço, e deve cumprir o disposto no inciso IV do art. 32 da Lei nº 8.212, de 1991;",
+      "III – estará sujeito ao recolhimento da CPP para a Seguridade Social, a cargo da pessoa jurídica, de que trata o art. 22 da Lei nº 8.212, de 1991, calculada à alíquota de 3% (três por cento) sobre o salário de contribuição previsto no caput.",
+      "§ 2º Nos casos de afastamento legal do único empregado do MEI, será permitida a contratação de outro empregado, inclusive por tempo determinado, até que cessem as condições do afastamento, na forma estabelecida pelo Ministério do Trabalho e Emprego. (Lei Complementar nº 123, de 2006, art. 18-C, § 2º)",
+      "§ 3º Não se incluem no limite de que trata o caput valores recebidos a título de horas extras e adicionais de insalubridade, periculosidade e por trabalho noturno, bem como os relacionados aos demais direitos constitucionais do trabalhador decorrentes da atividade laboral, inerentes à jornada ou condições do trabalho, e que incidem sobre o salário. (Lei Complementar nº 123, de 2006, art. 18-C)",
+      "§ 4º A percepção, pelo empregado, de valores a título de gratificações, gorjetas, percentagens, abonos e demais remunerações de caráter variável é considerada hipótese de descumprimento do limite de que trata o caput. (Lei Complementar nº 123, de 2006, art. 18-C)"
+     ],
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "O empregado a ser contratado pelo MEI, portanto, deve perceber, exclusivamente, 1 (um) salário mínimo, respeitadas as regras dispostas no art. 105 da Resolução em comento.",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por esses motivos, verifica-se que o exercício da atividade privada como MEI viola o art. 117, X, da Lei nº 8.112/1990.",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "De acordo com a Controladoria-Geral da União (CGU):",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Enunciado CGU/CCC nº 8, de 2019: “Vedação de Exercício de Comércio. A proibição ao exercício de comércio prevista no art. 117, X, da Lei nº 8.112, de 11 de dezembro de 1990, veda a atuação do servidor público federal como empresário individual ou como administrador de Eireli Empresária”."
+     ],
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Caso {{g:o consulente|a consulente}} deseje criar uma pessoa jurídica para exercer a atividade pleiteada, existe a possibilidade de constituir uma Empresa Individual de Responsabilidade Limitada (EIRELI), nos termos do artigo 980-A do Código Civil de 2002, ou compor uma sociedade na condição de sócio não administrador. Em ambos os casos, para que não haja violação ao disposto no artigo 117, inciso X, da Lei nº 8.112/1990, deverá ser nomeado um terceiro para exercer as funções de administração da entidade.",
+     "opc": {
+      "id": "mei",
+      "rotulo": "Servidor pergunta se pode atuar como MEI / por pessoa jurídica própria: incluir análise do art. 117, X, da Lei nº 8.112/1990",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "coaching_pessoa_fisica_simples",
+   "rotulo": "Coaching como pessoa física (redação resumida; eventual pessoa jurídica exige nova consulta) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que atuará como coach em nome próprio e apenas cogita, sem detalhar, constituir pessoa jurídica no futuro.",
+   "fonte": "PAR 301/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "COACHING.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de {{descricao_atividade}}, via pessoa física, concomitante com a atuação no cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Modalidade(s) de coaching",
+     "exemplo": "life coaching, coaching esportivo e coaching de produtividade",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, ressalte-se que esta consulta será analisada sob o prisma de ser praticada {{g:pelo consulente|pela consulente}} apenas como pessoa física. Caso {{g:o consulente|a consulente}} concretize a sua intenção conjectural de executar a atividade de coaching por intermédio de pessoa jurídica, será necessária a formulação de nova consulta, com a apresentação dos detalhes da natureza jurídica e administração da pessoa jurídica, uma vez que não é possível realizar uma análise concreta sem o adequado detalhamento, tendo em vista as multiplicidades de formas jurídicas existentes e a impossibilidade de se exercer gerência ou a administração de sociedades."
+    },
+    {
+     "t": "p",
+     "x": "Feito tal esclarecimento, analisando o pleito sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, concluímos que o exercício das atividades descritas {{g:pelo consulente|pela consulente}}, {{descricao_atividade}}, é materialmente compatível com o cargo e a função ocupados, uma vez que os assuntos não envolvem conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil (RFB)."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo as pessoas para as quais exerça a atividade de coaching."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, e que os assuntos tratados no exercício dessa atividade privada não podem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao consulente|à consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades expressas {{g:pelo servidor|pela servidora}}, via pessoa física, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "coaching_concursos",
+   "rotulo": "Coaching para concursos (pessoa física ou contratado por empresa de coaching) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que orientará candidatos a concursos públicos em nome próprio ou mediante contrato de prestação de serviços com empresa de coaching, sem ser sócio(a) dela.",
+   "fonte": "PAR 050/2019; PAR 042/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "COACHING PARA CONCURSOS.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de coaching para concursos.",
+    "Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "nome_empresa",
+     "rotulo": "Empresa contratante (somente se marcado o bloco da empresa)",
+     "exemplo": "XYZ Coaching S/A",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_empresa",
+     "rotulo": "Atividade registrada da empresa (CNAE)",
+     "exemplo": "atividade de treinamento em desenvolvimento profissional e gerencial (CNAE 85.99-6-04)",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verificou-se nos bancos de dados da Receita Federal que o CNPJ informado trata-se da empresa {{nome_empresa}}, empresa ativa e registrada como {{atividade_empresa}}.",
+     "opc": {
+      "id": "empresa_contratante",
+      "rotulo": "Há contrato de prestação de serviços com empresa de coaching: registrar verificação do CNPJ",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade privada de coaching para concursos, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Em análise mais detida da norma, observamos que a Lei nº 12.813, de 2013, em seu art. 3º, inciso I, dispõe que não só a atividade, mas de forma mais genérica a situação por ela ocasionada pode ser ensejadora de conflito de interesses se, de alguma forma comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I – conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública; e"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, além das hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, que só podem ser aferidas quando do exercício efetivo da atividade privada e cuja ocorrência deve {{g:o servidor|a servidora}} impedir, cabem ainda cautelas adicionais pertinentes ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Veja-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, conforme estatuído na lista de proibições passíveis de penalidades administrativas elencadas no art. 117, XVIII, da Lei nº 8.112, de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XVIII – exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Considerando que a resposta ao item 3 do formulário foi negativa, concluímos que {{g:o postulante|a postulante}} pretende exercer a atividade de coaching como pessoa física.",
+     "opc": {
+      "id": "pessoa_fisica",
+      "rotulo": "Resposta negativa ao item 3 do formulário: registrar que a atividade será exercida como pessoa física",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A atividade de coaching se reveste de um caráter de acompanhamento. Tendo em vista esse pilar da atividade, que se presume contínuo e diário, e que a princípio, não se conhecem quantas pessoas são ou serão orientadas pelo coach, é necessário que {{g:o consulente|a consulente}} mantenha registro, em relação a todas as pessoas por {{g:ele orientadas|ela orientadas}}, dos dias, horários e atividades despendidos direta ou indiretamente (atividades de preparação) neste acompanhamento, para que se possam aferir tanto a permanência da condição de ausência de conflito de interesses como a manutenção do respeito às condicionantes de horário diante do volume de pessoas orientadas."
+    },
+    {
+     "t": "p",
+     "x": "Para esta aferição, é necessário que também constem nos registros as informações sobre o início e o término do acompanhamento de cada orientado, de forma compatível com os dados constantes nos contratos celebrados."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, tendo em vista o princípio da lealdade, e como imperativo à prevenção da utilização do prestígio do cargo público na atividade privada, é proibido o uso da imagem e dos símbolos institucionais de forma privada na atividade de coaching, por estar dissociada do interesse público do trabalho. O que se tutelam aqui são a imagem e a credibilidade externa da instituição, que não podem estar sujeitas a uso de interesse unicamente privado, pela própria impossibilidade de se dispor de interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Ainda sobre a promoção da atividade de coaching, não se percebe, por outro lado, nenhum conflito de interesses no fato de {{g:o consulente|a consulente}} utilizar para esse fim informações sobre o sucesso obtido na aprovação em concursos públicos, características pessoais ou outros conhecimentos que tenha obtido em esfera privada, desde que não relacionados com o munus público.",
+     "opc": {
+      "id": "promocao_concursos",
+      "rotulo": "Coaching para concursos: incluir parágrafo sobre uso, na divulgação, do sucesso obtido em concursos",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de coaching informado {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "coaching_socio_cotista",
+   "rotulo": "Coaching por meio de pessoa jurídica (sócio cotista sem administração) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que presta coaching, mentoria, palestras ou aulas em curso preparatório por intermédio de empresa da qual é sócio(a) cotista, administrada por terceiro (ex.: cônjuge).",
+   "fonte": "PAR 119/2019; PAR 118/2019; PAR 121/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "COACHING.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de {{descricao_atividade}} concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade(s) pleiteada(s)",
+     "exemplo": "coaching para concursos públicos",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "nome_empresa",
+     "rotulo": "Razão social da empresa",
+     "exemplo": "XYZ Coaching e Concursos Ltda.",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_empresa",
+     "rotulo": "Atividades econômicas da empresa (CNAE), como aparecerão após “tendo como”",
+     "exemplo": "atividade econômica principal os cursos preparatórios para concursos (CNAE 85.99-6-05) e como secundária o treinamento em desenvolvimento profissional e gerencial (CNAE 85.99-6-04)",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, cumpre ressaltar que, após verificação no banco de dados da RFB, o Cadastro Nacional da Pessoa Jurídica (CNPJ) informado {{g:pelo consulente|pela consulente}} refere-se à entidade {{nome_empresa}}, empresa ativa, tendo como {{atividade_empresa}}. Ademais, constatou-se que {{g:o servidor interessado é sócio|a servidora interessada é sócia}} da referida empresa, sem poder de administração/gerência."
+    },
+    {
+     "t": "p",
+     "x": "Em primeiro plano, deve-se atentar para o imperativo quanto à não participação {{g:do servidor|da servidora}} em funções gerenciais ou de administração da empresa {{nome_empresa}}, ainda que informal e eventualmente, de forma a não incorrer na infração prevista no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, a seguir transcrito:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III do artigo 5º da Lei nº 12.813/2013, verifica-se que o exercício da atividade descrita {{g:pelo consulente|pela consulente}}, {{descricao_atividade}}, por si só, não é materialmente incompatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais exerça tal ofício."
+    },
+    {
+     "t": "p",
+     "x": "Em análise mais detida da normatização pertinente, observamos que a Lei n° 12.813/2013, em seu artigo 3°, inciso I, dispõe que não só a atividade, mas de uma forma mais genérica a situação por ela ocasionada, pode ser ensejadora de conflito de interesses se, de alguma forma, comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública, senão vejamos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública; e”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, além das hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, que só podem ser aferidas quando do exercício efetivo da atividade privada e cuja ocorrência deve {{g:o servidor interessado|a servidora interessada}} impedir, cabem ainda cautelas adicionais pertinentes ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Frise-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, conforme estatuído na lista de proibições passíveis de penalidades administrativas elencadas no artigo 117, inciso XVIII, da Lei n° 8.112/90:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XVIII - exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A atividade de coaching se reveste de um caráter de acompanhamento. Tendo em vista esse pilar da atividade, que se presume contínuo e diário, e que, a princípio, não se conhece quantas pessoas mais serão orientadas pelo coach, é necessário que a referida empresa mantenha registro em relação a todas as pessoas por {{g:ele orientadas|ela orientadas}}, dos dias, horários e atividades despendidas direta ou indiretamente (atividades de preparação) neste acompanhamento. Tais informações são necessárias para que se possa aferir tanto a permanência da condição de ausência de conflito de interesses, como a manutenção do respeito às condicionantes de compatibilidade de horários diante do volume de pessoas orientadas."
+    },
+    {
+     "t": "p",
+     "x": "Para esta aferição, é necessário que também constem nos referidos registros as informações sobre o início e o término do acompanhamento de cada orientado, de forma compatível com os dados constantes nos contratos celebrados."
+    },
+    {
+     "t": "p",
+     "x": "Em outra toada, considerando a abrangência que a atividade de coaching pode adquirir, com o risco de transbordar os limites da não ocorrência de conflito de interesses, a empresa deve registrar detalhadamente as receitas que aufere, efetuando a separação das receitas de coaching auferidas pela atividade descrita no item 2 do formulário deste pedido de autorização de quaisquer outras obtidas pela entidade. Isto vale para quaisquer outras receitas que sejam consideradas {{g:pelo consulente|pela consulente}} como extensão do conceito da atividade de coaching, ou por ela abarcadas."
+    },
+    {
+     "t": "p",
+     "x": "Cabe salientar que os controles e registros da pessoa jurídica são condição necessária para diferenciar a atividade objeto do presente pedido de outras, cuja compatibilidade com o cargo não foram analisadas, bem como para evitar que se use a empresa {{nome_empresa}} sem verdadeiro propósito negocial, apenas com finalidade de evasão fiscal e/ou trabalhista, situação que, se concretizada, possui interesse fiscal e, em se tratando de {{g:servidor|servidora}} da RFB, poderá acarretar interesse disciplinar ou ético, fora do escopo da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, tendo em vista o princípio da lealdade, e como imperativo à prevenção da utilização do prestígio do cargo público na atividade privada, é proibido o uso da imagem e dos símbolos institucionais de forma privada na atividade de coaching, por estar dissociada do interesse público do trabalho. O que se tutelam aqui são a imagem e a credibilidade externa da instituição, que não podem estar sujeitas a uso de interesse unicamente privado, pela própria impossibilidade de se dispor do interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Ainda sobre a promoção da atividade de coaching, não se percebe, por outro lado, nenhum conflito de interesses no fato de {{g:o consulente|a consulente}} utilizar para esse fim informações sobre o sucesso obtido na aprovação em concursos públicos, características pessoais ou outros conhecimentos que tenha obtido em esfera privada, desde que não relacionados com o munus público.",
+     "opc": {
+      "id": "promocao_concursos",
+      "rotulo": "Coaching para concursos: incluir parágrafo sobre uso, na divulgação, do sucesso obtido em concursos",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

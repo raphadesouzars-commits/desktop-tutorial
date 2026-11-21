@@ -1,0 +1,238 @@
+{
+ "id": "empresa_privada",
+ "nome": "Empresa privada – sociedade, gerência e administração",
+ "descricao": "Usar quando a consulta trata de participar de empresa privada como sócio ou de exercer gerência/administração de empresa (inclusive durante licença para tratar de interesses particulares ou afastamento).",
+ "palavrasChave": [
+  "empresa privada",
+  "sócio de empresa",
+  "sociedade empresária",
+  "ltda",
+  "abrir empresa",
+  "cnpj",
+  "gerência",
+  "administração de empresa",
+  "administrador",
+  "sócio-gerente",
+  "sócio administrador",
+  "licença para tratar de interesses particulares",
+  "licença sem remuneração",
+  "afastamento judicial",
+  "empresa inativa",
+  "empresa familiar"
+ ],
+ "variantes": [
+  {
+   "id": "socio_sem_gerencia",
+   "rotulo": "Participação como sócio em empresa privada – não há impedimento, desde que sem gerência ou administração",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor consulta se pode ser sócio de empresa privada (ex.: sociedade limitada com cônjuge, empresa inativa), sem participar da gerência ou administração.",
+   "fonte": "PAR 196/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SOCIEDADE EM EMPRESA.",
+   "ementa": [
+    "Consulta sobre a possibilidade de servidor participar como sócio em empresa. Inexistência de conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "descricao_objetivo",
+     "rotulo": "Objetivo do consulente (continua a frase \"tem por objetivo ...\")",
+     "exemplo": "participar de sociedade de uma empresa privada, que estaria inativa",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o|a}} consulente tem por objetivo {{descricao_objetivo}}."
+    },
+    {
+     "t": "p",
+     "x": "Face ao exposto acima, deve-se dar destaque ao disposto no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido: (Vide Medida Provisória nº 2.225-45, de 4.9.2001)",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário; (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Verifica-se, portanto, que não há impedimento de participação em sociedade privada, devendo se abster de participar da gerência ou administração de forma a não incorrer na infração prevista no inciso X, do art. 117, da Lei 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha informado a atividade econômica da empresa a ser constituída, ressalta-se que a mesma não deve ter como objeto atividade relacionada à área contábil, advocatícia, aduaneira ou tributária, de forma a não se criar nenhuma suspeição acerca da lealdade à instituição a que pertence.",
+     "opc": {
+      "id": "objeto_empresa",
+      "rotulo": "Servidor não informou a atividade econômica da empresa (alerta sobre áreas contábil, advocatícia, aduaneira ou tributária)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, entende-se que a condição de sócio em empresa privada não caracteriza exercício de atividade privada e, portanto, não há que se falar em atividade incompatível, inviabilizando-se a análise sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas outras situações que configuram conflito de interesses, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    }
+   ]
+  },
+  {
+   "id": "gerencia_administracao_em_licenca",
+   "rotulo": "Gerência/administração de empresa durante licença para tratar de interesses particulares – permitido (encaminhamento à Cogep, não à CEP)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende obter licença para tratar de interesses particulares (art. 91 da Lei 8.112) e, somente durante a licença, exercer a gerência ou administração de empresa privada.",
+   "fonte": "PAR 222/2017",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES ENTRE O EXERCÍCIO DA GERÊNCIA E ADMINISTRAÇÃO DE EMPRESA PRIVADA EM LICENÇA PARA TRATAR DE ASSUNTOS PARTICULARES.",
+   "ementa": [
+    "Consulta sobre a existência de conflito de interesses na licença do cargo de {{cargo}} para tratar de interesses particulares com o exercício da gerência e administração de empresa privada. Deferimento."
+   ],
+   "campos": [
+    {
+     "id": "descricao_empresa",
+     "rotulo": "Empresa a ser gerida (completa \"a gerência e a administração de ...\")",
+     "exemplo": "uma indústria de máquinas",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme descrito no item 2 do formulário, {{g:o servidor|a servidora}} pretende tirar licença para tratar de interesses particulares e exercer a gerência e a administração de {{descricao_empresa}}."
+    },
+    {
+     "t": "p",
+     "x": "Cabe esclarecer, inicialmente, que a análise sobre conflito de interesses não exclui a competência e a obrigação de avaliar a legalidade da consulta sob outros aspetos previstos na legislação de pessoal aplicável ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Essa avaliação se insere na autonomia conferida a esta Corregedoria para decidir sobre assuntos regidos pela legislação de pessoal que possam ter reflexo sobre o exercício das atividades privadas pretendidas."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, o artigo 13 da Lei nº 12.813, de 16 de maio de 2013, estabelece expressamente que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 13. O disposto nesta Lei não afasta a aplicabilidade da Lei nº 8.112, de 11 de dezembro de 1990, especialmente no que se refere à apuração das responsabilidades e possível aplicação de sanção em razão de prática de ato que configure conflito de interesses ou ato de improbidade nela previstos (grifo nosso)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Face ao exposto acima, deve-se dar destaque ao disposto no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido: (Vide Medida Provisória nº 2.225-45, de 4.9.2001)",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No entanto, como {{g:o servidor|a servidora}} pretende tirar licença para tratar de interesses particulares e só depois da licença exercer a gerência e administração, o caso em questão entra na exceção prevista no inciso II do parágrafo único do artigo 117, conforme descrito abaixo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "Parágrafo único. A vedação de que trata o inciso X do caput deste artigo não se aplica nos seguintes casos:",
+      "(…)",
+      "II - gozo de licença para o trato de interesses particulares, na forma do art. 91 desta Lei, observada a legislação sobre conflito de interesses."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, constata-se que diante da licença para tratar de interesses particulares, {{g:o servidor fica permitido|a servidora fica permitida}} a exercer a gerência e administração de empresa, afastando a vedação imposta pelo inciso X do artigo 117 da Lei 8.112/90."
+    },
+    {
+     "t": "p",
+     "x": "Assim, este caso será tratado como uma consulta a esta Corregedoria, que em decorrência de previsões legais expressas, esclarece que é permitido o exercício das atividades de gerência e administração de empresa diante da obtenção da licença para tratar de interesses particulares, de forma que se propõe o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep) para fins de cientificação {{g:do|da}} solicitante."
+    }
+   ]
+  },
+  {
+   "id": "administracao_vedada_servidor_afastado",
+   "rotulo": "Administração de empresa por servidor afastado do exercício do cargo por decisão judicial – vedado (art. 117, X)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor afastado/suspenso do exercício da função pública (com remuneração) pergunta se pode exercer atividade privada remunerada e, em especial, administrar empresa durante o afastamento.",
+   "fonte": "PAR 151/2020",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Consulta sobre possibilidade de atuar como administrador de empresas. Vedação prevista na Lei 8.112/90."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo|pela}} consulente, verifica-se que {{g:ele|ela}} se encontra {{g:afastado|afastada}}, por determinação judicial, do exercício do cargo, mas recebendo regularmente a remuneração."
+    },
+    {
+     "t": "p",
+     "x": "Observa-se, também, que {{g:o|a}} consulente não preencheu corretamente os campos constantes do formulário Seci, limitando-se a afirmar que estava {{g:afastado|afastada}} da função pública. A única informação relevante é a disposta no item 9, em que {{g:o interessado|a interessada}} questiona acerca da possibilidade de exercer alguma atividade privada remunerada enquanto perdurar seu afastamento, bem como sobre a possibilidade de atuar como {{g:administrador|administradora}} de empresa, sem contudo sequer informar o CNPJ e ramo de atividade da mesma.",
+     "opc": {
+      "id": "formulario_incompleto",
+      "rotulo": "Consulente não preencheu corretamente o formulário SeCI",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Em relação ao primeiro questionamento, é lícito {{g:ao interessado|à interessada}}, assim como a qualquer outro servidor, exercer atividade privada remunerada, desde que esta seja compatível com o exercício do cargo ou função e com o horário de trabalho. Nesse contexto, as disposições da lei 12.813/2013 são de suma importância, para que não se configure conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Em relação ao segundo ponto, cabe esclarecer que a análise sobre conflito de interesses não exclui a competência e a obrigação de avaliar a legalidade da consulta sob outros aspetos previstos na legislação de pessoal aplicável ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Essa avaliação se insere na autonomia conferida a esta Corregedoria para decidir sobre assuntos regidos pela legislação de pessoal que possam ter reflexo sobre o exercício das atividades privadas pretendidas."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, o artigo 13 da Lei nº 12.813, de 16 de maio de 2013, estabelece expressamente que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 13. O disposto nesta Lei não afasta a aplicabilidade da Lei nº 8.112, de 11 de dezembro de 1990, especialmente no que se refere à apuração das responsabilidades e possível aplicação de sanção em razão de prática de ato que configure conflito de interesses ou ato de improbidade nela previstos (grifo nosso)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Face ao exposto acima, deve-se dar destaque ao disposto no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido: (Vide Medida Provisória nº 2.225-45, de 4.9.2001)",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário; (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, afastada a incidência da Lei de Conflito de Interesses, este caso será tratado como uma consulta a esta Corregedoria que, em decorrência de previsões legais expressas, esclarece que não é permitido o exercício da atividade de administração de empresa mesmo na situação em que {{g:o servidor|a servidora}} se encontra {{g:afastado|afastada}} da função pública por determinação judicial, pois o vínculo com a administração pública permanece vigente, inclusive com a percepção da remuneração a que tem direito como ocupante do cargo de {{cargo}}."
+    }
+   ]
+  }
+ ]
+}

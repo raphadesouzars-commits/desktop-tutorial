@@ -1,0 +1,309 @@
+{
+ "id": "escritor",
+ "nome": "Escritor (publicação e venda de livros, site e blog)",
+ "descricao": "Use quando o servidor consulta ou pede autorização para escrever, publicar, divulgar ou vender livros e outras obras de sua autoria.",
+ "palavrasChave": [
+  "escritor",
+  "escritora",
+  "livro",
+  "livros",
+  "publicar livro",
+  "publicação",
+  "venda de livros",
+  "autor",
+  "autoria própria",
+  "e-book",
+  "ebook",
+  "editora",
+  "romance",
+  "blog",
+  "site",
+  "direitos autorais",
+  "obra literária",
+  "artigo"
+ ],
+ "variantes": [
+  {
+   "id": "escritor_comercializacao_livro_site_blog",
+   "rotulo": "Escritor que comercializa livro próprio e o divulga em site/blog – não configura conflito, desde que observadas as ressalvas (modelo completo)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor escreveu ou pretende escrever livro (sem relação com as atividades da RFB), comercializá-lo e divulgá-lo em site, blog ou redes sociais; análise completa do art. 117, X, da Lei 8.112 e do art. 966 do Código Civil (elemento de empresa, editora própria).",
+   "fonte": "PAR 247/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "COMERCIALIZAÇÃO DE LIVRO DE SUA PRÓPRIA AUTORIA, CRIAÇÃO DE SITE PARA SUA DIVULGAÇÃO E CRIAÇÃO DE UM BLOG PARA PROMOÇÃO PESSOAL COMO ESCRITOR.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de comercialização de livro de sua autoria e a criação de site para sua divulgação e possivelmente um blog para sua promoção pessoal como {{g:escritor|escritora}} com o cargo de {{cargo}} ({{cargo_sigla}}). Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "pretensao_comercial",
+     "rotulo": "O que o consulente pretende fazer com a obra (completa a frase \"assinalou que pretende ...\")",
+     "exemplo": "comercializar essa obra e criar um site para sua divulgação além de possivelmente criar um blog para sua promoção pessoal como escritor",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "meios",
+     "rotulo": "Obra e meios de divulgação (completa a frase \"o conteúdo ...\")",
+     "exemplo": "do livro, site e eventual blog",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta apenas sob o prisma do inciso III do art. 5º da Lei nº 12.813, poderíamos concluir que o exercício da atividade privada de escritor amador, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}. Contudo, {{g:o|a}} consulente assinalou que pretende {{pretensao_comercial}}. Sua atuação envolveria, então, atos de comércio."
+    },
+    {
+     "t": "p",
+     "x": "De pronto registramos a ressalva de que o conteúdo {{meios}}, não envolva conhecimentos específicos adquiridos no exercício de seu cargo público nem matéria relacionada às atividades desenvolvidas pela RFB."
+    },
+    {
+     "t": "p",
+     "x": "Diante das situações expostas, a seguir analisaremos em que termos e limites as atividades pretendidas {{g:pelo|pela}} consulente podem ser exercidas sem configurar a infração disciplinar tipificada no art. 117, inciso X, da Lei nº 8.112, de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De início cumpre registrar que o art. 117, inciso X, da Lei nº 8.112, de 1990, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o artigo supracitado, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A atividade de escritor pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil, para que não se configure a infração disciplinar tipificada no art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Precisamos delimitar o que é esse “elemento de empresa” do art. 966, parágrafo único, do novo Código Civil para que as informações fiquem claras."
+    },
+    {
+     "t": "p",
+     "x": "A princípio, está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares ou colaboradores."
+    },
+    {
+     "t": "p",
+     "x": "Essas atividades, ainda que realizadas de forma profissional, com objetivo de lucro, não se sujeitam ao regime jurídico empresarial, uma vez que não estariam organizadas sob a forma de empresa. Referidas atividades, em regra, são exercidas autonomamente/individualmente, ou no máximo sob a forma de Sociedades Simples."
+    },
+    {
+     "t": "p",
+     "x": "Nesse ponto cabe aproveitar a oportunidade para bem delimitar que um ponto é o escritor que obtém proveitos econômicos de suas obras com o auxílio de uma editora que as publica, e outro ponto bem diferente é o escritor que busca a obtenção de proveito econômico não apenas escrevendo livros, mas também “montando”/ “gerenciando” e/ou “administrando” a própria editora que os publica, ou seja, exercendo atividade empresarial."
+    },
+    {
+     "t": "p",
+     "x": "A situação de exercício de atividade empresarial fica ainda mais nítida quando a empresa comercializa “produtos” de terceiros. A título de exemplificação, o caso da editora do servidor que comercializa livros de outros autores, além dos livros do próprio servidor. Nestes casos o exercício da profissão intelectual de escritor constitui apenas um elemento de empresa (ao lado de outros profissionais), ou seja, estaria configurado o exercício de atividade empresarial e a infração disciplinar ao art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "A ideia do art. 966, parágrafo único, do novo Código Civil, é que a princípio a profissão intelectual não é empresarial por não compreender a organização de fatores de produção."
+    },
+    {
+     "t": "p",
+     "x": "A atividade/profissão intelectual será empresarial se presentes todos os elementos de uma empresa, ou seja, se presentes todos os requisitos do art. 966, caput do novo Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "Sobre o assunto, merecem destaque os Enunciados referentes à matéria aprovados na III Jornada de Direito Civil, realizada em 2002, bastante elucidativos e que vão ao encontro do que afirmamos até o momento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "193 – Art. 966: O exercício das atividades de natureza exclusivamente intelectual está excluído do conceito de empresa.",
+      "194 – Art. 966: Os profissionais liberais não são considerados empresários, salvo se a organização dos fatores de produção for mais importante que a atividade pessoal desenvolvida.",
+      "195 – Art. 966: A expressão “elemento de empresa” demanda interpretação econômica, devendo ser analisada sob a égide da absorção da atividade intelectual de natureza científica, literária ou artística, como um dos fatores da organização empresarial."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Reitera-se, todavia, que as atividades acima expostas devem ser desenvolvidas nos termos do parágrafo único do artigo 966 do Código Civil de 2002. Ademais, é importante repisar que o conteúdo {{meios}} não deve abordar conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício de seu cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "venda_livros_proprios",
+   "rotulo": "Venda de livros de autoria própria (internet/presencial) – não configura conflito, desde que observadas as ressalvas (modelo resumido)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor escritor pretende imprimir e vender seus próprios livros (pela internet ou presencialmente) e pergunta se isso configura ato de comércio; matéria dos livros estranha ao serviço público.",
+   "fonte": "PAR 259/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "VENDA DE LIVROS DE AUTORIA PRÓPRIA.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de venda de livros pela internet e presencialmente com o cargo de {{cargo}} ({{cargo_sigla}}). Não configura conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta apenas sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 2013, poderíamos concluir que o exercício da atividade privada de escritor amador, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}. Contudo, {{g:o|a}} consulente assinalou que a atividade não se circunscreverá apenas na criação do material, mas também na venda deste, ou seja, sua atuação envolveria atos de comércio."
+    },
+    {
+     "t": "p",
+     "x": "Diante da situação exposta, a seguir analisaremos em que termos e limites as atividades pretendidas {{g:pelo|pela}} consulente podem ser exercidas sem configurar a infração disciplinar tipificada no artigo 117, inciso X, da Lei nº 8.112, de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 8.112, de 1990",
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração da sociedade privada personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, a atividade de escritor pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil, para que não se configure a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”, do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "A ideia do art. 966, parágrafo único, do novo Código Civil é que a princípio a profissão intelectual não é empresarial por não compreender a organização de fatores de produção."
+    },
+    {
+     "t": "p",
+     "x": "Está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares e colaboradores."
+    },
+    {
+     "t": "p",
+     "x": "Assim, não há óbice a que {{g:o|a}} consulente disponibilize seus livros através de sites pois, neste caso, {{g:o servidor escritor|a servidora escritora}} desempenharia apenas a atividade intelectual."
+    },
+    {
+     "t": "p",
+     "x": "Situação diversa seria se {{g:o servidor|a servidora}} desejasse atuar vendendo não apenas seus livros, mas também o de outros autores, uma vez que {{g:ele|ela}} atuaria além dos limites da atividade intelectual excetuada pelo código civil do conceito de empresário, seja como uma loja de comércio de livros, seja como uma própria editora."
+    },
+    {
+     "t": "p",
+     "x": "Sobre o assunto, merecem destaque os Enunciados referentes à matéria aprovados na III Jornada de Direito Civil, realizada em 2002, bastante elucidativos e que vão ao encontro do que afirmamos até o momento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "193 – Art. 966. O exercício das atividades de natureza exclusivamente intelectual está excluído do conceito de empresa.",
+      "194 – Art. 966. Os profissionais liberais não são considerados empresários, salvo se a organização dos fatores de produção for mais importante que a atividade pessoal desenvolvida.",
+      "195 – Art. 966. A expressão “elemento de empresa” demanda interpretação econômica, devendo ser analisada sob a égide da absorção das atividades intelectual, de natureza científica, literária ou artística, como um dos fatores da organização empresarial."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir a sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "publicacao_livro_modelo_curto",
+   "rotulo": "Publicação de livro de autoria própria – não é materialmente incompatível com o cargo (modelo curto)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pede autorização apenas para publicar livro de sua autoria (sem discussão sobre comercialização/ato de comércio).",
+   "fonte": "PAR 53/2020",
+   "assunto": "Sistema Eletrônico de Conflito de Interesses (SeCI)",
+   "ementaTitulo": "PEDIDO PARA PUBLICAÇÃO DE LIVRO DE AUTORIA PRÓPRIA.",
+   "ementa": [
+    "Pedido de autorização para publicação de livro {{tema_livro}}. A publicação do livro não é materialmente incompatível com o cargo de {{cargo_sigla}}."
+   ],
+   "campos": [
+    {
+     "id": "tema_livro",
+     "rotulo": "Tema do livro (completa a frase \"publicação de livro ...\")",
+     "exemplo": "sobre histórias acerca do cotidiano de atendente em Centro de Atendimento ao Contribuinte",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_obra",
+     "rotulo": "Descrição curta da obra na conclusão (completa a frase \"a publicação ...\")",
+     "exemplo": "do livro de histórias de cotidiano vivenciados",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve se pautar precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A atividade de {{g:escritor|escritora}} ou de publicação de um livro próprio, analisada sob a luz do inciso III do art. 5º da Lei nº 12.813, de 2013, não é, por si só, materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, a publicação {{descricao_obra}} {{g:pelo servidor|pela servidora}} {{nome}}, não é materialmente incompatível com o cargo de {{cargo}}, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,323 @@
+{
+ "id": "pratico",
+ "nome": "Prático e Praticante de Prático (praticagem)",
+ "descricao": "Usar quando o servidor pede autorização para exercer a atividade de Prático da Marinha Mercante ou para participar do Programa de Qualificação de Praticante de Prático.",
+ "palavrasChave": [
+  "prático",
+  "praticante de prático",
+  "praticagem",
+  "marinha mercante",
+  "zona de praticagem",
+  "programa de qualificação",
+  "normam 12",
+  "aquaviário",
+  "manobra de navios",
+  "empresa de praticagem",
+  "capitania dos portos",
+  "autoridade marítima",
+  "processo seletivo para prático",
+  "treinamento supervisionado"
+ ],
+ "variantes": [
+  {
+   "id": "pratico_conflito",
+   "rotulo": "Prático da Marinha Mercante – configura conflito de interesses (art. 5º, III e VII; Portaria RFB nº 444/2015), ainda que em licença",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor da carreira de auditoria (AFRFB/ATRFB) pede autorização para exercer a atividade de Prático (inclusive como sócio de empresa de praticagem), mesmo alegando lotação fora da aduana ou afastamento por licença para tratar de interesses particulares.",
+   "fonte": "INF 049/2017",
+   "assunto": "Pedido de autorização para o exercício da atividade de Prático da Marinha Mercante do Brasil.",
+   "ementaTitulo": "PRÁTICO DA MARINHA MERCANTE.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de Prático da Marinha Mercante do Brasil. Configura conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "alegacao_consulente",
+     "rotulo": "Alegação do consulente sobre lotação/atividades (transcrição literal)",
+     "exemplo": "Não vislumbro incompatibilidade entre as atividades de praticagem e as do cargo, pois minha lotação é em unidade de tributos internos, sem qualquer relação com a área aduaneira",
+     "obrigatorio": false,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Corregedoria da Receita Federal do Brasil já manifestou, em diversas oportunidades, seu posicionamento quanto à incompatibilidade entre o cargo de Auditor-Fiscal da Receita Federal do Brasil e a atividade de Prático."
+    },
+    {
+     "t": "p",
+     "x": "A Controladoria-Geral da União (CGU), em resposta a pedido de autorização, por meio da Nota Técnica nº 853/2015/CGINT/DIACI/STPC/CGU-PR, considerou conflitante o exercício da atividade de Prático da Marinha Mercante e o cargo de AFRFB, concluindo que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "11. Desta forma, o exercício da Atividade de prático da Marinha Mercante pelo servidor consulente envolve a prestação de serviços a empresas de transporte marítimo e tais empresas têm parte essencial de sua atividade precípua, qual seja, o desembaraço aduaneiro, fiscalizada, controlada e, em boa medida regulada pelo ente ao qual o servidor consulente está vinculado. Portanto, a Receita Federal do Brasil é, por meio de seus auditores, responsável por fiscalizar, controlar e regulamentar parte essencial dessa atividade, sem a qual o ato de transportar não se concretizaria de forma regular e dentro da legalidade.",
+      "12. Diante do exposto anteriormente e com base no que diz o inciso VII do art. 5° da Lei n° 12.813/2013, a vedação a todo agente público federal de prestar serviços, ainda que eventuais, a empresas cuja atividade seja controlada, fiscalizada ou regulada pelo ente ao qual ele estiver vinculado, nos resta claro o enquadramento do caso em tela no dispositivo citado. Além de evitar a situação descrita, o referido inciso VII, teria o objetivo de evitar a confusão entre o fiscal e fiscalizado, que poderia comprometer o trabalho de fiscalização e a confiança do público na independência, imparcialidade e moralidade desse agente e do serviço público prestado por seu órgão."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Verifica-se que, na argumentação, a CGU entende que o exercício da atividade de Prático de Marinha Mercante é gerador de conflito de interesse, tendo em vista o disposto no inciso VII, art. 5º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, a Portaria RFB n° 444, de 23 de março de 2015, indicou algumas atividades consideradas incompatíveis com os cargos da Carreira de Auditoria da Receita Federal do Brasil, entre elas, a praticagem:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1° Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "(...)",
+      "III - praticagem."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, importante destacar que tanto a Lei nº 12.813, de 2013, quanto a Lei nº 8.112, de 1990, tratam da incompatibilidade de uma determinada atividade em relação às atribuições legais do cargo público ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Isto significa que, na Secretaria da Receita Federal do Brasil, com sua intensa capilaridade de presença institucional no território nacional e que tem suas atividades subdivididas em diversos processos de trabalho, de nada importam as unidades de lotação e de exercício, a localidade onde se situam e as tarefas concretamente desempenhadas pelo servidor, sejam elas efetivamente voltadas à matéria-fim, em tributos internos ou em comércio exterior, sejam elas contidas em tarefas-meio meramente corporativas e administrativas."
+    },
+    {
+     "t": "p",
+     "x": "A incompatibilidade de uma determinada atividade se verifica em relação às atribuições do cargo e tem sua configuração vinculada à integral extensão das atribuições legais deste cargo, independentemente das condições momentâneas, de tempo e de local, e individuais com que cada servidor tem sua lotação, seu exercício e sua localização interna, até mesmo porque, em razão da mobilidade de tais condições, o perigo de lesão não se afasta, permanecendo o potencial, o possível conflito de interesses descritos no artigo 3º da Lei nº 11.890, de 24 de dezembro de 2008, lei esta que trata das Carreiras e dos Cargos da Administração Pública Federal, e, especificamente no artigo citado, trata da Carreira de Auditoria da Receita Federal do Brasil, e no artigo 4º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Assim, além da incompatibilidade do artigo 5º, inciso VII da Lei 12.813, de 2013, deve-se enfatizar também a ocorrência de incompatibilidade no exercício da função, ou seja, a incompatibilidade de uma determinada atividade em relação às atribuições legais do cargo, na forma do artigo 5º, inciso III da Lei 12.813, de 2013:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei 12.813, de 2013.",
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, mostra-se inócua a seguinte alegação apresentada {{g:pelo|pela}} consulente:",
+     "opc": {
+      "id": "alegacao_lotacao",
+      "rotulo": "Consulente alega que sua lotação/atividades não têm relação com a área aduaneira ou com o local da praticagem",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“{{alegacao_consulente}}”"
+     ],
+     "opc": {
+      "id": "alegacao_lotacao",
+      "rotulo": "Consulente alega que sua lotação/atividades não têm relação com a área aduaneira ou com o local da praticagem",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Some-se que, a Lei 8.112, de 1990, permite a remoção de servidor com ou sem mudança de sede, ex officio, ou seja, no interesse da Administração Pública, conforme dispõe o artigo 36 e inciso I do parágrafo único, bastando o preenchimento apenas de duas condições para remoção, quais sejam, que o ato seja motivado e para desempenho de atividades condizentes com as do cargo no qual foi investido. A jurisprudência do STJ assim definiu:",
+     "opc": {
+      "id": "alegacao_lotacao",
+      "rotulo": "Consulente alega que sua lotação/atividades não têm relação com a área aduaneira ou com o local da praticagem",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Superior Tribunal de Justiça (STJ), Primeira Seção, Ministra Relatora Assusete Magalhães, Mandado de Segurança n.º 21.807/DF, DJ 15.03.2016: Ementa (...) II. Nos termos da jurisprudência pacífica do STJ, \"o ato administrativo de remoção deve ser motivado\" (STJ, AgRg no Resp 1.376.747/PE, Rel. Ministro HUMBERTO MARTINS, SEGUNDA TURMA, DJe de 05/06/2013).",
+      "III. Do mesmo modo, esta Corte entende que não incorre em desvio de poder a remoção realizada pela Administração, por interesse público, quando não vinculada à aplicação de sanção disciplinar, e quando o servidor é removido para o desempenho de atividades condizentes com as do cargo no qual foi investido, por concurso público. Nesse sentido: STJ, AgRg no RMS 37.675/SE, Rel. Ministro BENEDITO GONÇALVES, PRIMEIRA TURMA, DJe de 06/10/2014; RMS 25.512/RR, Rel. Ministra LAURITA VAZ, QUINTA TURMA, DJe de 19/12/2011. (grifos não são do original)"
+     ],
+     "opc": {
+      "id": "alegacao_lotacao",
+      "rotulo": "Consulente alega que sua lotação/atividades não têm relação com a área aduaneira ou com o local da praticagem",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que, diante de todo o exposto acima, todo integrante da Carreira de Auditoria da Receita Federal deve abster-se de qualquer atividade de praticagem, sob pena de incorrer em atividade incompatível, caracterizadora de Improbidade Administrativa."
+    },
+    {
+     "t": "p",
+     "x": "Por sua vez, compete analisar a argumentação {{g:do servidor|da servidora}} que pretende se afastar e solicitar licença para trato de interesses particulares.",
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ora, em primeiro lugar deve-se observar que a licença para tratar de interesses particulares (artigo 91 da Lei 8.112, de 11 de dezembro 1990) é concedida discricionariamente, no interesse da Administração Pública, e seu gozo pode ser interrompido a qualquer momento, caso haja interesse público:",
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 91. A critério da Administração, poderão ser concedidas ao servidor ocupante de cargo efetivo, desde que não esteja em estágio probatório, licenças para o trato de assuntos particulares pelo prazo de até três anos consecutivos, sem remuneração.",
+      "Parágrafo único. A licença poderá ser interrompida, a qualquer tempo, a pedido do servidor ou no interesse do serviço."
+     ],
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A propósito, cumpre mencionar, ainda, que o artigo 5º, parágrafo único, da Lei 12.813, de 16 de maio de 2013, estabelece:",
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "As situações que configuram conflitos de interesses estabelecidas no artigo 5º aplicam-se aos ocupantes de cargos ou empregos mencionados no artigo 2º ainda que em gozo de licença ou em período de afastamento."
+     ],
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "No mesmo sentido, o artigo 4º da Portaria Normativa n.º 4, de 6 de julho de 2012, da Secretaria de Gestão Pública do Ministério do Planejamento, Orçamento e Gestão (e alterações da Portaria Normativa n.º 1, de 25 de fevereiro de 2015), estabelece:",
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º O servidor que esteja usufruindo a licença para tratar de interesses particulares observará os deveres, impedimentos e vedações da legislação aplicável ao conflito de interesses. (Redação dada pela Portaria Normativa nº 1, de 25 de fevereiro de 2015)."
+     ],
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ainda mais recente, na Secretaria de Gestão de Pessoas e Relações do Trabalho no Serviço Público – SEGRT (do MPOG), que tem competência normativa em matéria de negociação de termos e condições de trabalho e solução de conflitos no serviço público, há também dispositivo semelhante, qual seja, a Portaria n.º 35, de 1º de março de 2016:",
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º O servidor que esteja usufruindo a licença para tratar de interesses particulares observará os deveres, impedimentos e vedações da legislação aplicável ao conflito de interesses."
+     ],
+     "opc": {
+      "id": "alegacao_licenca",
+      "rotulo": "Consulente alega que ficará afastado em licença para tratar de interesses particulares",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, identificando as razões de fato e de direito, esta {{orgao_corregedoria}} entende que há conflito de interesse no exercício da atividade de Prático da Marinha Mercante, por {{cargo}}."
+    }
+   ]
+  },
+  {
+   "id": "praticante_de_pratico_em_licenca",
+   "rotulo": "Praticante de Prático (Programa de Qualificação) – não configura conflito, desde que em licença para tratar de interesses particulares concedida antes do início",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor aprovado em processo seletivo para Prático pede autorização para participar do Programa de Qualificação de Praticante de Prático (treinamento supervisionado, não remunerado). Não se aplica ao exercício da atividade de Prático.",
+   "fonte": "PAR 162/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRATICANTE DE PRÁTICO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de praticante de prático com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor do pedido de autorização constante dos autos, verifica-se que a Controladoria-Geral da União (CGU), em resposta a consulta análoga ao presente caso, expressou entendimento, por meio da Nota Técnica nº 818/2015/CGINT/DIACI/STPC/CGU-PR, no sentido de que a participação de servidores da RFB em Programa de Qualificação de Praticante de Prático, durante período de licença para tratar de interesses particulares, não é suficiente para configurar uma das situações de conflito de interesses descritas no artigo 5º da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Cabe referência aos seguintes itens da mencionada Nota Técnica:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“13. Dessa forma, o principal elemento que determina o enquadramento do exercício da atividade de Prático da Marinha Mercante por Auditor-Fiscal da RFB no inciso VII do art. 5º da Lei nº 12.813/2013, qual seja, a prestação de serviço a empresa de transporte marítimo, que desempenha atividade fiscalizada, regulada e controlada pela RFB, está ausente no caso em tela. O Praticante de Prático ainda não é um Prático da Marinha Mercante, e, dessa forma, não pode desempenhar livremente as atividades reservadas a esses profissionais. Não é por outro motivo que o Praticante de Prático realiza suas atividades sob a supervisão de outros Práticos (NORMAN 12/DPC, 0223). Não há como caracterizar a prestação de serviços de praticagem a empresa de transporte marítimo por uma pessoa que não é um Prático da Marinha Mercante, mas que apenas exerce uma atividade de treinamento supervisionado, não remunerada. Não há que se falar em violação do inciso VII do art. 5º da Lei nº 12.813/2013, portanto.",
+      "14. Como a incompatibilidade entre a atividade de praticagem e o cargo de Auditor-Fiscal da RFB adviria de seu enquadramento anterior no inciso VII do mesmo artigo, também não há como se falar em violação ao inciso III do art. 5º da Lei nº 12.813/2013.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Do exposto, depreende-se que a CGU entende que a atividade de Praticante de Prático, por si só, não é incompatível com o cargo de {{cargo_sigla}}, e que a licença para tratar de interesse particular é relevante para garantir a compatibilidade de horários, pois se trata de um requisito básico imprescindível para a realização de qualquer atividade privada concomitantemente com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Cabe salientar, que o Teletrabalho não está abrangido na garantia de compatibilidade de horários da Nota Técnica nº 818/2015/CGINT/DIACI/STPC/CGU-PR. Além do mais, as características do Teletrabalho não se coadunam com a compatibilidade de horários necessária ao exercício concomitante de outra atividade pelo servidor, pois conforme disposto no artigo 3º da Portaria RFB nº 2383, de 13 de julho de 2017, que institui o Teletrabalho no âmbito da RFB, a admissão de atividades em Teletrabalho fica ao critério da Administração, em função da conveniência do serviço, e não do servidor. O parágrafo único do citado artigo 3º é mais enfático ao dizer que mesmo a inclusão em Teletrabalho não constitui direito do solicitante, podendo a qualquer momento ser desligado caso incorra em alguma das hipóteses de desligamento definidas pela referida Portaria.",
+     "opc": {
+      "id": "teletrabalho",
+      "rotulo": "Incluir ressalva de que o teletrabalho não garante a compatibilidade de horários (cita a Portaria RFB nº 2.383/2017 – conferir vigência)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 3º A realização de atividades em Teletrabalho é facultativa, mediante solicitação formal do servidor e compromisso de cumprimento das metas fixadas, ficando sua admissão nessa modalidade ao critério da Administração, em função da conveniência do serviço.",
+      "Parágrafo único. A designação do servidor para Teletrabalho não constitui direito do solicitante que poderá ser desligado conforme o disposto na Seção II do Capítulo III.”"
+     ],
+     "opc": {
+      "id": "teletrabalho",
+      "rotulo": "Incluir ressalva de que o teletrabalho não garante a compatibilidade de horários (cita a Portaria RFB nº 2.383/2017 – conferir vigência)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, apesar de ser de conhecimento público e notório dos servidores da RFB, não é demais chamar a atenção {{g:do|da}} consulente para a Portaria RFB n° 444, de 23 de março de 2015, que indica atividades incompatíveis com as atribuições dos cargos da Carreira Tributária e Aduaneira da RFB, nos seguintes termos:",
+     "opc": {
+      "id": "portaria_444",
+      "rotulo": "Chamar a atenção para a Portaria RFB nº 444/2015 (praticagem como atividade incompatível)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 1° Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "(...)",
+      "III - praticagem.",
+      "Art. 2° Esta Portaria entra em vigor na data de sua publicação no Boletim de Serviço da Secretaria da Receita Federal do Brasil”."
+     ],
+     "opc": {
+      "id": "portaria_444",
+      "rotulo": "Chamar a atenção para a Portaria RFB nº 444/2015 (praticagem como atividade incompatível)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, novamente e ainda com fundamento no entendimento adotado pela CGU na Nota Técnica n° 818/2015/CGINT/DIACI/STPC/CGU-PR, esta Corregedoria opina que no presente caso não está configurado conflito de interesses na participação de ocupante do cargo de {{cargo_sigla}} em Programa de Qualificação de Praticante de Prático, desde que haja compatibilidade de horários, o que somente será garantido por meio da concessão, anteriormente ao início da atividade de Praticante de Prático, da licença para tratar de interesses particulares."
+    }
+   ]
+  }
+ ]
+}

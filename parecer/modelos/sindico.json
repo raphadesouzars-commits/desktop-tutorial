@@ -1,0 +1,289 @@
+{
+ "id": "sindico",
+ "nome": "Síndico de condomínio",
+ "descricao": "Use quando o servidor pretende exercer (ou se candidatar a) a função de síndico de condomínio, inclusive cumulada com cargo em associação de moradores ou com participação societária em administradora.",
+ "palavrasChave": [
+  "síndico",
+  "síndica",
+  "condomínio",
+  "condomínio residencial",
+  "edifício",
+  "prédio onde moro",
+  "subsíndico",
+  "administração do condomínio",
+  "assembleia de condomínio",
+  "associação de moradores",
+  "síndico profissional",
+  "síndico terceirizado",
+  "administradora de condomínios",
+  "representar o condomínio",
+  "convenção de condomínio",
+  "candidatar a síndico"
+ ],
+ "variantes": [
+  {
+   "id": "sindico_condominio_residencial",
+   "rotulo": "Síndico de condomínio residencial – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ser síndico do condomínio residencial (em regra, onde reside).",
+   "fonte": "PAR 211/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE SÍNDICO DE CONDOMÍNIO RESIDENCIAL.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de síndico de condomínio residencial com o cargo de {{cargo}}-{{cargo_sigla}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à atividade de síndico que {{g:o consulente|a consulente}} pretende exercer, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} ({{cargo_sigla}}) em circunstâncias que prejudiquem a moralidade ou interesse público. Entretanto, faz-se necessário ressaltarmos a impossibilidade {{g:do interessado|da interessada}} atuar como representante do condomínio junto aos órgãos públicos federais, estaduais e municipais."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, a proibição aos servidores públicos federais de atuarem como procurador junto a repartições públicas. O legislador tinha como intuito impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de sua rede de relacionamento, de seu livre trânsito pelas repartições, de seu eventual prestígio ou possível influência adquirida através de sua atividade laborativa."
+    },
+    {
+     "t": "p",
+     "x": "Nesse diapasão, com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador não foi tão somente ratificada, e sim ampliada. A determinação contida no artigo 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação do servidor público federal como procurador perante quaisquer das esferas da Administração Pública, seja direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, a partir da publicação da referida lei, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa nesse conceito a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Nesse contexto, entende-se que em relação à obrigação de representar o condomínio, de acordo com o inciso II, art. 1.348, da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil), quando se tratar de atos praticados perante os órgãos ou entidades acima referendados, deverá o síndico transferir a outro condômino os poderes de representação, em conformidade com os parágrafos 1º e 2º do mesmo artigo supracitado:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1.348. Compete ao síndico:",
+      "(…)",
+      "II – representar, ativa e passivamente, o condomínio, praticando, em juízo ou fora dele, os atos necessários à defesa dos interesses comuns;",
+      "(…)",
+      "§ 1º Poderá a assembleia investir outra pessoa, em lugar do síndico, em poderes de representação.",
+      "§ 2º O síndico pode transferir a outrem, total ou parcialmente, os poderes de representação ou as funções administrativas, mediante aprovação da assembleia, salvo disposição em contrário da convenção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "sindico_e_diretor_associacao_moradores",
+   "rotulo": "Síndico e diretor de associação de moradores do mesmo condomínio – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ser síndico de condomínio residencial e, cumulativamente, diretor da associação de moradores do mesmo condomínio.",
+   "fonte": "PAR 57/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE SÍNDICO DO CONDOMÍNIO RESIDENCIAL.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de síndico do condomínio residencial com o cargo de {{cargo}}-{{cargo_sigla}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Na atuação como síndico de condomínio residencial e diretor de associação de moradores do mesmo condomínio, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} ({{cargo_sigla}}) em circunstâncias que prejudiquem a moralidade ou interesse público. Entretanto, faz-se necessário ressaltarmos sua impossibilidade de atuar como representante do condomínio junto aos órgãos públicos federais, estaduais e municipais."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, a proibição aos servidores públicos federais de atuarem como procurador junto a repartições públicas. O legislador tinha como intuito impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de sua rede de relacionamento, de seu livre trânsito pelas repartições, de seu eventual prestígio ou possível influência adquirida através de sua atividade laborativa."
+    },
+    {
+     "t": "p",
+     "x": "Nesse diapasão, com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador não foi tão somente ratificada, e sim ampliada. A determinação contida no artigo 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação do servidor público federal como procurador perante quaisquer das esferas da Administração Pública, seja direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, a partir da publicação da referida lei, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa nesse conceito a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Nesse contexto, entende-se que em relação à obrigação de representar o condomínio, de acordo com o inciso II, art. 1.348, da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil), quando se tratar de atos praticados perante os órgãos ou entidades acima referendados, deverá o síndico transferir a outro condômino os poderes de representação, em conformidade com os parágrafos 1º e 2º do mesmo artigo supracitado:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1.348. Compete ao síndico:",
+      "(…)",
+      "II – representar, ativa e passivamente, o condomínio, praticando, em juízo ou fora dele, os atos necessários à defesa dos interesses comuns;",
+      "(…)",
+      "§ 1º Poderá a assembleia investir outra pessoa, em lugar do síndico, em poderes de representação.",
+      "§ 2º O síndico pode transferir a outrem, total ou parcialmente, os poderes de representação ou as funções administrativas, mediante aprovação da assembleia, salvo disposição em contrário da convenção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades informadas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "sindico_e_socio_cotista_administradora",
+   "rotulo": "Síndico (inclusive não condômino) e sócio cotista de empresa de administração – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como síndico (do próprio condomínio ou como síndico terceirizado) e consta como sócio cotista, sem gerência, de empresa que presta o serviço.",
+   "fonte": "PAR 076/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SÍNDICO DE CONDOMÍNIO.",
+   "ementa": [
+    "Pedido de autorização para exercer a atividade de síndico de condomínio. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "nome_empresa",
+     "rotulo": "Nome da empresa de que o servidor é sócio cotista",
+     "exemplo": "Empresa X Assessoria Administrativa Ltda",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_empresa",
+     "rotulo": "Atividade(s) da empresa conforme o CNPJ",
+     "exemplo": "Serviços Combinados de Escritório e Apoio Administrativo e como atividade secundária a Gestão e Administração da Propriedade Imobiliária",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Em consulta realizada na internet, verifica-se que o CNPJ pertence à empresa {{nome_empresa}}, cuja atividade principal é {{atividade_empresa}}. {{g:O servidor|A servidora}} consta como {{g:sócio|sócia}} cotista da referida empresa."
+    },
+    {
+     "t": "p",
+     "x": "A participação de servidor público federal em sociedade empresarial é matéria que se encontra disposta na Lei nº 8.112, de 11 de dezembro de 1990, com destaque ao disposto no artigo 117, inciso X:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido: (Vide Medida Provisória nº 2.225-45, de 4.9.2001)",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, informa-se que não há impedimentos para que {{g:o servidor|a servidora}} seja {{g:sócio|sócia}} cotista da empresa retrocitada, sob a ressalva de que não pratique atos de gerência ou administração."
+    },
+    {
+     "t": "p",
+     "x": "Com relação à atividade que {{g:o servidor|a servidora}} pretende exercer, não ficou claro se tratar de síndico do local onde {{g:ele próprio|ela própria}} mora ou de atuar como síndico terceirizado, possibilidade essa tratada no Novo Código Civil, que legitima a terceirização do síndico, não condômino, conforme disposto no artigo nº 1.347: “A assembléia escolherá um síndico, que poderá não ser condômino, para administrar o condomínio, por prazo não superior a dois anos, o qual poderá renovar-se”."
+    },
+    {
+     "t": "p",
+     "x": "Independentemente do relatado no parágrafo pregresso, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} em circunstâncias que prejudiquem a moralidade ou interesse público. Entretanto, faz-se necessário ressaltarmos sua impossibilidade de atuar como representante do condomínio junto aos órgãos públicos federais, estaduais e municipais."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, a proibição aos servidores públicos federais de atuarem como procurador junto às repartições públicas. O legislador tinha como intuito impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de sua rede de relacionamento, de seu livre trânsito pelas repartições, de seu eventual prestígio ou possível influência adquirida através de sua atividade laborativa."
+    },
+    {
+     "t": "p",
+     "x": "Nesse diapasão, com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador foi ratificada e ampliada. A determinação contida no artigo 5º, inciso IV, definiu como situação ensejadora de conflito de interesses a atuação do servidor público federal como procurador perante quaisquer das esferas da Administração Pública, seja direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, a partir da publicação da referida lei, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa nesse conceito a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Nesse contexto, entende-se que em relação à obrigação de representar o condomínio, de acordo com o inciso II, art. 1.348, da Lei nº 10.406, de 10 de janeiro de 2002 (Código Civil), quando se tratar de atos praticados perante os órgãos ou entidades acima referendados, deverá o síndico transferir a outra pessoa os poderes de representação, em conformidade com os parágrafos 1º e 2º do mesmo artigo supracitado:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1.348. Compete ao síndico:",
+      "(…)",
+      "II – representar, ativa e passivamente, o condomínio, praticando, em juízo ou fora dele, os atos necessários à defesa dos interesses comuns;",
+      "(…)",
+      "§ 1º Poderá a assembleia investir outra pessoa, em lugar do síndico, em poderes de representação.",
+      "§ 2º O síndico pode transferir a outrem, total ou parcialmente, os poderes de representação ou as funções administrativas, mediante aprovação da assembleia, salvo disposição em contrário da convenção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do consulente|da consulente}}, cabendo a {{g:ele|ela}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, registre-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo consulente|pela consulente}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

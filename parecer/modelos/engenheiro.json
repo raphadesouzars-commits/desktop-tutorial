@@ -1,0 +1,344 @@
+{
+ "id": "engenheiro",
+ "nome": "Engenheiro",
+ "descricao": "Usar quando o servidor pretende exercer atividade de engenharia (civil, elétrica, agronômica etc.), como empregado ou autônomo, ou atuar na regularização de obras de construção civil perante a RFB.",
+ "palavrasChave": [
+  "engenheiro",
+  "engenharia",
+  "engenheiro civil",
+  "engenheiro agrônomo",
+  "engenheiro eletricista",
+  "projetos estruturais",
+  "projeto de instalações elétricas",
+  "obras",
+  "construção civil",
+  "crea",
+  "art",
+  "responsável técnico",
+  "regularização de obras",
+  "cno",
+  "sero",
+  "laudo técnico"
+ ],
+ "variantes": [
+  {
+   "id": "sem_conflito_ressalvas",
+   "rotulo": "Não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende exercer a engenharia (projetos, obras, vínculo com empresa de engenharia) sem relação com as atividades da RFB.",
+   "fonte": "PAR 008/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ENGENHEIRO.",
+   "ementa": [
+    "Pedido de Autorização para o exercício da atividade de {{especialidade}} concomitantemente com o cargo de {{cargo}} ({{cargo_sigla}}).",
+    "Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "especialidade",
+     "rotulo": "Atividade/especialidade",
+     "exemplo": "engenheiro civil",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "empresa_vinculo",
+     "rotulo": "Empresa com a qual terá vínculo (usado no parágrafo opcional)",
+     "exemplo": "a empresa X Projetos Ltda.",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "tomadores",
+     "rotulo": "Pessoas/empresas em relação às quais deve se abster de atuar na RFB",
+     "exemplo": "a empresa empregadora e as pessoas para as quais exerça o ofício de engenheiro",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade privada de {{especialidade}}, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Assim, sob esse viés, não há entraves que impeçam {{g:o servidor|a servidora}} consulente de ter vínculo empregatício (provisório ou permanente) com {{empresa_vinculo}} e de assinar/registrar os projetos estruturais de que porventura faça parte.",
+     "opc": {
+      "id": "vinculo_empresa",
+      "rotulo": "Incluir parágrafo sobre vínculo empregatício com empresa e assinatura/registro de projetos",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Todavia, deve-se frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo {{tomadores}}."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{especialidade}} informado {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "autonomo_contratos",
+   "rotulo": "Engenheiro autônomo com contratos específicos por trabalho – não configura conflito, com cautelas adicionais (registro de horários)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende prestar serviços de engenharia de forma autônoma, por contratos específicos, cabendo registrar início e término de cada serviço para aferição da compatibilidade de horários.",
+   "fonte": "PAR 301/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ENGENHEIRO.",
+   "ementa": [
+    "Consulta sobre o exercício da atividade de {{especialidade}}.",
+    "Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "especialidade",
+     "rotulo": "Atividade/especialidade",
+     "exemplo": "engenheiro agrônomo",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade privada de {{especialidade}}, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Em análise mais detida da norma, observamos que a Lei n° 12.813, de 2013, em seu art. 3°, inciso I, dispõe que não só a atividade, mas de uma forma mais genérica a situação por ela ocasionada pode ser ensejadora de conflito de interesses se, de alguma forma comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública; e"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, além das hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, que só podem ser aferidas quando do exercício efetivo da atividade privada e cuja ocorrência deve {{g:o servidor|a servidora}} impedir, cabem ainda cautelas adicionais pertinentes ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Veja-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, conforme estatuído na lista de proibições passíveis de penalidades administrativas elencadas no art. 117, XVIII, da Lei n° 8.112, de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XVIII - exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Para esta aferição, é necessário que constem nos registros as informações sobre o início e o término do acompanhamento de cada serviço realizado, de forma compatível com os dados constantes nos contratos celebrados."
+    },
+    {
+     "t": "p",
+     "x": "Ainda sobre a atividade de {{especialidade}}, não se percebe, por outro lado, nenhum conflito de interesses no fato de {{g:o consulente|a consulente}} utilizar para esse fim informações adquiridas em cursos específicos para a área, desde que não relacionados com o munus público.",
+     "opc": {
+      "id": "cursos_area",
+      "rotulo": "Incluir parágrafo sobre uso de informações adquiridas em cursos específicos da área",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{especialidade}} informado {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "conflito_regularizacao_obras",
+   "rotulo": "Regularização de obras perante a RFB (procurador/intermediário no e-CAC) – configura conflito de interesses",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende atuar na regularização de obras de construção civil (CNO/SERO/CND) em nome de terceiros, usando procuração e certificado digital no e-CAC, ou auxiliando colegas engenheiros.",
+   "fonte": "PAR 107/2023",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATUAÇÃO COMO PROCURADOR OU INTERMEDIÁRIO PERANTE A RFB.",
+   "ementa": [
+    "Pedido de autorização para atuação na regularização de obras de construção civil. Tal regularização é realizada pelo responsável pela obra ou por procurador que possua certificado digital para acesso ao ambiente virtual da Receita Federal do Brasil (e-CAC). Existência de conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme se depreende do pedido, a atividade pretendida {{g:pelo servidor|pela servidora}} é a atuação na regularização de obras utilizando sistemas da RFB, {{g:sozinho|sozinha}} ou auxiliando colegas de profissão da área de Engenharia. De acordo com {{g:o consulente|a consulente}}, o trâmite de tal regularização prevê a realização do cadastro das obras, no Cadastro Nacional de Obras (CNO), seguido da emissão da Certidão Negativa de Débitos (CND), realizada no Serviço Eletrônico para Aferição de Obras (SERO), sendo prestado atendimento pela Equipe de Obras em alguns casos excepcionais."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} consulente, como ATA, integra o Plano Geral de Cargos do Poder Executivo (PGPE), que foi criado pela Lei nº 11.357, de 19 de outubro de 2006. A respeito das atribuições dos ocupantes do cargo de ATA, dispôs o diploma legal:",
+     "opc": {
+      "id": "cargo_ata",
+      "rotulo": "Servidor ocupa cargo de Assistente Técnico-Administrativo (PGPE): incluir análise das atribuições do cargo",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Fica estruturado o Plano Geral de Cargos do Poder Executivo - PGPE composto por cargos efetivos de nível superior, intermediário e auxiliar não integrantes de Carreiras específicas, Planos Especiais de Cargos ou Planos de Carreiras instituídos por leis específicas e voltados ao exercício de atividades técnicas, técnico-administrativas e de suporte no âmbito dos órgãos e entidades da administração federal direta, autárquica e fundacional.",
+      "(...)",
+      "Parágrafo único. Integrarão o PGPE, nos termos desta Lei, os seguintes cargos de provimento efetivo:",
+      "(...)",
+      "III - Assistente Técnico-Administrativo, de nível intermediário, com atribuições voltadas à execução de atividades técnicas, administrativas, logísticas e de atendimento, de nível intermediário, relativas ao exercício das competências constitucionais e legais a cargo dos órgãos ou entidades da administração pública federal, ressalvadas as privativas de Carreiras específicas, fazendo uso de todos os equipamentos e recursos disponíveis para a consecução dessas atividades, além de outras atividades de mesmo nível de complexidade em sua área de atuação; (grifo nosso)"
+     ],
+     "opc": {
+      "id": "cargo_ata",
+      "rotulo": "Servidor ocupa cargo de Assistente Técnico-Administrativo (PGPE): incluir análise das atribuições do cargo",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que as atribuições dos Assistentes Técnico-Administrativos estão, portanto, diretamente ligadas às competências do órgão ou entidade da Administração Pública no qual o servidor está lotado e em exercício.",
+     "opc": {
+      "id": "cargo_ata",
+      "rotulo": "Servidor ocupa cargo de Assistente Técnico-Administrativo (PGPE): incluir análise das atribuições do cargo",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "O art. 117 da Lei n° 8.112, de 11 de dezembro de 1990, elenca as proibições impostas aos servidores. O inciso XI do citado artigo, prevê que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XI – atuar como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Importante ressaltar que o inciso supracitado traz uma exceção expressa, ao permitir a atuação do servidor como procurador junto a repartições públicas quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei n° 12.813, de 16 de maio de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5°, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "CAPÍTULO II",
+      "DAS SITUAÇÕES QUE CONFIGURAM CONFLITO DE INTERESSES NO EXERCÍCIO DO CARGO OU EMPREGO",
+      "Art. 5° Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo Federal:",
+      "(…)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que, de fato, as atividades de procurador, consultor, assessor ou intermediário de interesses privados são expressamente vedadas pela Lei nº 12.813/2013, em seu art. 5°, inciso IV. A pretensão do legislador é evitar o exercício de atividades com alto potencial de comprometimento do interesse coletivo e de prejuízo ao desempenho da função pública, uma vez que envolvem situações em que o agente público ao transitar entre a Administração Pública e o setor privado, ainda que informalmente, poderá vir a privilegiar interesses que não coadunem com o interesse público ou, ainda, que comprometam o interesse da coletividade e representem prejuízos ao exercício da função pública."
+    },
+    {
+     "t": "p",
+     "x": "Destaca-se que a literalidade do referido dispositivo legal não leva em consideração o fim visado pelo agente, não distingue se o mandante ou beneficiário da intermediação é terceiro, alheio à Administração, ou outro servidor público, e tampouco distingue se a atuação do servidor público se dará de modo presencial ou virtual. Desse modo, pelo teor do referido dispositivo legal, o servidor estaria proibido de ser procurador ou intermediário tanto de outro servidor como de terceiros, seja qual for o interesse envolvido, de forma presencial ou virtual, exceto na hipótese ressalvada pelo próprio dispositivo legal."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, o objetivo do legislador, ao estatuir na Lei nº 8.112, de 1990, a vedação para a atuação do servidor público como procurador ou intermediário, foi o de impedir que determinadas empreitadas particulares, em virtude de suas características específicas, possam ser executadas de forma vantajosa por servidor público, justamente em virtude de sua condição ou de informações que ele possua por ser servidor. Buscou-se ainda evitar que interesses particulares fossem colocados acima do interesse público ou que a impessoalidade e a moralidade, que devem reger todo ato de agente público, fossem afetadas."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, o Manual de PAD, elaborado pela CGU, disponível, nesta data, na página daquele órgão na Internet (https://repositorio.cgu.gov.br/handle/1/64869) dispõe a respeito do disposto no art. 117, XI, da Lei 8.112/90:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Trata-se de infração disciplinar assemelhada àquela prevista no art. 117, IX (valimento do cargo), e que se caracteriza quando o servidor, valendo-se do prestígio, respeito ou especial relacionamento com os demais colegas, atua em nome de terceiro junto a órgãos ou entidades da Administração Pública, com ou sem instrumento de mandato, ou seja, como procurador ou intermediário.",
+      "O dispositivo visa proteger a impessoalidade e moralidade na Administração Pública, proibindo condutas que ponham em evidência favorecimentos e conflitos de interesse.",
+      "(…)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o Manual do Serviço Eletrônico para Aferição de Obras (SERO), disponível, nesta data, na página da Secretaria da Receita Federal do Brasil na Internet (https://www.gov.br/receitafederal/pt-br/centrais-de-conteudo/publicacoes/manuais/manual-do-sero/manual-do-sero-1), são responsáveis pela regularização da obra de construção civil, que executarem diretamente ou por meio de terceiros, e obrigados a utilizar o SERO: o proprietário do imóvel, o dono da obra, inclusive o representante de construção em nome coletivo ou o incorporador de construção civil, a empresa construtora, a construção de edificação em condomínio, o consórcio, e a empresa líder em consórcio."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o Manual do SERO, o responsável pela obra deverá providenciar:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "• A inscrição da obra no Cadastro Nacional de Obras – CNO;",
+      "• A aferição da obra a ser realizada no Sero;",
+      "• A transmissão da DCTFWeb Aferição de Obras;",
+      "• O pagamento ou o parcelamento das contribuições apuradas no Sero;",
+      "• A emissão de certidão relativa à aferição da obra; e",
+      "• O cumprimento das demais obrigações relativas à execução da obra sob sua responsabilidade."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ademais, a respeito do acesso ao SERO, o manual em comento traz a seguinte disposição:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "O acesso ao Sero é realizado através do portal de atendimento virtual e-CAC, no site da RFB na Internet, no endereço eletrônico: https://cav.receita.fazenda.gov.br/ .",
+      "O acesso ao e-CAC pelo responsável pela obra será efetuado por meio da conta GOV.BR ou, temporariamente, mediante utilização de código de acesso e senha, inclusive quando a inscrição no CPF estiver com a situação cadastral Titular Falecido.",
+      "Alternativamente, se houver impossibilidade de cadastrar código de acesso/senha ou uma conta GOV.BR, inclusive no caso de pessoa física menor de idade, incapaz ou falecida, o acesso ao e-CAC poderá ser feito pelo procurador possuidor de certificado digital, após o cadastramento de procuração eletrônica ou da PROCURAÇÃO RFB (procuração digital para acesso ao e-CAC) e da conta GOV.BR. (grifos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Desse modo, a partir da análise da atuação pretendida {{g:pelo consulente|pela consulente}}, infere-se que {{g:o servidor|a servidora}} atuaria como {{g:verdadeiro procurador ou intermediário|verdadeira procuradora ou intermediária}} de contribuintes perante a RFB. De acordo com as informações disponíveis na página da Receita Federal na internet, em relação à procuração digital (procuração eletrônica ou procuração RFB), que deve ser utilizada por terceiros para obtenção de acesso ao SERO, por meio do portal de atendimento virtual e-CAC, tem-se que a procuração para uso do e-CAC “delega a terceiro, a realização de serviços dentro do portal e-CAC”."
+    },
+    {
+     "t": "p",
+     "x": "Por seu turno, a Instrução Normativa RFB nº 1751, de 16 de outubro de 2017, que dispõe sobre a permissão de acesso do contribuinte aos serviços disponíveis no Atendimento Virtual (e-CAC) da Secretaria da Receita Federal do Brasil (RFB) define:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Esta Instrução Normativa dispõe sobre o acesso do contribuinte aos serviços disponíveis na Lista de Serviços da Secretaria Especial da Receita Federal do Brasil (RFB) mediante outorga de poderes a pessoa física ou jurídica detentora de certificado digital.",
+      "Art. 2º A pessoa física ou jurídica, detentora ou não de certificado digital, poderá outorgar poderes a pessoa física ou jurídica detentora de certificado digital, por meio de procuração RFB ou de procuração eletrônica, para utilização, em ambiente virtual, de serviços disponíveis na Lista de Serviços da RFB a que se refere o art. 1º, protegidos ou não pelo sigilo fiscal, em nome do outorgante.",
+      "§ 1º Para fins do disposto no caput, considera-se:",
+      "I - Lista de Serviços, rol dos serviços constantes no sítio da RFB, disponível no endereço http://rfb.gov.br, que inclui serviços gerenciados pela RFB e serviços gerenciados por comitês dos quais a RFB participe;",
+      "II - Procuração RFB, procuração emitida por meio do aplicativo disponível no endereço eletrônico referido no inciso I, por outorgante que não detenha certificado digital; e",
+      "III - Procuração Eletrônica, procuração emitida por meio do e-CAC, na situação em que o outorgante e o outorgado possuem certificado digital."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, conclui-se que a Procuração RFB delega a terceiro poderes para a utilização em ambiente virtual de inúmeros serviços, disponíveis na Lista de Serviços da RFB, que abrange tanto os serviços encontrados no Portal e-CAC como em outras partes da página da Receita Federal na Internet (receita.economia.gov.br), de modo que, nesse caso, {{g:o servidor|a servidora}} solicita a autorização para atuar como {{g:procurador|procuradora}} de contribuintes, que não possuem certificado digital, e que lhe outorguem tal poder, perante a Secretaria Especial da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Por sua vez, a Procuração Eletrônica é emitida por meio do e-CAC, na situação em que o outorgante e o outorgado possuem certificado digital, sendo outorgado a terceiros poderes para utilização, em ambiente virtual, de serviços disponíveis na Lista de Serviços da RFB, em nome do outorgante."
+    },
+    {
+     "t": "p",
+     "x": "Diante de todo o disposto, conclui-se que a atuação de servidor de qualquer cargo em exercício na Secretaria da Receita Federal do Brasil como procurador ou intermediário, de forma presencial ou virtual, configura conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Caso fosse possível a um servidor da RFB atuar como procurador de contribuintes em meio virtual, teríamos a possibilidade de o mesmo servidor atuar de forma concomitante na esfera privada e pública, solicitando, como procurador digital, a realização de determinado serviço por meio do e-CAC e, em seguida, utilizando de sua influência junto a repartição e de contatos/canais relevantes, que podem beneficiar indevidamente interesses privados específicos, ou até mesmo efetivando ele próprio o serviço no exercício das atribuições de seu cargo na RFB, o que claramente contraria o disposto no art. 117, XI da Lei nº 8.112, de 1990 e do art. 5º, IV da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que não há qualquer diferença entre a representatividade presencial ou virtual, tendo em vista que a preocupação do legislador, ao estabelecer a restrição exposta acima, não é tolher a liberdade dos agentes públicos, mas evitar abusos que possam comprometer o interesse geral ou o desempenho da função pública em qualquer esfera de governo. E tal abuso pode ocorrer independente da via utilizada para a representação."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, a atuação {{g:do servidor|da servidora}} como representante de contribuintes na regularização de obras de construção civil, realizando serviços no ambiente virtual da Receita Federal do Brasil (e-CAC), por meio da utilização de certificado digital {{g:do servidor|da servidora}}, após a outorga de poderes por meio da procuração eletrônica ou da procuração RFB, ou mesmo auxiliando colegas da área de Engenharia, com o cargo de {{cargo}} {{g:lotado|lotada}} na RFB configura conflito de interesses."
+    }
+   ]
+  }
+ ]
+}

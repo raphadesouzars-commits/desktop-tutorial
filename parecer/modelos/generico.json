@@ -1,0 +1,385 @@
+{
+ "id": "generico",
+ "nome": "Outra atividade (modelo genérico)",
+ "descricao": "Usar quando a atividade consultada não possui modelo específico: contém apenas os parágrafos-padrão recorrentes nos pareceres (análise do art. 5º, III, da Lei nº 12.813/2013, incisos aferíveis no exercício efetivo, compatibilidade de horários, procurador/intermediário, informação privilegiada e conclusão).",
+ "palavrasChave": [
+  "outra atividade",
+  "atividade privada",
+  "pedido de autorização",
+  "consulta",
+  "conflito de interesses",
+  "atividade não listada",
+  "genérico",
+  "exercício concomitante",
+  "atividade remunerada",
+  "autônomo",
+  "prestação de serviços"
+ ],
+ "variantes": [
+  {
+   "id": "sem_conflito",
+   "rotulo": "Não configura conflito de interesses (compatibilidade material)",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Atividade sem qualquer relação com as atribuições do cargo e com as competências da RFB, sem necessidade de ressalvas além das gerais (horários e incisos do art. 5º).",
+   "fonte": "PAR 134/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de {{atividade_resumo}}. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "atividade_resumo",
+     "rotulo": "Atividade (resumo para a ementa, iniciando por verbo no infinitivo)",
+     "exemplo": "exercer a profissão de motorista de aplicativo",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Descrição da atividade (completa a frase \"tem por objetivo ...\")",
+     "exemplo": "exercer a profissão de motorista de aplicativos",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Analisando-se o teor da consulta sob o prisma do inciso III, do art. 5° da Lei nº 12.813/2013, verifica-se que o exercício da atividade pretendida é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    }
+   ]
+  },
+  {
+   "id": "sem_conflito_ressalvas",
+   "rotulo": "Não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Atividade materialmente compatível com o cargo, mas que exige ressalvas (não usar conhecimentos internos da RFB, compatibilidade de horários, abstenção em processos, vedação de gerência/administração etc.).",
+   "fonte": "PAR 008/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE PRIVADA.",
+   "ementa": [
+    "Pedido de Autorização para o exercício da atividade de {{atividade}} concomitantemente com o cargo de {{cargo}} ({{cargo_sigla}}).",
+    "Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "atividade",
+     "rotulo": "Atividade pretendida (substantivo, completa \"atividade privada de ...\")",
+     "exemplo": "engenheiro civil",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "pessoas_vinculadas",
+     "rotulo": "Pessoas/empresas em relação às quais deve se abster de atuar na RFB (parágrafo opcional)",
+     "exemplo": "a empresa contratante e as pessoas para as quais preste serviços",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses.",
+     "opc": {
+      "id": "art3_info_privilegiada",
+      "rotulo": "Incluir conceito legal de conflito de interesses e de uso de informação privilegiada (art. 3º da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade privada de {{atividade}}, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, deve-se frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que a atividade deve ser exercida sem configurar a infração disciplinar tipificada no artigo 117, inciso X, da Lei nº 8.112, de 1990:",
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ],
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850.",
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da Lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:",
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ],
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, caso a atividade pleiteada configure o exercício de atividade empresarial, não é permitido exercer qualquer função de gerência ou administração, sendo necessária a nomeação de um terceiro para exercer tais atribuições.",
+     "opc": {
+      "id": "gerencia_administracao",
+      "rotulo": "Incluir vedação de gerência/administração de sociedade e exercício do comércio (art. 117, X, da Lei nº 8.112/1990)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "É importante ressaltar que {{g:o consulente|a consulente}} não deve se apresentar nessa empreitada particular como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB, de forma a sugerir que o órgão público a que está {{g:vinculado|vinculada}} sanciona ou respalda suas atividades pessoais.",
+     "opc": {
+      "id": "nao_se_apresentar",
+      "rotulo": "Incluir ressalva de não se apresentar como servidor público na atividade privada",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo {{pessoas_vinculadas}}.",
+     "opc": {
+      "id": "abster_processos",
+      "rotulo": "Incluir dever de se abster de atuar em processos na RFB envolvendo pessoas/empresas a que se vincule",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "conflito",
+   "rotulo": "Configura conflito de interesses",
+   "resultado": "conflito",
+   "quandoUsar": "Atividade incompatível com o cargo, em especial quando implica atuar como procurador, consultor, assessor ou intermediário de interesses privados perante a administração pública; a análise específica do caso deve ser redigida no campo livre.",
+   "fonte": "PAR 107/2023",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Pedido de autorização para {{atividade_resumo}}. Existência de conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "atividade_resumo",
+     "rotulo": "Atividade (resumo para a ementa)",
+     "exemplo": "atuação na regularização de obras de construção civil",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Descrição da atividade pretendida (completa \"a atividade pretendida é ...\")",
+     "exemplo": "a atuação na regularização de obras utilizando sistemas da RFB",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "fundamentacao_caso",
+     "rotulo": "Análise específica do caso concreto (texto livre)",
+     "exemplo": "Desse modo, a partir da análise da atuação pretendida, infere-se que ...",
+     "obrigatorio": false,
+     "multilinha": true
+    },
+    {
+     "id": "atuacao_conclusao",
+     "rotulo": "Atuação que configura conflito (completa \"a atuação do servidor como ...\")",
+     "exemplo": "representante de contribuintes perante a RFB",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses.",
+     "opc": {
+      "id": "art3_info_privilegiada",
+      "rotulo": "Incluir conceito legal de conflito de interesses e de uso de informação privilegiada (art. 3º da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conforme se depreende do pedido, a atividade pretendida {{g:pelo servidor|pela servidora}} é {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "O art. 117 da Lei n° 8.112, de 11 de dezembro de 1990, elenca as proibições impostas aos servidores. O inciso XI do citado artigo, prevê que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XI – atuar como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro;"
+     ],
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Importante ressaltar que o inciso supracitado traz uma exceção expressa, ao permitir a atuação do servidor como procurador junto a repartições públicas quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei n° 12.813, de 16 de maio de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5°, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5° Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo Federal:",
+      "(…)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ],
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que, de fato, as atividades de procurador, consultor, assessor ou intermediário de interesses privados são expressamente vedadas pela Lei nº 12.813/2013, em seu art. 5°, inciso IV. A pretensão do legislador é evitar o exercício de atividades com alto potencial de comprometimento do interesse coletivo e de prejuízo ao desempenho da função pública, uma vez que envolvem situações em que o agente público ao transitar entre a Administração Pública e o setor privado, ainda que informalmente, poderá vir a privilegiar interesses que não coadunem com o interesse público ou, ainda, que comprometam o interesse da coletividade e representem prejuízos ao exercício da função pública.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Destaca-se que a literalidade do referido dispositivo legal não leva em consideração o fim visado pelo agente, não distingue se o mandante ou beneficiário da intermediação é terceiro, alheio à Administração, ou outro servidor público, e tampouco distingue se a atuação do servidor público se dará de modo presencial ou virtual. Desse modo, pelo teor do referido dispositivo legal, o servidor estaria proibido de ser procurador ou intermediário tanto de outro servidor como de terceiros, seja qual for o interesse envolvido, de forma presencial ou virtual, exceto na hipótese ressalvada pelo próprio dispositivo legal.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Além disso, o objetivo do legislador, ao estatuir na Lei nº 8.112, de 1990, a vedação para a atuação do servidor público como procurador ou intermediário, foi o de impedir que determinadas empreitadas particulares, em virtude de suas características específicas, possam ser executadas de forma vantajosa por servidor público, justamente em virtude de sua condição ou de informações que ele possua por ser servidor. Buscou-se ainda evitar que interesses particulares fossem colocados acima do interesse público ou que a impessoalidade e a moralidade, que devem reger todo ato de agente público, fossem afetadas.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "{{fundamentacao_caso}}",
+     "opc": {
+      "id": "fundamentacao_caso",
+      "rotulo": "Incluir parágrafo livre com a análise específica do caso concreto",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante de todo o disposto, conclui-se que a atuação de servidor de qualquer cargo em exercício na Secretaria da Receita Federal do Brasil como procurador ou intermediário, de forma presencial ou virtual, configura conflito de interesses.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que não há qualquer diferença entre a representatividade presencial ou virtual, tendo em vista que a preocupação do legislador, ao estabelecer a restrição exposta acima, não é tolher a liberdade dos agentes públicos, mas evitar abusos que possam comprometer o interesse geral ou o desempenho da função pública em qualquer esfera de governo. E tal abuso pode ocorrer independente da via utilizada para a representação.",
+     "opc": {
+      "id": "procurador_intermediario",
+      "rotulo": "Incluir fundamentação da vedação de atuar como procurador/intermediário (art. 117, XI, da Lei nº 8.112/1990 e art. 5º, IV, da Lei nº 12.813/2013)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, a atuação {{g:do servidor|da servidora}} como {{atuacao_conclusao}}, com o cargo de {{cargo}} {{g:lotado|lotada}} na RFB configura conflito de interesses."
+    }
+   ]
+  }
+ ]
+}

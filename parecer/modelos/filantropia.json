@@ -1,0 +1,135 @@
+{
+ "id": "filantropia",
+ "nome": "Atuação voluntária em entidade filantrópica / sem fins lucrativos",
+ "descricao": "Use quando o servidor pretende atuar como voluntário (sem remuneração) em ONG, entidade filantrópica ou associação sem fins lucrativos, sem exercer função de tesouraria ou conselho fiscal.",
+ "palavrasChave": [
+  "voluntário",
+  "voluntária",
+  "trabalho voluntário",
+  "ong",
+  "entidade filantrópica",
+  "filantropia",
+  "entidade sem fins lucrativos",
+  "associação sem fins lucrativos",
+  "terceiro setor",
+  "projeto social",
+  "mentoria",
+  "bolsas de estudo",
+  "assistência social",
+  "não remunerado",
+  "coordenador de projeto",
+  "observatório social",
+  "sócio fundador"
+ ],
+ "variantes": [
+  {
+   "id": "voluntario_entidade_sem_fins_lucrativos",
+   "rotulo": "Atuação voluntária em entidade sem fins lucrativos – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como voluntário, sem remuneração, em entidade sem fins lucrativos (ONG, projeto social), tendo juntado ou não o estatuto.",
+   "fonte": "PAR 159/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Pedido de autorização para atuar em entidade sem fins lucrativos. Inexistência de conflito de interesses. Compatibilidade com o cargo ocupado."
+   ],
+   "campos": [
+    {
+     "id": "nome_entidade",
+     "rotulo": "Nome da entidade",
+     "exemplo": "Associação X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "objetivo_entidade",
+     "rotulo": "Objetivo da instituição conforme o estatuto (transcrição)",
+     "exemplo": "promover, apoiar, incentivar e desenvolver a educação, a cultura, a assistência social e desenvolvimento socioeconômico",
+     "obrigatorio": false,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo consulente|pela consulente}}, inclusive com a juntada do Estatuto Social da {{nome_entidade}}, trata-se da atividade de atuar, como {{g:voluntário|voluntária}} e sem remuneração, em entidade sem fins lucrativos."
+    },
+    {
+     "t": "p",
+     "x": "Uma breve leitura no estatuto demonstra que o objetivo da instituição é \"{{objetivo_entidade}}\".",
+     "opc": {
+      "id": "objetivo_estatuto",
+      "rotulo": "Incluir parágrafo com o objetivo da instituição conforme o estatuto",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor do pedido de autorização sob o prisma do inciso III, do art. 5° da citada Lei, verifica-se que o exercício de atividade pretendida é materialmente compatível com o cargo e função ocupados {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "É importante ressaltar que {{g:o servidor|a servidora}} não deverá se valer do vínculo com a Receita Federal do Brasil para resolver questões da {{nome_entidade}} perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que o órgão sanciona ou respalda suas atividades particulares. Da mesma forma, deverá se abster de usar quaisquer informações de que é {{g:detentor|detentora}} em razão das atribuições do cargo."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público, não se configurando conflito de interesses, desde que sejam observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "informacoes_insuficientes_diretoria_filantropica",
+   "rotulo": "Informações insuficientes – solicitação de complementação (diretoria de entidade filantrópica)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor apenas informa que foi convidado a participar da diretoria de entidade filantrópica/sem fins lucrativos, sem descrever a entidade, o cargo e suas atribuições. ATENÇÃO: o original conclui pelo retorno do dossiê à Cogep (não pelo encaminhamento à Comissão de Ética) e transcreve o art. 10 da Portaria MF nº 173, de 2014 (revogada) – conferir o dispositivo equivalente na norma vigente e ajustar o encaminhamento.",
+   "fonte": "INF 029/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "DIRETORIA DE ENTIDADE FILANTRÓPICA SEM FINS LUCRATIVOS.",
+   "ementa": [
+    "Consulta sobre a possibilidade de {{cargo}} atuar como diretor de entidade filantrópica sem fins lucrativos. Ausência de documentação para embasar a análise."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme se verifica no formulário preenchido no sistema SeCI, {{g:o servidor|a servidora}} não descreveu as atividades que exerce atualmente na RFB.",
+     "opc": {
+      "id": "sem_atividades_rfb",
+      "rotulo": "Incluir: servidor não descreveu as atividades que exerce na RFB",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} limitou-se a informar que foi {{g:convidado|convidada}} a participar da diretoria de uma entidade filantrópica sem fins lucrativos, sem dar maiores detalhes a respeito da pessoa jurídica, da diretoria a ser ocupada e suas atribuições, tornando a consulta extremamente carente de subsídios necessários à análise."
+    },
+    {
+     "t": "p",
+     "x": "Tal previsão encontra amparo na {{portaria_curta}}:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 10. Caso considerem insuficientes as informações recebidas, as Comissões de Ética e Corregedorias poderão solicitar informações adicionais às unidades de Recursos Humanos por meio do sistema Comprotdoc."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, de forma a possibilitar uma análise mais escorreita por esta Corregedoria, é necessário que {{g:o interessado|a interessada}} complemente as informações e junte o estatuto da entidade filantrópica da qual quer fazer parte, possibilitando, assim, saber com exatidão quais são as atribuições da função a ser ocupada {{g:pelo interessado|pela interessada}}."
+    }
+   ]
+  }
+ ]
+}

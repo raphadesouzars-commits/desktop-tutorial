@@ -1,0 +1,276 @@
+{
+ "id": "terapia_alternativa",
+ "nome": "Terapias, psicologia clínica e yoga",
+ "descricao": "Use quando o servidor pretende atuar como terapeuta (holístico, florais, homeopatia, hipnoterapia, constelação familiar), psicólogo clínico ou instrutor de yoga/desenvolvimento pessoal.",
+ "palavrasChave": [
+  "terapeuta",
+  "terapia alternativa",
+  "terapia holística",
+  "florais de bach",
+  "homeopatia",
+  "hipnoterapia",
+  "hipnoterapeuta",
+  "constelação familiar",
+  "reiki",
+  "práticas integrativas",
+  "psicólogo",
+  "psicologia clínica",
+  "psicoterapia",
+  "yoga",
+  "instrutor de yoga",
+  "desenvolvimento pessoal",
+  "autocuidado",
+  "atendimentos individuais",
+  "pacientes"
+ ],
+ "variantes": [
+  {
+   "id": "terapeuta_pessoa_fisica",
+   "rotulo": "Terapeuta (pessoa física) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende atender como terapeuta (holístico, florais, homeopatia, constelação familiar etc.) em nome próprio, sem vínculo com pessoa jurídica.",
+   "fonte": "PAR 068/2020; PAR 264/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE TERAPEUTA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{descricao_atividade}} com o cargo de {{cargo_sigla}}. Não configura conflito de interesses, desde que observadas as ressalvas deste Parecer."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade terapêutica (como aparecerá após “atividade de”)",
+     "exemplo": "terapeuta holístico e terapeuta com florais de Bach",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha explicitado, entende-se que as atividades serão praticadas como pessoa física, sendo necessária a formulação de nova consulta, caso a atividade pretendida seja executada por intermédio de pessoa jurídica, com a apresentação dos detalhes da natureza jurídica e administração da pessoa jurídica.",
+     "opc": {
+      "id": "pessoa_fisica",
+      "rotulo": "Registrar que a análise pressupõe exercício como pessoa física (nova consulta se houver pessoa jurídica)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Na atuação como terapeuta não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} ({{cargo_sigla}}) em circunstâncias que prejudiquem a moralidade ou interesse público. É dizer, a atividade pleiteada é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}} consulente, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo seus eventuais pacientes."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Feitas todas considerações acima, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{descricao_atividade}} não configura conflito de interesses com o cargo de {{cargo}}, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "terapeuta_socio_cotista",
+   "rotulo": "Terapeuta/treinador por meio de pessoa jurídica (sócio cotista) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que exercerá atividades terapêuticas (ex.: hipnoterapia, treinamentos e coaching de desenvolvimento pessoal) por intermédio de empresa da qual é sócio(a) cotista sem poder de administração.",
+   "fonte": "PAR 093/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "TERAPIA ALTERNATIVA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante de atividades voltadas para o campo de terapia alternativa com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "nome_empresa",
+     "rotulo": "Razão social da empresa",
+     "exemplo": "XYZ Desenvolvimento Pessoal Ltda.",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_empresa",
+     "rotulo": "Atividades econômicas da empresa (CNAE), como aparecerão após “tendo como”",
+     "exemplo": "atividade econômica principal o treinamento em desenvolvimento profissional e gerencial (CNAE 85.99-6-04) e como secundária atividades de práticas integrativas e complementares em saúde humana (CNAE 86.90-9-01)",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividades de treinamento/coaching descritas (verbos no infinitivo)",
+     "exemplo": "ministrar treinamentos e/ou palestras e praticar coaching",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_terapeutica",
+     "rotulo": "Atividade terapêutica de atendimento a clientes/pacientes",
+     "exemplo": "hipnoterapia",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Cumpre ressaltar que, após verificação no banco de dados da RFB, o Cadastro Nacional da Pessoa Jurídica (CNPJ) informado {{g:pelo consulente|pela consulente}} refere-se à entidade {{nome_empresa}}, empresa ativa, tendo como {{atividade_empresa}}. Ademais, constatou-se que {{g:o servidor interessado é sócio|a servidora interessada é sócia}} da referida empresa, sem poder de administração/gerência."
+    },
+    {
+     "t": "p",
+     "x": "Em primeiro plano, deve-se atentar para o imperativo quanto à não participação {{g:do servidor|da servidora}} em funções gerenciais ou de administração da empresa {{nome_empresa}}, ainda que informal e eventualmente, de forma a não incorrer na infração prevista no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, a seguir transcrito:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ademais, a Lei nº 12.813/2013 estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida lei, opina-se que o exercício das atividades descritas {{g:pelo consulente|pela consulente}}, {{descricao_atividade}}, estritamente voltadas ao campo terapêutico, é materialmente compatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "No tocante ao exercício da atividade de {{atividade_terapeutica}}, não se vislumbra, do mesmo modo, incompatibilidade material com o cargo ocupado. No entanto, chamamos atenção para o fato de que {{g:o consulente|a consulente}} não deve atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo seus clientes/pacientes."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, cabe alertar {{g:o consulente|a consulente}} que a utilização da empresa {{nome_empresa}} para a prática das atividades privadas pleiteadas deve ter verdadeiro propósito negocial, e não a finalidade de evasão fiscal e/ou trabalhista, situação que, se concretizada, possui interesse fiscal e, em se tratando de {{g:servidor|servidora}} da RFB, poderá acarretar interesse disciplinar ou ético, fora do escopo da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades informadas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "psicologo_clinico",
+   "rotulo": "Psicologia clínica – compatibilidade material, observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) com formação em psicologia que pretende atender pessoas físicas como psicólogo(a) clínico(a), em horário diverso do expediente.",
+   "fonte": "PAR 103/2022",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE DE PSICÓLOGO CLÍNICO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da psicologia clínica com o cargo de {{cargo}}.",
+    "Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme transcrito acima, verifica-se que {{g:o servidor|a servidora}} pretende trabalhar diretamente com pessoas físicas, desempenhando atividades de {{g:psicólogo clínico|psicóloga clínica}}."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, em seu art. 3º, I, conceitua conflito de interesses como “a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública”. As hipóteses que configuram conflito de interesses no âmbito do Poder Executivo Federal são as descritas no art. 5º da citada lei."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 2013, conclui-se que o exercício da atividade descrita é materialmente compatível com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Não obstante, é imperioso alertar para que {{g:o interessado|a interessada}} se abstenha de atuar em quaisquer procedimentos e processos que tramitem perante a RFB e que envolvam seus eventuais clientes."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Feitas todas considerações acima, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{g:psicólogo clínico|psicóloga clínica}} não configura conflito de interesses com o cargo de {{cargo}}, desde que observadas as ressalvas acima.",
+     "opc": {
+      "id": "conclusao_expressa",
+      "rotulo": "Incluir parágrafo de conclusão expressa (redação do PAR 068/2020; o parecer-fonte desta variante não o traz)",
+      "padrao": true
+     }
+    }
+   ]
+  },
+  {
+   "id": "yoga_conteudo_digital_licenca",
+   "rotulo": "Aulas de yoga e conteúdos digitais de desenvolvimento pessoal (durante licença para tratar de interesses particulares) – compatibilidade material",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que, durante licença para tratar de interesses particulares, pretende dar aulas (ex.: yoga) e produzir conteúdos/produtos online sem relação com as atividades da RFB.",
+   "fonte": "PAR 212/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "AULAS DE YOGA. DESENVOLVIMENTO DE PRODUTOS/CONTEÚDOS SOBRE DESENVOLVIMENTO PESSOAL, AUTOCUIDADO E CRIATIVIDADE EM PLATAFORMA DIGITAL.",
+   "ementa": [
+    "Pedido de autorização para trabalhar como {{g:instrutor|instrutora}} de yoga e produzir produtos e conteúdos em plataforma digital. Compatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo trabalhar em áreas que não tem qualquer relação com as atividades desenvolvidas pela Secretaria Especial da Receita Federal do Brasil. Informa que pretende usufruir de licença para tratar de interesses particulares."
+    },
+    {
+     "t": "p",
+     "x": "Analisando as atividades a serem desenvolvidas, opinamos pela compatibilidade material com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que a matéria dos produtos e conteúdos a serem desenvolvidos não envolva conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria Especial da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o teor da consulta sob o prisma do inciso III, do art. 5° da Lei nº 12.813/2013, verifica-se que o exercício das atividades descritas são materialmente compatíveis com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Ainda que {{g:o servidor|a servidora}} informe que as atividades serão exercidas durante o período de licença para tratar de assuntos particulares, informa-se que tais atividades são permitidas mesmo quando voltar a exercer suas atividades na RFB, sendo necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  }
+ ]
+}

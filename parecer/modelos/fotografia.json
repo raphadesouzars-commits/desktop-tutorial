@@ -1,0 +1,142 @@
+{
+ "id": "fotografia",
+ "nome": "Fotografia, música e atividades artísticas",
+ "descricao": "Use quando o servidor pretende exercer atividade artística remunerada (fotografia, música, pintura, artesanato, apresentações), como pessoa física ou como sócio cotista de estúdio.",
+ "palavrasChave": [
+  "fotógrafo",
+  "fotografia",
+  "estúdio fotográfico",
+  "ensaio fotográfico",
+  "músico",
+  "apresentação musical",
+  "pianista",
+  "violão",
+  "cantor",
+  "banda",
+  "pintura",
+  "quadros",
+  "artes visuais",
+  "cerâmica",
+  "artesanato",
+  "feiras",
+  "atividade artística",
+  "artista"
+ ],
+ "variantes": [
+  {
+   "id": "atividade_artistica_pessoa_fisica",
+   "rotulo": "Atividade artística como pessoa física – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende exercer, em nome próprio, atividade artística (fotografia, música, pintura, produção e venda de objetos, participação em feiras).",
+   "fonte": "PAR 300/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE ARTÍSTICA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade artística com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividades artísticas descritas na consulta",
+     "exemplo": "estudo de artes visuais, produção e venda de objetos decorativos em cerâmica, participação em feiras, atividade artística musical remunerada (percussão)",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, ressalta-se que esta consulta será analisada sob o prisma de ser praticada {{g:pelo consulente|pela consulente}} apenas como pessoa física, sendo necessária a formulação de nova consulta, caso a atividade pretendida seja executada por intermédio de pessoa jurídica, com a apresentação dos detalhes da natureza jurídica e administração da pessoa jurídica."
+    },
+    {
+     "t": "p",
+     "x": "Feito tal esclarecimento, analisando o pleito sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, concluímos que o exercício das atividades descritas {{g:pelo servidor|pela servidora}} ({{descricao_atividade}}) é materialmente compatível com o cargo e a função ocupados, uma vez que os assuntos não envolvem conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil (RFB)."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, e que os assuntos tratados no exercício dessa atividade privada não podem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao consulente|à consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades expressas {{g:pelo servidor|pela servidora}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "fotografo_socio_cotista",
+   "rotulo": "Fotógrafo com estúdio/pessoa jurídica (sócio cotista) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende atuar como fotógrafo(a) e constituir ou integrar pessoa jurídica (estúdio fotográfico), hipótese em que só pode ser acionista, cotista ou comanditário, sem gerência ou administração.",
+   "fonte": "INF 150/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE FOTÓGRAFO. ESTÚDIO FOTOGRÁFICO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de Fotógrafo, criação de Estúdio Fotográfico e celebração de contratos com terceiros. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, compete registrar que a inscrição como pessoa jurídica é matéria que se encontra fora do âmbito da Lei de Conflito de Interesses, dizendo respeito à legislação disciplinar, mais precisamente ao artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, que estabelece que ao servidor é proibido “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a partir das informações prestadas {{g:pelo consulente|pela consulente}}, verifica-se que a situação descrita na consulta se insere no permissivo contido na segunda parte do inciso X, do artigo 117, da Lei n° 8.112, de 1990, que permite que o servidor público seja sócio de empresa na qualidade de “acionista, cotista ou comanditário”, após ter-lhe vedado atividades de gerência e administração de empresas."
+    },
+    {
+     "t": "p",
+     "x": "Referido dispositivo legal conjeturou permitir aos servidores públicos a participação marginal em empresas."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, como essa situação descrita {{g:pelo consulente|pela consulente}} não apresenta qualquer particularidade que afaste o permissivo disciplinar da segunda parte do artigo 117, inciso X, da Lei n° 8.112/90, bem como não atrai eventualmente a aplicação das normas que tratam especificamente de conflito de interesses, observa-se que esse assunto trata de uma consulta a essa Corregedoria, acerca de matéria disciplinar."
+    },
+    {
+     "t": "p",
+     "x": "Assim, respondendo às perguntas {{g:do consulente|da consulente}}, precisamente dentro do contexto que nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” da empresa (“estúdio fotográfico”) que mencionou na consulta, ainda que {{g:majoritário|majoritária}}, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90. Sendo-lhe expressamente vedadas atividades de gerência e administração."
+    },
+    {
+     "t": "p",
+     "x": "Prosseguindo nossa análise, consignamos que a Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à possível atuação {{g:do servidor|da servidora}} consulente como {{g:fotógrafo|fotógrafa}}, não se vislumbra incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Quanto aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{g:fotógrafo|fotógrafa}}, sob a condição de {{g:sócio-cotista|sócia-cotista}} de empresa privada (“estúdio fotográfico”), por sua natureza, não configura conflito de interesses, desde que observadas as ressalvas acima. Impende salientar que a referida autorização não exime eventuais penalidades por infração às demais legislações, especialmente à Lei n° 8.112/1990."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo consulente|pela consulente}}, de forma que eventuais alterações na situação (atividade) apresentada devem ser objeto de nova consulta.",
+     "opc": {
+      "id": "nova_consulta",
+      "rotulo": "Registrar que alterações na situação apresentada exigem nova consulta",
+      "padrao": true
+     }
+    }
+   ]
+  }
+ ]
+}

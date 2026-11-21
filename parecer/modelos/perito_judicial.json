@@ -1,0 +1,255 @@
+{
+ "id": "perito_judicial",
+ "nome": "Perito judicial",
+ "descricao": "Usar quando o servidor pretende atuar como perito nomeado pelo Juízo, perito/calculista extrajudicial ou assistente técnico de parte em processos judiciais.",
+ "palavrasChave": [
+  "perito judicial",
+  "perito",
+  "perícia",
+  "perícias judiciais",
+  "perito contábil",
+  "perito trabalhista",
+  "perito extrajudicial",
+  "assistente técnico",
+  "calculista",
+  "cálculos trabalhistas",
+  "cálculos judiciais",
+  "pje-calc",
+  "auxiliar da justiça",
+  "laudo pericial",
+  "cadastro de peritos",
+  "nomeado pelo juiz",
+  "perito engenheiro"
+ ],
+ "variantes": [
+  {
+   "id": "perito_judicial_sem_conflito_ressalvas",
+   "rotulo": "Perito judicial em área não vedada (ex.: engenharia) – compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como perito nomeado pelo Juízo em área que não seja contabilidade/advocacia (ex.: engenharia), sem envolver conhecimentos internos da RFB.",
+   "fonte": "PAR 252/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE CARGO DE PERITO JUDICIAL.",
+   "ementa": [
+    "Pedido de autorização. Atividade materialmente compatível com o exercício do cargo."
+   ],
+   "campos": [
+    {
+     "id": "area_pericia",
+     "rotulo": "Área de atuação como perito",
+     "exemplo": "Engenharia de Telecomunicações",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor|pela servidora}} consulente, existe a pretensão de atuar como auxiliar da Justiça, na condição de perito judicial na área de {{area_pericia}}."
+    },
+    {
+     "t": "p",
+     "x": "Com a edição da Resolução 233, de 13/07/2016, do CNJ, que dispõe sobre a criação de cadastro de profissionais e órgãos técnicos ou científicos no âmbito da Justiça de primeiro e segundo graus, o Conselho Nacional de Justiça elucidou o tema, conforme se verifica abaixo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 14. Ao detentor de cargo público no âmbito do Poder Judiciário é vedado o exercício do encargo de perito, exceto nas hipóteses do art. 95, § 3º, I, do Código de Processo Civil."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, resta claro que apenas os servidores do Poder Judiciário não podem atuar como perito judicial, com as exceções previstas nas hipóteses do art. 95, §3º, I, do CPC."
+    },
+    {
+     "t": "p",
+     "x": "Nos termos do §3º, do art. 4º, da Resolução 233, de 13/07/2016, do CNJ, não há vínculo empregatício ou estatutário do perito judicial:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "§ 3º O cadastramento ou a efetiva atuação do profissional, nas hipóteses de que trata esta Resolução, não gera vínculo empregatício ou estatutário, nem obrigação de natureza previdenciária."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito somente sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade de perito judicial é materialmente compatível com o cargo, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários, no caso em que {{g:o servidor|a servidora}} esteja no exercício do cargo, e não em licença para tratar de interesses particulares, é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Em relação à compatibilidade de horários é importante que seja considerado o disposto no inciso IV do art. 12 da Resolução 233, de 13/07/2016, do CNJ, em relação à rigorosa observância da data e horários designados para a realização das perícias e dos atos técnicos ou científicos, o que deverá ser devidamente verificado {{g:pelo|pela}} consulente para que não implique na vedação disposta no item anterior:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 12. São deveres dos profissionais e dos órgãos cadastrados nos termos desta Resolução:",
+      "[...]",
+      "IV – observar, rigorosamente, a data e os horários designados para a realização das perícias e dos atos técnicos ou científicos;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por fim, recomenda-se que seja dado conhecimento da atividade pretendida {{g:pelo|pela}} requerente ao seu superior hierárquico de forma que este faça o adequado controle da carga horária {{g:do servidor|da servidora}}.",
+     "opc": {
+      "id": "ciencia_chefia",
+      "rotulo": "Recomendar ciência ao superior hierárquico para controle da carga horária (PAR 281/2017 e PAR 285/2017)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, desde que observadas todas as ressalvas acima, entende-se que é compatível o exercício da atividade de perito judicial."
+    }
+   ]
+  },
+  {
+   "id": "perito_trabalhista_compativel",
+   "rotulo": "Perito judicial e extrajudicial de cálculos trabalhistas – compatibilidade material",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como perito judicial e extrajudicial na área trabalhista (perícias, cálculos trabalhistas, PJe-Calc).",
+   "fonte": "PAR 246/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PERITO DE CÁLCULOS TRABALHISTAS.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de atuar como perito judicial e extrajudicial na área trabalhista. Compatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do servidor|da servidora}} quando do exercício efetivo da atividade, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade de perito judicial e extrajudicial na área trabalhista é compatível materialmente com o cargo ocupado {{g:pelo|pela}} consulente."
+    }
+   ]
+  },
+  {
+   "id": "perito_contabil_assistente_tecnico_conflito",
+   "rotulo": "Perito contábil, assistente técnico ou calculista para partes/escritórios – conflito (Portaria RFB nº 444/2015)",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor da Carreira Tributária e Aduaneira pretende atuar como perito judicial contábil, assistente técnico contábil de parte ou elaborar cálculos para escritórios de advocacia e empresas visando ações judiciais.",
+   "fonte": "PAR 102/2020",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Consulta sobre possibilidade de atuar como perito judicial contábil, como assistente técnico contábil em processo judicial e em atividades de elaboração de cálculos para escritório de advocacia e outras empresas. Atividades incompatíveis com o cargo. Vedação prevista na Portaria nº 444/2015."
+   ],
+   "campos": [
+    {
+     "id": "contratantes",
+     "rotulo": "Para quem os cálculos/assistência técnica seriam prestados",
+     "exemplo": "um escritório de advocacia e empresas que prestam serviços para Municípios da Região",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "areas_causas",
+     "rotulo": "Áreas das causas judiciais",
+     "exemplo": "Trabalhista, Previdenciária, Tributária e Administrativa",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Da análise da referida Lei, observa-se que o legislador busca reprimir a prática de quaisquer atividades privadas que possam configurar incompatibilidade material com a natureza do cargo ou suscitar o conflito de interesses, quer pela possibilidade de comprometer a precedência e o desempenho da função pública, quer pela possibilidade de o servidor obter favorecimentos ou agregar vantagens, benefícios, preferências e privilégios nos atos de sua vida privada, se valendo da condição de servidor."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo|pela}} consulente, verifica-se que existe a pretensão de exercer a atividade particular de calculista/assistente técnico para {{contratantes}}, objetivando o ajuizamento de ações judiciais pelos contratantes."
+    },
+    {
+     "t": "p",
+     "x": "O calculista ou assistente técnico é o consultor da parte, contratado para assessorá-la em questões técnicas, auxiliando-a em suas demandas, inclusive para concordar, criticar ou complementar laudo de perito oficial."
+    },
+    {
+     "t": "p",
+     "x": "Conforme estabelecido no artigo 466, § 1º, da Lei nº 13.105, de 16 de março de 2015, (Código de Processo Civil):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 466. O perito cumprirá escrupulosamente o encargo que lhe foi cometido, independentemente de termo de compromisso.",
+      "§ 1º Os assistentes técnicos são de confiança da parte e não estão sujeitos a impedimento ou suspeição. (negritei)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "O calculista é o detentor de conhecimento técnico, especializado, que avalia direitos e obrigações em litígio, formalizando documento, que podem ser planilhas, em regra com memória de cálculo e resumo, que objetivam fundamentar a autenticidade de suas conclusões. Em outros termos, é um perito, um verdadeiro consultor/assessor, de que a parte se vale para fundamentar suas pretensões em Juízo."
+    },
+    {
+     "t": "p",
+     "x": "Pela própria afirmação {{g:do|da}} consulente, de que os cálculos seriam para subsidiar causas judiciais, confirma-se essa natureza da atividade particular pretendida."
+    },
+    {
+     "t": "p",
+     "x": "Registre que, no âmbito da Secretaria Especial da Receita Federal do Brasil, foi editada a Portaria RFB nº 444, de 23 de março de 2015, a qual dispõe sobre as atividades consideradas incompatíveis para os agentes públicos da Carreira Tributária e Aduaneira, *in verbis*:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444/2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I – advocacia;",
+      "II – contabilidade;",
+      "III – praticagem. (grifei)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, resta evidenciado que a atividade contábil afigura-se materialmente incompatível com o cargo de {{cargo}}, pela possibilidade de {{g:o servidor|a servidora}} obter, para si ou outrem, favorecimentos ou diferenciações nos atos de sua vida privada, se valendo da condição de {{g:servidor|servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Assim, no entendimento desta Corregedoria, conclui-se que o exercício da atividade particular de calculista/assistente técnico, objetivando causas judiciais nas áreas {{areas_causas}}, é incompatível com as atribuições do cargo ocupado {{g:pelo servidor|pela servidora}}, por infração ao disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas; (grifei)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em relação à pretensão de atuar como perito judicial nomeado pelo Juízo, também se caracteriza como materialmente incompatível com o cargo {{g:do servidor|da servidora}}, uma vez que a área de atuação pretendida é referente à contabilidade, de forma que permanece a vedação prevista na Portaria RFB nº 444/2015. Importante salientar que se a área de atuação não fosse daquelas incluídas na referida portaria, não haveria óbice ao exercício da atividade."
+    }
+   ]
+  }
+ ]
+}

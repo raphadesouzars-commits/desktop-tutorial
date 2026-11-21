@@ -1,0 +1,326 @@
+{
+ "id": "conselho_fiscal_sem_fins_lucrativos",
+ "nome": "Conselho fiscal de entidade sem fins lucrativos ou de condomínio",
+ "descricao": "Use quando o servidor pretende integrar conselho fiscal (ou conselho consultivo/diretoria) de fundação, associação, observatório social ou condomínio residencial.",
+ "palavrasChave": [
+  "conselho fiscal",
+  "conselheiro fiscal",
+  "membro do conselho fiscal",
+  "suplente do conselho fiscal",
+  "conselho consultivo",
+  "fundação",
+  "associação sem fins lucrativos",
+  "instituição sem fins lucrativos",
+  "observatório social",
+  "conselho fiscal de condomínio",
+  "aprovar contas",
+  "atestar contas",
+  "parecer sobre balanço",
+  "demonstrações financeiras",
+  "entidade sem fins lucrativos"
+ ],
+ "variantes": [
+  {
+   "id": "conselho_fiscal_entidade",
+   "rotulo": "Membro de conselho fiscal de fundação/associação – exercício condicionado (Termo de Compromisso)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ser membro do conselho fiscal de fundação ou associação sem fins lucrativos (estatuto não anexado).",
+   "fonte": "PAR 224/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "MEMBRO DO CONSELHO FISCAL DE ENTIDADE SEM FINS LUCRATIVOS.",
+   "ementa": [
+    "Pedido de autorização para atuar como membro em conselho fiscal da {{nome_entidade}}. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [
+    {
+     "id": "nome_entidade",
+     "rotulo": "Nome da entidade",
+     "exemplo": "Fundação X",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha anexado o estatuto da {{nome_entidade}}, em princípio, pode-se inferir que entre as atribuições de membro do conselho fiscal, estão aquelas referentes ao exercício da contabilidade, o que resultaria em incompatibilidade material com o exercício do cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em caso análogo, a CGU, por meio da Nota Técnica n° 790/2015/CGINC/DIACI/STPC/CGU-PR, entendeu por autorizar que um ocupante do cargo de AFRFB exercesse, de forma condicionada, a atividade de Tesoureiro de Congregação Religiosa, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "6. Primeiramente, vale ressaltar que a probabilidade de o servidor beneficiar a (...) em questões tributárias ou mesmo atuar na Receita Federal em processos que envolvam a (...) é muito pequena, tendo em vista que a instituição possui imunidade tributária. Além disso, o consulente pode mitigar ainda mais tal risco, caso se abstenha de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e se exima, em qualquer caso, de atuar como representante da congregação religiosa perante a RFB.",
+      "[...]",
+      "8. Assim, entendemos que, nos termos apresentados, seja possível a atuação do consulente como tesoureiro da (...), desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, e a jurisprudência da CGU em caso análogo, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer a atividade privada de membro do conselho fiscal da {{nome_entidade}}, desde que obedecidas as condições estabelecidas pela CGU no caso que se toma como paradigma."
+    },
+    {
+     "t": "p",
+     "x": "Tais condições determinam que {{g:o servidor|a servidora}} deverá abster-se de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e de atuar como representante da {{nome_entidade}} perante a fazenda pública. Ademais, deverá assinar Termo de Compromisso junto à RFB se comprometendo a não realizar essas atividades."
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, registre-se que encontra-se vigente a Portaria RFB nº 444/2015:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444/2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I – advocacia;",
+      "**II – contabilidade;**",
+      "III – praticagem. (grifos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de membro de conselho fiscal da {{nome_entidade}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "diretoria_ou_conselho_entidade",
+   "rotulo": "Membro de diretoria, conselho consultivo ou conselho fiscal de entidade sem fins lucrativos (ex.: observatório social) – exercício condicionado",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor foi convidado para ocupar a diretoria, o conselho consultivo ou o conselho fiscal de associação civil sem fins lucrativos cujo estatuto atribui ao conselho fiscal exame de balanço e escrituração.",
+   "fonte": "PAR 602/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "MEMBRO DE DIRETORIA OU CONSELHO DE INSTITUIÇÃO SEM FINS LUCRATIVOS.",
+   "ementa": [
+    "Consulta sobre atuar como membro em diretoria ou conselho fiscal/consultivo de entidade sem fins lucrativos. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [
+    {
+     "id": "nome_entidade",
+     "rotulo": "Nome da entidade",
+     "exemplo": "Observatório Social X",
+     "obrigatorio": false,
+     "multilinha": false
+    },
+    {
+     "id": "atribuicao_estatuto",
+     "rotulo": "Atribuição de representação prevista no estatuto (transcrição)",
+     "exemplo": "representar a entidade, ativa e passivamente, em juízo ou fora dele, em suas relações com a Administração Pública e qualquer terceiro",
+     "obrigatorio": false,
+     "multilinha": true
+    },
+    {
+     "id": "dispositivo_estatuto",
+     "rotulo": "Dispositivo do estatuto",
+     "exemplo": "artigo 39",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Pode-se constatar que entre as atribuições de membro do conselho fiscal, estão algumas referentes ao exercício da contabilidade, o que resultaria em incompatibilidade material com o exercício do cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em caso análogo, a CGU, por meio da Nota Técnica n° 790/2015/CGINC/DIACI/STPC/CGU-PR, entendeu por autorizar que um ocupante do cargo de AFRFB exercesse, de forma condicionada, a atividade de Tesoureiro de Congregação Religiosa, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "6. Primeiramente, vale ressaltar que a probabilidade de o servidor beneficiar a (...) em questões tributárias ou mesmo atuar na Receita Federal em processos que envolvam a (...) é muito pequena, tendo em vista que a instituição possui imunidade tributária. Além disso, o consulente pode mitigar ainda mais tal risco, caso se abstenha de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e se exima, em qualquer caso, de atuar como representante da congregação religiosa perante a RFB.",
+      "[...]",
+      "8. Assim, entendemos que, nos termos apresentados, seja possível a atuação do consulente como tesoureiro da (...), desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, registre-se que encontra-se vigente a Portaria RFB nº 444/2015:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444/2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I – advocacia;",
+      "**II – contabilidade;**",
+      "III – praticagem. (grifos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No que se refere à ocupação de outros cargos, seja na Diretoria ou no Conselho Consultivo, as mesmas restrições devem ser observadas."
+    },
+    {
+     "t": "p",
+     "x": "Atenção maior deve-se ter com os cargos de Presidente e Vice-Presidente do {{nome_entidade}}, uma vez que os mesmos têm a previsão estatutária de “{{atribuicao_estatuto}}”, conforme dispõe o {{dispositivo_estatuto}} do estatuto.",
+     "opc": {
+      "id": "presidente_representa",
+      "rotulo": "Incluir alerta sobre cargos de Presidente/Vice-Presidente com poder de representação",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Registre-se que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com a publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o consulente|a consulente}} venha a exercer algum cargo que detenha a competência de representar a entidade, deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, é importante ressaltar que {{g:o consulente|a consulente}} não deve se apresentar nessa empreitada particular como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB, de forma a sugerir que o órgão público a que está {{g:vinculado|vinculada}} sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do consulente|da consulente}}, cabendo a {{g:ele|ela}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades informadas {{g:pelo consulente|pela consulente}} não configuram conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "conselho_fiscal_condominio",
+   "rotulo": "Conselho fiscal de condomínio residencial – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende participar do conselho fiscal do condomínio residencial em que reside ou irá residir.",
+   "fonte": "PAR 216/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PEDIDO DE AUTORIZAÇÃO PARA PARTICIPAR DE CONSELHO FISCAL DE CONDOMÍNIO RESIDENCIAL.",
+   "ementa": [
+    "{{g:O servidor|A servidora}} solicita autorização para participar de conselho fiscal de condomínio residencial.",
+    "Não há conflito de interesses desde que cumpra as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Em primeiro plano, deve-se atentar para o imperativo quanto à não participação {{g:do servidor|da servidora}} em atividades de representação do condomínio junto à RFB ou qualquer outra repartição pública, tendo em vista o disposto no inciso IV do artigo 5º da Lei nº 12.813/2013 e no inciso XI do artigo 117 da Lei nº 8.112/90."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei 12.813/2013",
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "IV – atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;",
+      "Lei 8.112/90",
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XI - atuar, como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 16 de maio de 2013, verifica-se que o exercício da atividade de conselheiro fiscal do condomínio residencial, a princípio, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, é importante ressaltar que {{g:o consulente|a consulente}} não deve se valer do vínculo com a RFB para resolver questões do condomínio perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se, ainda, que {{g:o consulente|a consulente}} deixou claro que a atividade que pretende exercer se restringe a atestar ou não as contas do condomínio, as quais serão objeto de contabilização por uma empresa de contabilidade.",
+     "opc": {
+      "id": "apenas_atesta_contas",
+      "rotulo": "Incluir: servidor declarou que apenas atestará as contas, contabilizadas por empresa de contabilidade",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Em hipótese alguma {{g:o interessado|a interessada}} deve atuar na elaboração de demonstrações contábeis e de outros documentos congêneres do condomínio que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios, tendo em vista a proibição constante no inciso II, do art. 1º da Portaria RFB nº 444, de 23/03/2015."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444/2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I – advocacia;",
+      "**II – contabilidade;**",
+      "III – praticagem. (grifos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por fim, saliente-se que {{g:o servidor|a servidora}} deve declarar-se {{g:impedido|impedida}} de atuar, no exercício do cargo público que ocupa, de quaisquer demandas que envolvam o condomínio."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "informacoes_insuficientes_conselho_fiscal",
+   "rotulo": "Informações insuficientes – solicitação de complementação (conselho fiscal de associação)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pede autorização para participar de conselho fiscal de associação sem fins lucrativos sem informar a forma jurídica/estrutura da entidade nem as atribuições do conselho. ATENÇÃO: o original conclui pelo retorno do dossiê à Cogep (não pelo encaminhamento à Comissão de Ética) e transcreve o art. 10 da Portaria MF nº 173, de 2014 (revogada) – conferir o dispositivo equivalente na norma vigente e ajustar o encaminhamento.",
+   "fonte": "INF 077/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PARTICIPAÇÃO EM CONSELHO FISCAL DE ASSOCIAÇÃO SEM FINS LUCRATIVOS.",
+   "ementa": [
+    "Pedido de autorização para participar de conselho fiscal de associação sem fins lucrativos. Não há informações acerca das atividades a serem executadas e a estrutura da entidade."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "No entanto, {{g:o servidor|a servidora}} não deixou claro como seriam a forma jurídica, a organização e a estrutura da entidade. Ademais, com relação à participação no Conselho Fiscal, faz-se necessário que {{g:o consulente|a consulente}} informe pormenorizadamente em que consistiriam tais atividades, especificando os atos que seriam praticados, assim como as demais atribuições e competências do referido conselho."
+    },
+    {
+     "t": "p",
+     "x": "Tal previsão encontra amparo na {{portaria_curta}}:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 10. Caso considerem insuficientes as informações recebidas, as Comissões de Ética e Corregedorias poderão solicitar informações adicionais às unidades de Recursos Humanos por meio do sistema Comprotdoc."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, de forma a possibilitar uma análise mais escorreita por esta Corregedoria, é necessária a complementação das informações, a fim de analisar a compatibilidade com a legislação que rege a matéria disciplinar."
+    }
+   ]
+  }
+ ]
+}

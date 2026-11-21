@@ -1,0 +1,381 @@
+{
+ "id": "comercio",
+ "nome": "Comércio, revenda e venda de produtos",
+ "descricao": "Usar quando o servidor pretende exercer comércio ou atividade empresarial (fabricar e vender produtos, MEI, revenda/venda direta, franquia) ou comercializar obra intelectual própria.",
+ "palavrasChave": [
+  "comércio",
+  "venda de produtos",
+  "revenda",
+  "revendedor",
+  "consultor independente",
+  "venda direta",
+  "marketing multinível",
+  "mei",
+  "microempreendedor individual",
+  "empresário individual",
+  "franquia",
+  "loja",
+  "fabricação",
+  "comercializar",
+  "aplicativos",
+  "e-book",
+  "loja virtual",
+  "promotor de vendas"
+ ],
+ "variantes": [
+  {
+   "id": "comercio_vedado_empresario",
+   "rotulo": "Exercício de comércio / atividade empresarial individual (inclusive MEI) – vedado pelo art. 117, X (encaminhamento à Cogep, não à CEP)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende exercer pessoalmente atividade econômica organizada de produção ou circulação de bens (empresário individual, MEI, fabricação e venda de produtos), fora da condição de acionista, cotista ou comanditário.",
+   "fonte": "INF 050/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE COMÉRCIO.",
+   "ementa": [
+    "Consulta sobre a atividade de {{descricao_atividade}}. Vedação prevista no art. 117, inciso X, da Lei nº 8.112, de 1990."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade pretendida (completa \"atividade de ...\")",
+     "exemplo": "produção e comercialização de câmeras de vigilância",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Pelo teor da consulta verifica-se que, em síntese, {{g:o|a}} consulente questiona acerca da possibilidade de exercer profissionalmente atividade econômica organizada para a {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, é proibido ao servidor “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "De início cumpre registrar que o art. 117, inciso X, da Lei nº 8.112, de 1990, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o artigo supracitado, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa.” (grifou-se)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Desta feita, a atividade de {{descricao_atividade}} se enquadra na vedação de exercício de comércio tipificada acima, uma vez que se enquadra no conceito de empresário."
+    },
+    {
+     "t": "p",
+     "x": "De todo o exposto se verifica que o presente caso extrapola o âmbito da Lei de Conflito de Interesses (Lei nº 12.813, de 16 de maio de 2013) e o de uma consulta SeCI, de forma que será tratado como uma consulta a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "Assim, esta {{orgao_corregedoria}} entende que é vedado o exercício da atividade empresarial de {{descricao_atividade}}, de forma que propõe-se o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do|da}} consulente."
+    }
+   ]
+  },
+  {
+   "id": "revenda_venda_direta_vedada",
+   "rotulo": "Revenda de produtos / venda direta / marketing multinível – vedado pelo art. 117, X (encaminhamento à Cogep, não à CEP)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende atuar como revendedor ou consultor independente de marca de venda direta (cosméticos, suplementos etc.), inclusive em marketing de rede.",
+   "fonte": "INF 019/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "REVENDA DE PRODUTOS.",
+   "ementa": [
+    "Pedido de autorização. {{cargo}}. Revenda de produtos da empresa {{marca_empresa}}."
+   ],
+   "campos": [
+    {
+     "id": "marca_empresa",
+     "rotulo": "Marca/empresa cujos produtos seriam revendidos",
+     "exemplo": "Marca X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "denominacao_revendedor",
+     "rotulo": "Denominação da função pretendida",
+     "exemplo": "Consultor Independente da Marca X",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Pelo teor da consulta verifica-se que, em síntese, {{g:o|a}} consulente pretende ser “{{denominacao_revendedor}}”."
+    },
+    {
+     "t": "p",
+     "x": "Em consulta ao site da empresa {{marca_empresa}} verifica-se que o “{{denominacao_revendedor}}” exerce “uma atividade comercial flexível, experimentando o sistema de vendas diretas”, que “é a comercialização de bens e serviços que os revendedores autônomos promovem direta e pessoalmente aos consumidores, em suas residências, locais de trabalho ou em outros locais que não sejam estabelecimentos comerciais”. Ou seja, a atividade pretendida {{g:pelo|pela}} consulente é de revenda/comércio.",
+     "opc": {
+      "id": "consulta_site",
+      "rotulo": "Citar a descrição de venda direta constante do site da empresa (conferir no site antes de usar; a redação citada é a de um caso concreto)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, é proibido ao servidor “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "Assim, de pronto, verifica-se que a atividade privada pretendida {{g:pelo|pela}} consulente, qual seja, revenda/comércio de produtos, é expressamente vedada pelo artigo 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Do exposto no item anterior também se verifica que o presente caso extrapola o âmbito da Lei de Conflito de Interesses (Lei nº 12.813, de 16 de maio de 2013) e o de uma consulta SeCI, de forma que será tratado como uma consulta a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "Assim, esta {{orgao_corregedoria}} entende que é vedado o exercício da atividade de “{{denominacao_revendedor}}”, de revenda/comércio de produtos dessa marca/empresa, de forma que propõe-se o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do|da}} consulente."
+    }
+   ]
+  },
+  {
+   "id": "criacao_intelectual_comercializacao",
+   "rotulo": "Criação intelectual (aplicativos, livros, e-books) e oferta/venda da própria obra – não configura conflito, com ressalvas; limites do art. 966, parágrafo único, do Código Civil",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor desenvolve obra intelectual própria (aplicativo, software, livro, e-book) e pretende oferecê-la ou vendê-la em loja virtual/plataforma de terceiros, sem montar empresa própria.",
+   "fonte": "INF 023/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CRIAÇÃO E VENDA DE OBRA INTELECTUAL.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{descricao_atividade}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade de criação (entre aspas no texto)",
+     "exemplo": "fazer aplicativos para iphone",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "objeto_obra",
+     "rotulo": "Objeto criado (plural, com artigo: \"dos referidos ...\")",
+     "exemplo": "aplicativos",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "forma_oferta",
+     "rotulo": "Forma de oferta/comercialização (entre aspas no texto)",
+     "exemplo": "oferecer esses aplicativos na App Store",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opinamos que o exercício da atividade de “{{descricao_atividade}}”, por si só, não é incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, registramos a ressalva de que o conteúdo dos referidos {{objeto_obra}} não envolva conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria da Receita Federal do Brasil, tais como divulgação de assuntos relativos aos tributos e contribuições administradas pela RFB, bem como serviços de assessoria, de consultoria e de orientação na área tributária e previdenciária."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Prosseguindo, {{g:o|a}} consulente assinalou que sua atividade não se circunscreveria apenas a “{{descricao_atividade}}”, uma vez que {{g:ele|ela}} pretende “{{forma_oferta}}”."
+    },
+    {
+     "t": "p",
+     "x": "De pronto cabe chamar a atenção para o fato de que essa parte da consulta diz respeito a matéria estritamente disciplinar, que será analisada como uma consulta formulada a esta Corregedoria, que detém competência exclusiva para se manifestar sobre o assunto."
+    },
+    {
+     "t": "p",
+     "x": "De início salientamos que o presente caso deve ser tratado da mesma forma que o servidor que pretende ser escritor, e neste sentido inclusive a Lei nº 9.609, de 19 de fevereiro de 1998, que “dispõe sobre a proteção da propriedade intelectual de programa de computador, sua comercialização no País, e dá outras providências”, estabelece em seu art. 2º, caput:",
+     "opc": {
+      "id": "software",
+      "rotulo": "A obra é programa de computador/aplicativo (citar Lei nº 9.609/1998)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 2º O regime de proteção à propriedade intelectual de programa de computador é o conferido às obras literárias pela legislação de direitos autorais e conexos vigentes no País, observado o disposto nesta Lei”."
+     ],
+     "opc": {
+      "id": "software",
+      "rotulo": "A obra é programa de computador/aplicativo (citar Lei nº 9.609/1998)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, a seguir analisaremos em que termos e limites {{g:o|a}} consulente pode “{{forma_oferta}}”, sem configurar a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”, à semelhança de outras atividades, como por exemplo a de escritor."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o disposto no art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da Lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A atividade pretendida {{g:pelo|pela}} consulente deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil, assim como a atividade de escritor, para que não se configure a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”, do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Assim, para responder a presente consulta precisamos delimitar o que é esse “elemento de empresa” do art. 966, parágrafo único, do novo Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "A princípio, está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares ou colaboradores."
+    },
+    {
+     "t": "p",
+     "x": "Essas atividades, ainda que realizadas de forma profissional, com objetivo de lucro, não se sujeitam ao regime jurídico empresarial, uma vez que não estariam organizadas sob a forma de empresa. Referidas atividades em regra são exercidas autonomamente/individualmente, ou no máximo sob a forma de Sociedades Simples."
+    },
+    {
+     "t": "p",
+     "x": "Neste ponto cabe aproveitar a oportunidade para bem delimitar que uma coisa é o escritor que obtém proveitos econômicos de suas obras com o auxílio de uma editora que as publica, e outra coisa bem diferente é o escritor que busca a obtenção de proveito econômico não apenas escrevendo livros, mas também “montando”/gerenciando e/ou administrando a própria editora que os publica, ou seja, exercendo atividade empresarial. A situação de exercício de atividade empresarial fica ainda mais nítida quando a empresa comercializa “produtos” de terceiros. A título de exemplo, o caso da editora do servidor que comercializa livros de outros autores, além dos livros do próprio servidor. Nestes casos o exercício da profissão intelectual de escritor constitui apenas um elemento de empresa (ao lado de outros profissionais), ou seja, estaria configurado o exercício de atividade empresarial e a infração disciplinar ao art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "A idéia do art. 966, parágrafo único, do novo Código Civil é que a princípio a profissão intelectual, de natureza científica, literária ou artística não é empresarial por não compreender a organização de fatores de produção."
+    },
+    {
+     "t": "p",
+     "x": "Essa atividade/profissão será empresarial se presentes todos os elementos de uma empresa, ou seja, se presentes todos os requisitos do art. 966, caput do novo Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "Sobre o assunto, merecem destaque os Enunciados referentes à matéria aprovados na III Jornada de Direito Civil, realizada em 2002, bastante elucidativos e que vão ao encontro do que afirmamos até o momento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "193 – Art. 966: O exercício das atividades de natureza exclusivamente intelectual está excluído do conceito de empresa.",
+      "194 – Art. 966: Os profissionais liberais não são considerados empresários, salvo se a organização dos fatores de produção for mais importante que a atividade pessoal desenvolvida.",
+      "195 – Art. 966: A expressão “elemento de empresa” demanda interpretação econômica, devendo ser analisada sob a égide da absorção da atividade intelectual, de natureza científica, literária ou artística, como um dos fatores da organização empresarial."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, verifica-se que não há óbice {{g:ao|à}} consulente “{{forma_oferta}}”."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}}, de “{{descricao_atividade}}”, não configura conflito de interesse, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "informacoes_insuficientes_complementacao",
+   "rotulo": "Pedido genérico de abertura de franquia/negócio – informações insuficientes; retorno à Cogep para complementação",
+   "resultado": "outro",
+   "quandoUsar": "O pedido (ex.: abrir franquia, vender produtos) não informa natureza jurídica da empresa, se haverá gerência/administração nem as atividades que o servidor exercerá, impossibilitando a análise.",
+   "fonte": "PAR 155/2019",
+   "assunto": "Pedido de autorização para o exercício de atividade privada formulado por meio do SeCI.",
+   "ementaTitulo": "CONSTITUIÇÃO DE FRANQUIA EMPRESARIAL E VENDA DE PRODUTOS.",
+   "ementa": [
+    "Pedido de autorização para a constituição de uma franquia empresarial e para a venda de produtos. Retorno à Cogep para complementação das informações."
+   ],
+   "campos": [
+    {
+     "id": "descricao_pedido",
+     "rotulo": "Trecho do pedido, nas palavras do consulente (entre aspas no texto)",
+     "exemplo": "abrir uma franquia cuja atividade é a de promotor de vendas",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "{{g:O|A}} consulente descreveu – em seu pedido de autorização para exercício de atividade privada – que pretende “{{descricao_pedido}}”. Entretanto, não delimitou o pedido em relação a alguns pontos que dificultaram a análise da compatibilidade das citadas ações com as atribuições do cargo e de suas influências no desempenho da função pública."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o artigo 2º, inciso I da Portaria Interministerial nº 333, de 19 de setembro de 2013, a análise do pedido de autorização para exercício de atividade privada requer a descrição de uma “situação concreta, individualizada”, que diga respeito {{g:ao|à}} consulente e “que possa suscitar dúvidas quanto à ocorrência de conflito de interesses”. O artigo 3º, inciso II da citada Portaria, por sua vez, define que esse pedido deve conter “referência a objeto determinado e diretamente vinculado ao interessado”. Já o inciso III preconiza a necessidade de “descrição contextualizada dos elementos que suscitam a dúvida”."
+    },
+    {
+     "t": "p",
+     "x": "A {{portaria_curta}} assim determina:",
+     "opc": {
+      "id": "art10_portaria",
+      "rotulo": "Citar o dispositivo da portaria que autoriza solicitar informações adicionais (redação do art. 10 da Portaria MF nº 173/2014 – conferir o artigo correspondente na norma vigente)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 10. Caso considerem insuficientes as informações recebidas, as Comissões de Ética e Corregedorias poderão solicitar informações adicionais às unidades de Recursos Humanos por meio do sistema Comprotdoc."
+     ],
+     "opc": {
+      "id": "art10_portaria",
+      "rotulo": "Citar o dispositivo da portaria que autoriza solicitar informações adicionais (redação do art. 10 da Portaria MF nº 173/2014 – conferir o artigo correspondente na norma vigente)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Considerando tais previsões legais que permitem o questionamento sobre alguns pontos suscitadores de dúvidas, passa-se aos questionamentos."
+    },
+    {
+     "t": "p",
+     "x": "Primeiramente, solicita-se esclarecimento se a franquia empresarial será constituída por meio de inscrição de um CNPJ na Receita Federal do Brasil. Se sim, é necessário que {{g:o|a}} consulente informe a natureza jurídica da referida empresa (EIRELI, sociedade limitada, etc.), bem como se exercerá a função de gerência ou administração na franquia em comento.",
+     "opc": {
+      "id": "questionamentos_franquia",
+      "rotulo": "Questionamentos padrão sobre franquia empresarial (adaptar ao caso)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ainda em referência à constituição da franquia, solicitam-se informações sobre todas as atividades que {{g:o|a}} consulente exercerá nessa franquia empresarial. Não ficou claro, por exemplo, se {{g:o|a}} consulente atuará concretamente como um promotor de vendas, ou seja, se venderá – pessoalmente – o produto nas empresas que comercializam alimentos, se contratará funcionários e, em caso positivo, as atividades dos funcionários. Adicionalmente, solicita-se esclarecimento acerca do produto a ser vendido pela empresa.",
+     "opc": {
+      "id": "questionamentos_franquia",
+      "rotulo": "Questionamentos padrão sobre franquia empresarial (adaptar ao caso)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Considerando os questionamentos acima realizados, propõe-se que o dossiê retorne à Coordenação-Geral de Gestão de Pessoas (Cogep), para que {{g:o|a}} consulente complemente as informações."
+    }
+   ]
+  }
+ ]
+}

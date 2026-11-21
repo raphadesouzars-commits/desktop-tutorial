@@ -1,0 +1,260 @@
+{
+ "id": "mediador_conciliador",
+ "nome": "Mediador, conciliador ou árbitro",
+ "descricao": "Usar quando o servidor pretende atuar como mediador ou conciliador judicial (voluntário ou remunerado) ou como conciliador, mediador ou árbitro em câmara privada.",
+ "palavrasChave": [
+  "mediador",
+  "mediação",
+  "mediador judicial",
+  "conciliador",
+  "conciliação",
+  "conciliador voluntário",
+  "juizado especial",
+  "juiz leigo",
+  "árbitro",
+  "arbitragem",
+  "câmara arbitral",
+  "câmara de mediação",
+  "tribunal de justiça",
+  "cejusc",
+  "mediação de conflitos",
+  "mediador voluntário",
+  "solução de conflitos"
+ ],
+ "variantes": [
+  {
+   "id": "camara_privada_compativel",
+   "rotulo": "Conciliador, mediador e árbitro em câmara privada – compatibilidade material, com ressalva",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como conciliador, mediador e/ou árbitro em câmara de arbitragem ou mediação de direito privado.",
+   "fonte": "PAR 197/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONCILIAÇÃO, MEDIAÇÃO E ARBITRAGEM.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de atuar como conciliador, mediador e árbitro em câmara arbitral. Compatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado, {{g:o servidor|a servidora}} pretende atuar como conciliador, mediador e árbitro em câmara de arbitragem, entidade de direito privado, a fim de solucionar conflitos entre partes litigantes."
+    },
+    {
+     "t": "p",
+     "x": "Conforme definição doutrinária, arbitragem é “um método de resolução de disputas alternativo ao Poder Judiciário, que privilegia a flexibilidade, o sigilo e a agilidade visando a resolução eficiente e adequada dos litígios”. Já a mediação é um “método de resolução de disputas no qual um terceiro neutro, o mediador, promove a comunicação entre as Partes e conduz o procedimento, visando a uma solução do conflito de forma amigável, ágil e vantajosa a todas as partes”. Por fim, a conciliação é “uma forma de solucionar conflitos onde as partes envolvidas aceitam que uma terceira pessoa (neutra), o conciliador, faça o papel de orientá-las para chegarem a um acordo”."
+    },
+    {
+     "t": "p",
+     "x": "De fato, em consulta na internet, verifica-se a existência de diversas empresas privadas que realizam soluções de conflitos utilizando estratégias de conciliação, arbitragem e mediação em inúmeros locais do país."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do servidor|da servidora}} quando do exercício efetivo da atividade, cabendo {{g:ao mesmo|à mesma}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício das atividades descritas {{g:pelo|pela}} consulente são compatíveis materialmente com o cargo ocupado, sob a ressalva de que não envolva conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria Especial da Receita Federal do Brasil."
+    }
+   ]
+  },
+  {
+   "id": "mediador_judicial_voluntario",
+   "rotulo": "Mediador/conciliador judicial voluntário (não remunerado) – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como mediador ou conciliador judicial junto a Tribunal de Justiça de forma voluntária e não remunerada, fora do horário de expediente.",
+   "fonte": "PAR 215/2018",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "MEDIADOR VOLUNTÁRIO",
+   "ementa": [
+    "Pedido de autorização para exercer a atividade de mediação de forma voluntária. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o pleito {{g:do|da}} consulente sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813/2013, opina-se que o exercício da atividade de mediação judicial é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que os assuntos tratados no desempenho da função não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Salientamos que {{g:o|a}} consulente não deve atuar em procedimentos em que a Fazenda Pública, de qualquer esfera, seja parte ou tenha interesse. Além disso, se eventualmente o Tribunal de Justiça necessitar de auxílio da RFB em algum procedimento, tal pedido deve ser feito formalmente à RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5° da norma supracitada, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao|à}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Finalmente, em análise que extrapola o escopo do conflito de interesses, há de se atentar para a necessidade de observação do disposto no art. 37, incisos XVI e XVII da Constituição Federal (CF):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários, observado em qualquer caso o disposto no inciso XI:",
+      "a) a de dois cargos de professor;",
+      "b) a de um cargo de professor com outro técnico ou científico;",
+      "c) a de dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas;",
+      "XVII - a proibição de acumular estende-se a empregos e funções e abrange autarquias, fundações, empresas públicas, sociedades de economia mista, suas subsidiárias, e sociedades controladas, direta ou indiretamente, pelo poder público. (grifou-se)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nessa esteira, o Conselho Nacional de Justiça decidiu, em julgamento realizado em 8 de maio de 2007, ser incompatível, por acumulação de cargos públicos remunerados, o exercício das atividades de juiz leigo ou conciliador do Poder Judiciário por servidor público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Ata e Certidão de Julgamento da 10ª Sessão Extraordinária, de 08 de maio de 2007",
+      "PEDIDO DE PROVIDÊNCIAS Nº 1070",
+      "Assunto: Consulta - Servidor público - Incompatibilidade de exercício das atividades de Juiz Leigo ou Conciliador",
+      "Decisão: \"Prosseguindo no julgamento, iniciado na Sessão do dia 20 de março de 2007, na qual o Conselheiro Paulo Schmidt (Relator) proferiu voto no sentido de que, cumpridos os parâmetros objetivos apontados no voto e observada a compatibilidade de horários, não haveria, em tese, vedação à cumulação questionada pelo Requerente, o Conselho, por maioria, vencido o Relator, respondeu afirmativamente à consulta, nos termos dos votos dos Conselheiros Alexandre de Moraes e Cláudio Godoy, ou seja, pela incompatibilidade de exercício remunerado por parte de servidor público com o cargo - como definido na lei paraibana - de juiz leigo ou conciliador, deliberando, ainda, pela remessa de cópias dos presentes autos à Comissão de Juizados Especiais, instituída por este Conselho - conforme proposição apresentada pela Conselheira Germana Moraes - para revisão da questão referente à possibilidade de se recrutarem conciliadores dentre os servidores públicos. (...) Plenário, 08 de maio de 2007\". (grifou-se)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, a atividade pretendida {{g:pelo servidor|pela servidora}} deve ser exercida de forma voluntária, ou seja, sem remuneração. Caso contrário, estaria configurada a acumulação de cargos públicos remunerados, vedada pela CF."
+    },
+    {
+     "t": "p",
+     "x": "Logo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de mediação, de forma voluntária, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "mediador_judicial_remunerado_acumulacao",
+   "rotulo": "Mediador/conciliador judicial remunerado – acumulação vedada de função pública (fora do âmbito da Lei nº 12.813/2013)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende atuar como mediador ou conciliador judicial cadastrado em Tribunal, de forma remunerada; a matéria é tratada como acumulação ilegal de cargos/funções públicas, e não como conflito de interesses.",
+   "fonte": "INF 174/2016 e INF 046/2017",
+   "assunto": "Pedido de autorização para o exercício de atividade de conciliador e mediador judicial.",
+   "ementaTitulo": "EXERCÍCIO REMUNERADO DA ATIVIDADE DE CONCILIADOR E MEDIADOR JUDICIAL.",
+   "ementa": [
+    "Pedido de autorização para o exercício de atividade de conciliador e mediador judicial de forma remunerada. Vedação de acumulação de cargos e funções públicas. Matéria fora do âmbito da Lei nº 12.813, de 16 de maio de 2013."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A atual Constituição Federal dispõe, em seu art. 37, incisos XVI e XVII, a regra que proíbe a acumulação remunerada de cargos, empregos ou funções públicas, tanto na Administração direta como na indireta."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários, observado em qualquer caso o disposto no inciso XI:",
+      "a) a de dois cargos de professor;",
+      "b) a de um cargo de professor com outro técnico ou científico;",
+      "c) a de dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas;",
+      "XVII - a proibição de acumular estende-se a empregos e funções e abrange autarquias, fundações, empresas públicas, sociedades de economia mista, suas subsidiárias, e sociedades controladas, direta ou indiretamente, pelo poder público; (negritos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Pelo teor do inciso XVII, tem-se que a vedação se aplica a cargos, empregos e funções, exercidos em autarquias, fundações, empresas públicas, sociedades de economia mista, suas subsidiárias, e sociedades controladas, direta ou indiretamente, pelo poder público."
+    },
+    {
+     "t": "p",
+     "x": "Sobre o tema, José dos Santos Carvalho Filho:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "A vedação atinge, por conseguinte, a acumulação remunerada de cargos, empregos e funções na Administração Direta e Indireta, seja dentro de cada uma, seja entre os dois setores da Administração entre si.",
+      "(CARVALHO FILHO, José dos Santos. Manual de Direito Administrativo. 8ª Ed., Rio de Janeiro: Lumen Juris, 2008. p. 579)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A Lei 8.112, de 11 de dezembro de 1990, em seu capítulo III, reproduz a vedação constitucional e veda a acumulação remunerada de cargos públicos, empregos e funções públicas, senão vejamos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 118. Ressalvados os casos previstos na Constituição, é vedada a acumulação remunerada de cargos públicos.",
+      "§ 1º A proibição de acumular estende-se a cargos, empregos e funções em autarquias, fundações públicas, empresas públicas, sociedades de economia mista da União, do Distrito Federal, dos Estados, dos Territórios e dos Municípios.",
+      "§ 2º A acumulação de cargos, ainda que lícita, fica condicionada à comprovação da compatibilidade de horários.",
+      "§ 3º Considera-se acumulação proibida a percepção de vencimento de cargo ou emprego público efetivo com proventos da inatividade, salvo quando os cargos de que decorram essas remunerações forem acumuláveis na atividade. (Incluído pela Lei nº 9.527, de 10.12.97)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A vedação à acumulação tem por finalidade impedir que a mesma pessoa ocupe vários cargos ou exerça várias funções e seja integralmente remunerado por todas sem, contudo, desempenhá-las com eficiência."
+    },
+    {
+     "t": "p",
+     "x": "Com relação às atividades de conciliador e de mediador, estas são tratadas na Lei nº 13.105, de 16 de março de 2015 (novo Código de Processo Civil), nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 166. A conciliação e a mediação são informadas pelos princípios da independência, da imparcialidade, da autonomia da vontade, da confidencialidade, da oralidade, da informalidade e da decisão informada.",
+      "(...)",
+      "§ 2º Em razão do dever de sigilo, inerente às suas funções, o conciliador e o mediador, assim como os membros de suas equipes, não poderão divulgar ou depor acerca de fatos ou elementos oriundos da conciliação ou da mediação.",
+      "(...)",
+      "Art. 171. No caso de impossibilidade temporária do exercício da função, o conciliador ou mediador informará o fato ao centro, preferencialmente por meio eletrônico, para que, durante o período em que perdurar a impossibilidade, não haja novas distribuições. (negrito não é do original)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 13.140, de 26 de junho de 2015, dispõe o seguinte:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 8º O mediador e todos aqueles que o assessoram no procedimento de mediação, quando no exercício de suas funções ou em razão delas, são equiparados a servidor público, para os efeitos da legislação penal. (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "E ainda, de acordo com definição dada pelo Conselho Nacional de Justiça (CNJ) em seu sítio na internet, tal atividade é tratada como função pública."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“O mediador é uma pessoa selecionada para exercer a função pública de auxiliar as partes a compor uma solução para a disputa”. (negrito nosso)",
+      "(http://www.cnj.jus.br/noticias/cnj/80815-cnj-servico-quem-e-e-o-que-faz-o-mediador)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, o caráter de função pública das atividades de conciliação e mediação judicial fica evidente na Resolução CNJ nº 125, de 29/11/2010, que “dispõe sobre a Política Judiciária Nacional de tratamento adequado dos conflitos de interesses no âmbito do Poder Judiciário e dá outras providências”:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º Compete ao Conselho Nacional de Justiça organizar programa com o objetivo de promover ações de incentivo à autocomposição de litígios e à pacificação social por meio da conciliação e da mediação.",
+      "Anexo III",
+      "CÓDIGO DE ÉTICA DE CONCILIADORES E MEDIADORES JUDICIAIS",
+      "Das responsabilidades e sanções do conciliador/mediador",
+      "Art. 3º Apenas poderão exercer suas funções perante o Poder Judiciário conciliadores e mediadores devidamente capacitados e cadastrados pelos Tribunais, aos quais competirá regulamentar o processo de inclusão e exclusão no cadastro.",
+      "Art. 4º O conciliador/mediador deve exercer sua função com lisura, respeitar os princípios e regras deste Código, assinar, para tanto, no início do exercício, termo de compromisso e submeter-se às orientações do Juiz Coordenador da unidade a que esteja vinculado.",
+      "(...)",
+      "Art. 6º No caso de impossibilidade temporária do exercício da função, o conciliador ou mediador deverá informar com antecedência ao responsável para que seja providenciada sua substituição",
+      "(...)",
+      "Art. 8º O descumprimento dos princípios e regras estabelecidos neste Código, bem como a condenação definitiva em processo criminal, resultará na exclusão do conciliador/mediador do respectivo cadastro e no impedimento para atuar nesta função em qualquer outro órgão do Poder Judiciário nacional."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, como {{g:o|a}} consulente intenciona desempenhar a atividade de {{g:mediador|mediadora}} de forma remunerada, verifica-se que estamos diante de um caso em que a atividade pretendida caracterizaria infração à vedação de acumulação ilegal de cargos e funções públicas (artigo 132, inciso XII da Lei nº 8.112, de 11/12/1990). Ou seja, trata-se de matéria estritamente disciplinar, que se encontra fora do âmbito da Lei nº 12.813, de 16 de maio de 2013, por não abranger a análise de eventual incompatibilidade do exercício da função pública pretendida."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, como a consulta não diz respeito a conflito de interesse, não deve seguir o trâmite previsto pela {{portaria_curta}}."
+    }
+   ]
+  }
+ ]
+}

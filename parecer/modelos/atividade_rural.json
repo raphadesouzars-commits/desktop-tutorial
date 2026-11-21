@@ -1,0 +1,349 @@
+{
+ "id": "atividade_rural",
+ "nome": "Atividade rural / produtor rural",
+ "descricao": "Usar quando o servidor pretende exercer atividade rural (agricultura, pecuária, extrativismo), como produtor rural pessoa física, sócio de empresa rural ou trabalhando em propriedade da família.",
+ "palavrasChave": [
+  "atividade rural",
+  "produtor rural",
+  "produtora rural",
+  "fazenda",
+  "sítio",
+  "propriedade rural",
+  "agricultura",
+  "pecuária",
+  "gado",
+  "plantação",
+  "plantio",
+  "soja",
+  "milho",
+  "cana-de-açúcar",
+  "extrativismo",
+  "inscrição estadual de produtor rural",
+  "herança",
+  "empresa rural",
+  "venda da produção"
+ ],
+ "variantes": [
+  {
+   "id": "produtor_rural_ressalvas",
+   "rotulo": "Produtor rural (pessoa física/CNPJ de produtor rural) – compatível, desde que observada a vedação do art. 117, X (com Enunciado CGU/CCC nº 8/2019)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como produtor rural em nome próprio (inscrição de produtor rural, contratos de fornecimento, venda da produção), sem sociedade já constituída.",
+   "fonte": "PAR 223/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRODUTOR RURAL.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de exercício de atividade rural. Compatibilidade material desde que observadas as restrições."
+   ],
+   "campos": [
+    {
+     "id": "descricao_pretensao",
+     "rotulo": "Pretensão do consulente (continua a frase \"pretende atuar na atividade rural, ...\")",
+     "exemplo": "tendo a intenção de firmar contrato de comercialização de cana-de-açúcar com uma usina",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "motivo_inaplicabilidade",
+     "rotulo": "Por que a exploração individual de pequena monta não se aplica (continua \"uma vez que ...\")",
+     "exemplo": "está bem caracterizada a busca pelo lucro, bem como se trata de contrato de longo período e grandes quantidades a serem entregues",
+     "obrigatorio": false,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado, {{g:o servidor|a servidora}} pretende atuar na atividade rural, {{descricao_pretensao}}."
+    },
+    {
+     "t": "p",
+     "x": "A atividade rural, que contempla a agricultura, a pecuária, a silvicultura e o extrativismo, passou, a partir da codificação única do Direito privado, a ser considerada como empresária (desde que satisfeitos os requisitos do art. 966 do Código Civil - CC), seja praticada por meio de sociedade empresária, seja praticada individualmente como empresário, o que não ocorria antes da inovação legislativa no CC, quando era classificada como atividade civil."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, caso um servidor atue como produtor rural, seja em sociedade, seja individualmente, de forma organizada economicamente para produção ou circulação de bens ou de serviços ou de forma profissional e habitual na busca do lucro, independentemente de formal registro de qualquer natureza, pode vir a se enquadrar na vedação imposta, respectivamente, pela primeira ou pela segunda parte do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "X – participar da gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Aplicam-se, desse modo, para um servidor que exerce atividade rural, as duas formas de vedação. Caso o servidor exerça a atividade rural em sociedade e atue como administrador ou gerente dessa sociedade, pode enquadrar-se na vedação prevista na primeira parte do art. 117, inciso X, da Lei nº 8.112, de 1990. Já o servidor que exerce individualmente a atividade rural, independentemente de ter-se registrado como empresário, pode enquadrar-se na vedação prevista na segunda parte do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, restam ao servidor que atua na atividade rural duas possibilidades de tal prática se preservar estatutariamente lícita e compatível com o múnus público: a primeira possibilidade é exercer a atividade rural individualmente, situação na qual a atividade deve se manter à margem da definição legal de atividade economicamente organizada ou não configurar sequer habitualidade profissional na busca de lucro (ou seja, ser uma atividade de pequena relevância e pontual), podendo ainda se cogitar da hipótese de o servidor empregar um preposto ou empregado qualquer para a efetiva prática da atividade rural."
+    },
+    {
+     "t": "p",
+     "x": "Pelo contrato anexado {{g:pelo servidor|pela servidora}} ao presente dossiê essa possibilidade não se aplica, uma vez que {{motivo_inaplicabilidade}}.",
+     "opc": {
+      "id": "exploracao_individual_inaplicavel",
+      "rotulo": "Os documentos do caso mostram que a exploração individual de pequena monta não se aplica (busca de lucro, contrato de longo prazo etc.)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A segunda possibilidade é exercer a atividade rural em sociedade ou através de uma entidade unipessoal em que seja possível a nomeação de um terceiro administrador, tal como ocorre nas Empresas Individuais de Responsabilidade LTDA (Eireli). No primeiro caso, o servidor deve permanecer apenas como sócio acionista, cotista ou comanditário, sem exercer administração ou gerência. No segundo caso, um terceiro deverá ser nomeado / contratado para desempenhar as funções de gerência / administração. Nesse sentido é o Enunciado CGU/CCC n° 8, de 2019:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Enunciado CGU/CCC n° 8, de 2019: “Vedação de Exercício do Comércio. A proibição ao exercício do comércio prevista no art. 117, X, da Lei nº 8.112, de 11 de dezembro de 1990, veda a atuação do servidor público federal como empresário individual ou como administrador de Eireli Empresária”. (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, com base nas informações prestadas, que embora, sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, o exercício de atividade rural seja materialmente compatível com o cargo e a função ocupados {{g:pelo servidor|pela servidora}}, {{g:o|a}} consulente deve observar a vedação prevista no art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que a vedação prevista no inciso X, art. 117, da Lei n° 8.112, de 1990 deve ser observada durante o exercício do cargo público pelos servidores, sendo excepcionada durante o gozo de licença para o trato de interesses particulares, sendo permitido aos servidores, ao longo desse período, a participação em gerência ou administração de sociedade privada, personificada ou não personificada, e o exercício do comércio, ainda que não esteja na qualidade de acionista, cotista ou comanditário."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "Parágrafo único. A vedação de que trata o inciso X do caput deste artigo não se aplica nos seguintes casos:",
+      "I - participação nos conselhos de administração e fiscal de empresas ou entidades em que a União detenha, direta ou indiretamente, participação no capital social ou em sociedade cooperativa constituída para prestar serviços a seus membros; e",
+      "II - gozo de licença para o trato de interesses particulares, na forma do art. 91 desta Lei, observada a legislação sobre conflito de interesses."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício de atividade rural não configura conflito de interesses, desde que sejam observadas as ressalvas acima expostas, dentre as quais a vedação imposta pelo inciso X, art. 117, da Lei nº 8.112, de 1990."
+    }
+   ]
+  },
+  {
+   "id": "socio_empresa_rural",
+   "rotulo": "Atividade rural em sociedade (sócio cotista de empresa rural, sem gestão) ou individual de pequena monta – compatível, observada a vedação do art. 117, X",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende explorar atividade rural por meio de sociedade (ex.: empresa familiar em propriedade herdada) sem praticar atos de gestão, ou individualmente como pessoa física em pequena escala.",
+   "fonte": "PAR 200/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SÓCIO COTISTA EM EMPRESA RURAL COM PROPÓSITO COMERCIAL.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de exercício de atividade rural. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "descricao_pretensao",
+     "rotulo": "Síntese do que o servidor pretende (continua a frase \"o servidor pretende ...\")",
+     "exemplo": "constituir uma sociedade empresarial, juntamente com familiar, com o objetivo de atuar na atividade rural, comercializando os produtos oriundos das propriedades rurais herdadas. Informa que não efetuará atos de gestão e tampouco atuará na administração da empresa",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado, {{g:o servidor|a servidora}} pretende {{descricao_pretensao}}."
+    },
+    {
+     "t": "p",
+     "x": "A atividade rural, que contempla a agricultura, a pecuária, a silvicultura e o extrativismo, passou, a partir da codificação única do Direito privado, a ser considerada como empresária (desde que satisfeitos os requisitos do art. 966 do Código Civil - CC), seja praticada por meio de sociedade empresária, seja praticada individualmente como empresário, o que não ocorria antes da inovação legislativa no CC, quando era classificada como atividade civil."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, caso {{g:o servidor|a servidora}} atue como produtor rural, seja em sociedade, seja individualmente, de forma organizada economicamente para produção ou circulação de bens ou de serviços ou de forma profissional e habitual na busca do lucro, independentemente de formal registro de qualquer natureza, pode vir a se enquadrar na vedação imposta, respectivamente, pela primeira ou pela segunda parte do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "X – participar da gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Aplicam-se, desse modo, para o servidor que exerce atividade rural, as duas formas de vedação. Caso o servidor exerça a atividade rural em sociedade e atue como administrador ou gerente dessa sociedade, pode enquadrar-se na vedação prevista na primeira parte do art. 117, inciso X, da Lei nº 8.112, de 1990. Já o servidor que exerce individualmente a atividade rural, independentemente de ter-se registrado como empresário, pode enquadrar-se na vedação prevista na segunda parte do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, restam ao servidor que atua na atividade rural duas possibilidades de tal prática se preservar estatutariamente lícita e compatível com o múnus público: se ele exerce a atividade rural individualmente, deve esta atividade comercial manter-se à margem da definição legal de atividade economicamente organizada ou não configurar sequer habitualidade profissional na busca de lucro (ou seja, ser uma atividade de pequena relevância e pontual), podendo ainda se cogitar da hipótese de o servidor empregar um preposto ou empregado qualquer para a efetiva prática da atividade rural; se ele exerce a atividade rural em sociedade, deve manter-se apenas como sócio acionista, cotista ou comanditário, sem exercer administração ou gerência, ainda que pratique atos de venda ou de compra e de revenda de insumos e de produtos."
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, com base nas informações prestadas, que embora, sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, o exercício de atividade rural seja materialmente compatível com o cargo e a função ocupados {{g:pelo servidor|pela servidora}}, {{g:o|a}} consulente deve observar a vedação prevista no art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que a vedação prevista no inciso X, art. 117, da Lei n° 8.112, de 1990 deve ser observada durante o exercício do cargo público pelo servidor, sendo excepcionada durante o gozo de licença para o trato de interesses particulares, sendo permitido ao servidor, ao longo desse período, a participação em gerência ou administração de sociedade privada, personificada ou não personificada, e o exercício do comércio, ainda que não esteja na qualidade de acionista, cotista ou comanditário."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "Parágrafo único. A vedação de que trata o inciso X do caput deste artigo não se aplica nos seguintes casos:",
+      "I - participação nos conselhos de administração e fiscal de empresas ou entidades em que a União detenha, direta ou indiretamente, participação no capital social ou em sociedade cooperativa constituída para prestar serviços a seus membros; e",
+      "II - gozo de licença para o trato de interesses particulares, na forma do art. 91 desta Lei, observada a legislação sobre conflito de interesses."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício de atividade rural não configura conflito de interesses, desde que sejam observadas as ressalvas acima expostas, dentre as quais a vedação imposta pelo inciso X, art. 117, da Lei nº 8.112, de 1990."
+    }
+   ]
+  },
+  {
+   "id": "trabalho_em_propriedade_rural",
+   "rotulo": "Trabalho/ajuda em propriedade rural da família (sem exploração empresarial própria) – compatibilidade material",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor pretende apenas trabalhar ou ajudar em fazenda/sítio da família (plantio, criação), sem ser o titular da exploração nem praticar comércio.",
+   "fonte": "PAR 192/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "TRABALHAR EM FAZENDA.",
+   "ementa": [
+    "Pedido de autorização para o exercício de atividade de {{atividade_resumo}}. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "atividade_resumo",
+     "rotulo": "Atividade, em resumo (para a ementa)",
+     "exemplo": "ajudante em plantação de soja e milho",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_objetivo",
+     "rotulo": "Objetivo do consulente (continua a frase \"tem por objetivo ...\")",
+     "exemplo": "trabalhar na fazenda de sua família ajudando nas plantações de milho e soja",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o|a}} consulente tem por objetivo {{descricao_objetivo}}."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer a atividade descrita no formulário SeCI, não existindo incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  },
+  {
+   "id": "atividade_rural_individual_somente_em_licenca",
+   "rotulo": "Atividade rural individual organizada (art. 966 CC) – não há conflito, mas só escapa do art. 117, X durante licença para tratar de interesses particulares",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor informa que explorará a atividade rural individualmente, como pessoa física, de forma organizada e habitual (caput do art. 966 do Código Civil), em especial quando menciona licença para tratar de interesses particulares.",
+   "fonte": "PAR 030/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE RURAL.",
+   "ementa": [
+    "Pedido de autorização para {{g:servidor ocupante|servidora ocupante}} do cargo de {{cargo}} exercer atividade rural como pessoa física.",
+    "Não configura conflito de interesses desde que observadas as ressalvas.",
+    "Atividade não pode ser exercida nos termos do caput do artigo 966 do Código Civil, tendo em vista vedação disposta no artigo 117, inciso X, da Lei nº 8.112, de 1990."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo Federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão de sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III, do art. 5º da citada Lei, verifica-se que o exercício de atividade rural pretendida é materialmente compatível com o cargo e função ocupados {{g:pelo servidor|pela servidora}}, desde que observadas determinadas vedações previstas em lei."
+    },
+    {
+     "t": "p",
+     "x": "A atividade rural, que contempla a agricultura, a pecuária, a silvicultura e o extrativismo, passou, a partir da codificação única do Direito privado, a ser considerada como empresária (desde que satisfeitos os requisitos do art. 966 do Código Civil – CC), seja praticada por meio de sociedade empresária, seja praticada individualmente como empresário, o que não ocorria antes da inovação legislativa no CC, quando era classificada como atividade civil."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, caso {{g:o servidor|a servidora}} atue como produtor rural, seja em sociedade, seja individualmente (como {{g:o|a}} postulante informou), de forma organizada economicamente para produção ou circulação de bens ou de serviços ou de forma profissional e habitual na busca do lucro, independentemente de formal registro de qualquer natureza, pode vir a se enquadrar na vedação imposta, respectivamente, pela primeira ou pela segunda parte do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "X – participar da gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Aplicam-se, desse modo, para o servidor que exerce atividade rural, as duas formas de vedação. Caso o servidor exerça a atividade rural em sociedade e atue como administrador ou gerente dessa sociedade, pode enquadrar-se na vedação prevista na primeira parte do art. 117, inciso X, da Lei nº 8.112, de 1990. Já o servidor que exerce individualmente a atividade rural, como é o caso em comento de acordo com informação fornecida {{g:pelo|pela}} postulante, independentemente de ter-se registrado como empresário, pode enquadrar-se na vedação prevista na segunda parte do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, restam ao servidor que atua na atividade rural duas possibilidades de tal prática se preservar estatutariamente lícita e compatível com o múnus público: se ele exerce a atividade rural individualmente (como é o caso {{g:do|da}} consulente), deve esta atividade comercial manter-se à margem da definição legal de atividade economicamente organizada ou não configurar sequer habitualidade profissional na busca de lucro (ou seja, ser uma atividade de pequena relevância e pontual), podendo ainda se cogitar da hipótese de o servidor empregar um preposto ou empregado qualquer para a efetiva prática da atividade rural; se ele exerce a atividade rural em sociedade, deve manter-se apenas como sócio acionista, cotista ou comanditário, sem exercer administração ou gerência, ainda que pratique atos de venda ou de compra e de revenda de insumos e de produtos."
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, com base nas informações prestadas, que embora, sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 2013, o exercício da atividade rural seja materialmente compatível com o cargo e a função ocupados {{g:pelo servidor|pela servidora}}, {{g:o|a}} consulente deve observar a vedação prevista no art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que a vedação prevista no inciso X, art. 117, da Lei nº 8.112, de 1990 deve ser observada durante o exercício do cargo público pelo servidor, sendo excepcionada durante o gozo de licença para o trato de interesses particulares, sendo permitido ao servidor, ao longo desse período, a participação em gerência ou administração de sociedade privada, personificada ou não personificada, e o exercício do comércio, ainda que não esteja na qualidade de acionista, cotista ou comanditário."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "Parágrafo único. A vedação de que trata o inciso X do caput deste artigo não se aplica nos seguintes casos:",
+      "I - participação nos conselhos de administração e fiscal de empresas ou entidades em que a União detenha, direta ou indiretamente, participação no capital social ou em sociedade cooperativa constituída para prestar serviços a seus membros; e",
+      "II - gozo de licença para o trato de interesses particulares, na forma do art. 91 desta Lei, observada a legislação sobre conflito de interesses."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que, ao fim do gozo de licença e retorno ao exercício do cargo, não só retorna a aplicabilidade das vedações impostas no inciso X, art. 117 da Lei nº 8.112, de 1990, como também a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitantemente com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício de atividade rural não configura conflito de interesses, mas é de se ressaltar que somente sob o gozo de licença para tratar de interesses particulares, prevista no art. 91 da Lei nº 8.112, de 1990, a atividade em tela também não incorre nas proibições do citado inciso X, art. 117 do mesmo diploma legal."
+    }
+   ]
+  }
+ ]
+}
