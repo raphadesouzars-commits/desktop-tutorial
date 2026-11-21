@@ -73,6 +73,13 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
 .prec .x{color:var(--mut);margin-top:4px;max-height:5.8em;overflow:hidden}
 .prec.open .x{max-height:none}
 .prec a{color:var(--acc);cursor:pointer;text-decoration:underline}
+.conf{background:#fff;border:1px solid var(--line);border-left:5px solid var(--warn);border-radius:6px;padding:9px 12px;margin-bottom:10px;font-size:13px}
+.conf.ok{border-left-color:var(--ok)}
+.conf ul{margin:6px 0 0;padding-left:18px}
+.conf li{margin:3px 0}
+.extra{border:1px solid var(--line);border-radius:7px;padding:8px 10px;margin-top:8px;background:#fafbf9}
+.extra .t{font-weight:600;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10px}
 .aviso{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:7px 10px;font-size:12.5px;margin-top:8px}
 #seciPerguntas label{font-weight:500}
 .paper mark{background:#ffe866;padding:0 2px}
@@ -110,6 +117,8 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
     <p class="hint" id="descAtv"></p>
     <label>Conclusão / situação</label>
     <div id="variantes"></div>
+    <div id="extras"></div>
+    <button class="sec mini" id="addAtv" style="margin-top:10px">＋ Adicionar outra atividade ao mesmo parecer</button>
     <details id="precBox" style="margin-top:12px">
       <summary>Precedentes da CGU sobre a RFB <span id="precInfo" class="hint"></span></summary>
       <input type="text" id="precBusca" placeholder="Filtrar precedentes (ex.: investimentos, palestra, advocacia)" style="margin-top:8px">
@@ -204,6 +213,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
     <button class="sec" id="btnLimpar" title="Zera a consulta, os dados do servidor e o modelo escolhido; mantém as configurações da unidade">↺ Nova análise</button>
     <span class="pend" id="pend"></span>
   </div>
+  <div id="conf"></div>
   <div class="paper" id="previa"></div>
 </div>
 </div>
@@ -283,6 +293,11 @@ const salvarCfg = () => { try { localStorage.setItem("parecerCfg2", JSON.stringi
 let atv = null, vari = null;
 const valoresCampos = {}; // por id de campo
 const valoresOpc = {};    // por id de opcional
+const extras = [];        // outras atividades do mesmo parecer: {a: modelo, v: variante, rot: como citar}
+let rotPrincipal = null;  // como citar a atividade principal quando há mais de uma
+const rotPadrao = m => { const t = m.nome.replace(/\s*\(.*?\)/g,"").replace(/\s+–.*$/,"").trim(); return /^[A-ZÀ-Ý]{2}/.test(t) ? t : t[0].toLowerCase() + t.slice(1); };
+const partes = () => (vari ? [{a: atv, v: vari, rot: rotPrincipal || rotPadrao(atv)}] : []).concat(extras);
+const todosCampos = () => partes().flatMap(p => p.v.campos || []);
 const citados = new Set(); // protocolos de precedentes da CGU a citar
 
 /* ---------- identificação do tema ---------- */
@@ -318,7 +333,8 @@ function identificar(){
   }
   box.innerHTML = '<p class="hint">Temas sugeridos (clique para escolher):</p><div class="chips">' +
     r.map((x,i) => `<span class="chip${i===0?" on":""}" data-id="${x.m.id}" title="Termos encontrados: ${escH(x.hits.join(", "))}">${escH(x.m.nome)}<small>${x.hits.length} termo${x.hits.length>1?"s":""}</small></span>`).join("") + "</div>" +
-    (r.length > 1 && r[1].sc >= r[0].sc*0.7 ? '<p class="hint">Há mais de um tema provável: se a consulta envolve várias atividades, gere o parecer pelo tema principal e complemente no Word.</p>' : "");
+    (r.length > 1 ? '<p class="hint">A consulta trata de mais de uma atividade? Incluir no mesmo parecer: ' + r.slice(1).map(x => `<a class="add" data-id="${x.m.id}">＋ ${escH(x.m.nome)}</a>`).join("") + "</p>" : "");
+  box.querySelectorAll("a.add").forEach(a => a.onclick = () => { adicionarExtra(a.dataset.id); a.remove(); });
   box.querySelectorAll(".chip").forEach(c => c.onclick = () => {
     box.querySelectorAll(".chip").forEach(o => o.classList.remove("on")); c.classList.add("on"); selecionarAtividade(c.dataset.id);
   });
@@ -523,6 +539,49 @@ function avisos(){
   $("atencao").innerHTML = a.map(x => '<div class="aviso">' + escH(x) + "</div>").join("");
 }
 /* ---------- precedentes da CGU ---------- */
+function precedentesDe(m){
+  const termos = new Set((m.palavrasChave||[]).map(norm));
+  return (PRECEDENTES.itens||[]).filter(p => { const t = norm(p.x); let sc = 0; termos.forEach(k => { if (k && t.includes(k)) sc += k.includes(" ") ? 2 : 1; }); return sc >= 2; });
+}
+/* ---------- conferência de coerência ---------- */
+function conferir(B, d){
+  const A = [], PS = partes(); if (!PS.length) return A;
+  const sim = i => /^\s*[“"]?sim\b/i.test($("q" + i).value), inc = i => $("inc" + i).checked;
+  const res = PS.map(pt => pt.v.resultado), libera = res.some(r => r.startsWith("sem_")), nega = res.includes("conflito");
+  const texto = B.filter(b => b.k === "p" || b.k === "it").map(b => b.x).join(" ");
+  if (sim(7)){
+    if (nega && !inc(0)) A.push("Pergunta 7: o servidor declarou acesso a informações sigilosas ou privilegiadas e o inciso I do art. 5º não está marcado no enquadramento.");
+    if (libera && !($("resumo").checked && $("dev0").checked)) A.push("Pergunta 7: o servidor declarou acesso a informações sigilosas e o dever “a” (não divulgar informação privilegiada) está desligado na lista de ressalvas.");
+  }
+  if (sim(8)){
+    if (nega && !inc(1)) A.push("Pergunta 8: o servidor declarou poder decisório sobre a pessoa com quem se relacionará e o inciso II do art. 5º não está marcado.");
+    if (libera && !/abst|impedi|suspei/i.test(texto)) A.push("Pergunta 8: o servidor declarou poder decisório sobre a pessoa com quem se relacionará e o texto não traz dever de abstenção, impedimento ou suspeição.");
+  }
+  if (sim(4) && !/abst|impedi|suspei/i.test(texto) && !inc(1) && !inc(6)) A.push("Pergunta 4: a pessoa a que o servidor estará vinculado mantém vínculo com o órgão; avalie os incisos II e VII e o dever de abstenção.");
+  for (const pt of PS){
+    if (pt.a.id === "generico") continue;
+    const ps = precedentesDe(pt.a), neg = ps.filter(p => /^Há risco/i.test(p.r)).length, mit = ps.filter(p => /mitig/i.test(p.r)).length;
+    if (pt.v.resultado.startsWith("sem_") && neg >= 2 && neg > mit) A.push(`${pt.a.nome}: ${neg} de ${ps.length} precedentes parecidos da CGU sobre a RFB negaram a autorização, e a conclusão escolhida libera a atividade. Veja o painel de precedentes.`);
+    if (pt.v.resultado === "conflito" && mit >= 2 && mit > neg) A.push(`${pt.a.nome}: ${mit} de ${ps.length} precedentes parecidos da CGU consideraram o risco mitigável, e a conclusão escolhida é de risco relevante.`);
+    if (pt.v.resultado === "sem_conflito_ressalvas" && mit >= 1 && !$("termo").checked) A.push(`${pt.a.nome}: em ${mit} precedente(s) parecido(s) a CGU condicionou a autorização a termo de compromisso; avalie marcar o parágrafo de termo de compromisso.`);
+  }
+  const fixo = PS.flatMap(pt => pt.v.corpo.filter(b => b.t === "p").map(b => b.x).concat(pt.v.ementa)).join(" ");
+  if (d.sigla && d.sigla !== "AFRFB" && /Auditor(a)?-Fiscal|AFRFB/.test(fixo)) A.push(`O texto do modelo menciona Auditor-Fiscal e o cargo informado é ${d.sigla}; confira se a fundamentação se aplica ao cargo.`);
+  if (d.sigla && d.sigla !== "ATRFB" && /Analista-Tribut|ATRFB/.test(fixo)) A.push(`O texto do modelo menciona Analista-Tributário e o cargo informado é ${d.sigla}; confira se a fundamentação se aplica ao cargo.`);
+  const resp = [1,2,3,4,5,6,7,8,9].map(i => $("q" + i).value).join(" ");
+  if (!d.fem && /\b(auditora|servidora|analista[- ]tribut[áa]ria|lotada|aposentada)\b/i.test(resp)) A.push("As respostas do formulário estão no feminino e o tratamento escolhido é “o servidor”.");
+  const em = PS.flatMap(pt => pt.v.ementa).join(" ");
+  if (d.tipo === "consulta" && /Pedido de autoriza/i.test(em)) A.push("A demanda é consulta, mas a ementa do modelo fala em pedido de autorização; ajuste a ementa no Word ou o tipo de demanda.");
+  if (d.tipo === "pedido" && /(^|\. )Consulta (sobre|acerca|formulada)/.test(em)) A.push("A demanda é pedido de autorização, mas a ementa do modelo fala em consulta; ajuste a ementa no Word ou o tipo de demanda.");
+  if (nega && !ROMANOS.some((_, i) => inc(i))) A.push("Conclusão de risco relevante sem enquadramento: marque os incisos do art. 5º que fundamentam o conflito.");
+  if (res.includes("outro") && $("incluirEnc").checked && PS.length === 1) A.push("Esta variante costuma concluir por devolução ou impedimento de outra ordem; confira se o encaminhamento à Comissão de Ética se aplica.");
+  if (PS.length > 1 && new Set(res).size > 1) A.push("As atividades escolhidas têm conclusões diferentes; revise a ementa e a seção de conclusão para que cada atividade fique com o seu resultado.");
+  if (PS.length > 1) A.push("Parecer com mais de uma atividade: fundamentos repetidos foram unificados; leia a sequência dos parágrafos antes de assinar.");
+  if (/\b(nos|dos|no|do|aos) (par[áa]grafos?|ite(m|ns)) \d+/i.test(texto)) A.push("O texto cita parágrafos ou itens pelo número; confira se a numeração final corresponde.");
+  if (!$("q2").value.trim()) A.push("A pergunta 2 do formulário (descrição da atividade) está vazia.");
+  if (cfg.sigs.some(sg => !sg.nome)) A.push("Há signatário sem nome; preencha em “Configurações da unidade”.");
+  return A;
+}
 function listarPrecedentes(){
   const its = PRECEDENTES.itens || [];
   $("precInfo").textContent = its.length ? `(${its.length} decisões, respondidas de ${dmy(its[its.length-1].d)} a ${dmy(its[0].d)})` : "(base não carregada)";
@@ -569,7 +628,7 @@ function selecionarAtividade(id){
   $("descAtv").textContent = atv ? atv.descricao : "";
   const box = $("variantes"); box.innerHTML = "";
   listarPrecedentes();
-  if (!atv){ vari = null; montarCampos(); render(); return; }
+  if (!atv){ vari = null; montarExtras(); montarCampos(); render(); return; }
   const rot = {sem_conflito:"não há risco relevante", sem_conflito_ressalvas:"risco mitigável / com ressalvas", conflito:"risco relevante de conflito", outro:"impedimento de outra ordem / outros"};
   atv.variantes.forEach((v,i) => {
     const l = document.createElement("label"); l.className = "var";
@@ -582,33 +641,77 @@ function selecionarAtividade(id){
 function selecionarVariante(id){
   vari = atv.variantes.find(v => v.id === id);
   document.querySelectorAll("#variantes .var").forEach(l => { const on = l.querySelector("input").value === id; l.classList.toggle("on", on); l.querySelector("input").checked = on; });
-  $("incluirEnc").checked = vari.resultado !== "outro";
-  $("lblTermo").style.display = vari.resultado === "sem_conflito_ressalvas" ? "" : "none";
-  $("resumo").checked = vari.resultado === "sem_conflito" || vari.resultado === "sem_conflito_ressalvas";
-  montarCampos(); render();
+  rotPrincipal = null;
+  ajustarPadroes(); montarExtras(); montarCampos(); render();
+}
+/* opções que dependem do resultado das atividades escolhidas */
+function ajustarPadroes(){
+  const res = partes().map(p => p.v.resultado);
+  $("incluirEnc").checked = res.some(r => r !== "outro");
+  $("lblTermo").style.display = res.includes("sem_conflito_ressalvas") ? "" : "none";
+  $("resumo").checked = res.some(r => r.startsWith("sem_"));
+}
+/* ---------- outras atividades no mesmo parecer ---------- */
+function adicionarExtra(id){
+  if (!vari){ if (id) selecionarAtividade(id); else alert("Escolha primeiro a atividade principal."); return; }
+  const usados = new Set(partes().map(p => p.a.id));
+  const m = MODELOS.find(m => m.id === id) || MODELOS.find(m => !usados.has(m.id) && m.id !== "generico");
+  if (!m || usados.has(m.id)) return;
+  extras.push({a: m, v: m.variantes[0], rot: rotPadrao(m)});
+  ajustarPadroes(); montarExtras(); montarCampos(); listarPrecedentes(); render();
+}
+function montarExtras(){
+  const box = $("extras"); box.innerHTML = "";
+  if (!extras.length || !vari){ return; }
+  const ordem = MODELOS.slice().sort((a,b) => a.nome.localeCompare(b.nome,"pt"));
+  const d0 = document.createElement("div"); d0.className = "extra";
+  d0.innerHTML = `<div class="t">Atividade principal: ${escH(atv.nome)}</div><label>Como citar no texto (“Em relação à atividade de …”)</label><input type="text">`;
+  const i0 = d0.querySelector("input"); i0.value = rotPrincipal || rotPadrao(atv); i0.oninput = () => { rotPrincipal = i0.value; render(); };
+  box.appendChild(d0);
+  extras.forEach((e, idx) => {
+    const d = document.createElement("div"); d.className = "extra";
+    d.innerHTML = `<div class="t">Atividade ${idx + 2}<button class="sec mini">Remover</button></div>
+      <select data-k="a">${ordem.map(m => `<option value="${m.id}"${m === e.a ? " selected" : ""}>${escH(m.nome)}</option>`).join("")}</select>
+      <label>Conclusão / situação</label>
+      <select data-k="v">${e.a.variantes.map(v => `<option value="${v.id}"${v === e.v ? " selected" : ""}>${escH(v.rotulo)}</option>`).join("")}</select>
+      <p class="hint">${escH(e.v.quandoUsar || "")} <i>(base: ${escH(e.v.fonte || "")})</i></p>
+      <label>Como citar no texto</label><input type="text">`;
+    const muda = () => { ajustarPadroes(); montarExtras(); montarCampos(); listarPrecedentes(); render(); };
+    d.querySelector('[data-k="a"]').onchange = ev => { e.a = MODELOS.find(m => m.id === ev.target.value); e.v = e.a.variantes[0]; e.rot = rotPadrao(e.a); muda(); };
+    d.querySelector('[data-k="v"]').onchange = ev => { e.v = e.a.variantes.find(v => v.id === ev.target.value); muda(); };
+    const ir = d.querySelector("input"); ir.value = e.rot; ir.oninput = () => { e.rot = ir.value; render(); };
+    d.querySelector("button").onclick = () => { extras.splice(idx, 1); muda(); };
+    box.appendChild(d);
+  });
 }
 function montarCampos(){
   const cb = $("camposModelo"), ob = $("opcionais"); cb.innerHTML = ""; ob.innerHTML = "";
-  if (!vari) return;
-  for (const c of vari.campos||[]){
-    const l = document.createElement("label"); l.textContent = c.rotulo + (c.obrigatorio === false ? " (opcional)" : ""); cb.appendChild(l);
-    const i = document.createElement(c.multilinha ? "textarea" : "input"); if (!c.multilinha) i.type = "text"; else i.rows = 3;
-    if (valoresCampos[c.id] === undefined){ const sg = sugestaoCampo(c.id); if (sg){ valoresCampos[c.id] = sg; l.textContent += " – preenchido com a resposta do formulário; ajuste a redação"; } }
-    i.placeholder = c.exemplo ? "Ex.: " + c.exemplo : ""; i.value = valoresCampos[c.id] || "";
-    i.oninput = () => { valoresCampos[c.id] = i.value; render(); };
-    cb.appendChild(i);
+  const PS = partes(); if (!PS.length) return;
+  const vistosC = new Set(); let temOpc = false;
+  for (const pt of PS){
+    const cs = (pt.v.campos || []).filter(c => !vistosC.has(c.id));
+    if (PS.length > 1 && cs.length){ const h = document.createElement("label"); h.style.color = "var(--acc)"; h.textContent = "Campos de: " + pt.a.nome; cb.appendChild(h); }
+    for (const c of cs){
+      vistosC.add(c.id);
+      const l = document.createElement("label"); l.textContent = c.rotulo + (c.obrigatorio === false ? " (opcional)" : ""); cb.appendChild(l);
+      const i = document.createElement(c.multilinha ? "textarea" : "input"); if (!c.multilinha) i.type = "text"; else i.rows = 3;
+      if (valoresCampos[c.id] === undefined){ const sg = sugestaoCampo(c.id); if (sg){ valoresCampos[c.id] = sg; l.textContent += " – preenchido com a resposta do formulário; ajuste a redação"; } }
+      i.placeholder = c.exemplo ? "Ex.: " + c.exemplo : ""; i.value = valoresCampos[c.id] || "";
+      i.oninput = () => { valoresCampos[c.id] = i.value; render(); };
+      cb.appendChild(i);
+    }
+    const vistos = new Set();
+    for (const b of pt.v.corpo){
+      if (!b.opc || vistos.has(b.opc.id)) continue; vistos.add(b.opc.id);
+      const k = pt.a.id + "/" + pt.v.id + "/" + b.opc.id;
+      if (!(k in valoresOpc)) valoresOpc[k] = !!b.opc.padrao;
+      if (vistos.size === 1){ const h = document.createElement("label"); h.textContent = "Trechos opcionais" + (PS.length > 1 ? " de: " + pt.a.nome : " deste modelo"); ob.appendChild(h); }
+      const l = document.createElement("label"); l.className = "chk";
+      l.innerHTML = `<input type="checkbox" ${valoresOpc[k]?"checked":""}> ${escH(b.opc.rotulo||b.opc.id)}`;
+      l.querySelector("input").onchange = e => { valoresOpc[k] = e.target.checked; render(); };
+      ob.appendChild(l);
+    }
   }
-  const vistos = new Set();
-  for (const b of vari.corpo){
-    if (!b.opc || vistos.has(b.opc.id)) continue; vistos.add(b.opc.id);
-    const k = atv.id + "/" + vari.id + "/" + b.opc.id;
-    if (!(k in valoresOpc)) valoresOpc[k] = !!b.opc.padrao;
-    const l = document.createElement("label"); l.className = "chk";
-    l.innerHTML = `<input type="checkbox" ${valoresOpc[k]?"checked":""}> ${escH(b.opc.rotulo||b.opc.id)}`;
-    l.querySelector("input").onchange = e => { valoresOpc[k] = e.target.checked; render(); };
-    ob.appendChild(l);
-  }
-  if (vistos.size){ const h = document.createElement("label"); h.textContent = "Trechos opcionais deste modelo"; ob.prepend(h); }
 }
 
 /* ---------- montagem do texto ---------- */
@@ -636,7 +739,7 @@ function preencher(txt, d){
   return txt.replace(/\{\{(.*?)\}\}/g, (_, k) => {
     if (k.startsWith("g:")){ const [a,b] = k.slice(2).split("|"); return d.fem ? b : a; }
     if (k in mapa) return mapa[k];
-    const c = vari && (vari.campos||[]).find(c => c.id === k);
+    const c = todosCampos().find(c => c.id === k);
     if (c){ const v = (valoresCampos[k]||"").trim(); return v || (c.obrigatorio === false ? "" : falta(c.rotulo)); }
     return falta(k);
   }).replace(/ +([,.;:])/g,"$1").replace(/  +/g," ");
@@ -651,9 +754,10 @@ function blocos(){
   if (!vari) return {B, d};
   const pedido = d.tipo === "pedido";
   B.push({k:"em", first:true, x:"Assunto: " + (pedido ? "Pedido de autorização para exercício de atividade privada formulado por meio do SeCI." : (vari.assunto || "Consulta SeCI."))});
-  B.push({k:"em", x: preencher(vari.ementaTitulo, d)});
-  for (const e of vari.ementa) B.push({k:"em", x: preencher(e, d)});
-  const enc = $("incluirEnc").checked, conf = vari.resultado === "conflito";
+  const PS = partes();
+  B.push({k:"em", x: [...new Set(PS.map(pt => preencher(pt.v.ementaTitulo, d).trim()))].join(" ")});
+  for (const e of new Set(PS.flatMap(pt => pt.v.ementa.map(e => preencher(e, d))))) B.push({k:"em", x: e});
+  const enc = $("incluirEnc").checked, conf = PS.some(pt => pt.v.resultado === "conflito");
   const inc = ROMANOS.filter((_, i) => $("inc" + i).checked);
   const incTxt = inc.length > 1 ? inc.slice(0,-1).join(", ") + " e " + inc[inc.length-1] : inc.join("");
   if (inc.length) B.push({k:"em", x: `Lei nº 12.813/2013, art. 5º, ${incTxt}.`});
@@ -678,31 +782,38 @@ function blocos(){
   B.push({k:"gap"});
   if (!pedido && $("converter").checked)
     P("A despeito de constar no formulário que a presente demanda trata-se de uma consulta sobre a existência de conflito de interesses, por haver pretensão do exercício de uma atividade privada, de natureza continuada, o requerimento será tratado como um pedido de autorização para fins de análise sobre a existência de conflito de interesses, nos termos do art. 2º, II, da Portaria Interministerial nº 333, de 19 de setembro de 2013.");
-  const comResumo = $("resumo").checked;
-  let corpo = vari.corpo.filter(b => !b.opc || valoresOpc[atv.id + "/" + vari.id + "/" + b.opc.id]);
-  let iConc = -1; corpo.forEach((b, i) => { if (b.t === "p") iConc = i; });
-  const conclusao = corpo[iConc];
-  if (comResumo) corpo = corpo.filter(b => b === conclusao || b.t !== "p" || !REPETE_DEVER(b.x));
-  iConc = corpo.indexOf(conclusao);
+  const comResumo = $("resumo").checked, jaDito = new Set(), fund = [], concs = [];
+  const chave = (t, x) => t + norm(Array.isArray(x) ? x.join("|") : x).replace(/[^a-z0-9]+/g,"");
+  for (const pt of PS){
+    let corpo = pt.v.corpo.filter(b => !b.opc || valoresOpc[pt.a.id + "/" + pt.v.id + "/" + b.opc.id]);
+    let ic = -1; corpo.forEach((b, i) => { if (b.t === "p") ic = i; });
+    const conc = corpo[ic];
+    corpo = corpo.filter(b => b !== conc && !(comResumo && b.t === "p" && REPETE_DEVER(b.x)));
+    if (PS.length > 1) fund.push({t:"p", x:`Em relação à atividade de **${pt.rot || rotPadrao(pt.a)}**, cumpre observar o que segue.`});
+    for (const b of corpo){
+      // com várias atividades, fundamentos idênticos (mesma lei, mesma citação) entram uma vez só
+      const x = b.t === "p" ? preencher(b.x, d) : b.x.map(l => preencher(l, d)), k = chave(b.t, x);
+      if (jaDito.has(k)) continue; jaDito.add(k); fund.push({t: b.t, x});
+    }
+    if (conc){ const x = preencher(conc.x, d), k = chave("c", x); if (!jaDito.has(k)){ jaDito.add(k); concs.push(x); } }
+  }
   if (cfg.secoes) B.push({k:"h", x:"II. FUNDAMENTOS"});
-  corpo.forEach((b, i) => {
-    if (i === iConc){
-      if (comResumo){
-        const its = DEVERES.filter((_, j) => $("dev" + j).checked);
-        if (its.length){ P(preencher("Em resumo, em qualquer caso, {{g:o servidor|a servidora}} deve:", d)); its.forEach((t, j) => B.push({k:"it", x: `**${String.fromCharCode(97 + j)})** ${t}`})); B.push({k:"gap"}); }
-      }
-      if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
-      if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
-    }
-    if (i === iConc) for (const p of (PRECEDENTES.itens||[]).filter(p => citados.has(p.n))){
-      // precedentes citados entram imediatamente antes da conclusão
-      P(`Registre-se, a propósito, a manifestação da Controladoria-Geral da União no Protocolo SeCI nº ${p.n}, respondido em ${dmy(p.d)} (resultado: “${p.r}”), assim ementada:`);
-      B.push({k:"cit", x: p.x + (/[.!?…)]$/.test(p.x) ? "" : " (...)")}); B.push({k:"gap"});
-    }
-    if (b.t === "p") P(preencher(b.x, d));
-    else { for (const ln of b.x) B.push({k:"cit", x: preencher(ln, d)}); B.push({k:"gap"}); }
-  });
-  if (vari.resultado === "sem_conflito_ressalvas" && $("termo").checked)
+  for (const b of fund){
+    if (b.t === "p") P(b.x);
+    else { for (const ln of b.x) B.push({k:"cit", x: ln}); B.push({k:"gap"}); }
+  }
+  for (const p of (PRECEDENTES.itens||[]).filter(p => citados.has(p.n))){
+    P(`Registre-se, a propósito, a manifestação da Controladoria-Geral da União no Protocolo SeCI nº ${p.n}, respondido em ${dmy(p.d)} (resultado: “${p.r}”), assim ementada:`);
+    B.push({k:"cit", x: p.x + (/[.!?…)]$/.test(p.x) ? "" : " (...)")}); B.push({k:"gap"});
+  }
+  if (comResumo){
+    const its = DEVERES.filter((_, j) => $("dev" + j).checked);
+    if (its.length){ P(preencher("Em resumo, em qualquer caso, {{g:o servidor|a servidora}} deve:", d)); its.forEach((t, j) => B.push({k:"it", x: `**${String.fromCharCode(97 + j)})** ${t}`})); B.push({k:"gap"}); }
+  }
+  if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
+  if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
+  concs.forEach(x => P(x));
+  if (PS.some(pt => pt.v.resultado === "sem_conflito_ressalvas") && $("termo").checked)
     P(preencher("Registre-se que os riscos de conflito de interesses identificados podem ser mitigados caso {{g:o interessado|a interessada}}, mediante assinatura de termo de compromisso perante a Comissão de Ética Pública da RFB e sua chefia imediata, se obrigue a observar as ressalvas acima expostas.", d));
   const encTxt = (conf ? cfg.encaminhaConflito : cfg.encaminha) || "";
   if (enc && encTxt) P(preencher(encTxt.replace("{{enquadramento}}", inc.length ? `, nos termos do${inc.length > 1 ? "s incisos" : " inciso"} ${incTxt} do art. 5º da Lei nº 12.813/2013` : ""), d));
@@ -733,7 +844,10 @@ const limpo = x => x.replace(/[\u0001\u0002]/g,"").replace(/\*\*/g,"").replace(/
 
 /* ---------- prévia ---------- */
 function render(){
-  const {B} = blocos();
+  const {B, d} = blocos();
+  const A = conferir(B, d);
+  $("conf").className = vari ? "conf" + (A.length ? "" : " ok") : "";
+  $("conf").innerHTML = !vari ? "" : A.length ? `<b>Conferência: ${A.length} ponto(s) de atenção</b><ul>${A.map(a => "<li>" + escH(a) + "</li>").join("")}</ul>` : "<b>Conferência:</b> nenhum ponto de atenção encontrado.";
   const inl = x => trechos(x).map(r => { let s = escH(r.t); if (r.h) s = "<mark>"+s+"</mark>"; if (r.i) s = "<i>"+s+"</i>"; if (r.b) s = "<b>"+s+"</b>"; return s; }).join("");
   let h = `<img class="logo" src="${cfg.logo || "data:image/jpeg;base64," + LOGO_PADRAO}" alt="Cabeçalho">`;
   let pend = 0;
@@ -827,7 +941,7 @@ function montarDocx(){
   ];
   // sem acentos: alguns navegadores descartam nomes de arquivo não-ASCII em downloads locais
   const limpaNome = s => s.normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^\x20-\x7e]/g,"").replace(/[\\/:*?"<>|]+/g," ").replace(/\s+/g," ").trim();
-  const nomeArq = limpaNome(`PAR ${d.numero || "xxx"}-${d.ano || "xxxx"} - CON - ${d.nome || "Servidor"} - ${atv ? atv.nome : "Parecer"}`) + ".docx";
+  const nomeArq = limpaNome(`PAR ${d.numero || "xxx"}-${d.ano || "xxxx"} - CON - ${d.nome || "Servidor"} - ${atv ? atv.nome + (extras.length ? " e outras" : "") : "Parecer"}`) + ".docx";
   return {blob: zip(arqs), nomeArq};
 }
 function baixar(){
@@ -861,6 +975,7 @@ function montarCfg(){
 }
 const CFG_IDS = {sigla:"sigla", portariaLonga:"portariaLonga", portariaCurta:"portariaCurta", orgao:"orgao", encaminha:"encaminha", ementaEnc:"ementaEnc", encaminhaConflito:"encaminhaConflito", ementaEncConflito:"ementaEncConflito"};
 for (const [id,k] of Object.entries(CFG_IDS)) $(id).oninput = e => { cfg[k] = e.target.value; salvarCfg(); render(); };
+$("addAtv").onclick = () => adicionarExtra(null);
 $("addSig").onclick = () => { cfg.sigs.push({despacho:"De acordo.", nome:"", cargo:"Auditor-Fiscal da Receita Federal do Brasil", funcao:""}); salvarCfg(); montarCfg(); render(); };
 $("resetCfg").onclick = () => { if (!confirm("Restaurar as configurações padrão (assinaturas, normas e cabeçalho)?")) return; cfg = JSON.parse(JSON.stringify(CFG_PADRAO)); salvarCfg(); montarCfg(); render(); };
 $("logoFile").onchange = e => {
@@ -896,7 +1011,7 @@ function novaAnalise(){
   for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
   ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
   DEVERES.forEach((_, j) => $("dev" + j).checked = true);
-  citados.clear();
+  citados.clear(); extras.length = 0; rotPrincipal = null; $("extras").innerHTML = "";
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";

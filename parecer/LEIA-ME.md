@@ -41,3 +41,10 @@ PDF digitalizado (imagem) e arquivos `.doc` antigos não são lidos.
 Segue o padrão dos pareceres Coger/GNP de 2023: I. Relatório (parágrafos iniciais e formulário, com as respostas
 entre aspas), II. Fundamentos (modelo da atividade, lista "Em resumo, o servidor deve" e registro de nova consulta)
 e III. Conclusão (conclusão e encaminhamento). A lista de deveres está em `DEVERES`, em `app.src.html`.
+
+## Várias atividades e conferência
+
+No passo 2, "Adicionar outra atividade ao mesmo parecer" junta os fundamentos de mais de um modelo: a ementa é
+composta, cada atividade ganha um parágrafo de abertura, fundamentos idênticos entram uma vez só e as conclusões
+ficam em sequência na seção III. O painel "Conferência", acima da prévia, aponta incoerências entre as respostas
+do formulário, o modelo escolhido, os precedentes da CGU e as opções marcadas (função `conferir` em `app.src.html`).
