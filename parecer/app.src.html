@@ -181,7 +181,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
       </div>
       <label for="logoFile">Imagem do cabeçalho (marca/brasão) – opcional, para substituir a padrão</label>
       <input type="file" id="logoFile" accept="image/jpeg,image/png">
-      <p class="hint">A imagem padrão veio dos pareceres de 2021 (“Ministério da Economia”). Envie a marca atual se for diferente.</p>
+      <p class="hint">A imagem padrão é a marca atual (“Ministério da Fazenda – Receita Federal”). Só envie outra se ela mudar.</p>
     </details>
   </div>
 </div>
@@ -347,6 +347,50 @@ function distribuir(){
   avisos(); render();
   return resp ? Object.keys(resp).length : 0;
 }
+/* ---------- dados do servidor encontrados no texto do formulário ---------- */
+function valorRotulo(linhas, re){
+  for (let i = 0; i < linhas.length; i++){
+    const m = linhas[i].match(re); if (!m) continue;
+    let v = (m[1] || "").trim();
+    if (!v) for (let j = i + 1; j < Math.min(i + 3, linhas.length) && !v; j++) v = linhas[j].trim();
+    v = v.replace(/\s{2,}.*$/,"").trim();
+    if (v && v.length <= 140) return v;
+  }
+  return "";
+}
+function extrairDados(texto){
+  const L = texto.split("\n"), achados = [];
+  const por = (id, v, rot) => { if (v && !$(id).value.trim()){ $(id).value = v; achados.push(rot); } };
+  const nome = valorRotulo(L, /^\s*(?:nome(?: completo| civil| do (?:solicitante|servidor|agente p[úu]blico|requerente|interessado))?|solicitante|requerente|interessad[oa]|servidora?)\s*[:\-–]\s*(.*)$/i);
+  if (nome && /^[A-Za-zÀ-ÿ'’. ]{5,}$/.test(nome) && nome.trim().includes(" ")) por("nome", nome.replace(/\s+/g," "), "nome");
+  const mat = texto.match(/(?:matr[íi]cula(?:\s+(?:siape|funcional))?|siape)\s*(?:n[ºo°.]*)?\s*[:\-–]?\s*(\d[\d.\-]{3,11}\d)/i);
+  if (mat) por("matricula", mat[1], "matrícula");
+  const cargo = valorRotulo(L, /^\s*cargo(?:\s*\/\s*emprego| efetivo| ou emprego(?: p[úu]blico)?| p[úu]blico)?\s*[:\-–]\s*(.*)$/i);
+  if (cargo){
+    const c = norm(cargo);
+    if (/auditor/.test(c)) $("cargoSel").value = "AFRFB";
+    else if (/analista/.test(c) && /tribut/.test(c)) $("cargoSel").value = "ATRFB";
+    else { $("cargoSel").value = "outro"; por("cargoTxt", cargo, "cargo"); }
+    if ($("cargoSel").value !== "outro") achados.push("cargo");
+    $("cargoSel").onchange();
+    if (/auditora|tributaria|\ba servidora\b/.test(c)) $("genero").value = "f";
+  }
+  const uni = valorRotulo(L, /^\s*(?:unidade(?: de (?:exerc[íi]cio|lota[çc][ãa]o)| organizacional)?|lota[çc][ãa]o(?: atual)?|local de exerc[íi]cio|setor)\s*[:\-–]\s*(.*)$/i);
+  por("unidade", uni, "unidade de exercício");
+  // processo administrativo (o protocolo do SeCI, iniciado por 00096, não é o número do processo)
+  const procs = (texto.match(/\b\d{5}\.\d{6}\/\d{4}-\d{2}\b/g) || []).filter(n => !n.startsWith("00096"));
+  if (procs.length) por("processo", procs[0], "processo");
+  return achados;
+}
+// campos do modelo que podem partir das respostas do formulário (pergunta de origem)
+const CAMPO_DE_PERGUNTA = {descricao_atividade:2, descricao_pretensao:2, descricao_pedido:2, atividades:2, atividade_exercida:6};
+function sugestaoCampo(id){
+  const q = CAMPO_DE_PERGUNTA[id]; if (!q || !$("q" + q)) return "";
+  let t = $("q" + q).value.replace(/\s+/g," ").trim().replace(/[.;]+$/,"");
+  if (!t) return "";
+  if (!/^[A-ZÀ-Ý]{2}/.test(t)) t = t[0].toLowerCase() + t.slice(1);
+  return t;
+}
 /* ---------- leitura de arquivo enviado (offline) ---------- */
 async function gunzipB64(b64, tipo){
   const st = new Blob([b64bytes(b64)]).stream().pipeThrough(new DecompressionStream("gzip"));
@@ -417,9 +461,12 @@ async function lerArquivo(f){
     $("consulta").value = t;
     for (let i = 1; i <= 9; i++) $("q" + i).value = "";
     const n = distribuir();
+    for (const k in CAMPO_DE_PERGUNTA) delete valoresCampos[k];
+    const ach = extrairDados(t);
     identificar();
-    info.textContent = n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
-                         : `${f.name}: texto lido, mas as perguntas do SeCI não foram reconhecidas; o conteúdo foi colocado na pergunta 2. Confira no passo 3.`;
+    const extra = ach.length ? " Dados preenchidos a partir do arquivo: " + ach.join(", ") + "." : " Nenhum dado de identificação (nome, matrícula, cargo, unidade) foi localizado no arquivo.";
+    info.textContent = (n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
+                         : `${f.name}: texto lido, mas as perguntas do SeCI não foram reconhecidas; o conteúdo foi colocado na pergunta 2. Confira no passo 3.`) + extra;
   } catch (e){ info.textContent = "Não foi possível ler " + f.name + ": " + (e.message || e); }
 }
 function avisos(){
@@ -500,6 +547,7 @@ function montarCampos(){
   for (const c of vari.campos||[]){
     const l = document.createElement("label"); l.textContent = c.rotulo + (c.obrigatorio === false ? " (opcional)" : ""); cb.appendChild(l);
     const i = document.createElement(c.multilinha ? "textarea" : "input"); if (!c.multilinha) i.type = "text"; else i.rows = 3;
+    if (valoresCampos[c.id] === undefined){ const sg = sugestaoCampo(c.id); if (sg){ valoresCampos[c.id] = sg; l.textContent += " – preenchido com a resposta do formulário; ajuste a redação"; } }
     i.placeholder = c.exemplo ? "Ex.: " + c.exemplo : ""; i.value = valoresCampos[c.id] || "";
     i.oninput = () => { valoresCampos[c.id] = i.value; render(); };
     cb.appendChild(i);
