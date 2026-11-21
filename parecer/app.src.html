@@ -126,6 +126,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
     <label for="tipo">Tipo de demanda</label>
     <select id="tipo"><option value="pedido">Pedido de autorização</option><option value="consulta">Consulta</option></select>
     <label class="chk" id="lblConv"><input type="checkbox" id="converter"> Incluir parágrafo informando que a consulta será tratada como pedido de autorização (atividade de natureza continuada)</label>
+    <label class="chk"><input type="checkbox" id="incluirEnc" checked> Incluir encaminhamento à Comissão de Ética (linha da ementa e parágrafo final)</label>
     <label for="formulario">Transcrição do formulário SeCI (perguntas numeradas ficam em negrito)</label>
     <textarea id="formulario" rows="6" placeholder="2 - Descreva a atividade que você pretende exercer...&#10;Resposta do servidor."></textarea>
     <div id="camposModelo"></div>
@@ -274,6 +275,7 @@ function selecionarAtividade(id){
 function selecionarVariante(id){
   vari = atv.variantes.find(v => v.id === id);
   document.querySelectorAll("#variantes .var").forEach(l => { const on = l.querySelector("input").value === id; l.classList.toggle("on", on); l.querySelector("input").checked = on; });
+  $("incluirEnc").checked = vari.resultado !== "outro";
   montarCampos(); render();
 }
 function montarCampos(){
@@ -341,7 +343,8 @@ function blocos(){
   B.push({k:"em", first:true, x:"Assunto: " + (pedido ? "Pedido de autorização formulado por meio do SeCI." : (vari.assunto || "Consulta SeCI."))});
   B.push({k:"em", x: preencher(vari.ementaTitulo, d)});
   for (const e of vari.ementa) B.push({k:"em", x: preencher(e, d)});
-  if (cfg.ementaEnc) B.push({k:"em", x: cfg.ementaEnc});
+  const enc = $("incluirEnc").checked;
+  if (enc && cfg.ementaEnc) B.push({k:"em", x: cfg.ementaEnc});
   B.push({k:"gap"});
   let n = 0;
   const P = x => B.push({k:"p", n: ++n, x});
@@ -359,7 +362,7 @@ function blocos(){
     if (b.t === "p") P(preencher(b.x, d));
     else { for (const ln of b.x) B.push({k:"cit", x: preencher(ln, d)}); B.push({k:"gap"}); }
   }
-  if (cfg.encaminha) P(preencher(cfg.encaminha, d));
+  if (enc && cfg.encaminha) P(preencher(cfg.encaminha, d));
   for (const s of cfg.sigs){
     if (s.despacho) for (const ln of s.despacho.split("\n")) B.push({k:"desp", x: ln});
     B.push({k:"sgi", x:"Assinado digitalmente"});
@@ -527,7 +530,7 @@ $("busca").oninput = listarAtividades;
 $("atividade").onchange = e => selecionarAtividade(e.target.value);
 $("cargoSel").onchange = () => { $("cargoOutro").style.display = $("cargoSel").value === "outro" ? "" : "none"; render(); };
 $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "consulta" ? "" : "none"; render(); };
-for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","formulario"]) $(id).addEventListener("input", render);
+for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","formulario"]) $(id).addEventListener("input", render);
 $("btnDocx").onclick = baixar;
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
 $("btnLimpar").onclick = () => {
