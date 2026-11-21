@@ -201,7 +201,7 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
   <div class="actions">
     <button id="btnDocx">⬇ Gerar Word (.docx)</button>
     <button class="sec" id="btnCopiar">Copiar texto</button>
-    <button class="sec" id="btnLimpar">Limpar dados</button>
+    <button class="sec" id="btnLimpar" title="Zera a consulta, os dados do servidor e o modelo escolhido; mantém as configurações da unidade">↺ Nova análise</button>
     <span class="pend" id="pend"></span>
   </div>
   <div class="paper" id="previa"></div>
@@ -835,6 +835,7 @@ function baixar(){
   const {blob, nomeArq} = montarDocx();
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = nomeArq; document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  $("pend").innerHTML = "Word gerado. Para o próximo caso, clique em <b>↺ Nova análise</b>.";
 }
 function textoPuro(){
   const {B} = blocos();
@@ -881,16 +882,32 @@ $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "c
 for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta"]) $(id).addEventListener("input", render);
 $("btnDocx").onclick = baixar;
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
-$("btnLimpar").onclick = () => {
-  if (!confirm("Limpar os dados do servidor e da consulta? (As configurações da unidade são mantidas.)")) return;
-  for (const id of ["consulta","numero","processo","nome","matricula","unidade","equipe","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"]) $(id).value = "";
-  citados.clear(); ROMANOS.forEach((_, i) => $("inc" + i).checked = false); avisos(); listarPrecedentes();
+const hoje = () => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; };
+function novaAnalise(){
+  const ids = ["consulta","numero","processo","nome","matricula","unidade","equipe","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"];
+  const temDados = ids.some(id => $(id).value.trim()) || atv;
+  if (temDados && !confirm("Iniciar uma nova análise? Os dados do servidor, as respostas do formulário e o modelo escolhido serão apagados. As configurações da unidade (assinaturas, normas, cabeçalho) são mantidas.")) return;
+  for (const id of ids) $(id).value = "";
+  $("arqForm").value = ""; $("busca").value = ""; $("precBusca").value = "";
+  $("arqInfo").textContent = "O arquivo é lido aqui mesmo no navegador, sem internet. PDF digitalizado (imagem) não tem texto para ler.";
+  $("data").value = hoje(); $("genero").value = "m"; $("cargoSel").value = "AFRFB"; $("cargoSel").onchange();
+  $("tipo").value = "pedido"; $("tipo").onchange();
+  for (const id of ["converter","termo"]) $(id).checked = false;
+  for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
+  ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
+  DEVERES.forEach((_, j) => $("dev" + j).checked = true);
+  citados.clear();
   for (const k in valoresCampos) delete valoresCampos[k];
-  $("sugestoes").innerHTML = ""; montarCampos(); render();
-};
+  for (const k in valoresOpc) delete valoresOpc[k];
+  $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
+  avisos();
+  selecionarAtividade(null); // também refaz a lista, os precedentes e a prévia
+  window.scrollTo({top: 0, behavior: "smooth"}); $("consulta").focus({preventScroll: true});
+}
+$("btnLimpar").onclick = novaAnalise;
 
 /* ---------- início ---------- */
-(() => { const h = new Date(); $("data").value = `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; })();
+$("data").value = hoje();
 $("lblConv").style.display = "none"; $("lblTermo").style.display = "none";
 $("seciPerguntas").innerHTML = SECI.slice(0,9).map((q, i) => `<label for="q${i+1}">${i+1} – ${escH(q)}</label><textarea id="q${i+1}" rows="2"></textarea>`).join("");
 for (let i = 1; i <= 9; i++) $("q" + i).addEventListener("input", () => { avisos(); render(); if (i === 2) listarPrecedentes(); });
