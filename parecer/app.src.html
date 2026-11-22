@@ -117,6 +117,7 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
     <p class="hint" id="descAtv"></p>
     <label>Conclusão / situação</label>
     <div id="variantes"></div>
+    <div id="ovrBox"></div>
     <div id="extras"></div>
     <button class="sec mini" id="addAtv" style="margin-top:10px">＋ Adicionar outra atividade ao mesmo parecer</button>
     <details id="precBox" style="margin-top:12px">
@@ -303,7 +304,25 @@ const valoresOpc = {};    // por id de opcional
 const extras = [];        // outras atividades do mesmo parecer: {a: modelo, v: variante, rot: como citar}
 let rotPrincipal = null;  // como citar a atividade principal quando há mais de uma
 const rotPadrao = m => { const t = m.nome.replace(/\s*\(.*?\)/g,"").replace(/\s+–.*$/,"").trim(); return /^[A-ZÀ-Ý]{2}/.test(t) ? t : t[0].toLowerCase() + t.slice(1); };
-const partes = () => (vari ? [{a: atv, v: vari, rot: rotPrincipal || rotPadrao(atv)}] : []).concat(extras);
+let resPrincipal = "";   // conclusão escolhida para a atividade principal ("" = a do modelo)
+const RES_ROT = {sem_conflito:"Sem conflito de interesses (autorização sem ressalvas)", sem_conflito_ressalvas:"Sem conflito, com ressalvas (autorização condicionada a Termo de Compromisso)", conflito:"Risco relevante de conflito de interesses (não autorizar)", outro:"Impedimento de outra ordem / devolução"};
+/* troca a conclusão do modelo pela escolhida no caso concreto: ementa e parágrafo final mudam; os fundamentos do modelo permanecem para revisão */
+function efetiva(p){
+  const v = p.v, r = p.res;
+  if (!r || r === v.resultado) return v;
+  const at = `Pedido de autorização para exercício da atividade de ${p.rot}, concomitante com o cargo de {{cargo}}.`;
+  const EM = {sem_conflito:"Não configura conflito de interesses.", sem_conflito_ressalvas:"Não configura conflito de interesses, desde que observadas as ressalvas.", conflito:"Configura conflito de interesses.", outro:"Impedimento de outra ordem."};
+  const CO = {
+    sem_conflito:`Ante o exposto, nos limites das informações prestadas, conclui-se que o exercício da atividade de ${p.rot} não configura conflito de interesses, nos termos da Lei nº 12.813, de 2013, podendo ser autorizado.`,
+    sem_conflito_ressalvas:`Ante o exposto, nos limites das informações prestadas, conclui-se que o exercício da atividade de ${p.rot} não configura conflito de interesses, desde que observadas as ressalvas e os deveres acima expostos, podendo ser autorizado nessa condição.`,
+    conflito:`Ante o exposto, conclui-se que o exercício da atividade de ${p.rot} configura situação de conflito de interesses, nos termos da Lei nº 12.813, de 2013, razão pela qual não se recomenda a autorização.`,
+    outro:`Ante o exposto, o exercício da atividade de ${p.rot} não pode ser autorizado nos termos pretendidos, em razão de ${falta("fundamento do impedimento")}.`};
+  const corpo = v.corpo.slice(); let ic = -1; corpo.forEach((b, i) => { if (b.t === "p") ic = i; });
+  const nova = {t:"p", x: CO[r]};
+  if (ic >= 0) corpo[ic] = nova; else corpo.push(nova);
+  return {...v, resultado: r, ementa: [at + " " + EM[r]], corpo, trocada: v.resultado};
+}
+const partes = () => (vari ? [{a: atv, v: vari, rot: rotPrincipal || rotPadrao(atv), res: resPrincipal}] : []).concat(extras).map(p => ({a: p.a, v: efetiva(p), rot: p.rot, res: p.res}));
 const todosCampos = () => partes().flatMap(p => p.v.campos || []);
 const citados = new Set(); // protocolos de precedentes da CGU a citar
 
@@ -559,6 +578,7 @@ function conferir(B, d){
   const A = [], PS = partes(); if (!PS.length) return A;
   const sim = i => /^\s*[“"]?sim\b/i.test($("q" + i).value), inc = i => $("inc" + i).checked;
   const res = PS.map(pt => pt.v.resultado), libera = res.some(r => r.startsWith("sem_")), nega = res.includes("conflito");
+  PS.forEach(pt => { if (pt.v.trocada) A.push(`${pt.a.nome}: a conclusão foi trocada de “${RES_ROT[pt.v.trocada]}” para “${RES_ROT[pt.v.resultado]}”. Os fundamentos do modelo foram mantidos; revise-os para que sustentem a nova conclusão (e marque os incisos do art. 5º, se for o caso).`); });
   const texto = B.filter(b => b.k === "p" || b.k === "it").map(b => b.x).join(" ");
   if (sim(7)){
     if (nega && !inc(0)) A.push("Pergunta 7: o servidor declarou acesso a informações sigilosas ou privilegiadas e o inciso I do art. 5º não está marcado no enquadramento.");
@@ -654,11 +674,20 @@ function selecionarAtividade(id){
   });
   selecionarVariante(atv.variantes[0].id);
 }
+function opcoesRes(v, sel){
+  return `<option value="">Conforme o modelo escolhido (${escH(RES_ROT[v.resultado] || v.resultado)})</option>` + Object.keys(RES_ROT).filter(k => k !== v.resultado).map(k => `<option value="${k}"${k === sel ? " selected" : ""}>${escH(RES_ROT[k])}</option>`).join("");
+}
+function montarOvr(){
+  const b = $("ovrBox"); b.innerHTML = "";
+  if (!vari) return;
+  b.innerHTML = `<label>Conclusão do caso concreto <span class="hint">(opcional: use se a conclusão do seu caso for diferente da do modelo)</span></label><select id="ovrSel">${opcoesRes(vari, resPrincipal)}</select>`;
+  $("ovrSel").onchange = ev => { resPrincipal = ev.target.value; ajustarPadroes(); montarExtras(); montarCampos(); render(); };
+}
 function selecionarVariante(id){
   vari = atv.variantes.find(v => v.id === id);
   document.querySelectorAll("#variantes .var").forEach(l => { const on = l.querySelector("input").value === id; l.classList.toggle("on", on); l.querySelector("input").checked = on; });
-  rotPrincipal = null;
-  ajustarPadroes(); montarExtras(); montarCampos(); render();
+  rotPrincipal = null; resPrincipal = "";
+  ajustarPadroes(); montarOvr(); montarExtras(); montarCampos(); render();
 }
 /* opções que dependem do resultado das atividades escolhidas */
 function ajustarPadroes(){
@@ -675,7 +704,7 @@ function adicionarExtra(id){
   const usados = new Set(partes().map(p => p.a.id));
   const m = MODELOS.find(m => m.id === id) || MODELOS.find(m => !usados.has(m.id) && m.id !== "generico");
   if (!m || usados.has(m.id)) return;
-  extras.push({a: m, v: m.variantes[0], rot: rotPadrao(m)});
+  extras.push({a: m, v: m.variantes[0], res: "", rot: rotPadrao(m)});
   ajustarPadroes(); montarExtras(); montarCampos(); listarPrecedentes(); render();
 }
 function montarExtras(){
@@ -693,10 +722,13 @@ function montarExtras(){
       <label>Conclusão / situação</label>
       <select data-k="v">${e.a.variantes.map(v => `<option value="${v.id}"${v === e.v ? " selected" : ""}>${escH(v.rotulo)}</option>`).join("")}</select>
       <p class="hint">${escH(e.v.quandoUsar || "")} <i>(base: ${escH(e.v.fonte || "")})</i></p>
+      <label>Conclusão do caso concreto</label>
+      <select data-k="r">${opcoesRes(e.v, e.res)}</select>
       <label>Como citar no texto</label><input type="text">`;
     const muda = () => { ajustarPadroes(); montarExtras(); montarCampos(); listarPrecedentes(); render(); };
-    d.querySelector('[data-k="a"]').onchange = ev => { e.a = MODELOS.find(m => m.id === ev.target.value); e.v = e.a.variantes[0]; e.rot = rotPadrao(e.a); muda(); };
-    d.querySelector('[data-k="v"]').onchange = ev => { e.v = e.a.variantes.find(v => v.id === ev.target.value); muda(); };
+    d.querySelector('[data-k="a"]').onchange = ev => { e.a = MODELOS.find(m => m.id === ev.target.value); e.v = e.a.variantes[0]; e.res = ""; e.rot = rotPadrao(e.a); muda(); };
+    d.querySelector('[data-k="v"]').onchange = ev => { e.v = e.a.variantes.find(v => v.id === ev.target.value); e.res = ""; muda(); };
+    d.querySelector('[data-k="r"]').onchange = ev => { e.res = ev.target.value; muda(); };
     const ir = d.querySelector("input"); ir.value = e.rot; ir.oninput = () => { e.rot = ir.value; render(); };
     d.querySelector("button").onclick = () => { extras.splice(idx, 1); muda(); };
     box.appendChild(d);
@@ -1076,7 +1108,7 @@ function novaAnalise(){
   for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
   ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
   DEVERES.forEach((_, j) => $("dev" + j).checked = true);
-  citados.clear(); extras.length = 0; rotPrincipal = null; $("extras").innerHTML = "";
+  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
