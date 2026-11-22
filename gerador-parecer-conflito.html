@@ -862,7 +862,15 @@ function blocos(){
   }
   if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
   if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
-  concs.forEach(x => P(x));
+  if (PS.length > 1){
+    // várias atividades: uma só conclusão, agrupando as atividades que têm o mesmo resultado
+    const PRED = {sem_conflito:"não configura conflito de interesses, nos termos da Lei nº 12.813/2013", sem_conflito_ressalvas:"não configura conflito de interesses com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas", conflito:"configura conflito de interesses, nos termos da Lei nº 12.813/2013", outro:`não pode ser autorizado nos termos pretendidos, em razão de ${falta("fundamento do impedimento")}`};
+    const junta = l => l.length > 1 ? l.slice(0, -1).join(", ") + " e " + l[l.length - 1] : l[0];
+    const grupos = [];
+    for (const pt of PS){ let g = grupos.find(g => g.r === pt.v.resultado); if (!g) grupos.push(g = {r: pt.v.resultado, l: []}); g.l.push(pt.rot || rotPadrao(pt.a)); }
+    const frases = grupos.map((g, i) => `${i ? (g.r === "conflito" || g.r === "outro" ? "já " : "por sua vez, ") : ""}o exercício ${g.l.length > 1 ? "das atividades de " : "da atividade de "}**${junta(g.l)}**${grupos.length === 1 ? " {{g:pelo servidor|pela servidora}} **{{nome}}**" : ""} ${PRED[g.r]}`);
+    P(preencher(`Portanto, no entendimento da {{orgao_corregedoria}}, ${frases.join("; ")}.`, d));
+  } else concs.forEach(x => P(x));
   if (PS.some(pt => pt.v.resultado.startsWith("sem_")) && $("termo").checked)
     P(preencher("Registre-se que a autorização fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.", d));
   const encTxt = (conf ? cfg.encaminhaConflito : cfg.encaminha) || "";
