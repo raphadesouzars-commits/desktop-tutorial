@@ -28,6 +28,7 @@
 | P1 | Definir o ambiente de execução e instalar o motor | **TI** |
 | P1 | Carregar o acervo real e verificar a vigência dos normativos | Concepção / Coordenação |
 | P1 | Preencher `regras_coger.md` (seção "A consolidar pela COGER") | Coordenação |
+| P1 | Medir a indexação da biblioteca real (686 itens) no modo local e ajustar (leitura em segundo plano, limite de páginas) |
 | P1 | Testar o modo assistido com o Copilot Chat real e ajustar o prompt (`prompts/draft.txt`) | Concepção |
 | P1 | Treinar os pareceristas do piloto | Concepção |
 | P1 | Formulário de registro do piloto | Concepção |

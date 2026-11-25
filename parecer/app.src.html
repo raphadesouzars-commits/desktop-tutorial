@@ -246,6 +246,13 @@ nav.tabs button.on{background:var(--acc);color:#fff}
 
   <div class="aigrid" id="aiModoLocal">
     <div>
+      <div class="card" id="locBibBox">
+        <h2><span class="n">+</span>Biblioteca da COGER (opcional)</h2>
+        <p class="hint">Conecte a pasta da biblioteca <b>sincronizada do SharePoint</b> (a que contém <code>01_Pareceres_Emitidos</code>, <code>02_Precedentes</code>, <code>03_Normativos</code>) para pesquisar pareceres, precedentes e normativos da COGER. Os arquivos continuam no seu computador; o gerador só guarda o texto indexado neste navegador. A primeira leitura pode levar alguns minutos.</p>
+        <input type="file" id="locBib" webkitdirectory multiple>
+        <div id="locBibInfo" class="hint"></div>
+        <div style="display:flex;gap:8px;margin-top:6px"><button class="sec mini" id="locBibCancel" style="display:none">Cancelar</button><button class="sec mini" id="locBibEsquecer" style="display:none">Esquecer biblioteca</button></div>
+      </div>
       <div class="card">
         <h2><span class="n">1</span>Consulta (PDF)</h2>
         <input type="file" id="locArq" accept=".pdf,.docx,.odt,.txt,application/pdf,text/plain">
@@ -1260,6 +1267,101 @@ $("secoes").oninput = e => { cfg.secoes = e.target.checked; salvarCfg(); render(
 listarPrecedentes();
 montarCfg(); listarAtividades(); render();
 
+/* ---------- biblioteca da COGER: pasta sincronizada do SharePoint, lida e indexada no navegador ---------- */
+const BIB = {chunks: [], quando: "", resumo: null, bm: null, cancelar: false};
+const BIB_STOP = new Set("a o as os um uma uns umas de do da dos das em no na nos nas por para com sem sob sobre ao aos à às e ou que se como mais menos muito já não sim ser estar ter foi são era sua seu suas seus este esta isto esse essa isso entre até também quando onde qual quais art inciso lei".split(" "));
+const tokensJs = s => (norm(s || "").match(/[a-z0-9]+/g) || []).filter(t => t.length >= 2 && !BIB_STOP.has(t)).map(t => t.length > 4 && t.endsWith("s") ? t.slice(0, -1) : t);
+const idb = {
+  db: null,
+  async abrir(){ if (this.db) return this.db; return this.db = await new Promise((ok, no) => { const r = indexedDB.open("aici-biblioteca", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); }); },
+  async op(modo, fn){ const db = await this.abrir(); return new Promise((ok, no) => { const t = db.transaction("kv", modo), r = fn(t.objectStore("kv")); t.oncomplete = () => ok(r.result); t.onerror = () => no(t.error); }); },
+  get(k){ return this.op("readonly", s => s.get(k)); }, set(k, v){ return this.op("readwrite", s => s.put(v, k)); }, del(k){ return this.op("readwrite", s => s.delete(k)); }
+};
+function dividirChunksJs(texto, tam, sobre){
+  const paras = texto.split(/\n\s*\n|\n(?=\s*(?:Art\.|§|\d+[.)]\s))/).map(p => p.trim()).filter(Boolean), out = []; let atual = "";
+  for (let p of paras){
+    while (p.length > tam * 1.5){ let corte = p.lastIndexOf(". ", tam); if (corte < tam / 2) corte = tam; out.push((atual + " " + p.slice(0, corte + 1)).trim()); atual = ""; p = p.slice(corte + 1).trim(); }
+    if (atual.length + p.length + 1 > tam && atual){ out.push(atual); atual = (sobre ? atual.slice(-sobre) + " " : "") + p; } else atual = (atual + "\n" + p).trim();
+  }
+  if (atual.trim()) out.push(atual.trim());
+  return out;
+}
+function bibMeta(rel){
+  const partes = rel.split("/"), nome = partes[partes.length - 1].replace(/\.[^.]+$/, "");
+  const m = nome.match(/(?:PA|PAR)[_ -]?(\d+)[_ -](\d{4})[_ -]?(.*)/i);
+  return {numero: m ? m[1] : "", ano: m ? m[2] : ((nome.match(/(20\d{2})/) || [])[1] || (partes.find(x => /^20\d{2}$/.test(x)) || "")),
+    tema: (m ? m[3] : "").replace(/_/g, " ") || (partes.length > 2 ? partes[partes.length - 2].replace(/_/g, " ") : ""), titulo: nome.replace(/_/g, " ")};
+}
+async function bibTexto(f){
+  const ext = f.name.split(".").pop().toLowerCase();
+  if (ext === "pdf") return await textoPdf(await f.arrayBuffer());
+  if (ext === "docx") return textoXml(await arquivoDoZip(await f.arrayBuffer(), "word/document.xml"), "</w:p>");
+  return await f.text();
+}
+function bibResumo(){
+  const c = {parecer: new Set(), precedente: new Set(), normativo: new Set()};
+  BIB.chunks.forEach(x => c[x.tipo].add(x.fonte));
+  return {pareceres: c.parecer.size, precedentes: c.precedente.size, normativos: c.normativo.size};
+}
+function bibMostrar(extra){
+  const r = BIB.chunks.length ? bibResumo() : null;
+  $("locBibInfo").innerHTML = (r ? `<span class="ai-ok">Biblioteca conectada:</span> ${r.pareceres} parecer(es), ${r.precedentes} precedente(s) e ${r.normativos} normativo(s)${BIB.quando ? " (indexada em " + escH(BIB.quando) + ")" : ""}. Para atualizar, selecione a pasta de novo.` : "Nenhuma biblioteca conectada.") + (extra ? " " + escH(extra) : "");
+  $("locBibEsquecer").style.display = r ? "" : "none";
+}
+async function bibConectar(arquivos){
+  const itens = [];
+  for (const f of arquivos){
+    const rel = f.webkitRelativePath || f.name, partes = rel.split("/"), i = partes.findIndex(p => /^0[123]_/.test(p));
+    if (i < 0 || partes.includes("_Duplicados_Revisar") || /^(~\$|\.)/.test(f.name) || !/\.(pdf|docx|txt|md)$/i.test(f.name)) continue;
+    itens.push({f, rel: partes.slice(i).join("/"), tipo: {"01": "parecer", "02": "precedente", "03": "normativo"}[partes[i].slice(0, 2)], sig: f.size + "-" + f.lastModified});
+  }
+  if (!itens.length){ bibMostrar("Nenhum PDF/DOCX/TXT encontrado em 01_Pareceres_Emitidos, 02_Precedentes ou 03_Normativos. Selecione a pasta que contém essas pastas."); return; }
+  let cache = {}; try { cache = ((await idb.get("indice")) || {}).arquivos || {}; } catch(e){}
+  const novo = {}; let lidos = 0, reaproveitados = 0, semTexto = 0, erros = 0; BIB.cancelar = false;
+  $("locBibCancel").style.display = "";
+  for (let n = 0; n < itens.length; n++){
+    if (BIB.cancelar) break;
+    const it = itens[n];
+    $("locBibInfo").textContent = `Indexando ${n + 1} de ${itens.length}: ${it.f.name}`;
+    if (cache[it.rel] && cache[it.rel].sig === it.sig){ novo[it.rel] = cache[it.rel]; reaproveitados++; continue; }
+    try {
+      const t = (await bibTexto(it.f)).replace(/ /g, " ").trim();
+      const m = bibMeta(it.rel);
+      novo[it.rel] = {sig: it.sig, chunks: t.length < 40 ? [] : dividirChunksJs(t, 1200, 150).map((x, k) => ({id: it.rel + "#" + k, tipo: it.tipo, titulo: m.titulo, fonte: it.rel, texto: x, tema: m.tema, ano: m.ano, numero: m.numero}))};
+      if (t.length < 40) semTexto++; else lidos++;
+    } catch(e){ erros++; novo[it.rel] = {sig: it.sig, chunks: []}; }
+    if (n % 10 === 0) await new Promise(r => setTimeout(r, 0));
+  }
+  $("locBibCancel").style.display = "none";
+  if (BIB.cancelar){ bibMostrar("Indexação cancelada."); return; }
+  BIB.chunks = Object.values(novo).flatMap(a => a.chunks); BIB.bm = null; BIB.quando = new Date().toLocaleString("pt-BR");
+  let aviso = `${lidos} lido(s), ${reaproveitados} reaproveitado(s)${semTexto ? ", " + semTexto + " sem texto (digitalizado)" : ""}${erros ? ", " + erros + " com erro" : ""}.`;
+  try { await idb.set("indice", {arquivos: novo, quando: BIB.quando}); } catch(e){ aviso += " Não foi possível guardar o índice no navegador: será refeito na próxima vez."; }
+  bibMostrar(aviso); if (typeof locMostrar === "function" && $("locResultado").innerHTML) locMostrar();
+}
+$("locBib").onchange = e => { if (e.target.files.length) bibConectar(e.target.files); };
+$("locBibCancel").onclick = () => { BIB.cancelar = true; };
+$("locBibEsquecer").onclick = async () => { BIB.chunks = []; BIB.bm = null; BIB.quando = ""; try { await idb.del("indice"); } catch(e){} $("locBib").value = ""; bibMostrar("Biblioteca removida deste navegador."); if ($("locResultado").innerHTML) locMostrar(); };
+(async () => { try { const d = await idb.get("indice"); if (d && d.arquivos){ BIB.chunks = Object.values(d.arquivos).flatMap(a => a.chunks); BIB.quando = d.quando || ""; } } catch(e){} bibMostrar(); })();
+function bibBM(){
+  if (BIB.bm) return BIB.bm;
+  const docs = BIB.chunks.map(c => tokensJs(c.titulo + " " + c.texto)), df = {}, inv = {};
+  const tf = docs.map((d, i) => { const m = {}; d.forEach(t => m[t] = (m[t] || 0) + 1); for (const t in m){ df[t] = (df[t] || 0) + 1; (inv[t] = inv[t] || []).push(i); } return m; });
+  const N = docs.length, avg = docs.reduce((s, d) => s + d.length, 0) / (N || 1);
+  const idf = {}; for (const t in df) idf[t] = Math.log(1 + (N - df[t] + 0.5) / (df[t] + 0.5));
+  return BIB.bm = {docs, tf, inv, idf, avg};
+}
+function bibBuscar(consulta, tipo, k){
+  if (!BIB.chunks.length) return [];
+  const B = bibBM(), q = [...new Set(tokensJs(consulta))], sc = {}, k1 = 1.4, b = 0.75;
+  for (const t of q){ if (!B.idf[t]) continue; for (const i of B.inv[t]){ const f = B.tf[i][t]; sc[i] = (sc[i] || 0) + B.idf[t] * f * (k1 + 1) / (f + k1 * (1 - b + b * B.docs[i].length / (B.avg || 1))); } }
+  const melhor = {};
+  for (const i in sc){ const c = BIB.chunks[i]; if (c.tipo !== tipo) continue; const s = sc[i] * (tipo === "normativo" ? 1 : 1.25); if (!melhor[c.fonte] || s > melhor[c.fonte].s) melhor[c.fonte] = {c, s, comuns: q.filter(t => B.tf[i][t])}; }
+  return Object.values(melhor).sort((a, b) => b.s - a.s).slice(0, k);
+}
+const bibConsulta = () => [$("q2").value, atv ? atv.nome + " " + (atv.palavrasChave || []).join(" ") : "", $("q3").value].join(" ");
+const mascaraBib = (t, nome) => anonimizarTxt(t.replace(/((?:Servidor|Servidora|Interessad[oa]|Requerente|Peticionante)\s*:\s*)[^\n]+/gi, "$1[SERVIDOR]"), nome);
+
 /* ---------- modo local (sem motor): análise no navegador + Copilot Chat assistido ---------- */
 const LOC = {pacote: null, aplicado: null};
 document.querySelectorAll('input[name="aiModoApp"]').forEach(r => r.onchange = () => {
@@ -1321,6 +1423,11 @@ function locMostrar(){
   const ps = precSugeridos(4);
   h += '<div class="card"><h2>Precedentes da CGU parecidos</h2>' + (ps.length ? ps.map(p => `<div class="prec"><div class="h"><label class="chk" style="margin:0"><input type="checkbox" data-n="${escH(p.n)}" ${citados.has(p.n) ? "checked" : ""}> citar no parecer</label> ${escH(p.n)} · ${dmy(p.d)} <span class="badge b-outro">${escH(p.r)}</span></div><div class="x">${escH(p.x)}</div></div>`).join("")
     : '<p class="hint">Nenhum precedente da CGU claramente parecido. A biblioteca de pareceres da COGER só é consultada pelo motor AICI (modo avançado).</p>') + "</div>";
+  if (BIB.chunks.length){
+    const q = bibConsulta(), pa = bibBuscar(q, "parecer", 4), pr = bibBuscar(q, "precedente", 3);
+    const lin = r => `<div class="prec"><div class="h">${escH(r.c.titulo)}${r.c.ano ? ' <span class="badge b-outro">' + escH(r.c.ano) + "</span>" : ""}</div><div class="hint">${escH(r.c.fonte)} · termos em comum: ${escH(r.comuns.slice(0, 8).join(", "))}</div><div class="x">${escH(r.c.texto.slice(0, 380))}${r.c.texto.length > 380 ? "…" : ""}</div></div>`;
+    h += '<div class="card"><h2>Pareceres e precedentes da biblioteca da COGER</h2>' + (pa.length || pr.length ? pa.map(lin).join("") + pr.map(lin).join("") : '<p class="hint">Nada parecido na biblioteca conectada.</p>') + "</div>";
+  }
   if (fundExterno && LOC.aplicado) h += `<div class="card"><h2>Fundamentação do Copilot aplicada</h2><p class="hint">${fundExterno.length} parágrafo(s) aceito(s); ${LOC.aplicado.desc} descartado(s) por não citar fonte válida.${LOC.aplicado.resultado ? " Resultado sugerido pelo Copilot: <b>" + escH(RES_ROT[LOC.aplicado.resultado]) + "</b> (decisão sua)." : ""}</p>`
     + fundExterno.map(p => `<div class="pp">${escH(p.x)}<small>origem: ${escH(p.fontes.join(" · "))}</small></div>`).join("")
     + (LOC.aplicado.lacunas.length ? '<p class="hint"><b>Lacunas apontadas:</b> ' + escH(LOC.aplicado.lacunas.join(" | ")) + "</p>" : "") + "</div>";
@@ -1338,7 +1445,11 @@ function locContexto(limite){
   for (const i of [2, 3, 4, 6, 7, 8, 9]){ const r = $("q" + i).value.trim(); if (r) linhas.push(`${LOC_ROT[i]}: ${an(r.replace(/\s+/g, " "))}`); }
   const itens = [];
   (KB.normativos || []).forEach(n => itens.push({l: "N", titulo: n.titulo, fonte: n.fonte, texto: n.texto}));
+  const qb = bibConsulta();
+  bibBuscar(qb, "normativo", 3).filter(r => !/12813|333[_ ]2013/.test(r.c.fonte)).slice(0, 2).forEach(r => itens.push({l: "N", titulo: r.c.titulo, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
   precSugeridos(3).forEach(p => itens.push({l: "P", titulo: `Precedente CGU/SeCI nº ${p.n} (${dmy(p.d)}) - ${p.r}`, fonte: "precedentes da CGU (SeCI)", texto: an(p.x)}));
+  bibBuscar(qb, "precedente", 2).forEach(r => itens.push({l: "P", titulo: `Precedente da COGER: ${r.c.titulo}`, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
+  bibBuscar(qb, "parecer", 3).forEach(r => itens.push({l: "A", titulo: `Parecer da COGER: ${r.c.titulo}`, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
   if (atv && vari){
     const ps = vari.corpo.filter(b => (!b.opc || b.opc.padrao) && b.t === "p");
     itens.push({l: "M", titulo: `Modelo da COGER: ${atv.nome} - ${vari.rotulo}`, fonte: `modelo ${atv.id}/${vari.id} (${vari.fonte || ""})`,
@@ -1356,7 +1467,7 @@ function locContexto(limite){
   while (cap < 300 && it.length > 2){ it.pop(); cap = Math.min(1800, Math.floor((limite - base) / it.length)); }
   cap = Math.max(cap, 150);
   const mapa = {R1: {titulo: "Regras institucionais da COGER", fonte: "regras_coger.md"}}, blocos = [`=== REGRAS INSTITUCIONAIS DA COGER ===\n[R1] Regras institucionais da COGER (regras_coger.md)\n${regras}`];
-  const tit = {N: "NORMATIVOS", P: "PRECEDENTES", M: "MODELOS INSTITUCIONAIS"}, cont = {}; let ult = "";
+  const tit = {N: "NORMATIVOS", P: "PRECEDENTES", A: "PARECERES DA COGER", M: "MODELOS INSTITUCIONAIS"}, cont = {}; let ult = "";
   for (const x of it){
     cont[x.l] = (cont[x.l] || 0) + 1; const id = x.l + cont[x.l];
     const corpo = x.texto.length <= cap ? x.texto : x.texto.slice(0, cap).replace(/\s+\S*$/, "") + " [...]";

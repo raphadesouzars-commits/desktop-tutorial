@@ -10,7 +10,7 @@ Há duas abas:
 
 - **Gerador de Parecer:** funciona sozinha e sem internet. Você escolhe a atividade, preenche os dados e gera o Word.
 - **Análise Inteligente:** tem **dois modos**:
-  - **Local (padrão, não instala nada):** a análise acontece no próprio navegador. Lê o PDF do SeCI, mostra os fatos, sugere a atividade, mostra precedentes da CGU parecidos e, se você quiser, prepara o prompt para o Copilot Chat. Não consulta a biblioteca de pareceres da COGER.
+  - **Local (padrão, não instala nada):** a análise acontece no próprio navegador. Lê o PDF do SeCI, mostra os fatos, sugere a atividade, mostra precedentes da CGU parecidos e, se você quiser, prepara o prompt para o Copilot Chat. Consulta a biblioteca de pareceres da COGER **se você conectar a pasta sincronizada do SharePoint** (item 3.0).
   - **Motor AICI (avançado):** usa um programa em Python, que precisa estar instalado e ligado, e **consulta a biblioteca de pareceres, precedentes e normativos da COGER**.
 
 ## 2. Regras de uso seguro (leia antes)
@@ -23,6 +23,13 @@ Há duas abas:
 6. Não envie ao AICI arquivos que não sejam consultas do SeCI.
 
 ## 3. Passo a passo
+
+### 3.0a Conectar a biblioteca da COGER (uma vez)
+1. No SharePoint, abra a biblioteca de pareceres e clique em **Sincronizar** (o OneDrive cria a pasta no seu computador, com `01_Pareceres_Emitidos`, `02_Precedentes`, `03_Normativos`...).
+2. No gerador, aba **Análise Inteligente**, cartão **Biblioteca da COGER (opcional)**: clique em **Escolher arquivos** e selecione a **pasta que contém** essas subpastas. O navegador pergunta se pode "carregar" os arquivos: confirme (nada sai do computador).
+3. Aguarde a indexação (a primeira vez pode levar vários minutos; há botão **Cancelar**). Terminando, aparece "Biblioteca conectada: N pareceres, N precedentes, N normativos".
+4. O índice fica guardado **neste navegador**. Nas próximas vezes a biblioteca já aparece conectada; para pegar arquivos novos, selecione a pasta de novo (só o que mudou é relido). **Esquecer biblioteca** apaga o índice do navegador.
+5. Ficam de fora: `_Duplicados_Revisar`, a pasta `04_Modelos_Institucionais` e `05_Projeto_AICI`. PDFs digitalizados (sem texto) são contados como "sem texto" e não são pesquisados.
 
 ### 3.0 Modo local (padrão) - o que a maioria dos usuários vai usar
 1. Abra o `gerador-parecer-conflito.html` e entre na aba **Análise Inteligente** (o modo **Local** já vem marcado).
@@ -37,7 +44,7 @@ Há duas abas:
    5. O gerador confere as fontes (descarta o que não tem fonte), coloca a fundamentação no parecer e avisa na conferência. Clique em **Ir ao gerador**, **leia e revise** tudo e gere o Word.
    6. Se não gostar, **Remover fundamentação do Copilot** volta ao texto do modelo.
 
-No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nome), as regras da COGER, trechos da Lei nº 12.813/2013 e da Portaria Interministerial nº 333/2013, precedentes da CGU parecidos e o modelo da atividade. **Não leva pareceres da biblioteca da COGER** (isso só o motor faz). **Não há bloqueio técnico de revisão no modo local**: a revisão é sua, no gerador.
+No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nome), as regras da COGER, trechos da Lei nº 12.813/2013 e da Portaria Interministerial nº 333/2013, precedentes da CGU parecidos e o modelo da atividade. Se a **biblioteca da COGER estiver conectada**, leva também os pareceres, precedentes e normativos mais parecidos, com os nomes de servidores mascarados no cabeçalho (nomes no corpo do texto podem permanecer). **Não há bloqueio técnico de revisão no modo local**: a revisão é sua, no gerador.
 
 > Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 

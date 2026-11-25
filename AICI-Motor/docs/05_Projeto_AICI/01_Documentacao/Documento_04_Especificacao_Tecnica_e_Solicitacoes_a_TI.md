@@ -151,7 +151,7 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 | Opção | Descrição | Prós | Contras |
 |---|---|---|---|
-| 0. Somente o HTML (modo local) | O parecerista abre o gerador no navegador; análise, prompt e validação da resposta ocorrem no navegador | Nada a instalar; dados não saem da estação | Sem biblioteca de pareceres da COGER e sem bloqueio técnico de revisão; acervo embutido limitado |
+| 0. Somente o HTML (modo local) | O parecerista abre o gerador no navegador; análise, prompt e validação da resposta ocorrem no navegador | Nada a instalar; dados não saem da estação | Biblioteca da COGER só se o usuário conectar a pasta sincronizada do SharePoint (índice guardado no navegador); sem bloqueio técnico de revisão |
 | 1. Estação institucional (piloto) | Cada parecerista roda o motor na própria estação | Dados não saem da estação; atende a solução experimental (art. 16, § 2º, a confirmar) | Instalação e manutenção por usuário |
 | 2. Servidor/VM interno | Um serviço na rede interna, com proxy HTTPS e autenticação institucional | Centralizado; acervo e logs em um só lugar | Exige ambiente, segurança e operação da TI |
 | 3. Contêiner (Docker/Kubernetes) | Imagem do motor, volumes para `knowledge/` e `metrics/` | Reprodutível e escalável | Depende da plataforma da RFB |
@@ -161,7 +161,7 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 1. O modo assistido foi testado só com respostas simuladas; o Copilot Chat real não foi exercitado (formato JSON seguido, tamanho do prompt, comportamento com arquivo anexo). Nenhum provedor automático de IA foi exercitado.
 1a. O AICI não controla onde o usuário cola o prompt (risco de uso de serviço não homologado).
-1b. O modo local (sem motor) tem só o acervo embutido (instruções, regras, trechos de normativos, precedentes da CGU): não consulta a biblioteca de pareceres e não tem bloqueio técnico de revisão.
+1b. O modo local (sem motor) tem o acervo embutido (instruções, regras, trechos de normativos, precedentes da CGU) e, se o usuário **conectar a pasta sincronizada do SharePoint**, indexa a biblioteca no navegador (BM25 em JavaScript; índice em IndexedDB, que contém trechos dos pareceres, com dados pessoais). Não tem bloqueio técnico de revisão. O desempenho com as centenas de PDFs reais **não foi medido**.
 2. Nenhum modelo real de embeddings foi avaliado; a qualidade da busca semântica precisa ser medida.
 3. O OCR não foi testado.
 4. A acurácia da classificação e a precisão dos precedentes não foram medidas com casos reais.

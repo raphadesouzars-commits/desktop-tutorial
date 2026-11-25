@@ -66,6 +66,9 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF041 | Gerar, no navegador, o prompt para o Copilot Chat (caso mascarado, regras da COGER, normativos, precedentes da CGU, modelo da atividade) dentro do limite de caracteres | M | Prompt com marcadores [R1], [N1], [P1], [M1]; sem CPF, matrícula, telefone, e-mail e nome; limite configurável | Implementado | Verificado no navegador (7.500 caracteres, sem vazamento de identificadores). O acervo embutido: `parecer/kb_local.json` |
 | RF042 | Validar a resposta colada | M | JSON obrigatório; fonte que não foi enviada invalida o parágrafo; resposta inválida recusada com orientação | Implementado | Verificado no navegador |
 | RF043 | Aplicar a fundamentação validada ao parecer do gerador | M | A fundamentação do Copilot substitui a do modelo no Word; a conferência avisa para revisar; é possível remover | Implementado | Verificado no navegador, inclusive o Word gerado |
+| RF045 | Conectar a biblioteca da COGER (pasta sincronizada do SharePoint) e indexá-la no navegador | S | Lê PDF, DOCX, TXT e MD de `01_`, `02_` e `03_`; ignora `_Duplicados_Revisar` e demais pastas; mostra progresso e permite cancelar; reaproveita o que não mudou; guarda o índice no navegador | Implementado (testado com biblioteca sintética) | Verificado no navegador com PDF, DOCX e TXT. **Desempenho com as centenas de PDFs reais não medido** |
+| RF046 | Pesquisar pareceres, precedentes e normativos da biblioteca conectada e mostrá-los com origem e termos em comum | S | Lista com título, ano, arquivo e trecho | Implementado | Idem |
+| RF047 | Levar ao prompt do Copilot os trechos da biblioteca (marcador [A]), com nomes de servidores mascarados no cabeçalho | S | Trechos entram no prompt, citáveis; "Servidor: ..." vira [SERVIDOR] | Implementado | Nomes no corpo do texto podem permanecer |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -90,12 +93,12 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 37 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF044 |
+| Implementado | 40 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF047 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **44** | |
+| **Total** | **47** | |
 
-"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local **não** busca na biblioteca de pareceres da COGER (só o motor).
+"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 
 ## 4. Matriz de rastreabilidade (RF -> componente)
 

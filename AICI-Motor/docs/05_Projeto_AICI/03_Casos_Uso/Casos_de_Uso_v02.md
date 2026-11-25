@@ -97,7 +97,7 @@
 5. Segue ao gerador, revisa e gera o Word.
 
 **Alternativas:** PDF digitalizado (sem texto): aviso, preencher manualmente; resposta inválida: recusada; fonte inexistente: parágrafo descartado.
-**Limites:** não consulta a biblioteca de pareceres da COGER; não há bloqueio técnico de revisão.
+**Biblioteca (opcional):** o parecerista pode conectar a pasta da biblioteca sincronizada do SharePoint (uma vez); o navegador a indexa e passa a mostrar pareceres e precedentes da COGER parecidos e a levá-los ao prompt. **Limites:** não há bloqueio técnico de revisão; a biblioteca só é consultada se conectada.
 
 ## UC007 - Decidir e gerar documentos
 
