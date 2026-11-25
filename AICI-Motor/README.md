@@ -30,7 +30,7 @@ O código só orquestra. Atividades, categorias, textos de conclusão, deveres e
 
 ## Dois modos de uso
 
-- **Modo local (sem instalar nada):** abra `gerador-parecer-conflito.html` -> aba "Análise Inteligente" (modo Local). Lê o PDF no navegador, mostra fatos, atividade e precedentes da CGU e, opcionalmente, prepara o prompt do Copilot Chat e valida a resposta colada. Usa a biblioteca de pareceres da COGER se você conectar a pasta sincronizada do SharePoint (índice BM25 em JavaScript guardado no navegador); não tem bloqueio técnico de revisão. O acervo embutido vem de `parecer/kb_local.json` (`python parecer/gerar_kb_local.py` + `python parecer/build.py`).
+- **Modo local (sem instalar nada):** abra `gerador-parecer-conflito.html` -> aba "Análise Inteligente" (modo Local). Lê o PDF no navegador, mostra fatos, atividade e precedentes da CGU e, opcionalmente, usa o Copilot Chat em **duas etapas**: (1) *entender o caso* - o Copilot devolve atividade, termos de busca, incisos e pontos de atenção, e o gerador refaz a busca com esses termos; (2) *fundamentação* - prompt com o contexto refinado e validação da resposta colada. Usa a biblioteca de pareceres da COGER se você conectar a pasta sincronizada do SharePoint (índice BM25 em JavaScript guardado no navegador); não tem bloqueio técnico de revisão. O acervo embutido vem de `parecer/kb_local.json` (`python parecer/gerar_kb_local.py` + `python parecer/build.py`).
 - **Motor AICI (este projeto Python):** o restante deste README. Consulta a biblioteca de pareceres, precedentes e normativos da COGER, tem API, auditoria e indicadores.
 
 ## Instalação e execução
