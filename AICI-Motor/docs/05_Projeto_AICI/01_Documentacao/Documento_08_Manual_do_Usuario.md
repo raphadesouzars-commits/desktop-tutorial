@@ -53,6 +53,9 @@ No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nom
 - Pule a etapa 1 quando o caso for simples ou quando a busca já trouxer bons resultados. Se a resposta da etapa 1 vier errada, use **Descartar entendimento**.
 - A atividade fora da lista, incisos inexistentes e termos exagerados são descartados automaticamente. A decisão continua sua.
 
+### 3.0c Pedido com várias atividades: conclusão por atividade
+Quando a pergunta 2 do SeCI lista atividades (a, b, c...), o gerador mostra, no passo 2, **"Conclusão por atividade do pedido"**. Cada atividade ganha a sua conclusão no parecer: *sem conflito*, *sem conflito com ressalvas*, *risco relevante*, *impedimento de outra ordem* (com o fundamento) ou *não analisada neste parecer*. As sugestões vêm do modelo (no caso do modelo de conteúdo digital, por exemplo, o afiliado em plataforma digital vem como impedimento por exercício do comércio, e o canal e os cursos como autorizáveis com ressalvas). **Confira cada uma.** O Termo de Compromisso e o parágrafo de autorização passam a citar só as atividades autorizadas. Se preferir uma conclusão única, desmarque "Tratar cada atividade na conclusão".
+
 > Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 
 ### 3.1 Ligar o motor

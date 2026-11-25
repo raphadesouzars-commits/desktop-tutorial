@@ -135,6 +135,7 @@ nav.tabs button.on{background:var(--acc);color:#fff}
     <div id="variantes"></div>
     <div id="ovrBox"></div>
     <div id="extras"></div>
+    <div id="itensBox"></div>
     <button class="sec mini" id="addAtv" style="margin-top:10px">＋ Adicionar outra atividade ao mesmo parecer</button>
     <details id="precBox" style="margin-top:12px">
       <summary>Precedentes da CGU sobre a RFB <span id="precInfo" class="hint"></span></summary>
@@ -725,7 +726,14 @@ function precedentesDe(m){
 function conferir(B, d){
   const A = [], PS = partes(); if (!PS.length) return A;
   const sim = i => /^\s*[“"]?sim\b/i.test($("q" + i).value), inc = i => $("inc" + i).checked;
-  const res = PS.map(pt => pt.v.resultado), libera = res.some(r => r.startsWith("sem_")), nega = res.includes("conflito");
+  const res = resEf(), libera = res.some(r => r.startsWith("sem_")), nega = res.includes("conflito");
+  if (itensPedido.length >= 2 && !porItemAtivo()) A.push(`O pedido lista ${itensPedido.length} atividades (${itensPedido.map(i => i.letra + ")").join(" ")}), mas a conclusão trata o conjunto de uma só vez. Marque "Tratar cada atividade na conclusão" (passo 2) para que cada uma tenha a sua conclusão.`);
+  if (porItemAtivo()){
+    const dif = itensPedido.filter(i => i.res !== "nao_tratada" && (i.manual || !i.comp) && partes().every(pt => pt.v.resultado !== i.res));
+    if (dif.length) A.push(`A conclusão de ${dif.map(i => i.letra + ")").join(", ")} difere da(s) do(s) modelo(s) escolhido(s): confira se os fundamentos e a ementa sustentam essa conclusão.`);
+    if (itensPedido.some(i => i.res === "outro" && !i.motivo.trim())) A.push("Há atividade com conclusão de impedimento sem o fundamento: preencha o campo no passo 2.");
+    if (itensPedido.some(i => i.res === "nao_tratada")) A.push("Há atividade marcada como não analisada neste parecer: confira se o encaminhamento prevê o pedido próprio para ela.");
+  }
   if (fundExterno && fundExterno.length) A.push("A fundamentação foi redigida com apoio do Copilot Chat e conferida apenas quanto à existência das fontes citadas: leia e revise o texto antes de assinar.");
   PS.forEach(pt => { if (pt.v.trocada) A.push(`${pt.a.nome}: a conclusão foi trocada de “${RES_ROT[pt.v.trocada]}” para “${RES_ROT[pt.v.resultado]}”. Os fundamentos do modelo foram mantidos; revise-os para que sustentem a nova conclusão (e marque os incisos do art. 5º, se for o caso).`); });
   const texto = B.filter(b => b.k === "p" || b.k === "it").map(b => b.x).join(" ");
@@ -754,7 +762,7 @@ function conferir(B, d){
   if (d.tipo === "consulta" && /Pedido de autoriza/i.test(em)) A.push("A demanda é consulta, mas a ementa do modelo fala em pedido de autorização; ajuste a ementa no Word ou o tipo de demanda.");
   if (d.tipo === "pedido" && /(^|\. )Consulta (sobre|acerca|formulada)/.test(em)) A.push("A demanda é pedido de autorização, mas a ementa do modelo fala em consulta; ajuste a ementa no Word ou o tipo de demanda.");
   if (nega && !ROMANOS.some((_, i) => inc(i))) A.push("Conclusão de risco relevante sem enquadramento: marque os incisos do art. 5º que fundamentam o conflito.");
-  if (res.includes("outro") && $("incluirEnc").checked && PS.length === 1) A.push("Esta variante costuma concluir por devolução ou impedimento de outra ordem; confira se o encaminhamento à Comissão de Ética se aplica.");
+  if (res.includes("outro") && !porItemAtivo() && $("incluirEnc").checked && PS.length === 1) A.push("Esta variante costuma concluir por devolução ou impedimento de outra ordem; confira se o encaminhamento à Comissão de Ética se aplica.");
   if (PS.length > 1 && new Set(res).size > 1) A.push("As atividades escolhidas têm conclusões diferentes; revise a ementa e a seção de conclusão para que cada atividade fique com o seu resultado.");
   if (PS.length > 1) A.push("Parecer com mais de uma atividade: fundamentos repetidos foram unificados; leia a sequência dos parágrafos antes de assinar.");
   if (/\b(nos|dos|no|do|aos) (par[áa]grafos?|ite(m|ns)) \d+/i.test(texto)) A.push("O texto cita parágrafos ou itens pelo número; confira se a numeração final corresponde.");
@@ -839,8 +847,64 @@ function selecionarVariante(id){
   ajustarPadroes(); montarOvr(); montarExtras(); montarCampos(); render();
 }
 /* opções que dependem do resultado das atividades escolhidas */
+/* ---------- conclusão por atividade do pedido (a, b, c...) ---------- */
+let itensPedido = [], itensSig = "";
+const RES_ITEM = Object.assign({}, RES_ROT, {nao_tratada: "Não analisada neste parecer"});
+function extrairItens(txt){
+  const itens = []; let atual = null;
+  for (const l0 of String(txt || "").split("\n")){
+    const l = l0.trim(); if (!l) continue;
+    const m = l.match(/^\(?([a-z]|[ivx]{1,4}|\d{1,2})\s*[).\-–]\s+(\S.*)$/i);
+    if (m && (itens.length || /^(a|i|1)$/i.test(m[1]))){ atual = {letra: m[1].toLowerCase(), rot: m[2]}; itens.push(atual); }
+    else if (atual) atual.rot += " " + l;
+  }
+  const lim = t => t.replace(/\s+/g, " ").replace(/\s+([,;.:])/g, "$1").replace(/[;,.\s]+$/, "").replace(/-me\b/g, "-se").trim();
+  return itens.map(i => ({letra: i.letra, rot: lim(i.rot)})).filter(i => i.rot.length > 8);
+}
+function itemComponente(rot){
+  const t = norm(rot); let melhor = null, nm = 0;
+  for (const c of (vari && vari.componentes) || []){ const n = (c.palavras || []).filter(k => t.includes(norm(k))).length; if (n > nm){ nm = n; melhor = c; } }
+  return melhor;
+}
+function atualizarItens(){
+  const q2 = $("q2") ? $("q2").value : "", sig = q2 + "|" + (vari ? vari.id : "") + "|" + (resPrincipal || "");
+  if (sig === itensSig) return; itensSig = sig;
+  const novos = extrairItens(q2), velhos = new Map(itensPedido.map(i => [norm(i.rot), i]));
+  itensPedido = novos.map(n => {
+    const ant = velhos.get(norm(n.rot)); if (ant && ant.manual) return Object.assign(ant, {letra: n.letra});
+    const c = itemComponente(n.rot);
+    return {letra: n.letra, rot: n.rot, res: c ? c.resultado : (resPrincipal || (vari ? vari.resultado : "sem_conflito_ressalvas")), motivo: c ? (c.motivo || "") : "", manual: false, comp: c ? c.rotulo : ""};
+  });
+  montarItens(); ajustarPadroes();
+}
+const porItemAtivo = () => !!(vari && itensPedido.length >= 2 && $("porItem") && $("porItem").checked);
+const resEf = () => porItemAtivo() ? itensPedido.filter(i => i.res !== "nao_tratada").map(i => i.res) : partes().map(p => p.v.resultado);
+function montarItens(){
+  const box = $("itensBox"); if (!box) return;
+  if (!vari || itensPedido.length < 2){ box.innerHTML = ""; return; }
+  const marcado = !$("porItem") || $("porItem").checked;
+  box.innerHTML = `<details open id="itensDet" style="margin-top:12px"><summary>Conclusão por atividade do pedido <span class="hint">(${itensPedido.length} atividades no pedido)</span></summary>
+    <p class="hint">O pedido lista mais de uma atividade. Cada uma recebe a sua própria conclusão no parecer (as sugestões vêm do modelo; ajuste conforme o caso).</p>
+    <label class="chk"><input type="checkbox" id="porItem"${marcado ? " checked" : ""}> Tratar cada atividade na conclusão</label>
+    <div id="itensLista">${itensPedido.map((it, i) => `<div class="extra" data-i="${i}"><div class="t"><span><b>${escH(it.letra)})</b> ${escH(it.rot.length > 150 ? it.rot.slice(0, 148) + "…" : it.rot)}</span></div>
+      <select data-k="res">${Object.keys(RES_ITEM).map(k => `<option value="${k}"${k === it.res ? " selected" : ""}>${escH(RES_ITEM[k])}</option>`).join("")}</select>
+      <input type="text" data-k="motivo" placeholder="Fundamento (ex.: configurar o exercício do comércio, art. 117, X, da Lei nº 8.112/1990)" value="${escH(it.motivo || "")}" style="margin-top:6px;${it.res === "outro" ? "" : "display:none"}">
+      ${it.comp ? `<p class="hint">Sugestão do modelo: ${escH(it.comp)}</p>` : ""}</div>`).join("")}</div></details>`;
+  $("porItem").onchange = () => { ajustarPadroes(); render(); };
+  box.querySelectorAll(".extra").forEach(d => {
+    const it = itensPedido[+d.dataset.i], sel = d.querySelector('[data-k="res"]'), mot = d.querySelector('[data-k="motivo"]');
+    sel.onchange = () => { it.res = sel.value; it.manual = true; mot.style.display = it.res === "outro" ? "" : "none"; ajustarPadroes(); render(); };
+    mot.oninput = () => { it.motivo = mot.value; it.manual = true; render(); };
+  });
+}
+function fraseItem(it){
+  const FR = {sem_conflito: "não configura conflito de interesses, nos termos da Lei nº 12.813/2013", sem_conflito_ressalvas: "não configura conflito de interesses com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas",
+    conflito: "configura situação de conflito de interesses, nos termos da Lei nº 12.813/2013, razão pela qual não se recomenda a autorização",
+    outro: "não pode ser autorizada nos termos pretendidos, em razão de " + (it.motivo.trim() || falta("fundamento do impedimento")), nao_tratada: "não é objeto do presente parecer"};
+  return FR[it.res];
+}
 function ajustarPadroes(){
-  const res = partes().map(p => p.v.resultado);
+  const res = resEf();
   $("incluirEnc").checked = res.some(r => r !== "outro");
   const autoriza = res.some(r => r.startsWith("sem_"));
   $("lblTermo").style.display = autoriza ? "" : "none";
@@ -956,7 +1020,7 @@ function blocos(){
   const PS = partes();
   B.push({k:"em", x: [...new Set(PS.map(pt => preencher(pt.v.ementaTitulo, d).trim()))].join(" ")});
   for (const e of new Set(PS.flatMap(pt => pt.v.ementa.map(e => preencher(e, d))))) B.push({k:"em", x: e});
-  const enc = $("incluirEnc").checked, conf = PS.some(pt => pt.v.resultado === "conflito");
+  const enc = $("incluirEnc").checked, porItem = porItemAtivo(), conf = porItem ? itensPedido.some(i => i.res === "conflito") : PS.some(pt => pt.v.resultado === "conflito");
   const inc = ROMANOS.filter((_, i) => $("inc" + i).checked);
   const incTxt = inc.length > 1 ? inc.slice(0,-1).join(", ") + " e " + inc[inc.length-1] : inc.join("");
   if (inc.length) B.push({k:"em", x: `Lei nº 12.813/2013, art. 5º, ${incTxt}.`});
@@ -1015,7 +1079,11 @@ function blocos(){
   }
   if ($("novaConsulta").checked) P(preencher(NOVA_CONSULTA, d));
   if (cfg.secoes) B.push({k:"h", x:"III. CONCLUSÃO"});
-  if (PS.length > 1){
+  if (porItem){
+    P(preencher("Portanto, no entendimento da {{orgao_corregedoria}}, quanto às atividades descritas {{g:pelo servidor|pela servidora}} **{{nome}}**:", d));
+    itensPedido.forEach((it, k) => B.push({k: "it", x: `**${it.letra})** a atividade de “${it.rot}” ${fraseItem(it)}${k === itensPedido.length - 1 ? "." : ";"}`}));
+    B.push({k: "gap"});
+  } else if (PS.length > 1){
     // várias atividades: uma só conclusão, agrupando as atividades que têm o mesmo resultado
     const PRED = {sem_conflito:"não configura conflito de interesses, nos termos da Lei nº 12.813/2013", sem_conflito_ressalvas:"não configura conflito de interesses com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas", conflito:"configura conflito de interesses, nos termos da Lei nº 12.813/2013", outro:`não pode ser autorizado nos termos pretendidos, em razão de ${falta("fundamento do impedimento")}`};
     const junta = l => l.length > 1 ? l.slice(0, -1).join(", ") + " e " + l[l.length - 1] : l[0];
@@ -1024,8 +1092,10 @@ function blocos(){
     const frases = grupos.map((g, i) => `${i ? (g.r === "conflito" || g.r === "outro" ? "já " : "por sua vez, ") : ""}o exercício ${g.l.length > 1 ? "das atividades de " : "da atividade de "}**${junta(g.l)}**${grupos.length === 1 ? " {{g:pelo servidor|pela servidora}} **{{nome}}**" : ""} ${PRED[g.r]}`);
     P(preencher(`Portanto, no entendimento da {{orgao_corregedoria}}, ${frases.join("; ")}.`, d));
   } else concs.forEach(x => P(x));
-  if (PS.some(pt => pt.v.resultado.startsWith("sem_")) && $("termo").checked)
-    P(preencher("Registre-se que a autorização fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.", d));
+  const autorizadas = porItem ? itensPedido.filter(i => i.res.startsWith("sem_")) : [];
+  if ((porItem ? autorizadas.length > 0 : PS.some(pt => pt.v.resultado.startsWith("sem_"))) && $("termo").checked)
+    P(porItem && autorizadas.length < itensPedido.length ? preencher(`Registre-se que a autorização d${autorizadas.length > 1 ? "as atividades indicadas nos itens" : "a atividade indicada no item"} ${autorizadas.length > 1 ? autorizadas.slice(0, -1).map(i => i.letra + ")").join(", ") + " e " + autorizadas[autorizadas.length - 1].letra + ")" : autorizadas[0].letra + ")"} fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.`, d)
+      : preencher("Registre-se que a autorização fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.", d));
   const encTxt = (conf ? cfg.encaminhaConflito : cfg.encaminha) || "";
   if (enc && encTxt) P(preencher(encTxt.replace("{{enquadramento}}", inc.length ? `, nos termos do${inc.length > 1 ? "s incisos" : " inciso"} ${incTxt} do art. 5º da Lei nº 12.813/2013` : ""), d));
   for (const s of cfg.sigs){
@@ -1055,9 +1125,10 @@ const limpo = x => x.replace(/[\u0001\u0002]/g,"").replace(/\*\*/g,"").replace(/
 
 /* ---------- prévia ---------- */
 function render(){
+  atualizarItens();
   const {B, d} = blocos();
   const A = conferir(B, d);
-  $("btnTermo").style.display = vari && $("termo").checked && partes().some(pt => pt.v.resultado.startsWith("sem_")) ? "" : "none";
+  $("btnTermo").style.display = vari && $("termo").checked && resEf().some(r => r.startsWith("sem_")) ? "" : "none";
   $("conf").className = vari ? "conf" + (A.length ? "" : " ok") : "";
   $("conf").innerHTML = !vari ? "" : A.length ? `<b>Conferência: ${A.length} ponto(s) de atenção</b><ul>${A.map(a => "<li>" + escH(a) + "</li>").join("")}</ul>` : "<b>Conferência:</b> nenhum ponto de atenção encontrado.";
   const inl = x => trechos(x).map(r => { let s = escH(r.t); if (r.h) s = "<mark>"+s+"</mark>"; if (r.i) s = "<i>"+s+"</i>"; if (r.b) s = "<b>"+s+"</b>"; return s; }).join("");
@@ -1107,7 +1178,7 @@ function paraXml(ppr, inner){ return `<w:p><w:pPr>${ppr}</w:pPr>${inner}</w:p>`;
 function blocosTermo(){
   const d = dados(), PS = partes(), T = [];
   const meu = t => t.replace(/\bseus\b/g,"meus").replace(/\bsuas\b/g,"minhas").replace(/\bseu\b/g,"meu").replace(/\bsua\b/g,"minha");
-  const ativ = PS.filter(pt => pt.v.resultado.startsWith("sem_")).map(pt => pt.rot || rotPadrao(pt.a));
+  const ativ = porItemAtivo() ? itensPedido.filter(i => i.res.startsWith("sem_")).map(i => "“" + i.rot + "”") : PS.filter(pt => pt.v.resultado.startsWith("sem_")).map(pt => pt.rot || rotPadrao(pt.a));
   const lista = ativ.length > 1 ? ativ.slice(0,-1).join(", ") + " e " + ativ[ativ.length-1] : (ativ[0] || falta("atividade"));
   const par = `Parecer ${cfg.sigla} nº ${d.numero || falta("nº")}/${d.ano || falta("ano")}`;
   const prot = $("protocoloSeci").value.trim();
@@ -1305,6 +1376,7 @@ function novaAnalise(){
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
+  itensPedido = []; itensSig = ""; $("itensBox").innerHTML = "";
   restaurarUltimos();
   avisos();
   selecionarAtividade(null); // também refaz a lista, os precedentes e a prévia

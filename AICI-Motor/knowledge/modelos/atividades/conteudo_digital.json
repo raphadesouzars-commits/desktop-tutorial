@@ -167,6 +167,51 @@
      "t": "p",
      "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades descritas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesse com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas."
     }
+   ],
+   "componentes": [
+    {
+     "id": "afiliado",
+     "rotulo": "afiliado em plataforma digital",
+     "palavras": [
+      "afili",
+      "comiss",
+      "de terceiros",
+      "revend"
+     ],
+     "resultado": "outro",
+     "motivo": "configurar o exercício do comércio, vedado pelo art. 117, X, da Lei nº 8.112/1990 e pelo Enunciado CGU/CCC nº 8, de 2019, quando exercido como pessoa física ou empresário individual (admite-se a sociedade limitada unipessoal com administrador designado, nos termos dos fundamentos acima)"
+    },
+    {
+     "id": "cursos_mentorias",
+     "rotulo": "cursos e mentorias",
+     "palavras": [
+      "curso",
+      "mentoria",
+      "treinamento",
+      "produtos digitais",
+      "aula"
+     ],
+     "resultado": "sem_conflito_ressalvas",
+     "motivo": ""
+    },
+    {
+     "id": "conteudo",
+     "rotulo": "produção de conteúdo em mídia digital (YouTube)",
+     "palavras": [
+      "youtube",
+      "canal",
+      "adsense",
+      "monetiz",
+      "video",
+      "vídeo",
+      "rede social",
+      "redes sociais",
+      "podcast",
+      "blog"
+     ],
+     "resultado": "sem_conflito_ressalvas",
+     "motivo": ""
+    }
    ]
   },
   {

@@ -77,6 +77,7 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF053 | Base ampliada de precedentes da CGU (SeCI): todos os 123 casos da RFB (2014 a 2026) embutidos no gerador e os 2.576 casos de todos os órgãos como arquivos de biblioteca | S | Um trecho por caso, começando por "Protocolo SeCI nº ..."; título com protocolo, órgão e resultado; peso COGER > CGU/RFB > CGU outros órgãos; vários casos do mesmo arquivo podem aparecer | Implementado | Testes `test_precedentes_cgu_um_trecho_por_caso`; verificado no navegador (2.576 casos indexados em menos de 1 s; busca em cerca de 5 ms). Dados públicos baixados da API de busca do SeCI em 25/11/2026 |
 | RF054 | Atualizar a base da CGU por rotina | C | `parecer/atualizar_precedentes.py [--md pasta]` baixa os casos (com pausa entre páginas) e regenera o JSON da RFB e os arquivos Markdown | Implementado | Execução manual; agendamento periódico planejado |
 | RF055 | Preenchimento guiado no gerador: só os campos essenciais visíveis; "Mais opções" e "Respostas do formulário SeCI" recolhidas (com contagem de respostas preenchidas); campos pendentes clicáveis (na prévia e na lista "Falta preencher") que levam ao campo; local de assinatura lembrado; sugestão do próximo nº do parecer | S | O formulário vazio cai de cerca de 2.770 para cerca de 1.070 px de altura; clicar em `[PROCESSO]` na prévia leva ao campo; ao reabrir, a cidade é lembrada e o nº mostra "próximo: N+1" | Implementado | Verificado no navegador. Unidade, equipe, cargo e tratamento **não** são lembrados (mudam a cada consulente) |
+| RF056 | Conclusão por atividade do pedido: ler a lista de atividades da pergunta 2 (a, b, c ...), sugerir a conclusão de cada uma (a partir dos "componentes" do modelo) e redigir uma conclusão para cada atividade | M | Pedido com 3 atividades gera a frase "a) a atividade de “...” não configura conflito...; b) ...; c) ... não pode ser autorizada ..., em razão de ..."; o Termo de Compromisso e o parágrafo de autorização citam só as atividades autorizadas; a conferência avisa se a conclusão trata o conjunto | Implementado | Verificado no navegador com um formulário real do SeCI de 3 atividades e no Word gerado. Só no gerador HTML; o motor Python ainda tem a conclusão única |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -101,10 +102,10 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 48 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF055 |
+| Implementado | 49 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF056 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **55** | |
+| **Total** | **56** | |
 
 "Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 
