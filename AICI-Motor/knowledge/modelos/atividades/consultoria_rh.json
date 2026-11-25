@@ -1,0 +1,52 @@
+{
+ "id": "consultoria_rh",
+ "nome": "Consultoria em recursos humanos",
+ "descricao": "Use quando o servidor pretende prestar consultoria na área de recursos humanos (sistemas de remuneração, recrutamento e seleção, avaliação de desempenho, participação em resultados).",
+ "grupo": "Consultoria e procuração (A.2)",
+ "palavrasChave": [
+  "consultoria",
+  "recursos humanos",
+  "rh",
+  "gestão de pessoas",
+  "sistemas de remuneração",
+  "recrutamento e seleção",
+  "avaliação de desempenho",
+  "participação em resultados",
+  "consultor de rh",
+  "cargos e salários",
+  "consultoria empresarial"
+ ],
+ "variantes": [
+  {
+   "id": "consultoria_rh_ressalvas",
+   "rotulo": "Consultoria na área de Recursos Humanos – não configura conflito, desde que observadas as ressalvas (entendimento de 2016)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende prestar consultoria em Recursos Humanos, desenvolvendo ou implantando sistemas de remuneração, recrutamento e seleção, avaliação de desempenho ou participação em resultados. Atenção: entendimento de 2016; a CGU negou em 2024-2025 pedidos de consultoria empresarial, contábil e tributária de servidores da RFB (art. 5º, incisos I, III e IV) – avaliar a clientela e o objeto da consultoria antes de usar este modelo.",
+   "fonte": "INF 044/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTORIA NA ÁREA DE RECURSOS HUMANOS.",
+   "ementa": [
+    "Consulta quanto à realização de consultoria na área de Recursos Humanos. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o pleito {{g:do|da}} consulente sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, não se vislumbra incompatibilidade material com o exercício do cargo por {{g:ele|ela}} ocupado, desde que não utilize conhecimentos, informações ou qualquer outra vantagem decorrente de sua condição funcional (cargo)."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao|à}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "É igualmente necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público, e que os assuntos tratados no exercício dessa atividade privada não podem envolver conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

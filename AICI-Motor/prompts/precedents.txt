@@ -1,0 +1,3 @@
+Para cada trecho de precedente/parecer (marcadores P1, A1, ...) do contexto, explique em uma frase por que ele é ou não semelhante ao caso concreto e se é aplicável.
+Responda APENAS com JSON: {"itens": [{"id": "P1", "similaridade": "frase objetiva", "aplicavel": true}]}
+Não cite nenhum documento que não esteja no contexto.

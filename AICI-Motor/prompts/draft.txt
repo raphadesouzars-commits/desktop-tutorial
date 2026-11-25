@@ -1,0 +1,9 @@
+Redija a FUNDAMENTAÇÃO do parecer sobre o caso concreto, em parágrafos curtos e na linguagem dos pareceres da COGER, usando apenas o contexto fornecido.
+Sugira também o resultado e as ressalvas aplicáveis.
+O relatório e a conclusão são montados pelo sistema; você não os escreve.
+Responda APENAS com JSON:
+{"fundamentacao": [{"texto": "parágrafo", "fontes": ["N1", "P2"]}],
+ "resultado_sugerido": "sem_conflito | sem_conflito_ressalvas | conflito | outro",
+ "ressalvas": ["ressalva em uma frase"],
+ "lacunas": ["pontos sem base no acervo"]}
+Todo parágrafo deve ter ao menos uma fonte válida do contexto.

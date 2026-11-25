@@ -1,0 +1,351 @@
+{
+ "id": "software",
+ "nome": "Desenvolvimento e venda de software / atividades de TI",
+ "descricao": "Usar quando o servidor pretende atuar na área de tecnologia da informação: desenvolvedor ou analista de dados freelancer, criação e comercialização de sistemas, aplicativos e websites, ou emprego em TI no exterior durante licença.",
+ "palavrasChave": [
+  "software",
+  "desenvolvimento de sistemas",
+  "programador",
+  "desenvolvedor",
+  "freelancer",
+  "tecnologia da informação",
+  "ti",
+  "aplicativo",
+  "app",
+  "website",
+  "site",
+  "analista de dados",
+  "ciência de dados",
+  "machine learning",
+  "marketing digital",
+  "web design",
+  "emprego no exterior",
+  "licença para tratar de interesses particulares"
+ ],
+ "variantes": [
+  {
+   "id": "freelancer_ti",
+   "rotulo": "Freelancer/prestador de serviços de TI – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende prestar serviços de TI (desenvolvimento, análise de dados etc.) como autônomo/freelancer ou empregado, sem comercialização própria de produtos.",
+   "fonte": "PAR 131/2022",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADES RELACIONADAS À ÁREA DE TECNOLOGIA DA INFORMAÇÃO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{atividade_resumo}} com o cargo de {{cargo}}. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "atividade_resumo",
+     "rotulo": "Atividade (resumo para a ementa)",
+     "exemplo": "analista de dados e desenvolvedor na área de tecnologia da informação",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Serviços de TI que pretende prestar",
+     "exemplo": "cientista de dados, machine learning e desenvolvimento de aplicações web e locais",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo trabalhar como “freelancer” prestando serviços relacionados à área de Tecnologia da Informação, como {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta, também, que as atividades a serem realizadas não envolveriam temas relacionados à Administração Tributária e Aduaneira ou conhecimentos sigilosos/estratégicos obtidos em razão do cargo.",
+     "opc": {
+      "id": "ressalva_consulente",
+      "rotulo": "Registrar que o próprio consulente ressalvou que não tratará de temas tributários/aduaneiros",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opinamos pela compatibilidade material de tais atividades com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que o conteúdo dos sistemas e aplicativos desenvolvidos não envolva conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria Especial da Receita Federal do Brasil, tais como divulgação de assuntos relativos aos tributos e contribuições administradas pela RFB, bem como serviços na área tributária e aduaneira."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Feitas as considerações acima, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "comercializacao_software",
+   "rotulo": "Desenvolvimento e comercialização de sistemas, aplicativos ou websites – não configura conflito, desde que observadas as ressalvas (inclui art. 117, X, da Lei nº 8.112/1990)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende desenvolver e vender/comercializar software, aplicativos, websites ou serviços digitais próprios, inclusive por meio de pessoa jurídica.",
+   "fonte": "PAR 197/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "DESENVOLVIMENTO DE SISTEMAS E APLICATIVOS.",
+   "ementa": [
+    "Pedido de autorização para {{atividade_resumo}}. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "atividade_resumo",
+     "rotulo": "Atividade (resumo para a ementa, iniciando por verbo no infinitivo)",
+     "exemplo": "trabalhar como “free-lancer”, prestando serviços relacionados à área de TI tais como desenvolvimento e testagem de sistemas, bem como para atuar no desenvolvimento de aplicativos para websites e smartphones",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Descrição da atividade pretendida (completa a frase \"tem por objetivo ...\")",
+     "exemplo": "trabalhar como “freelancer”, prestando serviços relacionados à área de TI tais como desenvolvimento e testagem de sistemas, bem como atuar no desenvolvimento de aplicativos para websites e smartphones, sendo remunerado por diversas formas, inclusive com a comercialização dos aplicativos nas \"app store\"",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813/2013, opinamos pela compatibilidade material de tais atividades com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que o conteúdo dos sistemas e aplicativos desenvolvidos não envolva conhecimentos específicos, salientando-se os sigilosos, adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria Especial da Receita Federal do Brasil, tais como divulgação de assuntos relativos aos tributos e contribuições administradas pela RFB, bem como serviços de assessoria, de consultoria e de orientação na área tributária e previdenciária."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "No que se refere à comercialização dos sistemas e aplicativos, cabe chamar a atenção para o fato de que essa questão diz respeito a matéria estritamente disciplinar, que será analisada como uma consulta formulada a esta Corregedoria, que detém competência exclusiva para se manifestar sobre o assunto."
+    },
+    {
+     "t": "p",
+     "x": "De início salientamos que o presente caso deve ser tratado da mesma forma que o servidor que pretende ser escritor, e neste sentido inclusive a Lei nº 9.609, de 19 de fevereiro de 1998, que “dispõe sobre a proteção da propriedade intelectual de programa de computador, sua comercialização no País, e dá outras providências”, estabelece em seu art. 2º, caput:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º O regime de proteção à propriedade intelectual de programa de computador é o conferido às obras literárias pela legislação de direitos autorais e conexos vigentes no País, observado o disposto nesta Lei."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a seguir analisaremos em que termos e limites {{g:o consulente|a consulente}} pode oferecer seus produtos/serviços, sem configurar a infração disciplinar de exercício de comércio e de gerência e administração de sociedade privada, à semelhança de outras atividades, como por exemplo a de escritor."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o disposto no art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da Lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, a atividade pretendida {{g:pelo consulente|pela consulente}} deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil. Caso a atividade seja desenvolvida fora dos limites do parágrafo único, ou seja, se o exercício das atividades pretendidas constituir mero elemento de empresa, em hipótese alguma {{g:o servidor|a servidora}} poderá participar da gerência ou administração da entidade, devendo tal função ser exercida por um terceiro, tendo em vista o disposto no art. 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Assim, para responder a presente consulta precisamos delimitar o que é esse elemento de empresa do art. 966, parágrafo único, do novo Código Civil.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A princípio está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares ou colaboradores.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Essas atividades, ainda que realizadas de forma profissional, com objetivo de lucro, não se sujeitam ao regime jurídico empresarial, uma vez que não estariam organizadas sob a forma de empresa. Referidas atividades, em regra são exercidas autonomamente/individualmente, ou no máximo sob a forma de Sociedade Simples.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Nesse ponto cabe aproveitar a oportunidade para bem delimitar que uma coisa é o escritor que obtém proveitos econômicos de suas obras com o auxílio de uma editora que as publica, e outra coisa bem diferente é o escritor que busca a obtenção de proveito econômico não apenas escrevendo livros, mas também montando/gerenciando e/ou administrando a própria editora que os publica, ou seja, exercendo atividade empresarial. A situação de exercício de atividade empresarial fica ainda mais nítida quando a empresa comercializa produtos de terceiros. A título de exemplo, o caso da editora do servidor que comercializa livros de outros autores, além dos livros de sua própria autoria. Nestes casos o exercício da profissão intelectual de escritor constitui apenas um elemento de empresa (ao lado de outros profissionais), ou seja, estaria configurado o exercício de atividade empresarial e a infração disciplinar ao art. 117, inciso X, da Lei nº 8.112, de 1990.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A ideia do art. 966, parágrafo único, do novo Código Civil é que a princípio a profissão intelectual, de natureza científica, literária ou artística não é empresarial por não compreender a organização de fatores de produção.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Essa atividade/profissão será empresarial se presentes todos os elementos de uma empresa, ou seja, se presentes todos os requisitos do art. 966, caput do novo Código Civil.",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Sobre o assunto, merecem destaque os Enunciados referentes à matéria aprovados na III Jornada de Direito Civil, realizada em 2002, bastante elucidativos e que vão ao encontro do que afirmamos até o momento:",
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "193 - Art. 966. O exercício das atividades de natureza exclusivamente intelectual está excluído do conceito de empresa.",
+      "194 - Art. 966. Os profissionais liberais não são considerados empresários, salvo se a organização dos fatores de produção for mais importante que a atividade pessoal desenvolvida.",
+      "195 - Art. 966. A expressão \"elemento de empresa\" demanda interpretação econômica, devendo ser analisada sob a égide da absorção da atividade intelectual, de natureza científica, literária ou artística, como um dos fatores da organização empresarial."
+     ],
+     "opc": {
+      "id": "elemento_empresa",
+      "rotulo": "Incluir detalhamento do conceito de \"elemento de empresa\" (art. 966, parágrafo único, do Código Civil)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Registramos que {{g:o servidor|a servidora}} poderá exercer as atividades descritas como pessoa física.",
+     "opc": {
+      "id": "pf_pj",
+      "rotulo": "Incluir orientação sobre atuar como pessoa física ou pessoa jurídica",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Caso deseje atuar como Pessoa Jurídica, seja ela unipessoal como uma EIRELI ou pluripessoal, é necessário que um terceiro exerça as funções de gerência ou administração da entidade, tendo em vista o já citado artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, que estabelece que ao servidor é proibido “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”.",
+     "opc": {
+      "id": "pf_pj",
+      "rotulo": "Incluir orientação sobre atuar como pessoa física ou pessoa jurídica",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade expressa {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "ti_exterior_licenca",
+   "rotulo": "Emprego em TI no exterior durante licença para tratar de interesses particulares – inexistência de conflito",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor pretende (ou já está em) licença para tratar de interesses particulares e quer trabalhar na área de tecnologia da informação em empresa no exterior.",
+   "fonte": "PAR 632/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EMPREGO NO EXTERIOR.",
+   "ementa": [
+    "{{g:Servidor|Servidora}} em licença para tratar de interesses particulares. Trabalho no exterior na área de tecnologia de informações. Não configura conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "pais",
+     "rotulo": "País, com a preposição (ex.: \"na Alemanha\", \"em Portugal\")",
+     "exemplo": "na Alemanha",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "De início, salientamos que a legislação referente a conflito de interesses expressamente preceitua, em seu artigo 5º, parágrafo único, da Lei nº 12.813, de 16 de maio de 2013, que as situações que configuram conflito de interesses estabelecidas neste artigo aplicam-se aos ocupantes de cargos ou empregos públicos ainda que em gozo de licença ou em período de afastamento.",
+     "opc": {
+      "id": "licenca_art5_pu",
+      "rotulo": "Registrar que a Lei nº 12.813/2013 se aplica ainda que em gozo de licença (art. 5º, parágrafo único)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Como se verifica, {{g:o servidor|a servidora}} informa que pretende solicitar uma Licença para tratar de interesses particulares e, durante esse período, residir e trabalhar {{pais}} na área de Tecnologia da Informação."
+    },
+    {
+     "t": "p",
+     "x": "Preliminarmente, é importante registrar que o afastamento para tratar de interesses particulares não descaracteriza o vínculo jurídico com a administração, conforme entendimento jurisprudencial firmado no âmbito do Supremo Tribunal Federal, já que a referida licença somente é concedida a critério da administração e pelo prazo fixado em lei, podendo, inclusive, ser interrompida, a qualquer tempo, no interesse do serviço ou a pedido do servidor."
+    },
+    {
+     "t": "p",
+     "x": "Em uma análise perfunctória, pode-se afirmar que o exercício da atividade pretendida não resultaria em potencial conflito de interesses, por se tratar de exercício de atividade que em razão da sua natureza é compatível com as atribuições do cargo, por não envolver matérias correlatas às desenvolvidas na RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência, embora seja difícil imaginar alguma conduta em que tais incisos possam ser invocados, uma vez que se trata de emprego em empresa {{pais}}, sem qualquer relação jurídica ou tributária com o Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer atividades relacionadas à área de Tecnologia da Informação, {{pais}}, uma vez que inexiste a hipótese de conflito de interesses."
+    }
+   ]
+  }
+ ]
+}

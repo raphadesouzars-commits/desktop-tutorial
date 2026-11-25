@@ -1,0 +1,897 @@
+{
+ "id": "advocacia",
+ "nome": "Advocacia",
+ "descricao": "Usar quando o servidor (ativo, licenciado ou aposentado) pretende exercer a advocacia privada, integrar sociedade de advogados ou atuar como advogado/voluntário na área jurídica em órgão público.",
+ "palavrasChave": [
+  "advocacia",
+  "advogado",
+  "advogada",
+  "advogar",
+  "oab",
+  "inscrição na oab",
+  "ordem dos advogados",
+  "escritório de advocacia",
+  "sociedade de advogados",
+  "advocacia privada",
+  "consultoria jurídica",
+  "assessoria jurídica",
+  "causa própria",
+  "advogado voluntário",
+  "defensoria pública",
+  "serviço voluntário",
+  "procuradoria",
+  "prática jurídica",
+  "licença para tratar de interesses particulares",
+  "aposentado"
+ ],
+ "variantes": [
+  {
+   "id": "carreira_tributaria_conflito",
+   "rotulo": "AFRFB ou ATRFB em atividade – configura conflito (Portaria RFB nº 444/2015)",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor da Carreira Tributária e Aduaneira (Auditor-Fiscal ou Analista-Tributário), em atividade ou em licença para tratar de interesses particulares, pretende exercer a advocacia privada em qualquer área.",
+   "fonte": "PAR 041/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ADVOCACIA",
+   "ementa": [
+    "Pedido de autorização para {{g:servidor|servidora}} ocupante do cargo de {{cargo}} exercer a atividade de advocacia.",
+    "Configura conflito de interesses. Pedido de autorização indeferido."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Ressalte-se, inicialmente, que o fato de {{g:o servidor|a servidora}} estar em licença para tratar de interesses particulares não afasta seu vínculo com a Administração e, consequentemente, com o aspecto disciplinar de sua conduta.",
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, salientamos que a legislação referente a conflito de interesses expressamente preceitua, em seu artigo 5º, parágrafo único, da Lei 12.813, de 16 de maio de 2013, que:",
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "As situações que configuram conflitos de interesses estabelecidas no artigo 5º aplicam-se aos ocupantes de cargos ou empregos mencionados no artigo 2º ainda que em gozo de licença ou em período de afastamento."
+     ],
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, eventuais vedações mantêm-se mesmo que {{g:o servidor|a servidora}} esteja no gozo da licença para trato de assuntos particulares.",
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Neste esteio de lidar com interesses contraditórios e tendo em consideração o escopo do exercício da advocacia no período de licença para trato de assuntos particulares, há que salientar o voto-vogal do Ministro Herman Benjamin citado na Ementa do Recurso Especial n.º 1352448:",
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Superior Tribunal de Justiça (STJ), Segunda Turma, Ministro Relator Humberto Martins, Recurso Especial nº 1352448, DJ. 21.11.2014: Ementa. (...) O servidor que, a pretexto de tratar de \"assuntos particulares\" propõe-se, na verdade, a simplesmente trocar de lado do balcão, oferecendo seus serviços aos regulados ou fiscalizados pelo mesmo órgão público a que pertence, leva consigo o que não deve (informações privilegiadas, dados estratégicos, conhecimento de pessoas e rotinas, das entranhas da instituição) e, quando retorna, traz também o que não deve (especialmente uma rede de clientes, favores e intimidades). 5. Incorre em inequívoco conflito de interesse o servidor afastado para tratar de assuntos \"particulares\" que exerce função, atividade ou atos perante o órgão ou instituição a que pertence, seja quando atua na representação ou em benefício daqueles que pelo Estado são regulados ou fiscalizados, seja quando aconselha (presta consultoria, para utilizar o jargão da profissão) ou patrocina demandas, administrativas ou judiciais, que, direta ou indiretamente, possam atingir os interesse do seu empregador estatal. (...)"
+     ],
+     "opc": {
+      "id": "licenca",
+      "rotulo": "Servidor em licença para tratar de interesses particulares (INF 085/2016)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III da referida lei, verifica-se que o exercício da atividade privada de advocacia, por si só, é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}. A Portaria RFB nº 444, de 23 de março de 2015, dispõe de maneira expressa tal entendimento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444, de 23 de março de 2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I - advocacia;",
+      "II - contabilidade;",
+      "III - praticagem."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Cumpre ressaltar que esta Portaria não cria, não inova, não limita, não altera e não extingue direito, sendo então uma norma meramente declaratória, harmonizada com a tutela preventiva que se extrai do art. 4º da Lei nº 12.813, de 2013. Neste sentido também já se manifestou a Procuradoria-Geral da Fazenda Nacional (PGFN), no seu Parecer PGFN/Cojed 295/2017:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Parecer PGFN/Cojed nº 295/2017:",
+      "“34. Cabe rejeitar, também em caráter preambular a alegação de nulidade da portaria RFB nº 444, de 23 março de 2015, que prevê a incompatibilidade da atividade de praticagem com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil (na qual o Auditor-Fiscal da RFB está incluso por força do art. 5º da Lei n.º 10.593, de 6 de dezembro de 2002).",
+      "35. É certo que não é dado aos atos infralegais inovarem na ordem jurídica estabelecendo direitos e obrigações no mundo jurídico, sob pena de afrontar o art. 5º, II, da CF, que nos remete a ideia de quem ninguém será obrigado a fazer, ou deixar de fazer, alguma coisa, salvo em razão de lei. Contudo, a portaria em questão não inovou. Não criou a proibição, apenas concretizou princípios constitucionais, entre eles o da moralidade e interesse público, uma vez que a proibição aqui discutida já decorre da própria Constituição.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com a edição da Portaria RFB nº 444, de 2015, cujo conhecimento presume-se de todo servidor da Carreira de Auditoria da RFB (presunção absoluta e inafastável), descarta-se a possibilidade de exercício de advocacia (assim como também da contabilidade e praticagem), por AFRFB e por ATRFB, sem consciência de seu caráter ilícito. Não há como se cogitar da prática de alguma daquelas três atividades por aqueles servidores que não seja eivada de dolo, visto que a consciência da ilicitude é presumida, configurando, portanto, improbidade administrativa, nos moldes da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Destaca-se que a análise sobre conflito de interesses não exclui a competência e a obrigação de esta Corregedoria avaliar a legalidade da consulta sob outros aspectos previstos na legislação de pessoal aplicável ao caso. Nesse sentido, o artigo 13 da Lei nº 12.813, de 16 de maio de 2013, estabelece expressamente que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 13. O disposto nesta Lei não afasta a aplicabilidade da Lei nº 8.112, de 11 de dezembro de 1990, especialmente no que se refere à apuração das responsabilidades e possível aplicação de sanção em razão de prática de ato que configure conflito de interesses ou ato de improbidade nela previstos. (grifos nossos)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Trazemos à luz o disposto no art. 117, inciso XVIII, da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XVIII – exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Tal dispositivo decorre do dever de dedicação, zelo e lealdade à instituição e visa tutelar a moralidade administrativa. Desse modo, será considerada uma afronta ao princípio da moralidade administrativa a prática de atividades privadas, com ou sem remuneração, que provoquem dúvida a respeito da integridade, moralidade e clareza de posições da Instituição e de seus servidores e deixem transparecer uma possível sobreposição do interesse particular ao interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Cabe salientar que a natureza das atividades desenvolvidas no âmbito da RFB tem relação intrínseca com a guarda e utilização de informações de caráter sigiloso e restrito, referentes à capacidade econômica dos contribuintes, bem como seus dados fiscais. Portanto, os servidores que trabalham na Secretaria da Receita Federal do Brasil (RFB) naturalmente têm acesso a informações a respeito de assunto sigiloso capaz de trazer vantagem econômica ou financeira para si ou para terceiro."
+    },
+    {
+     "t": "p",
+     "x": "O acesso a informações sigilosas pode ocorrer em quaisquer dos macroprocessos de trabalho da instituição, independentemente da unidade de lotação e de exercício do servidor ou das tarefas concretamente desempenhadas por ele, sejam elas efetivamente voltadas à área fim, em tributos internos ou em comércio exterior, sejam elas contidas em atividades-meio."
+    },
+    {
+     "t": "p",
+     "x": "A ampla gama de informações a que tem acesso o servidor lotado e em exercício na RFB pode influenciar a atividade privada de advocacia em qualquer área de atuação, ferindo a moralidade e imagem do órgão perante a sociedade. Ressalte-se que o advogado, por sua própria natureza, empenha-se na busca por decisão favorável ao seu cliente, na tentativa de convencimento do julgador."
+    },
+    {
+     "t": "p",
+     "x": "Convém ainda destacar a dicotomia natural da via judicial. Se de um lado estivesse o servidor da RFB, no outro polo provavelmente estaria um advogado da área privada sem qualquer vínculo com a Administração Pública. Tal fato poderia acarretar desconfianças quanto à possível vantagem que o cliente do advogado-servidor teria, na visão do público em geral."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, constata-se que o simples exercício da advocacia afronta a moralidade, qualificando-se como uma atividade incompatível mesmo sem o efetivo uso da informação estratégica ou sigilosa pelo servidor, conduta esta que se enquadraria em outras infrações previstas na Lei n° 8.112, de 1990, tal como a prevista no artigo 117, inciso IX, da referida lei."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, é importante ressaltar que a inteligência do Estatuto da OAB revela, primordialmente, sua função de tutelar o regular exercício do ministério privado da advocacia. Por sua vez, ao editar as Leis n° 8.112, de 1990, n° 11.890, de 2008 e n° 12.813, de 2013, o legislador colocou o interesse público em primazia, buscando coibir condutas do servidor público ensejadoras de ilícitos administrativos e cercear atividades incompatíveis geradoras de conflitos entre interesses público e privado."
+    },
+    {
+     "t": "p",
+     "x": "Dessarte, imperativo à Administração Pública impor medidas vinculadas à proibição de incompatibilidades, a fim de garantir a máxima efetivação do direito subjetivo público a uma administração pública honesta e proba – inegável direito fundamental (arts. 5°, LXXIII e 37, *caput*, da Constituição Federal de 1988), concretizando-se com o reconhecimento da incompatibilidade do exercício da advocacia aos servidores da Carreira de Auditoria da Receita Federal do Brasil, não importando, para caracterizar tal incompatibilidade, a unidade de lotação e de exercício e as tarefas concretamente desempenhadas pelo servidor, nem tampouco o ramo do direito em que se pretende exercer a advocacia."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício concomitante e regular da advocacia com o cargo de {{cargo}} configura conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "ata_sem_conflito_termo_compromisso",
+   "rotulo": "Assistente Técnico-Administrativo (ATA) – não configura conflito, com ressalvas e Termo de Compromisso",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Ocupante do cargo de Assistente Técnico-Administrativo (PGPE) em exercício na RFB pretende exercer a advocacia privada fora das matérias tributária, previdenciária e aduaneira.",
+   "fonte": "PAR 067/2020",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "EXERCÍCIO DA ADVOCACIA PRIVADA",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de advocacia com o cargo de ATA. Não configura conflito de interesses, desde que observadas as ressalvas deste Parecer e as condições na proposta de Termo de Compromisso a ser firmado {{g:pelo servidor|pela servidora}}."
+   ],
+   "campos": [
+    {
+     "id": "atividade_exercida",
+     "rotulo": "Atividade em que o(a) servidor(a) está lotado(a) e acesso a informações",
+     "exemplo": "uma atividade de atendimento ao contribuinte, tendo assim acesso a informações sigilosas dos contribuintes de um posto de atendimento da Receita Federal do Brasil",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, verifica-se que {{g:o|a}} consulente se refere à possibilidade de exercer a advocacia, concomitante à atuação do cargo de Assistente Técnico-Administrativo, estando {{g:lotado|lotada}} em {{atividade_exercida}}."
+    },
+    {
+     "t": "p",
+     "x": "Deve-se esclarecer que a posição pregressa desta Corregedoria era que, à luz do art. 5°, III, da Lei n° 12.813, de 2013, mesmo para o caso dos ocupantes do cargo de Assistente Técnico-Administrativo (ATA), dada a posição vantajosa que poderia advir pelo acesso do servidor a informações privilegiadas sobre partes litigantes, haveria incompatibilidade total entre a atividade pública e a prática da advocacia."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Contudo, revisa-se parcialmente este posicionamento, observadas as circunstâncias aqui expostas."
+    },
+    {
+     "t": "p",
+     "x": "Um primeiro ponto de análise é observar que se mantém inalterado o pretérito entendimento sobre a incompatibilidade da advocacia em matérias tributária, previdenciária e aduaneira, mesmo aos ocupantes do cargo de ATA, haja vista sua correlação direta com as competências da Secretaria da Receita Federal do Brasil (RFB)."
+    },
+    {
+     "t": "p",
+     "x": "Caso fosse permitido ao ATA atuar nestas matérias, estaríamos diante da situação em que o servidor, para dar bom cumprimento à prática advocatícia ao defender o interesse de seus clientes, poderia estar em desacordo com os interesses da Fazenda Pública, por exemplo, ao questionar matéria tributária, previdenciária ou aduaneira. Vê-se, assim, a inafastável incompatibilidade do exercício da advocacia em matéria tributária, previdenciária e aduaneira com o exercício do cargo de Assistente Técnico-Administrativo lotado na RFB."
+    },
+    {
+     "t": "p",
+     "x": "Imperioso também ressaltar que da mesma forma permanece defeso o exercício da advocacia, em qualquer repartição pública, no caso de advocacia administrativa, e contra a Fazenda Pública que remunere ou à qual seja vinculada o servidor, no caso de advocacia judicial. Nesse sentido, dispõem a Lei n° 8.112, 1990, por intermédio de seu art. 117, XI (proibição à advocacia administrativa), e a Lei n° 8.906, de 4 de julho 1994, arts. 27 e 30, I (Estatuto da Advocacia):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei n° 8.112, de 1990:",
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XI - atuar, como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro;",
+      "Lei n° 8.906, de 1994",
+      "Art. 27. A incompatibilidade determina a proibição total, e o impedimento, a proibição parcial do exercício da advocacia.",
+      "(…)",
+      "Art. 30. São impedidos de exercer a advocacia:",
+      "I - os servidores da administração direta, indireta e fundacional, contra a Fazenda Pública que os remunere ou à qual seja vinculada a entidade empregadora;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Além destas primeiras ressalvas e excetuados os casos em que se verifique o desvio de função ou a atuação do Assistente Técnico Administrativo (ATA) em uma condição que acarrete um risco verificável, é de se ressaltar que as atribuições deste cargo possuem caráter eminentemente administrativo."
+    },
+    {
+     "t": "p",
+     "x": "Assim nos esclarece a Lei n° 11.357, de 19 de outubro de 2006, sobre as atribuições do ATA:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Fica estruturado o Plano Geral de Cargos do Poder Executivo - PGPE composto por cargos efetivos de nível superior, intermediário e auxiliar não integrantes de Carreiras específicas, Planos Especiais de Cargos ou Planos de Carreiras instituídos por leis específicas e voltados ao exercício de atividades técnicas, técnico-administrativas e de suporte no âmbito dos órgãos e entidades da administração federal direta, autárquica e fundacional.",
+      "Parágrafo único. Integrarão o PGPE, nos termos desta Lei, os seguintes cargos de provimento efetivo:",
+      "(...)",
+      "III - Assistente Técnico-Administrativo, de nível intermediário, com atribuições voltadas à execução de atividades técnicas, administrativas, logísticas e de atendimento, de nível intermediário, relativas ao exercício das competências constitucionais e legais a cargo dos órgãos ou entidades da administração pública federal, ressalvadas as privativas de Carreiras específicas, fazendo uso de todos os equipamentos e recursos disponíveis para a consecução dessas atividades, além de outras atividades de mesmo nível de complexidade em sua área de atuação;",
+      "(grifou-se)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Atenta-se para o fato de que o Assistente Técnico-Administrativo é impedido de exercer as atribuições privativas aos cargos de Auditor-Fiscal da Receita Federal do Brasil (AFRFB) e de Analista-Tributário da Receita Federal do Brasil (ATRFB), conforme decorre da descrição de suas atribuições. Por sua vez, os ocupantes dos cargos de AFRFB e ATRFB (carreira Tributária e Aduaneira da RFB), já são, por força da Portaria RFB n° 444, de 23 de março de 2015, impedidos da prática advocatícia:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I - advocacia;",
+      "(...)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nesse mesmo sentido, também dispõe o Estatuto da Advocacia:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 27. A incompatibilidade determina a proibição total, e o impedimento, a proibição parcial do exercício da advocacia.",
+      "(…)",
+      "Art. 28. A advocacia é incompatível, mesmo em causa própria, com as seguintes atividades:",
+      "(...)",
+      "VII - ocupantes de cargos ou funções que tenham competência de lançamento, arrecadação ou fiscalização de tributos e contribuições parafiscais;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sem perder de vista o caso concreto que aqui se analisa, uma vez que {{g:o|a}} consulente trata-se de {{g:um|uma}} ATA que atua na RFB, devemos observar, de forma mais ampla, quais são as atribuições deste órgão, definidas no art. 1º da Portaria do Ministério da Fazenda nº 430, de 9 de outubro de 2017, e podem ser sintetizadas da seguinte forma, conforme texto constante no sítio da instituição na internet:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "• Administração dos tributos internos e do comércio exterior;",
+      "• Gestão e execução das atividades de arrecadação, lançamento, cobrança administrativa, fiscalização, pesquisa e investigação fiscal e controle da arrecadação administrada;",
+      "• Gestão e execução dos serviços de administração, fiscalização e controle aduaneiro;",
+      "• Repressão ao contrabando e descaminho, no limite da sua alçada;",
+      "• Preparo e julgamento, em primeira instância, dos processos administrativos de determinação e exigência de créditos tributários da União;",
+      "• Interpretação, aplicação e elaboração de propostas para o aperfeiçoamento da legislação tributária e aduaneira federal;",
+      "• Subsídio à formulação da política tributária e aduaneira;",
+      "• Subsídio à elaboração do orçamento de receitas e benefícios tributários da União;",
+      "• Interação com o cidadão por meio dos diversos canais de atendimento, presencial ou a distância;",
+      "• Educação fiscal para o exercício da cidadania;",
+      "• Formulação e gestão da política de informações econômico-fiscais;",
+      "• Promoção da integração com órgãos públicos e privados afins, mediante convênios para permuta de informações, métodos e técnicas de ação fiscal e para a racionalização de atividades, inclusive com a delegação de competência;",
+      "• Atuação na cooperação internacional e na negociação e implementação de acordos internacionais em matéria tributária e aduaneira."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Diante de tantas competências, verifica-se que a RFB é um órgão estratégico, sendo responsável pela administração dos tributos de competência da União, inclusive os previdenciários, e aqueles incidentes sobre o comércio exterior, abrangendo parte significativa das contribuições sociais do país, atuando no combate e na prevenção aos ilícitos fiscais e aduaneiros como a sonegação fiscal, contrabando, descaminho, pirataria, fraude comercial, tráfico de drogas e de animais em extinção e outros delitos relacionados ao comércio internacional, além de auxiliar o Poder Executivo federal na formulação da política tributária do País. Para o desempenho de tamanho rol de atribuições regimentais, a instituição compartimenta sua atuação em diversas áreas, internamente chamadas de macroprocessos de trabalho, dentre os quais se destacam aduana, tributação, fiscalização, arrecadação, atendimento, cobrança, gestão de pessoas, logística, tecnologia da informação, dentre outros."
+    },
+    {
+     "t": "p",
+     "x": "É da natureza das atividades desta instituição lidar com informações de caráter sigiloso e restrito, referentes à capacidade econômica dos contribuintes, bem como seus dados fiscais. Portanto, os servidores que têm o dever funcional de exercer as atividades inerentes à competência da Secretaria da Receita Federal do Brasil naturalmente têm acesso a informações a respeito de assunto sigiloso capaz de trazer vantagem econômica ou financeira para o agente público ou para terceiro."
+    },
+    {
+     "t": "p",
+     "x": "Observa-se, portanto, de um lado, o risco que existe no acesso a dados sigilosos a qualquer servidor que trabalhe na RFB e, de outro lado, a menor potencialidade deste risco aos cargos de natureza eminentemente administrativa, como o cargo Assistente Técnico-Administrativo."
+    },
+    {
+     "t": "p",
+     "x": "Por esta antítese, chega-se à síntese que a atividade de advocacia por um ocupante do cargo de Assistente Técnico-Administrativo em exercício na RFB pode ser compatível com o cargo público, mediante a assinatura de Termo de Compromisso junto à Comissão de Ética da Receita Federal do Brasil, no qual o servidor assim se comprometa:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "1. Não advogar em matéria tributária e previdenciária federal, aduaneira ou relacionada a contribuições sociais destinadas ao financiamento da seguridade social.",
+      "2. Resguardar o uso ou a divulgação de informações privilegiadas obtidas em razão do exercício das atribuições públicas que exerço, bem como outras informações de acesso restrito, e não as utilizar na atividade privada, ainda que a título exemplificativo.",
+      "3. Não atuar, ainda que informalmente, junto à RFB e ao Ministério da Economia e entidades vinculadas, como procurador, consultor, assessor ou intermediário de interesses de seu contratante ou empregador em âmbito privado;",
+      "4. Não vincular minha atuação privada ao nome e imagem da RFB, tampouco utilizar minha condição de servidor do órgão para angariar clientela;",
+      "5. Não advogar contra a fazenda pública que me remunera, nos termos do art. 30 da Lei nº 8.906, de 04 de julho de 1994;",
+      "6. Não exercer a atividade privada caso seja incompatível com meu horário de trabalho na RFB;",
+      "7. Declarar-me impedido ou em suspeição para atuar em processos decisórios, no âmbito da RFB, que sejam do interesse de seus clientes privados, nos termos do art. 19 da Lei nº 9.784/1999, e caput e incisos do art. 22 do Código de Conduta dos Agentes Públicos em Exercício na Secretaria da Receita Federal do Brasil;",
+      "8. Não utilizar e nem permitir o uso do cargo que exerço, ou do nome da RFB, de forma que possibilite a interpretação de que a RFB sanciona ou respalda minhas atividades pessoais, ou avaliza qualquer opinião, produto, serviço ou entidade particular em que eu atue, ressalvada a citação em documentos curriculares, na forma do § 1º do art. 27 do Código de Conduta dos Agentes Públicos em Exercício na Secretaria da Receita Federal do Brasil;",
+      "9. Não carrear para a empreitada particular vantagens em decorrência da minha condição funcional na RFB e nem me valer desta condição para receber qualquer compensação remuneratória pela atividade particular autorizada;",
+      "10. Não me apresentar como servidor público e nem me valer do vínculo com a RFB, para resolver questões de pessoas para as quais eventualmente prestarei serviços, perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;",
+      "11. Durante o exercício da atividade privada, não praticar atos que possam transmitir à opinião pública dúvida em relação a minha integridade, moralidade, clareza de posições e decoro exigido dos agentes públicos da RFB;",
+      "12. Exercer a atividade privada na forma autorizada, zelando para que não implique impacto nas atividades públicas que executo ou prejuízo aos interesses da Secretaria da Receita Federal do Brasil."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Além disso, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Feitas todas considerações acima, no entendimento desta Corregedoria, o exercício da atividade de advocacia não configura conflito de interesses com o cargo de Assistente Técnico-Administrativo, desde que observadas as ressalvas acima e a necessidade da assinatura do Termo de Compromisso."
+    }
+   ]
+  },
+  {
+   "id": "cargo_administrativo_rfb_conflito",
+   "rotulo": "Analista/Técnico do Seguro Social ou Analista Previdenciário em exercício na RFB – configura conflito",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor de cargo administrativo redistribuído ou em exercício na RFB (Analista do Seguro Social, Analista Previdenciário e similares) pretende exercer a advocacia; opcionalmente, também pergunta sobre integrar sociedade de advogados.",
+   "fonte": "PAR 077/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE A POSSIBILIDADE DO EXERCÍCIO DA ATIVIDADE PRIVADA DE ADVOCACIA CONCOMITANTEMENTE COM O CARGO DE {{cargo}}.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de {{g:advogado|advogada}}.",
+    "Conflito de interesses. Impossibilidade. Vedação. Pedido de autorização indeferido."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Para se analisar se a atividade privada informada {{g:pelo servidor|pela servidora}} enseja situação caracterizadora de conflito de interesses, inicialmente é importante ressaltar que a Constituição Federal de 1988 (CF), ao dispor sobre a Administração Pública, previu, em seu artigo 37, §7º, restrições a serem impostas por lei aos ocupantes de cargo ou emprego público que tivessem acesso a informações privilegiadas."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "CF - Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte: (Redação dada pela Emenda Constitucional nº 19, de 1998).",
+      "(…)",
+      "§ 7º A lei disporá sobre os requisitos e as restrições ao ocupante de cargo ou emprego da administração direta e indireta que possibilite o acesso a informações privilegiadas. (incluído pela Emenda Constitucional nº 19, de 1998)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com o fim de regulamentar essa previsão constitucional, foi publicada a Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal."
+    },
+    {
+     "t": "p",
+     "x": "Quanto ao alcance subjetivo da Lei, de imediato é certo afirmar que o espectro de sua observância é bastante extenso, atingindo não apenas determinadas autoridades como também os servidores públicos comuns (art. 10), em especial “os ocupantes de cargos ou empregos cujo exercício proporcione acesso a informação privilegiada capaz de trazer vantagem econômica ou financeira para o servidor público ou para terceiro” (art. 2º, parágrafo único)."
+    },
+    {
+     "t": "p",
+     "x": "A mesma Lei, em seu artigo 5º, elencou as hipóteses de condutas que configuram conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, com destaque para o inciso III deste artigo, *in verbis*:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "O inciso destacado trata da prática de atividade incompatível com o exercício do cargo público. Esta questão, configurada aqui como situação de conflito de interesses, já era tratada pela Lei nº 8.112, de 11 de dezembro de 1990, que dispõe sobre o regime jurídico dos servidores públicos civis da União, das autarquias e das fundações públicas federais. O artigo 117, inciso XVIII, desta Lei, impõe que ao servidor é proibido “exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho”."
+    },
+    {
+     "t": "p",
+     "x": "O objetivo do legislador, ao estatuir na Lei nº 8.112, de 1990, a incompatibilidade entre algumas atividades e o cargo ou função pública, foi o de impedir que determinadas empreitadas particulares, em virtude de suas características específicas, possam ser executadas de forma vantajosa por servidor público, justamente em virtude de sua condição ou de informações que ele possua por ser servidor. Buscou-se ainda evitar que interesses particulares fossem colocados acima do interesse público ou que a impessoalidade e a moralidade, que devem reger todo ato de agente público, fossem afetadas."
+    },
+    {
+     "t": "p",
+     "x": "As Leis nº 8.112, de 1990, e nº 12.813, de 2013, vinculam todos os servidores do Poder Executivo federal. A análise acerca da existência de incompatibilidade entre uma atividade particular e determinado cargo ou função deve ser feita levando-se em conta que o cargo {{g:do servidor|da servidora}} consulente ({{cargo}}) pertence ao grupo administrativo da Receita Federal do Brasil-RFB, conforme podemos extrair do sistema SA3. Portanto, as atribuições do referido cargo estão diretamente ligadas às competências da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, para analisar-se a existência ou não de incompatibilidade entre o exercício do cargo de {{cargo}} e a prática de atividade privada de advocacia, por servidor lotado e em exercício na Secretaria da Receita Federal do Brasil, faz-se necessário o exame das competências reservadas ao Fisco Federal."
+    },
+    {
+     "t": "p",
+     "x": "As competências da RFB estão definidas no art. 1º da Portaria do Ministério da Fazenda nº 430, de 9 de outubro de 2017, e podem ser sintetizadas da seguinte forma, conforme texto constante no sítio da instituição na internet:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "• Administração dos tributos internos e do comércio exterior;",
+      "• Gestão e execução das atividades de arrecadação, lançamento, cobrança administrativa, fiscalização, pesquisa e investigação fiscal e controle da arrecadação administrada;",
+      "• Gestão e execução dos serviços de administração, fiscalização e controle aduaneiro;",
+      "• Repressão ao contrabando e descaminho, no limite da sua alçada;",
+      "• Preparo e julgamento, em primeira instância, dos processos administrativos de determinação e exigência de créditos tributários da União;",
+      "• Interpretação, aplicação e elaboração de propostas para o aperfeiçoamento da legislação tributária e aduaneira federal;",
+      "• Subsídio à formulação da política tributária e aduaneira;",
+      "• Subsídio à elaboração do orçamento de receitas e benefícios tributários da União;",
+      "• Interação com o cidadão por meio dos diversos canais de atendimento, presencial ou a distância;",
+      "• Educação fiscal para o exercício da cidadania;",
+      "• Formulação e gestão da política de informações econômico-fiscais;",
+      "• Promoção da integração com órgãos públicos e privados afins, mediante convênios para permuta de informações, métodos e técnicas de ação fiscal e para a racionalização de atividades, inclusive com a delegação de competência;",
+      "• Atuação na cooperação internacional e na negociação e implementação de acordos internacionais em matéria tributária e aduaneira."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Diante de tantas competências, verifica-se que a RFB é um órgão estratégico, sendo responsável pela administração dos tributos de competência da União, inclusive os previdenciários, e aqueles incidentes sobre o comércio exterior, abrangendo parte significativa das contribuições sociais do país, atuando no combate e na prevenção aos ilícitos fiscais e aduaneiros como a sonegação fiscal, contrabando, descaminho, pirataria, fraude comercial, tráfico de drogas e de animais em extinção e outros delitos relacionados ao comércio internacional, além de auxiliar o Poder Executivo federal na formulação da política tributária do País. Para o desempenho de tamanho rol de atribuições regimentais, a instituição compartimenta sua atuação em diversas áreas, internamente chamadas de macroprocessos de trabalho, dentre os quais se destacam aduana, tributação, fiscalização, arrecadação, atendimento, cobrança, gestão de pessoas, logística, tecnologia da informação, dentre outros."
+    },
+    {
+     "t": "p",
+     "x": "É da natureza das atividades desta Instituição lidar com informações de caráter sigiloso e restrito, referentes à capacidade econômica dos contribuintes, bem como seus dados fiscais. Portanto, os servidores que têm o dever funcional de exercer as atividades inerentes à competência da Secretaria da Receita Federal do Brasil naturalmente têm acesso a informações a respeito de assunto sigiloso capaz de trazer vantagem econômica ou financeira para o agente público ou para terceiro."
+    },
+    {
+     "t": "p",
+     "x": "O acesso a informações sigilosas pode ocorrer em quaisquer dos macroprocessos de trabalho da instituição, independentemente da unidade de lotação e de exercício do servidor ou das tarefas concretamente desempenhadas por ele, sejam elas efetivamente voltadas à matéria-fim, em tributos internos ou em comércio exterior, sejam elas contidas em tarefas-meio meramente corporativas e administrativas."
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, verifica-se que, independentemente do cargo que ocupam, os servidores da RFB podem atuar em quaisquer das áreas de competência do órgão (fiscalização, arrecadação, controle e cobrança do crédito tributário, atendimento aos contribuintes, controle aduaneiro, tributação, logística, tecnologia da informação e gestão de pessoas, dentre outras), havendo a possibilidade e o risco potencial de terem acesso a documentos e informações sujeitos ao sigilo fiscal, mesmo que executem somente atividades de apoio."
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, passemos a analisar a atividade advocatícia, regulamentada pela Lei nº 8.906, de 1994, que dispõe sobre o Estatuto da Advocacia e a Ordem dos Advogados do Brasil (OAB):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 8.906, de 1994 - Art. 1º São atividades privativas de advocacia:",
+      "I - a postulação a qualquer órgão do Poder Judiciário e aos juizados especiais; (Vide ADIN 1.127-8)",
+      "II - as atividades de consultoria, assessoria e direção jurídicas.",
+      "(...)",
+      "§ 2º Os atos e contratos constitutivos de pessoas jurídicas, sob pena de nulidade, só podem ser admitidos a registro, nos órgãos competentes, quando visados por advogados.",
+      "(...)",
+      "Art. 2º O advogado é indispensável à administração da justiça.",
+      "(...)",
+      "§ 2º No processo judicial, o advogado contribui, na postulação de decisão favorável ao seu constituinte, ao convencimento do julgador, e seus atos constituem múnus público.",
+      "(...)",
+      "Art. 5º O advogado postula, em juízo ou fora dele, fazendo prova do mandato."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Das definições acima expostas, verifica-se que, por lidar com interesses em contraposição, é inerente à atividade advocatícia a defesa de interesses privados perante órgãos públicos, judiciais ou administrativos, seja litigando contra o Estado, seja litigando contra interesses de outros particulares. Ademais, verifica-se também que o advogado deve se empenhar na busca por decisão favorável ao seu constituinte e ao convencimento do julgador."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, observa-se que a Lei que rege esta profissão não diferencia ou discrimina áreas de atuação do advogado, de forma que o profissional habilitado e licenciado pelo órgão classista a exercer a advocacia pode atuar em todos os ramos ou áreas do Direito, sendo tal autorização intransitiva e não fragmentável."
+    },
+    {
+     "t": "p",
+     "x": "Diante do que foi exposto, conclui-se que existe incompatibilidade material no exercício da advocacia por {{g:servidor ocupante|servidora ocupante}} do cargo de {{cargo}}, {{g:lotado|lotada}} e em exercício na Secretaria da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "As leis que regem o conflito de interesses na esfera pública têm como corolário, assim como toda a legislação que regula as condutas de servidores públicos, o princípio da moralidade administrativa. Este princípio é pressuposto de validade da atuação administrativa e sua não observância tem o condão inclusive de invalidar atos legais, pois o poder público define o desempenho da função pública de acordo com a ética e voltado à realização de seus fins, tendo como elementos a boa-fé, a honestidade, a lealdade."
+    },
+    {
+     "t": "p",
+     "x": "O princípio da moralidade administrativa deriva não somente da postura interna, mas daquilo que deflui da postura externa. Não por acaso, o brocardo que diz que “a conduta do agente administrativo mais do que lícita (atender à lei), deve ser honesta (atender à moral)” é cada vez mais atual e na cultura administrativista pátria ganha perfeita adequação para que se exija que a conduta do agente público não apenas seja concretamente honesta, mas sim que, além disto, transpareça de forma indubitável para a sociedade que é honesta."
+    },
+    {
+     "t": "p",
+     "x": "Desse modo, as atividades privadas, com ou sem remuneração, serão consideradas materialmente incompatíveis com o exercício do cargo ou função quando, de alguma maneira, afrontarem efetivamente ou apenas potencialmente o princípio da moralidade administrativa, provocando dúvida a respeito da integridade, moralidade e clareza de posições da Instituição e de seus servidores, deixando transparecer uma possível preponderância do interesse particular em detrimento do interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Conforme já foi mencionado, a natureza das atividades desenvolvidas no âmbito da RFB tem relação intrínseca com a guarda e utilização de informações de caráter sigiloso e restrito."
+    },
+    {
+     "t": "p",
+     "x": "No que se refere à advocacia, quando exercida na área tributária ou previdenciária, obviamente, a incompatibilidade é mais patente, uma vez que há correlação direta com as competências e atribuições da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Mas, mesmo em relação à advocacia praticada em outras áreas, a incompatibilidade, apesar de não ser tão evidente, subsiste. Isso decorre justamente da ampla gama de informações a que pode ter acesso o servidor lotado e em exercício na RFB, fato que pode influenciar aquela atividade privada em qualquer área de atuação, ferindo a moralidade e a imagem do órgão perante a sociedade."
+    },
+    {
+     "t": "p",
+     "x": "A natureza da atividade desempenhada pelo advogado pressupõe que haja duas partes em litígio e contraposição de interesses. Como o servidor que também exerce a advocacia poderia, no afã de obter o convencimento do julgador e uma decisão favorável ao seu constituinte, se sentir atraído, seduzido e tentado a acessar dados sigilosos que pudessem favorecer seu cliente na lide, busca-se, com o enquadramento de tal atividade como incompatível, coibir desde já um mero risco potencial, em sintonia com a vontade do legislador, claramente exposta na Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, para o outro litigante, o fato de o advogado da parte contrária ser um servidor em exercício na RFB traz uma insegurança em relação a eventual uso de dados ou informações a que ele pode ter acesso em razão de seu múnus público, o que, como já indicado, acaba por ferir a moralidade e a imagem do órgão perante a sociedade e põe em xeque o interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, o simples exercício da advocacia afronta a moralidade, qualificando-se como uma atividade incompatível, à vista do risco potencial contemplado pelo legislador, sem depender do efetivo uso da informação estratégica ou sigilosa pelo servidor, conduta esta que se enquadraria em outras infrações previstas na Lei n° 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "O exercício da atividade advocatícia por servidor da RFB ofende ainda o princípio da supremacia ou preponderância do interesse público, também conhecido por princípio da finalidade pública, que consiste no direcionamento das atividades e dos serviços públicos à efetividade do bem comum. Ao tentar coibir a prática de algumas atividades privadas, remuneradas ou não, o legislador quis evitar o risco de que o servidor priorizasse a sua empreitada particular em detrimento de suas tarefas relativas ao cargo ou à função pública."
+    },
+    {
+     "t": "p",
+     "x": "A instituição de um rol de incompatibilidades (entre as quais está o exercício da advocacia por servidor da RFB) rende homenagem ainda ao princípio da imparcialidade, ao pregar uma atuação da função pública com neutralidade, isenção, independência e objetividade, impondo a fiel observância da lealdade à instituição à qual pertence o servidor público. Evita-se, dessa forma, a confusão entre as esferas pública e privada, o conflito de interesses, o tráfico de influência, o acesso privilegiado a informações sigilosas, e enfim, o aproveitamento de uma situação para quebrar a igualdade e obter vantagens."
+    },
+    {
+     "t": "p",
+     "x": "Com relação ao fato de {{g:o|a}} consulente ser {{cargo}}, cabe sustentar que os ocupantes de cargos e funções meramente administrativos e auxiliares incidem nesta incompatibilidade exatamente porque são meios auxiliares para o alcance dos objetivos e metas da RFB, tendo acesso a informações sigilosas, muitas vezes oriundas de trabalhos finalizados por Auditores-Fiscais da Receita Federal do Brasil (AFRFB) e Analistas-Tributários da Receita Federal do Brasil (ATRFB)."
+    },
+    {
+     "t": "p",
+     "x": "Ora, pouca eficácia teria a definição de incompatibilidade apenas para os cargos pertencentes à Carreira de Auditoria da Receita Federal (AFRFB e ATRFB) se cargos meramente administrativos ficassem à margem da vedação, pois permaneceriam os efeitos nocivos que a incompatibilidade visa evitar e coibir, como a possibilidade de acesso a informações sigilosas e de prejuízos à imagem do órgão perante a sociedade e à moralidade."
+    },
+    {
+     "t": "p",
+     "x": "Insta, por fim, explanar que eventual argumento de que o impedimento trazido pelo artigo 30, inciso I, da Lei n° 8.906, de 1994, que proíbe ao servidor público a advocacia contra a Fazenda Pública que o remunerar ou à qual esteja vinculada a entidade empregadora, é corolário do princípio da razoabilidade, não cabe prosperar. Senão vejamos, a inteligência do Estatuto da OAB revela, primordialmente, sua função de tutelar o regular exercício do ministério privado da advocacia."
+    },
+    {
+     "t": "p",
+     "x": "Por sua vez, ao editar as Leis n° 8.112, de 1990, n° 11.890, de 2008 e n° 12.813, de 2013, o legislador colocou o interesse público em primazia, buscando cercear atividades incompatíveis geradoras de conflitos entre interesses público e privado."
+    },
+    {
+     "t": "p",
+     "x": "Dessarte, imperativo à Administração Pública impor medidas vinculadas à proibição de incompatibilidades, a fim de garantir a máxima efetivação do direito subjetivo público a uma administração pública honesta e proba – inegável direito fundamental (arts. 5°, LXXIII e 37, *caput*, da Constituição Federal de 1988), concretizando-se com o reconhecimento da incompatibilidade do exercício da advocacia a todos os servidores que atuam na RFB, não importando, para caracterizar tal incompatibilidade, a unidade de lotação e de exercício e as tarefas concretamente desempenhadas pelo servidor."
+    },
+    {
+     "t": "p",
+     "x": "Quanto à possibilidade de {{g:o|a}} requerente fazer parte de quadro societário de sociedade de advogados, ao consultar a legislação pátria, verifica-se que o Estatuto da OAB prevê normas a respeito da participação de advogado em sociedade no Capítulo IV, arts. 15 a 17.",
+     "opc": {
+      "id": "sociedade_advogados",
+      "rotulo": "Consulente também pergunta sobre participar de sociedade de advogados (PAR 194/2019)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "O art. 15, *caput*, refere que “os advogados podem reunir-se em sociedade simples de prestação de serviços de advocacia (…) na forma disciplinada nesta Lei e no regulamento geral” (grifo nosso). No seu § 1º, indica que o seu registro será “aprovado nos atos constitutivos no Conselho Seccional da OAB em cuja base territorial tiver sede”. Segundo o art. 16,",
+     "opc": {
+      "id": "sociedade_advogados",
+      "rotulo": "Consulente também pergunta sobre participar de sociedade de advogados (PAR 194/2019)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 16. Não são admitidas a registro nem podem funcionar todas as espécies de sociedades de advogados que apresentem forma ou características de sociedade empresária, que adotem denominação de fantasia, que realizem atividades estranhas à advocacia, que incluam como sócio ou titular de sociedade unipessoal de advocacia pessoa não inscrita como advogado ou totalmente proibida de advogar. (Redação dada pela Lei nº 13.247, de 2016)",
+      "(...)",
+      "§ 3º É proibido o registro, nos cartórios de registro civil de pessoas jurídicas e nas juntas comerciais, de sociedade que inclua, entre outras finalidades, a atividade de advocacia. (grifo nosso)"
+     ],
+     "opc": {
+      "id": "sociedade_advogados",
+      "rotulo": "Consulente também pergunta sobre participar de sociedade de advogados (PAR 194/2019)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Em outros termos, o Estatuto da OAB, no seu art. 16, *caput*, proíbe como sócio em sociedade de advogados pessoa não inscrita como advogado ou totalmente proibida de advogar. Dessa maneira, verifica-se que {{g:o|a}} requerente só pode fazer parte de quadro societário em empresa de advocacia se for {{g:advogado|advogada}}. Ressalta-se que, como {{g:ele não pode ser advogado|ela não pode ser advogada}} por configurar conflito de interesses, por interpretação lógica, {{g:ele|ela}} não pode fazer parte de quadro societário.",
+     "opc": {
+      "id": "sociedade_advogados",
+      "rotulo": "Consulente também pergunta sobre participar de sociedade de advogados (PAR 194/2019)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento desta {{orgao_corregedoria}}, o exercício da atividade de advocacia informada {{g:pelo servidor|pela servidora}} {{nome}} configura conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "aposentado_sem_conflito",
+   "rotulo": "Servidor aposentado – não há impedimento, respeitado o dever de sigilo (art. 6º da Lei nº 12.813/2013)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor aposentado voluntariamente pretende exercer a advocacia; analisa-se apenas o art. 6º da Lei nº 12.813/2013 (informação privilegiada e quarentena de 6 meses).",
+   "fonte": "PAR 015/2020",
+   "assunto": "Pedido de autorização formulado por meio do SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ADVOCACIA APÓS APOSENTADORIA VOLUNTÁRIA.",
+   "ementa": [
+    "O pedido de autorização é analisado com o objetivo de verificar se há configuração de conflito de interesses entre a função pública e a atividade privada a ser exercida. Não há impedimento legal, com base na Lei nº 12.813, de 16 de maio de 2013, para exercer a advocacia após {{g:o servidor|a servidora}} aposentar-se voluntariamente."
+   ],
+   "campos": [
+    {
+     "id": "data_aposentadoria",
+     "rotulo": "Data de publicação da aposentadoria",
+     "exemplo": "10 de março de 2021",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiramente, cabe esclarecer que os pedidos de autorização para exercício de atividade privada formulados por meio do SeCI visam verificar a possível existência de um conflito de interesses entre a função pública e a atividade privada a ser exercida pelo requerente, bem como objetivam discutir sobre a necessidade de resguardo, por ele, de informações privilegiadas obtidas em razão do exercício da função pública. Em resumo, deve ser verificado na análise desses pedidos: se há conflito de interesses entre a função pública e a atividade privada, e se há necessidade de resguardo de informações privilegiadas."
+    },
+    {
+     "t": "p",
+     "x": "O art. 3º, I da Lei nº 12.813, de 16 de maio de 2013 (Lei nº 12.813/2013) traz a definição de conflito de interesses:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 4º, § 2º, da Lei em comento,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º, § 2º A ocorrência de conflito de interesses independe da existência de lesão ao patrimônio público, bem como do recebimento de qualquer vantagem ou ganho pelo agente público ou por terceiro."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em síntese, o conflito de interesses repercute no comprometimento do interesse público ou na influência, de maneira imprópria, do desempenho da função pública. Prescinde de lesão ao patrimônio público, do recebimento de qualquer vantagem ou do ganho pelo agente público ou por terceiro."
+    },
+    {
+     "t": "p",
+     "x": "Por informação privilegiada, o art. 3º, II da Lei nº 12.813/2013 assim define:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "(…)",
+      "II – informação privilegiada: a que diz respeito a assuntos sigilosos ou aquela relevante ao processo de decisão no âmbito do Poder Executivo federal que tenha repercussão econômica ou financeira e que não seja de amplo conhecimento público. (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A informação privilegiada diz respeito, portanto, a assuntos sigilosos. Pode-se incluir, nessa descrição, o sigilo fiscal, cuja previsão, regras e exceções estão dispostas no art. 198 do Código Tributário Nacional (CTN). Segundo o *caput* deste artigo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 198. Sem prejuízo do disposto na legislação criminal, é vedada a divulgação, por parte da Fazenda Pública ou de seus servidores, de informação obtida em razão do ofício sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades. (Redação dada pela Lcp nº 104, de 2001) (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme o art. 2º da Portaria RFB nº 2.344, de 24 de março de 2011,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º São protegidas por sigilo fiscal as informações sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades, obtidas em razão do ofício para fins de arrecadação e fiscalização de tributos, inclusive aduaneiros, tais como:",
+      "I - as relativas a rendas, rendimentos, patrimônio, débitos, créditos, dívidas e movimentação financeira ou patrimonial;",
+      "II - as que revelem negócios, contratos, relacionamentos comerciais, fornecedores, clientes e volumes ou valores de compra e venda;",
+      "III - as relativas a projetos, processos industriais, fórmulas, composição e fatores de produção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que o acesso a dados protegidos por sigilo fiscal faz parte das tarefas cotidianas dos servidores ocupantes de cargo junto à RFB. Esta é uma das situações para a qual a Lei nº 12.813/2013 foi publicada: a necessidade de resguardo de informações privilegiadas; em específico, de informações protegidas pelo sigilo fiscal."
+    },
+    {
+     "t": "p",
+     "x": "Tendo por base as informações preliminares acerca da Lei nº 12.813/2013, passa-se para a análise da consulta formulada por meio do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O|A}} requerente descreve no seu pedido de autorização que se aposentou voluntariamente do cargo de {{cargo}} por meio de portaria publicada em {{data_aposentadoria}}. Pretende exercer a Advocacia e informa estar {{g:inscrito|inscrita}} na Ordem dos Advogados do Brasil (OAB)."
+    },
+    {
+     "t": "p",
+     "x": "Considerando a aposentadoria voluntária {{g:do|da}} peticionante, serão analisadas apenas as situações que podem gerar conflito de interesse após o exercício do cargo. Estas situações se limitam às previstas no art. 6º da referida Lei, que assim disciplina:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 6º Configura conflito de interesses após o exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - a qualquer tempo, divulgar ou fazer uso de informação privilegiada obtida em razão das atividades exercidas; e",
+      "II - no período de 6 (seis) meses, contado da data da dispensa, exoneração, destituição, demissão ou aposentadoria, salvo quando expressamente autorizado, conforme o caso, pela Comissão de Ética Pública ou pela Controladoria-Geral da União:",
+      "a) prestar, direta ou indiretamente, qualquer tipo de serviço a pessoa física ou jurídica com quem tenha estabelecido relacionamento relevante em razão do exercício do cargo ou emprego;",
+      "b) aceitar cargo de administrador ou conselheiro ou estabelecer vínculo profissional com pessoa física ou jurídica que desempenhe atividade relacionada à área de competência do cargo ou emprego ocupado;",
+      "c) celebrar com órgãos ou entidades do Poder Executivo federal contratos de serviço, consultoria, assessoramento ou atividades similares, vinculados, ainda que indiretamente, ao órgão ou entidade em que tenha ocupado o cargo ou emprego; ou",
+      "d) intervir, direta ou indiretamente, em favor de interesse privado perante órgão ou entidade em que haja ocupado cargo ou emprego ou com o qual tenha estabelecido relacionamento relevante em razão do exercício do cargo ou emprego. (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que, no inciso I, existe vedação ao uso, {{g:pelo|pela}} peticionante, de informações obtidas em razão do exercício do cargo. Nessa medida, ainda que o vínculo com a RFB tenha se cessado em virtude da aposentadoria voluntária, o dever de sigilo persiste quanto às informações protegidas por sigilo fiscal acessadas {{g:pelo|pela}} consulente durante suas atividades laborais. Como descrito nos parágrafos 7 a 10, estas se caracterizam como informações privilegiadas."
+    },
+    {
+     "t": "p",
+     "x": "O art. 6º da Lei nº 12.813/2013 não limita o exercício da advocacia após a aposentadoria do cargo público; entretanto, permanece, em virtude do inciso I, o dever de não divulgar e não fazer uso de informação privilegiada obtida em razão das atividades exercidas. Caso contrário, a divulgação ou o uso de informações privilegiadas configura conflito de interesses e, por consequência, resulta no cometimento de ato de improbidade administrativa, de acordo com o art. 12 da Lei em comento."
+    },
+    {
+     "t": "p",
+     "x": "Considerando-se o prazo maior de 6 (seis) meses decorrido entre a data da aposentadoria voluntária, qual seja, {{data_aposentadoria}}, e a presente data, não persiste a limitação prevista no inciso II para {{g:o|a}} peticionante.",
+     "opc": {
+      "id": "mais_de_6_meses",
+      "rotulo": "Já decorreram mais de 6 meses desde a aposentadoria (não persiste a limitação do inciso II do art. 6º)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que não se verifica conflito de interesses, com base no art. 6º da Lei nº 12.813/2013, entre o exercício da função pública e da advocacia {{g:pelo servidor aposentado|pela servidora aposentada}} {{nome}}, desde que respeitado o dever de não divulgar e não fazer uso de informação privilegiada obtida quando {{g:ativo|ativa}} no cargo de {{cargo}}."
+    }
+   ]
+  },
+  {
+   "id": "advocacia_voluntaria_orgao_publico_vedacao",
+   "rotulo": "Advocacia voluntária (não remunerada) em órgão público, ex.: Defensoria Pública da União – vedação",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor da Carreira Tributária e Aduaneira pretende atuar como advogado voluntário, sem remuneração, em Defensoria Pública ou órgão semelhante (prática de atos privativos de advogado).",
+   "fonte": "PAR 002/2018",
+   "assunto": "Solução de consulta",
+   "ementaTitulo": "PEDIDO DE AUTORIZAÇÃO SECI.",
+   "ementa": [
+    "Atuação como {{g:advogado voluntário|advogada voluntária}} na {{orgao_voluntariado}}. Vedação legal."
+   ],
+   "campos": [
+    {
+     "id": "orgao_voluntariado",
+     "rotulo": "Órgão em que seria prestada a advocacia voluntária",
+     "exemplo": "Defensoria Pública da União",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme se depreende do pedido {{g:do servidor|da servidora}}, a atividade pretendida é a advocacia voluntária na Defensoria Pública da União, conforme regulamentado pela Resolução nº 82, de 10 de fevereiro de 2014, do Conselho Superior da DPU, e da qual se extrai os pontos principais:",
+     "opc": {
+      "id": "resolucao_dpu",
+      "rotulo": "Atividade na Defensoria Pública da União (transcrever a Resolução CSDPU nº 82/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º A prestação do serviço voluntário dar-se-á mediante Termo de Adesão celebrado entre o interessado e a Defensoria Pública da União, no qual constará o objeto e as condições do referido serviço.",
+      "Parágrafo único. Os interessados deverão preencher Ficha Cadastral, juntando cópia da carteira de identidade, comprovante de residência, certidões negativas criminais expedidas pela Justiça Federal e Estadual, diploma ou certificado de conclusão de curso e, caso o voluntário seja inscrito na Ordem dos Advogados do Brasil, deverá apresentar cópia do respectivo registro.",
+      "Art. 12. O advogado voluntário poderá assinar peças em conjunto com membro da Defensoria Pública da União, devendo indicar expressamente que atua nessa condição.",
+      "Art. 15. Durante o prazo de prestação do serviço, o advogado voluntário não poderá exercer advocacia privada:",
+      "[...]",
+      "Parágrafo único. Deverão ser observados ainda os deveres e incompatibilidades inerentes ao exercício da advocacia previstos na Lei 8.906/94."
+     ],
+     "opc": {
+      "id": "resolucao_dpu",
+      "rotulo": "Atividade na Defensoria Pública da União (transcrever a Resolução CSDPU nº 82/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.906, de 4 de julho de 1994, assim dispõe:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º São atividades privativas de advocacia:",
+      "[...]",
+      "§ 1º Exercem atividade de advocacia, sujeitando-se ao regime desta lei, além do regime próprio a que se subordinem, os integrantes da Advocacia-Geral da União, da Procuradoria da Fazenda Nacional, da Defensoria Pública e das Procuradorias e Consultorias Jurídicas dos Estados, do Distrito Federal, dos Municípios e das respectivas entidades de administração indireta e fundacional.",
+      "Art. 4º São nulos os atos privativos de advogado praticados por pessoa não inscrita na OAB, sem prejuízo das sanções civis, penais e administrativas.",
+      "Art. 27. A incompatibilidade determina a proibição total, e o impedimento, a proibição parcial do exercício da advocacia.",
+      "Art. 28. A advocacia é incompatível, mesmo em causa própria, com as seguintes atividades:",
+      "[...]",
+      "VII - ocupantes de cargos ou funções que tenham competência de lançamento, arrecadação ou fiscalização de tributos e contribuições parafiscais;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Após uma breve leitura dos parágrafos pregressos, conclui-se, portanto, que há vedação legal para que {{g:o servidor|a servidora}} exerça a atividade de {{g:advogado|advogada}}, ainda que seja atuando sem remuneração na condição de {{g:advogado voluntário|advogada voluntária}} na {{orgao_voluntariado}}. Tal atividade é incompatível com o cargo de {{cargo}}, conforme assentado na Portaria RFB nº 444, de 23 de março de 2015, sem distinção entre a advocacia pública e privada:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I - advocacia;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade de advocacia é materialmente incompatível com o cargo ocupado por servidor da Carreira de Auditoria da Receita Federal do Brasil."
+    }
+   ]
+  },
+  {
+   "id": "servico_voluntario_orgao_publico_fora_escopo",
+   "rotulo": "Serviço voluntário não remunerado em órgão público (ex.: Procuradoria-Geral de Estado) – fora do âmbito da Lei nº 12.813/2013",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende prestar serviço voluntário e não remunerado, na área jurídica, a órgão público (ex.: Procuradoria-Geral de Estado), regulado por norma própria do órgão; a Corregedoria entendeu não se tratar de atividade privada sujeita à Lei nº 12.813/2013.",
+   "fonte": "PAR 031/2018",
+   "assunto": "Parecer de análise de processo.",
+   "ementaTitulo": "CONSULTA.",
+   "ementa": [
+    "Voluntariado na {{orgao_voluntariado}}."
+   ],
+   "campos": [
+    {
+     "id": "norma_voluntariado",
+     "rotulo": "Norma que regula o serviço voluntário no órgão",
+     "exemplo": "Resolução nº 52, de 14 de agosto de 2012",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "orgao_voluntariado",
+     "rotulo": "Órgão público em que será prestado o serviço voluntário",
+     "exemplo": "Procuradoria-Geral do Estado do Rio Grande do Sul",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "À vista da {{norma_voluntariado}}, que institui o regulamento do Serviço Voluntário no âmbito da {{orgao_voluntariado}}, constatamos se tratar de atividade voluntária e não remunerada nele regulada."
+    },
+    {
+     "t": "p",
+     "x": "A atual Constituição Federal proíbe, em seu art. 37, incisos XVI e XVII, a acumulação remunerada de cargos, empregos ou funções públicas, tanto na Administração direta como na indireta."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários, observado em qualquer caso o disposto no inciso XI:",
+      "a) a de dois cargos de professor;",
+      "b) a de um cargo de professor com outro técnico ou científico;",
+      "c) a de dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, conforme vislumbrado {{g:pelo próprio|pela própria}} solicitante, verifica-se que não estamos diante de um caso que deva ser analisado através da Lei nº 12.813, de 16 de maio de 2013, por não abranger a eventual incompatibilidade de exercício da função pública com atividade privada."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, como a consulta não guarda relação com o possível conflito de interesse, não deve seguir o trâmite previsto pela {{portaria_curta}}, e será considerado como consulta autônoma a esta Corregedoria."
+    }
+   ]
+  }
+ ]
+}

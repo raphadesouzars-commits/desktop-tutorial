@@ -1,0 +1,66 @@
+{
+ "orgao": "Corregedoria da Receita Federal do Brasil",
+ "sigla": "Coger/GNP",
+ "portaria_longa": "Portaria n° 15.966, de 06 de junho de 2020, da Secretaria Executiva do Ministério da Economia (atual Ministério da Fazenda - MF), que estabeleceu procedimentos a serem adotados no âmbito do MF",
+ "portaria_curta": "Portaria SE/ME nº 15.966/2020",
+ "deveres": [
+  "não divulgar ou fazer uso, em proveito próprio ou de terceiros, de informação privilegiada e/ou sigilosa obtida em razão do exercício do seu cargo, ainda que a título exemplificativo para fins didáticos;",
+  "não vincular sua atuação privada ao nome e/ou à imagem da RFB, não utilizando o nome de seu cargo ou o nome do órgão em suas apresentações pessoais, a não ser quando acompanhados de outras informações biográficas igualmente relevantes;",
+  "não praticar atos que possam transmitir à opinião pública dúvida a respeito da integridade, moralidade, clareza de posições e decoro de seu cargo público;",
+  "não utilizar as instalações, equipamentos, rotinas e materiais de trabalho, processos, sistemas de informação e rede eletrônica de comunicações da RFB para assuntos diversos aos do exercício de suas atribuições no órgão;",
+  "deixar claro, em seus vídeos e publicações, que as opiniões ali expostas são de caráter pessoal e não refletem, necessariamente, a posição oficial da RFB sobre os mesmos assuntos;",
+  "não se utilizar de sua condição de agente público para proveito próprio ou de terceiros;",
+  "impedir a ocorrência das hipóteses conflitivas dispostas nos incisos I, II, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, pois só podem ser aferidas quando do exercício efetivo da atividade privada;",
+  "respeitar a compatibilidade de horários para a realização de qualquer atividade privada concomitante com o cargo público, com primazia para o último;"
+ ],
+ "nova_consulta": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo consulente|pela consulente}}, de forma que eventual alteração na situação apresentada deve ser objeto de nova consulta.",
+ "encaminha": "Propõe-se o encaminhamento à Comissão de Ética da RFB.",
+ "encaminha_conflito": "Considerando a identificação de potencial conflito de interesses{{enquadramento}}, propõe-se o encaminhamento à Comissão de Ética da RFB para prosseguimento e remessa da solicitação à Controladoria-Geral da União, por meio do SeCI, acompanhada desta manifestação, conforme o disposto na Portaria Interministerial nº 333, de 19 de setembro de 2013.",
+ "termo_registro": "Registre-se que a autorização fica condicionada à assinatura, {{g:pelo interessado|pela interessada}}, de Termo de Compromisso perante a Comissão de Ética da RFB e sua chefia imediata, no qual se obrigue a observar as ressalvas acima expostas.",
+ "abertura": {
+  "pedido": "Trata-se de pedido de autorização para exercício de atividade privada formulado por meio do Sistema Eletrônico de Prevenção de Conflito de Interesses (SeCI) e encaminhado a esta Corregedoria, conforme disciplina a {{portaria_longa}}, para atender o disposto no art. 8° da Lei n° 12.813, de 16 de maio de 2013, e na Portaria Interministerial n° 333, de 19 de setembro de 2013.",
+  "consulta": "Trata-se de consulta sobre o exercício de atividade privada, formulada por meio do Sistema Eletrônico de Prevenção de Conflito de Interesses (SeCI) e encaminhada a esta Corregedoria, conforme disciplina a {{portaria_longa}}, para atender o disposto no art. 8° da Lei n° 12.813, de 16 de maio de 2013, e na Portaria Interministerial n° 333, de 19 de setembro de 2013."
+ },
+ "identificacao": "{{g:O servidor|A servidora}} **{{nome}}**, {{cargo}}, matrícula Siape nº {{matricula}}, {{g:lotado|lotada}} na {{unidade}}, formalizou {{demanda}} nos seguintes termos:",
+ "conclusao_por_resultado": {
+  "sem_conflito": "Portanto, no entendimento da {{orgao}}, o exercício da atividade de {{atividade}} não configura conflito de interesses, nos termos da Lei nº 12.813, de 2013, podendo ser autorizado.",
+  "sem_conflito_ressalvas": "Portanto, no entendimento da {{orgao}}, o exercício da atividade de {{atividade}} não configura conflito de interesses, desde que observadas as ressalvas e os deveres acima expostos, podendo ser autorizado nessa condição.",
+  "conflito": "Portanto, no entendimento da {{orgao}}, o exercício da atividade de {{atividade}} configura situação de conflito de interesses, nos termos da Lei nº 12.813, de 2013, razão pela qual não se recomenda a autorização.",
+  "outro": "Portanto, o exercício da atividade de {{atividade}} não pode ser autorizado nos termos pretendidos, em razão de [FUNDAMENTO DO IMPEDIMENTO]."
+ },
+ "ementa_por_resultado": {
+  "sem_conflito": "Não configura conflito de interesses.",
+  "sem_conflito_ressalvas": "Não configura conflito de interesses, desde que observadas as ressalvas.",
+  "conflito": "Configura conflito de interesses.",
+  "outro": "Impedimento de outra ordem."
+ },
+ "rotulo_resultado": {
+  "sem_conflito": "Sem conflito de interesses (autorização sem ressalvas)",
+  "sem_conflito_ressalvas": "Sem conflito, com ressalvas (autorização condicionada a Termo de Compromisso)",
+  "conflito": "Risco relevante de conflito de interesses (não autorizar)",
+  "outro": "Impedimento de outra ordem / devolução"
+ },
+ "perguntas_seci": [
+  "Sua dúvida tem relação com qual (quais) das situações que podem configurar conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, descritas no art. 5º da Lei nº 12.813/2013:",
+  "Descreva a atividade que você pretende exercer fora da administração pública ou a situação que suscita sua dúvida:",
+  "Você estaria vinculado a outra pessoa, empresa, associação ou organização durante o exercício dessa atividade ou enquanto perdurar essa situação? Se sim, indique o CPF ou CNPJ da pessoa, o tipo de vínculo e demais informações sobre essa pessoa que considera importantes:",
+  "Essa pessoa física ou jurídica mantém algum vínculo com o órgão ou entidade em que você trabalha? Se sim, descreva-o.",
+  "Quais são as atribuições de seu cargo ou emprego público?",
+  "Quais atividades você exerce efetivamente em sua atual lotação?",
+  "Você lida ou tem acesso a informações sigilosas ou privilegiadas no exercício de seu cargo ou emprego público? Se sim, descreva-as.",
+  "No desempenho de sua função pública você exerce poder decisório (de forma individual ou enquanto membro de colegiado) capaz de interferir (positiva ou negativamente) nos interesses de pessoa física ou jurídica com quem pretende se relacionar em âmbito privado? Se sim, descreva essa possível interferência.",
+  "Descreva como a situação que suscita sua dúvida ou a atividade que você pretende exercer poderia gerar um conflito entre seus interesses privados e o exercício de sua função pública.",
+  "A partir das informações prestadas, você gostaria de receber:"
+ ],
+ "termo": {
+  "abertura": "Eu, **{{nome}}**, {{cargo}}, matrícula Siape nº {{matricula}}, {{g:lotado|lotada}} na {{unidade}}, tendo em vista {{demanda_ext_art}} que formulei por meio do Sistema Eletrônico de Prevenção de Conflito de Interesses (SeCI) para o exercício da atividade privada de {{atividade}}, e o disposto no {{referencia}}, que concluiu pela inexistência de conflito de interesses desde que observadas as ressalvas nele expostas, **comprometo-me**, perante a Comissão de Ética da RFB e minha chefia imediata, nos termos da Lei nº 12.813, de 16 de maio de 2013, a:",
+  "itens_finais": [
+   "observar as demais ressalvas constantes do {{referencia}};",
+   "comunicar à Comissão de Ética da RFB qualquer alteração na situação informada, formulando nova consulta ou novo pedido de autorização, se for o caso."
+  ],
+  "ciencia": "Declaro estar ciente de que o descumprimento dos compromissos ora assumidos pode caracterizar situação de conflito de interesses, nos termos do art. 5º da Lei nº 12.813, de 2013, sujeitando-me ao disposto no art. 12 da mesma Lei, sem prejuízo das demais sanções cabíveis."
+ },
+ "despacho": {
+  "abertura": "Encaminho o Processo nº {{processo}}, que trata de {{demanda_ext}} do SeCI de {{nome}}, com o {{referencia}}, para {{destino}}."
+ }
+}

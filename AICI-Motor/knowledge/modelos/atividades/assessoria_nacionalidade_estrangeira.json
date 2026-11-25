@@ -1,0 +1,89 @@
+{
+ "id": "assessoria_nacionalidade_estrangeira",
+ "nome": "Assessoria para reconhecimento de nacionalidade/cidadania estrangeira",
+ "descricao": "Usar quando o servidor pretende assessorar pessoas físicas na obtenção de nacionalidade ou cidadania estrangeira perante consulados e órgãos de governo estrangeiro.",
+ "grupo": "Consultoria e procuração (A.2)",
+ "palavrasChave": [
+  "cidadania estrangeira",
+  "nacionalidade portuguesa",
+  "cidadania portuguesa",
+  "cidadania italiana",
+  "dupla cidadania",
+  "consulado",
+  "reconhecimento de nacionalidade",
+  "assessoria",
+  "passaporte",
+  "certidões",
+  "governo estrangeiro",
+  "assessoria a pessoas físicas"
+ ],
+ "variantes": [
+  {
+   "id": "assessoria_pessoas_fisicas_orgao_estrangeiro",
+   "rotulo": "Assessoria a pessoas físicas perante consulado/governo estrangeiro – compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende prestar, de forma remunerada e fora do expediente, assessoria a pessoas físicas no reconhecimento de nacionalidade/cidadania estrangeira (análise de documentos, montagem do processo, agendamentos) perante consulado e órgãos de governo estrangeiro, sem atuar perante a administração pública brasileira.",
+   "fonte": "INF 181/2017",
+   "assunto": "Pedido de autorização para prestar assessoria no reconhecimento de nacionalidade estrangeira.",
+   "ementaTitulo": "ASSESSORIA NO RECONHECIMENTO DE NACIONALIDADE ESTRANGEIRA.",
+   "ementa": [
+    "Pedido de autorização para prestar assessoria a pessoas físicas no reconhecimento de nacionalidade estrangeira junto a consulado e órgãos de governo estrangeiro, concomitante com o cargo de {{cargo}}. Atividade materialmente compatível com o cargo, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Cumpre salientar que a Lei nº 8.112, de 11 de dezembro de 1990, prevê em seu art. 117, inciso XI, que os servidores públicos federais são proibidos atuarem como procuradores junto às repartições públicas."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º. Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Assim, de acordo com termos expostos {{g:pelo consulente|pela consulente}}, verifica-se que o exercício da atividade pretendida não possui qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Feitas estas considerações, opina-se que, sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, o exercício da atividade descrita {{g:pelo consulente|pela consulente}} é materialmente compatível com o cargo, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor requerente|à servidora requerente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, deve-se frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Assim, desde que observadas as ressalvas acima, entendemos que é compatível o exercício da atividade pretendida {{g:pelo consulente|pela consulente}}."
+    }
+   ]
+  }
+ ]
+}

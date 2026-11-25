@@ -1,0 +1,124 @@
+{
+ "id": "declaracao_irpf",
+ "nome": "Elaboração de declaração de imposto de renda (DIRPF) de familiar",
+ "grupo": "Consultoria e procuração (A.2)",
+ "descricao": "Usar quando o servidor consulta sobre elaborar ou transmitir a declaração de imposto de renda de cônjuge, companheiro ou parente próximo, inclusive com procuração eletrônica no e-CAC.",
+ "palavrasChave": [
+  "dirpf",
+  "declaração de imposto de renda",
+  "imposto de renda",
+  "irpf",
+  "cônjuge",
+  "esposa",
+  "marido",
+  "companheiro",
+  "parente",
+  "procuração eletrônica",
+  "e-cac",
+  "certificado digital",
+  "sigilo fiscal",
+  "declaração pré-preenchida",
+  "elaborar declaração"
+ ],
+ "variantes": [
+  {
+   "id": "dirpf_conjuge_parente_sem_contraprestacao",
+   "rotulo": "Elaborar DIRPF de cônjuge, companheiro ou parente até o 2º grau, sem contraprestação – não há conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor consulta se pode acessar, mediante procuração eletrônica, os dados fiscais do cônjuge/companheiro (ou parente até o segundo grau) no e-CAC para elaborar e transmitir a declaração de imposto de renda, sem qualquer contraprestação. O texto registra que, em todas as demais situações (terceiros, com ou sem remuneração), a elaboração de DIRPF por servidor é indevida. Fonte é minuta com marcas de revisão; texto reconstituído – conferir.",
+   "fonte": "INF 181/2016",
+   "assunto": "Elaboração de Declaração de Imposto de Renda para cônjuge ou companheiro.",
+   "ementaTitulo": "ELABORAÇÃO DE DECLARAÇÃO DE IMPOSTO DE RENDA PARA CÔNJUGE OU COMPANHEIRO.",
+   "ementa": [
+    "Consulta sobre a elaboração de Declaração de Imposto de Renda de Pessoa Física para cônjuge ou companheiro. Atividade compatível com as atribuições do cargo de {{cargo}}, observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "parente",
+     "rotulo": "Pessoa para quem a declaração será elaborada (com possessivo)",
+     "exemplo": "sua esposa",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;",
+      "[...]"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nos termos do inciso I do art. 3º da Lei nº 12.813, de 2013, conflito de interesses é a situação gerada pelo confronto entre interesses públicos e privados que possam comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. Sua verificação, portanto, deve ser realizada caso a caso, levando-se em consideração as especificidades de cada situação concreta."
+    },
+    {
+     "t": "p",
+     "x": "A preocupação do legislador, ao estabelecer as restrições dispostas no art. 5º da norma, não é tolher a liberdade dos agentes públicos, mas evitar abusos que possam comprometer o interesse geral ou o desempenho da função pública."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a atividade a ser desenvolvida é, segundo {{g:o consulente|a consulente}}, o acesso aos dados fiscais de {{parente}} no portal e-cac do sítio da Receita Federal do Brasil, com o intuito de usar as ferramentas facilitadoras que permitem a elaboração de Declaração de Imposto de Renda de Pessoa Física – DIRPF, tais como, a declaração pré-preenchida."
+    },
+    {
+     "t": "p",
+     "x": "A elaboração de declaração de Imposto de Renda situa-se no campo das obrigações acessórias, de responsabilidade dos contribuintes, consistindo em uma atividade lícita do sujeito passivo da obrigação tributária, em que, em regra, não há colisão entre os interesses do Fisco e do contribuinte."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se que, em consulta semelhante, esta Corregedoria adotou o seguinte entendimento, na Informação Coger/Codis/Diaco nº 215/2014:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Analisando especificamente sob o prisma do disposto no inciso III do art. 5º da Lei nº 12.813/2013, caso a atividade seja realizada por servidor, ainda que fora do ambiente e do horário de trabalho, mediante a cobrança de alguma contraprestação, pecuniária ou não, há afronta sobretudo ao princípio da lealdade, pois o servidor se utiliza do status e dos conhecimentos obtidos no órgão para obter vantagem pessoal, priorizando o interesse privado sobre o público. Ademais, ofende também o princípio da moralidade, maculando a imagem do órgão perante a sociedade, já que transparece que o fato de o executante ser agente público agrega vantagens, benefícios e preferências.",
+      "Quando a declaração é elaborada sem qualquer tipo de contraprestação, apesar do dano à imagem do órgão ser bem inferior ao descrito no parágrafo anterior, há também ofensa ao princípio da moralidade. Desta forma, tal situação também é considerada conflitante.",
+      "Prosseguindo no raciocínio, é razoável interpretar que tal ofensa é ainda menor – chegando ao nível da irrelevância – quando a elaboração feita pelo servidor é de declaração de parentes próximos, sem que logicamente haja nenhuma contraprestação.",
+      "A própria lei nº 8.112, de 11 de dezembro de 1990, ao prever situação potencialmente bem mais ofensiva à moralidade administrativa, no art. 117, XI, permitiu que o servidor atuasse em favor de parentes próximos sem que isso ensejasse punição.",
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XI - atuar, como procurador ou intermediário, junto a repartições públicas, salvo quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro;",
+      "Desta forma, com base nos princípios da razoabilidade e proporcionalidade, e lançando mão analogamente da exceção prevista no parágrafo acima, entende-se que não há conflito de interesse quando o servidor elabora, sem contraprestação, pecuniária ou não, declaração de Imposto de Renda de Pessoa Física para cônjuge ou companheiro e parentes até o segundo grau.",
+      "Em todas as demais situações, entende-se indevida a elaboração de declaração de Imposto de Renda de Pessoa Física."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Desta forma, com base nos princípios da razoabilidade e proporcionalidade, e lançando mão analogamente do parágrafo acima, entende-se que não há conflito de interesse quando o servidor elabora DIRPF para o cônjuge ou companheiro."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, cabe observar que {{g:o consulente|a consulente}} deverá se abster de atuar como {{g:procurador|procuradora}} ou representante de {{parente}} perante a RFB e demais órgãos públicos, sob pena de infringir o art. 117, inciso XI, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "De forma que, como {{g:procurador|procuradora}} de {{parente}}, {{g:o servidor|a servidora}} consulente deve se limitar a utilizar a certificação digital para transmissão de dados protegidos por sigilo fiscal de {{parente}}, evitando qualquer atuação diante de órgãos públicos, salvo “quando se tratar de benefícios previdenciários ou assistenciais de parentes até o segundo grau, e de cônjuge ou companheiro”.",
+     "opc": {
+      "id": "procuracao_eletronica",
+      "rotulo": "Incluir parágrafo sobre uso de procuração eletrônica/certificação digital para transmissão dos dados",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Deve-se, ainda, ressaltar que a presente análise de compatibilidade se realiza sob a ótica do acima citado inciso III do art. 5º da Lei nº 12.813, de 2013. Contudo, caberá {{g:ao servidor|à servidora}} a estrita observância dos incisos I, II, IV, V, VI e VII do mesmo artigo, a fim de impedir a materialização das hipóteses ali previstas."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, vale enfatizar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Ante o exposto, a {{orgao_corregedoria}} entende que o exercício da atividade descrita {{g:pelo servidor|pela servidora}} é compatível com as atribuições do cargo de {{cargo}}, observadas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

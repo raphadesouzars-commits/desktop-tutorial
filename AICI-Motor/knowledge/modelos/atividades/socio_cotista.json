@@ -1,0 +1,452 @@
+{
+ "id": "socio_cotista",
+ "nome": "Sócio cotista de empresa privada",
+ "descricao": "Usar quando o servidor consulta sobre participar de sociedade (limitada, holding familiar, SPE) como sócio cotista ou acionista, sem exercer gerência ou administração.",
+ "palavrasChave": [
+  "sócio cotista",
+  "sócia cotista",
+  "sócio quotista",
+  "cotista",
+  "quotista",
+  "acionista",
+  "sociedade limitada",
+  "ltda",
+  "participação societária",
+  "sócio minoritário",
+  "empresa familiar",
+  "holding familiar",
+  "sociedade de propósito específico",
+  "spe",
+  "sem exercer gerência",
+  "sem administração",
+  "abrir empresa com cônjuge",
+  "contrato social",
+  "divisão de lucros"
+ ],
+ "variantes": [
+  {
+   "id": "cotista_sem_gerencia_sem_conflito",
+   "rotulo": "Sócio cotista sem gerência – não se verifica conflito (análise completa: Lei 12.813 e art. 117, X)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende apenas figurar como sócio cotista de sociedade limitada, sem exercer gerência ou administração, e a atividade econômica da empresa não é correlata às atribuições do cargo.",
+   "fonte": "PAR 112/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SÓCIO COTISTA.",
+   "ementa": [
+    "Pedido de autorização para ser {{g:sócio|sócia}} cotista, sem exercer administração, de empresa da área de {{area_empresa}}. Atividade econômica da sociedade é materialmente compatível com o cargo de {{cargo}}."
+   ],
+   "campos": [
+    {
+     "id": "area_empresa",
+     "rotulo": "Área de atuação da empresa (completa \"empresa da área de ...\")",
+     "exemplo": "beleza e estética",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verifica-se que {{g:o|a}} consulente se refere à possibilidade não de exercer alguma atividade especificamente, mas de ser {{g:sócio|sócia}} de uma sociedade empresária limitada, como cotista e sem exercer a gerência da empresa."
+    },
+    {
+     "t": "p",
+     "x": "Por adotarmos essa premissa, alerta-se que, caso {{g:o|a}} consulente, além da condição de {{g:sócio|sócia}}, intencione exercer quaisquer das atividades na empresa da área de {{area_empresa}}, deve apresentar nova consulta pormenorizando a atividade que pretenda exercer."
+    },
+    {
+     "t": "p",
+     "x": "Inicia-se esclarecendo que em uma sociedade de pessoas, a figura do sócio é essencial, pois o sucesso da empresa depende da competência empresarial e do caráter do empreendedor. O sócio exerce, portanto, papel de relevo no próprio sucesso do empreendimento. A sociedade limitada tem natureza personalista na medida em que a figura dos sócios é central e definitiva para a constituição da sociedade."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve se pautar precipuamente pela natureza da atividade particular, neste caso, da empresa:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} questiona se poderia acumular o cargo público de {{cargo}} ({{cargo_sigla}}) com a condição de {{g:sócio|sócia}} cotista de empresa da área de {{area_empresa}}. Analisando o pleito sob o prisma do inciso III da referida lei, e tendo em vista as atividades descritas no item 2 do formulário, não se observa incompatibilidade material entre a atividade econômica a ser desenvolvida pela sociedade e o cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Transposta a análise sobre conflito de interesses, observa-se que, ainda que o presente pedido de autorização formulado por intermédio do SeCI seja analisado com a finalidade de verificar se há, ou não, conflito de interesses de acordo com a Lei nº 12.813/2013, dada à correlação com a área disciplinar e considerando os princípios do formalismo moderado e da economia processual (previstos na Lei nº 9.784, de 29 de janeiro de 1999), o referido pedido também será analisado como uma consulta a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990 (Lei nº 8.112/1990), estabelece, no art. 117, X, que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, **exceto na qualidade de acionista, cotista ou comanditário**; (Redação dada pela Lei nº 11.784, de 2008) (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A situação descrita {{g:pelo|pela}} peticionante se insere no permissivo contido na segunda parte do art. 117, X, da Lei em comento."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, cabe pontuar que há viabilidade de sua participação como {{g:sócio|sócia}} cotista da empresa. Não é possível, entretanto, exercer função de gerência ou administração da empresa. Como {{g:sócio|sócia}} cotista, {{g:o|a}} peticionante terá direito somente à divisão de lucros, a depender da sua cota no contrato social."
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que não se verifica conflito de interesses, com base no art. 5º da Lei nº 12.813, de 2013, entre o exercício da função pública e a participação, {{g:do servidor|da servidora}} {{nome}}, como {{g:sócio|sócia}} cotista da empresa privada, cujas atividades desenvolvidas serão na área de {{area_empresa}}, conforme descrito no item 2 do formulário. Ao figurar como {{g:sócio|sócia}} cotista, sem gerenciar ou administrar a sociedade, a situação almejada {{g:pelo|pela}} consulente se insere no permissivo previsto na 2ª parte do inciso X do art. 117 da Lei nº 8.112, de 1990."
+    }
+   ]
+  },
+  {
+   "id": "cotista_sucinto_compatibilidade",
+   "rotulo": "Sócio cotista – parecer sucinto: não há impedimento, vedada gerência/administração (opcional: divulgação e vendas em plataformas digitais)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Consulta simples sobre ser sócio cotista em sociedade limitada (inclusive familiar), sem atos de gerência; opcionalmente o servidor também quer divulgar a empresa e vender seus produtos em vídeos/plataformas digitais.",
+   "fonte": "PAR 229/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SÓCIO COTISTA.",
+   "ementa": [
+    "Consulta a respeito da possibilidade de ser {{g:sócio|sócia}} cotista em empresa de responsabilidade limitada. Compatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o|a}} consulente tem por objetivo participar de empresa privada na condição de {{g:sócio|sócia}} cotista."
+    },
+    {
+     "t": "p",
+     "x": "Preliminarmente, cabe registrar que a condição de sócio cotista em empresa privada não caracteriza exercício de atividade privada e, portanto, não há que se falar em atividade incompatível, inviabilizando-se a análise desta pretensão sob prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "A participação de servidor público federal em sociedade empresarial é matéria que se encontra disposta na Lei nº 8.112, de 11 de dezembro de 1990, com destaque ao disposto no artigo 117, inciso X:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido: (Vide Medida Provisória nº 2.225-45, de 4.9.2001)",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, não há impedimentos para que {{g:o servidor|a servidora}} seja {{g:sócio|sócia}} cotista da empresa, sob a ressalva de que não pratique atos de gerência ou administração."
+    },
+    {
+     "t": "p",
+     "x": "Continuando, {{g:o servidor|a servidora}} informa que pretende fazer divulgação da empresa e venda dos produtos por meio de vídeos promocionais em plataformas digitais. Em relação a estas atividades, analisando sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813/2013, opinamos pela compatibilidade material com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que o conteúdo dos vídeos exibidos não envolva conhecimentos específicos adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria Especial da Receita Federal do Brasil.",
+     "opc": {
+      "id": "divulgacao_vendas",
+      "rotulo": "Servidor também pretende divulgar a empresa e vender produtos em plataformas digitais",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do servidor|da servidora}} quando do exercício efetivo da atividade, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, registre-se que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  },
+  {
+   "id": "cotista_materia_disciplinar_cogep",
+   "rotulo": "Sócio cotista/acionista – matéria disciplinar fora da Lei de Conflito de Interesses (encaminhamento à Cogep, não à CEP)",
+   "resultado": "outro",
+   "quandoUsar": "Entendimento adotado de 2017 a 2019: a mera participação societária (cotista, acionista, holding familiar, SPE) não é exercício de atividade; trata-se como consulta disciplinar (art. 117, X, Lei 8.112) e encaminha-se à Cogep para ciência. A partir de 2020 os pareceres passaram a encaminhar à CEP (ver demais variantes).",
+   "fonte": "PAR 195/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "SÓCIO QUOTISTA DE EMPRESA PRIVADA.",
+   "ementa": [
+    "Consulta sobre o possível conflito de interesses entre o exercício do cargo de {{cargo}} e a participação como sócio cotista de empresa privada. Não se enquadra em exercício de atividade."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, cabe registrar que a participação em sociedade empresarial é matéria que se encontra fora do âmbito da Lei de Conflito de Interesses, dizendo respeito à legislação disciplinar, mais precisamente ao artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, que estabelece que ao servidor é proibido “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a partir das informações prestadas {{g:pelo|pela}} consulente, verifica-se que a situação descrita no pedido de autorização se insere no permissivo contido na segunda parte do inciso X, do artigo 117, da Lei n° 8.112, de 1990, que permite que o servidor público seja sócio de empresa na qualidade de “acionista, cotista ou comanditário”, após ter-lhe vedado exercer atividades de gerência e administração de empresas."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, como a situação descrita {{g:pelo|pela}} consulente não apresenta particularidades que afastem o permissivo disciplinar da segunda parte do artigo 117, inciso X, da Lei n° 8.112, de 1990, bem como não atrai eventualmente a aplicação das normas que tratam especificamente de conflito de interesses, observa-se que o presente caso trata de uma consulta a essa Corregedoria, acerca de matéria disciplinar."
+    },
+    {
+     "t": "p",
+     "x": "No tocante ao modelo de sociedade, cumpre destacar que a Sociedade de Propósito Específico - SPE está prevista no artigo 981, parágrafo único, do Código Civil de 2002, e tem como principal característica restringir sua existência à realização de um negócio determinado.",
+     "opc": {
+      "id": "spe",
+      "rotulo": "A sociedade é uma Sociedade de Propósito Específico (SPE)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 981. Celebram contrato de sociedade as pessoas que reciprocamente se obrigam a contribuir, com bens ou serviços, para o exercício de atividade econômica e a partilha, entre si, dos resultados.",
+      "Parágrafo único. A atividade pode restringir-se à realização de um ou mais negócios determinados."
+     ],
+     "opc": {
+      "id": "spe",
+      "rotulo": "A sociedade é uma Sociedade de Propósito Específico (SPE)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que a SPE não constitui um novo tipo ou modelo societário, ou seja, organiza-se, sempre, sob uma das formas já previstas pela legislação, sendo que, dentre as possibilidades possíveis, podem se enquadrar como qualquer tipo já existente, desde que personificável.",
+     "opc": {
+      "id": "spe",
+      "rotulo": "A sociedade é uma Sociedade de Propósito Específico (SPE)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, respondendo à pergunta {{g:do servidor|da servidora}}, precisamente dentro do contexto que {{g:este|esta}} nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” de SPE, ainda que majoritário, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90, sendo-lhe expressamente vedadas as atividades de gerência e administração.",
+     "opc": {
+      "id": "spe",
+      "rotulo": "A sociedade é uma Sociedade de Propósito Específico (SPE)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Da leitura direta da Lei, a condição de sócio-cotista não caracteriza exercício de atividade privada e, portanto, não há que se falar em atividade incompatível."
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se o fato de que {{g:o servidor|a servidora}} deve se abster de participar da gerência ou administração da sociedade privada, ainda que informal e eventualmente, de forma a não incorrer na infração prevista no inciso X, do art. 117, da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "É importante deixar claro que a atividade econômica da empresa na qual pretende participar, em razão de sua natureza, não deve ser incompatível com as atribuições do cargo {{g:do servidor|da servidora}}.",
+     "opc": {
+      "id": "natureza_atividade",
+      "rotulo": "Alertar que a atividade econômica da empresa não deve ser incompatível com o cargo",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo|pela}} consulente, de forma que eventuais alterações na situação apresentada devem ser objeto de nova consulta.",
+     "opc": {
+      "id": "nova_consulta",
+      "rotulo": "Registrar que alterações na situação exigem nova consulta",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Como a consulta não diz respeito a conflito de interesse, não deve seguir o trâmite previsto pela {{portaria_curta}}. Dito isso, propõe-se encaminhá-la à Coordenação-Geral de Gestão de Pessoas (Cogep), para ciência {{g:do servidor|da servidora}}."
+    }
+   ]
+  },
+  {
+   "id": "socio_area_correlata_conflito",
+   "rotulo": "Sócio de sociedade limitada de pessoas em área correlata ao cargo – configura conflito de interesses (art. 5º, III)",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende ser sócio (ainda que sem gerência formal) de sociedade limitada de pequeno/médio porte em que sua figura é essencial e cuja atividade se desenvolve em área correlata às atribuições do cargo ou às atividades de sua unidade (ex.: importação por servidor da área aduaneira).",
+   "fonte": "PAR 029/2020",
+   "assunto": "Consulta formulada por meio do SeCI.",
+   "ementaTitulo": "SÓCIO COTISTA. ATIVIDADE EM ÁREA CORRELATA.",
+   "ementa": [
+    "A consulta é analisada com o objetivo de verificar se há configuração de conflito de interesses entre o exercício da função pública e a atividade privada. Em sociedades limitadas de pequeno e médio porte, a figura do sócio é essencial, pois o sucesso da empresa depende da competência empresarial e do caráter do empreendedor. Dada a essencialidade da figura do sócio e a imagem e prestígio que o cargo público {{g:o|a}} proporcionará, considerou-se a atividade privada de {{atividade_privada_considerada}}.",
+    "Configura conflito de interesses, com base no art. 5º, III, da Lei nº 12.813, de 16 de maio de 2013, entre o exercício da função pública como {{cargo_sigla}}, {{g:lotado|lotada}} em {{unidade}}, e a atividade privada de {{g:sócio|sócia}} de empresa de {{atividade_empresa}}."
+   ],
+   "campos": [
+    {
+     "id": "atividade_empresa",
+     "rotulo": "Atividade da empresa (completa \"empresa de ...\")",
+     "exemplo": "importação e comercialização de máquinas e equipamentos",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_privada_considerada",
+     "rotulo": "Atividade privada considerada para o consulente",
+     "exemplo": "importador e empresário (comerciante)",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "area_correlata",
+     "rotulo": "Área da função pública relacionada (com artigo)",
+     "exemplo": "o comércio exterior",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "descricao_correlacao",
+     "rotulo": "Como a atividade cotidiana do servidor se correlaciona com a da empresa (continua a frase \"...desenvolvida pelo peticionante, \")",
+     "exemplo": "em que elabora pareceres para subsidiar decisões na área de comércio exterior, especificamente, na área de importação de mercadorias (item 6 da consulta)",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiramente, cabe esclarecer que a consulta formulada por meio do SeCI visa verificar a possível existência de um conflito de interesses entre a função pública e a atividade privada a ser exercida {{g:pelo|pela}} requerente, bem como objetiva discutir sobre a necessidade de resguardo, por {{g:ele|ela}}, de informações privilegiadas obtidas em razão do exercício da função pública. Em resumo, deve ser verificado na análise desses pedidos: se há conflito de interesses entre a função pública e a atividade privada, e se há necessidade de resguardo de informações privilegiadas."
+    },
+    {
+     "t": "p",
+     "x": "O art. 3º, I da Lei nº 12.813, de 16 de maio de 2013 (Lei nº 12.813/2013) traz a definição de conflito de interesses:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 4º, § 2º, da Lei em comento,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º, § 2º A ocorrência de conflito de interesses independe da existência de lesão ao patrimônio público, bem como do recebimento de qualquer vantagem ou ganho pelo agente público ou por terceiro."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em síntese, o conflito de interesses repercute no comprometimento do interesse público ou na influência, de maneira imprópria, do desempenho da função pública. Prescinde de lesão ao patrimônio público, do recebimento de qualquer vantagem ou do ganho pelo agente público ou por terceiro."
+    },
+    {
+     "t": "p",
+     "x": "Por informação privilegiada, o art. 3º, II da Lei nº 12.813/2013 assim define:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "(…)",
+      "II – informação privilegiada: a que diz respeito a assuntos sigilosos ou aquela relevante ao processo de decisão no âmbito do Poder Executivo federal que tenha repercussão econômica ou financeira e que não seja de amplo conhecimento público. (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A informação privilegiada diz respeito, portanto, a assuntos sigilosos. Pode-se incluir, nessa descrição, o sigilo fiscal, cuja previsão, regras e exceções estão dispostas no art. 198 do Código Tributário Nacional (CTN). Segundo o caput deste artigo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 198. Sem prejuízo do disposto na legislação criminal, é vedada a divulgação, por parte da Fazenda Pública ou de seus servidores, de informação obtida em razão do ofício sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades. (Redação dada pela Lcp nº 104, de 2001) (grifo nosso)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme o art. 2º da Portaria RFB nº 2.344, de 24 de março de 2011,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º São protegidas por sigilo fiscal as informações sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades, obtidas em razão do ofício para fins de arrecadação e fiscalização de tributos, inclusive aduaneiros, tais como:",
+      "I - as relativas a rendas, rendimentos, patrimônio, débitos, créditos, dívidas e movimentação financeira ou patrimonial;",
+      "II - as que revelem negócios, contratos, relacionamentos comerciais, fornecedores, clientes e volumes ou valores de compra e venda;",
+      "III - as relativas a projetos, processos industriais, fórmulas, composição e fatores de produção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que o acesso a dados protegidos por sigilo fiscal faz parte das tarefas cotidianas dos servidores ocupantes de cargo junto à RFB. Esta é uma das situações para a qual a Lei nº 12.813/2013 foi publicada: a necessidade de resguardo de informações privilegiadas; em específico, de informações protegidas pelo sigilo fiscal."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 12 da Lei nº 12.813/2013, o servidor público que praticar atos que configuram conflito de interesses incorre no cometimento de improbidade administrativa na forma do art. 11 da Lei nº 8.429, de 2 de junho de 1992, quando não caracterizada qualquer das condutas descritas nos arts. 9º e 10 daquela Lei."
+    },
+    {
+     "t": "p",
+     "x": "Considerando as informações preliminares acerca da Lei nº 12.813/2013, passa-se para a análise da consulta formulada por meio do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "Considerando a descrição realizada {{g:pelo|pela}} requerente, a sociedade que constituirá é uma sociedade de pessoas (sociedade *intuitu personae*). Segundo define Coelho,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "há sociedades empresárias em que os atributos (vale dizer, seus valores, sua capacidade e disposição para o trabalho etc.) interferem na realização do objeto social. São, geralmente, sociedades de pequeno ou médio porte, cujo sucesso depende, basicamente, da competência empresarial e do caráter do empreendedor. A pessoa do sócio é importante para o bom desenvolvimento dos negócios sociais, e não apenas o aporte de recursos materiais que ele realiza. E há, de outro lado, sociedades empresárias para as quais os atributos dos seus membros são irrelevantes. Qualquer um, desde que se comprometa a investir determinado dinheiro na empresa, serve para sócio. Por evidente, essa marca se encontra, com maior facilidade, nos empreendimentos de maior vulto e complexidade. As sociedades em que os atributos dos sócios interferem na realização do objeto social são chamadas de pessoas; aquelas em que tais não interferem são as de capital. (p. 355)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Na sociedade de pessoas, a figura do sócio é essencial, pois o sucesso da empresa depende da competência empresarial e do caráter do empreendedor. O sócio exerce, portanto, papel de relevo no próprio sucesso do empreendimento. A sociedade limitada tem natureza personalista na medida em que a figura dos sócios é central e definitiva para a constituição da sociedade."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com Santa Cruz, a sociedade limitada tem duas características principais: a contratualidade e a limitação da responsabilidade dos sócios. A primeira característica se refere ao fato de que os sócios podem regular as características da sociedade por meio da manifestação de suas vontades."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, evidencia-se a importância que a imagem dos sócios traz para o resultado financeiro de empresas de pequeno e médio portes, quando a figura dos sócios é essencial. No caso em tela, o prestígio de ocupar o cargo público de {{cargo}} poderá contribuir, assim, para essa sociedade limitada com fins lucrativos."
+    },
+    {
+     "t": "p",
+     "x": "A sociedade limitada proposta {{g:pelo|pela}} consulente visa a {{atividade_empresa}}. Dada a essencialidade da figura do sócio e a imagem e prestígio que o cargo público {{g:o|a}} proporcionará, a atividade privada a ser considerada para {{g:o|a}} consulente é a de {{atividade_privada_considerada}}."
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que a função pública desenvolvida {{g:pelo|pela}} requerente é diretamente relacionada com {{area_correlata}}."
+    },
+    {
+     "t": "p",
+     "x": "O conflito de interesses entre o exercício da função pública como {{cargo_sigla}} e a atividade privada como {{atividade_privada_considerada}}, cujas características estão expostas nos parágrafos anteriores deste Parecer, está configurado na seguinte situação:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 12.813/2013, Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A correlação entre as áreas está caracterizada na atividade cotidiana desenvolvida {{g:pelo|pela}} peticionante, {{descricao_correlacao}}. A atividade privada como {{atividade_privada_considerada}} é, portanto, em razão da sua natureza, incompatível com as atribuições do cargo como {{cargo_sigla}}."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, {{g:o|a}} peticionante afirmou ter, em virtude de sua função pública, acesso a informações privilegiadas (item 7 da consulta). Conforme explicado nos parágrafos anteriores deste Parecer, as informações privilegiadas a que se têm acesso na RFB são dados protegidos por sigilo fiscal, que podem revelar informações relativas a rendas, patrimônios, negócios, contratos, relacionamentos comerciais, fornecedores, clientes e volumes ou valores de compra e venda, por exemplo. O acesso a informações privilegiadas em áreas correlatas caracteriza não só vantagem competitiva, mas também pode influenciar, de maneira imprópria, o desempenho da função pública por um servidor público, já que este pode vir a realizar atos que beneficiem a si e a terceiros.",
+     "opc": {
+      "id": "informacoes_privilegiadas",
+      "rotulo": "Servidor declarou ter acesso a informações privilegiadas (item 7 do formulário)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, esclarece-se que a análise acerca do conflito de interesses se refere exclusivamente ao caso {{g:do|da}} consulente. Caso outro servidor público pretenda verificar acerca da constituição de uma sociedade limitada, como mencionado na consulta, também precisa cadastrar sua consulta individual sobre possível conflito de interesses.",
+     "opc": {
+      "id": "outro_socio_servidor",
+      "rotulo": "Há outro servidor público como futuro sócio (deve formular consulta própria)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que se verifica conflito de interesses, com base no art. 5º, III da Lei nº 12.813/2013, entre o exercício da função pública como {{cargo_sigla}}, {{g:lotado|lotada}} em {{unidade}}, e a atividade privada de {{g:sócio|sócia}} de empresa de {{atividade_empresa}}, {{g:pelo servidor público|pela servidora pública}} {{nome}}."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,170 @@
+{
+ "id": "medicina",
+ "nome": "Medicina, odontologia e medicina veterinária",
+ "descricao": "Use quando o servidor pretende exercer, fora do horário de expediente, profissão da área de saúde (médico, dentista, médico veterinário) em caráter privado.",
+ "palavrasChave": [
+  "médico",
+  "médica",
+  "medicina",
+  "plantão",
+  "consultório",
+  "clínica",
+  "atendimento médico",
+  "pediatra",
+  "dentista",
+  "odontologia",
+  "odontólogo",
+  "cirurgião-dentista",
+  "veterinário",
+  "veterinária",
+  "medicina veterinária",
+  "home care pet",
+  "pacientes",
+  "crm",
+  "cro"
+ ],
+ "variantes": [
+  {
+   "id": "medico",
+   "rotulo": "Exercício da medicina – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) com formação em medicina que pretende atender pacientes (consultório, plantão, serviço de saúde privado) fora do horário de expediente.",
+   "fonte": "PAR 280/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE {{g:MÉDICO|MÉDICA}}.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{g:médico|médica}} com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Na atuação como {{g:médico|médica}} não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} ({{cargo_sigla}}) em circunstâncias que prejudiquem a moralidade ou interesse público. É dizer, a atividade pleiteada é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}} consulente."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo seus eventuais pacientes."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante ao cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "odontologia",
+   "rotulo": "Exercício da odontologia – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) com formação em odontologia que pretende atender pacientes em horário distinto do expediente.",
+   "fonte": "PAR 106/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE DE ODONTOLOGIA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da odontologia com o cargo de {{cargo}}.",
+    "Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} questiona se poderia acumular o cargo público de {{cargo}} ({{cargo_sigla}}) com o exercício da odontologia. Analisando o pleito sob o prisma do inciso III da referida lei, verifica-se que o exercício da odontologia é materialmente compatível com o cargo ocupado, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, chamamos a atenção para o fato de que {{g:o interessado|a interessada}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo seus eventuais pacientes."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se, ainda, que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar e reiterar que a opinada inexistência de incompatibilidade material do exercício da odontologia ora pretendida, com o cargo e a função ocupados {{g:pelo servidor|pela servidora}} condiciona-se à observância de todas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "veterinaria",
+   "rotulo": "Exercício da medicina veterinária – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que pretende atuar como médico(a) veterinário(a) autônomo(a), inclusive em atendimento domiciliar, fora do horário de expediente.",
+   "fonte": "PAR 269/2019; PAR 164/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESTAÇÃO DE SERVIÇOS DE MÉDICO VETERINÁRIO.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante da atividade de {{g:médico veterinário|médica veterinária}} com o cargo de {{cargo_sigla}}. Não configura conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à possível atuação {{g:do servidor|da servidora}} como {{g:médico veterinário autônomo|médica veterinária autônoma}}, fora do horário de expediente, não se vislumbra incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Todavia chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas para as quais exerça o ofício de veterinário."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

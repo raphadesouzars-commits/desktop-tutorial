@@ -1,0 +1,190 @@
+{
+ "id": "corretor_imoveis",
+ "nome": "Corretor de imóveis",
+ "descricao": "Usar quando o servidor pretende exercer a atividade de corretor de imóveis (intermediação na compra, venda, permuta e locação), como autônomo, em parceria com imobiliárias ou constituindo imobiliária própria.",
+ "palavrasChave": [
+  "corretor de imóveis",
+  "corretagem",
+  "creci",
+  "imobiliária",
+  "intermediação imobiliária",
+  "compra e venda de imóveis",
+  "locação de imóveis",
+  "construtora",
+  "incorporadora",
+  "corretor",
+  "venda de imóveis",
+  "lei 6.530"
+ ],
+ "variantes": [
+  {
+   "id": "sem_conflito_ressalvas",
+   "rotulo": "Corretor autônomo – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como corretor de imóveis (pessoa física, com ou sem parceria com imobiliárias/construtoras), sem administrar pessoa jurídica.",
+   "fonte": "PAR 645/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CORRETOR DE IMÓVEIS.",
+   "ementa": [
+    "Pedido de autorização para exercer concomitantemente a atividade de corretor de imóveis com o cargo de {{cargo}}. Compatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme o Decreto n° 81.871, de 29 de junho de 1978, que regulamenta a Lei n° 6.530, de 12 de maio de 1978, compete ao Corretor de Imóveis exercer a intermediação na compra, venda, permuta e locação de imóveis e opinar quanto à comercialização imobiliária.",
+     "opc": {
+      "id": "competencia_corretor",
+      "rotulo": "Incluir parágrafo inicial sobre a competência legal do Corretor de Imóveis (Decreto nº 81.871/1978)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do inciso III, do artigo 5º, da Lei 12.813/2013, não se vislumbra na atividade pretendida qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo de {{cargo}} em circunstâncias que prejudiquem a moralidade ou interesse público, sob a ressalva de que não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Da mesma forma, não se verifica nenhum empecilho em atuar em parceria com imobiliárias, construtoras e incorporadores, desde que se limite a intermediação entre vendedor e comprador.",
+     "opc": {
+      "id": "parcerias",
+      "rotulo": "Consulente pergunta sobre parceria com imobiliárias, construtoras e incorporadores",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ressalta-se que a atividade de corretor imobiliário deve ser exercida sem configurar a infração disciplinar tipificada no artigo 117, inciso X, da Lei nº 8.112, de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 8.112, de 1990",
+      "Art. 117. Ao servidor é proibido:",
+      "[...]",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da Lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, caso a atividade pleiteada configure o exercício de atividade empresarial, não é permitido exercer qualquer função de gerência ou administração, sendo necessária a nomeação de um terceiro para exercer tais atribuições."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, é importante ressaltar que {{g:o consulente|a consulente}} não deve se apresentar nessa empreitada particular como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB, de forma a sugerir que o órgão público a que está {{g:vinculado|vinculada}} sanciona ou respalda suas atividades pessoais.",
+     "opc": {
+      "id": "nao_se_apresentar",
+      "rotulo": "Incluir ressalva de não se apresentar como servidor público na atividade",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do consulente|da consulente}}, cabendo {{g:a ele|a ela}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "No entendimento da {{orgao_corregedoria}}, o exercício da atividade de corretagem de imóveis descrita {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "imobiliaria_administracao",
+   "rotulo": "Corretagem com abertura/administração de imobiliária – corretagem permitida; gerência ou administração vedada (art. 117, X, da Lei nº 8.112/1990)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende, além de atuar como corretor, abrir imobiliária ou constituir pessoa jurídica e administrá-la.",
+   "fonte": "PAR 229/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE O EXERCÍCIO DA ATIVIDADE DE CORRETOR DE IMÓVEIS, SENDO ADMINISTRADOR DA PESSOA JURÍDICA CRIADA.",
+   "ementa": [
+    "Pedido de autorização para exercer concomitantemente a atividade de corretor de imóveis, na pessoa de administrador da pessoa jurídica criada, com o cargo de {{cargo}}. Deferimento do exercício de corretagem de imóveis e indeferimento do exercício de administração."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme o Decreto n° 81.871, de 29 de junho de 1978, que regulamenta a Lei n° 6.530, de 12 de maio de 1978, compete ao Corretor de Imóveis exercer a intermediação na compra, venda, permuta e locação de imóveis e opinar quanto à comercialização imobiliária.",
+     "opc": {
+      "id": "competencia_corretor",
+      "rotulo": "Incluir parágrafo inicial sobre a competência legal do Corretor de Imóveis (Decreto nº 81.871/1978)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Conforme descrito no item 2, {{g:o servidor|a servidora}} pretende exercer a atividade de corretor de imóveis, constituindo uma pessoa jurídica para tal. Além disso, {{g:ele|ela}} pretende exercer a administração da pessoa jurídica."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do inciso III, do artigo 5º, da Lei 12.813/2013, não existe conflito de interesses no exercício da atividade de corretor de imóveis concomitante com o exercício do cargo de {{cargo}}, sob a ressalva de que não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que {{g:o consulente|a consulente}} afirma que, além de exercer a atividade particular de corretagem de imóveis, pretende abrir uma imobiliária e administrá-la."
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, há de se chamar a atenção para o fato de que a atividade privada descrita {{g:pelo consulente|pela consulente}} pode ensejar afronta ao disposto no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;",
+      "(…)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Pela definição contida no art. 966 do Novo Código Civil, constata-se a natureza empresarial da atividade descrita {{g:pelo servidor|pela servidora}}:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou serviços."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, dentro do contexto que {{g:o servidor|a servidora}} nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” de empresa, ainda que majoritário, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90, sendo-lhe expressamente vedadas atividades de gerência e administração."
+    },
+    {
+     "t": "p",
+     "x": "No entendimento da {{orgao_corregedoria}}, o exercício da atividade de corretagem de imóveis {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas. No entanto, o exercício de gerência e/ou administração de pessoa jurídica incidirá na proibição do inciso X, do artigo 117, da Lei 8.112/90, cominando na penalidade de demissão de acordo com o inciso XIII do artigo 132 da referida lei."
+    }
+   ]
+  }
+ ]
+}

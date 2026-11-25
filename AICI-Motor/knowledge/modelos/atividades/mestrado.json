@@ -1,0 +1,47 @@
+{
+ "id": "mestrado",
+ "nome": "Frequência a curso de mestrado (pós-graduação)",
+ "descricao": "Use quando o servidor consulta sobre a possibilidade de frequentar, como aluno, curso de mestrado ou outra pós-graduação de conteúdo acadêmico.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "mestrado",
+  "pós-graduação",
+  "doutorado",
+  "curso de mestrado",
+  "aluno de mestrado",
+  "frequência a curso",
+  "universidade",
+  "programa de pós-graduação",
+  "estudante",
+  "atividade acadêmica"
+ ],
+ "variantes": [
+  {
+   "id": "frequencia_mestrado",
+   "rotulo": "Frequência a curso de mestrado – não configura conflito, desde que observada a compatibilidade de horários",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) que consulta sobre frequentar curso de mestrado (atividade de conteúdo acadêmico, como discente). Modelo curto, de 2015.",
+   "fonte": "INF 082/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "FREQUÊNCIA A CURSO DE MESTRADO.",
+   "ementa": [
+    "Consulta quanto à compatibilidade de frequência de mestrado por {{g:servidor|servidora}} ocupante do cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Com relação à possível participação {{g:do servidor|da servidora}} em curso de mestrado, não se vislumbra incompatibilidade material com o cargo ocupado, tratando-se de atividade de conteúdo acadêmico."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade concomitante com o exercício de cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades expressas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

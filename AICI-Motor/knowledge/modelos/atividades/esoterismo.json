@@ -1,0 +1,70 @@
+{
+ "id": "esoterismo",
+ "nome": "Atividades esotéricas (tarologia, cartomancia, astrologia)",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor pretende oferecer, como pessoa física, serviços esotéricos (tarô, cartomancia e similares), de forma remunerada ou gratuita, fora do horário de expediente.",
+ "palavrasChave": [
+  "esoterismo",
+  "esotérica",
+  "esotérico",
+  "cartomante",
+  "cartomancia",
+  "taróloga",
+  "tarólogo",
+  "tarô",
+  "tarologia",
+  "cbo 5168-05",
+  "astrologia",
+  "leitura de cartas",
+  "prestação de serviço"
+ ],
+ "variantes": [
+  {
+   "id": "esoterismo_pessoa_fisica",
+   "rotulo": "Atividades esotéricas como pessoa física – compatibilidade material",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor pretende prestar serviços esotéricos (tarologia, cartomancia etc.) em nome próprio, sem informar constituição de pessoa jurídica; o texto registra que a atuação por pessoa jurídica exige nova consulta.",
+   "fonte": "PAR 66/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "LEI DE CONFLITO DE INTERESSES. ATIVIDADES ESOTÉRICAS.",
+   "ementa": [
+    "Pedido de autorização. Exercício de atividade de esoterismo. Compatibilidade material."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividades esotéricas pretendidas",
+     "exemplo": "tarologia e cartomancia (CBO 5168-05)",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Como relatado, {{g:o servidor|a servidora}} pretende trabalhar com atividades de esoterismo, como {{descricao_atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha explicitado, entende-se que as atividades serão praticadas como pessoa física, sendo necessária a formulação de nova consulta, caso a atividade pretendida seja executada por intermédio de pessoa jurídica, com a apresentação dos detalhes da natureza jurídica e administração da pessoa jurídica."
+    },
+    {
+     "t": "p",
+     "x": "Feito tal esclarecimento, analisando o pleito sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 16 de maio de 2013, conclui-se que o exercício das atividades descritas é materialmente compatível com o cargo ocupado."
+    }
+   ]
+  }
+ ]
+}

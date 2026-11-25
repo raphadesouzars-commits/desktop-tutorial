@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+uploads/*
+!uploads/.gitkeep
+output/*
+!output/.gitkeep
+vectorstore/*
+!vectorstore/.gitkeep
+metrics/*
+!metrics/.gitkeep
+# acervo real (dados pessoais): sincronizado do SharePoint, nunca versionado
+knowledge/pareceres/*
+knowledge/precedentes/*
+!knowledge/*/.gitkeep

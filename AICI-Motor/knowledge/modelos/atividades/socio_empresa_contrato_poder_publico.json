@@ -1,0 +1,78 @@
+{
+ "id": "socio_empresa_contrato_poder_publico",
+ "nome": "Sócio de empresa que contrata com o Poder Público",
+ "descricao": "Use quando o servidor consulta sobre ser sócio (ou responsável) de empresa que prestará serviços ou explorará espaço público mediante contrato ou autorização de Município, Estado ou outro órgão público.",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "palavrasChave": [
+  "sócio",
+  "sócio majoritário",
+  "responsável pela empresa",
+  "cnpj",
+  "empresa de publicidade",
+  "prefeitura",
+  "contrato com o poder público",
+  "licitação",
+  "espaço público",
+  "exploração de publicidade",
+  "prestação de serviço à prefeitura",
+  "cotista"
+ ],
+ "variantes": [
+  {
+   "id": "socio_cotista_empresa_contrata_poder_publico",
+   "rotulo": "Sócio (apenas acionista, cotista ou comanditário) de empresa que contrata com a Administração – matéria disciplinar (ciência via Cogep)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor(a) que pergunta se pode ser responsável ou sócio (inclusive majoritário) de empresa que contratará com a prefeitura ou outro órgão público. Entendimento de 2016 (matéria disciplinar, art. 117, X, da Lei nº 8.112/1990, com encaminhamento à Cogep); a partir de 2020 os pareceres sobre sócio cotista passaram a seguir à Comissão de Ética (ver modelo “Sócio cotista de empresa privada”). Atenção: o texto cita a Lei nº 8.666/1993, revogada pela Lei nº 14.133/2021.",
+   "fonte": "INF 152/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PARTICIPAÇÃO EM EMPRESA QUE CONTRATA COM O PODER PÚBLICO.",
+   "ementa": [
+    "Consulta sobre participação societária em empresa que prestará serviço ao Poder Público. Matéria disciplinar. Possibilidade apenas na qualidade de acionista, cotista ou comanditário."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiro cabe registrar que a Consulta SeCi é um instrumento disponibilizado aos servidores públicos para obtenção de orientações relacionadas ao exercício de atividade privada por eles e não por um de seus parentes.",
+     "opc": {
+      "id": "parente",
+      "rotulo": "Consulta também se refere à participação de parente",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Compete consignar que os fundamentos das respostas às perguntas {{g:do servidor|da servidora}} consulente não se encontram nas normas que tratam especificamente de conflito de interesses, mas sim na legislação disciplinar."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a partir das informações prestadas {{g:pelo|pela}} consulente, verifica-se que a situação descrita na consulta se insere no permissivo contido na segunda parte do inciso X, do artigo 117, da Lei n° 8.112, de 1990, que permite que o servidor público seja sócio de empresa na qualidade de “acionista, cotista ou comanditário”, após ter-lhe vedado atividades de gerência e administração de empresas."
+    },
+    {
+     "t": "p",
+     "x": "Referido dispositivo legal conjeturou permitir aos servidores públicos a participação marginal em empresas."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, como a situação descrita {{g:pelo|pela}} consulente não apresenta qualquer particularidade que afaste o permissivo disciplinar da segunda parte do artigo 117, inciso X, da Lei n° 8.112/90, bem como não atrai eventualmente a aplicação das normas que tratam especificamente de conflito de interesses, observa-se que o presente caso trata de uma consulta a essa Corregedoria, acerca de matéria disciplinar."
+    },
+    {
+     "t": "p",
+     "x": "Assim, respondendo às perguntas {{g:do|da}} consulente, precisamente dentro do contexto que nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” da empresa que mencionou na consulta, ainda que majoritário, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90. Sendo-lhe expressamente vedadas atividades de gerência e administração."
+    },
+    {
+     "t": "p",
+     "x": "Cabe salientar que {{g:o servidor|a servidora}} e a empresa na qual pretende participar devem respeitar estritamente as vedações pertinentes a contratações com a Administração Pública, observando a legislação pertinente, como por exemplo, a Lei n° 8.666, de 21 de junho de 1993."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo|pela}} consulente, de forma que eventuais alterações na situação (atividade) apresentada devem ser objeto de nova consulta."
+    },
+    {
+     "t": "p",
+     "x": "Feitas estas considerações, como o presente caso não diz respeito a conflito de interesses, não deve ser seguido o trâmite da {{portaria_curta}}. Destarte, propõe-se o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para cientificação {{g:do|da}} consulente."
+    }
+   ]
+  }
+ ]
+}

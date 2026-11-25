@@ -1,0 +1,228 @@
+{
+ "id": "administracao_bens_proprios",
+ "nome": "Administração de bens próprios (aluguel de imóveis próprios, Eireli, empresário individual)",
+ "descricao": "Usar quando o servidor pretende administrar patrimônio próprio (em especial aluguel de imóveis próprios) por meio de pessoa jurídica: como sócio sem gerência ou como único titular de empresa.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "administração de bens próprios",
+  "patrimônio próprio",
+  "aluguel de imóveis próprios",
+  "locação de imóveis",
+  "imóveis próprios",
+  "holding patrimonial",
+  "eireli",
+  "firma individual",
+  "empresário individual",
+  "sociedade limitada unipessoal",
+  "gerente delegado",
+  "administrador não sócio",
+  "antecipação de legítima",
+  "gerência de aluguel"
+ ],
+ "variantes": [
+  {
+   "id": "socio_empresa_locacao_imoveis_proprios",
+   "rotulo": "Sócio, sem gerência, de empresa de locação de imóveis próprios – não se vislumbra incompatibilidade",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende integrar sociedade (ex.: com o cônjuge) cujo objeto é apenas a locação/administração de imóveis próprios, sem exercer a gerência e sem atividades além das inerentes a um proprietário de imóveis.",
+   "fonte": "PAR 265/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE GERÊNCIA DE ALUGUEL DE IMÓVEIS PRÓPRIOS.",
+   "ementa": [
+    "Pedido de autorização para participar de sociedade que tem por objeto a locação de imóveis próprios, sem exercício de gerência, concomitante com o cargo de {{cargo}}. Atividade de administração de patrimônio próprio. Não se vislumbra incompatibilidade material."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "{{g:O consulente|A consulente}} já havia informado em formulário próprio que não efetuará a gerência da empresa a ser constituída. Vale lembrar que nos termos do art. 117, X, da Lei n° 8.112, de 11 de dezembro de 1990, a participação de gerência ou administração constitui-se infração disciplinar."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art.117. Ao servidor é proibido:",
+      "…",
+      "X-participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sobre a natureza de imóveis locados, embora tenha informado inicialmente tratar-se de imóveis também de terceiros, retificou essa informação na resposta, asseverando que o objeto social da empresa será apenas a locação de imóveis próprios.",
+     "opc": {
+      "id": "retificacao_imoveis",
+      "rotulo": "Servidor informou inicialmente imóveis de terceiros e depois retificou (somente imóveis próprios)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Sobre eventual atuação na empresa, informou que não teria atividades distintas das inerentes aos proprietários de imóveis, tais como manutenção de imóveis e responder a consultas sobre preços dos aluguéis.",
+     "opc": {
+      "id": "atuacao_empresa",
+      "rotulo": "Registrar que o servidor não terá atividades distintas das inerentes a proprietário de imóveis",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Cumpre esclarecer que atividade de administração de patrimônio próprio, com gestão de aluguéis de imóvel próprio, não é materialmente incompatível com o cargo de {{cargo}} e com as atividades desempenhadas {{g:pelo servidor|pela servidora}}. Assim, nos limites descritos {{g:pelo servidor consulente|pela servidora consulente}}, não se vislumbra incompatibilidade material desta atividade com a atividade pública, à luz do art. 5°, III, da Lei n° 12.813, de 2013."
+    }
+   ]
+  },
+  {
+   "id": "eireli_com_administrador_ou_empresario_individual",
+   "rotulo": "Titular de Eireli (com administrador constituído) ou empresário individual para administrar patrimônio próprio",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pergunta se pode ser o único titular de empresa (Eireli ou firma/empresário individual) de administração de patrimônio próprio, nomeando terceiro como administrador. Conclusão do original: impossível como empresário individual; possível como Eireli com administrador não titular. Atenção: a Eireli foi extinta (Lei nº 14.195/2021, art. 41, transformou-as em sociedades limitadas unipessoais) e o art. 980-A do Código Civil, transcrito no modelo, foi revogado (Lei nº 14.382/2022) – adaptar o texto à sociedade limitada unipessoal antes de usar.",
+   "fonte": "PAR 282/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATUAR COMO PROPRIETÁRIO DE EIRELI OU FIRMA INDIVIDUAL EM UMA EMPRESA DE ADMINISTRAÇÃO DE PATRIMÔNIO PRÓPRIO.",
+   "ementa": [
+    "Pedido de autorização para ser proprietário de Eireli ou Firma Individual cumulativamente com o exercício do cargo de {{cargo}}, para a atividade de administração de patrimônio próprio.",
+    "Impossibilidade do exercício da atividade via Firma Individual (empresário individual) e, possibilidade via Eireli, mediante a constituição de administrador."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, verifica-se que {{g:o consulente|a consulente}} se refere à possibilidade de ser proprietário de uma empresa individual de responsabilidade limitada (doravante Eireli) ou empresário individual (doravante EI), antiga firma individual. A atividade da nova empresa (Eireli ou EI) será a administração de patrimônio próprio."
+    },
+    {
+     "t": "p",
+     "x": "Inicialmente, cumpre esclarecer que atividade de administração de patrimônio próprio, per si, não é materialmente incompatível com o cargo de {{cargo}} e com as atividades desempenhadas {{g:pelo servidor|pela servidora}}. Assim, permanecendo a atividade de administração de patrimônio próprio, com gestão de aluguéis de imóvel próprio, não se vislumbra incompatibilidade material desta atividade com a atividade pública, à luz do art. 5°, III, da Lei n° 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "No que diz respeito às formas jurídicas suscitadas {{g:pelo consulente|pela consulente}} como opções para a empresa na que será o único sócio, fazem-se necessários alguns esclarecimentos, tendo em vista a impossibilidade do exercício de comércio {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "O exercício do comércio, hoje tratado no Código Civil como exercício de atividade empresária, tem sua proibição estampada na segunda parte do art. 117, inciso X, da Lei n° 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Das Proibições",
+      "Art.117. Ao servidor é proibido:",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Tendo em vista a necessidade de buscar as formas jurídicas de atuação pessoal de atividade empresária no Código Civil vigente (Lei n° 10.406, de 10 de janeiro de 2002), adentraremos na esfera civil para os esclarecimentos, com reprodução dos dispositivos mais importantes:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Orientação Coger nº 26",
+      "Uma vez que o atual regramento civil não mais define ato de comércio, a interpretação da vedação de o servidor exercer o comércio deve ser feita adaptando-se o art. 966 do Código Civil, vedando-se o exercício individual da atividade de empresário."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Primeiramente, vejamos como é tratada a figura de Empresário Individual."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "LIVRO II",
+      "Do Direito de Empresa",
+      "TÍTULO I",
+      "Do Empresário",
+      "CAPÍTULO I",
+      "Da Caracterização e da Inscrição",
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa.",
+      "Art. 967. É obrigatória a inscrição do empresário no Registro Público de Empresas Mercantis da respectiva sede, antes do início de sua atividade.",
+      "Art. 968. A inscrição do empresário far-se-á mediante requerimento que contenha:",
+      "I - o seu nome, nacionalidade, domicílio, estado civil e, se casado, o regime de bens;",
+      "II- a firma, com a respectiva assinatura autógrafa que poderá ser substituída pela assinatura autenticada com certificação digital ou meio equivalente que comprove a sua autenticidade, ressalvado o disposto no inciso I do § 1º do art. 4º da Lei Complementar nº 123, de 14 de dezembro de 2006; (Redação dada pela Lei Complementar nº 147, de 2014)",
+      "III - o capital;",
+      "IV - o objeto e a sede da empresa.",
+      "(...)",
+      "§3º Caso venha a admitir sócios, o empresário individual poderá solicitar ao Registro Público de Empresas Mercantis a transformação de seu registro de empresário para registro de sociedade empresária, observado, no que couber, o disposto nos arts. 1.113 a 1.115 deste Código. (Incluído pela Lei Complementar nº 128, de 2008)",
+      "(...)",
+      "CAPÍTULO II",
+      "Da Capacidade",
+      "Art. 972. Podem exercer a atividade de empresário os que estiverem em pleno gozo da capacidade civil e não forem legalmente impedidos.",
+      "Art. 973. A pessoa legalmente impedida de exercer atividade própria de empresário, se a exercer, responderá pelas obrigações contraídas.",
+      "Art. 974. Poderá o incapaz, por meio de representante ou devidamente assistido, continuar a empresa antes exercida por ele enquanto capaz, por seus pais ou pelo autor de herança.",
+      "(...)",
+      "Art. 975. Se o representante ou assistente do incapaz for pessoa que, por disposição de lei, não puder exercer atividade de empresário, nomeará, com a aprovação do juiz, um ou mais gerentes.",
+      "§1º Do mesmo modo será nomeado gerente em todos os casos em que o juiz entender ser conveniente.",
+      "§2º A aprovação do juiz não exime o representante ou assistente do menor ou do interdito da responsabilidade pelos atos dos gerentes nomeados.",
+      "Art. 976. A prova da emancipação e da autorização do incapaz, nos casos do art. 974, e a de eventual revogação desta, serão inscritas ou averbadas no Registro Público de Empresas Mercantis.",
+      "Parágrafo único. O uso da nova firma caberá, conforme o caso, ao gerente; ou ao representante do incapaz; ou a este, quando puder ser autorizado.",
+      "(...)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por estes dispositivos, observa-se um impedimento legal da prática da atividade de empresário individual, disposto no art. 973, como, por exemplo, encontra-se na proibição ao servidor público já vista e cunhada no art. 117, inciso X, da Lei n° 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Embora haja menção à possibilidade de constituição de um gerente para um empresário individual, observa-se que os arts. 975 e 976 tratam da situação particular em que o empresário individual é incapaz. Tendo em vista a natureza pessoal do exercício da atividade empresária do EI, não é possível, pelos dispositivos sob exame, extrapolar esta possibilidade ao empresário plenamente capaz, como o caso {{g:do consulente|da consulente}}, restando o impedimento de sua atuação insanável por esta via jurídica."
+    },
+    {
+     "t": "p",
+     "x": "Agora, apresentamos os dispositivos que tratam da nova forma jurídica denominada Empresa Individual de Responsabilidade Limitada (Eireli):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "DA EMPRESA INDIVIDUAL DE RESPONSABILIDADE LIMITADA",
+      "Art. 980-A. A empresa individual de responsabilidade limitada será constituída por uma única pessoa titular da totalidade do capital social, devidamente integralizado, que não será inferior a 100 (cem) vezes o maior salário-mínimo vigente no País. (Incluído pela Lei nº 12.441, de 2011)",
+      "§1º O nome empresarial deverá ser formado pela inclusão da expressão \" EIRELI \" após a firma ou a denominação social da empresa individual de responsabilidade limitada.(Incluído pela Lei nº 12.441, de 2011)(Vigência)",
+      "§2º A pessoa natural que constituir empresa individual de responsabilidade limitada somente poderá figurar em uma única empresa dessa modalidade.(Incluído pela Lei nº 12.441, de 2011)(Vigência)",
+      "§3º A empresa individual de responsabilidade limitada também poderá resultar da concentração das quotas de outra modalidade societária num único sócio, independentemente das razões que motivaram tal concentração.(Incluído pela Lei nº 12.441, de 2011)(Vigência)",
+      "§4º( VETADO).(Incluído pela Lei nº 12.441, de 2011) (Vigência)",
+      "§5º Poderá ser atribuída à empresa individual de responsabilidade limitada constituída para a prestação de serviços de qualquer natureza a remuneração decorrente da cessão de direitos patrimoniais de autor ou de imagem, nome, marca ou voz de que seja detentor o titular da pessoa jurídica, vinculados à atividade profissional.(Incluído pela Lei nº 12.441, de 2011)(Vigência)",
+      "§6º Aplicam-se à empresa individual de responsabilidade limitada, no que couber, as regras previstas para as sociedades limitadas.(Incluído pela Lei nº 12.441, de 2011)(Vigência)",
+      "§7º Somente o patrimônio social da empresa responderá pelas dívidas da empresa individual de responsabilidade limitada, hipótese em que não se confundirá, em qualquer situação, com o patrimônio do titular que a constitui, ressalvados os casos de fraude.(Incluído pela Lei nº 13.874, de 2019)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em relação ao exercício da atividade pretendida na forma de Eireli, observa-se uma maior proximidade às regras de sociedades limitadas, como expressamente previsto no §6° do art. 980-A."
+    },
+    {
+     "t": "p",
+     "x": "Neste diapasão, como é inequívoca a permissão de constituição de administradores não sócios em sociedades limitadas (arts. 1.060 e 1.061 do Código Civil), entende-se que é possível a constituição de administrador que não o sócio também para a Eireli, superando-se, com esta condição implementada, o impedimento do exercício do comércio."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1.060. A sociedade limitada é administrada por uma ou mais pessoas designadas no contrato social ou em ato separado.",
+      "(...)",
+      "Art. 1.061. A designação de administradores não sócios dependerá de aprovação da unanimidade dos sócios, enquanto o capital não estiver integralizado, e de 2/3 (dois terços), no mínimo, após a integralização. (Redação dada pela Lei nº 12.375, de 2010)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Além disso, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Feitas as considerações acima, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de administração de bens próprios no formato de Eireli com constituição de administrador não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

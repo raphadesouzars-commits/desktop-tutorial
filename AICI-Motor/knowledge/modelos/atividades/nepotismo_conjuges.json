@@ -1,0 +1,200 @@
+{
+ "id": "nepotismo_conjuges",
+ "nome": "Nepotismo – cônjuge ou parente em cargo em comissão / função de confiança",
+ "descricao": "Usar em consulta sobre a regularidade de cônjuges, companheiros ou parentes ocuparem cargo em comissão e função de confiança no mesmo órgão ou unidade (art. 117, VIII, da Lei nº 8.112/1990 e Decreto nº 7.203/2010).",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "nepotismo",
+  "cônjuge",
+  "esposa",
+  "marido",
+  "companheiro",
+  "parente",
+  "cargo em comissão",
+  "função de confiança",
+  "chefia imediata",
+  "subordinação direta",
+  "mesma unidade",
+  "delegado",
+  "chefe de equipe",
+  "decreto 7.203",
+  "das",
+  "fg"
+ ],
+ "variantes": [
+  {
+   "id": "conjuges_comissao_e_funcao_mesma_unidade",
+   "rotulo": "Cônjuges com cargo em comissão e função de confiança na mesma unidade, sem subordinação direta – regularidade",
+   "resultado": "outro",
+   "quandoUsar": "Consulta (não é pedido SeCI de atividade privada) sobre nepotismo: servidor nomeado para cargo em comissão/chefia de unidade em que seu cônjuge, companheiro ou parente, também servidor efetivo, exerce função de confiança sem lhe ser diretamente subordinado. Análise do art. 117, VIII, da Lei nº 8.112/1990 e do Decreto nº 7.203/2010.",
+   "fonte": "PAR 002/2014 (Escor07)",
+   "assunto": "Consulta.",
+   "ementaTitulo": "NEPOTISMO. CARGO EM COMISSÃO E FUNÇÃO DE CONFIANÇA. CÔNJUGES NA MESMA UNIDADE.",
+   "ementa": [
+    "Consulta. Regularidade estatutária e infralegal no preenchimento do cargo em comissão de {{cargo_comissao}} e no exercício de função de confiança por seu cônjuge, detentor de cargo efetivo, lotado na mesma unidade mas não diretamente subordinado ao titular."
+   ],
+   "campos": [
+    {
+     "id": "cargo_comissao",
+     "rotulo": "Cargo em comissão do consulente (completa \"cargo em comissão de ...\")",
+     "exemplo": "Delegado da Delegacia X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "familiar",
+     "rotulo": "Familiar (completa \"o fato de ... exercer a função\")",
+     "exemplo": "sua esposa",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "funcao_familiar",
+     "rotulo": "Função de confiança exercida pelo familiar",
+     "exemplo": "Chefe de Equipe",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "subordinacao_familiar",
+     "rotulo": "Subordinação direta do familiar (completa \"diretamente ...\")",
+     "exemplo": "subordinada ao Chefe da Divisão Y",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A questão em apreço merece dois focos de análise: o primeiro, além do mencionado na pergunta, sob ótica legal, da proibição estatutária prevista no art. 117, VIII da Lei nº 8.112, 11 de dezembro de 1990; e o segundo, à luz dos dispositivos do Decreto nº 7.203, de 2010, que disciplina a vedação à prática do nepotismo na administração pública federal."
+    },
+    {
+     "t": "p",
+     "x": "Primeiramente, a mencionada base legal do tema, que se encontra no inciso VIII do art. 117 da Lei nº 8.112, de 1990, estabelece a proibição, litteris:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 8.112, de 1990 - Art. 117. É proibido ao servidor:",
+      "VIII - manter sob sua chefia imediata, em cargo ou função de confiança, cônjuge, companheiro ou parente até o segundo grau civil."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Este enquadramento específico da Lei nº 8.112, de 1990, restringe sua proibição à manutenção de servidor preenchendo cargo em comissão ou exercendo função de confiança sob direta subordinação de seu cônjuge, companheiro ou parente até o 2º grau. A vedação estatutária específica recai sobre a manutenção da nomeação de qualquer pessoa, já servidor efetivo ou não, para ocupar cargo em comissão (e, no caso de pessoa que não possuía vínculo estatutário, passa a tê-lo) ou sobre a manutenção da designação de servidor efetivo para ocupar função de confiança, em ambos casos sob direta subordinação de seu cônjuge, companheiro ou parente até 2º grau."
+    },
+    {
+     "t": "p",
+     "x": "Dito isto, de imediato, atente-se que a proibição legal em tela atinge apenas a relação familiar com a chefia imediata. Não é alcançada por esta vedação estatutária a existência de relação familiar entre servidores separados por mais de um grau de hierarquia funcional, ou seja, se entre eles houver pelo menos um chefe intermediário."
+    },
+    {
+     "t": "p",
+     "x": "Importante destacar que, no texto legal, a ação verbal proibida é de a autoridade superior “manter” o seu familiar com provimento em comissão ou de confiança sob sua direta subordinação. Ou seja, não é necessário para perfazer o enquadramento que a autoridade sob crítica tenha nomeado ou designado o seu familiar. Para incorrer na ilicitude, basta que mantenha esta situação de simultaneidade de provimentos em comissão ou de confiança proibida, ainda que não tenha sido quem nomeou. Deparando-se com tal situação de proibida concomitância, para afastar a ilicitude, compete a esta autoridade pedir sua exoneração ou dispensa ou exonerar ou dispensar o familiar diretamente subordinado, caso tenha competência para tal, ou provocar a exoneração ou dispensa por parte da autoridade superior competente. Se, além de manter a situação legalmente vedada, a autoridade também tiver nomeado ou designado o familiar sob direta subordinação, tal fato antecedente pode atuar, na dosimetria punitiva permitida no art. 128 da Lei nº 8.112, de 1990, como uma agravante, possivelmente ensejadora da aplicação de pena de suspensão, em lugar da pena originalmente prevista para a infringência da proibição do art. 117, VIII da mesma Lei, que seria de advertência."
+    },
+    {
+     "t": "p",
+     "x": "Com isto, ainda que no âmbito restrito de um mesmo órgão ou de uma mesma entidade, não há impedimento legal, no alcance limitado do enquadramento em tela, para que o servidor, a qualquer tempo (desde a nomeação ou ao longo da vida funcional), exerça seu cargo efetivo, sem cargo em comissão ou função de confiança, diretamente subordinado a seu cônjuge, companheiro ou parente até 2º grau. Tampouco configura a vedação em comento o fato de o servidor, a qualquer tempo (desde a nomeação ou ao longo da vida funcional), trabalhar junto a seu cônjuge, companheiro ou parente até 2º grau, não havendo relação de chefia entre eles, tanto pelo fato de nenhum dos dois ocupar cargos em comissão ou funções de confiança ou até mesmo pelas hipóteses de ambos ocuparem cargos em comissão ou função de confiança de mesma hierarquia ou com hierarquia não direta ou ainda sem nenhuma ligação hierárquica."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, a título figurado, na acepção estrita do inciso VIII do art. 117 da Lei nº 8.112, de 1990, no contexto específico da Secretaria da Receita Federal do Brasil (RFB) pode um servidor exercer seu cargo efetivo, sem nenhum provimento em comissão ou de confiança, em direta subordinação ao Chefe da Divisão, da Seção, do Serviço ou do Setor que é seu cônjuge, companheiro ou parente até 2º grau; mas já não pode este mesmo servidor ser o Chefe da Divisão, da Seção, do Serviço ou do Setor que se subordina diretamente ao Delegado, Inspetor-Chefe ou Superintendente que é seu cônjuge, companheiro ou parente até 2º grau. Por outro lado, não afronta este enquadramento estatutário específico o fato de um servidor exercer, na mesma Divisão, Seção, Serviço ou Setor, seu cargo efetivo ao lado do seu cônjuge, companheiro ou parente até 2º grau, como simples colegas de trabalho, sem que ambos possuam qualquer provimento em comissão ou de confiança. Tampouco há ilegalidade em ambos terem provimentos em comissão de Chefes de distintas Divisões, Seções, Serviços ou Setores de uma mesma Delegacia ou Inspetoria ou Superintendência Regional ou ainda em ambos serem Delegados ou Inspetores-Chefes de diferentes unidades no âmbito de uma mesma Superintendência Regional. E menos ainda haveria de se cogitar de afronta ao presente enquadramento na hipótese de um servidor ser Chefe de Divisão, de Seção, de Serviço ou de Setor ou ser Delegado ou Inspetor-Chefe e seu cônjuge, companheiro ou parente até 2º grau possuir qualquer provimento em comissão ou de confiança em outra unidade da mesma Região Fiscal ou em unidade de outra Região Fiscal ou em unidade do sistema correcional ou do sistema de pesquisa de investigação, em hipóteses em que nem sequer se cogita de relação hierárquica entre eles. Por fim, nem há que se mencionar este enquadramento na hipótese de um servidor ter provimento em comissão ou de confiança na RFB e seu cônjuge, companheiro ou parente até 2º grau também o ter em outro órgão ou entidade."
+    },
+    {
+     "t": "p",
+     "x": "À vista do exposto, no primeiro foco de interesse no presente Parecer, o provimento {{g:do consulente|da consulente}} em cargo em comissão de {{cargo_comissao}} concomitantemente com o fato de {{familiar}} exercer a função de confiança de {{funcao_familiar}}, diretamente {{subordinacao_familiar}}, embora na mesma unidade, não afronta o inciso VIII do art. 117 da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Passa-se à complementação da análise, ora à luz do Decreto nº 7.203, de 2010, que regulamentou o tema da vedação ao nepotismo, em sede restrita da administração federal."
+    },
+    {
+     "t": "p",
+     "x": "Primeiramente, percebe-se que o Decreto incluiu no conceito de “familiar” não só o cônjuge ou o companheiro mas também os parentes até o 3º grau, enquanto a Lei o faz apenas até o 2º grau. Também se destaca a definição - não muito precisa e afinada com a doutrina administrativista - de que, na sua acepção, para o foco de aplicação mais comum (abstraindo-se aqui da Presidência da República e de seus órgãos próprios), o termo “órgão” engloba cada um dos Ministérios do Poder Executivo Federal, incluindo as entidades de administração indireta da respectiva Pasta (as autarquias e fundações vinculadas). Como regra geral, o espectro da vedação do Decreto se restringe ao âmbito de cada Ministério."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Decreto nº 7.203, de 2010 - Art. 2º Para os fins deste Decreto considera-se:",
+      "I - órgão:",
+      "a) a Presidência da República, compreendendo a Vice-Presidência, a Casa Civil, o Gabinete Pessoal e a Assessoria Especial;",
+      "b) os órgãos da Presidência da República comandados por Ministro de Estado ou autoridade equiparada; e",
+      "c) os Ministérios;",
+      "II - entidade: autarquia, fundação, empresa pública e sociedade de economia mista; e",
+      "III - familiar: o cônjuge, o companheiro ou o parente em linha reta ou colateral, por consanguinidade ou afinidade, até o terceiro grau.",
+      "Parágrafo único. Para fins das vedações previstas neste Decreto, serão consideradas como incluídas no âmbito de cada órgão as autarquias e fundações a ele vinculadas."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Superadas as comparações meramente conceituais, no cerne de sua vedação, se verifica que o texto do Decreto 7.203, de 2010, em seu art. 3º, avançou na proibição em relação à Lei nº 8.112, de 1990. Primeiramente, para comentar a inovação normativa, faz-se necessário destacar o foco da ação proibida. Enquanto o inciso VIII do art. 117 da Lei nº 8.112, de 1990, proíbe a manutenção de familiar em provimento em comissão ou de confiança sob direta subordinação da autoridade contra a qual se dirige o comando estatutário, o Decreto veda o ato de provimento em si, voltando-se, portanto, à autoridade superior com competência para promover o provimento."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, prosseguindo na comparação com o texto legal, desdobrando-se a literalidade do art. 3º do Decreto nº 7.203, de 2010, diferencia-se que o comando estende a vedação para nomeação ou designação de qualquer pessoa, para preencher cargo em comissão ou exercer função de confiança (e também para a contratação até mesmo para atender necessidade temporária excepcional de interesse público ou para estagiar, nestes dois últimos casos sem regular processo seletivo), que seja familiar do respectivo Ministro de Estado ou da máxima autoridade administrativa do órgão ou entidade ou ainda de algum ocupante de cargo em comissão ou de função de confiança neste órgão ou entidade."
+    },
+    {
+     "t": "p",
+     "x": "A priori, este comando do art. 3º do Decreto 7.203, de 2010, ao não expressar que se dirige apenas a pessoas sem nenhum vínculo com a administração e ao incluir a vedação de designação para exercer função de confiança (que, constitucionalmente, somente pode ser exercida por servidores detentores de cargos efetivos), assume uma imensa abrangência proibitiva, em que se incluem estes servidores de provimento efetivo. Na primeira leitura do mencionado art. 3º, um servidor detentor de cargo efetivo não poderia ser nomeado para preencher qualquer cargo em comissão ou para exercer qualquer função de confiança no âmbito de qualquer órgão ou entidade do mesmo Ministério em que simplesmente seu cônjuge, companheiro ou parente até 3º grau já fosse ocupante de cargo em comissão ou exercesse função de confiança, independentemente de haver entre eles grau de hierarquia ou não ou independentemente de serem ou não lotados na mesma unidade deste órgão ou entidade ou até mesmo de serem ou não lotados em órgãos ou entidades distintos da mesma Pasta."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Decreto nº 7.203, de 2010 - Art. 3º No âmbito de cada órgão e de cada entidade, são vedadas as nomeações, contratações ou designações de familiar de Ministro de Estado, familiar da máxima autoridade administrativa correspondente ou, ainda, familiar de ocupante de cargo em comissão ou função de confiança de direção, chefia ou assessoramento, para:",
+      "I - cargo em comissão ou função de confiança;",
+      "II - atendimento a necessidade temporária de excepcional interesse público, salvo quando a contratação tiver sido precedida de regular processo seletivo; e",
+      "III - estágio, salvo se a contratação for precedida de processo seletivo que assegure o princípio da isonomia entre os concorrentes.",
+      "§ 1º Aplicam-se as vedações deste Decreto também quando existirem circunstâncias caracterizadoras de ajuste para burlar as restrições ao nepotismo, especialmente mediante nomeações ou designações recíprocas, envolvendo órgão ou entidade da administração pública federal.",
+      "§ 2º As vedações deste artigo estendem-se aos familiares do Presidente e do Vice-Presidente da República e, nesta hipótese, abrangem todo o Poder Executivo Federal.",
+      "§ 3º É vedada também a contratação direta, sem licitação, por órgão ou entidade da administração pública federal de pessoa jurídica na qual haja administrador ou sócio com poder de direção, familiar de detentor de cargo em comissão ou função de confiança que atue na área responsável pela demanda ou contratação ou de autoridade a ele hierarquicamente superior no âmbito de cada órgão e de cada entidade."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Todavia, o forte comando proibitivo do art. 3º Decreto nº 7.203, de 2010, é flexibilizado com a leitura conjunta do subsequente art. 4º da mesma norma, que excepciona a vedação acima no caso de nomeação ou de designação de servidor ocupante de cargo efetivo para preencher cargo em comissão ou para exercer função de confiança, desde que observadas as compatibilidades do grau de escolaridade ou da atividade do cargo efetivo e a qualificação profissional para o novo encargo. Mas o parágrafo único do mesmo dispositivo repete a vedação estatutária, estabelecida no enquadramento em tela, do inciso VIII do art. 117 da Lei nº 8.112, de 1990, qual seja, de que, em nenhum caso - quer dizer: seja pessoa sem vinculação com a administração, seja servidor detentor de cargo efetivo e ainda que sejam atendidas as compatibilidades de grau de escolaridade e de atividade do cargo efetivo -, se tolera a manutenção de ocupante de cargo em comissão ou de função de confiança sob subordinação direta de agente público com quem também guarde relação familiar. Reforça-se, então, a interpretação de que o ordenamento pátrio (seja pela imposição da vedação mais abrangente no Decreto, seja pela imposição da vedação mais específica na Lei) veda o provimento sob relação de parentesco apenas em comissão ou de confiança e não no cargo efetivo."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Decreto nº 7.203, de 2010 - Art. 4º Não se incluem nas vedações deste Decreto as nomeações, designações ou contratações:",
+      "I - de servidores federais ocupantes de cargo de provimento efetivo, bem como de empregados federais permanentes, inclusive aposentados, observada a compatibilidade do grau de escolaridade do cargo ou emprego de origem, ou a compatibilidade da atividade que lhe seja afeta e a complexidade inerente ao cargo em comissão ou função comissionada a ocupar, além da qualificação profissional do servidor ou empregado;",
+      "II - de pessoa, ainda que sem vinculação funcional com a administração pública, para a ocupação de cargo em comissão de nível hierárquico mais alto que o do agente público referido no art. 3º;",
+      "III - realizadas anteriormente ao início do vínculo familiar entre o agente público e o nomeado, designado ou contratado, desde que não se caracterize ajuste prévio para burlar a vedação do nepotismo; ou",
+      "IV - de pessoa já em exercício no mesmo órgão ou entidade antes do início do vínculo familiar com o agente público, para cargo, função ou emprego de nível hierárquico igual ou mais baixo que o anteriormente ocupado.",
+      "Parágrafo único. Em qualquer caso, é vedada a manutenção de familiar ocupante de cargo em comissão ou função de confiança sob subordinação direta do agente público."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Importante reiterar que, enquanto a proibição do art. 117, VIII da Lei nº 8.112, de 1990, dirige-se a qualquer autoridade que mantenha o familiar sob sua direta e pessoal subordinação e não necessariamente se aplica à autoridade com competência para promover o provimento vedado (já que não necessariamente estas autoridades se confundem), o art. 3º do Decreto nº 7.203, de 2010, proíbe a nomeação, designação ou contratação de familiares de autoridades diversas dentro de um mesmo Ministério, dirigindo-se, portanto, exclusivamente à autoridade com competência para promover o provimento vedado. Nesta linha, o art. 5º do mencionado Decreto impõe o controle da prática do nepotismo aos titulares dos órgãos ou entidades, exonerando e dispensando agentes públicos em situação vedada ou requerendo tal providência da autoridade superior competente para tal."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Decreto nº 7.203, de 2010 - Art. 5º Cabe aos titulares dos órgãos e entidades da administração pública federal exonerar ou dispensar agente público em situação de nepotismo, de que tenham conhecimento, ou requerer igual providência à autoridade encarregada de nomear, designar ou contratar, sob pena de responsabilidade.",
+      "Parágrafo único. Cabe à Controladoria-Geral da União notificar os casos de nepotismo de que tomar conhecimento às autoridades competentes, sem prejuízo da responsabilidade permanente delas de zelar pelo cumprimento deste Decreto, assim como de apurar situações irregulares, de que tenham conhecimento, nos órgãos e entidades correspondentes."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Releva aduzir e sintetizar que, no atual estágio do ordenamento, o tema em tela pode se traduzir em duas diferentes possibilidades de repercussão para um servidor federal estatutário investido da condição de autoridade por ser ocupante de cargo em comissão ou de função em confiança. Na primeira, mais específica, se mantiver sob sua subordinação direta e imediata, sem degraus intermediários de hierarquia, seu cônjuge, companheiro ou parente até 2º grau, infringe a proibição estatuída no art. 117, VIII da Lei nº 8.112, de 1990, e pode ser apenado no mínimo com advertência por este enquadramento. Na segunda, se incorrer em qualquer outra vedação estabelecida no art. 3º do Decreto nº 7.203, de 2010, sem as excludentes que o art. 4º do mesmo Decreto permite, incorre em responsabilização disciplinar por inobservar a norma regulamentar, enquadrável no art. 116, III da Lei nº 8.112, de 1990, e também pode ser apenado no mínimo com advertência por este enquadramento."
+    },
+    {
+     "t": "p",
+     "x": "No caso específico da RFB, cujo corpo funcional se restringe a servidores detentores de cargo efetivo, mesmo com as inovações trazidas ao ordenamento pelo Decreto nº 7.203, de 2010, continuam válidas as exemplificações de ausência de ilegalidade já expressadas linhas acima, quando se apreciou apenas o comando estatutário, de que pode um servidor exercer seu cargo efetivo, sem nenhum provimento em comissão ou de confiança, em direta subordinação ao Chefe da Divisão, da Seção, do Serviço ou do Setor que é seu cônjuge, companheiro ou parente até 3º grau. Também não há ilegalidade no fato de um servidor exercer, na mesma Divisão, Seção, Serviço ou Setor, seu cargo efetivo ao lado do seu cônjuge, companheiro ou parente até 3º grau, como simples colegas de trabalho, sem que ambos possuam qualquer provimento em comissão ou de confiança. E, graças ao comando permissivo de seu art. 4º, satisfeitas as condições de grau de escolaridade e de atividade técnica do cargo efetivo com o cargo em comissão ou com a função de confiança a ser preenchido ou exercida, tampouco há ilegalidade em ambos terem provimentos em comissão de Chefes de distintas Divisões, Seções, Serviços ou Setores de uma mesma Delegacia ou Inspetoria ou Superintendência Regional ou ainda em ambos serem Delegados ou Inspetores-Chefes de diferentes unidades no âmbito de uma mesma Superintendência Regional. E menos ainda haveria de se cogitar de afronta ao Decreto em tela na hipótese de um servidor ser Chefe de Divisão, de Seção, ou de Serviço, ou de Setor ou ser Delegado ou Inspetor-Chefe e seu cônjuge, companheiro ou parente até 3º grau possuir qualquer provimento em comissão ou de confiança em outra unidade da mesma Região Fiscal ou em unidade de outra Região Fiscal ou em unidade do sistema correcional ou do sistema de pesquisa de investigação, em hipóteses em que nem sequer se cogita de relação hierárquica entre eles. Por fim, nem há que se mencionar a vedação do Decreto na hipótese de o servidor ter um provimento em comissão ou de confiança na RFB e seu cônjuge, companheiro ou parente até 3º grau também o ter em outro órgão ou entidade do mesmo Ministério da Fazenda e muito menos em outro Ministério."
+    },
+    {
+     "t": "p",
+     "x": "Em hipóteses adversas, ainda no caso específico da RFB, se uma autoridade mantiver seu cônjuge, companheiro ou parente até 2º grau sob direta subordinação ocupando cargo em comissão ou função de confiança (independentemente de tê-lo nomeado ou designado), incide no enquadramento estatutário específico do inciso VIII do art. 117 da Lei nº 8.112, de 1990. E se uma autoridade nomear ou designar servidor detentor de cargo específico e que seja cônjuge, companheiro ou parente até 3º grau do Ministro de Estado da Fazenda, do Secretário da Receita Federal do Brasil ou de qualquer autoridade interna detentora de cargo em comissão ou de função de confiança, para preencher cargo em comissão ou para exercer função de confiança, sem atender ao critério da compatibilidade de grau de escolaridade ou da atividade do cargo efetivo com o provimento em comissão ou de confiança, também incide em responsabilização disciplinar, com a liminar diferença de ser enquadrada no inciso III do art. 116 da mesma Lei, por inobservância da norma regulamentar estabelecida no art. 3º, I do Decreto nº 7.203, de 2010."
+    },
+    {
+     "t": "p",
+     "x": "Partindo-se do pressuposto de que designação de {{familiar}} para exercer a função de confiança de {{funcao_familiar}} atende as condições de grau de escolaridade e de compatibilidade de natureza e de grau de complexidade daquele encargo - questões que restam à margem da consulta e da consequente análise -, o provimento {{g:do consulente|da consulente}} ao cargo em comissão de {{cargo_comissao}} concomitantemente com o fato de {{familiar}}, ambos detentores de cargos efetivos, amolda-se à permissão estabelecida no art. 4º do Decreto nº 7.203, de 2010, não havendo, portanto, que se cogitar de afronta aos comandos proibitivos do art. 3º desta mesma norma na situação ora consultada."
+    },
+    {
+     "t": "p",
+     "x": "Não há, na situação concreta ora consultada, afronta a vedações estatutárias ou infralegais - quer dizer, nem ao inciso VIII do art. 117 da Lei nº 8.112, de 1990, tampouco ao Decreto nº 7.203, de 2010."
+    }
+   ]
+  }
+ ]
+}

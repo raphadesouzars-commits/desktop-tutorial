@@ -1,0 +1,491 @@
+{
+ "id": "investimentos",
+ "nome": "Investimentos: assessor, consultor, agente autônomo, planejamento financeiro e bolsa de valores",
+ "grupo": "Atuar ou interagir com o mercado (A.1)",
+ "descricao": "Usar quando o servidor pretende atuar no mercado financeiro (assessor/consultor/agente autônomo de investimentos, planejador financeiro, docência com consultoria em investimentos) ou consulta sobre investir recursos próprios em bolsa de valores.",
+ "palavrasChave": [
+  "assessor de investimentos",
+  "consultor de investimentos",
+  "consultoria financeira",
+  "agente autônomo de investimentos",
+  "aai",
+  "analista de investimentos",
+  "planejamento financeiro",
+  "planejador financeiro",
+  "cfp",
+  "bolsa de valores",
+  "ações",
+  "fundos imobiliários",
+  "day trade",
+  "corretora",
+  "cvm",
+  "mercado financeiro",
+  "captação de clientes",
+  "carteira de investimentos",
+  "renda variável",
+  "finanças pessoais"
+ ],
+ "variantes": [
+  {
+   "id": "assessor_consultor_investimentos_conflito",
+   "rotulo": "Assessoria ou consultoria de investimentos – configura conflito de interesses",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende atuar como assessor, consultor ou analista de investimentos (captação e assessoria financeira de clientes). Entendimento alinhado à posição atual da CGU, que negou casos análogos da RFB em 2024-2025 (art. 5º, I, III e IV, da Lei nº 12.813/2013).",
+   "fonte": "PAR 016/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ASSESSOR DE INVESTIMENTOS",
+   "ementa": [
+    "Consulta sobre a existência de conflito de interesses no exercício da atividade de {{atividade}}.",
+    "Atividade materialmente incompatível com o exercício do cargo."
+   ],
+   "campos": [
+    {
+     "id": "atividade",
+     "rotulo": "Atividade pretendida (completa a frase \"a atividade de ...\")",
+     "exemplo": "assessoria na área de investimentos",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Depreende-se do relato {{g:do servidor|da servidora}} que trata-se de pedido de autorização para a prática da atividade de {{atividade}}."
+    },
+    {
+     "t": "p",
+     "x": "Em razão de os servidores da RFB possuírem acesso a informações privilegiadas e sigilosas, tais como o conhecimento da situação patrimonial e financeira das empresas e de eventuais procedimentos fiscais a que estas podem estar submetidas em determinado momento, considera-se a atividade de {{atividade}} como sendo incompatível com o exercício do cargo de {{cargo_sigla}}. As informações de que um {{cargo_sigla}} é detentor, em razão das atribuições de seu cargo, podem representar uma vantagem competitiva {{g:ao servidor|à servidora}}, dentre outras facilitações e favorecimentos contrários ao interesse público."
+    },
+    {
+     "t": "p",
+     "x": "A título de exemplo, um servidor, conhecendo a situação contábil desfavorável de uma empresa, poderia desaconselhar aos clientes que presta assessoria a compra de papéis daquela pessoa jurídica. No outro sentido, poderia aconselhar a compra de tais papéis, se fosse detentor da informação de que uma fiscalização na empresa está prestes a ser encerrada sem lançamento de algum tributo."
+    },
+    {
+     "t": "p",
+     "x": "Desse modo, tem-se que as informações privilegiadas a que {{g:o servidor|a servidora}} possui acesso em razão do cargo, quando contrapostas à natureza da atividade de {{atividade}}, representam um alto risco de que sua atuação privada se desenvolva com a utilização indevida de informações e outras ferramentas restritas que lhes são disponíveis no exercício de sua função pública, com objetivo específico de facilitar negociações, angariar clientes e favorecer interesses próprios e de terceiros em detrimento do interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{atividade}} é incompatível com o exercício do cargo de {{cargo}} e sua prática configura situação de conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "docencia_e_consultoria_investimentos_parcial",
+   "rotulo": "Docência (compatível, com ressalvas) e consultoria (conflito) na área de finanças e investimentos",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende, ao mesmo tempo, ministrar cursos/aulas sobre finanças e investimentos e prestar consultoria (atendimento individual) nessa área: a docência é admitida com ressalvas e a consultoria é considerada incompatível. Atenção: em 2024 a CGU negou a consultoria de investimentos e condicionou cursos na área a compromisso do servidor; cursos para público amplo hoje exigem termo de compromisso.",
+   "fonte": "INF 069/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "DOCÊNCIA E CONSULTORIA NA ÁREA DE FINANÇAS E INVESTIMENTOS.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante das atividades de docência e consultoria, na área de finanças e investimentos, com o cargo de {{cargo}}. Compatibilidade quanto à atividade de docência. Incompatibilidade quanto à atividade de consultoria."
+   ],
+   "campos": [
+    {
+     "id": "empresa_vinculada",
+     "rotulo": "Empresa com a qual manterá relação de negócio (bloco opcional)",
+     "exemplo": "Empresa X Marketing e Serviços Ltda.",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Depreende-se do relatado {{g:pelo servidor|pela servidora}} que trata-se de pedido de autorização para a prática de duas atividades distintas: docência e consultoria na área de investimentos."
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade de docência é materialmente compatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolvam conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil (RFB) que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "É importante deixar claro que as aulas ministradas {{g:pelo servidor|pela servidora}} deverão abordar apenas aspectos gerais e teóricos dos investimentos, não podendo adentrar na análise de situações específicas de empresas. Esta ressalva é importante em razão de os servidores da RFB possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira das empresas e de eventuais procedimentos fiscais a que estas podem estar submetidas em determinado momento."
+    },
+    {
+     "t": "p",
+     "x": "Por este mesmo motivo (o acesso a informações sigilosas e privilegiadas), considera-se a atividade de consultoria na área de investimentos como sendo incompatível com o exercício do cargo de {{cargo_sigla}}. As informações de que um {{cargo_sigla}} é detentor, em razão das atribuições de seu cargo, podem representar uma vantagem competitiva {{g:ao servidor|à servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "A título de exemplo, um servidor, conhecendo a situação contábil desfavorável de uma empresa, poderia desaconselhar aos clientes de sua consultoria a compra de papéis daquela pessoa jurídica. No outro sentido, poderia aconselhar a compra de tais papéis, se fosse detentor da informação de que uma fiscalização na empresa está prestes a ser encerrada sem lançamento de algum tributo."
+    },
+    {
+     "t": "p",
+     "x": "Em relação à atividade de docência, que esta Coger entende como compatível com o exercício do cargo de {{cargo_sigla}}, ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "No que concerne à informação de que irá prestar serviços ou manter relação de negócio com a empresa {{empresa_vinculada}}, {{g:o servidor|a servidora}} não especificou em que consistiria tal relação comercial. Não é possível concluir se tal empresa comercializaria os cursos desenvolvidos {{g:pelo consulente|pela consulente}}, se haveria algum tipo de vínculo empregatício, se {{g:o servidor|a servidora}} faz parte do quadro societário da pessoa jurídica, se simplesmente lhe prestaria um serviço de hospedagem de sítio de internet ou se haveria algum outro tipo qualquer de relação.",
+     "opc": {
+      "id": "empresa_vinculada",
+      "rotulo": "Incluir análise sobre empresa com a qual o servidor manterá relação de negócio não especificada",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Contudo, independentemente do tipo de prestação de serviços ou relação de negócio mantida, {{g:o servidor|a servidora}} consulente deve se abster de atuar em qualquer processo de interesse da citada empresa que porventura tramite no âmbito da Receita Federal do Brasil.",
+     "opc": {
+      "id": "empresa_vinculada",
+      "rotulo": "Incluir análise sobre empresa com a qual o servidor manterá relação de negócio não especificada",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Como não ficou claro o vínculo que {{g:o consulente|a consulente}} estabeleceria com a empresa {{empresa_vinculada}}, há de se atentar, em análise que extrapola o escopo da Lei nº 12.813, de 2013, para a necessidade de observação do disposto no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990:",
+     "opc": {
+      "id": "empresa_vinculada",
+      "rotulo": "Incluir análise sobre empresa com a qual o servidor manterá relação de negócio não especificada",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;",
+      "(...)"
+     ],
+     "opc": {
+      "id": "empresa_vinculada",
+      "rotulo": "Incluir análise sobre empresa com a qual o servidor manterá relação de negócio não especificada",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de docência, descrita {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesse, desde que observadas as ressalvas acima expostas. Porém, a atividade de consultoria na área de investimentos é incompatível com o exercício do cargo de {{cargo}} e sua prática configura situação de conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "planejamento_financeiro_conflito",
+   "rotulo": "Consultoria e cursos de planejamento financeiro (CFP) – configura conflito de interesses",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor pretende prestar consultoria e ministrar cursos na área de planejamento financeiro pessoal/familiar (planejador financeiro, certificação CFP). Entendimento alinhado à CGU, que negou autorização para planejador financeiro em 2026 (art. 5º, I e III).",
+   "fonte": "INF 048/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTORIA E CURSOS NA ÁREA DE PLANEJAMENTO FINANCEIRO.",
+   "ementa": [
+    "Consulta sobre o exercício das atividades de prestar consultoria e ministrar cursos na área de planejamento financeiro. Atividades incompatíveis com o exercício do cargo de {{cargo}}. Configuração de conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Do relatado verifica-se que {{g:o consulente|a consulente}} pretende prestar consultoria e ministrar cursos na área de planejamento financeiro."
+    },
+    {
+     "t": "p",
+     "x": "Em consulta ao site http://www.ibcpf.org.br/, obtivemos as seguintes informações sobre essas atividades:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“O planejador financeiro Certified Financial Planner é um multiespecialista, com visão estratégica e conhecimentos de administração de investimentos, gerenciamento de riscos, previdência complementar, seguros, planejamento financeiro, fiscal e sucessório.",
+      "Componentes do Planejamento Financeiro O FPSB classificou as Capacidades do Planejador Financeiro em seis componentes de planejamento financeiro: 1. Gestão Financeira 2. Gestão de Ativos 3. Gestão de Risco 4. Planejamento Tributário 5. Planejamento de Aposentadoria 6. Planejamento Sucessório.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A partir do exposto acima, verifica-se que as atividades pretendidas {{g:pelo consulente|pela consulente}} se enquadram claramente na infração tipificada no artigo 5º, inciso III, da Lei nº 12.813, de 16 de maio de 2013:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Some-se a isso o grave risco potencial de essas atividades, uma vez em exercício, também se enquadrem em outras infrações tipificadas no artigo 5º, da Lei nº 12.813, de 2013, tais como as elencadas nos incisos I, II e IV desse dispositivo legal."
+    },
+    {
+     "t": "p",
+     "x": "Também chamamos atenção para o artigo 2º, caput e § 2º, da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, que ao tratar do exercício de atividade de magistério por agentes públicos do Poder Executivo Federal dispõe:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "(...)",
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A propósito, as informações de que um {{cargo_sigla}} é detentor, em razão das atribuições de seu cargo, podem representar uma vantagem competitiva {{g:ao servidor|à servidora}} em ambas as atividades."
+    },
+    {
+     "t": "p",
+     "x": "O mesmo entendimento foi perfilado pela CGU na Nota Técnica n.º 1870/2015/CGINT/DIACI/STPC/CGU-PR:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“15. Assim sendo, ao pretender atuar como consultor na área de finanças e investimento, o consulente poderá se colocar em situação de extrema vulnerabilidade, pois, possuidor de informações altamente relevantes ao seu negócio, o mesmo estaria a exercer, na seara privada, atividade eminentemente intelectual, de modo que, ao desenvolver o múnus consultivo, poderia utilizar, ainda que não intencionalmente, informações e conhecimentos adquiridos no exercício da função pública, criando, assim, conforme destacado pela RFB em sede de análise preliminar, uma vantagem competitiva indevida, dentre outras facilitações e favorecimentos contrários ao interesse público.",
+      "16. Nesse quadro, vale retomar a exemplificação trazida a lume pela Corregedoria da RFB. Como se verifica em sua análise preliminar, tem-se claro a incompatibilidade entre o cargo de AFRFB e a natureza da atividade de consultoria em finanças e investimento quando se observam as peculiaridades atinentes ao seu campo de atuação. Vislumbra-se, por exemplo, que o servidor, conhecendo a situação contábil desfavorável de uma empresa, poderia desaconselhar os clientes de sua consultoria a comprar os papéis daquela pessoa jurídica ou, em outro sentido, aconselhar a compra de papéis, se detentor de informação de que uma fiscalização na empresa estivesse prestes a ser encerrada sem lançamento de algum tributo.",
+      "17. Desse modo, tem-se, por certo, que as informações privilegiadas a que o servidor possui acesso aliadas às atribuições desempenhadas no âmbito da RFB, quando contrapostas à natureza da atividade privada pretendida, incluindo tratar-se de consultoria em área e matéria correlatas, representam um alto risco de que sua atuação privada se desenvolva com a utilização indevida de informações e outras ferramentas restritas que lhes são disponíveis no exercício de sua função pública, com objetivo específico de facilitar negociações, angariar clientes e favorecer interesses próprios e de terceiros em detrimento do interesse público.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, salientamos que as atividades consultadas também podem configurar a infração disciplinar disposta no artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990:",
+     "opc": {
+      "id": "infracao_disciplinar_117x",
+      "rotulo": "Incluir alerta sobre o art. 117, X, da Lei nº 8.112/1990 (matéria disciplinar)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário; (Redação dada pela Lei nº 11.784, de 2008)"
+     ],
+     "opc": {
+      "id": "infracao_disciplinar_117x",
+      "rotulo": "Incluir alerta sobre o art. 117, X, da Lei nº 8.112/1990 (matéria disciplinar)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "No mesmo sentido, essas atividades também podem configurar a infração disciplinar de improbidade administrativa (artigo 132, inciso IV, da Lei nº 8.112, de 1990), com a definição emprestada pelo artigo 11 da Lei nº 8.429, de 2 de junho de 1992, que em seu caput estabelece:",
+     "opc": {
+      "id": "improbidade",
+      "rotulo": "Incluir alerta sobre improbidade administrativa (art. 11 da Lei nº 8.429/1992 – redação anterior à Lei nº 14.230/2021)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 11. Constitui ato de improbidade administrativa que atenta contra os princípios da administração pública qualquer ação ou omissão que viole os deveres de honestidade, imparcialidade, legalidade, e lealdade às instituições, e notadamente:”."
+     ],
+     "opc": {
+      "id": "improbidade",
+      "rotulo": "Incluir alerta sobre improbidade administrativa (art. 11 da Lei nº 8.429/1992 – redação anterior à Lei nº 14.230/2021)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, é oportuno registrarmos que as matérias tratadas nos parágrafos anteriores têm caráter estritamente disciplinar, se encontrando fora da competência da Comissão de Ética Pública da Secretaria da Receita Federal do Brasil, que não detém competência para se manifestar sobre elas.",
+     "opc": {
+      "id": "infracao_disciplinar_117x",
+      "rotulo": "Incluir alerta sobre o art. 117, X, da Lei nº 8.112/1990 (matéria disciplinar)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, registramos que, no entendimento da {{orgao_corregedoria}}, o exercício das atividades de prestar consultoria e ministrar cursos na área de planejamento financeiro, descritas {{g:pelo consulente|pela consulente}} {{nome}}, são incompatíveis com o exercício do cargo de {{cargo}} e sua prática configura conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "agente_autonomo_investimentos_ressalvas",
+   "rotulo": "Agente autônomo de investimentos (ICVM 497/2011) – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como agente autônomo de investimentos (hoje, assessor de investimentos) vinculado a sociedade/escritório do sistema de distribuição de valores mobiliários. ATENÇÃO: entendimento de 2017-2019 superado – a CGU negou a atividade de assessor de investimentos a servidores da RFB em 2024-2025 (art. 5º, I, III e IV); além disso, a Instrução CVM nº 497/2011 foi revogada (Resoluções CVM nº 16/2021 e nº 178/2023). Use a variante de conflito, salvo orientação diversa.",
+   "fonte": "PAR 63/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "AGENTE AUTÔNOMO DE INVESTIMENTO.",
+   "ementa": [
+    "Pedido de autorização para realização da atividade de agente autônomo de investimentos, nos termos da Instrução CVM 497, de 2011. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "empresa",
+     "rotulo": "Sociedade/escritório a que o servidor se vinculará",
+     "exemplo": "XYZ Agentes Autônomos de Investimentos S/S Ltda.",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Conforme descrito nos itens 2 e 3 do formulário, {{g:o servidor|a servidora}} pretende exercer a atividade de Agente Autônomo de Investimento, associando-se à empresa {{empresa}}, nos termos do art. 2º da Instrução CVM nº 497, de 03/11/2011."
+    },
+    {
+     "t": "p",
+     "x": "Assim, para que se possa exarar uma opinião vinculada a uma situação concreta, o pedido de autorização será analisado considerando {{g:o consulente|a consulente}} {{g:vinculado|vinculada}} à empresa {{empresa}}. Se {{g:o consulente|a consulente}} se vincular a outra pessoa jurídica, deve {{g:ele|ela}} fazer outro pedido de autorização, uma vez que o entendimento aqui exarado não será aplicável.",
+     "opc": {
+      "id": "vinculo_futuro",
+      "rotulo": "Incluir parágrafos para o caso de a empresa ser apenas uma possibilidade (vínculo futuro ainda indefinido)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Veja-se, que conforme dispõe o art. 3°, III, da Portaria Interministerial n° 333, de 2013, é necessária a descrição contextualizada da situação relatada:",
+     "opc": {
+      "id": "vinculo_futuro",
+      "rotulo": "Incluir parágrafos para o caso de a empresa ser apenas uma possibilidade (vínculo futuro ainda indefinido)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3° - A consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada deverão ser formulados mediante petição eletrônica e conter no mínimo os seguintes elementos:",
+      "(…)",
+      "III – descrição contextualizada dos elementos que suscitam a dúvida."
+     ],
+     "opc": {
+      "id": "vinculo_futuro",
+      "rotulo": "Incluir parágrafos para o caso de a empresa ser apenas uma possibilidade (vínculo futuro ainda indefinido)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Instrução CVM n° 497, de 2011, assim define o agente autônomo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Agente autônomo de investimento é a pessoa natural, registrada na forma desta Instrução, para realizar, sob a responsabilidade e como preposto de instituição integrante do sistema de distribuição de valores mobiliários, as atividades de:",
+      "I - prospecção e captação de clientes;",
+      "II - recepção e registro de ordens e transmissão dessas ordens para os sistemas de negociação ou de registro cabíveis, na forma da regulamentação em vigor; e",
+      "III - prestação de informações sobre os produtos oferecidos e sobre os serviços prestados pela instituição integrante do sistema de distribuição de valores mobiliários pela qual tenha sido contratado.",
+      "Parágrafo único. A prestação de informações a que se refere o inciso III inclui as atividades de suporte e orientação inerentes à relação comercial com os clientes, observado o disposto no art. 10."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do inciso III, do artigo 5º, da Lei 12.813/2013, não existe conflito de interesses no exercício da atividade de agente autônomo de investimentos concomitante com o exercício do cargo de {{cargo}}, sob a ressalva de que não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, {{g:o consulente|a consulente}} deve agir preventivamente de forma a não incluir na sua prospecção de clientes, pessoas físicas que tenham sido objeto de procedimentos aduaneiros ou tributários de qualquer natureza de sua responsabilidade, na execução das atribuições do cargo público, a fim de evitar um possível conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Quanto ao inciso I citado no parágrafo anterior, chama-se atenção para o fato de que {{g:o servidor|a servidora}} não pode fazer uso de informações privilegiadas obtidas em razão das atividades exercidas na RFB, uma vez que, além de configurar conflito de interesse, pode gerar uma concorrência desleal no âmbito da atividade privada pretendida."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que {{g:o consulente|a consulente}} não informa qual é o vínculo que pretende manter com o CNPJ informado. Deve-se ter em mente, contudo, o que dispõe o art. 2° da supramencionada instrução sobre a forma de atuação do agente autônomo por intermédio de sociedade ou como firma individual:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º Os agentes autônomos de investimento podem exercer suas atividades por meio de sociedade ou firma individual constituída exclusivamente para este fim, observados os requisitos desta Instrução.",
+      "§ 1º A constituição de pessoa jurídica, na forma do caput, não elide as obrigações e responsabilidades estabelecidas nesta Instrução para os agentes autônomos de investimento que a integram nem para os integrantes do sistema de distribuição de valores mobiliários que a tenham contratado.",
+      "§ 2º A sociedade constituída na forma do caput será registrada na CVM, na forma do art. 4º."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, há de se chamar a atenção para o fato do possível exercício de gerência ou administração {{g:pelo consulente|pela consulente}} que ensejaria afronta ao disposto no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, dentro do contexto que {{g:o servidor|a servidora}} nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” de empresa, ainda que majoritário, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90, sendo-lhe expressamente vedadas atividades de gerência e administração."
+    },
+    {
+     "t": "p",
+     "x": "Assim, no que toca ao caso de firma individual, por ser imperativa a gerência, fica vedada esta forma de atuação do agente autônomo."
+    },
+    {
+     "t": "p",
+     "x": "Outro aspecto relevante é a impossibilidade de o agente autônomo atuar em qualquer tipo de consultoria de valores mobiliários ou financeira, pelo potencial risco de conflito de interesses com um servidor que atua dentro da Receita Federal do Brasil. Tal vedação encontra também amparo no art. 13, IV, da Instrução CVM nº 497, de 2011:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 13. É vedado ao agente autônomo de investimento ou à pessoa jurídica constituída na forma do art. 2º:",
+      "(…)",
+      "IV - contratar com clientes ou realizar, ainda que a título gratuito, serviços de administração de carteira de valores mobiliários, consultoria ou análise de valores mobiliários;",
+      "(...)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De antemão, observa-se que a atividade de consultoria se trata de atividade econômica regular, quando desempenhada nos limites da livre iniciativa privada. Esta atividade assume contornos infracionais quando é exercida por agente público em área de conhecimento ou de atuação relacionada com as atribuições legais do cargo que ocupa ou com sua condição de servidor, conferindo a tal prática a mácula de incompatibilidade por conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Por todo o exposto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de agente autônomo de investimentos {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "investir_bolsa_recursos_proprios",
+   "rotulo": "Investir recursos próprios em bolsa de valores – ato privado, sem impedimento (vedado o uso de informação privilegiada)",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor consulta se pode comprar e vender ações, fundos imobiliários, contratos futuros e outros ativos em bolsa com recursos próprios, sem prestar serviço a terceiros, e declara não ter acesso a informações privilegiadas sobre as empresas. ATENÇÃO: em 2024 a CGU negou a compra de ações por Auditor-Fiscal que atuava no monitoramento das obrigações tributárias das empresas listadas (art. 5º, I e III); verifique se o servidor lida com dados dessas empresas antes de usar este modelo.",
+   "fonte": "PAR 187/2020",
+   "assunto": "Consulta",
+   "ementaTitulo": "LEI DE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Consulta acerca da possibilidade de servidor da RFB investir em Bolsas de Valores. Inexistência de impedimentos observada a não utilização de informação privilegiada."
+   ],
+   "campos": [
+    {
+     "id": "exercicio_cargo",
+     "rotulo": "Onde/como o servidor exerce suas atividades (completa \"exerce sua atividade ...\")",
+     "exemplo": "na fronteira com o Paraguai, fiscalizando caminhões e cargas",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo consulente|pela consulente}}, não se trata de exercício de atividade privada, mas sim de ato privado de interesse personalíssimo, no caso, investimentos financeiros com recursos próprios na Bolsa de Valores do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O servidor|A servidora}} informa que não tem acesso a informações privilegiadas e que exerce sua atividade {{exercicio_cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no presente caso, sob o prisma do inciso III, do art. 5° da citada Lei, verifica-se que não há efetivamente uma atividade a ser exercida {{g:pelo servidor|pela servidora}}, mas apenas um ato privado de decisão de investimentos em Bolsa de Valores."
+    },
+    {
+     "t": "p",
+     "x": "Com relação ao inciso I, do art. 5°, da Lei n° 12.813, de 2013, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência, não utilizando qualquer informação privilegiada ou sigilosa obtida em razão do cargo."
+    }
+   ]
+  }
+ ]
+}

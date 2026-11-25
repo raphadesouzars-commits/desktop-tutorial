@@ -1,0 +1,56 @@
+{
+ "id": "controle_dopagem",
+ "nome": "Coletor de material para controle de dopagem (ABCD)",
+ "descricao": "Usar quando o servidor pretende atuar como agente/coletor de controle de dopagem, de forma autônoma, para a Autoridade Brasileira de Controle de Dopagem.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "dopagem",
+  "doping",
+  "antidoping",
+  "controle de dopagem",
+  "abcd",
+  "autoridade brasileira de controle de dopagem",
+  "coleta de urina",
+  "coletor",
+  "oficial de controle de dopagem",
+  "rpa",
+  "atividade esporádica"
+ ],
+ "variantes": [
+  {
+   "id": "coletor_autonomo_abcd",
+   "rotulo": "Coletor de material para testes de dopagem (ABCD), como autônomo – inexistência de conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor certificado pretende atuar, de forma esporádica e autônoma (sem vínculo empregatício, pagamento por RPA), na coleta de material para controle de dopagem por designação da Autoridade Brasileira de Controle de Dopagem, fora do horário de trabalho.",
+   "fonte": "PAR 194/2020",
+   "assunto": "Pedido de autorização.",
+   "ementaTitulo": "CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Pedido de autorização para desenvolver atividades para o órgão público denominado Autoridade Brasileira de Controle de Dopagem. Inexistência de conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo consulente|pela consulente}}, trata-se de atividade a ser exercida de forma autônoma, a partir de solicitação da Autoridade Brasileira de Controle de Dopagem, sem vínculo empregatício, o que afasta a possibilidade de acumulação ilegal de cargos."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer a atividade de coletor de material para testes de dopagem, uma vez que inexiste a hipótese de conflito de interesses."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,179 @@
+{
+ "id": "fora_ambito_conflito_interesses",
+ "nome": "Consulta fora do âmbito da Lei de Conflito de Interesses (atividade de terceiro, questão funcional interna, conselho de estatal)",
+ "descricao": "Usar quando a consulta feita pelo SeCI não envolve atividade ou interesse privado do próprio servidor (atividade do cônjuge, dúvida sobre o próprio trabalho, conselho fiscal de empresa estatal) e deve retornar à Cogep.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "cônjuge",
+  "esposa",
+  "marido",
+  "terceiro",
+  "empresa do cônjuge",
+  "mei do cônjuge",
+  "não vou exercer atividade",
+  "divergência com a chefia",
+  "segregação de funções",
+  "projeto da rfb",
+  "conselho fiscal de empresa pública",
+  "sociedade de economia mista",
+  "empresa estatal",
+  "fora do âmbito"
+ ],
+ "variantes": [
+  {
+   "id": "atividade_exercida_por_terceiro",
+   "rotulo": "Atividade privada a ser exercida por terceiro (cônjuge) – não se enquadra em exercício de atividade; retorno à Cogep",
+   "resultado": "outro",
+   "quandoUsar": "Servidor não exercerá atividade alguma: consulta se há irregularidade em seu cônjuge (ou outro terceiro) abrir empresa ou prestar serviço em área relacionada ao seu trabalho na RFB. Atenção: em 2024 a CGU apreciou no mérito consulta de servidor da RFB sobre atividade da esposa e concluiu por risco mitigável (art. 5º, V, da Lei nº 12.813/2013 – uso de suspeição/impedimento), em vez de considerá-la fora do âmbito da Lei.",
+   "fonte": "PAR 250/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES NA ABERTURA DE EMPRESA POR TERCEIRO.",
+   "ementa": [
+    "Consulta sobre o possível conflito de interesses entre as atividades realizadas {{g:pelo servidor|pela servidora}} no cargo ocupado na Secretaria da Receita Federal do Brasil (RFB) e a abertura de empresa privada pelo cônjuge. Não se enquadra em exercício de atividade. Proposta de retorno do processo à Coordenação-Geral de Gestão de Pessoas (COGEP)."
+   ],
+   "campos": [
+    {
+     "id": "terceiro",
+     "rotulo": "Terceiro que exercerá a atividade (completa \"qual seja, ...\")",
+     "exemplo": "sua cônjuge",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividade_terceiro",
+     "rotulo": "O que o terceiro pretende fazer (completa \"que pretende ...\")",
+     "exemplo": "constituir uma empresa com objetivo de prestar serviço de assessoria virtual ao eSocial",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verificou-se inicialmente que {{g:o consulente|a consulente}} se refere a uma atividade a ser prestada por terceiro, qual seja, {{terceiro}}, que pretende {{atividade_terceiro}}."
+    },
+    {
+     "t": "p",
+     "x": "Faz-se necessário salientar que a Portaria Interministerial nº 333/2013 disciplina os procedimentos para a consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada por servidor ou empregado público do Poder Executivo federal, no âmbito de competência atribuída à Controladoria-Geral da União (CGU) pelo parágrafo 1º do artigo 4º e pelo artigo 8º da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "A referida Portaria Interministerial definiu em seu artigo 2º, inciso I, que a consulta é um “instrumento à disposição de servidor ou empregado público pelo qual ele pode solicitar, a qualquer momento, orientação acerca de situação concreta, individualizada, que lhe diga respeito e que possa suscitar dúvidas quanto à ocorrência de conflito de interesses”."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, a mesma Portaria, em seu artigo 3º, inciso II, determina que é necessário que a consulta contenha “referência a objeto determinado e diretamente vinculado ao interessado”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, as informações prestadas {{g:pelo consulente|pela consulente}} evidenciam que a atividade privada será exercida por terceiro, portanto, não se trata de caso que motive a aplicação das normas que tratam especificamente de conflito de interesses, por não abranger a eventual incompatibilidade de exercício da função pública com atividade privada."
+    },
+    {
+     "t": "p",
+     "x": "Feitas essas considerações, como o presente caso não diz respeito a conflito de interesses, não deve ser seguido o trâmite previsto pela {{portaria_curta}}. Destarte, propõe-se que o presente dossiê retorne à Coordenação-Geral de Gestão de Pessoas (COGEP/RFB), para cientificação {{g:do consulente|da consulente}}."
+    }
+   ]
+  },
+  {
+   "id": "ausencia_de_interesse_privado",
+   "rotulo": "Dúvida sobre o próprio trabalho na RFB, sem interesse privado – não é conflito de interesses; retorno à Cogep",
+   "resultado": "outro",
+   "quandoUsar": "A consulta não envolve atividade ou interesse privado do servidor: trata de divergência com a chefia ou de dúvida sobre atribuições exercidas no próprio cargo (ex.: segregação de funções em projeto/contratação da RFB).",
+   "fonte": "PAR 129/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE SITUAÇÃO FUNCIONAL SEM INTERESSE PRIVADO.",
+   "ementa": [
+    "Consulta sobre o possível conflito de interesses em situação relativa ao exercício do próprio cargo na Secretaria Especial da Receita Federal do Brasil (RFB). Ausência de contraposição entre interesse público e privado. Proposta de retorno do processo à Coordenação-Geral de Gestão de Pessoas (COGEP)."
+   ],
+   "campos": [
+    {
+     "id": "situacao_consultada",
+     "rotulo": "Situação consultada (completa \"o consulente se refere ...\")",
+     "exemplo": "à possibilidade de participação, como titular responsável, em todas as fases/atividades de determinado projeto de tecnologia da RFB",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verificou-se inicialmente que {{g:o consulente|a consulente}} se refere {{situacao_consultada}}, no exercício do cargo de {{cargo}} por {{g:ele|ela}} ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Faz-se necessário salientar que a Portaria Interministerial nº 333/2013 disciplina os procedimentos para a consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada por servidor ou empregado público do Poder Executivo federal, no âmbito de competência atribuída à Controladoria-Geral da União (CGU) pelo parágrafo 1º do artigo 4º e pelo artigo 8º da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "A referida Portaria Interministerial definiu em seu artigo 2º, inciso I, que a consulta é um “instrumento à disposição de servidor ou empregado público pelo qual ele pode solicitar, a qualquer momento, orientação acerca de situação concreta, individualizada, que lhe diga respeito e que possa suscitar dúvidas quanto à ocorrência de conflito de interesses”."
+    },
+    {
+     "t": "p",
+     "x": "O inciso I do artigo 3º da Lei nº 12.813/2013, por sua vez, define conflito de interesses como sendo “a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, conforme salientado {{g:pelo próprio consulente|pela própria consulente}} no item 9 do formulário, não se verifica a existência de confronto entre interesse público e privado. Portanto, não se trata de caso que motive a aplicação das normas que regem especificamente de conflito de interesses no âmbito da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Feitas essas considerações, como o presente caso não diz respeito a conflito de interesses disciplinado pela Lei nº 12.813/2013, não deve ser seguido o trâmite previsto pela {{portaria_curta}}. Destarte, propõe-se que o presente processo retorne à Coordenação-Geral de Gestão de Pessoas (COGEP/RFB), para cientificação {{g:do consulente|da consulente}}."
+    }
+   ]
+  },
+  {
+   "id": "conselho_fiscal_estatal",
+   "rotulo": "Conselho fiscal de empresa pública ou sociedade de economia mista – fora do âmbito da Lei nº 12.813; retorno à Cogep",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende participar de conselho fiscal de empresa estatal (empresa pública ou sociedade de economia mista, inclusive estadual ou municipal); entendeu-se não haver interesse privado e remeteu-se a matéria à Lei nº 13.303/2016.",
+   "fonte": "INF 037/2017",
+   "assunto": "Consulta sobre participar de conselho fiscal de empresa estatal.",
+   "ementaTitulo": "CONSELHO FISCAL DE EMPRESA ESTATAL.",
+   "ementa": [
+    "Consulta sobre participar de conselho fiscal de {{tipo_entidade}}. Matéria fora do âmbito da Lei nº 12.813, de 2013. Restituição dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep)."
+   ],
+   "campos": [
+    {
+     "id": "tipo_entidade",
+     "rotulo": "Tipo de entidade estatal",
+     "exemplo": "sociedade de economia mista municipal",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Ora, conforme disposto no artigo 3º, inciso I, da Lei nº 12.813, de 2013:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública;”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, tendo em vista que {{g:o consulente|a consulente}} pretende participar de conselho fiscal de {{tipo_entidade}}, verifica-se que o presente caso está fora do âmbito da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Salientando-se que provavelmente este caso deve ser analisado no âmbito da Lei nº 13.303, de 30 de junho de 2016, que dispõe sobre o estatuto jurídico da empresa pública, da sociedade de economia mista e de suas subsidiárias, no âmbito da União, dos Estados, do Distrito Federal e dos Municípios; que em seu artigo 26, § 2º inclusive prevê a participação de servidor público em conselho fiscal, conforme transcrito a seguir:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 26. Além das normas previstas nesta Lei, aplicam-se aos membros do Conselho Fiscal da empresa pública e da sociedade de economia mista as disposições previstas na Lei nº 6.404, de 15 de dezembro de 1976, relativas a seus poderes, deveres e responsabilidades, a requisitos e impedimentos para investidura e a remuneração, além de outras disposições estabelecidas na referida Lei.",
+      "(...)",
+      "§ 2º O Conselho Fiscal contará com pelo menos 1 (um) membro indicado pelo ente controlador, que deverá ser servidor público com vínculo permanente com a administração pública”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, propomos a restituição dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do consulente|da consulente}} de que esta matéria se encontra fora do âmbito da Lei nº 12.813, de 2013."
+    }
+   ]
+  }
+ ]
+}

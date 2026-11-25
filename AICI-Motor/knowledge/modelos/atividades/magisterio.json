@@ -1,0 +1,673 @@
+{
+ "id": "magisterio",
+ "nome": "Magistério (docência, aulas, cursos e tutoria)",
+ "descricao": "Use quando o servidor consulta ou pede autorização para lecionar: docência em instituição de ensino, cursos, tutoria, professor em rede pública ou magistério em regime de teletrabalho.",
+ "palavrasChave": [
+  "magistério",
+  "professor",
+  "professora",
+  "docência",
+  "lecionar",
+  "ministrar aulas",
+  "dar aulas",
+  "faculdade",
+  "universidade",
+  "curso",
+  "ensino superior",
+  "pós-graduação",
+  "tutor",
+  "tutoria",
+  "ead",
+  "ensino à distância",
+  "curso preparatório",
+  "resolução de questões",
+  "rede pública",
+  "teletrabalho"
+ ],
+ "variantes": [
+  {
+   "id": "docencia_instituicao_privada",
+   "rotulo": "Docência em instituição de ensino privada – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende lecionar em instituição de ensino privada (graduação, pós-graduação, cursos regulares), fora do horário de expediente.",
+   "fonte": "PAR 281/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE DOCÊNCIA EM INSTITUIÇÕES DE ENSINO SUPERIOR PRIVADAS.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de docência em ensino superior com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade de docência pretendida (completa a frase \"a atividade de ...\")",
+     "exemplo": "Docência em cursos de graduação em Administração e Ciências Contábeis em Instituições de Ensino Superior privadas",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III da referida lei, verifica-se que a atividade de {{descricao_atividade}} é materialmente compatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Cumpre salientar que a atividade em análise é objeto da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, a qual autoriza, na primeira parte do caput do artigo 2º, o exercício da atividade de magistério por agente público."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o servidor|a servidora}} da estrita observância das restrições impostas pela própria norma supracitada, conforme incisos I, II e III, e os §§ 2º a 5º do mesmo artigo 2º, além dos artigos 3º e 5º, parágrafo único do artigo 6º e, em especial, do disposto no artigo 4º da referida Orientação Normativa."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "(...)",
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "§ 3º Para efeitos dos incisos I e II do caput deste artigo, no tocante aos servidores estatutários, deve ser especialmente observado o disposto no Decreto nº 1.590, de 10 de agosto de 1995, no Parecer AGU nº GQ-145, de 16 de março de 1998, e na Portaria Normativa SEGEP/MP nº 2, de 12 de março de 2012.",
+      "§ 4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "Art. 3º Quando a atividade de magistério ocorrer no interesse institucional do órgão ou entidade a que pertence o agente público indicado, é vedado o recebimento de remuneração de origem privada, ressalvada a possibilidade de indenização por transporte, alimentação e hospedagem paga, total ou parcialmente, pela instituição promotora.",
+      "Art. 4º Na hipótese de magistério em curso preparatório para concurso público ou processo seletivo, o agente público não poderá atuar em qualquer atividade relacionada à definição do cronograma ou do conteúdo programático do certame ou relacionada à elaboração, aplicação e correção de provas de qualquer fase, incluindo-se o curso de formação, o teste psicotécnico ou psicológico e a prova de aptidão.",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3º da Lei nº 12.813, de 2013.",
+      "Art. 6º (...)",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Cabe destacar que a Orientação Normativa CGU n° 2/2014 imprime uma definição bastante ampla para o espectro permitido e presumivelmente não conflituoso da atividade de magistério."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, faz-se necessário deixar claro que as aulas ministradas {{g:pelo|pela}} consulente deverão abordar apenas aspectos gerais e teóricos sobre os temas, não podendo adentrar na análise de situações específicas de empresas. Esta ressalva é importante em razão de os servidores em exercício nesta RFB possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira das empresas, e de eventuais procedimentos fiscais e/ou aduaneiros a que estas podem estar submetidas em determinado momento."
+    },
+    {
+     "t": "p",
+     "x": "Cabe chamar atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em qualquer processo de interesse da empresa em que lecione, que porventura tramite no âmbito da RFB, conforme disposto no § 4º do artigo 2º da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, acima transcrito."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "magisterio_teletrabalho",
+   "rotulo": "Magistério por servidor em teletrabalho – não configura conflito, desde que observadas as recomendações",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor em regime de teletrabalho pretende lecionar e questiona se pode ministrar aulas no horário de funcionamento da repartição.",
+   "fonte": "PAR 102/2022",
+   "assunto": "Pedido de autorização formulado por meio do SeCI.",
+   "ementaTitulo": "MAGISTÉRIO EM CURSO DE NÍVEL SUPERIOR.",
+   "ementa": [
+    "O pedido de autorização é analisado com o objetivo de verificar se há configuração de conflito de interesses entre o exercício do cargo público e a atividade privada a ser exercida. Não configura conflito de interesses o exercício, {{g:pelo|pela}} requerente, de atividade privada como {{g:professor|professora}}, desde que observadas as recomendações. Inteligência da Portaria RFB nº 2.383/2017."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade pretendida (completa a frase \"pretende exercer atividade privada como ...\")",
+     "exemplo": "professora do curso de Direito em faculdade particular",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "No pedido, {{g:o|a}} consulente informa que pretende exercer atividade privada como {{descricao_atividade}}. Questiona se há impedimento para que as aulas sejam ministradas no horário de funcionamento da repartição, uma vez que se encontra na modalidade de teletrabalho, {{g:sujeito|sujeita}}, portanto, ao controle de metas."
+    },
+    {
+     "t": "p",
+     "x": "A legislação pátria estabelece limites para o exercício da atividade privada em concomitância com o cargo público quanto à configuração de conflito de interesses e à compatibilidade de horários."
+    },
+    {
+     "t": "p",
+     "x": "Quanto à primeira limitação, não se verifica a configuração do conflito de interesses previsto no art. 5º, III da Lei nº 12.813/2013, dado que a área de trabalho e a matéria são compatíveis com as atribuições do cargo. Especificamente em relação ao exercício do magistério, a Controladoria Geral da União, na condição de órgão central do Sistema de Correição do Poder Executivo Federal (SisCor-PEF), editou a Orientação Normativa (ON) CGU nº 2, de 9 de setembro de 2014, que trata do exercício do magistério por agentes públicos do Poder Executivo Federal."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o artigo 2º dessa Orientação, a posição é de que o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813, de 2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o|a}} consulente da estrita observância das restrições impostas pela própria norma supracitada. Nesse sentido, importante destacar alguns trechos da ON CGU nº 2, de 2014:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei n.º 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação ilegal de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "§1º Por magistério, para fins desta Orientação Normativa, compreendem-se as seguintes atividades, ainda que exercidas de forma esporádica ou não remunerada:",
+      "I - docência em instituições de ensino, de pesquisa ou de ciência e tecnologia, públicas ou privadas;",
+      "II - capacitação ou treinamento, mediante cursos, palestras ou conferências; e",
+      "III - outras correlatas ou de suporte às dos incisos I e II deste parágrafo, tais como funções de coordenador, monitor, preceptor, avaliador, integrante de banca examinadora de discente, presidente de mesa, moderador e debatedor, observada a proibição do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990.",
+      "(…)",
+      "§4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "(...)",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3° da Lei n.º 12.813, de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob a ótica do inciso III, do art. 5° da Lei nº 12.813/2013, verifica-se que o exercício da atividade pretendida é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Em relação à compatibilidade de horários, {{g:o|a}} consulente informa estar em regime de Teletrabalho. Por oportuno, cabe pontuar aspectos referentes a esse regime, o qual é regulado pela Portaria RFB nº 2.383, de 13 de julho de 2017. De acordo com o seu art. 3º, a realização das atividades em Teletrabalho é facultativa, “ficando sua admissão nessa modalidade ao critério da Administração, em função da conveniência do serviço”. A designação do servidor para o Teletrabalho não é direito do solicitante (art. 3º, parágrafo único)."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, o art. 1º, § 2º da citada portaria estabelece que “o Teletrabalho não exime o servidor de ser convocado para reuniões, treinamentos, cursos ou execução de atividades outras dentro ou fora da RFB, inclusive em outra localidade”. Dessa maneira, o servidor em Teletrabalho deverá atender às convocações para as reuniões administrativas, participação em eventos de capacitação ou execução de atividades em geral. Essas atividades poderão ocorrer no horário regular de funcionamento da RFB, sendo necessário {{g:ao|à}} requerente estar disponível sempre que for {{g:solicitado|solicitada}}."
+    },
+    {
+     "t": "p",
+     "x": "Salienta-se que, por definição, o Teletrabalho consiste na realização de atividades inerentes às competências da RFB, fora das dependências físicas de suas Unidades. A dedicação e o zelo pela coisa pública devem permanecer os mesmos, devendo {{g:o servidor|a servidora}} “agir de modo a prevenir ou a impedir possível conflito de interesses” (art. 4º da Lei nº 12.813/2013)."
+    },
+    {
+     "t": "p",
+     "x": "Conforme o art. 21, § 2º, V, da Portaria RFB nº 773, de 24 de junho de 2013, que aprova o Código de Conduta dos Agentes Públicos em exercício na RFB (Código de Conduta da RFB):"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 21, § 2º Suscita conflito de interesses, entre outros, o exercício de atividade que:",
+      "(...)",
+      "V – comprometa a precedência das atividades do cargo ou função pública sobre quaisquer outras atividades."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se, desse modo, a obrigatoriedade de {{g:o servidor|a servidora}} prevenir ou impedir o conflito de interesses. {{g:O servidor|A servidora}} tem o dever de não comprometer a precedência das atividades do cargo público sobre as demais atividades."
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, considerando as informações prestadas {{g:pelo servidor|pela servidora}} {{nome}} no pedido e a legislação atual acerca da matéria, no entendimento da {{orgao_corregedoria}}, concluiu-se que não configura conflito de interesses, com base na Lei nº 12.813/2013, o exercício concomitante do cargo público e da atividade privada de {{g:professor|professora}} de ensino superior, desde que observadas as recomendações acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "rede_publica_acumulacao_cargo_nao_tecnico",
+   "rotulo": "Professor em rede pública – impossibilidade por acumulação de cargos (cargo não técnico/científico)",
+   "resultado": "outro",
+   "quandoUsar": "Servidor ocupante de cargo que NÃO é técnico ou científico (isto é, que não seja AFRFB nem ATRFB) pretende ser professor em rede pública de ensino (cargo, emprego ou contrato temporário remunerado por ente público).",
+   "fonte": "PAR 079/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "MAGISTÉRIO REDE PÚBLICA. IMPOSSIBILIDADE POR ACUMULAÇÃO DE CARGOS. SERVIDOR NÃO OCUPA CARGO TÉCNICO.",
+   "ementa": [
+    "Pedido de autorização para exercer concomitantemente a atividade de professor em rede pública com o cargo de {{cargo}}. Impossibilidade. Caracterização de acumulação de cargos."
+   ],
+   "campos": [
+    {
+     "id": "rede_ensino",
+     "rotulo": "Rede pública em que pretende lecionar",
+     "exemplo": "Rede Pública Estadual de São Paulo",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "ente_publico",
+     "rotulo": "Ente que pagaria a remuneração de professor (completa \"dos cofres ...\")",
+     "exemplo": "do Estado de São Paulo",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Preliminarmente, é importante ressaltar que a atividade de magistério é compatível materialmente com o exercício de cargo público à luz da Lei de Conflito de Interesses. Contudo, conforme descrito {{g:pelo servidor|pela servidora}}, {{g:ele|ela}} pretende exercer a atividade de {{g:Professor|Professora}} na {{rede_ensino}}. A despeito da compatibilidade material, por se tratar de dois cargos públicos, há que se observar as normas atinentes à acumulação de cargos e empregos públicos, em análise que foge ao escopo da Lei de Conflito de Interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, {{g:o|a}} consulente estaria a receber remuneração dos cofres da União e dos cofres {{ente_publico}}, o que caracterizaria um claro caso de acumulação de cargos públicos, restando saber se a mesma é lícita ou ilícita."
+    },
+    {
+     "t": "p",
+     "x": "Tal análise, portanto, foge ao escopo da Lei nº 12.813/2013 e se insere na seara de uma consulta acerca de matéria correicional."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica na alínea “b” do inciso XVI do art. 37 da Constituição Federal, somente são permitidas acumulações de cargos, empregos ou funções de um provimento técnico ou científico público com um provimento de professor público e ainda sujeita à compatibilidade de horários."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "CF - Art. 37.",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários: (Redação dada pela Emenda Constitucional nº 19, de 14/06/98)",
+      "b) a de um cargo de professor com outro, técnico ou científico; (Redação dada pela Emenda Constitucional nº 19, de 14/06/98)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, também é a Orientação Normativa CGU nº 2, de 09/09/14:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação de cargos e empregos públicos; e",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "§ 3º Para efeitos dos incisos I e II do caput deste artigo, no tocante aos servidores estatutários, deve ser especialmente observado o disposto no Decreto nº 1.590, de 10 de agosto de 1995, no Parecer AGU nº GQ-145, de 16 de março de 1998, e na Portaria Normativa SEGEP/MP nº 2, de 12 de março de 2012"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "O interesse maior no presente caso recai na previsão excepcionalmente permissiva prevista na alínea “b” do inciso XVI do art. 37 da CF, envolvendo um cargo, emprego ou função de professor com outro técnico ou científico, que é a única possibilidade viável de acumulação lícita no âmbito da RFB."
+    },
+    {
+     "t": "p",
+     "x": "Faz-se necessário definir estas duas espécies de provimento, técnico e científico, em diferenciação das atividades meramente administrativas. Diz-se “técnico” o cargo, o emprego ou a função cuja investidura requeira do candidato conhecimentos e habilitação legal específica, não necessariamente de nível superior, para o exercício de determinada atividade profissional, a fim de assegurar o satisfatório desempenho de suas atribuições. E diz-se “científico” o cargo, o emprego ou a função cuja investidura requeira do candidato a qualificação em nível superior que legalmente o habilite a atuar na pesquisa em áreas específicas do conhecimento humano. A atribuição de natureza técnica ou científica a um cargo, emprego ou função depende fortemente das atividades concretas e cotidianas que necessariamente o agente tem de executar no desempenho daquele múnus público e, por consequência, também do rol de conhecimentos que dele se exige, pois indispensavelmente são aplicados no exercício das atribuições legais, diferentemente dos provimentos meramente administrativos para desempenho de atribuições generalistas, que não requerem do executor uma formação técnica ou acadêmica."
+    },
+    {
+     "t": "p",
+     "x": "Diferencie-se, de outro lado, que a acepção de técnico ou de científico de um cargo não se atrela às condições ou capacitações pessoais de cada servidor; em outras palavras, não é o currículo escolar e acadêmico ou profissional do servidor que, por si só, lhe atribui individualmente alguma daquelas adjetivações. Ainda que o servidor possua imenso, amplo e sólido rol de saberes e de conhecimentos em sua formação profissional ou acadêmica, a consideração de que um cargo é técnico ou científico vincula-se a suas atribuições legais, que requerem para seu desempenho a aplicação daquela técnica ou daquele conhecimento. A qualificação individual do agente pode ser pré-requisito para a investidura no provimento constitucionalmente favorecido com acumulação com outro provimento de professor, mas não é suficiente, uma vez que se o agente devidamente qualificado venha a ocupar um cargo de atribuições generalistas meramente administrativas não estará contemplado na licitude de acumulação."
+    },
+    {
+     "t": "p",
+     "x": "Atente-se que não necessariamente apenas pelo fato de o cargo exigir grau de escolaridade superior significa que seja técnico ou científico. O grau de escolaridade superior, como requisito de investidura, não é condição necessária e muito menos suficiente para que o cargo seja qualificado como técnico ou como científico. De um lado, pode-se ter cargo de nível intermediário que exija capacitação prévia em curso técnico específico e que, como tal, será qualificado na acepção constitucional em comento; de outro lado, um cargo cujas atribuições legais se revelam meramente burocráticas (rotineiras, repetitivas e de baixo grau de complexidade) não será assim considerado, independentemente de eventual exigência de determinado grau de escolaridade para investidura e da habilitação pessoal do servidor. Por fim, a mera denominação do cargo em nada importa para, juridicamente, lhe emprestar natureza técnica ou científica nos termos exigidos pelo ordenamento, como ocorre, por exemplo, em cargo cujo nome compõe-se do termo “Técnico”."
+    },
+    {
+     "t": "p",
+     "x": "No caso específico da Receita Federal do Brasil, os cargos de Auditor-Fiscal e de Analista Tributário da Receita Federal do Brasil (AFRFB e ATRFB) são, na definição legal, cargos técnicos e, portanto, podem, à vista de compatibilidade de horário, acumular licitamente com outro provimento público de professor. Por outro lado, os demais cargos não perfazem os requisitos legais e jurídicos para serem considerados técnicos ou científicos, já que desempenham atividades generalistas de apoio administrativo, como é o caso do cargo ocupado {{g:pelo|pela}} consulente."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no presente caso, tem-se uma situação de afronta constitucional, sem relação com a Lei de Conflitos de Interesses, uma vez que o cargo ocupado {{g:pelo|pela}} consulente não é considerado como técnico ou científico, única condição que poderia ser autorizativa para a acumulação de cargos."
+    }
+   ]
+  },
+  {
+   "id": "docencia_resolucao_questoes",
+   "rotulo": "Professor de resolução/comentário de questões – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como professor resolvendo/comentando questões (material didático, cursos abertos ao público em geral), remunerado por questão ou por serviço, sem vínculo com a empresa.",
+   "fonte": "PAR 069/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ATIVIDADE DOCENTE",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de docência com o cargo de {{cargo}}.",
+    "Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III da referida lei, verifica-se que o exercício da docência por meio da resolução de questões, é materialmente compatível com o cargo de {{cargo}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "O exercício do magistério por agentes públicos do Poder Executivo Federal foi tratado na Controladoria Geral da União, na condição de órgão central do Sistema de Correição do Poder Executivo Federal (SisCor-PEF), em sua Orientação Normativa (ON) CGU nº 2, de 9 de setembro de 2014. De acordo com o artigo 2º dessa Orientação, a posição apriorística é de que o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813, de 2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o|a}} consulente da estrita observância das restrições impostas pela própria norma supracitada. Nesse sentido, importante destacar alguns trechos da ON CGU nº 2, de 2014:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei n.º 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação ilegal de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "§1º Por magistério, para fins desta Orientação Normativa, compreendem-se as seguintes atividades, ainda que exercidas de forma esporádica ou não remunerada:",
+      "I - docência em instituições de ensino, de pesquisa ou de ciência e tecnologia, públicas ou privadas;",
+      "II - capacitação ou treinamento, mediante cursos, palestras ou conferências; e",
+      "III - outras correlatas ou de suporte às dos incisos I e II deste parágrafo, tais como funções de coordenador, monitor, preceptor, avaliador, integrante de banca examinadora de discente, presidente de mesa, moderador e debatedor, observada a proibição do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990.",
+      "§2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "(…)",
+      "§4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "(...)",
+      "Art. 4º Na hipótese de magistério em curso preparatório para concurso público ou processo seletivo, o agente público não poderá atuar em qualquer atividade relacionada à definição do cronograma ou do conteúdo programático do certame ou relacionada à elaboração, aplicação e correção de provas de qualquer fase, incluindo-se o curso de formação, o teste psicotécnico ou psicológico e a prova de aptidão.",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3° da Lei n.º 12.813, de 2013.",
+      "Art. 6º As atividades referidas nesta Orientação Normativa dispensam a consulta acerca da existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada, previstos na Lei nº 12.813, de 2013.",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "O artigo 6º, parágrafo único, da ON CGU nº 2, de 2014, dispõe sobre a obrigatoriedade de realização de consulta sobre o conflito de interesses quando o magistério for direcionado para público específico e que possa ter interesse em decisão do agente ou da instituição ou de colegiado do qual o agente participe. Assim, não há incompatibilidade com o cargo caso a atividade de resolução de questões descrita {{g:pelo|pela}} consulente seja aberta ao público em geral. Porém, caso {{g:o|a}} consulente eventualmente decida promover cursos de resolução de questões que sejam destinados a públicos específicos ou que tenham interesse em decisão do agente, deverá realizar uma nova consulta ou pedido de autorização com todas as informações necessárias para análise do pleito."
+    },
+    {
+     "t": "p",
+     "x": "Deve ser salientado que é fundamental que o(s) assunto(s) a ser(em) tratado(s) {{g:pelo|pela}} consulente nas questões se restrinja(m) apenas a aspectos gerais e teóricos sobre os temas. Esta ressalva é importante em razão de os servidores desta RFB possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira de empresas, bem como de eventuais procedimentos fiscais ou aduaneiros a que estas podem estar ou ter sido submetidas."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O|A}} consulente revela em sua consulta que o pagamento pela prestação do serviço será realizado por meio de Recibo de Pagamento a Autônomo (RPA) ou Pessoa Jurídica (PJ). A esse respeito é importante ressaltar que, caso {{g:o|a}} consulente venha a exercer a atividade por intermédio de uma pessoa jurídica, deve-se atentar para o imperativo quanto à sua não participação em funções gerenciais ou de administração da referida empresa, ainda que informal e eventualmente, de forma a não incorrer na infração prevista no inciso X, do art. 117, da Lei nº 8.112, de 11 de dezembro de 1990.",
+     "opc": {
+      "id": "pagamento_pj",
+      "rotulo": "Incluir ressalva sobre recebimento por RPA ou por pessoa jurídica (art. 117, X, Lei 8.112)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "É de se acrescentar que o fato de o pedido se reportar a atividade remunerada não altera os entendimentos até aqui esposados. A tutela de todo o arcabouço legal e normativo atinente a conflito de interesses, incluindo a Lei nº 12.813, de 2013, não visam à questão remuneratória, mas sim ao controle do tipo de informação que o agente público se predispõe a disponibilizar para público externo. No caso em tela, não havendo superposição temporal com a jornada de trabalho e não se vislumbrando conflito material de interesses das informações a serem disponibilizadas externamente, opina-se a favor do deferimento."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar e reiterar que a opinada inexistência de incompatibilidade material da atividade de resolução de questões ora pretendida, com o cargo e a função ocupados {{g:pelo servidor|pela servidora}} condiciona-se à observância de todas as ressalvas destacadas acima."
+    }
+   ]
+  },
+  {
+   "id": "tutoria",
+   "rotulo": "Tutoria (presencial ou EAD) equiparada a magistério – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende atuar como tutor (presencial ou à distância) em instituição de ensino privada; a tutoria é tratada como desdobramento da atividade de professor.",
+   "fonte": "PAR 028/2020",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "EXERCÍCIO DE TUTORIA PRESENCIAL PARA FACULDADE À DISTÂNCIA",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{g:tutor|tutora}} presencial com o cargo de {{cargo_sigla}}. Não configura conflito de interesses, desde que observadas as ressalvas deste Parecer."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade de tutoria pretendida (completa a frase \"a atividade de ...\")",
+     "exemplo": "tutoria presencial em cursos de graduação à distância em instituições privadas",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, verifica-se que {{g:o|a}} consulente se refere à possibilidade de exercer a tutoria presencial para faculdade à distância, concomitantemente à atuação do cargo de {{cargo}} e exercendo suas funções na RFB."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício do cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III da referida lei, verifica-se que a atividade de {{descricao_atividade}} é materialmente compatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Cumpre-nos destacar a similitude entre a atividade de tutoria e o magistério citando o entendimento recente do Tribunal Regional do Trabalho da 4ª Região (RS) que assim decidiu: a falta de registro profissional no Ministério da Educação não impede o reconhecimento da condição de professor nas relações trabalhistas se há provas do exercício do cargo. Sendo assim, reconheceu que o monitor de uma instituição de ensino exercia atividade de professor. O juiz se convenceu de que as atividades atribuídas ao cargo de tutor eram, na verdade, desdobramentos daquelas inerentes e indissociáveis da função de professor."
+    },
+    {
+     "t": "p",
+     "x": "Salientamos, pois, que a atividade em análise é objeto da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, a qual autoriza, na primeira parte do caput do artigo 2º, o exercício da atividade de magistério por agente público."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o servidor|a servidora}} da estrita observância das restrições impostas pela própria norma supracitada, conforme incisos I, II e III, e os §§ 2º a 5º do mesmo artigo 2º, além dos artigos 3º e 5º, parágrafo único do artigo 6º e, em especial, do disposto no artigo 4º da referida Orientação Normativa."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "(...)",
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "§ 3º Para efeitos dos incisos I e II do caput deste artigo, no tocante aos servidores estatutários, deve ser especialmente observado o disposto no Decreto nº 1.590, de 10 de agosto de 1995, no Parecer AGU nº GQ-145, de 16 de março de 1998, e na Portaria Normativa SEGEP/MP nº 2, de 12 de março de 2012.",
+      "§ 4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "Art. 3º Quando a atividade de magistério ocorrer no interesse institucional do órgão ou entidade a que pertence o agente público indicado, é vedado o recebimento de remuneração de origem privada, ressalvada a possibilidade de indenização por transporte, alimentação e hospedagem paga, total ou parcialmente, pela instituição promotora.",
+      "Art. 4º Na hipótese de magistério em curso preparatório para concurso público ou processo seletivo, o agente público não poderá atuar em qualquer atividade relacionada à definição do cronograma ou do conteúdo programático do certame ou relacionada à elaboração, aplicação e correção de provas de qualquer fase, incluindo-se o curso de formação, o teste psicotécnico ou psicológico e a prova de aptidão.",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3º da Lei nº 12.813, de 2013.",
+      "Art. 6º (...)",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ainda cabe destacar que a Orientação Normativa CGU nº 2/2014 imprime uma definição bastante ampla para o espectro permitido e presumivelmente não conflituoso da atividade de magistério. Dessa forma, faz-se necessário deixar claro que {{g:o|a}} consulente deve resguardar o sigilo das informações privilegiadas a que tem acesso exercendo suas funções na RFB."
+    },
+    {
+     "t": "p",
+     "x": "Cabe chamar atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em qualquer processo de interesse da empresa em que preste serviço de tutoria presencial ou dos alunos tutorados, que porventura tramite no âmbito da RFB, conforme disposto no § 4º do artigo 2º da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, acima transcrito."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "professor_universitario_horario_intervalo",
+   "rotulo": "Professor universitário com questionamento sobre horário/intervalo de refeição – materialmente compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende lecionar em universidade privada e questiona a compatibilidade de horários (flexibilidade de jornada, aula no intervalo para refeição e descanso), inclusive quando ocupa função gratificada.",
+   "fonte": "PAR 56/2020",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "PROFESSOR UNIVERSITÁRIO.",
+   "ementa": [
+    "Pedido de autorização para atividade de professor universitário, concomitante ao cargo de {{cargo}} ({{cargo_sigla}}). Trata-se de atividade materialmente compatível com o cargo de {{cargo_sigla}}."
+   ],
+   "campos": [
+    {
+     "id": "disciplinas",
+     "rotulo": "Disciplinas que pretende ministrar",
+     "exemplo": "Direito Tributário e Direito Ambiental",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verifica-se que {{g:o|a}} consulente se refere à possibilidade de exercer a atividade de professor universitário, nas disciplinas de {{disciplinas}}, em instituição de ensino superior privada, concomitante à atuação do cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, dispondo sobre o conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício do cargo público, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III da referida lei, bem como das ementas apresentadas das disciplinas de {{disciplinas}} que {{g:o servidor|a servidora}} pretende ministrar, verifica-se que a atividade de professor universitário em instituições privadas dessas disciplinas é materialmente compatível com o cargo de {{cargo_sigla}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da Secretaria da Receita Federal do Brasil que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "No que diz respeito aos questionamentos sobre horários à luz da Portaria ME n.º 371, de 23 de julho de 2019, sobre o exercício da atividade privada se dar no intervalo para refeição e descanso, cumpre-nos trazer, antes, o disposto no art. 2°, I, da Orientação Normativa CGU n.º 2, de 9 de setembro de 2014, que trata do exercício de atividades de magistério por agente público do Poder Executivo federal:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "(...)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Além disso, consta do rol de proibições aos servidores públicos, o exercício de atividades incompatíveis com o horário de trabalho, conforme dispõe o art. 117, XVIII, da Lei n.º 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(…)",
+      "XVIII - exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Acrescentamos tais normas ao presente parecer, apenas para frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Contudo, por não ser de competência da Corregedoria adentrar na análise de legislação de pessoal, como é o caso da Portaria ME n° 371, de 23 de julho de 2019, e de regularidade de horários praticada {{g:pelo servidor|pela servidora}}, teceremos apenas breves comentários a este respeito."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, observa-se que o intervalo para refeição e descanso não se configura em jornada de trabalho. Por isso, eventual exercício de atividade privada materialmente compatível ao cargo de servidor neste intervalo, caso esteja de acordo com a legislação de pessoal, não feriria a compatibilidade de horários."
+    },
+    {
+     "t": "p",
+     "x": "Vale lembrar que, pelo fato de {{g:o servidor|a servidora}} exercer função gratificada, {{g:ele|ela}} se submete a regime de dedicação integral, pelo qual pode ser {{g:convocado|convocada}} sempre que presente interesse ou necessidade de serviço, não podendo, em nenhum momento, dar primazia à atividade privada em detrimento de seu múnus público. Veja-se o que dispõe, o art. 3°, §3°, da Portaria ME n° 371, de 2019, nesse sentido:",
+     "opc": {
+      "id": "funcao_gratificada",
+      "rotulo": "Incluir ressalva sobre regime de dedicação integral (servidor com função gratificada/cargo em comissão)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º O horário de início e fim da jornada diária de trabalho do servidor e o intervalo para refeição e descanso serão, observado o interesse do serviço, previamente acordados entre o servidor e a chefia imediata, devendo estar compreendidos dentro do horário de funcionamento do órgão de que trata o art. 1º.",
+      "(...)",
+      "§ 3º Os servidores que sejam ocupantes de cargos em comissão ou função de direção, chefia e assessoramento superiores, cargos de direção e função gratificada exercerão sua jornada de trabalho em regime de dedicação integral, podendo ser convocados sempre que presente interesse ou necessidade de serviço."
+     ],
+     "opc": {
+      "id": "funcao_gratificada",
+      "rotulo": "Incluir ressalva sobre regime de dedicação integral (servidor com função gratificada/cargo em comissão)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de professor universitário de {{disciplinas}}, de acordo com as ementas apresentadas, é materialmente compatível com o cargo de {{cargo}}, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "aulas_cursos_livres_modelo_curto",
+   "rotulo": "Aulas/cursos em instituição privada – modelo curto – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ministrar aulas ou cursos sem relação com as atribuições do cargo (ex.: cursos da área de saúde, tutoria EAD) em instituição privada identificada, fora do horário de expediente.",
+   "fonte": "PAR 245/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE MINISTRAR AULAS.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de {{descricao_atividade}} com o cargo de {{cargo}} - {{cargo_sigla}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "descricao_atividade",
+     "rotulo": "Atividade pretendida (completa a frase \"atividade de ...\")",
+     "exemplo": "magistério de RCP (reanimação cardiopulmonar), SBV (suporte básico de vida) e APH (atendimento pré-hospitalar) em instituição privada",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "instituicao_ensino",
+     "rotulo": "Nome da instituição/empresa em que lecionará",
+     "exemplo": "Instituto X Ltda.",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Cumpre-nos ressaltar, de pronto, que o presente processo será tratado como um pedido de autorização conforme corretamente preenchido {{g:pelo|pela}} consulente no item 10 do formulário.",
+     "opc": {
+      "id": "tratado_como_autorizacao",
+      "rotulo": "Incluir nota de que o processo será tratado como pedido de autorização (item 10 do formulário)",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à possível atuação {{g:do servidor|da servidora}} na atividade de {{descricao_atividade}}, fora do horário de expediente, não se vislumbra incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Todavia chamamos a atenção para o fato de que {{g:o servidor|a servidora}} consulente deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo a empresa {{instituicao_ensino}}."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

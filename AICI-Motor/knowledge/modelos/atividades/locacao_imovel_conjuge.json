@@ -1,0 +1,62 @@
+{
+ "id": "locacao_imovel_conjuge",
+ "nome": "Locação de imóvel comercial (inquilino) para atividade do cônjuge",
+ "grupo": "Outras situações",
+ "descricao": "Usar quando o servidor pretende assinar, em seu nome, contrato de locação de sala ou imóvel comercial que será utilizado pelo cônjuge em empresa da qual o servidor não participa.",
+ "palavrasChave": [
+  "aluguel comercial",
+  "locação",
+  "locatário",
+  "inquilino",
+  "sala comercial",
+  "imóvel comercial",
+  "cônjuge",
+  "esposa",
+  "marido",
+  "empresa do cônjuge",
+  "clínica de estética",
+  "contrato de locação",
+  "fiador"
+ ],
+ "variantes": [
+  {
+   "id": "locatario_sala_comercial_conjuge",
+   "rotulo": "Servidor locatário de sala comercial cedida ao cônjuge – ausência de conflito de interesses",
+   "resultado": "sem_conflito",
+   "quandoUsar": "Servidor figura apenas como locatário do imóvel comercial e o cede gratuitamente ao cônjuge, sem participar da empresa nem mesmo como sócio cotista. O texto flexiona o cônjuge pelo gênero oposto ao do servidor (esposa/esposo); ajuste se necessário.",
+   "fonte": "PAR 226/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "ALUGUEL DE SALA COMERCIAL PARA ATIVIDADE DO CÔNJUGE.",
+   "ementa": [
+    "Consulta sobre possibilidade de alugar imóvel comercial para utilização do cônjuge. Ausência de conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "atividade_conjuge",
+     "rotulo": "Negócio a ser explorado pelo cônjuge (com artigo)",
+     "exemplo": "uma clínica de estética",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Conforme se verifica, {{g:o consulente|a consulente}} tem por objetivo alugar uma sala comercial na qual será desenvolvida atividade comercial {{g:pela esposa do servidor|pelo esposo da servidora}}, sem que {{g:este|esta}} tenha efetiva participação na empresa a ser constituída, nem mesmo na qualidade de sócio cotista."
+    },
+    {
+     "t": "p",
+     "x": "Pelo relato {{g:do servidor|da servidora}}, verifica-se que se trata de uma locação comercial em seu nome e cessão gratuita do local para que {{g:a esposa|o esposo}} explore comercialmente por intermédio de {{atividade_conjuge}}."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o contexto apresentado, opinamos pela não caracterização da existência de conflito de interesses, conforme as definições constantes da Lei nº 12.813/2013."
+    }
+   ]
+  }
+ ]
+}

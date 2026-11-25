@@ -1,0 +1,2852 @@
+{
+ "categorias": [
+  {
+   "id": "administracao_bens_proprios",
+   "nome": "Administração de bens próprios (aluguel de imóveis próprios, Eireli, empresário individual)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende administrar patrimônio próprio (em especial aluguel de imóveis próprios) por meio de pessoa jurídica: como sócio sem gerência ou como único titular de empresa.",
+   "palavrasChave": [
+    "administração de bens próprios",
+    "patrimônio próprio",
+    "aluguel de imóveis próprios",
+    "locação de imóveis",
+    "imóveis próprios",
+    "holding patrimonial",
+    "eireli",
+    "firma individual",
+    "empresário individual",
+    "sociedade limitada unipessoal",
+    "gerente delegado",
+    "administrador não sócio",
+    "antecipação de legítima",
+    "gerência de aluguel"
+   ],
+   "variantes": [
+    {
+     "id": "socio_empresa_locacao_imoveis_proprios",
+     "rotulo": "Sócio, sem gerência, de empresa de locação de imóveis próprios – não se vislumbra incompatibilidade",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 265/2020",
+     "quandoUsar": "Servidor pretende integrar sociedade (ex.: com o cônjuge) cujo objeto é apenas a locação/administração de imóveis próprios, sem exercer a gerência e sem atividades além das inerentes a um proprietário de imóveis."
+    },
+    {
+     "id": "eireli_com_administrador_ou_empresario_individual",
+     "rotulo": "Titular de Eireli (com administrador constituído) ou empresário individual para administrar patrimônio próprio",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 282/2019",
+     "quandoUsar": "Servidor pergunta se pode ser o único titular de empresa (Eireli ou firma/empresário individual) de administração de patrimônio próprio, nomeando terceiro como administrador. Conclusão do original: impossível como empresário individual; possível como Eireli com administrador não titular. Atenção: a Eireli foi extinta (Lei nº 14.195/2021, art. 41, transformou-as em sociedades limitadas unipessoais) e o art. 980-A do Código Civil, transcrito no modelo, foi revogado (Lei nº 14.382/2022) – adaptar o texto à sociedade limitada unipessoal antes de usar."
+    }
+   ]
+  },
+  {
+   "id": "advocacia",
+   "nome": "Advocacia",
+   "grupo": "",
+   "descricao": "Usar quando o servidor (ativo, licenciado ou aposentado) pretende exercer a advocacia privada, integrar sociedade de advogados ou atuar como advogado/voluntário na área jurídica em órgão público.",
+   "palavrasChave": [
+    "advocacia",
+    "advogado",
+    "advogada",
+    "advogar",
+    "oab",
+    "inscrição na oab",
+    "ordem dos advogados",
+    "escritório de advocacia",
+    "sociedade de advogados",
+    "advocacia privada",
+    "consultoria jurídica",
+    "assessoria jurídica",
+    "causa própria",
+    "advogado voluntário",
+    "defensoria pública",
+    "serviço voluntário",
+    "procuradoria",
+    "prática jurídica",
+    "licença para tratar de interesses particulares",
+    "aposentado"
+   ],
+   "variantes": [
+    {
+     "id": "carreira_tributaria_conflito",
+     "rotulo": "AFRFB ou ATRFB em atividade – configura conflito (Portaria RFB nº 444/2015)",
+     "resultado": "conflito",
+     "fonte": "PAR 041/2020",
+     "quandoUsar": "Servidor da Carreira Tributária e Aduaneira (Auditor-Fiscal ou Analista-Tributário), em atividade ou em licença para tratar de interesses particulares, pretende exercer a advocacia privada em qualquer área."
+    },
+    {
+     "id": "ata_sem_conflito_termo_compromisso",
+     "rotulo": "Assistente Técnico-Administrativo (ATA) – não configura conflito, com ressalvas e Termo de Compromisso",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 067/2020",
+     "quandoUsar": "Ocupante do cargo de Assistente Técnico-Administrativo (PGPE) em exercício na RFB pretende exercer a advocacia privada fora das matérias tributária, previdenciária e aduaneira."
+    },
+    {
+     "id": "cargo_administrativo_rfb_conflito",
+     "rotulo": "Analista/Técnico do Seguro Social ou Analista Previdenciário em exercício na RFB – configura conflito",
+     "resultado": "conflito",
+     "fonte": "PAR 077/2019",
+     "quandoUsar": "Servidor de cargo administrativo redistribuído ou em exercício na RFB (Analista do Seguro Social, Analista Previdenciário e similares) pretende exercer a advocacia; opcionalmente, também pergunta sobre integrar sociedade de advogados."
+    },
+    {
+     "id": "aposentado_sem_conflito",
+     "rotulo": "Servidor aposentado – não há impedimento, respeitado o dever de sigilo (art. 6º da Lei nº 12.813/2013)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 015/2020",
+     "quandoUsar": "Servidor aposentado voluntariamente pretende exercer a advocacia; analisa-se apenas o art. 6º da Lei nº 12.813/2013 (informação privilegiada e quarentena de 6 meses)."
+    },
+    {
+     "id": "advocacia_voluntaria_orgao_publico_vedacao",
+     "rotulo": "Advocacia voluntária (não remunerada) em órgão público, ex.: Defensoria Pública da União – vedação",
+     "resultado": "conflito",
+     "fonte": "PAR 002/2018",
+     "quandoUsar": "Servidor da Carreira Tributária e Aduaneira pretende atuar como advogado voluntário, sem remuneração, em Defensoria Pública ou órgão semelhante (prática de atos privativos de advogado)."
+    },
+    {
+     "id": "servico_voluntario_orgao_publico_fora_escopo",
+     "rotulo": "Serviço voluntário não remunerado em órgão público (ex.: Procuradoria-Geral de Estado) – fora do âmbito da Lei nº 12.813/2013",
+     "resultado": "outro",
+     "fonte": "PAR 031/2018",
+     "quandoUsar": "Servidor pretende prestar serviço voluntário e não remunerado, na área jurídica, a órgão público (ex.: Procuradoria-Geral de Estado), regulado por norma própria do órgão; a Corregedoria entendeu não se tratar de atividade privada sujeita à Lei nº 12.813/2013."
+    }
+   ]
+  },
+  {
+   "id": "area_previdenciaria",
+   "nome": "Cursos, aulas e consultoria na área previdenciária",
+   "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+   "descricao": "Usar quando o servidor pretende ministrar cursos, aulas ou palestras (inclusive digitais) sobre direitos e benefícios previdenciários/trabalhistas, com ou sem prestação de consultoria ou assessoria individual no tema.",
+   "palavrasChave": [
+    "previdenciário",
+    "previdência",
+    "aposentadoria",
+    "pensão",
+    "benefícios previdenciários",
+    "reforma da previdência",
+    "direito previdenciário",
+    "curso online",
+    "cursos digitais",
+    "palestras",
+    "aulas",
+    "consultoria previdenciária",
+    "assessoria",
+    "projeção de aposentadoria",
+    "legislação trabalhista",
+    "redes sociais"
+   ],
+   "variantes": [
+    {
+     "id": "cursos_previdenciarios_publico_geral",
+     "rotulo": "Cursos (inclusive digitais) na área previdenciária/trabalhista para o público em geral – compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 195/2020",
+     "quandoUsar": "Servidor pretende criar e vender cursos, inclusive por redes sociais e plataformas digitais, para ensinar a pessoas físicas seus direitos previdenciários e trabalhistas, com abordagem geral e teórica. Coerente com a posição atual da CGU para cursos a público amplo (autorização condicionada a termo de compromisso); cursos para público específico são negados."
+    },
+    {
+     "id": "aulas_e_consultoria_previdenciaria_parcial",
+     "rotulo": "Palestras/aulas (compatíveis, com ressalvas) e consultoria/assessoria (conflito) em tema previdenciário",
+     "resultado": "outro",
+     "fonte": "INF 014/2017",
+     "quandoUsar": "Servidor pretende, ao mesmo tempo, ministrar palestras e aulas e prestar consultoria/assessoria individual (pareceres, projeções de aposentadoria) em tema previdenciário: as aulas são admitidas com ressalvas e a consultoria/assessoria é considerada incompatível. Coerente com a CGU (consultoria negada; cursos a público amplo condicionados a termo de compromisso; a público específico, negados)."
+    }
+   ]
+  },
+  {
+   "id": "artes_plasticas_ilustracao",
+   "nome": "Artes plásticas, desenho e ilustração (criação, exposição e venda de obras próprias)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende produzir, expor e vender obras de artes plásticas ou atuar como desenhista/ilustrador, inclusive como sócio cotista de editora das próprias obras.",
+   "palavrasChave": [
+    "artes plásticas",
+    "artista plástico",
+    "pintura de quadros",
+    "escultura",
+    "artesanato",
+    "artesã",
+    "exposição de obras",
+    "venda de obras de arte",
+    "aulas de artes",
+    "desenhista",
+    "ilustrador",
+    "ilustrações",
+    "livros para colorir",
+    "royalties",
+    "editora",
+    "scrapbook",
+    "pintura em porcelana"
+   ],
+   "variantes": [
+    {
+     "id": "artes_plasticas_exposicao_venda",
+     "rotulo": "Artes plásticas com exposição/venda das obras – sem conflito, com ressalvas (art. 117, X, da Lei nº 8.112)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 132/2016",
+     "quandoUsar": "Servidor(a) artista plástico(a)/artesão(ã) que pretende criar, expor e vender as próprias obras (pinturas, esculturas, artesanato), eventualmente dar aulas de artes e divulgar o trabalho; a análise delimita o \"elemento de empresa\" do art. 966 do Código Civil."
+    },
+    {
+     "id": "ilustrador_socio_cotista_editora",
+     "rotulo": "Desenhista/ilustrador e sócio cotista de editora das próprias obras – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 190/2016",
+     "quandoUsar": "Servidor(a) cria desenhos/ilustrações (ex.: livros para colorir), recebe royalties das vendas feitas por plataforma de terceiros e pretende figurar como sócio cotista, sem gerência, de editora que publicará suas obras."
+    }
+   ]
+  },
+  {
+   "id": "assessoria_nacionalidade_estrangeira",
+   "nome": "Assessoria para reconhecimento de nacionalidade/cidadania estrangeira",
+   "grupo": "Consultoria e procuração (A.2)",
+   "descricao": "Usar quando o servidor pretende assessorar pessoas físicas na obtenção de nacionalidade ou cidadania estrangeira perante consulados e órgãos de governo estrangeiro.",
+   "palavrasChave": [
+    "cidadania estrangeira",
+    "nacionalidade portuguesa",
+    "cidadania portuguesa",
+    "cidadania italiana",
+    "dupla cidadania",
+    "consulado",
+    "reconhecimento de nacionalidade",
+    "assessoria",
+    "passaporte",
+    "certidões",
+    "governo estrangeiro",
+    "assessoria a pessoas físicas"
+   ],
+   "variantes": [
+    {
+     "id": "assessoria_pessoas_fisicas_orgao_estrangeiro",
+     "rotulo": "Assessoria a pessoas físicas perante consulado/governo estrangeiro – compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 181/2017",
+     "quandoUsar": "Servidor pretende prestar, de forma remunerada e fora do expediente, assessoria a pessoas físicas no reconhecimento de nacionalidade/cidadania estrangeira (análise de documentos, montagem do processo, agendamentos) perante consulado e órgãos de governo estrangeiro, sem atuar perante a administração pública brasileira."
+    }
+   ]
+  },
+  {
+   "id": "atividade_rural",
+   "nome": "Atividade rural / produtor rural",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende exercer atividade rural (agricultura, pecuária, extrativismo), como produtor rural pessoa física, sócio de empresa rural ou trabalhando em propriedade da família.",
+   "palavrasChave": [
+    "atividade rural",
+    "produtor rural",
+    "produtora rural",
+    "fazenda",
+    "sítio",
+    "propriedade rural",
+    "agricultura",
+    "pecuária",
+    "gado",
+    "plantação",
+    "plantio",
+    "soja",
+    "milho",
+    "cana-de-açúcar",
+    "extrativismo",
+    "inscrição estadual de produtor rural",
+    "herança",
+    "empresa rural",
+    "venda da produção"
+   ],
+   "variantes": [
+    {
+     "id": "produtor_rural_ressalvas",
+     "rotulo": "Produtor rural (pessoa física/CNPJ de produtor rural) – compatível, desde que observada a vedação do art. 117, X (com Enunciado CGU/CCC nº 8/2019)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 223/2021",
+     "quandoUsar": "Servidor pretende atuar como produtor rural em nome próprio (inscrição de produtor rural, contratos de fornecimento, venda da produção), sem sociedade já constituída."
+    },
+    {
+     "id": "socio_empresa_rural",
+     "rotulo": "Atividade rural em sociedade (sócio cotista de empresa rural, sem gestão) ou individual de pequena monta – compatível, observada a vedação do art. 117, X",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 200/2021",
+     "quandoUsar": "Servidor pretende explorar atividade rural por meio de sociedade (ex.: empresa familiar em propriedade herdada) sem praticar atos de gestão, ou individualmente como pessoa física em pequena escala."
+    },
+    {
+     "id": "trabalho_em_propriedade_rural",
+     "rotulo": "Trabalho/ajuda em propriedade rural da família (sem exploração empresarial própria) – compatibilidade material",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 192/2020",
+     "quandoUsar": "Servidor pretende apenas trabalhar ou ajudar em fazenda/sítio da família (plantio, criação), sem ser o titular da exploração nem praticar comércio."
+    },
+    {
+     "id": "atividade_rural_individual_somente_em_licenca",
+     "rotulo": "Atividade rural individual organizada (art. 966 CC) – não há conflito, mas só escapa do art. 117, X durante licença para tratar de interesses particulares",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 030/2019",
+     "quandoUsar": "Servidor informa que explorará a atividade rural individualmente, como pessoa física, de forma organizada e habitual (caput do art. 966 do Código Civil), em especial quando menciona licença para tratar de interesses particulares."
+    }
+   ]
+  },
+  {
+   "id": "ator_audiovisual",
+   "nome": "Ator, figurante e produção audiovisual",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende atuar como ator/atriz ou figurante (teatro, filmes, comerciais) ou trabalhar com produção de cinema e TV.",
+   "palavrasChave": [
+    "ator",
+    "atriz",
+    "figurante",
+    "teatro",
+    "peça teatral",
+    "companhia teatral",
+    "artes cênicas",
+    "filmes",
+    "comerciais de tv",
+    "cinema",
+    "produção audiovisual",
+    "produção de cinema e tv",
+    "registro profissional de ator",
+    "espetáculos"
+   ],
+   "variantes": [
+    {
+     "id": "ator_figurante",
+     "rotulo": "Ator ou figurante (filmes, comerciais, teatro) – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 080/2019",
+     "quandoUsar": "Servidor(a) pretende atuar em nome próprio como ator/atriz ou figurante em filmes, comerciais de TV e peças teatrais, fora do horário de expediente."
+    },
+    {
+     "id": "ator_possivel_pessoa_juridica",
+     "rotulo": "Ofício de ator com menção genérica à criação de pessoa jurídica – sem conflito; novo pedido para a PJ",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 022/2020",
+     "quandoUsar": "Servidor(a) pede autorização para exercer o ofício de ator/atriz, menciona vagamente que \"talvez\" crie uma pessoa jurídica para algum projeto e pergunta se pode atuar fora do horário de trabalho; análise extensa (conceitos de conflito de interesses e informação privilegiada, sigilo fiscal, art. 117, XVIII, da Lei nº 8.112)."
+    },
+    {
+     "id": "producao_audiovisual_licenca",
+     "rotulo": "Produção audiovisual (cinema e TV), com intenção de licença sem vencimento – compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 065/2015",
+     "quandoUsar": "Servidor(a) pretende obter licença para tratar de interesses particulares para estudar produção audiovisual e possivelmente trabalhar com produção de cinema e TV."
+    },
+    {
+     "id": "ator_condicionantes_cgu",
+     "rotulo": "Ator/atriz de artes cênicas – adota condicionantes da Nota Técnica CGU nº 2427/2014",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 035/2015",
+     "quandoUsar": "Servidor(a) consulta sobre atuar como ator/atriz (companhias teatrais ou contratos em nome próprio); modelo curto que apenas adota o precedente da CGU (Nota Técnica nº 2427/2014) e transcreve as medidas condicionantes – útil quando se quer registrar as condições para termo de compromisso."
+    }
+   ]
+  },
+  {
+   "id": "clube_futebol",
+   "nome": "Conselheiro ou dirigente de clube de futebol / clube esportivo",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende integrar conselho (deliberativo, fiscal) ou a presidência de clube de futebol ou associação desportiva.",
+   "palavrasChave": [
+    "clube de futebol",
+    "clube esportivo",
+    "futebol clube",
+    "esporte clube",
+    "conselheiro",
+    "conselho deliberativo",
+    "conselheiro deliberativo",
+    "conselho fiscal do clube",
+    "presidente do clube",
+    "associação desportiva",
+    "associação atlética",
+    "sócio do clube",
+    "eleição do clube",
+    "torcida",
+    "dirigente esportivo",
+    "comodoro",
+    "vice-comodoro",
+    "iate clube",
+    "clube social",
+    "clube recreativo",
+    "clube náutico"
+   ],
+   "variantes": [
+    {
+     "id": "conselheiro_deliberativo_clube",
+     "rotulo": "Conselheiro deliberativo de clube de futebol – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 073/2019",
+     "quandoUsar": "Servidor pretende ser membro (não presidente nem vice) do conselho deliberativo de clube de futebol."
+    },
+    {
+     "id": "conselheiro_clube_simplificado",
+     "rotulo": "Conselheiro de clube de futebol (redação concisa, com dever de declarar-se impedido) – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 234/2019",
+     "quandoUsar": "Servidor (especialmente se ocupa chefia ou atua em área que pode receber demandas do clube) pretende atuar como conselheiro de clube de futebol."
+    },
+    {
+     "id": "presidente_clube",
+     "rotulo": "Presidente de clube de futebol – não configura conflito, com ressalvas (transferir a representação)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 093/2016",
+     "quandoUsar": "Servidor pretende exercer a presidência de clube de futebol cujo estatuto atribui ao presidente a representação do clube em juízo ou fora dele."
+    },
+    {
+     "id": "conselheiro_fiscal_clube",
+     "rotulo": "Conselheiro fiscal de clube de futebol – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 067/2017",
+     "quandoUsar": "Servidor pretende integrar o conselho fiscal de clube de futebol."
+    }
+   ]
+  },
+  {
+   "id": "coaching",
+   "nome": "Coaching e mentoria",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende atuar como coach ou mentor (life coaching, coaching para concursos, palestras e treinamentos de desenvolvimento pessoal), como pessoa física, contratado ou sócio cotista de empresa.",
+   "palavrasChave": [
+    "coaching",
+    "coach",
+    "life coaching",
+    "life coach",
+    "mentoria",
+    "mentor",
+    "coaching para concursos",
+    "coachee",
+    "desenvolvimento pessoal",
+    "palestrante",
+    "palestras",
+    "treinamentos",
+    "orientação de estudos",
+    "concursos públicos",
+    "programação neurolinguística",
+    "pnl",
+    "produtividade",
+    "emagrecimento",
+    "mei",
+    "sócio cotista"
+   ],
+   "variantes": [
+    {
+     "id": "coaching_pessoa_fisica",
+     "rotulo": "Coaching pessoal (life coaching) como pessoa física – não configura conflito, desde que observadas as ressalvas (com análise opcional sobre MEI)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 058/2020",
+     "quandoUsar": "Servidor(a) que pretende atuar em nome próprio como coach (life coaching, saúde, carreira etc.); marque o bloco MEI se houver dúvida sobre atuar como MEI ou por pessoa jurídica própria."
+    },
+    {
+     "id": "coaching_pessoa_fisica_simples",
+     "rotulo": "Coaching como pessoa física (redação resumida; eventual pessoa jurídica exige nova consulta) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 301/2019",
+     "quandoUsar": "Servidor(a) que atuará como coach em nome próprio e apenas cogita, sem detalhar, constituir pessoa jurídica no futuro."
+    },
+    {
+     "id": "coaching_concursos",
+     "rotulo": "Coaching para concursos (pessoa física ou contratado por empresa de coaching) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 050/2019; PAR 042/2019",
+     "quandoUsar": "Servidor(a) que orientará candidatos a concursos públicos em nome próprio ou mediante contrato de prestação de serviços com empresa de coaching, sem ser sócio(a) dela."
+    },
+    {
+     "id": "coaching_socio_cotista",
+     "rotulo": "Coaching por meio de pessoa jurídica (sócio cotista sem administração) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 119/2019; PAR 118/2019; PAR 121/2019",
+     "quandoUsar": "Servidor(a) que presta coaching, mentoria, palestras ou aulas em curso preparatório por intermédio de empresa da qual é sócio(a) cotista, administrada por terceiro (ex.: cônjuge)."
+    }
+   ]
+  },
+  {
+   "id": "comercio",
+   "nome": "Comércio, revenda e venda de produtos",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende exercer comércio ou atividade empresarial (fabricar e vender produtos, MEI, revenda/venda direta, franquia) ou comercializar obra intelectual própria.",
+   "palavrasChave": [
+    "comércio",
+    "venda de produtos",
+    "revenda",
+    "revendedor",
+    "consultor independente",
+    "venda direta",
+    "marketing multinível",
+    "mei",
+    "microempreendedor individual",
+    "empresário individual",
+    "franquia",
+    "loja",
+    "fabricação",
+    "comercializar",
+    "aplicativos",
+    "e-book",
+    "loja virtual",
+    "promotor de vendas"
+   ],
+   "variantes": [
+    {
+     "id": "comercio_vedado_empresario",
+     "rotulo": "Exercício de comércio / atividade empresarial individual (inclusive MEI) – vedado pelo art. 117, X (encaminhamento à Cogep, não à CEP)",
+     "resultado": "outro",
+     "fonte": "INF 050/2017",
+     "quandoUsar": "Servidor pretende exercer pessoalmente atividade econômica organizada de produção ou circulação de bens (empresário individual, MEI, fabricação e venda de produtos), fora da condição de acionista, cotista ou comanditário."
+    },
+    {
+     "id": "revenda_venda_direta_vedada",
+     "rotulo": "Revenda de produtos / venda direta / marketing multinível – vedado pelo art. 117, X (encaminhamento à Cogep, não à CEP)",
+     "resultado": "outro",
+     "fonte": "INF 019/2016",
+     "quandoUsar": "Servidor pretende atuar como revendedor ou consultor independente de marca de venda direta (cosméticos, suplementos etc.), inclusive em marketing de rede."
+    },
+    {
+     "id": "criacao_intelectual_comercializacao",
+     "rotulo": "Criação intelectual (aplicativos, livros, e-books) e oferta/venda da própria obra – não configura conflito, com ressalvas; limites do art. 966, parágrafo único, do Código Civil",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 023/2017",
+     "quandoUsar": "Servidor desenvolve obra intelectual própria (aplicativo, software, livro, e-book) e pretende oferecê-la ou vendê-la em loja virtual/plataforma de terceiros, sem montar empresa própria."
+    },
+    {
+     "id": "informacoes_insuficientes_complementacao",
+     "rotulo": "Pedido genérico de abertura de franquia/negócio – informações insuficientes; retorno à Cogep para complementação",
+     "resultado": "outro",
+     "fonte": "PAR 155/2019",
+     "quandoUsar": "O pedido (ex.: abrir franquia, vender produtos) não informa natureza jurídica da empresa, se haverá gerência/administração nem as atividades que o servidor exercerá, impossibilitando a análise."
+    }
+   ]
+  },
+  {
+   "id": "conselho_fiscal_sem_fins_lucrativos",
+   "nome": "Conselho fiscal de entidade sem fins lucrativos ou de condomínio",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende integrar conselho fiscal (ou conselho consultivo/diretoria) de fundação, associação, observatório social ou condomínio residencial.",
+   "palavrasChave": [
+    "conselho fiscal",
+    "conselheiro fiscal",
+    "membro do conselho fiscal",
+    "suplente do conselho fiscal",
+    "conselho consultivo",
+    "fundação",
+    "associação sem fins lucrativos",
+    "instituição sem fins lucrativos",
+    "observatório social",
+    "conselho fiscal de condomínio",
+    "aprovar contas",
+    "atestar contas",
+    "parecer sobre balanço",
+    "demonstrações financeiras",
+    "entidade sem fins lucrativos"
+   ],
+   "variantes": [
+    {
+     "id": "conselho_fiscal_entidade",
+     "rotulo": "Membro de conselho fiscal de fundação/associação – exercício condicionado (Termo de Compromisso)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 224/2021",
+     "quandoUsar": "Servidor pretende ser membro do conselho fiscal de fundação ou associação sem fins lucrativos (estatuto não anexado)."
+    },
+    {
+     "id": "diretoria_ou_conselho_entidade",
+     "rotulo": "Membro de diretoria, conselho consultivo ou conselho fiscal de entidade sem fins lucrativos (ex.: observatório social) – exercício condicionado",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 602/2021",
+     "quandoUsar": "Servidor foi convidado para ocupar a diretoria, o conselho consultivo ou o conselho fiscal de associação civil sem fins lucrativos cujo estatuto atribui ao conselho fiscal exame de balanço e escrituração."
+    },
+    {
+     "id": "conselho_fiscal_condominio",
+     "rotulo": "Conselho fiscal de condomínio residencial – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 216/2019",
+     "quandoUsar": "Servidor pretende participar do conselho fiscal do condomínio residencial em que reside ou irá residir."
+    },
+    {
+     "id": "informacoes_insuficientes_conselho_fiscal",
+     "rotulo": "Informações insuficientes – solicitação de complementação (conselho fiscal de associação)",
+     "resultado": "outro",
+     "fonte": "INF 077/2016",
+     "quandoUsar": "Servidor pede autorização para participar de conselho fiscal de associação sem fins lucrativos sem informar a forma jurídica/estrutura da entidade nem as atribuições do conselho. ATENÇÃO: o original conclui pelo retorno do dossiê à Cogep (não pelo encaminhamento à Comissão de Ética) e transcreve o art. 10 da Portaria MF nº 173, de 2014 (revogada) – conferir o dispositivo equivalente na norma vigente e ajustar o encaminhamento."
+    }
+   ]
+  },
+  {
+   "id": "consulta_em_tese",
+   "nome": "Consulta em tese ou sobre situação de terceiro (não apreciação)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando a consulta não trata de situação concreta e individualizada do próprio consulente (hipótese abstrata, dúvida sobre caso de outra pessoa – ex.: diretor sindical em comissão de inquérito), devendo ser encerrada sem análise.",
+   "palavrasChave": [
+    "consulta em tese",
+    "hipótese",
+    "situação hipotética",
+    "caso de terceiro",
+    "fato genérico",
+    "gostaria de saber se",
+    "diretor sindical",
+    "diretoria sindical",
+    "sindicato",
+    "comissão de inquérito",
+    "processo administrativo disciplinar",
+    "dúvida genérica"
+   ],
+   "variantes": [
+    {
+     "id": "consulta_em_tese_encerramento",
+     "rotulo": "Consulta em tese – não deve ser analisada; devolução à Cogep para encerramento",
+     "resultado": "outro",
+     "fonte": "INF 182/2016",
+     "quandoUsar": "O consulente não descreve atividade que ele próprio exerce ou pretende exercer, mas formula dúvida abstrata ou relativa a outra pessoa (no parecer de origem: se um diretor sindical poderia integrar comissão de inquérito disciplinar). Aplica-se o art. 3º, parágrafo único, da Portaria Interministerial MPOG/CGU nº 333/2013."
+    }
+   ]
+  },
+  {
+   "id": "consultoria_comercio_exterior",
+   "nome": "Consultoria em comércio exterior",
+   "grupo": "Consultoria e procuração (A.2)",
+   "descricao": "Usar quando o servidor (ativo ou recém-aposentado) pretende prestar consultoria, perícia, treinamento ou assessoria em comércio exterior, facilitação de comércio ou matéria aduaneira.",
+   "palavrasChave": [
+    "consultoria",
+    "comércio exterior",
+    "facilitação de comércio",
+    "aduaneira",
+    "aduana",
+    "oea",
+    "operador econômico autorizado",
+    "cooperação internacional",
+    "perito",
+    "importação",
+    "exportação",
+    "aposentadoria",
+    "aposentado",
+    "quarentena",
+    "seis meses",
+    "treinamento",
+    "despacho aduaneiro"
+   ],
+   "variantes": [
+    {
+     "id": "consultor_facilitacao_comercio_conflito",
+     "rotulo": "Consultor/perito em comércio exterior para agência de cooperação ou entidade privada – configura conflito",
+     "resultado": "conflito",
+     "fonte": "PAR 235/2019",
+     "quandoUsar": "Servidor (em especial da área aduaneira ou de relações internacionais) pretende atuar, por contrato temporário, como consultor ou perito em comércio exterior/facilitação de comércio, interagindo com órgãos públicos em nome do contratante. Entendimento alinhado à CGU, que nega consultoria em área correlata (art. 5º, I, III e IV)."
+    },
+    {
+     "id": "aposentado_quarentena_consultoria_conflito",
+     "rotulo": "Aposentado – consultoria, treinamento e advocacia em comércio exterior nos 6 meses após a aposentadoria – incompatível (quarentena)",
+     "resultado": "conflito",
+     "fonte": "INF 180/2016",
+     "quandoUsar": "Servidor recém-aposentado pretende, dentro dos 6 meses seguintes à aposentadoria, prestar consultoria, treinamento, auditoria prévia (ex.: programa OEA) ou advocacia na mesma área em que atuava (comércio exterior/aduana). Para advocacia de aposentado em geral, ver o modelo advocacia (variante de aposentado, PAR 015/2020), mais recente e com conclusão diversa."
+    }
+   ]
+  },
+  {
+   "id": "consultoria_organismo_internacional",
+   "nome": "Consultoria para organismo internacional (BID, FMI)",
+   "grupo": "Consultoria e procuração (A.2)",
+   "descricao": "Usar quando o servidor pretende prestar consultoria, estudo ou pesquisa remunerada para organismo internacional (BID, FMI, Banco Mundial etc.) ou, a convite deste, para governo estrangeiro.",
+   "palavrasChave": [
+    "bid",
+    "banco interamericano de desenvolvimento",
+    "fmi",
+    "fundo monetário internacional",
+    "organismo internacional",
+    "consultoria internacional",
+    "pesquisa remunerada",
+    "estudo",
+    "termos de referência",
+    "governo estrangeiro",
+    "administração aduaneira",
+    "missão no exterior",
+    "licença para tratar de interesses particulares",
+    "consultor",
+    "banco mundial",
+    "ocde",
+    "fundo monetário",
+    "banco interamericano",
+    "missão técnica"
+   ],
+   "variantes": [
+    {
+     "id": "organismo_internacional_dados_publicos_ressalvas",
+     "rotulo": "Consultoria/pesquisa remunerada para organismo internacional (ex.: BID) com dados públicos – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 15/2019",
+     "quandoUsar": "Servidor pretende prestar consultoria ou desenvolver pesquisa remunerada, por prazo certo e fora do expediente, para organismo internacional de que o Brasil participa (BID e semelhantes), utilizando apenas dados públicos. Atenção: a CGU tem negado consultoria em matéria tributária/aduaneira (art. 5º, I, III e IV); este modelo pressupõe estudo com dados públicos e controle da Comissão de Ética sobre os dados e relatórios."
+    },
+    {
+     "id": "organismo_internacional_reanalise_esclarecimentos",
+     "rotulo": "Consultoria para organismo internacional – revisão de parecer anterior desfavorável após esclarecimentos do servidor",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 17/2019",
+     "quandoUsar": "Pedido já analisado com conclusão pela existência de conflito (risco de uso de informações internas); o servidor apresentou esclarecimentos declarando que só utilizará informações públicas, e o entendimento é revisto, com ressalvas. Atenção: a CGU tem negado consultoria em matéria tributária/aduaneira (art. 5º, I, III e IV)."
+    },
+    {
+     "id": "consultoria_administracao_estrangeira_conflito",
+     "rotulo": "Consultoria em matéria aduaneira/tributária a governo estrangeiro, a convite de organismo internacional (ex.: FMI) – incompatível",
+     "resultado": "conflito",
+     "fonte": "INF 151/2016",
+     "quandoUsar": "Servidor é convidado individualmente por organismo internacional (FMI e semelhantes) para prestar consultoria, em matéria fortemente correlata às suas atribuições na RFB, a administração tributária/aduaneira de outro país, em geral durante licença para tratar de interesses particulares. Entendimento alinhado à CGU, que nega consultoria em área correlata (art. 5º, I, III e IV)."
+    }
+   ]
+  },
+  {
+   "id": "consultoria_rh",
+   "nome": "Consultoria em recursos humanos",
+   "grupo": "Consultoria e procuração (A.2)",
+   "descricao": "Use quando o servidor pretende prestar consultoria na área de recursos humanos (sistemas de remuneração, recrutamento e seleção, avaliação de desempenho, participação em resultados).",
+   "palavrasChave": [
+    "consultoria",
+    "recursos humanos",
+    "rh",
+    "gestão de pessoas",
+    "sistemas de remuneração",
+    "recrutamento e seleção",
+    "avaliação de desempenho",
+    "participação em resultados",
+    "consultor de rh",
+    "cargos e salários",
+    "consultoria empresarial"
+   ],
+   "variantes": [
+    {
+     "id": "consultoria_rh_ressalvas",
+     "rotulo": "Consultoria na área de Recursos Humanos – não configura conflito, desde que observadas as ressalvas (entendimento de 2016)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 044/2016",
+     "quandoUsar": "Servidor(a) que pretende prestar consultoria em Recursos Humanos, desenvolvendo ou implantando sistemas de remuneração, recrutamento e seleção, avaliação de desempenho ou participação em resultados. Atenção: entendimento de 2016; a CGU negou em 2024-2025 pedidos de consultoria empresarial, contábil e tributária de servidores da RFB (art. 5º, incisos I, III e IV) – avaliar a clientela e o objeto da consultoria antes de usar este modelo."
+    }
+   ]
+  },
+  {
+   "id": "contador_historias_meditacao",
+   "nome": "Contador de histórias e professor de meditação",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende atuar como contador de histórias e/ou professor de meditação, de forma remunerada, fora do expediente.",
+   "palavrasChave": [
+    "contador de histórias",
+    "contação de histórias",
+    "contador de estórias",
+    "meditação",
+    "professor de meditação",
+    "aulas de meditação",
+    "mindfulness",
+    "narração de histórias",
+    "atividade cultural"
+   ],
+   "variantes": [
+    {
+     "id": "contador_historias_professor_meditacao",
+     "rotulo": "Contador de histórias e professor de meditação – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 128/2019",
+     "quandoUsar": "Servidor pretende exercer, de forma remunerada e fora do expediente, atividade cultural ou de bem-estar sem relação com o cargo (contação de histórias, aulas de meditação)."
+    }
+   ]
+  },
+  {
+   "id": "conteudo_digital",
+   "nome": "Produção de conteúdo digital (YouTube, redes sociais, cursos online, afiliado)",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende criar canal ou perfil em mídias sociais, vender cursos/mentorias próprios em plataformas digitais ou atuar como afiliado promovendo produtos de terceiros.",
+   "palavrasChave": [
+    "youtube",
+    "canal",
+    "youtuber",
+    "vídeos",
+    "redes sociais",
+    "mídias sociais",
+    "instagram",
+    "tiktok",
+    "podcast",
+    "mídia digital",
+    "conteúdo digital",
+    "produtos digitais",
+    "infoproduto",
+    "monetização",
+    "monetizado",
+    "adsense",
+    "hotmart",
+    "afiliado",
+    "afiliar",
+    "mentoria",
+    "mentorias",
+    "curso online",
+    "influenciador",
+    "educação financeira"
+   ],
+   "variantes": [
+    {
+     "id": "conteudo_cursos_afiliado",
+     "rotulo": "Conteúdo em mídia digital, cursos/mentorias e afiliado – sem conflito, com ressalvas; comércio vedado (art. 117, X)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 522/2023",
+     "quandoUsar": "Canal monetizado, cursos e mentorias próprios e/ou afiliação a produtos de terceiros; desmarque os blocos que não se aplicarem."
+    },
+    {
+     "id": "somente_conteudo",
+     "rotulo": "Somente produção de conteúdo em mídia digital (canal monetizado) – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 522/2023",
+     "quandoUsar": "O servidor pretende apenas produzir e divulgar conteúdo em canal ou perfil, com eventual monetização, sem vender cursos nem promover produtos."
+    }
+   ]
+  },
+  {
+   "id": "controle_dopagem",
+   "nome": "Coletor de material para controle de dopagem (ABCD)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende atuar como agente/coletor de controle de dopagem, de forma autônoma, para a Autoridade Brasileira de Controle de Dopagem.",
+   "palavrasChave": [
+    "dopagem",
+    "doping",
+    "antidoping",
+    "controle de dopagem",
+    "abcd",
+    "autoridade brasileira de controle de dopagem",
+    "coleta de urina",
+    "coletor",
+    "oficial de controle de dopagem",
+    "rpa",
+    "atividade esporádica"
+   ],
+   "variantes": [
+    {
+     "id": "coletor_autonomo_abcd",
+     "rotulo": "Coletor de material para testes de dopagem (ABCD), como autônomo – inexistência de conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 194/2020",
+     "quandoUsar": "Servidor certificado pretende atuar, de forma esporádica e autônoma (sem vínculo empregatício, pagamento por RPA), na coleta de material para controle de dopagem por designação da Autoridade Brasileira de Controle de Dopagem, fora do horário de trabalho."
+    }
+   ]
+  },
+  {
+   "id": "cooperativa_credito",
+   "nome": "Diretoria de cooperativa de crédito",
+   "grupo": "Entidades privadas sem fins lucrativos (A.8)",
+   "descricao": "Usar quando o servidor, cooperado de cooperativa de crédito, consulta se pode integrar a diretoria da cooperativa sem identificar a entidade nem as atribuições do cargo (pedido de complementação).",
+   "palavrasChave": [
+    "cooperativa de crédito",
+    "cooperado",
+    "diretoria de cooperativa",
+    "diretor de cooperativa",
+    "sicoob",
+    "sicredi",
+    "unicred",
+    "uniprime",
+    "chapa",
+    "associados",
+    "cooperativismo",
+    "conselho de administração de cooperativa"
+   ],
+   "variantes": [
+    {
+     "id": "informacoes_insuficientes_diretoria_cooperativa",
+     "rotulo": "Diretoria de cooperativa de crédito – informações insuficientes; retorno à Cogep para complementação",
+     "resultado": "outro",
+     "fonte": "INF 051/2017",
+     "quandoUsar": "A consulta é sucinta/genérica: não informa o nome da cooperativa de crédito nem as atribuições da diretoria. Pede-se complementação e juntada do estatuto. Não há, neste lote, parecer de mérito sobre o tema."
+    }
+   ]
+  },
+  {
+   "id": "corretor_imoveis",
+   "nome": "Corretor de imóveis",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende exercer a atividade de corretor de imóveis (intermediação na compra, venda, permuta e locação), como autônomo, em parceria com imobiliárias ou constituindo imobiliária própria.",
+   "palavrasChave": [
+    "corretor de imóveis",
+    "corretagem",
+    "creci",
+    "imobiliária",
+    "intermediação imobiliária",
+    "compra e venda de imóveis",
+    "locação de imóveis",
+    "construtora",
+    "incorporadora",
+    "corretor",
+    "venda de imóveis",
+    "lei 6.530"
+   ],
+   "variantes": [
+    {
+     "id": "sem_conflito_ressalvas",
+     "rotulo": "Corretor autônomo – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 645/2021",
+     "quandoUsar": "Servidor pretende atuar como corretor de imóveis (pessoa física, com ou sem parceria com imobiliárias/construtoras), sem administrar pessoa jurídica."
+    },
+    {
+     "id": "imobiliaria_administracao",
+     "rotulo": "Corretagem com abertura/administração de imobiliária – corretagem permitida; gerência ou administração vedada (art. 117, X, da Lei nº 8.112/1990)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 229/2017",
+     "quandoUsar": "Servidor pretende, além de atuar como corretor, abrir imobiliária ou constituir pessoa jurídica e administrá-la."
+    }
+   ]
+  },
+  {
+   "id": "curso_formacao_concurso",
+   "nome": "Curso de formação de concurso para outro cargo público",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor, aprovado em concurso para outro cargo público, consulta sobre a participação no respectivo curso de formação.",
+   "palavrasChave": [
+    "curso de formação",
+    "curso de formação profissional",
+    "concurso público",
+    "outro cargo público",
+    "academia de polícia",
+    "polícia civil",
+    "polícia militar",
+    "papiloscopista",
+    "curso de formação de oficiais",
+    "bolsa-auxílio",
+    "segunda fase do concurso",
+    "acumulação de cargos",
+    "licença para tratar de interesses particulares"
+   ],
+   "variantes": [
+    {
+     "id": "curso_etapa_do_concurso_bolsa_auxilio",
+     "rotulo": "Curso de formação que é etapa do concurso (bolsa-auxílio, sem vínculo) – sem conflito, desde que em licença",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 084/2019",
+     "quandoUsar": "Servidor aprovado em concurso para outro cargo público consulta sobre participar do curso de formação, quando o edital mostra que o curso é fase do certame e a bolsa-auxílio não gera vínculo; conclusão condicionada à licença para tratar de interesses particulares."
+    },
+    {
+     "id": "curso_pressupoe_investidura_acumulacao",
+     "rotulo": "Curso de formação cuja matrícula pressupõe investidura no cargo – acumulação vedada; fora do SeCI",
+     "resultado": "outro",
+     "fonte": "INF 131/2017",
+     "quandoUsar": "O edital mostra que o curso de formação não é etapa do concurso (certame já encerrado) e que a matrícula já importa investidura no outro cargo público (ex.: curso de formação de oficiais de polícia militar); tratado como acumulação ilegal de cargos, com devolução à Cogep."
+    }
+   ]
+  },
+  {
+   "id": "cursos_publico_especifico",
+   "nome": "Cursos e treinamentos para público específico (despachantes, contadores, advogados)",
+   "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+   "descricao": "Use quando o servidor pretende ministrar ou coordenar cursos e treinamentos sobre matéria aduaneira, tributária ou de preenchimento de declarações, dirigidos a público específico atendido ou fiscalizado pela RFB.",
+   "palavrasChave": [
+    "ministrar cursos",
+    "treinamentos",
+    "curso para despachantes",
+    "despachante aduaneiro",
+    "ajudante de despachante",
+    "importadores e exportadores",
+    "comércio exterior",
+    "área aduaneira",
+    "siscomex",
+    "operador econômico autorizado",
+    "coordenador pedagógico",
+    "curso preparatório",
+    "empresa de treinamentos",
+    "preenchimento de declarações",
+    "contadores",
+    "advogados",
+    "profissionais liberais",
+    "público específico",
+    "legislação aduaneira"
+   ],
+   "variantes": [
+    {
+     "id": "cursos_area_aduaneira_despachantes_conflito",
+     "rotulo": "Cursos e treinamentos na área aduaneira para despachantes, importadores e exportadores – configura conflito",
+     "resultado": "conflito",
+     "fonte": "PAR 241/2019",
+     "quandoUsar": "AFRFB (inclusive afastado do exercício do cargo) que pretende ministrar cursos ou treinamentos sobre legislação e procedimentos aduaneiros/tributários voltados a público específico atendido pela RFB (despachantes aduaneiros, importadores, exportadores). Posição compatível com a da CGU, que negou cursos para público específico em 2023-2026; para público amplo a CGU tem concedido autorização condicionada a termo de compromisso (art. 5º, I e II)."
+    },
+    {
+     "id": "coordenador_professor_curso_despachantes_conflito",
+     "rotulo": "Coordenador pedagógico e professor em curso para despachantes aduaneiros e ajudantes – configura conflito",
+     "resultado": "conflito",
+     "fonte": "INF 153/2016",
+     "quandoUsar": "Servidor que pretende atuar como coordenador pedagógico e/ou professor em curso preparatório ou de certificação dirigido a despachantes aduaneiros, ajudantes de despachante e demais intervenientes do comércio exterior, promovido por associação ou consultoria da área. Posição compatível com a da CGU (cursos para público específico negados em 2023-2026)."
+    },
+    {
+     "id": "treinamentos_direito_declaracoes_conflito",
+     "rotulo": "Treinamentos de Direito e preenchimento de declarações para advogados, contadores e profissionais liberais – configura conflito",
+     "resultado": "conflito",
+     "fonte": "INF 021/2016",
+     "quandoUsar": "Servidor (no original, ATRFB sócio minoritário de empresa de treinamentos) que pretende ministrar treinamentos de matérias jurídicas, inclusive Direito Tributário, com aulas práticas de preenchimento de declarações e formulários de órgãos públicos, para público específico (advogados, contadores, administradores, profissionais liberais). Posição compatível com a da CGU (cursos para público específico negados em 2023-2026)."
+    }
+   ]
+  },
+  {
+   "id": "declaracao_irpf",
+   "nome": "Elaboração de declaração de imposto de renda (DIRPF) de familiar",
+   "grupo": "Consultoria e procuração (A.2)",
+   "descricao": "Usar quando o servidor consulta sobre elaborar ou transmitir a declaração de imposto de renda de cônjuge, companheiro ou parente próximo, inclusive com procuração eletrônica no e-CAC.",
+   "palavrasChave": [
+    "dirpf",
+    "declaração de imposto de renda",
+    "imposto de renda",
+    "irpf",
+    "cônjuge",
+    "esposa",
+    "marido",
+    "companheiro",
+    "parente",
+    "procuração eletrônica",
+    "e-cac",
+    "certificado digital",
+    "sigilo fiscal",
+    "declaração pré-preenchida",
+    "elaborar declaração"
+   ],
+   "variantes": [
+    {
+     "id": "dirpf_conjuge_parente_sem_contraprestacao",
+     "rotulo": "Elaborar DIRPF de cônjuge, companheiro ou parente até o 2º grau, sem contraprestação – não há conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 181/2016",
+     "quandoUsar": "Servidor consulta se pode acessar, mediante procuração eletrônica, os dados fiscais do cônjuge/companheiro (ou parente até o segundo grau) no e-CAC para elaborar e transmitir a declaração de imposto de renda, sem qualquer contraprestação. O texto registra que, em todas as demais situações (terceiros, com ou sem remuneração), a elaboração de DIRPF por servidor é indevida. Fonte é minuta com marcas de revisão; texto reconstituído – conferir."
+    }
+   ]
+  },
+  {
+   "id": "designer_interiores",
+   "nome": "Designer de interiores / projetos de decoração",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende atuar como designer de interiores e ambientes, decorador ou projetista de decoração, como pessoa física.",
+   "palavrasChave": [
+    "designer de interiores",
+    "design de interiores",
+    "designer de ambientes",
+    "decoração",
+    "decorador",
+    "decoradora",
+    "projetos de decoração",
+    "projetos de interiores",
+    "paisagismo",
+    "mobiliário",
+    "luminotécnico",
+    "lei 13.369/2016",
+    "projetista"
+   ],
+   "variantes": [
+    {
+     "id": "projetista_decoracao_ressalvas",
+     "rotulo": "Projetos de decoração e de interiores – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 077/2021",
+     "quandoUsar": "Servidor pretende elaborar projetos de decoração e de interiores como autônomo; inclui ressalva de não usar conhecimentos internos da RFB e blocos opcionais para a dúvida sobre cobrança pelos serviços e para servidor cedido a outro órgão."
+    },
+    {
+     "id": "designer_ambientes_compatibilidade",
+     "rotulo": "Designer de interiores e ambientes – compatibilidade material (modelo sucinto)",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 222/2020",
+     "quandoUsar": "Servidor pretende atuar profissionalmente como designer de interiores e ambientes (Lei nº 13.369/2016), sem vínculo com pessoa jurídica e fora do horário de expediente; análise sucinta, sem ressalvas específicas."
+    }
+   ]
+  },
+  {
+   "id": "direcao_associacao",
+   "nome": "Direção / presidência de associação ou instituição sem fins lucrativos",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende ocupar cargo de direção (presidente, vice-presidente, diretor, conselheiro de administração) em associação civil, associação de pais, clube social ou instituição religiosa.",
+   "palavrasChave": [
+    "presidente de associação",
+    "vice-presidente",
+    "diretor de associação",
+    "diretoria executiva",
+    "diretoria",
+    "diretor geral",
+    "conselho de administração",
+    "conselheiro de administração",
+    "associação civil",
+    "associação sem fins lucrativos",
+    "associação de pais e alunos",
+    "círculo de pais e mestres",
+    "clube social",
+    "instituição religiosa",
+    "diretoria de igreja",
+    "representar a associação",
+    "estatuto social",
+    "não remunerado",
+    "associação de moradores",
+    "presidente da associação",
+    "diretor da associação"
+   ],
+   "variantes": [
+    {
+     "id": "presidente_conselheiro_associacao_civil",
+     "rotulo": "Presidente, vice-presidente e/ou conselheiro de administração de associação civil – não configura conflito, com ressalvas (contabilidade e representação)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 090/2022",
+     "quandoUsar": "Estatuto da associação atribui ao cargo pretendido competências relacionadas à contabilidade e à representação da entidade."
+    },
+    {
+     "id": "presidente_associacao_representacao",
+     "rotulo": "Presidente de associação sem fins lucrativos – exercício condicionado (transferir a representação perante órgãos públicos)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 635/2021",
+     "quandoUsar": "Servidor pretende presidir associação sem fins lucrativos cujo estatuto atribui ao presidente a representação da entidade; sem atribuições contábeis relevantes."
+    },
+    {
+     "id": "membro_diretoria_associacao",
+     "rotulo": "Membro de diretoria de associação sem fins lucrativos – não configura conflito, com ressalvas (representação e contabilidade)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 224/2018",
+     "quandoUsar": "Servidor pretende compor a diretoria (diretor geral, diretoria executiva) de associação sem fins lucrativos, tendo apresentado o estatuto social."
+    },
+    {
+     "id": "diretoria_instituicao_religiosa",
+     "rotulo": "Participação em diretoria de instituição religiosa – atividade materialmente compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 012/2019",
+     "quandoUsar": "Servidor pretende participar da diretoria de instituição religiosa sem fins lucrativos, sem remuneração (não especificamente como tesoureiro)."
+    }
+   ]
+  },
+  {
+   "id": "economista",
+   "nome": "Economista",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende exercer a profissão de economista (elaboração e análise econômica e financeira de projetos, estudos de viabilidade), sem vínculo empregatício.",
+   "palavrasChave": [
+    "economista",
+    "análise econômica",
+    "análise financeira de projetos",
+    "elaboração de projetos",
+    "viabilidade econômica",
+    "corecon",
+    "estudos econômicos",
+    "projetos",
+    "consultoria econômica",
+    "profissional liberal",
+    "autônomo"
+   ],
+   "variantes": [
+    {
+     "id": "economista_ressalvas",
+     "rotulo": "Economista (elaboração e análise econômica e financeira de projetos) – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 254/2018",
+     "quandoUsar": "Servidor pretende exercer, sem vínculo empregatício e fora do expediente, atividade remunerada de economista (elaboração e análise econômica e financeira de projetos), sem atuar em contabilidade nem em matéria tributária. Atenção: a CGU negou contabilidade e consultoria empresarial/tributária em 2024-2025 (art. 5º, I, III e IV); o modelo só se sustenta com as ressalvas que vedam contabilidade e qualquer viés tributário. Verificar a vigência da Portaria RFB nº 444/2015, citada no texto."
+    }
+   ]
+  },
+  {
+   "id": "educador_financeiro",
+   "nome": "Educador financeiro em redes sociais",
+   "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+   "descricao": "Usar quando o servidor produz ou pretende produzir conteúdo de educação financeira/investimentos em redes sociais (YouTube, Instagram), com eventual venda de livro próprio e intenção de vender cursos.",
+   "palavrasChave": [
+    "educador financeiro",
+    "educação financeira",
+    "youtube",
+    "instagram",
+    "redes sociais",
+    "canal",
+    "tesouro direto",
+    "fundos imobiliários",
+    "investimentos",
+    "conteúdo digital",
+    "venda de livros",
+    "livro",
+    "cursos online",
+    "influenciador",
+    "finanças pessoais"
+   ],
+   "variantes": [
+    {
+     "id": "educador_financeiro_redes_sociais",
+     "rotulo": "Educador financeiro em redes sociais e venda de livro próprio – compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 249/2019",
+     "quandoUsar": "Servidor produz conteúdo de educação financeira em redes sociais (YouTube, Instagram) sobre investimentos de forma geral e com informações públicas (ex.: Tesouro Direto, fundos imobiliários), vende livro de sua autoria e cogita vender cursos no futuro. Atenção: a CGU hoje condiciona a divulgação de conteúdo a público amplo a termo de compromisso e negou, em 2024-2026, consultoria/análise de investimentos e e-books sobre matéria tributária (art. 5º, I e III)."
+    }
+   ]
+  },
+  {
+   "id": "eireli",
+   "nome": "Constituição de EIRELI / empresa individual (art. 117, X, da Lei nº 8.112/1990)",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor consulta se pode constituir empresa individual de responsabilidade limitada (EIRELI) – por exemplo para ministrar aulas ou ceder direitos autorais – diante da proibição de gerência ou administração do art. 117, X, da Lei nº 8.112/1990.",
+   "palavrasChave": [
+    "eireli",
+    "empresa individual de responsabilidade limitada",
+    "abrir cnpj",
+    "constituir empresa",
+    "pessoa jurídica",
+    "administração terceirizada",
+    "art. 117, x",
+    "gerência ou administração",
+    "direitos autorais",
+    "cessão de direitos autorais",
+    "direitos patrimoniais",
+    "sociedade unipessoal",
+    "titular de empresa"
+   ],
+   "variantes": [
+    {
+     "id": "eireli_possivel_administrador_terceiro",
+     "rotulo": "EIRELI – proibição do art. 117, X, aplica-se; possível constituir se terceiro for o administrador",
+     "resultado": "outro",
+     "fonte": "PAR 026/2020",
+     "quandoUsar": "Entendimento de 2020: o servidor pode constituir EIRELI desde que contrate terceiro para a gerência/administração; tratado como requerimento disciplinar à Corregedoria. Há bloco opcional para pedir complementação quando a finalidade é a docência. Atenção: a EIRELI foi extinta (a Lei nº 14.195/2021 transformou as existentes em sociedade limitada unipessoal e a Lei nº 14.382/2022 revogou o art. 980-A do Código Civil); adapte antes de usar."
+    },
+    {
+     "id": "eireli_vedada_materia_disciplinar",
+     "rotulo": "EIRELI com administração terceirizada – vedada; matéria estritamente disciplinar (entendimento de 2017)",
+     "resultado": "outro",
+     "fonte": "INF 083/2017",
+     "quandoUsar": "Entendimento de 2017, mais restritivo e posteriormente superado pelo PAR 026/2020: a EIRELI caracteriza sociedade empresária vedada pelo art. 117, X, da Lei nº 8.112/1990, e a contratação de administrador não atenua a situação; consulta devolvida à Cogep. Atenção: a EIRELI foi extinta (a Lei nº 14.195/2021 transformou as existentes em sociedade limitada unipessoal e a Lei nº 14.382/2022 revogou o art. 980-A do Código Civil); adapte antes de usar."
+    }
+   ]
+  },
+  {
+   "id": "empresa_privada",
+   "nome": "Empresa privada – sociedade, gerência e administração",
+   "grupo": "",
+   "descricao": "Usar quando a consulta trata de participar de empresa privada como sócio ou de exercer gerência/administração de empresa (inclusive durante licença para tratar de interesses particulares ou afastamento).",
+   "palavrasChave": [
+    "empresa privada",
+    "sócio de empresa",
+    "sociedade empresária",
+    "ltda",
+    "abrir empresa",
+    "cnpj",
+    "gerência",
+    "administração de empresa",
+    "administrador",
+    "sócio-gerente",
+    "sócio administrador",
+    "licença para tratar de interesses particulares",
+    "licença sem remuneração",
+    "afastamento judicial",
+    "empresa inativa",
+    "empresa familiar"
+   ],
+   "variantes": [
+    {
+     "id": "socio_sem_gerencia",
+     "rotulo": "Participação como sócio em empresa privada – não há impedimento, desde que sem gerência ou administração",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 196/2020",
+     "quandoUsar": "Servidor consulta se pode ser sócio de empresa privada (ex.: sociedade limitada com cônjuge, empresa inativa), sem participar da gerência ou administração."
+    },
+    {
+     "id": "gerencia_administracao_em_licenca",
+     "rotulo": "Gerência/administração de empresa durante licença para tratar de interesses particulares – permitido (encaminhamento à Cogep, não à CEP)",
+     "resultado": "outro",
+     "fonte": "PAR 222/2017",
+     "quandoUsar": "Servidor pretende obter licença para tratar de interesses particulares (art. 91 da Lei 8.112) e, somente durante a licença, exercer a gerência ou administração de empresa privada."
+    },
+    {
+     "id": "administracao_vedada_servidor_afastado",
+     "rotulo": "Administração de empresa por servidor afastado do exercício do cargo por decisão judicial – vedado (art. 117, X)",
+     "resultado": "outro",
+     "fonte": "PAR 151/2020",
+     "quandoUsar": "Servidor afastado/suspenso do exercício da função pública (com remuneração) pergunta se pode exercer atividade privada remunerada e, em especial, administrar empresa durante o afastamento."
+    }
+   ]
+  },
+  {
+   "id": "engenheiro",
+   "nome": "Engenheiro",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende exercer atividade de engenharia (civil, elétrica, agronômica etc.), como empregado ou autônomo, ou atuar na regularização de obras de construção civil perante a RFB.",
+   "palavrasChave": [
+    "engenheiro",
+    "engenharia",
+    "engenheiro civil",
+    "engenheiro agrônomo",
+    "engenheiro eletricista",
+    "projetos estruturais",
+    "projeto de instalações elétricas",
+    "obras",
+    "construção civil",
+    "crea",
+    "art",
+    "responsável técnico",
+    "regularização de obras",
+    "cno",
+    "sero",
+    "laudo técnico"
+   ],
+   "variantes": [
+    {
+     "id": "sem_conflito_ressalvas",
+     "rotulo": "Não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 008/2020",
+     "quandoUsar": "Servidor pretende exercer a engenharia (projetos, obras, vínculo com empresa de engenharia) sem relação com as atividades da RFB."
+    },
+    {
+     "id": "autonomo_contratos",
+     "rotulo": "Engenheiro autônomo com contratos específicos por trabalho – não configura conflito, com cautelas adicionais (registro de horários)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 301/2018",
+     "quandoUsar": "Servidor pretende prestar serviços de engenharia de forma autônoma, por contratos específicos, cabendo registrar início e término de cada serviço para aferição da compatibilidade de horários."
+    },
+    {
+     "id": "conflito_regularizacao_obras",
+     "rotulo": "Regularização de obras perante a RFB (procurador/intermediário no e-CAC) – configura conflito de interesses",
+     "resultado": "conflito",
+     "fonte": "PAR 107/2023",
+     "quandoUsar": "Servidor pretende atuar na regularização de obras de construção civil (CNO/SERO/CND) em nome de terceiros, usando procuração e certificado digital no e-CAC, ou auxiliando colegas engenheiros."
+    }
+   ]
+  },
+  {
+   "id": "escritor",
+   "nome": "Escritor (publicação e venda de livros, site e blog)",
+   "grupo": "",
+   "descricao": "Use quando o servidor consulta ou pede autorização para escrever, publicar, divulgar ou vender livros e outras obras de sua autoria.",
+   "palavrasChave": [
+    "escritor",
+    "escritora",
+    "livro",
+    "livros",
+    "publicar livro",
+    "publicação",
+    "venda de livros",
+    "autor",
+    "autoria própria",
+    "e-book",
+    "ebook",
+    "editora",
+    "romance",
+    "blog",
+    "site",
+    "direitos autorais",
+    "obra literária",
+    "artigo"
+   ],
+   "variantes": [
+    {
+     "id": "escritor_comercializacao_livro_site_blog",
+     "rotulo": "Escritor que comercializa livro próprio e o divulga em site/blog – não configura conflito, desde que observadas as ressalvas (modelo completo)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 247/2019",
+     "quandoUsar": "Servidor escreveu ou pretende escrever livro (sem relação com as atividades da RFB), comercializá-lo e divulgá-lo em site, blog ou redes sociais; análise completa do art. 117, X, da Lei 8.112 e do art. 966 do Código Civil (elemento de empresa, editora própria)."
+    },
+    {
+     "id": "venda_livros_proprios",
+     "rotulo": "Venda de livros de autoria própria (internet/presencial) – não configura conflito, desde que observadas as ressalvas (modelo resumido)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 259/2018",
+     "quandoUsar": "Servidor escritor pretende imprimir e vender seus próprios livros (pela internet ou presencialmente) e pergunta se isso configura ato de comércio; matéria dos livros estranha ao serviço público."
+    },
+    {
+     "id": "publicacao_livro_modelo_curto",
+     "rotulo": "Publicação de livro de autoria própria – não é materialmente incompatível com o cargo (modelo curto)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 53/2020",
+     "quandoUsar": "Servidor pede autorização apenas para publicar livro de sua autoria (sem discussão sobre comercialização/ato de comércio)."
+    }
+   ]
+  },
+  {
+   "id": "esoterismo",
+   "nome": "Atividades esotéricas (tarologia, cartomancia, astrologia)",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende oferecer, como pessoa física, serviços esotéricos (tarô, cartomancia e similares), de forma remunerada ou gratuita, fora do horário de expediente.",
+   "palavrasChave": [
+    "esoterismo",
+    "esotérica",
+    "esotérico",
+    "cartomante",
+    "cartomancia",
+    "taróloga",
+    "tarólogo",
+    "tarô",
+    "tarologia",
+    "cbo 5168-05",
+    "astrologia",
+    "leitura de cartas",
+    "prestação de serviço"
+   ],
+   "variantes": [
+    {
+     "id": "esoterismo_pessoa_fisica",
+     "rotulo": "Atividades esotéricas como pessoa física – compatibilidade material",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 66/2021",
+     "quandoUsar": "Servidor pretende prestar serviços esotéricos (tarologia, cartomancia etc.) em nome próprio, sem informar constituição de pessoa jurídica; o texto registra que a atuação por pessoa jurídica exige nova consulta."
+    }
+   ]
+  },
+  {
+   "id": "estudante",
+   "nome": "Estudante (curso de graduação, inclusive no exterior) e estágio",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor consulta se pode frequentar curso de graduação (inclusive em país vizinho, sem afastamento) ou realizar estágio vinculado a curso que frequenta.",
+   "palavrasChave": [
+    "estudante",
+    "estudar",
+    "graduação",
+    "curso de graduação",
+    "faculdade",
+    "estudar no exterior",
+    "paraguai",
+    "estágio",
+    "estagiário",
+    "estagiária",
+    "estágio curricular",
+    "gastronomia",
+    "cozinheira",
+    "horário especial",
+    "servidor estudante",
+    "lei 11.788/2008"
+   ],
+   "variantes": [
+    {
+     "id": "graduacao_exterior_fora_escopo",
+     "rotulo": "Cursar graduação (inclusive no exterior) – fora do escopo da Lei de Conflito de Interesses",
+     "resultado": "outro",
+     "fonte": "PAR 228/2020",
+     "quandoUsar": "Servidor pergunta se há impedimento para cursar graduação, em especial em instituição de país vizinho, sem pedir afastamento; a condição de estudante não é atividade privada e a consulta é remetida à Coordenação-Geral de Gestão de Pessoas."
+    },
+    {
+     "id": "estagio_curso_sem_conflito",
+     "rotulo": "Estágio vinculado a curso frequentado pelo servidor – não há conflito; observar as Leis nº 8.112/1990 e nº 11.788/2008",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 017/2020",
+     "quandoUsar": "Servidor matriculado em curso sem correlação com as atribuições do cargo (ex.: gastronomia) pede autorização para realizar estágio na área; o parecer também orienta sobre horário especial do servidor estudante e a Lei do Estágio."
+    }
+   ]
+  },
+  {
+   "id": "filantropia",
+   "nome": "Atuação voluntária em entidade filantrópica / sem fins lucrativos",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende atuar como voluntário (sem remuneração) em ONG, entidade filantrópica ou associação sem fins lucrativos, sem exercer função de tesouraria ou conselho fiscal.",
+   "palavrasChave": [
+    "voluntário",
+    "voluntária",
+    "trabalho voluntário",
+    "ong",
+    "entidade filantrópica",
+    "filantropia",
+    "entidade sem fins lucrativos",
+    "associação sem fins lucrativos",
+    "terceiro setor",
+    "projeto social",
+    "mentoria",
+    "bolsas de estudo",
+    "assistência social",
+    "não remunerado",
+    "coordenador de projeto",
+    "observatório social",
+    "sócio fundador"
+   ],
+   "variantes": [
+    {
+     "id": "voluntario_entidade_sem_fins_lucrativos",
+     "rotulo": "Atuação voluntária em entidade sem fins lucrativos – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 159/2020",
+     "quandoUsar": "Servidor pretende atuar como voluntário, sem remuneração, em entidade sem fins lucrativos (ONG, projeto social), tendo juntado ou não o estatuto."
+    },
+    {
+     "id": "informacoes_insuficientes_diretoria_filantropica",
+     "rotulo": "Informações insuficientes – solicitação de complementação (diretoria de entidade filantrópica)",
+     "resultado": "outro",
+     "fonte": "INF 029/2015",
+     "quandoUsar": "Servidor apenas informa que foi convidado a participar da diretoria de entidade filantrópica/sem fins lucrativos, sem descrever a entidade, o cargo e suas atribuições. ATENÇÃO: o original conclui pelo retorno do dossiê à Cogep (não pelo encaminhamento à Comissão de Ética) e transcreve o art. 10 da Portaria MF nº 173, de 2014 (revogada) – conferir o dispositivo equivalente na norma vigente e ajustar o encaminhamento."
+    }
+   ]
+  },
+  {
+   "id": "filiacao_partidaria",
+   "nome": "Filiação a partido político",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor consulta apenas sobre a possibilidade de se filiar a partido político, sem descrever atividades partidárias ou cargo de direção.",
+   "palavrasChave": [
+    "filiação a partido político",
+    "filiação partidária",
+    "partido político",
+    "filiado",
+    "filiar-se",
+    "atividade partidária",
+    "política",
+    "candidatura",
+    "cargo eletivo",
+    "eleições"
+   ],
+   "variantes": [
+    {
+     "id": "filiacao_nao_e_atividade",
+     "rotulo": "Mera filiação a partido político – não é atividade privada; consulta fora do trâmite de conflito de interesses",
+     "resultado": "outro",
+     "fonte": "INF 133/2016",
+     "quandoUsar": "Servidor pergunta somente se pode filiar-se a partido político. A filiação é ato, não atividade; a consulta é devolvida à Cogep para ciência. Se houver atividades partidárias ou cargo de direção no partido, exige-se nova consulta detalhada (não usar este modelo)."
+    }
+   ]
+  },
+  {
+   "id": "fora_ambito_cargo_publico",
+   "nome": "Cargo em comissão em outro ente ou bolsa de curso de formação (fora do âmbito da Lei nº 12.813)",
+   "grupo": "Outras situações",
+   "descricao": "Use quando a consulta não trata de atividade privada, mas de exercício de cargo em comissão em Estado ou Município ou de recebimento de bolsa-auxílio em curso de formação de concurso público.",
+   "palavrasChave": [
+    "cargo em comissão",
+    "cargo comissionado municipal",
+    "prefeitura",
+    "superintendente",
+    "secretário municipal",
+    "cessão",
+    "bolsa-auxílio",
+    "curso de formação",
+    "concurso público",
+    "outro ente federativo",
+    "acúmulo de remuneração",
+    "fora do âmbito"
+   ],
+   "variantes": [
+    {
+     "id": "cargo_comissao_outro_ente",
+     "rotulo": "Cargo em comissão municipal/estadual – fora do âmbito da Lei nº 12.813/2013 (restituição à Cogep)",
+     "resultado": "outro",
+     "fonte": "INF 038/2017",
+     "quandoUsar": "Servidor(a) que consulta sobre exercer cargo em comissão em Município (ou outro ente): não é atividade privada; o caso é de cessão e os autos são restituídos à Cogep para ciência."
+    },
+    {
+     "id": "bolsa_auxilio_curso_formacao",
+     "rotulo": "Bolsa-auxílio de curso de formação de concurso público – não é atividade privada (retorno à Cogep)",
+     "resultado": "outro",
+     "fonte": "INF 080/2016",
+     "quandoUsar": "Servidor(a) que consulta se pode receber bolsa-auxílio de curso de formação de concurso de outro ente concomitantemente à remuneração do cargo: matéria de remuneração e afastamento, de competência da Cogep."
+    }
+   ]
+  },
+  {
+   "id": "fora_ambito_conflito_interesses",
+   "nome": "Consulta fora do âmbito da Lei de Conflito de Interesses (atividade de terceiro, questão funcional interna, conselho de estatal)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando a consulta feita pelo SeCI não envolve atividade ou interesse privado do próprio servidor (atividade do cônjuge, dúvida sobre o próprio trabalho, conselho fiscal de empresa estatal) e deve retornar à Cogep.",
+   "palavrasChave": [
+    "cônjuge",
+    "esposa",
+    "marido",
+    "terceiro",
+    "empresa do cônjuge",
+    "mei do cônjuge",
+    "não vou exercer atividade",
+    "divergência com a chefia",
+    "segregação de funções",
+    "projeto da rfb",
+    "conselho fiscal de empresa pública",
+    "sociedade de economia mista",
+    "empresa estatal",
+    "fora do âmbito"
+   ],
+   "variantes": [
+    {
+     "id": "atividade_exercida_por_terceiro",
+     "rotulo": "Atividade privada a ser exercida por terceiro (cônjuge) – não se enquadra em exercício de atividade; retorno à Cogep",
+     "resultado": "outro",
+     "fonte": "PAR 250/2018",
+     "quandoUsar": "Servidor não exercerá atividade alguma: consulta se há irregularidade em seu cônjuge (ou outro terceiro) abrir empresa ou prestar serviço em área relacionada ao seu trabalho na RFB. Atenção: em 2024 a CGU apreciou no mérito consulta de servidor da RFB sobre atividade da esposa e concluiu por risco mitigável (art. 5º, V, da Lei nº 12.813/2013 – uso de suspeição/impedimento), em vez de considerá-la fora do âmbito da Lei."
+    },
+    {
+     "id": "ausencia_de_interesse_privado",
+     "rotulo": "Dúvida sobre o próprio trabalho na RFB, sem interesse privado – não é conflito de interesses; retorno à Cogep",
+     "resultado": "outro",
+     "fonte": "PAR 129/2019",
+     "quandoUsar": "A consulta não envolve atividade ou interesse privado do servidor: trata de divergência com a chefia ou de dúvida sobre atribuições exercidas no próprio cargo (ex.: segregação de funções em projeto/contratação da RFB)."
+    },
+    {
+     "id": "conselho_fiscal_estatal",
+     "rotulo": "Conselho fiscal de empresa pública ou sociedade de economia mista – fora do âmbito da Lei nº 12.813; retorno à Cogep",
+     "resultado": "outro",
+     "fonte": "INF 037/2017",
+     "quandoUsar": "Servidor pretende participar de conselho fiscal de empresa estatal (empresa pública ou sociedade de economia mista, inclusive estadual ou municipal); entendeu-se não haver interesse privado e remeteu-se a matéria à Lei nº 13.303/2016."
+    }
+   ]
+  },
+  {
+   "id": "fotografia",
+   "nome": "Fotografia, música e atividades artísticas",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende exercer atividade artística remunerada (fotografia, música, pintura, artesanato, apresentações), como pessoa física ou como sócio cotista de estúdio.",
+   "palavrasChave": [
+    "fotógrafo",
+    "fotografia",
+    "estúdio fotográfico",
+    "ensaio fotográfico",
+    "músico",
+    "apresentação musical",
+    "pianista",
+    "violão",
+    "cantor",
+    "banda",
+    "pintura",
+    "quadros",
+    "artes visuais",
+    "cerâmica",
+    "artesanato",
+    "feiras",
+    "atividade artística",
+    "artista"
+   ],
+   "variantes": [
+    {
+     "id": "atividade_artistica_pessoa_fisica",
+     "rotulo": "Atividade artística como pessoa física – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 300/2019",
+     "quandoUsar": "Servidor(a) que pretende exercer, em nome próprio, atividade artística (fotografia, música, pintura, produção e venda de objetos, participação em feiras)."
+    },
+    {
+     "id": "fotografo_socio_cotista",
+     "rotulo": "Fotógrafo com estúdio/pessoa jurídica (sócio cotista) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 150/2016",
+     "quandoUsar": "Servidor(a) que pretende atuar como fotógrafo(a) e constituir ou integrar pessoa jurídica (estúdio fotográfico), hipótese em que só pode ser acionista, cotista ou comanditário, sem gerência ou administração."
+    }
+   ]
+  },
+  {
+   "id": "generico",
+   "nome": "Outra atividade (modelo genérico)",
+   "grupo": "",
+   "descricao": "Usar quando a atividade consultada não possui modelo específico: contém apenas os parágrafos-padrão recorrentes nos pareceres (análise do art. 5º, III, da Lei nº 12.813/2013, incisos aferíveis no exercício efetivo, compatibilidade de horários, procurador/intermediário, informação privilegiada e conclusão).",
+   "palavrasChave": [
+    "outra atividade",
+    "atividade privada",
+    "pedido de autorização",
+    "consulta",
+    "conflito de interesses",
+    "atividade não listada",
+    "genérico",
+    "exercício concomitante",
+    "atividade remunerada",
+    "autônomo",
+    "prestação de serviços"
+   ],
+   "variantes": [
+    {
+     "id": "sem_conflito",
+     "rotulo": "Não configura conflito de interesses (compatibilidade material)",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 134/2021",
+     "quandoUsar": "Atividade sem qualquer relação com as atribuições do cargo e com as competências da RFB, sem necessidade de ressalvas além das gerais (horários e incisos do art. 5º)."
+    },
+    {
+     "id": "sem_conflito_ressalvas",
+     "rotulo": "Não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 008/2020",
+     "quandoUsar": "Atividade materialmente compatível com o cargo, mas que exige ressalvas (não usar conhecimentos internos da RFB, compatibilidade de horários, abstenção em processos, vedação de gerência/administração etc.)."
+    },
+    {
+     "id": "conflito",
+     "rotulo": "Configura conflito de interesses",
+     "resultado": "conflito",
+     "fonte": "PAR 107/2023",
+     "quandoUsar": "Atividade incompatível com o cargo, em especial quando implica atuar como procurador, consultor, assessor ou intermediário de interesses privados perante a administração pública; a análise específica do caso deve ser redigida no campo livre."
+    }
+   ]
+  },
+  {
+   "id": "instrutor_aviacao",
+   "nome": "Instrutor de voo / docência em aviação",
+   "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+   "descricao": "Usar quando o servidor pretende dar aulas teóricas e/ou práticas de aviação (instrutor de voo) em escola de aviação ou aeroclube.",
+   "palavrasChave": [
+    "instrutor de voo",
+    "aviação",
+    "escola de aviação",
+    "aeroclube",
+    "aulas de voo",
+    "piloto",
+    "helicóptero",
+    "anac",
+    "aeronauta",
+    "aulas práticas",
+    "aulas teóricas",
+    "comandante"
+   ],
+   "variantes": [
+    {
+     "id": "docencia_aviacao",
+     "rotulo": "Aulas teóricas e práticas em escola de aviação ou aeroclube – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 190/2019",
+     "quandoUsar": "Servidor habilitado como instrutor de voo pretende lecionar aulas teóricas e práticas em escola de aviação ou aeroclube, fora da jornada; mantenha o bloco da Lei do Aeronauta quando o servidor for piloto/tripulante de aeronave da RFB."
+    }
+   ]
+  },
+  {
+   "id": "inventariante",
+   "nome": "Inventariante",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende exercer (ou pode vir a ser nomeado para) a função de inventariante de espólio de familiar.",
+   "palavrasChave": [
+    "inventariante",
+    "inventário",
+    "espólio",
+    "herança",
+    "bens herdados",
+    "herdeiros",
+    "partilha",
+    "inventário judicial",
+    "representar o espólio",
+    "falecimento"
+   ],
+   "variantes": [
+    {
+     "id": "inventariante_ressalvas",
+     "rotulo": "Inventariante – não configura conflito, desde que nomeie procurador para atos perante órgãos públicos",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 150/2018; PAR 201/2017",
+     "quandoUsar": "Servidor pretende atuar como inventariante dos bens de familiar; ressalva de que a representação do espólio perante órgãos e entidades da administração pública (inclusive a RFB) deve ser feita por procurador nomeado (art. 5º, IV, da Lei nº 12.813/2013)."
+    }
+   ]
+  },
+  {
+   "id": "investimentos",
+   "nome": "Investimentos: assessor, consultor, agente autônomo, planejamento financeiro e bolsa de valores",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende atuar no mercado financeiro (assessor/consultor/agente autônomo de investimentos, planejador financeiro, docência com consultoria em investimentos) ou consulta sobre investir recursos próprios em bolsa de valores.",
+   "palavrasChave": [
+    "assessor de investimentos",
+    "consultor de investimentos",
+    "consultoria financeira",
+    "agente autônomo de investimentos",
+    "aai",
+    "analista de investimentos",
+    "planejamento financeiro",
+    "planejador financeiro",
+    "cfp",
+    "bolsa de valores",
+    "ações",
+    "fundos imobiliários",
+    "day trade",
+    "corretora",
+    "cvm",
+    "mercado financeiro",
+    "captação de clientes",
+    "carteira de investimentos",
+    "renda variável",
+    "finanças pessoais"
+   ],
+   "variantes": [
+    {
+     "id": "assessor_consultor_investimentos_conflito",
+     "rotulo": "Assessoria ou consultoria de investimentos – configura conflito de interesses",
+     "resultado": "conflito",
+     "fonte": "PAR 016/2020",
+     "quandoUsar": "Servidor pretende atuar como assessor, consultor ou analista de investimentos (captação e assessoria financeira de clientes). Entendimento alinhado à posição atual da CGU, que negou casos análogos da RFB em 2024-2025 (art. 5º, I, III e IV, da Lei nº 12.813/2013)."
+    },
+    {
+     "id": "docencia_e_consultoria_investimentos_parcial",
+     "rotulo": "Docência (compatível, com ressalvas) e consultoria (conflito) na área de finanças e investimentos",
+     "resultado": "outro",
+     "fonte": "INF 069/2015",
+     "quandoUsar": "Servidor pretende, ao mesmo tempo, ministrar cursos/aulas sobre finanças e investimentos e prestar consultoria (atendimento individual) nessa área: a docência é admitida com ressalvas e a consultoria é considerada incompatível. Atenção: em 2024 a CGU negou a consultoria de investimentos e condicionou cursos na área a compromisso do servidor; cursos para público amplo hoje exigem termo de compromisso."
+    },
+    {
+     "id": "planejamento_financeiro_conflito",
+     "rotulo": "Consultoria e cursos de planejamento financeiro (CFP) – configura conflito de interesses",
+     "resultado": "conflito",
+     "fonte": "INF 048/2017",
+     "quandoUsar": "Servidor pretende prestar consultoria e ministrar cursos na área de planejamento financeiro pessoal/familiar (planejador financeiro, certificação CFP). Entendimento alinhado à CGU, que negou autorização para planejador financeiro em 2026 (art. 5º, I e III)."
+    },
+    {
+     "id": "agente_autonomo_investimentos_ressalvas",
+     "rotulo": "Agente autônomo de investimentos (ICVM 497/2011) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 63/2019",
+     "quandoUsar": "Servidor pretende atuar como agente autônomo de investimentos (hoje, assessor de investimentos) vinculado a sociedade/escritório do sistema de distribuição de valores mobiliários. ATENÇÃO: entendimento de 2017-2019 superado – a CGU negou a atividade de assessor de investimentos a servidores da RFB em 2024-2025 (art. 5º, I, III e IV); além disso, a Instrução CVM nº 497/2011 foi revogada (Resoluções CVM nº 16/2021 e nº 178/2023). Use a variante de conflito, salvo orientação diversa."
+    },
+    {
+     "id": "investir_bolsa_recursos_proprios",
+     "rotulo": "Investir recursos próprios em bolsa de valores – ato privado, sem impedimento (vedado o uso de informação privilegiada)",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 187/2020",
+     "quandoUsar": "Servidor consulta se pode comprar e vender ações, fundos imobiliários, contratos futuros e outros ativos em bolsa com recursos próprios, sem prestar serviço a terceiros, e declara não ter acesso a informações privilegiadas sobre as empresas. ATENÇÃO: em 2024 a CGU negou a compra de ações por Auditor-Fiscal que atuava no monitoramento das obrigações tributárias das empresas listadas (art. 5º, I e III); verifique se o servidor lida com dados dessas empresas antes de usar este modelo."
+    }
+   ]
+  },
+  {
+   "id": "leilao",
+   "nome": "Participação em leilões (da RFB, judiciais e extrajudiciais)",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Use quando o servidor consulta sobre participar de leilão de mercadorias promovido pela RFB ou arrematar bens (imóveis) em leilões judiciais ou extrajudiciais, para uso próprio ou investimento.",
+   "palavrasChave": [
+    "leilão",
+    "leilões da rfb",
+    "leilão judicial",
+    "leilão extrajudicial",
+    "arrematação",
+    "arrematar imóvel",
+    "hasta pública",
+    "mercadorias apreendidas",
+    "e-cac",
+    "certificado digital",
+    "lance",
+    "imóveis de leilão",
+    "investimento em imóveis",
+    "execução fiscal",
+    "fazenda nacional",
+    "revenda de bens"
+   ],
+   "variantes": [
+    {
+     "id": "leilao_rfb_impossibilidade",
+     "rotulo": "Participação em leilão de mercadorias realizado pela RFB – impossibilidade",
+     "resultado": "conflito",
+     "fonte": "PAR 227/2021",
+     "quandoUsar": "Servidor(a) em exercício na RFB que consulta se pode participar, com certificado digital próprio, de leilões eletrônicos de mercadorias apreendidas ou abandonadas realizados pela RFB. Atenção: o texto transcreve as Portarias RFB nº 2.206/2010 e nº 3.010/2011 – conferir a vigência e a redação atual antes de usar."
+    },
+    {
+     "id": "leilao_judicial_uso_proprio",
+     "rotulo": "Arrematação de imóvel para uso próprio em leilão judicial/extrajudicial – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 197/2018",
+     "quandoUsar": "Servidor(a) que pretende participar de arrematações em leilões judiciais e extrajudiciais, sem esclarecer se os bens são para uso próprio ou para revenda: autoriza-se a hipótese de uso próprio e exige-se nova consulta para a de revenda."
+    },
+    {
+     "id": "leilao_judicial_investimento",
+     "rotulo": "Arrematação de imóveis em leilão judicial como investimento (frequência informada) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 048/2018; INF 015/2016",
+     "quandoUsar": "Servidor(a) que descreve concretamente a arrematação de imóveis em leilões judiciais ou extrajudiciais a título de investimento (inclusive com terceiros), informando a frequência das operações, ou a arrematação eventual de imóvel em execução promovida pela Fazenda Nacional (INF 015/2016, de redação equivalente)."
+    }
+   ]
+  },
+  {
+   "id": "locacao_imovel_conjuge",
+   "nome": "Locação de imóvel comercial (inquilino) para atividade do cônjuge",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende assinar, em seu nome, contrato de locação de sala ou imóvel comercial que será utilizado pelo cônjuge em empresa da qual o servidor não participa.",
+   "palavrasChave": [
+    "aluguel comercial",
+    "locação",
+    "locatário",
+    "inquilino",
+    "sala comercial",
+    "imóvel comercial",
+    "cônjuge",
+    "esposa",
+    "marido",
+    "empresa do cônjuge",
+    "clínica de estética",
+    "contrato de locação",
+    "fiador"
+   ],
+   "variantes": [
+    {
+     "id": "locatario_sala_comercial_conjuge",
+     "rotulo": "Servidor locatário de sala comercial cedida ao cônjuge – ausência de conflito de interesses",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 226/2021",
+     "quandoUsar": "Servidor figura apenas como locatário do imóvel comercial e o cede gratuitamente ao cônjuge, sem participar da empresa nem mesmo como sócio cotista. O texto flexiona o cônjuge pelo gênero oposto ao do servidor (esposa/esposo); ajuste se necessário."
+    }
+   ]
+  },
+  {
+   "id": "magisterio",
+   "nome": "Magistério (docência, aulas, cursos e tutoria)",
+   "grupo": "",
+   "descricao": "Use quando o servidor consulta ou pede autorização para lecionar: docência em instituição de ensino, cursos, tutoria, professor em rede pública ou magistério em regime de teletrabalho.",
+   "palavrasChave": [
+    "magistério",
+    "professor",
+    "professora",
+    "docência",
+    "lecionar",
+    "ministrar aulas",
+    "dar aulas",
+    "faculdade",
+    "universidade",
+    "curso",
+    "ensino superior",
+    "pós-graduação",
+    "tutor",
+    "tutoria",
+    "ead",
+    "ensino à distância",
+    "curso preparatório",
+    "resolução de questões",
+    "rede pública",
+    "teletrabalho"
+   ],
+   "variantes": [
+    {
+     "id": "docencia_instituicao_privada",
+     "rotulo": "Docência em instituição de ensino privada – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 281/2019",
+     "quandoUsar": "Servidor pretende lecionar em instituição de ensino privada (graduação, pós-graduação, cursos regulares), fora do horário de expediente."
+    },
+    {
+     "id": "magisterio_teletrabalho",
+     "rotulo": "Magistério por servidor em teletrabalho – não configura conflito, desde que observadas as recomendações",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 102/2022",
+     "quandoUsar": "Servidor em regime de teletrabalho pretende lecionar e questiona se pode ministrar aulas no horário de funcionamento da repartição."
+    },
+    {
+     "id": "rede_publica_acumulacao_cargo_nao_tecnico",
+     "rotulo": "Professor em rede pública – impossibilidade por acumulação de cargos (cargo não técnico/científico)",
+     "resultado": "outro",
+     "fonte": "PAR 079/2021",
+     "quandoUsar": "Servidor ocupante de cargo que NÃO é técnico ou científico (isto é, que não seja AFRFB nem ATRFB) pretende ser professor em rede pública de ensino (cargo, emprego ou contrato temporário remunerado por ente público)."
+    },
+    {
+     "id": "docencia_resolucao_questoes",
+     "rotulo": "Professor de resolução/comentário de questões – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 069/2020",
+     "quandoUsar": "Servidor pretende atuar como professor resolvendo/comentando questões (material didático, cursos abertos ao público em geral), remunerado por questão ou por serviço, sem vínculo com a empresa."
+    },
+    {
+     "id": "tutoria",
+     "rotulo": "Tutoria (presencial ou EAD) equiparada a magistério – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 028/2020",
+     "quandoUsar": "Servidor pretende atuar como tutor (presencial ou à distância) em instituição de ensino privada; a tutoria é tratada como desdobramento da atividade de professor."
+    },
+    {
+     "id": "professor_universitario_horario_intervalo",
+     "rotulo": "Professor universitário com questionamento sobre horário/intervalo de refeição – materialmente compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 56/2020",
+     "quandoUsar": "Servidor pretende lecionar em universidade privada e questiona a compatibilidade de horários (flexibilidade de jornada, aula no intervalo para refeição e descanso), inclusive quando ocupa função gratificada."
+    },
+    {
+     "id": "aulas_cursos_livres_modelo_curto",
+     "rotulo": "Aulas/cursos em instituição privada – modelo curto – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 245/2019",
+     "quandoUsar": "Servidor pretende ministrar aulas ou cursos sem relação com as atribuições do cargo (ex.: cursos da área de saúde, tutoria EAD) em instituição privada identificada, fora do horário de expediente."
+    }
+   ]
+  },
+  {
+   "id": "marketing",
+   "nome": "Marketing e publicidade",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende exercer atividade de marketing, marketing digital ou publicidade (em empresa familiar de que é cotista, como autônomo/afiliado ou como diretor de marketing de clube ou entidade).",
+   "palavrasChave": [
+    "marketing",
+    "marketing digital",
+    "publicidade",
+    "propaganda",
+    "afiliado",
+    "comissão de vendas",
+    "divulgação de produtos",
+    "redes sociais",
+    "empresa familiar",
+    "sócio cotista",
+    "diretor de marketing",
+    "clube de futebol",
+    "promover produtos",
+    "e-commerce",
+    "comunicação"
+   ],
+   "variantes": [
+    {
+     "id": "marketing_empresa_familiar_cotista",
+     "rotulo": "Marketing digital em empresa familiar da qual é sócio cotista – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 059/2020",
+     "quandoUsar": "Servidor é sócio cotista (sem administração) de empresa familiar, em geral com o cônjuge como administrador, e pretende exercer nela a atividade de marketing/marketing digital, sem representar a empresa perante o poder público."
+    },
+    {
+     "id": "diretor_marketing_clube_futebol",
+     "rotulo": "Diretor de marketing de clube de futebol (não estatutário, sem representação) – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 251/2019",
+     "quandoUsar": "Servidor é convidado para ser diretor de marketing de clube de futebol ou entidade semelhante, em cargo não remunerado e não estatutário, sem poderes para representar a entidade perante órgãos públicos. Para conselhos e presidência de clube, ver o modelo clube_futebol."
+    },
+    {
+     "id": "marketing_digital_autonomo",
+     "rotulo": "Marketing digital como autônomo/afiliado (comissão por vendas) – materialmente compatível",
+     "resultado": "sem_conflito",
+     "fonte": "INF 250/2015",
+     "quandoUsar": "Servidor pretende promover na internet produtos de outras pessoas físicas ou jurídicas (marketing digital/afiliado), remunerado por comissão sobre vendas, sem representar a empresa; modelo curto. Para canal próprio, cursos e afiliação com análise mais completa, ver o modelo conteudo_digital (PAR 522/2023)."
+    }
+   ]
+  },
+  {
+   "id": "mediador_conciliador",
+   "nome": "Mediador, conciliador ou árbitro",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende atuar como mediador ou conciliador judicial (voluntário ou remunerado) ou como conciliador, mediador ou árbitro em câmara privada.",
+   "palavrasChave": [
+    "mediador",
+    "mediação",
+    "mediador judicial",
+    "conciliador",
+    "conciliação",
+    "conciliador voluntário",
+    "juizado especial",
+    "juiz leigo",
+    "árbitro",
+    "arbitragem",
+    "câmara arbitral",
+    "câmara de mediação",
+    "tribunal de justiça",
+    "cejusc",
+    "mediação de conflitos",
+    "mediador voluntário",
+    "solução de conflitos"
+   ],
+   "variantes": [
+    {
+     "id": "camara_privada_compativel",
+     "rotulo": "Conciliador, mediador e árbitro em câmara privada – compatibilidade material, com ressalva",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 197/2021",
+     "quandoUsar": "Servidor pretende atuar como conciliador, mediador e/ou árbitro em câmara de arbitragem ou mediação de direito privado."
+    },
+    {
+     "id": "mediador_judicial_voluntario",
+     "rotulo": "Mediador/conciliador judicial voluntário (não remunerado) – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 215/2018",
+     "quandoUsar": "Servidor pretende atuar como mediador ou conciliador judicial junto a Tribunal de Justiça de forma voluntária e não remunerada, fora do horário de expediente."
+    },
+    {
+     "id": "mediador_judicial_remunerado_acumulacao",
+     "rotulo": "Mediador/conciliador judicial remunerado – acumulação vedada de função pública (fora do âmbito da Lei nº 12.813/2013)",
+     "resultado": "outro",
+     "fonte": "INF 174/2016 e INF 046/2017",
+     "quandoUsar": "Servidor pretende atuar como mediador ou conciliador judicial cadastrado em Tribunal, de forma remunerada; a matéria é tratada como acumulação ilegal de cargos/funções públicas, e não como conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "medicina",
+   "nome": "Medicina, odontologia e medicina veterinária",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende exercer, fora do horário de expediente, profissão da área de saúde (médico, dentista, médico veterinário) em caráter privado.",
+   "palavrasChave": [
+    "médico",
+    "médica",
+    "medicina",
+    "plantão",
+    "consultório",
+    "clínica",
+    "atendimento médico",
+    "pediatra",
+    "dentista",
+    "odontologia",
+    "odontólogo",
+    "cirurgião-dentista",
+    "veterinário",
+    "veterinária",
+    "medicina veterinária",
+    "home care pet",
+    "pacientes",
+    "crm",
+    "cro"
+   ],
+   "variantes": [
+    {
+     "id": "medico",
+     "rotulo": "Exercício da medicina – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 280/2019",
+     "quandoUsar": "Servidor(a) com formação em medicina que pretende atender pacientes (consultório, plantão, serviço de saúde privado) fora do horário de expediente."
+    },
+    {
+     "id": "odontologia",
+     "rotulo": "Exercício da odontologia – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 106/2020",
+     "quandoUsar": "Servidor(a) com formação em odontologia que pretende atender pacientes em horário distinto do expediente."
+    },
+    {
+     "id": "veterinaria",
+     "rotulo": "Exercício da medicina veterinária – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 269/2019; PAR 164/2019",
+     "quandoUsar": "Servidor(a) que pretende atuar como médico(a) veterinário(a) autônomo(a), inclusive em atendimento domiciliar, fora do horário de expediente."
+    }
+   ]
+  },
+  {
+   "id": "mestrado",
+   "nome": "Frequência a curso de mestrado (pós-graduação)",
+   "grupo": "Outras situações",
+   "descricao": "Use quando o servidor consulta sobre a possibilidade de frequentar, como aluno, curso de mestrado ou outra pós-graduação de conteúdo acadêmico.",
+   "palavrasChave": [
+    "mestrado",
+    "pós-graduação",
+    "doutorado",
+    "curso de mestrado",
+    "aluno de mestrado",
+    "frequência a curso",
+    "universidade",
+    "programa de pós-graduação",
+    "estudante",
+    "atividade acadêmica"
+   ],
+   "variantes": [
+    {
+     "id": "frequencia_mestrado",
+     "rotulo": "Frequência a curso de mestrado – não configura conflito, desde que observada a compatibilidade de horários",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 082/2015",
+     "quandoUsar": "Servidor(a) que consulta sobre frequentar curso de mestrado (atividade de conteúdo acadêmico, como discente). Modelo curto, de 2015."
+    }
+   ]
+  },
+  {
+   "id": "milhas_aereas",
+   "nome": "Aquisição e venda de milhas aéreas",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Usar quando o servidor pretende comprar e vender milhas aéreas ou pontos de programas de fidelidade como pessoa física.",
+   "palavrasChave": [
+    "milhas",
+    "milhas aéreas",
+    "programa de fidelidade",
+    "pontos",
+    "venda de milhas",
+    "compra de milhas",
+    "passagens aéreas",
+    "companhias aéreas",
+    "maxmilhas",
+    "hotmilhas",
+    "pontos de cartão"
+   ],
+   "variantes": [
+    {
+     "id": "milhas_pessoa_fisica_ressalvas",
+     "rotulo": "Aquisição e venda de milhas aéreas como pessoa física – não configura conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 296/2018",
+     "quandoUsar": "Servidor pretende adquirir milhas aéreas (passagens, compra de pontos em programas de fidelidade) e vendê-las por meio de sites especializados, de forma eletrônica, como pessoa física e fora do horário de trabalho."
+    }
+   ]
+  },
+  {
+   "id": "modelo_publicitario",
+   "nome": "Modelo publicitário",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Use quando o servidor pretende atuar como modelo em peças publicitárias, diretamente ou por intermédio de agência de modelos.",
+   "palavrasChave": [
+    "modelo",
+    "modelo publicitário",
+    "modelo publicitária",
+    "peças publicitárias",
+    "agência de modelos",
+    "publicidade",
+    "campanha publicitária",
+    "comercial",
+    "fotos publicitárias",
+    "desfile"
+   ],
+   "variantes": [
+    {
+     "id": "modelo_publicitario_ressalvas",
+     "rotulo": "Modelo publicitário – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 097/2016; INF 208/2015",
+     "quandoUsar": "Servidor(a) que pretende participar de peças publicitárias como modelo; se os trabalhos forem repassados por agência de modelos, marque a ressalva de abstenção quanto a processos da agência."
+    }
+   ]
+  },
+  {
+   "id": "motorista_aplicativo",
+   "nome": "Motorista de aplicativo / taxista",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende exercer transporte remunerado individual de passageiros, como motorista de aplicativo (Uber, 99 etc.) ou taxista.",
+   "palavrasChave": [
+    "motorista de aplicativo",
+    "uber",
+    "99",
+    "99 pop",
+    "taxista",
+    "táxi",
+    "transporte de passageiros",
+    "motorista",
+    "aplicativo de transporte",
+    "corridas",
+    "motorista parceiro",
+    "complementar a renda"
+   ],
+   "variantes": [
+    {
+     "id": "motorista_aplicativo",
+     "rotulo": "Motorista de aplicativo – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 182/2019",
+     "quandoUsar": "Servidor pretende atuar como motorista de aplicativo de transporte (Uber, 99 etc.) fora do horário de expediente."
+    },
+    {
+     "id": "taxista",
+     "rotulo": "Taxista – compatibilidade material",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 205/2020",
+     "quandoUsar": "Servidor pretende exercer a profissão de taxista (ou motorista de aplicativo, em análise sucinta) como autônomo."
+    }
+   ]
+  },
+  {
+   "id": "nepotismo_conjuges",
+   "nome": "Nepotismo – cônjuge ou parente em cargo em comissão / função de confiança",
+   "grupo": "Outras situações",
+   "descricao": "Usar em consulta sobre a regularidade de cônjuges, companheiros ou parentes ocuparem cargo em comissão e função de confiança no mesmo órgão ou unidade (art. 117, VIII, da Lei nº 8.112/1990 e Decreto nº 7.203/2010).",
+   "palavrasChave": [
+    "nepotismo",
+    "cônjuge",
+    "esposa",
+    "marido",
+    "companheiro",
+    "parente",
+    "cargo em comissão",
+    "função de confiança",
+    "chefia imediata",
+    "subordinação direta",
+    "mesma unidade",
+    "delegado",
+    "chefe de equipe",
+    "decreto 7.203",
+    "das",
+    "fg"
+   ],
+   "variantes": [
+    {
+     "id": "conjuges_comissao_e_funcao_mesma_unidade",
+     "rotulo": "Cônjuges com cargo em comissão e função de confiança na mesma unidade, sem subordinação direta – regularidade",
+     "resultado": "outro",
+     "fonte": "PAR 002/2014 (Escor07)",
+     "quandoUsar": "Consulta (não é pedido SeCI de atividade privada) sobre nepotismo: servidor nomeado para cargo em comissão/chefia de unidade em que seu cônjuge, companheiro ou parente, também servidor efetivo, exerce função de confiança sem lhe ser diretamente subordinado. Análise do art. 117, VIII, da Lei nº 8.112/1990 e do Decreto nº 7.203/2010."
+    }
+   ]
+  },
+  {
+   "id": "nutricionista",
+   "nome": "Nutricionista",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Use quando o servidor pretende exercer a profissão de nutricionista, com atendimento a pacientes, concomitantemente ao cargo.",
+   "palavrasChave": [
+    "nutricionista",
+    "nutrição",
+    "graduação em nutrição",
+    "consultório de nutrição",
+    "atendimento nutricional",
+    "pacientes",
+    "dieta",
+    "plano alimentar",
+    "profissão da área de saúde",
+    "consultas nutricionais",
+    "nutricional"
+   ],
+   "variantes": [
+    {
+     "id": "nutricionista_ressalvas",
+     "rotulo": "Exercício da profissão de nutricionista – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 186/2020",
+     "quandoUsar": "Servidor(a) que pretende exercer a profissão de nutricionista em caráter privado, atendendo pacientes, fora do horário de expediente."
+    }
+   ]
+  },
+  {
+   "id": "organismo_internacional",
+   "nome": "Cargo em organismo internacional (Organização Mundial das Aduanas)",
+   "grupo": "Outras situações",
+   "descricao": "Use quando o servidor pretende, em licença para tratar de interesses particulares, exercer cargo na Organização Mundial das Aduanas (OMA) ou em organismo internacional de que o Brasil seja membro.",
+   "palavrasChave": [
+    "organização mundial das aduanas",
+    "oma",
+    "wco",
+    "organismo internacional",
+    "organização internacional",
+    "bruxelas",
+    "especialista",
+    "licença para tratar de interesses particulares",
+    "exterior",
+    "programa de integridade",
+    "missões de assistência técnica",
+    "aduana",
+    "cooperação internacional"
+   ],
+   "variantes": [
+    {
+     "id": "cargo_oma_em_licenca",
+     "rotulo": "Cargo na Organização Mundial das Aduanas durante licença para tratar de interesses particulares – compatibilidade material",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 236/2020",
+     "quandoUsar": "Servidor(a) que solicitará licença para tratar de interesses particulares (art. 91 da Lei nº 8.112/1990) para exercer cargo na OMA. O texto descreve especificamente a OMA; para outro organismo, adaptar os parágrafos descritivos."
+    }
+   ]
+  },
+  {
+   "id": "palestras",
+   "nome": "Palestras e palestrante",
+   "grupo": "",
+   "descricao": "Use quando o servidor consulta ou pede autorização para proferir palestras, conferências, treinamentos ou cursos avulsos para público externo.",
+   "palavrasChave": [
+    "palestra",
+    "palestras",
+    "palestrante",
+    "conferência",
+    "seminário",
+    "evento externo",
+    "treinamento",
+    "curso",
+    "cursos e palestras",
+    "instrutor",
+    "expositor",
+    "coaching",
+    "matéria tributária",
+    "público externo",
+    "contadores",
+    "sindicato",
+    "associação de classe",
+    "procedimentos da rfb"
+   ],
+   "variantes": [
+    {
+     "id": "palestra_evento_externo_ressalvas",
+     "rotulo": "Palestra em evento externo – sem incompatibilidade material, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 270/2018",
+     "quandoUsar": "Servidor pede autorização para proferir palestra (tema geral/teórico) em evento externo promovido por entidade identificada, sem público com interesse em decisão do servidor."
+    },
+    {
+     "id": "cursos_palestras_procedimentos_rfb_conflito",
+     "rotulo": "Palestras/cursos sobre sistemas e procedimentos da RFB para público específico – configura conflito",
+     "resultado": "conflito",
+     "fonte": "PAR 581/2021",
+     "quandoUsar": "Servidor pretende ministrar, mediante remuneração, palestras, cursos ou treinamentos (e assessoria) sobre sistemas, rotinas e procedimentos da RFB, dirigidos a público específico (escritórios, contadores, empresas, usuários dos serviços) – atividade com caráter de consultoria."
+    },
+    {
+     "id": "palestras_publico_especifico_conflito",
+     "rotulo": "Palestras remuneradas sobre matéria tributária para público específico – configura conflito",
+     "resultado": "conflito",
+     "fonte": "INF 099/2016",
+     "quandoUsar": "Servidor pretende ministrar palestras remuneradas sobre matéria tributária para público específico com interesse em decisões da RFB (associações de classe, sindicatos, conselhos profissionais), não abertas ao público em geral."
+    },
+    {
+     "id": "consulta_em_tese_nao_apreciada",
+     "rotulo": "Consulta genérica/em tese sobre cursos, palestras e coaching – encerramento por não preencher requisitos",
+     "resultado": "outro",
+     "fonte": "INF 179/2015",
+     "quandoUsar": "A consulta não descreve situação concreta e individualizada (hipóteses abstratas, temas e público-alvo imprecisos), não atendendo à Portaria Interministerial MP/CGU nº 333/2013."
+    }
+   ]
+  },
+  {
+   "id": "perito_judicial",
+   "nome": "Perito judicial",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende atuar como perito nomeado pelo Juízo, perito/calculista extrajudicial ou assistente técnico de parte em processos judiciais.",
+   "palavrasChave": [
+    "perito judicial",
+    "perito",
+    "perícia",
+    "perícias judiciais",
+    "perito contábil",
+    "perito trabalhista",
+    "perito extrajudicial",
+    "assistente técnico",
+    "calculista",
+    "cálculos trabalhistas",
+    "cálculos judiciais",
+    "pje-calc",
+    "auxiliar da justiça",
+    "laudo pericial",
+    "cadastro de peritos",
+    "nomeado pelo juiz",
+    "perito engenheiro"
+   ],
+   "variantes": [
+    {
+     "id": "perito_judicial_sem_conflito_ressalvas",
+     "rotulo": "Perito judicial em área não vedada (ex.: engenharia) – compatível, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 252/2018",
+     "quandoUsar": "Servidor pretende atuar como perito nomeado pelo Juízo em área que não seja contabilidade/advocacia (ex.: engenharia), sem envolver conhecimentos internos da RFB."
+    },
+    {
+     "id": "perito_trabalhista_compativel",
+     "rotulo": "Perito judicial e extrajudicial de cálculos trabalhistas – compatibilidade material",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 246/2020",
+     "quandoUsar": "Servidor pretende atuar como perito judicial e extrajudicial na área trabalhista (perícias, cálculos trabalhistas, PJe-Calc)."
+    },
+    {
+     "id": "perito_contabil_assistente_tecnico_conflito",
+     "rotulo": "Perito contábil, assistente técnico ou calculista para partes/escritórios – conflito (Portaria RFB nº 444/2015)",
+     "resultado": "conflito",
+     "fonte": "PAR 102/2020",
+     "quandoUsar": "Servidor da Carreira Tributária e Aduaneira pretende atuar como perito judicial contábil, assistente técnico contábil de parte ou elaborar cálculos para escritórios de advocacia e empresas visando ações judiciais."
+    }
+   ]
+  },
+  {
+   "id": "pratico",
+   "nome": "Prático e Praticante de Prático (praticagem)",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pede autorização para exercer a atividade de Prático da Marinha Mercante ou para participar do Programa de Qualificação de Praticante de Prático.",
+   "palavrasChave": [
+    "prático",
+    "praticante de prático",
+    "praticagem",
+    "marinha mercante",
+    "zona de praticagem",
+    "programa de qualificação",
+    "normam 12",
+    "aquaviário",
+    "manobra de navios",
+    "empresa de praticagem",
+    "capitania dos portos",
+    "autoridade marítima",
+    "processo seletivo para prático",
+    "treinamento supervisionado"
+   ],
+   "variantes": [
+    {
+     "id": "pratico_conflito",
+     "rotulo": "Prático da Marinha Mercante – configura conflito de interesses (art. 5º, III e VII; Portaria RFB nº 444/2015), ainda que em licença",
+     "resultado": "conflito",
+     "fonte": "INF 049/2017",
+     "quandoUsar": "Servidor da carreira de auditoria (AFRFB/ATRFB) pede autorização para exercer a atividade de Prático (inclusive como sócio de empresa de praticagem), mesmo alegando lotação fora da aduana ou afastamento por licença para tratar de interesses particulares."
+    },
+    {
+     "id": "praticante_de_pratico_em_licenca",
+     "rotulo": "Praticante de Prático (Programa de Qualificação) – não configura conflito, desde que em licença para tratar de interesses particulares concedida antes do início",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 162/2018",
+     "quandoUsar": "Servidor aprovado em processo seletivo para Prático pede autorização para participar do Programa de Qualificação de Praticante de Prático (treinamento supervisionado, não remunerado). Não se aplica ao exercício da atividade de Prático."
+    }
+   ]
+  },
+  {
+   "id": "presidente_entidade",
+   "nome": "Presidência de igreja, partido político, rádio comunitária e observatório social",
+   "grupo": "Entidades privadas sem fins lucrativos (A.8)",
+   "descricao": "Use quando o servidor pretende presidir (ou fundar e integrar conselho de) instituição religiosa, partido político, associação de radiodifusão comunitária ou observatório social.",
+   "palavrasChave": [
+    "presidente de igreja",
+    "instituição religiosa",
+    "organização religiosa",
+    "igreja evangélica",
+    "responsável legal",
+    "partido político",
+    "presidente estadual de partido",
+    "diretório partidário",
+    "rádio comunitária",
+    "radiodifusão comunitária",
+    "apoio cultural",
+    "observatório social",
+    "sócio fundador",
+    "conselho de administração",
+    "terceiro setor",
+    "cidadania fiscal",
+    "representar a entidade",
+    "sem fins lucrativos",
+    "presidente da igreja",
+    "presidente do partido",
+    "pastor"
+   ],
+   "variantes": [
+    {
+     "id": "presidente_instituicao_religiosa",
+     "rotulo": "Presidente (responsável legal) de instituição religiosa – possibilidade de forma condicionada",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 225/2021",
+     "quandoUsar": "Servidor(a) que pretende ser presidente/responsável legal de organização religiosa (igreja) sem fins lucrativos, sem ter anexado o estatuto da entidade."
+    },
+    {
+     "id": "presidente_igreja_representacao_estatutaria",
+     "rotulo": "Presidente de igreja com atribuição estatutária de representá-la em juízo e fora dele – autorização condicionada (mitigação)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 104/2016",
+     "quandoUsar": "Servidor(a) que pede autorização para presidir entidade religiosa cujo estatuto atribui ao presidente a representação da entidade em juízo e fora dele; fundamentação mais extensa, com referência a precedentes da CGU de autorização condicionada (art. 7º, parágrafo único, da Portaria Interministerial nº 333/2013)."
+    },
+    {
+     "id": "presidente_partido_politico",
+     "rotulo": "Presidente de diretório de partido político (sem remuneração) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 177/2017",
+     "quandoUsar": "Servidor(a) convidado(a) a presidir órgão partidário (estadual, municipal) sem remuneração, com estatuto do partido juntado aos autos."
+    },
+    {
+     "id": "presidente_radio_comunitaria",
+     "rotulo": "Presidente de associação de radiodifusão comunitária – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 199/2019",
+     "quandoUsar": "Servidor(a) que pretende presidir associação sem fins lucrativos mantenedora de rádio comunitária (distribuição de horários, recebimento e aplicação de apoios culturais)."
+    },
+    {
+     "id": "observatorio_social",
+     "rotulo": "Sócio fundador e membro de conselho de Observatório Social – permitido, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 094/2016",
+     "quandoUsar": "Servidor(a) que pretende ser sócio fundador e integrar o Conselho de Administração (presidente ou vice) ou o Conselho Fiscal de Observatório Social (associação do terceiro setor, apartidária, voltada à cidadania fiscal e à gestão de recursos públicos), em atividade voluntária, com minuta de estatuto apresentada."
+    }
+   ]
+  },
+  {
+   "id": "radialista",
+   "nome": "Radialista / comentarista de notícias em rádio",
+   "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+   "descricao": "Use quando o servidor pretende apresentar programa ou quadro em emissora de rádio, com leitura e comentário de notícias, inclusive sobre normas tributárias e previdenciárias publicadas pela imprensa.",
+   "palavrasChave": [
+    "radialista",
+    "rádio",
+    "programa de rádio",
+    "locutor",
+    "apresentador",
+    "comentarista",
+    "notícias",
+    "jornais e revistas",
+    "mídia",
+    "emissora",
+    "imprensa",
+    "comunicador"
+   ],
+   "variantes": [
+    {
+     "id": "radialista_ressalvas",
+     "rotulo": "Radialista (leitura e esclarecimento de notícias) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 016/2016",
+     "quandoUsar": "Servidor(a) que atua ou pretende atuar em rádio, fora do horário de expediente, selecionando e esclarecendo fatos publicados em jornais e revistas, inclusive normas da Previdência ou da Receita Federal divulgadas pela imprensa."
+    }
+   ]
+  },
+  {
+   "id": "sindico",
+   "nome": "Síndico de condomínio",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende exercer (ou se candidatar a) a função de síndico de condomínio, inclusive cumulada com cargo em associação de moradores ou com participação societária em administradora.",
+   "palavrasChave": [
+    "síndico",
+    "síndica",
+    "condomínio",
+    "condomínio residencial",
+    "edifício",
+    "prédio onde moro",
+    "subsíndico",
+    "administração do condomínio",
+    "assembleia de condomínio",
+    "associação de moradores",
+    "síndico profissional",
+    "síndico terceirizado",
+    "administradora de condomínios",
+    "representar o condomínio",
+    "convenção de condomínio",
+    "candidatar a síndico"
+   ],
+   "variantes": [
+    {
+     "id": "sindico_condominio_residencial",
+     "rotulo": "Síndico de condomínio residencial – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 211/2021",
+     "quandoUsar": "Servidor pretende ser síndico do condomínio residencial (em regra, onde reside)."
+    },
+    {
+     "id": "sindico_e_diretor_associacao_moradores",
+     "rotulo": "Síndico e diretor de associação de moradores do mesmo condomínio – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 57/2020",
+     "quandoUsar": "Servidor pretende ser síndico de condomínio residencial e, cumulativamente, diretor da associação de moradores do mesmo condomínio."
+    },
+    {
+     "id": "sindico_e_socio_cotista_administradora",
+     "rotulo": "Síndico (inclusive não condômino) e sócio cotista de empresa de administração – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 076/2021",
+     "quandoUsar": "Servidor pretende atuar como síndico (do próprio condomínio ou como síndico terceirizado) e consta como sócio cotista, sem gerência, de empresa que presta o serviço."
+    }
+   ]
+  },
+  {
+   "id": "socio_cotista",
+   "nome": "Sócio cotista de empresa privada",
+   "grupo": "",
+   "descricao": "Usar quando o servidor consulta sobre participar de sociedade (limitada, holding familiar, SPE) como sócio cotista ou acionista, sem exercer gerência ou administração.",
+   "palavrasChave": [
+    "sócio cotista",
+    "sócia cotista",
+    "sócio quotista",
+    "cotista",
+    "quotista",
+    "acionista",
+    "sociedade limitada",
+    "ltda",
+    "participação societária",
+    "sócio minoritário",
+    "empresa familiar",
+    "holding familiar",
+    "sociedade de propósito específico",
+    "spe",
+    "sem exercer gerência",
+    "sem administração",
+    "abrir empresa com cônjuge",
+    "contrato social",
+    "divisão de lucros"
+   ],
+   "variantes": [
+    {
+     "id": "cotista_sem_gerencia_sem_conflito",
+     "rotulo": "Sócio cotista sem gerência – não se verifica conflito (análise completa: Lei 12.813 e art. 117, X)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 112/2020",
+     "quandoUsar": "Servidor pretende apenas figurar como sócio cotista de sociedade limitada, sem exercer gerência ou administração, e a atividade econômica da empresa não é correlata às atribuições do cargo."
+    },
+    {
+     "id": "cotista_sucinto_compatibilidade",
+     "rotulo": "Sócio cotista – parecer sucinto: não há impedimento, vedada gerência/administração (opcional: divulgação e vendas em plataformas digitais)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 229/2020",
+     "quandoUsar": "Consulta simples sobre ser sócio cotista em sociedade limitada (inclusive familiar), sem atos de gerência; opcionalmente o servidor também quer divulgar a empresa e vender seus produtos em vídeos/plataformas digitais."
+    },
+    {
+     "id": "cotista_materia_disciplinar_cogep",
+     "rotulo": "Sócio cotista/acionista – matéria disciplinar fora da Lei de Conflito de Interesses (encaminhamento à Cogep, não à CEP)",
+     "resultado": "outro",
+     "fonte": "PAR 195/2019",
+     "quandoUsar": "Entendimento adotado de 2017 a 2019: a mera participação societária (cotista, acionista, holding familiar, SPE) não é exercício de atividade; trata-se como consulta disciplinar (art. 117, X, Lei 8.112) e encaminha-se à Cogep para ciência. A partir de 2020 os pareceres passaram a encaminhar à CEP (ver demais variantes)."
+    },
+    {
+     "id": "socio_area_correlata_conflito",
+     "rotulo": "Sócio de sociedade limitada de pessoas em área correlata ao cargo – configura conflito de interesses (art. 5º, III)",
+     "resultado": "conflito",
+     "fonte": "PAR 029/2020",
+     "quandoUsar": "Servidor pretende ser sócio (ainda que sem gerência formal) de sociedade limitada de pequeno/médio porte em que sua figura é essencial e cuja atividade se desenvolve em área correlata às atribuições do cargo ou às atividades de sua unidade (ex.: importação por servidor da área aduaneira)."
+    }
+   ]
+  },
+  {
+   "id": "socio_empresa_contrato_poder_publico",
+   "nome": "Sócio de empresa que contrata com o Poder Público",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Use quando o servidor consulta sobre ser sócio (ou responsável) de empresa que prestará serviços ou explorará espaço público mediante contrato ou autorização de Município, Estado ou outro órgão público.",
+   "palavrasChave": [
+    "sócio",
+    "sócio majoritário",
+    "responsável pela empresa",
+    "cnpj",
+    "empresa de publicidade",
+    "prefeitura",
+    "contrato com o poder público",
+    "licitação",
+    "espaço público",
+    "exploração de publicidade",
+    "prestação de serviço à prefeitura",
+    "cotista"
+   ],
+   "variantes": [
+    {
+     "id": "socio_cotista_empresa_contrata_poder_publico",
+     "rotulo": "Sócio (apenas acionista, cotista ou comanditário) de empresa que contrata com a Administração – matéria disciplinar (ciência via Cogep)",
+     "resultado": "outro",
+     "fonte": "INF 152/2016",
+     "quandoUsar": "Servidor(a) que pergunta se pode ser responsável ou sócio (inclusive majoritário) de empresa que contratará com a prefeitura ou outro órgão público. Entendimento de 2016 (matéria disciplinar, art. 117, X, da Lei nº 8.112/1990, com encaminhamento à Cogep); a partir de 2020 os pareceres sobre sócio cotista passaram a seguir à Comissão de Ética (ver modelo “Sócio cotista de empresa privada”). Atenção: o texto cita a Lei nº 8.666/1993, revogada pela Lei nº 14.133/2021."
+    }
+   ]
+  },
+  {
+   "id": "software",
+   "nome": "Desenvolvimento e venda de software / atividades de TI",
+   "grupo": "",
+   "descricao": "Usar quando o servidor pretende atuar na área de tecnologia da informação: desenvolvedor ou analista de dados freelancer, criação e comercialização de sistemas, aplicativos e websites, ou emprego em TI no exterior durante licença.",
+   "palavrasChave": [
+    "software",
+    "desenvolvimento de sistemas",
+    "programador",
+    "desenvolvedor",
+    "freelancer",
+    "tecnologia da informação",
+    "ti",
+    "aplicativo",
+    "app",
+    "website",
+    "site",
+    "analista de dados",
+    "ciência de dados",
+    "machine learning",
+    "marketing digital",
+    "web design",
+    "emprego no exterior",
+    "licença para tratar de interesses particulares"
+   ],
+   "variantes": [
+    {
+     "id": "freelancer_ti",
+     "rotulo": "Freelancer/prestador de serviços de TI – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 131/2022",
+     "quandoUsar": "Servidor pretende prestar serviços de TI (desenvolvimento, análise de dados etc.) como autônomo/freelancer ou empregado, sem comercialização própria de produtos."
+    },
+    {
+     "id": "comercializacao_software",
+     "rotulo": "Desenvolvimento e comercialização de sistemas, aplicativos ou websites – não configura conflito, desde que observadas as ressalvas (inclui art. 117, X, da Lei nº 8.112/1990)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 197/2020",
+     "quandoUsar": "Servidor pretende desenvolver e vender/comercializar software, aplicativos, websites ou serviços digitais próprios, inclusive por meio de pessoa jurídica."
+    },
+    {
+     "id": "ti_exterior_licenca",
+     "rotulo": "Emprego em TI no exterior durante licença para tratar de interesses particulares – inexistência de conflito",
+     "resultado": "sem_conflito",
+     "fonte": "PAR 632/2021",
+     "quandoUsar": "Servidor pretende (ou já está em) licença para tratar de interesses particulares e quer trabalhar na área de tecnologia da informação em empresa no exterior."
+    }
+   ]
+  },
+  {
+   "id": "tecnico_esportivo",
+   "nome": "Técnico / treinador esportivo (inclusive com bolsa de incentivo ao esporte)",
+   "grupo": "Outras situações",
+   "descricao": "Usar quando o servidor pretende atuar como técnico ou treinador de modalidade esportiva, inclusive recebendo bolsa-técnico de ente público.",
+   "palavrasChave": [
+    "técnico esportivo",
+    "treinador",
+    "treinos",
+    "rugby",
+    "educação física",
+    "bolsa técnico",
+    "bolsa-auxílio",
+    "bolsa atleta",
+    "incentivo ao esporte",
+    "secretaria de esportes",
+    "time",
+    "equipe esportiva"
+   ],
+   "variantes": [
+    {
+     "id": "tecnico_esportivo_bolsa",
+     "rotulo": "Técnico/treinador esportivo, com bolsa de incentivo ao esporte – sem conflito, com ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 058/2017",
+     "quandoUsar": "Servidor dá treinos de modalidade esportiva e consulta se pode receber bolsa-técnico/bolsa-auxílio de incentivo ao esporte concedida por ente público (ex.: prefeitura), cuja norma declara não gerar vínculo de trabalho."
+    }
+   ]
+  },
+  {
+   "id": "terapia_alternativa",
+   "nome": "Terapias, psicologia clínica e yoga",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende atuar como terapeuta (holístico, florais, homeopatia, hipnoterapia, constelação familiar), psicólogo clínico ou instrutor de yoga/desenvolvimento pessoal.",
+   "palavrasChave": [
+    "terapeuta",
+    "terapia alternativa",
+    "terapia holística",
+    "florais de bach",
+    "homeopatia",
+    "hipnoterapia",
+    "hipnoterapeuta",
+    "constelação familiar",
+    "reiki",
+    "práticas integrativas",
+    "psicólogo",
+    "psicologia clínica",
+    "psicoterapia",
+    "yoga",
+    "instrutor de yoga",
+    "desenvolvimento pessoal",
+    "autocuidado",
+    "atendimentos individuais",
+    "pacientes"
+   ],
+   "variantes": [
+    {
+     "id": "terapeuta_pessoa_fisica",
+     "rotulo": "Terapeuta (pessoa física) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 068/2020; PAR 264/2020",
+     "quandoUsar": "Servidor(a) que pretende atender como terapeuta (holístico, florais, homeopatia, constelação familiar etc.) em nome próprio, sem vínculo com pessoa jurídica."
+    },
+    {
+     "id": "terapeuta_socio_cotista",
+     "rotulo": "Terapeuta/treinador por meio de pessoa jurídica (sócio cotista) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 093/2019",
+     "quandoUsar": "Servidor(a) que exercerá atividades terapêuticas (ex.: hipnoterapia, treinamentos e coaching de desenvolvimento pessoal) por intermédio de empresa da qual é sócio(a) cotista sem poder de administração."
+    },
+    {
+     "id": "psicologo_clinico",
+     "rotulo": "Psicologia clínica – compatibilidade material, observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 103/2022",
+     "quandoUsar": "Servidor(a) com formação em psicologia que pretende atender pessoas físicas como psicólogo(a) clínico(a), em horário diverso do expediente."
+    },
+    {
+     "id": "yoga_conteudo_digital_licenca",
+     "rotulo": "Aulas de yoga e conteúdos digitais de desenvolvimento pessoal (durante licença para tratar de interesses particulares) – compatibilidade material",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 212/2021",
+     "quandoUsar": "Servidor(a) que, durante licença para tratar de interesses particulares, pretende dar aulas (ex.: yoga) e produzir conteúdos/produtos online sem relação com as atividades da RFB."
+    }
+   ]
+  },
+  {
+   "id": "tesoureiro",
+   "nome": "Tesoureiro de entidade religiosa ou associação",
+   "grupo": "",
+   "descricao": "Use quando o servidor pretende exercer a função de tesoureiro (ou auxiliar/adjunto de tesoureiro, ou presidente de conselho fiscal) em igreja, paróquia, congregação, loja maçônica ou entidade congênere sem fins lucrativos.",
+   "palavrasChave": [
+    "tesoureiro",
+    "tesoureira",
+    "segundo tesoureiro",
+    "tesoureiro adjunto",
+    "auxiliar de tesoureiro",
+    "tesouraria",
+    "igreja",
+    "paróquia",
+    "entidade religiosa",
+    "congregação religiosa",
+    "comunidade evangélica",
+    "loja maçônica",
+    "conselho fiscal de igreja",
+    "assinar cheques",
+    "finanças da igreja",
+    "prestação de contas",
+    "sem fins lucrativos"
+   ],
+   "variantes": [
+    {
+     "id": "tesoureiro_entidade_religiosa",
+     "rotulo": "Tesoureiro de entidade religiosa – possibilidade de exercício de forma condicionada (Termo de Compromisso)",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 188/2020",
+     "quandoUsar": "Servidor pretende ser tesoureiro (titular ou substituto) de igreja/entidade religiosa cujo estatuto atribui ao cargo tarefas de natureza contábil."
+    },
+    {
+     "id": "tesoureiro_ou_conselho_fiscal_religiosa_sem_estatuto",
+     "rotulo": "Tesoureiro ou presidente de conselho fiscal de entidade religiosa (estatuto não apresentado) – exercício condicionado",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 215/2020",
+     "quandoUsar": "Consulta sobre ser tesoureiro ou presidente do conselho fiscal de entidade religiosa, sem juntada do estatuto nem identificação da entidade."
+    },
+    {
+     "id": "tesoureiro_loja_maconica",
+     "rotulo": "Tesoureiro (ou auxiliar/adjunto) de Loja Maçônica – exercício condicionado",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "INF 141/2015",
+     "quandoUsar": "Servidor atua ou pretende atuar como tesoureiro, tesoureiro adjunto ou auxiliar de tesoureiro em Loja Maçônica (associação civil sem fins lucrativos, sem imunidade tributária)."
+    }
+   ]
+  },
+  {
+   "id": "tradutor",
+   "nome": "Tradutor e revisor de textos",
+   "grupo": "Atuar ou interagir com o mercado (A.1)",
+   "descricao": "Use quando o servidor pretende prestar serviços de tradução de língua estrangeira e/ou revisão de livros e textos, como autônomo, para pessoas físicas ou jurídicas.",
+   "palavrasChave": [
+    "tradutor",
+    "tradução",
+    "revisor",
+    "revisão de livros",
+    "revisão de textos",
+    "língua estrangeira",
+    "tradução de obras",
+    "tradutor juramentado",
+    "tradutor público",
+    "manuais",
+    "papers",
+    "freelancer de tradução",
+    "tradução pro bono"
+   ],
+   "variantes": [
+    {
+     "id": "tradutor_autonomo",
+     "rotulo": "Tradutor autônomo (inclusive pro bono e de obras de domínio público) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 212/2018",
+     "quandoUsar": "Servidor(a) que pretende prestar serviços de tradução como autônomo, traduzir pro bono para instituições sem fins lucrativos ou traduzir obras para publicação própria; inclui ressalvas sobre o art. 966 do Código Civil (comércio) e sobre tradutor público/juramentado."
+    },
+    {
+     "id": "tradutor_revisor_livros",
+     "rotulo": "Tradutor e revisor de livros e afins (modelo curto) – não configura conflito, desde que observadas as ressalvas",
+     "resultado": "sem_conflito_ressalvas",
+     "fonte": "PAR 262/2018",
+     "quandoUsar": "Servidor(a) que pretende exercer atividades remuneradas de tradução e revisão de livros, manuais, papers e catálogos para pessoas físicas ou jurídicas de qualquer ramo; ressalva de abstenção em processos dos clientes."
+    }
+   ]
+  }
+ ]
+}

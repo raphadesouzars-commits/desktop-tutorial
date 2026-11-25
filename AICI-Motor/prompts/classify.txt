@@ -1,0 +1,4 @@
+Escolha a categoria de atividade que melhor descreve a consulta. Você só pode escolher UMA das categorias abaixo e deve copiar o id exatamente:
+{{categorias}}
+Responda APENAS com JSON: {"id": "<id da lista>", "justificativa": "uma frase"}
+Se nenhuma servir, responda {"id": "generico", "justificativa": "..."}.

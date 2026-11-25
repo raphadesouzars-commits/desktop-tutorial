@@ -1,0 +1,4 @@
+Revise a consistência da minuta de parecer abaixo em relação ao caso concreto, aos normativos e aos precedentes do contexto.
+Aponte: (1) conclusão que não decorre da fundamentação; (2) fundamento sem base no contexto; (3) fato do caso não enfrentado; (4) divergência com precedentes da COGER.
+Responda APENAS com JSON: {"pontos": [{"gravidade": "alta|media|baixa", "descricao": "...", "trecho": "..."}]}
+Se não houver inconsistências, devolva {"pontos": []}.

@@ -1,0 +1,104 @@
+{
+ "id": "instrutor_aviacao",
+ "nome": "Instrutor de voo / docência em aviação",
+ "descricao": "Usar quando o servidor pretende dar aulas teóricas e/ou práticas de aviação (instrutor de voo) em escola de aviação ou aeroclube.",
+ "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+ "palavrasChave": [
+  "instrutor de voo",
+  "aviação",
+  "escola de aviação",
+  "aeroclube",
+  "aulas de voo",
+  "piloto",
+  "helicóptero",
+  "anac",
+  "aeronauta",
+  "aulas práticas",
+  "aulas teóricas",
+  "comandante"
+ ],
+ "variantes": [
+  {
+   "id": "docencia_aviacao",
+   "rotulo": "Aulas teóricas e práticas em escola de aviação ou aeroclube – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor habilitado como instrutor de voo pretende lecionar aulas teóricas e práticas em escola de aviação ou aeroclube, fora da jornada; mantenha o bloco da Lei do Aeronauta quando o servidor for piloto/tripulante de aeronave da RFB.",
+   "fonte": "PAR 190/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE DOCÊNCIA EM AVIAÇÃO.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de docência em aviação com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, compete registrar que a Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III do artigo 5º da Lei nº 12.813/2013, verifica-se que o exercício da atividade descrita {{g:pelo consulente|pela consulente}}, qual seja, lecionar aulas teóricas e práticas em escola de aviação ou aeroclubes, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo consulente|pela consulente}} na RFB, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade discriminada quaisquer características que, por sua natureza, possam prejudicar a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Cumpre salientar que a atividade em análise é objeto da Orientação Normativa CGU nº 2, de 9 de setembro de 2014, a qual autoriza, na primeira parte do caput do artigo 2º, o exercício da atividade de magistério por agente público."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o servidor|a servidora}} da estrita observância das restrições impostas pela própria norma supracitada, conforme incisos I, II e III, e os §§ 2º a 5º do mesmo artigo 2º; além dos artigos 3º, 5º, parágrafo único do artigo 6º da referida Orientação Normativa."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei nº 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "(...)",
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "§ 3º Para efeitos dos incisos I e II do caput deste artigo, no tocante aos servidores estatutários, deve ser especialmente observado o disposto no Decreto nº 1.590, de 10 de agosto de 1995, no Parecer AGU nº GQ-145, de 16 de março de 1998, e na Portaria Normativa SEGEP/MP nº 2, de 12 de março de 2012.",
+      "§ 4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "Art. 3º Quando a atividade de magistério ocorrer no interesse institucional do órgão ou entidade a que pertence o agente público indicado, é vedado o recebimento de remuneração de origem privada, ressalvada a possibilidade de indenização por transporte, alimentação e hospedagem paga, total ou parcialmente, pela instituição promotora.",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3º da Lei nº 12.813, de 2013.",
+      "Art. 6º (...)",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Como {{g:o interessado|a interessada}} também pretende ministrar aulas práticas de aviação, é essencial a análise da Lei nº 13.475, de 28 de agosto de 2017, a qual regulamenta o exercício da profissão de tripulante de aeronave, denominado aeronauta (piloto de aeronave, comissário de voo e mecânico de voo). Referida norma estabelece uma série de limitações ao exercício dessas profissões, dentre as quais cabe destacar a duração máxima da jornada de trabalho e dos limites de voos e de pousos dos tripulantes de aeronave. Tendo em vista todas as limitações impostas pela lei em comento, {{g:o consulente|a consulente}} deverá sempre priorizar as missões nas aeronaves da RFB, impedindo que as horas de voo na atividade privada interfiram ou limitem a escala de voo a ser cumprida como servidor público.",
+     "opc": {
+      "id": "tripulante_rfb",
+      "rotulo": "Servidor é tripulante de aeronave da RFB e dará aulas práticas de voo (Lei nº 13.475/2017)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Além disso, chamamos a atenção para o fato de que {{g:o servidor consulente|a servidora consulente}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais lecione as aulas teóricas e práticas."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

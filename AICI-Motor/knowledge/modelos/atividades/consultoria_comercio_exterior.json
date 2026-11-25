@@ -1,0 +1,198 @@
+{
+ "id": "consultoria_comercio_exterior",
+ "nome": "Consultoria em comércio exterior",
+ "grupo": "Consultoria e procuração (A.2)",
+ "descricao": "Usar quando o servidor (ativo ou recém-aposentado) pretende prestar consultoria, perícia, treinamento ou assessoria em comércio exterior, facilitação de comércio ou matéria aduaneira.",
+ "palavrasChave": [
+  "consultoria",
+  "comércio exterior",
+  "facilitação de comércio",
+  "aduaneira",
+  "aduana",
+  "oea",
+  "operador econômico autorizado",
+  "cooperação internacional",
+  "perito",
+  "importação",
+  "exportação",
+  "aposentadoria",
+  "aposentado",
+  "quarentena",
+  "seis meses",
+  "treinamento",
+  "despacho aduaneiro"
+ ],
+ "variantes": [
+  {
+   "id": "consultor_facilitacao_comercio_conflito",
+   "rotulo": "Consultor/perito em comércio exterior para agência de cooperação ou entidade privada – configura conflito",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor (em especial da área aduaneira ou de relações internacionais) pretende atuar, por contrato temporário, como consultor ou perito em comércio exterior/facilitação de comércio, interagindo com órgãos públicos em nome do contratante. Entendimento alinhado à CGU, que nega consultoria em área correlata (art. 5º, I, III e IV).",
+   "fonte": "PAR 235/2019",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Servidor solicita autorização para atuar como consultor na área de Comércio Exterior para {{contratante}}. Configuração de conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "contratante",
+     "rotulo": "Contratante",
+     "exemplo": "agência de cooperação internacional",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "objeto_contrato",
+     "rotulo": "Objeto do contrato (transcrição)",
+     "exemplo": "Interagir diretamente com os atores relevantes do setor público para avaliar seu interesse em uma cooperação sobre os tópicos identificados até o momento e / ou outros tópicos.",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No item OBJETO DO CONTRATO temos que o consultor deve \"{{objeto_contrato}}\""
+    },
+    {
+     "t": "p",
+     "x": "A partir do exposto no contrato juntado aos autos, verifica-se que as atividades pretendidas {{g:pelo consulente|pela consulente}} se enquadram claramente na infração tipificada no artigo 5º, inciso III, da Lei nº 12.813, de 16 de maio de 2013, citada em parágrafo pregresso."
+    },
+    {
+     "t": "p",
+     "x": "Some-se a isso o grave risco potencial de essas atividades, uma vez em exercício, também se enquadrem em outras infrações tipificadas no artigo 5º, da Lei nº 12.813, de 2013, tais como as elencadas nos incisos I e IV desse dispositivo legal."
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - divulgar ou fazer uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas;",
+      "...",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A propósito, as informações de que um {{cargo_sigla}} é detentor, em razão das atribuições de seu cargo, podem representar uma vantagem competitiva {{g:ao servidor|à servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Verifica-se que durante muito tempo {{g:o consulente|a consulente}} ocupou funções de chefia na área aduaneira, onde permanece até hoje.",
+     "opc": {
+      "id": "chefia_area",
+      "rotulo": "Incluir registro de que o servidor ocupou funções de chefia na área aduaneira",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Por fim, cumpre salientar que a lei 8112/90, em seu artigo 117, inciso XI, proíbe o servidor público de atuar como procurador ou intermediário junto a repartições públicas, o que pode ir de encontro as atividades {{g:do consulente|da consulente}} na consultoria pleiteada. Cabe ressaltar que o objeto do contrato que {{g:o interessado|a interessada}} pretende celebrar pressupõe uma interação direta {{g:deste|desta}} com diferentes órgãos públicos."
+    },
+    {
+     "t": "p",
+     "x": "Aliás, o que se espera {{g:do consulente|da consulente}}, conforme consta no termo de referência, é justamente que {{g:ele|ela}} faça uso de contatos relevantes com diferentes órgãos governamentais, agências e secretarias, para avaliar o interesse e a disponibilidade desses órgãos em realizar cooperações atreladas aos anseios comerciais dos países envolvidos.",
+     "opc": {
+      "id": "contatos_orgaos",
+      "rotulo": "Incluir registro de que o termo de referência prevê o uso de contatos com órgãos governamentais",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, registramos que, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de prestar consultoria descrita {{g:pelo consulente|pela consulente}}, é incompatível com o exercício do cargo de {{cargo}} e sua prática configura conflito de interesses."
+    }
+   ]
+  },
+  {
+   "id": "aposentado_quarentena_consultoria_conflito",
+   "rotulo": "Aposentado – consultoria, treinamento e advocacia em comércio exterior nos 6 meses após a aposentadoria – incompatível (quarentena)",
+   "resultado": "conflito",
+   "quandoUsar": "Servidor recém-aposentado pretende, dentro dos 6 meses seguintes à aposentadoria, prestar consultoria, treinamento, auditoria prévia (ex.: programa OEA) ou advocacia na mesma área em que atuava (comércio exterior/aduana). Para advocacia de aposentado em geral, ver o modelo advocacia (variante de aposentado, PAR 015/2020), mais recente e com conclusão diversa.",
+   "fonte": "INF 180/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE PRIVADA NO PERÍODO DE 6 (SEIS) MESES APÓS A APOSENTADORIA.",
+   "ementa": [
+    "Consulta sobre o exercício de {{atividades_pretendidas}} no interstício de 6 (seis) meses após a aposentadoria. Incompatibilidade durante o período de “quarentena” de que trata o art. 6º da Lei nº 12.813, de 2013."
+   ],
+   "campos": [
+    {
+     "id": "atividades_pretendidas",
+     "rotulo": "Atividades pretendidas (resumo, para a ementa)",
+     "exemplo": "advocacia e consultoria na área aduaneira",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "data_aposentadoria",
+     "rotulo": "Data da aposentadoria",
+     "exemplo": "23 de março de 2016",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atividades_exercidas",
+     "rotulo": "Atividades que exerceu no cargo, segundo o próprio consulente (transcrição)",
+     "exemplo": "atividades relacionadas ao Comércio Exterior, entre elas a feitura de Auto de Infração e o uso do Siscomex ...",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Ressalte-se, inicialmente, que {{g:o consulente|a consulente}} encontra-se {{g:aposentado|aposentada}} desde {{data_aposentadoria}}."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com {{g:o próprio consulente|a própria consulente}}, como {{cargo}}, {{g:ele|ela}} exerceu as seguintes atividades:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "{{atividades_exercidas}}"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Ao tratar das “situações que configuram conflito de interesses após o exercício do cargo ou emprego”, o artigo 6º da Lei nº 12.813, de 2013, estabelece:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 6º Configura conflito de interesses após o exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "I - a qualquer tempo, divulgar ou fazer uso de informação privilegiada obtida em razão das atividades exercidas; e",
+      "II - no período de 6 (seis) meses, contado da data da dispensa, exoneração, destituição, demissão ou aposentadoria, salvo quando expressamente autorizado, conforme o caso, pela Comissão de Ética Pública ou pela Controladoria-Geral da União:",
+      "a) prestar, direta ou indiretamente, qualquer tipo de serviço a pessoa física ou jurídica com quem tenha estabelecido relacionamento relevante em razão do exercício do cargo ou emprego;",
+      "b) aceitar cargo de administrador ou conselheiro ou estabelecer vínculo profissional com pessoa física ou jurídica que desempenhe atividade relacionada à área de competência do cargo ou emprego ocupado;",
+      "c) celebrar com órgãos ou entidades do Poder Executivo federal contratos de serviço, consultoria, assessoramento ou atividades similares, vinculados, ainda que indiretamente, ao órgão ou entidade em que tenha ocupado o cargo ou emprego; ou",
+      "d) intervir, direta ou indiretamente, em favor de interesse privado perante órgão ou entidade em que haja ocupado cargo ou emprego ou com o qual tenha estabelecido relacionamento relevante em razão do exercício do cargo ou emprego."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Confrontado o referido dispositivo legal com as atividades pretendidas {{g:pelo consulente|pela consulente}}, observa-se que todas as atividades configuram evidente conflito de interesses e caracterizam violação ao artigo 6º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, {{g:o consulente|a consulente}} deve observar a “quarentena” estabelecida na Lei nº 12.813, de 2013, de forma a abster-se dessas atividades no período de 6 (seis) meses, contado da data da aposentadoria."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, diante de todo os argumentos expostos, no entendimento da {{orgao_corregedoria}}, é incompatível o exercício das atividades elencadas {{g:pelo consulente|pela consulente}}, durante o período de “quarentena” de 6 (seis) meses, contado da data da aposentadoria."
+    }
+   ]
+  }
+ ]
+}

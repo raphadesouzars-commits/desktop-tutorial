@@ -1,0 +1,53 @@
+# Configuração do AICI-Motor. Nada aqui contém conhecimento jurídico: ele vive em knowledge/.
+servidor:
+  host: 127.0.0.1                # só a própria máquina; para rede interna, use proxy reverso institucional
+  porta: 8765
+  cors_origens: ["null", "http://localhost:8765", "http://127.0.0.1:8765"]   # "null" = HTML aberto como arquivo
+  token_env: AICI_TOKEN          # se esta variável de ambiente existir, toda chamada exige o cabeçalho X-AICI-Token
+
+caminhos:
+  knowledge: knowledge
+  vectorstore: vectorstore
+  prompts: prompts
+  templates: templates
+  uploads: uploads
+  output: output
+  metrics: metrics
+  banco: metrics/aici.db
+  categorias: config/categorias.json
+
+indexador:
+  backend: lexical               # lexical (sem dependências, offline) | chroma (requer chromadb)
+  chunk_chars: 1200
+  chunk_sobreposicao: 150
+  extensoes: [".pdf", ".docx", ".txt", ".md", ".json"]
+
+recuperacao:
+  top_k_pareceres: 4
+  top_k_precedentes: 4
+  top_k_normativos: 4
+  top_k_modelos: 2
+  peso_coger: 1.25               # RN005: precedentes da COGER pesam mais que os demais
+
+ocr:
+  habilitado: true
+  idiomas: [pt, en]
+  min_caracteres_por_pagina: 40
+
+ia:
+  provider: offline              # offline (sem IA, extrativo) | copilot (gateway homologado, ver abaixo)
+  anonimizar: true               # mascara CPF, matrícula, telefone e e-mail antes de enviar à IA
+  temperatura: 0.1
+  copilot:
+    # Preencha com o endpoint/gateway homologado pela RFB. O token NUNCA vai neste arquivo:
+    # defina a variável de ambiente indicada em token_env.
+    endpoint: ""
+    token_env: AICI_COPILOT_TOKEN
+    cabecalho_auth: Authorization
+    prefixo_auth: "Bearer "
+    modelo: ""
+    formato: openai              # openai (messages/choices) | custom (usa corpo_template e caminho_resposta)
+    corpo_template: ""           # JSON com {{system}} e {{user}}; só no formato custom
+    caminho_resposta: "choices.0.message.content"
+    timeout_s: 120
+    verificar_tls: true

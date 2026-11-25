@@ -1,0 +1,264 @@
+{
+ "id": "area_previdenciaria",
+ "nome": "Cursos, aulas e consultoria na área previdenciária",
+ "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+ "descricao": "Usar quando o servidor pretende ministrar cursos, aulas ou palestras (inclusive digitais) sobre direitos e benefícios previdenciários/trabalhistas, com ou sem prestação de consultoria ou assessoria individual no tema.",
+ "palavrasChave": [
+  "previdenciário",
+  "previdência",
+  "aposentadoria",
+  "pensão",
+  "benefícios previdenciários",
+  "reforma da previdência",
+  "direito previdenciário",
+  "curso online",
+  "cursos digitais",
+  "palestras",
+  "aulas",
+  "consultoria previdenciária",
+  "assessoria",
+  "projeção de aposentadoria",
+  "legislação trabalhista",
+  "redes sociais"
+ ],
+ "variantes": [
+  {
+   "id": "cursos_previdenciarios_publico_geral",
+   "rotulo": "Cursos (inclusive digitais) na área previdenciária/trabalhista para o público em geral – compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende criar e vender cursos, inclusive por redes sociais e plataformas digitais, para ensinar a pessoas físicas seus direitos previdenciários e trabalhistas, com abordagem geral e teórica. Coerente com a posição atual da CGU para cursos a público amplo (autorização condicionada a termo de compromisso); cursos para público específico são negados.",
+   "fonte": "PAR 195/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CURSO NA ÁREA PREVIDENCIÁRIA",
+   "ementa": [
+    "Pedido de autorização para criar cursos digitais na área previdenciária. Inexistência de conflito de interesses."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, pelas informações apresentadas {{g:pelo consulente|pela consulente}}, trata-se da atividade de ministrar cursos nas áreas previdenciária e trabalhista."
+    },
+    {
+     "t": "p",
+     "x": "Informa, ainda, que oferecerá os cursos através de interfaces digitais e redes sociais.",
+     "opc": {
+      "id": "meios_digitais",
+      "rotulo": "Incluir registro de que os cursos serão oferecidos por interfaces digitais e redes sociais",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "O exercício do magistério por agentes públicos do Poder Executivo Federal foi tratado na Controladoria Geral da União, na condição de órgão central do Sistema de Correição do Poder Executivo Federal (SisCor-PEF), em sua Orientação Normativa (ON) CGU nº 2, de 9 de setembro de 2014."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o artigo 2º dessa Orientação, a posição apriorística é de que o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813, de 2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o consulente|a consulente}} da estrita observância das restrições impostas pela própria norma supracitada. Nesse sentido, importante destacar alguns trechos da ON CGU nº 2, de 2014:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei n.º 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação ilegal de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "§1º Por magistério, para fins desta Orientação Normativa, compreendem-se as seguintes atividades, ainda que exercidas de forma esporádica ou não remunerada:",
+      "I - docência em instituições de ensino, de pesquisa ou de ciência e tecnologia, públicas ou privadas;",
+      "II - capacitação ou treinamento, mediante cursos, palestras ou conferências; e",
+      "III - outras correlatas ou de suporte às dos incisos I e II deste parágrafo, tais como funções de coordenador, monitor, preceptor, avaliador, integrante de banca examinadora de discente, presidente de mesa, moderador e debatedor, observada a proibição do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990.",
+      "§2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "(…)",
+      "§4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "(...)",
+      "Art. 4º Na hipótese de magistério em curso preparatório para concurso público ou processo seletivo, o agente público não poderá atuar em qualquer atividade relacionada à definição do cronograma ou do conteúdo programático do certame ou relacionada à elaboração, aplicação e correção de provas de qualquer fase, incluindo-se o curso de formação, o teste psicotécnico ou psicológico e a prova de aptidão.",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3° da Lei n.º 12.813, de 2013.",
+      "Art. 6º As atividades referidas nesta Orientação Normativa dispensam a consulta acerca da existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada, previstos na Lei nº 12.813, de 2013.",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "É importante deixar claro que os cursos ministrados {{g:pelo consulente|pela consulente}} deverão abordar apenas aspectos gerais e teóricos sobre os temas, não podendo adentrar na análise de situações específicas. Esta ressalva é importante em razão de os servidores desta Secretaria Especial da Receita Federal do Brasil possuírem acesso a informações privilegiadas, bem como de estratégias internas do órgão em relação aos assuntos previdenciários. Portanto, os assuntos tratados {{g:pelo servidor|pela servidora}} não podem envolver conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Ainda, deve-se atentar que o artigo 6º, parágrafo único, da Orientação Normativa CGU nº 2, de 2014, salvaguarda situações em que a atividade de consultoria e assessoria se reveste da roupagem da atividade de magistério."
+    },
+    {
+     "t": "p",
+     "x": "Tal dispositivo salienta que “O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013”."
+    },
+    {
+     "t": "p",
+     "x": "Assim, caso pretenda ministrar cursos para público específico, compete {{g:ao consulente|à consulente}} formular consultas caso a caso, especificando pormenorizadamente o objeto das aulas, assim como o seu público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o teor do pedido de autorização sob o prisma do inciso III, do art. 5° da Lei nº 12.813/2013, verifica-se que o exercício da atividade pretendida é materialmente compatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, é necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    }
+   ]
+  },
+  {
+   "id": "aulas_e_consultoria_previdenciaria_parcial",
+   "rotulo": "Palestras/aulas (compatíveis, com ressalvas) e consultoria/assessoria (conflito) em tema previdenciário",
+   "resultado": "outro",
+   "quandoUsar": "Servidor pretende, ao mesmo tempo, ministrar palestras e aulas e prestar consultoria/assessoria individual (pareceres, projeções de aposentadoria) em tema previdenciário: as aulas são admitidas com ressalvas e a consultoria/assessoria é considerada incompatível. Coerente com a CGU (consultoria negada; cursos a público amplo condicionados a termo de compromisso; a público específico, negados).",
+   "fonte": "INF 014/2017",
+   "assunto": "Pedido de autorização para o exercício da atividade de consultoria, assessoria, palestras ou aulas de tema previdenciário.",
+   "ementaTitulo": "CONSULTORIA, ASSESSORIA, PALESTRAS E AULAS DE TEMA PREVIDENCIÁRIO.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de consultoria, assessoria, palestras ou aulas de {{tema}}. Palestras e aulas: não configura conflito de interesses, desde que observadas as ressalvas. Consultoria e assessoria: atividade incompatível com o exercício do cargo."
+   ],
+   "campos": [
+    {
+     "id": "tema",
+     "rotulo": "Tema (completa \"palestras e aulas de ...\")",
+     "exemplo": "tema previdenciário sob a ótica unicamente financeira",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "trecho_consulta",
+     "rotulo": "Trecho da consulta que descreve a consultoria (bloco opcional)",
+     "exemplo": "Atuarei de modo a esclarecer, com a emissão de pareceres (consultor) e a prestação de palestras e aulas, a situação de cada servidor público. Farei projeções financeiras aos clientes ...",
+     "obrigatorio": false,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Em primeiro plano, analisaremos as atividades de ministrar palestras e aulas de {{tema}}. Com relação ao exercício do magistério, a Lei nº 11.890, de 24 de dezembro de 2008, trouxe a expressa permissão para o magistério, afastando-o, portanto, do conceito de conflito de interesses. Ademais, a atividade em análise é objeto da Orientação Normativa nº 2, de 9 de setembro de 2014, da Controladoria-Geral da União, a qual autoriza, em seu art. 2º, o exercício do magistério por agente público."
+    },
+    {
+     "t": "p",
+     "x": "Tal permissão, entretanto, não dispensa {{g:o servidor|a servidora}} da estrita observância das restrições impostas pela própria norma supracitada, conforme a 2ª parte do caput do art. 2º; os parágrafos 2º, 3º, 4º e 5º do mesmo artigo; artigos 3º, 4º, 5º e o parágrafo único do art. 6º da referida Orientação Normativa."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o artigo 2º dessa Orientação, o magistério é permitido para os agentes públicos, desde que sejam respeitados os dispositivos da Lei nº 12.813, de 2013, as normas atinentes à compatibilidade de horários e à acumulação de cargos e empregos públicos e a legislação específica aplicável ao regime jurídico e à respectiva carreira do agente."
+    },
+    {
+     "t": "p",
+     "x": "É importante deixar claro que as aulas e palestras ministradas {{g:pelo consulente|pela consulente}} deverão abordar apenas aspectos gerais e teóricos sobre os temas, não podendo adentrar na análise de situações específicas de contribuintes. Esta ressalva é importante em razão de os servidores desta Secretaria da Receita Federal do Brasil (RFB) possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira das empresas, e de eventuais procedimentos fiscais a que estas podem estar submetidas em determinado momento."
+    },
+    {
+     "t": "p",
+     "x": "Os assuntos tratados nas aulas e palestras também não podem envolver conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, deve-se lembrar também que o artigo 6º, parágrafo único, da Orientação Normativa CGU nº 2, de 2014, salvaguarda situações em que a atividade de consultoria e assessoria (incompatíveis, como se trata adiante) se reveste da roupagem da atividade de magistério."
+    },
+    {
+     "t": "p",
+     "x": "Tal dispositivo salienta que “O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013”."
+    },
+    {
+     "t": "p",
+     "x": "De forma que caso pretenda ministrar palestras e aulas para público específico, compete {{g:ao consulente|à consulente}} formular consultas caso a caso, especificando pormenorizadamente o objeto das palestras e aulas, assim como o seu público."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Ressalte-se que as hipóteses de conflito de interesses descritas nos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, a realização de palestras e aulas de {{tema}}, informada {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    },
+    {
+     "t": "p",
+     "x": "No que toca às atividades de consultoria e assessoria de {{tema}}, tendo em vista o supracitado acesso a informações sigilosas e privilegiadas intrínseco ao cargo de {{cargo_sigla}}, constata-se que essa atividade é incompatível com o exercício deste cargo. As informações de que um {{cargo_sigla}} é detentor, em razão das atribuições de seu cargo, podem, por exemplo, representar uma vantagem competitiva {{g:ao servidor|à servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, a própria Orientação Normativa n° 2, de 2014, assim expressa:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "§ 2º Não se inclui entre as atividades de magistério a prestação de consultoria."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em que pese {{g:o consulente|a consulente}} afirmar que não fiscaliza matéria previdenciária e que as informações sigilosas a que tem acesso atualmente não são úteis para a atividade que visa desenvolver, não se pode olvidar as extensas atribuições e competências de um {{cargo_sigla}} e da Secretaria da Receita Federal do Brasil.",
+     "opc": {
+      "id": "alegacao_nao_fiscaliza",
+      "rotulo": "Incluir resposta à alegação de que o servidor não fiscaliza a matéria e de que as informações a que tem acesso não são úteis",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Ademais, na descrição da atividade de assessoria e consultoria pretendida {{g:pelo consulente|pela consulente}} fica evidente a realização de atividade de auditoria, com a análise financeira de contribuintes, conforme transcrito a seguir: “{{trecho_consulta}}”.",
+     "opc": {
+      "id": "trecho_auditoria",
+      "rotulo": "Incluir transcrição de trecho da consulta que evidencia análise financeira individual de clientes",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "A natureza incompatível dessas atividades de assessoria e consultoria fica ainda mais evidente quando se verifica que não existe a separação entre a ordem tributária e previdenciária que {{g:o consulente|a consulente}} indicou, uma vez que as contribuições previdenciárias têm natureza tributária."
+    },
+    {
+     "t": "p",
+     "x": "Nessa trilha, é oportuno sintetizar as atribuições e competências da Secretaria da Receita Federal do Brasil:",
+     "opc": {
+      "id": "competencias_rfb",
+      "rotulo": "Incluir síntese das atribuições e competências da RFB (texto institucional da época)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“A Secretaria da Receita Federal do Brasil é um órgão específico, singular, subordinado ao Ministério da Fazenda, exercendo funções essenciais para que o Estado possa cumprir seus objetivos. É responsável pela administração dos tributos de competência da União, inclusive os previdenciários, e aqueles incidentes sobre o comércio exterior, abrangendo parte significativa das contribuições sociais do País.",
+      "Também subsidia o Poder Executivo Federal na formulação da política tributária brasileira, previne e combate a sonegação fiscal, o contrabando, o descaminho, a pirataria, a fraude comercial, o tráfico de drogas e de animais em extinção e outros atos ilícitos relacionados ao comércio internacional”."
+     ],
+     "opc": {
+      "id": "competencias_rfb",
+      "rotulo": "Incluir síntese das atribuições e competências da RFB (texto institucional da época)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A incompatibilidade da atividade pretendida {{g:pelo consulente|pela consulente}} fica ainda mais evidente quando se verifica que no sítio eletrônico da RFB, a título de exemplo, há uma página destinada exclusivamente à legislação da “Previdência Complementar”, onde inclusive constam diversas Instruções Normativas e Atos Declaratórios da Secretaria da Receita Federal do Brasil.",
+     "opc": {
+      "id": "previdencia_complementar",
+      "rotulo": "Incluir menção à legislação de Previdência Complementar no sítio da RFB",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante do exposto, verifica-se que a atividade de consultoria e assessoria pretendida {{g:pelo consulente|pela consulente}} se enquadra na vedação disposta no art. 5°, inciso III, da Lei n° 12.813, de 2013, segundo o qual configura conflito de interesses “exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas”."
+    }
+   ]
+  }
+ ]
+}

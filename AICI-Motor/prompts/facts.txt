@@ -1,0 +1,8 @@
+Extraia os fatos da consulta SeCI abaixo. Use somente o que está escrito; não complete com suposições.
+Responda APENAS com um objeto JSON, sem comentários, neste formato (use "" ou [] quando a informação não constar):
+{"atividade": "nome curto da atividade privada pretendida",
+ "entidade": "pessoa, empresa ou instituição com quem haverá relação",
+ "remuneracao": "se há remuneração e de que tipo/valor",
+ "vinculo": "tipo de vínculo com a entidade (sócio, empregado, autônomo, voluntário...)",
+ "descricao": "resumo fiel da atividade em até 3 frases",
+ "atribuicoes": ["atribuições do cargo mencionadas"]}

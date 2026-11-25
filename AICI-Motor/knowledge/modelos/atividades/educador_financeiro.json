@@ -1,0 +1,235 @@
+{
+ "id": "educador_financeiro",
+ "nome": "Educador financeiro em redes sociais",
+ "grupo": "Magistério, palestras, publicações e mídias sociais (A.10 e A.15)",
+ "descricao": "Usar quando o servidor produz ou pretende produzir conteúdo de educação financeira/investimentos em redes sociais (YouTube, Instagram), com eventual venda de livro próprio e intenção de vender cursos.",
+ "palavrasChave": [
+  "educador financeiro",
+  "educação financeira",
+  "youtube",
+  "instagram",
+  "redes sociais",
+  "canal",
+  "tesouro direto",
+  "fundos imobiliários",
+  "investimentos",
+  "conteúdo digital",
+  "venda de livros",
+  "livro",
+  "cursos online",
+  "influenciador",
+  "finanças pessoais"
+ ],
+ "variantes": [
+  {
+   "id": "educador_financeiro_redes_sociais",
+   "rotulo": "Educador financeiro em redes sociais e venda de livro próprio – compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor produz conteúdo de educação financeira em redes sociais (YouTube, Instagram) sobre investimentos de forma geral e com informações públicas (ex.: Tesouro Direto, fundos imobiliários), vende livro de sua autoria e cogita vender cursos no futuro. Atenção: a CGU hoje condiciona a divulgação de conteúdo a público amplo a termo de compromisso e negou, em 2024-2026, consultoria/análise de investimentos e e-books sobre matéria tributária (art. 5º, I e III).",
+   "fonte": "PAR 249/2019",
+   "assunto": "Consulta SeCI",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "Servidor elabora consulta tendo em vista que atua como educador financeiro. Produção de conteúdo em redes sociais sobre investimentos. Venda de livro de autoria {{g:do consulente|da consulente}}. Intenção de comercializar cursos e vender livros. Não configuração de conflito de interesses."
+   ],
+   "campos": [
+    {
+     "id": "temas_conteudo",
+     "rotulo": "Temas tratados no conteúdo",
+     "exemplo": "Tesouro Direto e Fundos Imobiliários",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "titulo_livro",
+     "rotulo": "Título do livro de autoria do servidor (bloco opcional)",
+     "exemplo": "Investimentos Simplificados",
+     "obrigatorio": false,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em relação à atividade de educador financeiro, com a produção de materiais em redes sociais, verificou-se, no canal {{g:do consulente|da consulente}} no Youtube, que {{g:o consulente|a consulente}} trata de temas gerais em relação a {{temas_conteudo}}, fazendo análises de acordo com informações disponíveis ao público em geral."
+    },
+    {
+     "t": "p",
+     "x": "Em relação ao mercado de ações, também verificou-se que {{g:o próprio servidor|a própria servidora}} relata nos seus vídeos que, em virtude do cargo que ocupa, não faz análises sobre estes ativos financeiros.",
+     "opc": {
+      "id": "nao_analisa_acoes",
+      "rotulo": "Incluir registro de que o servidor declara não fazer análises sobre o mercado de ações",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opinamos que o exercício da atividade de produzir conteúdo para redes sociais acerca de {{temas_conteudo}}, por si só, não é incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, registramos a ressalva de que o conteúdo dos materiais produzidos não envolvam conhecimentos específicos adquiridos no exercício do cargo público, nem matéria relacionada às atividades desenvolvidas na Secretaria da Receita Federal do Brasil."
+    },
+    {
+     "t": "p",
+     "x": "Continuando, {{g:o consulente|a consulente}} também afirma que é {{g:autor|autora}} do livro \"{{titulo_livro}}\", comercializado pela internet.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Diante da situação exposta, a seguir analisaremos em que termos e limites a atividade de venda de livros de sua autoria pode ser exercida sem configurar a infração disciplinar tipificada no artigo 117, inciso X, da Lei nº 8.112, de 1990:",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Lei nº 8.112, de 1990",
+      "Art. 117. Ao servidor é proibido:",
+      "[...]",
+      "X - participar de gerência ou administração da sociedade privada personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ],
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Esse dispositivo, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o art. 117, inciso X, da lei nº 8.112, de 1990, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966 Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ],
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, a atividade de escritor pretendida {{g:pelo consulente|pela consulente}} deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil, para que não se configure a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”, do art. 117, inciso X, da Lei nº 8.112, de 1990.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A ideia do art. 966, parágrafo único, do novo Código Civil é que, a princípio, a profissão intelectual não é empresarial por não compreender a organização de fatores de produção.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares e colaboradores.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Assim, não há óbice a que {{g:o consulente|a consulente}} comercialize seus livros em sites da internet ou mesmo em lojas físicas, desde que estas não estejam sob a administração ou gerência {{g:do servidor|da servidora}}, pois, neste caso, {{g:o servidor escritor|a servidora escritora}} desempenharia apenas a atividade intelectual.",
+     "opc": {
+      "id": "venda_livro",
+      "rotulo": "Incluir análise da venda de livro de autoria do servidor (art. 117, X, da Lei 8.112 e art. 966 do Código Civil)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Outro ponto abordado {{g:pelo consulente|pela consulente}} diz respeito à \"intenção de, no futuro, comercializar cursos\".",
+     "opc": {
+      "id": "cursos_futuros",
+      "rotulo": "Incluir parágrafos sobre intenção genérica de comercializar cursos no futuro (necessidade de nova consulta)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "O artigo 3° da Portaria Interministerial MPOG/CGU n° 333/2013, de 19 de setembro de 2013, dispõe que o objeto das consultas e pedidos de autorização é esclarecer sobre a existência ou não de conflito de interesses, em uma situação contextualizada, determinada e individualizada. Assim, em sede de consulta ou pedido de autorização, não é possível uma manifestação genérica sobre a atividade de comercializar cursos sem que sejam prestadas informações detalhadas:",
+     "opc": {
+      "id": "cursos_futuros",
+      "rotulo": "Incluir parágrafos sobre intenção genérica de comercializar cursos no futuro (necessidade de nova consulta)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º A consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada deverão ser formulados mediante petição eletrônica e conter no mínimo os seguintes elementos:",
+      "I - identificação do interessado;",
+      "II - referência a objeto determinado e diretamente vinculado ao interessado; e",
+      "III - descrição contextualizada dos elementos que suscitam a dúvida.",
+      "Parágrafo único. Não será apreciada a consulta ou o pedido de autorização formulado em tese ou com referência a fato genérico."
+     ],
+     "opc": {
+      "id": "cursos_futuros",
+      "rotulo": "Incluir parágrafos sobre intenção genérica de comercializar cursos no futuro (necessidade de nova consulta)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, caso {{g:o servidor|a servidora}} pretenda produzir e comercializar cursos na área financeira, deverá realizar uma nova consulta ou pedido de autorização com todas as informações necessárias para análise do pleito.",
+     "opc": {
+      "id": "cursos_futuros",
+      "rotulo": "Incluir parágrafos sobre intenção genérica de comercializar cursos no futuro (necessidade de nova consulta)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} consulente impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  }
+ ]
+}

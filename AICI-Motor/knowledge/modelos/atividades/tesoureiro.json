@@ -1,0 +1,229 @@
+{
+ "id": "tesoureiro",
+ "nome": "Tesoureiro de entidade religiosa ou associação",
+ "descricao": "Use quando o servidor pretende exercer a função de tesoureiro (ou auxiliar/adjunto de tesoureiro, ou presidente de conselho fiscal) em igreja, paróquia, congregação, loja maçônica ou entidade congênere sem fins lucrativos.",
+ "palavrasChave": [
+  "tesoureiro",
+  "tesoureira",
+  "segundo tesoureiro",
+  "tesoureiro adjunto",
+  "auxiliar de tesoureiro",
+  "tesouraria",
+  "igreja",
+  "paróquia",
+  "entidade religiosa",
+  "congregação religiosa",
+  "comunidade evangélica",
+  "loja maçônica",
+  "conselho fiscal de igreja",
+  "assinar cheques",
+  "finanças da igreja",
+  "prestação de contas",
+  "sem fins lucrativos"
+ ],
+ "variantes": [
+  {
+   "id": "tesoureiro_entidade_religiosa",
+   "rotulo": "Tesoureiro de entidade religiosa – possibilidade de exercício de forma condicionada (Termo de Compromisso)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ser tesoureiro (titular ou substituto) de igreja/entidade religiosa cujo estatuto atribui ao cargo tarefas de natureza contábil.",
+   "fonte": "PAR 188/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE CARGO DE TESOUREIRO EM ENTIDADE RELIGIOSA.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de tesoureiro de entidade religiosa sem fins lucrativos com o cargo de {{cargo}}. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Em princípio, verifica-se que entre as atribuições de tesoureiro da entidade religiosa, estão aquelas referentes ao exercício da contabilidade, o que resultaria em incompatibilidade material com o exercício do cargo {{g:do servidor|da servidora}} na RFB."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em caso análogo, a CGU, por meio da Nota Técnica n° 790/2015/CGINC/DIACI/STPC/CGU-PR, entendeu por autorizar que um ocupante do cargo de AFRFB exercesse, de forma condicionada, a atividade de Tesoureiro de Congregação Religiosa, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "6. Primeiramente, vale ressaltar que a probabilidade de o servidor beneficiar a (...) em questões tributárias ou mesmo atuar na Receita Federal em processos que envolvam a (...) é muito pequena, tendo em vista que a instituição possui imunidade tributária. Além disso, o consulente pode mitigar ainda mais tal risco, caso se abstenha de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e se exima, em qualquer caso, de atuar como representante da congregação religiosa perante a RFB.",
+      "[...]",
+      "8. Assim, entendemos que, nos termos apresentados, seja possível a atuação do consulente como tesoureiro da (...), desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, e a jurisprudência da CGU em caso análogo, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer a atividade privada de tesoureiro de entidade religiosa, desde que obedecidas as condições estabelecidas pela CGU no caso que se toma como paradigma."
+    },
+    {
+     "t": "p",
+     "x": "Tais condições determinam que {{g:o servidor|a servidora}} deverá abster-se de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e de atuar como representante da entidade religiosa perante a fazenda pública. Ademais, deverá assinar Termo de Compromisso junto à RFB se comprometendo a não realizar essas atividades."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de tesoureiro de entidade religiosa não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "tesoureiro_ou_conselho_fiscal_religiosa_sem_estatuto",
+   "rotulo": "Tesoureiro ou presidente de conselho fiscal de entidade religiosa (estatuto não apresentado) – exercício condicionado",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Consulta sobre ser tesoureiro ou presidente do conselho fiscal de entidade religiosa, sem juntada do estatuto nem identificação da entidade.",
+   "fonte": "PAR 215/2020",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "LEI DE CONFLITO DE INTERESSES. TESOUREIRO/PRESIDENTE DE CONSELHO FISCAL DE ENTIDADE RELIGIOSA.",
+   "ementa": [
+    "Consulta sobre o exercício de cargo de tesoureiro ou presidente de conselho fiscal em entidade religiosa. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Embora {{g:o servidor|a servidora}} não tenha anexado o estatuto e nem mesmo informado o nome da entidade religiosa, em princípio, pode-se inferir que entre as atribuições de tesoureiro ou presidente do conselho fiscal de entidade religiosa, estão aquelas referentes ao exercício da contabilidade, o que resultaria em incompatibilidade material com o exercício do cargo de {{cargo}}."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em caso análogo, a CGU, por meio da Nota Técnica n° 790/2015/CGINC/DIACI/STPC/CGU-PR, entendeu por autorizar que um ocupante do cargo de AFRFB exercesse, de forma condicionada, a atividade de Tesoureiro de Congregação Religiosa, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "6. Primeiramente, vale ressaltar que a probabilidade de o servidor beneficiar a (...) em questões tributárias ou mesmo atuar na Receita Federal em processos que envolvam a (...) é muito pequena, tendo em vista que a instituição possui imunidade tributária. Além disso, o consulente pode mitigar ainda mais tal risco, caso se abstenha de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e se exima, em qualquer caso, de atuar como representante da congregação religiosa perante a RFB.",
+      "[...]",
+      "8. Assim, entendemos que, nos termos apresentados, seja possível a atuação do consulente como tesoureiro da (...), desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, e a jurisprudência da CGU em caso análogo, opina-se pela possibilidade de {{g:o servidor|a servidora}} exercer a atividade privada de tesoureiro ou presidente do conselho fiscal de entidade religiosa, desde que obedecidas as condições estabelecidas pela CGU no caso que se toma como paradigma."
+    },
+    {
+     "t": "p",
+     "x": "Tais condições determinam que {{g:o servidor|a servidora}} deverá abster-se de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e de atuar como representante da entidade religiosa perante a fazenda pública. Ademais, deverá assinar Termo de Compromisso junto à RFB se comprometendo a não realizar essas atividades."
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, registre-se que encontra-se vigente a Portaria RFB nº 444/2015:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Portaria RFB nº 444/2015",
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "I – advocacia;",
+      "**II – contabilidade;**",
+      "III – praticagem. (grifos nossos)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de tesoureiro ou presidente de conselho fiscal de entidade religiosa não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "tesoureiro_loja_maconica",
+   "rotulo": "Tesoureiro (ou auxiliar/adjunto) de Loja Maçônica – exercício condicionado",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor atua ou pretende atuar como tesoureiro, tesoureiro adjunto ou auxiliar de tesoureiro em Loja Maçônica (associação civil sem fins lucrativos, sem imunidade tributária).",
+   "fonte": "INF 141/2015",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "TESOUREIRO DE LOJA MAÇÔNICA.",
+   "ementa": [
+    "Consulta acerca da existência de conflito de interesse entre a atividade de {{funcao}} em Loja Maçônica, com o cargo de {{cargo}}. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [
+    {
+     "id": "funcao",
+     "rotulo": "Função exercida na Loja",
+     "exemplo": "auxiliar de tesoureiro",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "dispositivo_estatuto",
+     "rotulo": "Dispositivo do Estatuto Social que prevê a escrituração contábil a cargo do tesoureiro",
+     "exemplo": "artigo 13, inciso VI",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Verifica-se que a atividade descrita no {{dispositivo_estatuto}}, do Estatuto Social da Loja Maçônica, é materialmente incompatível com o cargo de {{cargo_sigla}}."
+    },
+    {
+     "t": "p",
+     "x": "Porém, em caso análogo ao da presente consulta, a CGU, por meio da Nota Técnica n° 790/2015/CGINC/DIACI/STPC/CGU-PR, entendeu por autorizar que um ocupante do cargo de AFRFB exercesse, de forma condicionada, a atividade de Tesoureiro de Congregação Religiosa, nos seguintes termos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "6. Primeiramente, vale ressaltar que a probabilidade de o servidor beneficiar a (...) em questões tributárias ou mesmo atuar na Receita Federal em processos que envolvam a (...) é muito pequena, tendo em vista que a instituição possui imunidade tributária. Além disso, o consulente pode mitigar ainda mais tal risco, caso se abstenha de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e se exima, em qualquer caso, de atuar como representante da congregação religiosa perante a RFB.",
+      "(...)",
+      "8. Assim, entendemos que, nos termos apresentados, seja possível a atuação do consulente como tesoureiro da (...), desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Apesar de a Loja Maçônica não possuir imunidade tributária, como as congregações religiosas, trata-se de uma associação civil com personalidade jurídica de direito privado sem fins lucrativos. Dessa forma, também, é pequena a probabilidade de {{g:o servidor|a servidora}} beneficiar a Loja Maçônica ou de atuar na Receita Federal em processos que a envolvam."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, {{g:o requerente|a requerente}} informou que não trata de assuntos ligados às obrigações fiscais e previdenciárias da Loja Maçônica, ficando essas atividades a cargo de contadora contratada pela Loja.",
+     "opc": {
+      "id": "contador_contratado",
+      "rotulo": "Incluir: servidor informou que obrigações fiscais/previdenciárias ficam a cargo de contador contratado",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, e considerando a natureza jurídica não econômica das associações definida no artigo 53 do Código Civil e a recente jurisprudência da CGU em caso análogo, opina-se pela possibilidade de {{g:o consulente|a consulente}}, ocupante do cargo de {{cargo_sigla}}, exercer a atividade privada de {{funcao}} de Loja Maçônica, desde que nos termos expostos {{g:pelo servidor|pela servidora}} e obedecidas as condições estabelecidas pela CGU no caso que se toma como paradigma."
+    },
+    {
+     "t": "p",
+     "x": "Tais condições determinam que {{g:o consulente|a consulente}} deverá abster-se de atuar na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e de atuar como representante da associação perante a fazenda pública. Ademais, deverá assinar Termo de Compromisso junto à RFB se comprometendo a não realizar essas atividades."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{funcao}} de Loja Maçônica, descrita {{g:pelo servidor|pela servidora}} {{nome}}, não configura conflito de interesse, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}

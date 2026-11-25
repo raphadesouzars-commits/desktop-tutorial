@@ -1,0 +1,57 @@
+{
+ "id": "consulta_em_tese",
+ "nome": "Consulta em tese ou sobre situação de terceiro (não apreciação)",
+ "grupo": "Outras situações",
+ "descricao": "Usar quando a consulta não trata de situação concreta e individualizada do próprio consulente (hipótese abstrata, dúvida sobre caso de outra pessoa – ex.: diretor sindical em comissão de inquérito), devendo ser encerrada sem análise.",
+ "palavrasChave": [
+  "consulta em tese",
+  "hipótese",
+  "situação hipotética",
+  "caso de terceiro",
+  "fato genérico",
+  "gostaria de saber se",
+  "diretor sindical",
+  "diretoria sindical",
+  "sindicato",
+  "comissão de inquérito",
+  "processo administrativo disciplinar",
+  "dúvida genérica"
+ ],
+ "variantes": [
+  {
+   "id": "consulta_em_tese_encerramento",
+   "rotulo": "Consulta em tese – não deve ser analisada; devolução à Cogep para encerramento",
+   "resultado": "outro",
+   "quandoUsar": "O consulente não descreve atividade que ele próprio exerce ou pretende exercer, mas formula dúvida abstrata ou relativa a outra pessoa (no parecer de origem: se um diretor sindical poderia integrar comissão de inquérito disciplinar). Aplica-se o art. 3º, parágrafo único, da Portaria Interministerial MPOG/CGU nº 333/2013.",
+   "fonte": "INF 182/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA EM TESE.",
+   "ementa": [
+    "Consulta que não trata de situação concreta que diga respeito {{g:ao|à}} consulente. Consulta em tese. Não apreciação, nos termos da Portaria Interministerial MPOG/CGU nº 333, de 2013."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, faz-se necessário esclarecer que a Portaria Interministerial MPOG/CGU Nº 333, de 19 de setembro de 2013, disciplina os procedimentos para a consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada por servidor ou empregado público do Poder Executivo federal, no âmbito de competência atribuída à Controladoria-Geral da União (CGU) pelo § 1º do art. 4º e pelo art. 8º da Lei nº 12.813, de 2013."
+    },
+    {
+     "t": "p",
+     "x": "A referida Portaria Interministerial definiu em seu artigo 2º, inciso I, que a consulta é “um instrumento à disposição de servidor ou empregado público pelo qual ele pode solicitar, a qualquer momento, orientação acerca de situação concreta, individualizada, que lhe diga respeito e que possa suscitar dúvidas quanto à ocorrência de conflito de interesses”."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, a mesma Portaria, em seu art. 3º, inciso II determina que é necessário que a consulta contenha “referência a objeto determinado e diretamente vinculado ao interessado”, e em seu parágrafo único esclarece que “Não será apreciada a consulta ou pedido de autorização formulada em tese ou com referência a fato genérico”."
+    },
+    {
+     "t": "p",
+     "x": "A partir do exposto, verifica-se que a consulta ora analisada não preenche os requisitos acima, de forma que não deve ser analisada, uma vez que não se trata de uma situação concreta que diga respeito {{g:ao|à}} consulente, tratando-se de uma consulta em tese."
+    },
+    {
+     "t": "p",
+     "x": "Assim, propõe-se a devolução dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para que seja encerrada a presente consulta, nos termos do artigo 6º da {{portaria_curta}}."
+    }
+   ]
+  }
+ ]
+}

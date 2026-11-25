@@ -1,0 +1,377 @@
+{
+ "id": "direcao_associacao",
+ "nome": "Direção / presidência de associação ou instituição sem fins lucrativos",
+ "descricao": "Use quando o servidor pretende ocupar cargo de direção (presidente, vice-presidente, diretor, conselheiro de administração) em associação civil, associação de pais, clube social ou instituição religiosa.",
+ "palavrasChave": [
+  "presidente de associação",
+  "vice-presidente",
+  "diretor de associação",
+  "diretoria executiva",
+  "diretoria",
+  "diretor geral",
+  "conselho de administração",
+  "conselheiro de administração",
+  "associação civil",
+  "associação sem fins lucrativos",
+  "associação de pais e alunos",
+  "círculo de pais e mestres",
+  "clube social",
+  "instituição religiosa",
+  "diretoria de igreja",
+  "representar a associação",
+  "estatuto social",
+  "não remunerado",
+  "associação de moradores",
+  "presidente da associação",
+  "diretor da associação"
+ ],
+ "variantes": [
+  {
+   "id": "presidente_conselheiro_associacao_civil",
+   "rotulo": "Presidente, vice-presidente e/ou conselheiro de administração de associação civil – não configura conflito, com ressalvas (contabilidade e representação)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Estatuto da associação atribui ao cargo pretendido competências relacionadas à contabilidade e à representação da entidade.",
+   "fonte": "PAR 090/2022",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE PRESIDENTE, VICE-PRESIDENTE E/OU CONSELHEIRO DE ADMINISTRAÇÃO EM ASSOCIAÇÃO CIVIL.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de presidente, vice-presidente e/ou conselheiro de administração em associação civil com o cargo de {{cargo}}. Não configura conflito de interesses desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "funcao",
+     "rotulo": "Cargo(s) pretendido(s) na associação",
+     "exemplo": "Presidente, Vice-Presidente e/ou Conselheiro de Administração",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "entidade_de",
+     "rotulo": "Entidade, precedida da preposição (ex.: \"da Associação X\", \"do Clube Y\")",
+     "exemplo": "da Associação X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "dispositivo_estatuto",
+     "rotulo": "Dispositivo do estatuto que prevê a representação",
+     "exemplo": "art. 64, inciso a",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atribuicao_estatuto",
+     "rotulo": "Atribuição de representação prevista no estatuto (transcrição)",
+     "exemplo": "representar o Clube, ativa ou passivamente, em juízo ou fora dele, em conjunto com o Diretor Administrativo",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do citado inciso III do art. 5º da Lei nº 12.813, de 2013, verifica-se que o exercício da atividade requerida de {{funcao}} {{entidade_de}}, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}, sob a ressalva de que não envolvam conhecimentos e procedimentos internos da RFB que não sejam de domínio público."
+    },
+    {
+     "t": "p",
+     "x": "É importante ressaltar, porém, que dentre as competências de {{funcao}}, apresentadas no estatuto social da associação civil há atribuições relacionadas à sua contabilidade. Desse modo, levando em consideração que a Portaria RFB nº 444, de 23 de março de 2015, considera o exercício da contabilidade incompatível com o cargo de {{cargo}}, entende-se que neste caso, o potencial conflito de interesses pode ser mitigado caso {{g:o servidor|a servidora}} se abstenha de atuar na contabilidade da entidade, e na elaboração e aprovação de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Além disso, tendo em vista o disposto no inciso IV do art. 5º da Lei nº 12.813, de 2013, entende-se que a atribuição elencada no {{dispositivo_estatuto}}, do Estatuto social da entidade, qual seja, “{{atribuicao_estatuto}}” é incompatível com o cargo de {{cargo}}, quando realizada perante órgãos da Administração Pública:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(…)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Desse modo, faz-se necessário ressaltarmos a impossibilidade de {{g:o interessado|a interessada}} atuar como representante {{entidade_de}}, além de não se valer do vínculo com a RFB para resolver questões da associação civil, perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Cabe ressaltar ainda que, no exercício de seu cargo público, {{g:o servidor|a servidora}} deve se abster de atuar em qualquer processo que possa ser do interesse da referida entidade."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Feitas as considerações acima, no entendimento desta Corregedoria, o exercício da atividade de {{funcao}} {{entidade_de}} não configura conflito de interesses, desde que observadas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "presidente_associacao_representacao",
+   "rotulo": "Presidente de associação sem fins lucrativos – exercício condicionado (transferir a representação perante órgãos públicos)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende presidir associação sem fins lucrativos cujo estatuto atribui ao presidente a representação da entidade; sem atribuições contábeis relevantes.",
+   "fonte": "PAR 635/2021",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESIDENTE DE ASSOCIAÇÃO SEM FINS LUCRATIVOS.",
+   "ementa": [
+    "Pedido de autorização para exercer o cargo de Presidente de Associação sem fins lucrativos. Possibilidade de exercício da atividade de forma condicionada."
+   ],
+   "campos": [
+    {
+     "id": "entidade_de",
+     "rotulo": "Entidade, precedida da preposição (ex.: \"da Associação X\", \"do Clube Y\")",
+     "exemplo": "da Associação X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atribuicao_estatuto",
+     "rotulo": "Atribuição prevista no estatuto (transcrição)",
+     "exemplo": "representar a associação ativa e passivamente, judicial e extrajudicialmente",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, no inciso I do artigo 3º, conceitua conflito de interesses como a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública. A Lei também dispõe que a divulgação ou o uso de informação privilegiada, em proveito próprio ou de terceiro, obtida em razão das atividades exercidas, também é passível de enquadramento como conflito de interesses."
+    },
+    {
+     "t": "p",
+     "x": "Em princípio, não se verifica a existência de conflito de interesses na atividade pretendida {{g:pelo consulente|pela consulente}}, contudo, {{g:o servidor|a servidora}} deve ter atenção em relação às atribuições inerentes ao cargo de Presidente, uma vez que existe a previsão estatutária de “{{atribuicao_estatuto}}”."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com a publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o consulente|a consulente}} venha a exercer o cargo de Presidente, deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, é importante ressaltar que {{g:o consulente|a consulente}} não deve se apresentar nessa empreitada particular como {{g:servidor público|servidora pública}} e nem se valer do vínculo com a RFB, de forma a sugerir que o órgão público a que está {{g:vinculado|vinculada}} sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas a partir da conduta {{g:do consulente|da consulente}}, cabendo a {{g:ele|ela}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Pelo exposto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de Presidente {{entidade_de}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "membro_diretoria_associacao",
+   "rotulo": "Membro de diretoria de associação sem fins lucrativos – não configura conflito, com ressalvas (representação e contabilidade)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende compor a diretoria (diretor geral, diretoria executiva) de associação sem fins lucrativos, tendo apresentado o estatuto social.",
+   "fonte": "PAR 224/2018",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE CARGO NA DIRETORIA DE ASSOCIAÇÃO.",
+   "ementa": [
+    "Consulta para o exercício concomitante da atividade de {{funcao}} de associação sem fins lucrativos com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "funcao",
+     "rotulo": "Cargo na diretoria (flexionado)",
+     "exemplo": "diretor geral",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "entidade_de",
+     "rotulo": "Entidade, precedida da preposição (ex.: \"da Associação X\", \"do Clube Y\")",
+     "exemplo": "da Associação X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "dispositivo_estatuto",
+     "rotulo": "Dispositivo do estatuto",
+     "exemplo": "artigo 22, inciso IV",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "atribuicao_estatuto",
+     "rotulo": "Competência da diretoria prevista no estatuto (transcrição)",
+     "exemplo": "reunir-se com instituições públicas e privadas para mútua colaboração, em atividades de interesse comum",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813/2013 estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor consulente|pela servidora consulente}} – ocupar o cargo de {{funcao}} {{entidade_de}} (doravante Associação) – não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, a análise do {{dispositivo_estatuto}}, do Estatuto Social da Associação, apresentado {{g:pelo consulente|pela consulente}}, demonstra que dentre as competências da diretoria da Associação encontra-se inserido o ato de “{{atribuicao_estatuto}}”."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador ou intermediário foi ampliada. A determinação contida no artigo 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador ou intermediário perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o consulente|a consulente}} venha a se tornar {{funcao}} da Associação, {{g:ele|ela}} deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Outra ressalva importante a ser feita diz respeito ao disposto no Estatuto Social da Associação, que elenca as competências de {{funcao}}. Observa-se que algumas das atribuições de {{funcao}} estão relacionadas com o exercício da contabilidade, atividade considerada incompatível com as desenvolvidas pelos ocupantes do cargo de {{cargo_sigla}}, conforme dispõe o artigo 1º, inciso II, da Portaria RFB nº 444, de 23 de março de 2015:",
+     "opc": {
+      "id": "contabilidade_444",
+      "rotulo": "Incluir ressalva: atribuições do cargo relacionadas à contabilidade (Portaria RFB nº 444/2015)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 1º Considera-se incompatível com as atribuições dos cargos da Carreira de Auditoria da Receita Federal do Brasil o exercício das seguintes atividades, sem prejuízo da existência de outras atividades eventualmente incompatíveis:",
+      "(...)",
+      "**II – contabilidade;** (grifos nossos)"
+     ],
+     "opc": {
+      "id": "contabilidade_444",
+      "rotulo": "Incluir ressalva: atribuições do cargo relacionadas à contabilidade (Portaria RFB nº 444/2015)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, {{g:o servidor consulente|a servidora consulente}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento desta Corregedoria, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "diretoria_instituicao_religiosa",
+   "rotulo": "Participação em diretoria de instituição religiosa – atividade materialmente compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende participar da diretoria de instituição religiosa sem fins lucrativos, sem remuneração (não especificamente como tesoureiro).",
+   "fonte": "PAR 012/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PARTICIPAÇÃO EM DIRETORIA DE INSTITUIÇÃO RELIGIOSA.",
+   "ementa": [
+    "Consulta. Atividade materialmente compatível com o exercício do cargo."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "[...]",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor consulente|pela servidora consulente}} – compor a diretoria de instituição religiosa - não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Por oportuno, registre-se que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com a publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o consulente|a consulente}} venha a se tornar membro da diretoria da instituição religiosa, deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se, ainda, que {{g:o servidor|a servidora}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários, no caso em que {{g:o servidor|a servidora}} esteja no exercício do cargo, e não em licença para tratar de interesses particulares, é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade descrita {{g:pelo servidor consulente|pela servidora consulente}} é materialmente compatível com o cargo, desde que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público e que sejam observadas as demais ressalvas explicitadas acima."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,297 @@
+{
+ "id": "clube_futebol",
+ "nome": "Conselheiro ou dirigente de clube de futebol / clube esportivo",
+ "descricao": "Use quando o servidor pretende integrar conselho (deliberativo, fiscal) ou a presidência de clube de futebol ou associação desportiva.",
+ "palavrasChave": [
+  "clube de futebol",
+  "clube esportivo",
+  "futebol clube",
+  "esporte clube",
+  "conselheiro",
+  "conselho deliberativo",
+  "conselheiro deliberativo",
+  "conselho fiscal do clube",
+  "presidente do clube",
+  "associação desportiva",
+  "associação atlética",
+  "sócio do clube",
+  "eleição do clube",
+  "torcida",
+  "dirigente esportivo",
+  "comodoro",
+  "vice-comodoro",
+  "iate clube",
+  "clube social",
+  "clube recreativo",
+  "clube náutico"
+ ],
+ "variantes": [
+  {
+   "id": "conselheiro_deliberativo_clube",
+   "rotulo": "Conselheiro deliberativo de clube de futebol – não configura conflito, desde que observadas as ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende ser membro (não presidente nem vice) do conselho deliberativo de clube de futebol.",
+   "fonte": "PAR 073/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE DE CONSELHEIRO DELIBERATIVO DE CLUBE DE FUTEBOL.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de conselheiro deliberativo com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "entidade_de",
+     "rotulo": "Clube, precedido da preposição (ex.: \"do Clube X\", \"da Associação Atlética Y\")",
+     "exemplo": "do Clube X",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813/2013 estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida Lei, opina-se que o exercício da atividade descrita {{g:pelo servidor interessado|pela servidora interessada}}, participação no Conselho Deliberativo {{entidade_de}}, é materialmente compatível com o cargo de {{cargo_sigla}}. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público. Observando-se que {{g:o consulente|a consulente}} deve se abster de emitir pareceres que versem sobre matéria contábil, fiscal ou tributária, além de se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Salientamos que a presente consulta não abrange as atribuições de “Presidente” ou “Vice-Presidente” do Conselho Deliberativo, uma vez que {{g:o consulente|a consulente}} informou que deseja apenas se tornar {{g:conselheiro|conselheira}} no Conselho Deliberativo {{entidade_de}}. É imperioso salientar, ainda, que o escopo avaliado nesta informação se restringe ao desenvolvimento da atividade privada mencionada {{g:pelo servidor consulente|pela servidora consulente}}. Caso {{g:ele|ela}} resolva, no clube do qual é membro, postular qualquer outra função ou exercer qualquer atividade diversa daquela evidenciada, deverá formular nova consulta. A presente resposta não abrange, por exemplo, a atuação em conselhos distintos do deliberativo, como o fiscal e/ou o diretor."
+    },
+    {
+     "t": "p",
+     "x": "Cabe observar também que a Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu artigo 117, inciso XI, que aos servidores públicos federais é proibido atuar, como procurador ou intermediário, junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813/2013, a vedação à atuação do servidor público como procurador ou intermediário foi ampliada. A determinação contida no artigo 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador ou intermediário perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da Lei nº 12.813/2013, é vedada a atuação de servidor como procurador ou intermediário junto a qualquer órgão ou entidade (inclusa a RFB) da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento desta COGER, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "conselheiro_clube_simplificado",
+   "rotulo": "Conselheiro de clube de futebol (redação concisa, com dever de declarar-se impedido) – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor (especialmente se ocupa chefia ou atua em área que pode receber demandas do clube) pretende atuar como conselheiro de clube de futebol.",
+   "fonte": "PAR 234/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSULTA SOBRE CONFLITO DE INTERESSES.",
+   "ementa": [
+    "{{g:O servidor|A servidora}} solicita autorização para atuar como {{g:conselheiro|conselheira}} de clube de futebol. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício do cargo ou emprego no âmbito do Poder Executivo federal:",
+      "III – exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor consulente|pela servidora consulente}}, não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "É importante ressaltar que {{g:o consulente|a consulente}} não deve se valer do vínculo com a RFB para resolver questões do clube perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios, nem utilizar ou permitir o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais."
+    },
+    {
+     "t": "p",
+     "x": "Registre-se, ainda, que {{g:o consulente|a consulente}} deve se abster de emitir pareceres que versem sobre matéria contábil, fiscal ou tributária, além de se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, saliente-se que {{g:o servidor|a servidora}} deve declarar-se {{g:impedido|impedida}} de atuar, no exercício do cargo público que ocupa, de quaisquer demandas que envolvam o clube."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, analisando o pleito sob o prisma do disposto no inciso III, do art. 5°, da Lei n° 12.813, de 2013, opina-se que o exercício da atividade descrita {{g:pelo consulente|pela consulente}} não é materialmente incompatível com o cargo. É necessário frisar que a opinada inexistência de incompatibilidade material da atividade pretendida com o cargo condiciona-se a que sejam observadas as ressalvas acima. Ademais, a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    }
+   ]
+  },
+  {
+   "id": "presidente_clube",
+   "rotulo": "Presidente de clube de futebol – não configura conflito, com ressalvas (transferir a representação)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende exercer a presidência de clube de futebol cujo estatuto atribui ao presidente a representação do clube em juízo ou fora dele.",
+   "fonte": "INF 093/2016",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PRESIDENTE DE CLUBE DE FUTEBOL.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante de presidente de clube de futebol. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "dispositivo_estatuto",
+     "rotulo": "Dispositivo do estatuto do clube que trata das atribuições do presidente",
+     "exemplo": "art. 49",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor consulente|pela servidora consulente}} – a atividade de presidência do clube – não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público. Observando-se que {{g:o consulente|a consulente}} deve se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, a análise do {{dispositivo_estatuto}} do Estatuto do clube, mencionado {{g:pelo servidor|pela servidora}}, demonstra que, dentre as atribuições do presidente do clube, está a representação do clube em juízo ou fora dele."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da Lei nº 12.813, de 2013, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Logo, caso {{g:o consulente|a consulente}} venha a se tornar presidente do clube, {{g:ele|ela}} deverá transferir a representação para outra pessoa, quando estiver diante de qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários, no caso em que {{g:o servidor|a servidora}} esteja no exercício do cargo, e não em licença para tratar de interesses particulares, é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  },
+  {
+   "id": "conselheiro_fiscal_clube",
+   "rotulo": "Conselheiro fiscal de clube de futebol – não configura conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor pretende integrar o conselho fiscal de clube de futebol.",
+   "fonte": "INF 067/2017",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "CONSELHEIRO FISCAL DE CLUBE DE FUTEBOL.",
+   "ementa": [
+    "Consulta quanto ao exercício concomitante de conselheiro fiscal de clube de futebol. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, a prática de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No caso específico narrado {{g:pelo servidor consulente|pela servidora consulente}} – a atividade de conselheiro fiscal do clube – não se vislumbra qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público. Observando-se que {{g:o consulente|a consulente}} deve se abster de emitir pareceres que versem sobre matéria contábil, fiscal ou tributária, além de se abster de atuar na elaboração de demonstrações contábeis e de outros documentos congêneres que venham a ser analisados pela União (inclusa a RFB), Estados, Distrito Federal e Municípios."
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, já previa em seu art. 117, inciso XI, que aos servidores públicos federais é proibido atuar como procurador junto a repartições públicas. O legislador quis impedir que o servidor atuasse no patrocínio, direto ou indireto, de interesse privado perante a Administração Pública, valendo-se da qualidade de servidor, de suas amizades, de seu livre trânsito pelas repartições, de seu prestígio ou de sua influência."
+    },
+    {
+     "t": "p",
+     "x": "Com o advento da Lei nº 12.813, de 2013, a vedação à atuação do servidor público como procurador foi ampliada. A determinação contida no art. 5º, inciso IV, daquela Lei, definiu como situação ensejadora de conflito de interesses a atuação de servidor público federal como procurador perante qualquer esfera da administração pública, direta ou indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "IV - atuar, ainda que informalmente, como procurador, consultor, assessor ou intermediário de interesses privados nos órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Assim, a partir da publicação da Lei nº 12.813, de 2013, é vedada a atuação do servidor como procurador junto a qualquer órgão ou entidade da administração pública direta ou indireta de qualquer dos Poderes da União (inclusa a RFB), dos Estados, do Distrito Federal e dos Municípios."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5º, da Lei nº 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários, no caso em que {{g:o servidor|a servidora}} esteja no exercício do cargo, e não em licença para tratar de interesses particulares, é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas acima."
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,231 @@
+{
+ "id": "artes_plasticas_ilustracao",
+ "nome": "Artes plásticas, desenho e ilustração (criação, exposição e venda de obras próprias)",
+ "descricao": "Usar quando o servidor pretende produzir, expor e vender obras de artes plásticas ou atuar como desenhista/ilustrador, inclusive como sócio cotista de editora das próprias obras.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "artes plásticas",
+  "artista plástico",
+  "pintura de quadros",
+  "escultura",
+  "artesanato",
+  "artesã",
+  "exposição de obras",
+  "venda de obras de arte",
+  "aulas de artes",
+  "desenhista",
+  "ilustrador",
+  "ilustrações",
+  "livros para colorir",
+  "royalties",
+  "editora",
+  "scrapbook",
+  "pintura em porcelana"
+ ],
+ "variantes": [
+  {
+   "id": "artes_plasticas_exposicao_venda",
+   "rotulo": "Artes plásticas com exposição/venda das obras – sem conflito, com ressalvas (art. 117, X, da Lei nº 8.112)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) artista plástico(a)/artesão(ã) que pretende criar, expor e vender as próprias obras (pinturas, esculturas, artesanato), eventualmente dar aulas de artes e divulgar o trabalho; a análise delimita o \"elemento de empresa\" do art. 966 do Código Civil.",
+   "fonte": "INF 132/2016",
+   "assunto": "Consulta quanto à atividade de artes plásticas.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE ARTES PLÁSTICAS.",
+   "ementa": [
+    "Consulta quanto ao exercício da atividade de artes plásticas, com exposição e venda das obras, concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta sob o prisma do inciso III do art. 5º da Lei nº 12.813, de 2013, poderíamos concluir que o exercício das atividades privadas de execução de artes plásticas, por si só, não é materialmente incompatível com o cargo ocupado {{g:pelo servidor|pela servidora}}. Contudo, {{g:o consulente|a consulente}} assinalou que a atividade não se circunscreveria apenas na criação do material, mas também a realização de exposições destes. Depreende-se então que a atividade envolveria a venda do material, ou seja, sua atuação envolveria atos de comércio."
+    },
+    {
+     "t": "p",
+     "x": "Sendo assim, há de se chamar a atenção para o fato de que a atividade privada descrita {{g:pelo servidor|pela servidora}} pode ensejar afronta ao disposto no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "X - participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Diante disso, analisaremos em que termos e limites a atividade pretendida {{g:pelo consulente|pela consulente}} pode ser exercida sem configurar a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”."
+    },
+    {
+     "t": "p",
+     "x": "O art. 117, inciso X, da Lei nº 8.112, de 1990, até o advento da nova Codificação Civil (Lei nº 10.406, de 10 de janeiro de 2002), era complementado pela “teoria dos atos de comércio” do Código Comercial de 1850."
+    },
+    {
+     "t": "p",
+     "x": "Entretanto, com a referida atualização normativa, o novo Código Civil é que passou a complementar o artigo supracitado, com a “teoria da empresa”, estabelecendo o seguinte conceito de empresário:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 966. Considera-se empresário quem exerce profissionalmente atividade econômica organizada para a produção ou a circulação de bens ou de serviços.",
+      "Parágrafo único. Não se considera empresário quem exerce profissão intelectual, de natureza científica, literária ou artística, ainda com o concurso de auxiliares ou colaboradores, salvo se o exercício da profissão constituir elemento de empresa."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A atividade pretendida {{g:pelo consulente|pela consulente}} deve ser desenvolvida dentro dos limites estabelecidos no parágrafo único do art. 966 do novo Código Civil para que não se configure a infração disciplinar de “exercício de comércio” e de “gerência e administração de sociedade privada”, do art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Assim, para responder a presente consulta precisamos delimitar o que é esse “elemento de empresa” do art. 966, parágrafo único, do novo Código Civil."
+    },
+    {
+     "t": "p",
+     "x": "A princípio, está excluída do conceito de empresa a atividade econômica desempenhada, por exemplo, por escritores, escultores e músicos, ainda que com o concurso de auxiliares ou colaboradores."
+    },
+    {
+     "t": "p",
+     "x": "Essas atividades, ainda que realizadas de forma profissional, com objetivo de lucro, não se sujeitam ao regime jurídico empresarial, uma vez que não estariam organizadas sob a forma de empresa. Referidas atividades em regra são exercidas autonomamente/individualmente, ou no máximo sob a forma de Sociedades Simples."
+    },
+    {
+     "t": "p",
+     "x": "Neste ponto cabe aproveitar a oportunidade para bem delimitar que uma coisa é o artista plástico que obtém proveitos econômicos de suas obras, e outra coisa bem diferente é o artista plástico que busca a obtenção de proveito econômico não apenas com suas obras de arte, mas também “montando”/gerenciando e/ou administrando um espaço para exposições, ou seja, exercendo atividade empresarial. A situação de exercício de atividade empresarial fica ainda mais nítida quando nesse espaço de exposições são comercializadas obras de arte de terceiros. A título de exemplo, o caso do espaço de exposições do servidor comercializar obras de arte de outros artistas, além das obras do próprio servidor. Nestes casos o exercício da profissão artística de artes plástica constitui apenas um elemento de empresa (ao lado de outros profissionais), ou seja, estaria configurado o exercício de atividade empresarial e a infração disciplinar ao art. 117, inciso X, da Lei nº 8.112, de 1990."
+    },
+    {
+     "t": "p",
+     "x": "A idéia do art. 966, parágrafo único, do novo Código Civil é que a princípio a profissão intelectual não é empresarial por não compreender a organização de fatores de produção."
+    },
+    {
+     "t": "p",
+     "x": "Sobre o assunto, merecem destaque os Enunciados referentes à matéria aprovados na III Jornada de Direito Civil, realizada em 2002, bastante elucidativos e que vão ao encontro do que afirmamos até o momento:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "193 – Art. 966: O exercício das atividades de natureza exclusivamente intelectual está excluído do conceito de empresa.",
+      "194 – Art. 966: Os profissionais liberais não são considerados empresários, salvo se a organização dos fatores de produção for mais importante que a atividade pessoal desenvolvida.",
+      "195 – Art. 966: A expressão “elemento de empresa” demanda interpretação econômica, devendo ser analisada sob a égide da absorção da atividade intelectual, de natureza científica, literária ou artística, como um dos fatores da organização empresarial."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Acerca do assunto, também cabe registrar que o art. 966, parágrafo único, do novo Código Civil se inspirou no art. 2.238 do Código Civil Italiano, que tem a seguinte redação: “Salvo se o exercício da profissão constituir elemento de atividade organizada em empresa”."
+    },
+    {
+     "t": "p",
+     "x": "Diante disso, cabe {{g:ao servidor|à servidora}} evitar que sua atuação incida nas proibições previstas no inciso X do art. 117 da Lei nº 8.112, de 11 de dezembro de 1990."
+    },
+    {
+     "t": "p",
+     "x": "Já a atividade de ministrar aulas de artes, não se vislumbra incompatibilidade material com o cargo ocupado {{g:pelo consulente|pela consulente}}, entretanto deve {{g:o servidor|a servidora}} mais uma vez observar o disposto no inciso X do art. 117 da Lei nº 8.112.",
+     "opc": {
+      "id": "aulas_artes",
+      "rotulo": "Servidor também pretende ministrar aulas de artes",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Também não há óbice quanto à sua participação em programas de televisão com o objetivo de divulgar o material artístico, devendo {{g:o servidor|a servidora}} observar as restrições impostas pelo Código de Conduta dos Agentes Públicos em exercício na Secretaria da Receita Federal do Brasil.",
+     "opc": {
+      "id": "programas_tv",
+      "rotulo": "Servidor também pretende participar de programas de televisão para divulgar o material artístico",
+      "padrao": false
+     }
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência em todas essas atividades que pretende exercer."
+    },
+    {
+     "t": "p",
+     "x": "É igualmente necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Assim sendo, no entendimento da {{orgao_corregedoria}}, o exercício das atividades expressas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "ilustrador_socio_cotista_editora",
+   "rotulo": "Desenhista/ilustrador e sócio cotista de editora das próprias obras – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) cria desenhos/ilustrações (ex.: livros para colorir), recebe royalties das vendas feitas por plataforma de terceiros e pretende figurar como sócio cotista, sem gerência, de editora que publicará suas obras.",
+   "fonte": "INF 190/2016",
+   "assunto": "Pedido de autorização para atuar como sócio-cotista de empresa privada e exercer a atividade de desenhista.",
+   "ementaTitulo": "SÓCIO COTISTA DE EDITORA. ATIVIDADE DE DESENHISTA/ILUSTRADOR.",
+   "ementa": [
+    "Pedido de autorização para atuar como sócio-cotista de empresa privada e exercer a atividade de desenhista/ilustrador concomitante com o cargo de {{cargo}}. Participação societária restrita à condição de acionista, cotista ou comanditário. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "plataforma_vendas",
+     "rotulo": "Empresa/plataforma que realiza as vendas (completa \"vendas realizadas pela ...\")",
+     "exemplo": "plataforma de venda de livros sob demanda",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, compete registrar que a condição de sócio-cotista de empresa privada é matéria que se encontra fora do âmbito da Lei de Conflito de Interesses, dizendo respeito à legislação disciplinar, mais precisamente ao artigo 117, inciso X, da Lei nº 8.112, de 11 de dezembro de 1990, que estabelece que ao servidor é proibido “participar de gerência ou administração de sociedade privada, personificada ou não personificada, exercer o comércio, exceto na qualidade de acionista, cotista ou comanditário”."
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a partir das informações prestadas {{g:pelo consulente|pela consulente}}, verifica-se que a situação descrita na consulta se insere no permissivo contido na segunda parte do inciso X, do artigo 117, da Lei n° 8.112, de 1990, que permite que o servidor público seja sócio de empresa na qualidade de “acionista, cotista ou comanditário”, após ter-lhe vedado atividades de gerência e administração de empresas."
+    },
+    {
+     "t": "p",
+     "x": "Referido dispositivo legal conjeturou permitir aos servidores públicos a participação marginal em empresas."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, como essa situação descrita {{g:pelo consulente|pela consulente}} não apresenta qualquer particularidade que afaste o permissivo disciplinar da segunda parte do artigo 117, inciso X, da Lei n° 8.112/90, bem como não atrai eventualmente a aplicação das normas que tratam especificamente de conflito de interesses, observa-se que esse assunto trata de uma consulta a essa Corregedoria, acerca de matéria disciplinar."
+    },
+    {
+     "t": "p",
+     "x": "Assim, respondendo às perguntas {{g:do consulente|da consulente}}, precisamente dentro do contexto que nos apresentou, {{g:ele|ela}} somente pode ser “acionista, cotista ou comanditário” da empresa (editora) que mencionou na consulta, ainda que majoritário, em respeito ao disposto no artigo 117, inciso X, da Lei n° 8.112/90, sendo-lhe expressamente vedadas atividades de gerência e administração."
+    },
+    {
+     "t": "p",
+     "x": "Prosseguindo nossa análise, consignamos que a Lei nº 12.813, de 16 de maio de 2013, estabelece que a avaliação de eventual incompatibilidade entre o exercício de atividade privada e do cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à atuação {{g:do servidor consulente|da servidora consulente}} como desenhista/ilustrador de livros para colorir, com o respectivo recebimento de royalties das vendas realizadas pela {{plataforma_vendas}}, não se vislumbra incompatibilidade material com o cargo ocupado."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Quanto aos incisos I, II, IV, V, VI e VII, do art. 5°, da Lei n° 12.813, de 2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada, cabendo {{g:ao servidor|à servidora}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Por fim, compete registrar que a presente resposta se fundamentou nas informações prestadas {{g:pelo consulente|pela consulente}}, de forma que eventuais alterações na situação (atividade) apresentada devem ser objeto de nova consulta.",
+     "opc": {
+      "id": "nova_consulta",
+      "rotulo": "Registrar que alterações na situação exigem nova consulta",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de desenhista/ilustrador, por sua natureza, não configura conflito de interesses, desde que observadas as ressalvas acima. Impende salientar a referida autorização não exime eventuais penalidades por infração às demais legislações, especialmente à Lei n° 8.112/1990."
+    }
+   ]
+  }
+ ]
+}

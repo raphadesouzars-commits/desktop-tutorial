@@ -1,0 +1,318 @@
+{
+ "id": "ator_audiovisual",
+ "nome": "Ator, figurante e produção audiovisual",
+ "descricao": "Usar quando o servidor pretende atuar como ator/atriz ou figurante (teatro, filmes, comerciais) ou trabalhar com produção de cinema e TV.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "ator",
+  "atriz",
+  "figurante",
+  "teatro",
+  "peça teatral",
+  "companhia teatral",
+  "artes cênicas",
+  "filmes",
+  "comerciais de tv",
+  "cinema",
+  "produção audiovisual",
+  "produção de cinema e tv",
+  "registro profissional de ator",
+  "espetáculos"
+ ],
+ "variantes": [
+  {
+   "id": "ator_figurante",
+   "rotulo": "Ator ou figurante (filmes, comerciais, teatro) – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) pretende atuar em nome próprio como ator/atriz ou figurante em filmes, comerciais de TV e peças teatrais, fora do horário de expediente.",
+   "fonte": "PAR 080/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE DE ATOR E FIGURANTE.",
+   "ementa": [
+    "Pedido de autorização para o exercício concomitante da atividade de ator e figurante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "A Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que configura situação de conflito de interesses, caracterizador de prática de ato de improbidade administrativa, o desempenho de atividade privada incompatível com o exercício de cargo público:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o pleito sob o prisma do disposto no inciso III da referida Lei, opina-se que o exercício da atividade descrita {{g:pelo servidor interessado|pela servidora interessada}}, desempenhar papéis como {{g:ator|atriz}} e figurante em filmes, comerciais e/ou peças teatrais, é materialmente compatível com o cargo de {{cargo}}, sob a ressalva de que não envolva conhecimentos e procedimentos internos da RFB que não sejam de domínio público. Ademais, não se vislumbra na atividade qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou interesse público."
+    },
+    {
+     "t": "p",
+     "x": "Todavia, chamamos a atenção para o fato de que {{g:o servidor consulente|a servidora consulente}} deve se abster de atuar em quaisquer procedimentos e processos que tramitem na RFB envolvendo pessoas ou instituições para as quais exerça o ofício de {{g:ator|atriz}} e figurante."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV, V, VI e VII, do artigo 5º da Lei nº 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade privada. Assim, cabe {{g:ao servidor consulente|à servidora consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "Outrossim, necessário frisar que a compatibilidade de horários é requisito imprescindível para a realização de qualquer atividade privada concomitante com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade informada {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesses, desde que observadas todas as ressalvas explicitadas acima."
+    }
+   ]
+  },
+  {
+   "id": "ator_possivel_pessoa_juridica",
+   "rotulo": "Ofício de ator com menção genérica à criação de pessoa jurídica – sem conflito; novo pedido para a PJ",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) pede autorização para exercer o ofício de ator/atriz, menciona vagamente que \"talvez\" crie uma pessoa jurídica para algum projeto e pergunta se pode atuar fora do horário de trabalho; análise extensa (conceitos de conflito de interesses e informação privilegiada, sigilo fiscal, art. 117, XVIII, da Lei nº 8.112).",
+   "fonte": "PAR 022/2020",
+   "assunto": "Pedido de autorização formulado por meio do SeCI.",
+   "ementaTitulo": "OFÍCIO DE ATOR. CRIAÇÃO DE PESSOA JURÍDICA.",
+   "ementa": [
+    "O pedido de autorização é analisado com o objetivo de verificar se há configuração de conflito de interesses entre a função pública e a atividade privada a ser exercida. Não há impedimento legal, com base na Lei nº 12.813, de 16 de maio de 2013, para exercer o ofício de ator. Orienta-se {{g:o servidor|a servidora}} a ingressar com novo pedido de autorização, de acordo com o art. 3º da Portaria Interministerial nº 333, de 19 de setembro de 2013, quando da criação de pessoa jurídica. A Lei nº 8.112, de 11 de dezembro de 1990, permite a realização da atividade desde que em horário diverso da jornada estabelecida para cumprimento do horário de trabalho."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Primeiramente, cabe esclarecer que os pedidos de autorização para exercício de atividade privada formulados por meio do SeCI visam verificar a possível existência de um conflito de interesses entre a função pública e a atividade privada a ser exercida {{g:pelo requerente|pela requerente}}, bem como objetivam discutir sobre a necessidade de resguardo, por ele, de informações privilegiadas obtidas em razão do exercício da função pública. Em resumo, deve ser verificado na análise desses pedidos: se há conflito de interesses entre a função pública e a atividade privada, e se há necessidade de resguardo de informações privilegiadas."
+    },
+    {
+     "t": "p",
+     "x": "O art. 3º, I da Lei nº 12.813, de 16 de maio de 2013 (Lei nº 12.813/2013) traz a definição de conflito de interesses:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "I - conflito de interesses: a situação gerada pelo confronto entre interesses públicos e privados, que possa comprometer o interesse coletivo ou influenciar, de maneira imprópria, o desempenho da função pública;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 4º, § 2º, da Lei em comento,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 4º, § 2º A ocorrência de conflito de interesses independe da existência de lesão ao patrimônio público, bem como do recebimento de qualquer vantagem ou ganho pelo agente público ou por terceiro."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Em síntese, o conflito de interesses repercute no comprometimento do interesse público ou na influência, de maneira imprópria, do desempenho da função pública. Prescinde de lesão ao patrimônio público, do recebimento de qualquer vantagem ou do ganho pelo agente público ou por terceiro."
+    },
+    {
+     "t": "p",
+     "x": "Por informação privilegiada, o art. 3º, II da Lei nº 12.813/2013 assim define:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º Para os fins desta Lei, considera-se:",
+      "(…)",
+      "II – informação privilegiada: a que diz respeito a assuntos sigilosos ou aquela relevante ao processo de decisão no âmbito do Poder Executivo federal que tenha repercussão econômica ou financeira e que não seja de amplo conhecimento público."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A informação privilegiada diz respeito, portanto, a assuntos sigilosos. Pode-se incluir, nessa descrição, o sigilo fiscal, cuja previsão, regras e exceções estão dispostas no art. 198 do Código Tributário Nacional (CTN). Segundo o caput deste artigo:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 198. Sem prejuízo do disposto na legislação criminal, é vedada a divulgação, por parte da Fazenda Pública ou de seus servidores, de informação obtida em razão do ofício sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades. (Redação dada pela Lcp nº 104, de 2001)"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Conforme o art. 2º da Portaria RFB nº 2.344, de 24 de março de 2011,"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º São protegidas por sigilo fiscal as informações sobre a situação econômica ou financeira do sujeito passivo ou de terceiros e sobre a natureza e o estado de seus negócios ou atividades, obtidas em razão do ofício para fins de arrecadação e fiscalização de tributos, inclusive aduaneiros, tais como:",
+      "I - as relativas a rendas, rendimentos, patrimônio, débitos, créditos, dívidas e movimentação financeira ou patrimonial;",
+      "II - as que revelem negócios, contratos, relacionamentos comerciais, fornecedores, clientes e volumes ou valores de compra e venda;",
+      "III - as relativas a projetos, processos industriais, fórmulas, composição e fatores de produção."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Observa-se que o acesso a dados protegidos por sigilo fiscal faz parte das tarefas cotidianas dos servidores ocupantes de cargo junto à RFB. Esta é uma das situações para a qual a Lei nº 12.813/2013 foi publicada: a necessidade de resguardo de informações privilegiadas; em específico, de informações protegidas pelo sigilo fiscal."
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o art. 12 da Lei nº 12.813/2013, o servidor público que praticar atos que configuram conflito de interesses incorrem no cometimento de improbidade administrativa na forma do art. 11 da Lei nº 8.429, de 2 de junho de 1992, quando não caracterizada qualquer das condutas descritas nos arts. 9º e 10 daquela Lei."
+    },
+    {
+     "t": "p",
+     "x": "Considerando as informações preliminares acerca da Lei nº 12.813/2013, passa-se para a análise da consulta formulada por meio do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "Dado que a atividade almejada {{g:pelo demandante|pela demandante}} é o ofício de {{g:ator|atriz}}, não se verifica conflito de interesses com base no art. 5º, III, da Lei nº 12.813/2013, considerando a ausência de correlação de matérias entre a referida atividade e a função pública por {{g:ele|ela}} exercida. Ainda que {{g:ele|ela}} tivesse acesso a informações privilegiadas, estas não limitam, per se, o exercício de atividade privada, já que apenas se configura conflito de interesses quando há possibilidade de uso dessas informações em atividade de natureza incompatível com as atribuições do cargo, inclusive, em área ou matéria correlata."
+    },
+    {
+     "t": "p",
+     "x": "Com relação aos incisos I, II, IV a VII, do art. 5°, da Lei n° 12.813/2013, verifica-se que neles são descritas situações que só podem ser aferidas quando do exercício efetivo da atividade. Assim, cabe {{g:ao consulente|à consulente}} impedir sua ocorrência."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O peticionante|A peticionante}} refere, ainda, a possibilidade de “criar uma pessoa jurídica para trabalhar em algum projeto”. Entretanto, não especifica dados sobre a constituição dessa pessoa jurídica (se EIRELI, se sociedade limitada, etc.), não define se exercerá função de gerência ou administração, nem traz informações passíveis de serem analisadas."
+    },
+    {
+     "t": "p",
+     "x": "A Portaria Interministerial nº 333, de 19 de setembro de 2013, em seu art. 2º, inciso II, define que o pedido de autorização para o exercício de atividade privada é um “instrumento à disposição do servidor ou empregado público pelo qual ele pode solicitar autorização para exercer atividade privada”. Determina, no art. 3º, que se deve instruir o pedido de autorização para exercício de atividade privada da seguinte forma:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 3º A consulta sobre a existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada deverão ser formulados mediante petição eletrônica e conter no mínimo os seguintes elementos:",
+      "I - identificação do interessado;",
+      "II - referência a objeto determinado e diretamente vinculado ao interessado; e",
+      "III - descrição contextualizada dos elementos que suscitam a dúvida.",
+      "Parágrafo único. Não será apreciada a consulta ou o pedido de autorização formulado em tese ou com referência a fato genérico."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Por esse motivo, orienta-se {{g:o consulente|a consulente}} a efetuar novo pedido de autorização a respeito especificamente da possibilidade de criação de pessoa jurídica, a qualquer tempo, quando as informações alcançarem nível de concretude passível de análise, com a especificação da pessoa jurídica que pretende criar, das funções que pretende exercer e da finalidade da pessoa jurídica. Recomenda-se juntar, preferencialmente, uma minuta do contrato social da referida pessoa jurídica, com o objetivo de descrever contextualizadamente e dar concretude aos elementos do pedido de autorização."
+    },
+    {
+     "t": "p",
+     "x": "A respeito da dúvida suscitada {{g:pelo requerente|pela requerente}} no item 9 do pedido de autorização para exercício de atividade privada, cabe esclarecer que, de acordo com o explicitado no início deste Parecer, o pedido de autorização formulado por intermédio do SeCI é analisado com a finalidade de verificar se há, ou não, conflito de interesses de acordo com a Lei nº 12.813/2013. Entretanto, dada à correlação com a área disciplinar e considerando os princípios do formalismo moderado e da economia processual (previstos na Lei nº 9.784, de 29 de janeiro de 1999), o referido pedido também será analisado como uma consulta a esta Corregedoria."
+    },
+    {
+     "t": "p",
+     "x": "A Lei 8.112, de 11 de dezembro de 1990, define que:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 117. Ao servidor é proibido:",
+      "(...)",
+      "XVIII - exercer quaisquer atividades que sejam incompatíveis com o exercício do cargo ou função e com o horário de trabalho;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Dessa maneira e em atenção à dúvida suscitada no item 9, é permitido {{g:ao servidor|à servidora}} exercer atividade privada, no caso em tela, o ofício de {{g:ator|atriz}}, desde que em horário diverso da jornada estabelecida para cumprimento do horário de trabalho."
+    },
+    {
+     "t": "p",
+     "x": "Conclui-se, assim, que não se verifica conflito de interesses, com base no art. 5º, III da Lei nº 12.813/2013, entre o exercício da função pública e a atividade de {{g:ator|atriz}} {{g:pelo servidor|pela servidora}} {{nome}}; quanto aos demais incisos do referido artigo, evidencia-se a necessidade de {{g:o servidor|a servidora}} evitar a ocorrência do conflito de interesses. Quanto à criação de pessoa jurídica, orienta-se {{g:o servidor|a servidora}} a ingressar com novo pedido de autorização com descrição contextualizada dos elementos, de acordo com o art. 3º da Portaria Interministerial nº 333, de 19 de setembro de 2013. Ressalta-se a obrigatoriedade de {{g:o servidor|a servidora}} exercer a atividade privada em horário diverso da jornada estabelecida para cumprimento do horário de trabalho."
+    }
+   ]
+  },
+  {
+   "id": "producao_audiovisual_licenca",
+   "rotulo": "Produção audiovisual (cinema e TV), com intenção de licença sem vencimento – compatível, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) pretende obter licença para tratar de interesses particulares para estudar produção audiovisual e possivelmente trabalhar com produção de cinema e TV.",
+   "fonte": "INF 065/2015",
+   "assunto": "Consulta sobre o exercício de atividade privada de produção audiovisual.",
+   "ementaTitulo": "PRODUÇÃO AUDIOVISUAL. CINEMA E TV.",
+   "ementa": [
+    "Consulta sobre eventual incompatibilidade entre as atribuições do cargo de {{cargo}} e a atividade privada de produção de cinema e TV, com pretensão de licença sem vencimento. Atividades compatíveis com as atribuições do cargo, observadas as ressalvas."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Inicialmente, cabe destacar que a Lei nº 12.813, de 16 de maio de 2013, estabelece de forma inequívoca que a avaliação de eventual incompatibilidade entre o desenvolvimento de atividade privada e o exercício de cargo público deve pautar-se precipuamente pela natureza da atividade particular:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 5º Configura conflito de interesses no exercício de cargo ou emprego no âmbito do Poder Executivo federal:",
+      "(...)",
+      "III - exercer, direta ou indiretamente, atividade que em razão da sua natureza seja incompatível com as atribuições do cargo ou emprego, considerando-se como tal, inclusive, a atividade desenvolvida em áreas ou matérias correlatas;"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com efeito, não se vislumbra na atividade particular pretendida qualquer característica que, por sua natureza, possa propiciar ou facilitar o uso do cargo em circunstâncias que prejudiquem a moralidade ou o interesse públicos."
+    },
+    {
+     "t": "p",
+     "x": "{{g:O consulente|A consulente}} afirma, ainda, que pretende obter licença sem vencimento. Ressalte-se que, caso não lhe seja concedida, deverá observar a compatibilidade de horários, requisito imprescindível para a realização de qualquer atividade concomitante com o exercício de cargo público."
+    },
+    {
+     "t": "p",
+     "x": "O escopo avaliado nesta informação se restringe à pretensão de efetiva atuação na área indicada. Quanto ao manifestado objetivo de realizar estudos, não há que se falar em incompatibilidade, pois a lei não impõe limites à busca de conhecimentos.",
+     "opc": {
+      "id": "estudos",
+      "rotulo": "Servidor também manifesta objetivo de realizar estudos na área",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "A presente análise de compatibilidade se realiza sob a ótica do acima citado item III do art. 5º da Lei nº 12.813, de 2013. Contudo, caberá {{g:ao servidor|à servidora}} a estrita observância dos incisos I, II, IV, V, VI e VII do mesmo artigo, a fim de impedir a materialização das hipóteses ali previstas."
+    },
+    {
+     "t": "p",
+     "x": "Ante o exposto, entende a {{orgao_corregedoria}} que o exercício das atividades descritas {{g:pelo servidor|pela servidora}} é compatível com as atribuições do cargo de {{cargo}}, observadas as ressalvas expostas."
+    }
+   ]
+  },
+  {
+   "id": "ator_condicionantes_cgu",
+   "rotulo": "Ator/atriz de artes cênicas – adota condicionantes da Nota Técnica CGU nº 2427/2014",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor(a) consulta sobre atuar como ator/atriz (companhias teatrais ou contratos em nome próprio); modelo curto que apenas adota o precedente da CGU (Nota Técnica nº 2427/2014) e transcreve as medidas condicionantes – útil quando se quer registrar as condições para termo de compromisso.",
+   "fonte": "INF 035/2015",
+   "assunto": "Consulta sobre o exercício de atividade privada de ator de peça teatral.",
+   "ementaTitulo": "EXERCÍCIO DE ATIVIDADE ARTÍSTICA. ARTES CÊNICAS.",
+   "ementa": [
+    "Consulta sobre o exercício de atividade privada de {{g:ator|atriz}} de peça teatral concomitante com o cargo de {{cargo}}. Caso análogo já apreciado pela Controladoria-Geral da União. Não configura conflito de interesses, desde que observadas as medidas condicionantes."
+   ],
+   "campos": [],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Preliminarmente, é importante consignar que a Comissão de Ética Pública Seccional da Secretaria da Receita Federal do Brasil e a Controladoria-Geral da União já se pronunciaram em situação na qual um servidor ocupante do cargo de Analista-Tributário da Receita Federal do Brasil pediu autorização para atuar como ator de artes cênicas."
+    },
+    {
+     "t": "p",
+     "x": "Naquela oportunidade, a Controladoria-Geral da União, por meio da Nota Técnica nº 2427/2014/CGINT/DIACI/STPC/CGU-PR, assim se manifestou:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Em resposta ao pedido de autorização em comento formulado a esta Controladoria-Geral da União no âmbito das competências a ela atribuídas pela Portaria Interministerial MPOG/CGU nº 333/2013, esclarecermos que o exercício de atividades na área artística pelo Sr. Xxxxxxxxxxx não configura conflito de interesses, nos termos do art. 5º da Lei nº 12.813/2013.",
+      "Assim, ratificamos o entendimento exarado pela Comissão de Ética da RFB que concluiu por autorizar condicionalmente o exercício da atividade privada pretendida, desde que o servidor se comprometa a adotar as medidas condicionantes contidas no item 9, alíneas “a” a “e” desta Nota Técnica.",
+      "Ressalte-se também que esta manifestação e conseqüente proposição de autorização para o exercício de atividade privada requerida se restringe à análise do conflito de interesses sob o prisma da Lei 12.813, de 16 de maio de 2013, e não exime a eventual avaliação que se faça necessária por força de outras leis, regulamentos ou normas.",
+      "A verificação de quaisquer outros assuntos regidos pela legislação de pessoal e que possam ter reflexo sobre o exercício da atividade privada pretendida, seja esta legislação de caráter geral ou específico, como, por exemplo, (in)compatilidade de horários (sic), regime de dedicação exclusiva, necessidade de autorização específica, entre outros, deve ser realizada pelos órgãos ou autoridades a quem as normas que regem essas matérias conferirem competência para tanto."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Para um melhor entendimento do exposto acima, reproduz-se o trecho que trata das medidas condicionantes contidas no parágrafo nº 9 da referida Nota Técnica:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "a. O servidor, no eventual desempenho de atividades artistico-cênicas, poderá, por exemplo, receber remuneração de pessoas físicas e jurídicas, desde que se isente de atuar, junto a seus contratantes, como consultor, facilitador, informador, etc., no que respeita a sua qualificação profissional e ao seu acesso privilegiado à maquina tributária e pública; ademais, deverá:",
+      "b. Não fazer uso ou divulgar informação privilegiada a que tenha tido acesso em função do exercício de atividades na RFB;",
+      "c. Não carrear para sua empreitada particular vantagens em decorrência de sua especial condição funcional;",
+      "d. Não praticar atos que possam transmitir à opinião pública dúvida a respeito integridade, moralidade, clareza de posições e decoro do agente;",
+      "e. Declarar-se impedido ou em suspeição, se porventura vier a participar, no exercício do cargo público que ocupa, de demandas de pessoas físicas ou jurídicas com as quais possuir qualquer tipo de relação comercial ou artística, no âmbito das atividades privadas desempenhadas."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "No presente caso, a consulta {{g:do servidor|da servidora}} se amolda perfeitamente ao caso já tratado pela Controladoria-Geral da União, motivo pelo qual se adota os ditames da citada Nota Técnica."
+    }
+   ]
+  }
+ ]
+}

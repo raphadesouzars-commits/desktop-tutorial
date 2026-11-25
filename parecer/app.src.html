@@ -83,6 +83,14 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
 .aviso{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:7px 10px;font-size:12.5px;margin-top:8px}
 #seciPerguntas label{font-weight:500}
 .paper mark{background:#ffe866;padding:0 2px}
+nav.tabs{display:flex;gap:4px;padding:10px 18px 0;max-width:1500px;margin:0 auto;border-bottom:1px solid var(--line)}
+nav.tabs button{background:#fff;color:var(--acc);border-radius:8px 8px 0 0;border-bottom:none;padding:8px 16px}
+nav.tabs button.on{background:var(--acc);color:#fff}
+#paneAI{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:18px}
+@media(max-width:980px){#paneAI{grid-template-columns:1fr;padding:12px}}
+.ai-t{width:100%;border-collapse:collapse;font-size:13px}.ai-t td{border-bottom:1px solid var(--line);padding:4px 6px;vertical-align:top}.ai-t td:first-child{color:var(--mut);white-space:nowrap;width:1%}
+.ai-min{font-size:13.5px}.ai-min h4{margin:12px 0 6px}.ai-min .pp{margin:0 0 8px;text-align:justify}.ai-min .pp small{display:block;color:var(--mut);font-size:11.5px}.ai-min .pp.cit{margin-left:24px;font-style:italic}
+.ai-ok{color:var(--ok)}.ai-erro{background:var(--badbg);color:var(--bad);border-radius:6px;padding:7px 10px;font-size:13px;margin-top:8px}
 @media(max-width:600px){.paper .em{margin-left:30%}.paper .fq,.paper .fa{margin-left:10%}.paper .cit{margin-left:8%}}
 </style>
 </head>
@@ -92,7 +100,9 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
   <p>Modelos extraídos dos pareceres da Corregedoria · gera arquivo Word (.docx) editável · funciona sem internet, nada é enviado para fora do navegador</p>
 </header>
 
-<div class="wrap">
+<nav class="tabs"><button id="tabGer" class="on">Gerador de Parecer</button><button id="tabAI">Análise Inteligente (motor AICI)</button></nav>
+
+<div class="wrap" id="paneGer">
 <div id="form">
 
   <div class="card">
@@ -224,6 +234,40 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
   <div id="conf"></div>
   <div class="paper" id="previa"></div>
 </div>
+</div>
+
+<div id="paneAI" style="display:none">
+  <div>
+    <div class="card">
+      <h2><span class="n">1</span>Motor AICI</h2>
+      <p class="hint">O motor roda na sua máquina ou rede interna (Python). Este gerador continua funcionando sem ele; sem o motor, só esta aba fica indisponível.</p>
+      <label for="aiUrl">Endereço do motor</label><input type="text" id="aiUrl" autocomplete="off">
+      <label for="aiToken">Token (somente se o motor exigir)</label><input type="password" id="aiToken" autocomplete="off">
+      <div style="margin-top:8px"><button class="sec" id="aiTestar">Testar conexão</button> <span class="hint" id="aiSaude"></span></div>
+    </div>
+    <div class="card">
+      <h2><span class="n">2</span>Consulta (PDF)</h2>
+      <input type="file" id="aiArq" accept="application/pdf,.pdf">
+      <p class="hint">O PDF vai ao motor, que lê o texto (com OCR se for digitalizado), extrai os fatos e consulta a base de pareceres, precedentes e normativos da COGER. A IA, quando habilitada no motor, sempre recebe o caso junto com essa base.</p>
+      <div style="margin-top:8px"><button id="aiEnviar">Enviar Consulta (PDF)</button></div>
+      <div id="aiMsg" class="hint"></div>
+    </div>
+    <div class="card" id="aiEscolha" style="display:none">
+      <h2><span class="n">3</span>Decisão do parecerista</h2>
+      <label for="aiAtiv">Atividade (enquadramento)</label><select id="aiAtiv"></select>
+      <div class="hint" id="aiConf"></div>
+      <label for="aiRes">Conclusão do caso concreto</label><select id="aiRes"></select>
+      <p class="hint">A IA e o motor apenas sugerem; a escolha é sua. Ao mudar, a minuta ao lado é refeita.</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+        <button id="aiAplicar" title="Preenche o gerador (aba ao lado) com os dados, as respostas, a atividade e a conclusão">Aplicar no gerador</button>
+        <button class="sec" id="aiDocx">⬇ Minuta do motor (.docx)</button>
+        <button class="sec" id="aiTermo" style="display:none">⬇ Termo de Compromisso</button>
+        <button class="sec" id="aiRevisar">Revisar minuta</button>
+      </div>
+    </div>
+    <div class="card"><details id="aiIndBox"><summary>Indicadores gerenciais</summary><div id="aiInd" class="hint">Carregando…</div></details></div>
+  </div>
+  <div id="aiResultado"></div>
 </div>
 
 <script>
@@ -1139,6 +1183,153 @@ $("secoes").checked = cfg.secoes !== false;
 $("secoes").oninput = e => { cfg.secoes = e.target.checked; salvarCfg(); render(); };
 listarPrecedentes();
 montarCfg(); listarAtividades(); render();
+
+/* ---------- aba Análise Inteligente: conversa com o motor AICI (Python) ---------- */
+const AI = {cid: null, an: null, minuta: null, cats: null};
+try { $("aiUrl").value = localStorage.getItem("aiciUrl") || "http://127.0.0.1:8765"; } catch(e){ $("aiUrl").value = "http://127.0.0.1:8765"; }
+try { $("aiToken").value = sessionStorage.getItem("aiciToken") || ""; } catch(e){}
+$("aiUrl").oninput = () => { try { localStorage.setItem("aiciUrl", $("aiUrl").value.trim()); } catch(e){} };
+$("aiToken").oninput = () => { try { sessionStorage.setItem("aiciToken", $("aiToken").value); } catch(e){} };
+function abaAtiva(n){
+  $("paneGer").style.display = n === "ger" ? "" : "none"; $("paneAI").style.display = n === "ai" ? "" : "none";
+  $("tabGer").classList.toggle("on", n === "ger"); $("tabAI").classList.toggle("on", n === "ai");
+}
+$("tabGer").onclick = () => abaAtiva("ger"); $("tabAI").onclick = () => abaAtiva("ai");
+async function aiFetch(caminho, opc){
+  opc = opc || {}; const h = Object.assign({}, opc.headers || {}), tk = $("aiToken").value.trim();
+  if (tk) h["X-AICI-Token"] = tk;
+  let r;
+  try { r = await fetch($("aiUrl").value.trim().replace(/\/+$/, "") + caminho, Object.assign({}, opc, {headers: h})); }
+  catch(e){ throw new Error("Não foi possível falar com o motor. Ele está em execução (python main.py) e o endereço está correto?"); }
+  if (!r.ok){
+    let m = "HTTP " + r.status;
+    try { const j = await r.json(); if (j.detail) m = typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail); } catch(e){}
+    throw new Error(m);
+  }
+  return r;
+}
+const aiJson = (c, corpo) => aiFetch(c, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(corpo)}).then(r => r.json());
+const aiMsg = (t, erro) => { $("aiMsg").innerHTML = t ? (erro ? '<div class="ai-erro">' + escH(t) + "</div>" : escH(t)) : ""; };
+$("aiTestar").onclick = async () => {
+  try { const s = await (await aiFetch("/saude")).json();
+    $("aiSaude").innerHTML = `<span class="ai-ok">Conectado.</span> IA: ${escH(s.provider)} · índice (${escH(s.backend)}): ${escH(JSON.stringify(s.indice))} · OCR: ${s.ocr ? "sim" : "não"}`;
+  } catch(e){ $("aiSaude").innerHTML = '<span class="ai-erro">' + escH(e.message) + "</span>"; }
+};
+const RES_AI = RES_ROT;
+async function aiEnviar(){
+  const f = $("aiArq").files[0]; if (!f){ aiMsg("Escolha o PDF da consulta.", true); return; }
+  $("aiEnviar").disabled = true;
+  try {
+    aiMsg("Enviando o PDF…");
+    const fd = new FormData(); fd.append("arquivo", f);
+    const up = await (await aiFetch("/upload", {method: "POST", body: fd})).json();
+    if (up.status === "sem_texto"){ aiMsg("O PDF não tem texto legível. " + (up.avisos || []).join(" "), true); return; }
+    aiMsg("Analisando (fatos, classificação, base de conhecimento, minuta)…");
+    const an = await aiJson("/analisar", {consulta_id: up.consulta_id});
+    AI.cid = up.consulta_id; AI.an = an; AI.minuta = an.minuta;
+    if (!AI.cats){ try { AI.cats = await (await aiFetch("/categorias")).json(); } catch(e){ AI.cats = []; } }
+    aiMsg(`${up.paginas} página(s) lida(s)${up.usou_ocr ? " com OCR" : ""}.`);
+    aiMostrar();
+  } catch(e){ aiMsg(e.message, true); } finally { $("aiEnviar").disabled = false; }
+}
+$("aiEnviar").onclick = aiEnviar;
+function aiLista(titulo, itens){
+  if (!itens || !itens.length) return `<div class="card"><h2>${titulo}</h2><p class="hint">Nada recuperado da base para este caso.</p></div>`;
+  return `<div class="card"><h2>${titulo}</h2>` + itens.map(t => `<div class="prec"><div class="h">${escH(t.titulo)}${t.ano ? ' <span class="badge b-outro">' + escH(t.ano) + "</span>" : ""}</div>
+    <div class="hint">${escH(t.fonte)} · ${escH(t.motivo || "")}</div><div class="x">${escH(t.texto.slice(0, 420))}${t.texto.length > 420 ? "…" : ""}</div></div>`).join("") + "</div>";
+}
+function aiMostrar(){
+  const an = AI.an, f = an.fatos, s = f.servidor, cl = an.classificacao;
+  $("aiEscolha").style.display = "";
+  const cand = (cl.candidatas || []), ids = new Set(cand.map(c => c.id));
+  const outras = (AI.cats || []).filter(c => !ids.has(c.id));
+  $("aiAtiv").innerHTML = cand.map(c => `<option value="${escH(c.id)}">${escH(c.nome)} (${c.confianca})</option>`).join("")
+    + (outras.length ? '<optgroup label="Todas as atividades">' + outras.map(c => `<option value="${escH(c.id)}">${escH(c.nome)}</option>`).join("") + "</optgroup>" : "");
+  if (cl.escolhida) $("aiAtiv").value = cl.escolhida.id;
+  $("aiRes").innerHTML = Object.keys(RES_AI).map(k => `<option value="${k}">${escH(RES_AI[k])}</option>`).join("");
+  $("aiRes").value = an.minuta ? an.minuta.resultado_sugerido : "sem_conflito_ressalvas";
+  aiRotulos(); aiPintar();
+}
+function aiRotulos(){
+  const cl = AI.an.classificacao, e = cl.escolhida;
+  $("aiConf").innerHTML = e ? `Sugestão do motor: <b>${escH(e.nome)}</b> — confiança <b>${e.confianca}</b>${e.motivos.length ? " (" + escH(e.motivos.join("; ")) + ")" : ""}.` : "";
+  $("aiTermo").style.display = $("aiRes").value === "sem_conflito_ressalvas" ? "" : "none";
+}
+function aiPintar(){
+  const an = AI.an, f = an.fatos, s = f.servidor, m = AI.minuta;
+  const tab = [["Servidor", s.nome], ["Cargo", s.cargo], ["Matrícula", s.matricula], ["Protocolo SeCI", s.protocolo], ["Demanda", s.tipo],
+    ["Atividade", f.atividade], ["Entidade", f.entidade], ["Remuneração", f.remuneracao], ["Vínculo", f.vinculo],
+    ["Atribuições", (f.atribuicoes || []).join(" · ")], ["Origem dos fatos", f.origem]].filter(r => r[1]);
+  const av = (an.avisos || []).concat(an.classificacao.avisos || [], m ? m.avisos : []);
+  let h = "";
+  if (av.length) h += '<div class="card"><h2>Avisos</h2>' + av.map(a => '<div class="aviso">' + escH(a) + "</div>").join("") + "</div>";
+  h += '<div class="card"><h2>Fatos extraídos</h2><table class="ai-t">' + tab.map(r => `<tr><td>${escH(r[0])}</td><td>${escH(String(r[1]))}</td></tr>`).join("") + "</table></div>";
+  h += aiLista("Pareceres da COGER semelhantes", an.pareceres) + aiLista("Precedentes semelhantes", an.precedentes) + aiLista("Normativos relacionados", an.normativos);
+  if (m){
+    h += `<div class="card ai-min"><h2>Minuta (${escH(m.modo === "copilot" ? "redigida com IA" : "extrativa, sem IA")})</h2>` + m.secoes.map(sc => `<h4>${escH(sc.titulo)}</h4>` + sc.paragrafos.map(p =>
+      `<div class="pp ${p.tipo === "cit" ? "cit" : ""}">${escH(p.texto.replace(/\*\*/g, ""))}<small>origem: ${escH((p.fontes || []).join(" · ") || "—")}</small></div>`).join("")).join("") + '<div id="aiRev"></div></div>';
+  }
+  $("aiResultado").innerHTML = h;
+}
+async function aiRefazer(){
+  aiRotulos();
+  try { AI.minuta = await aiJson("/minuta", {consulta_id: AI.cid, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value}); aiPintar(); }
+  catch(e){ aiMsg(e.message, true); }
+}
+$("aiAtiv").onchange = aiRefazer; $("aiRes").onchange = aiRefazer;
+function aiAplicar(){
+  const an = AI.an, f = an.fatos, s = f.servidor, ativ = $("aiAtiv").value, res = $("aiRes").value;
+  if (s.nome) $("nome").value = s.nome;
+  if (s.matricula) $("matricula").value = s.matricula;
+  if (s.processo) $("processo").value = s.processo;
+  if (s.protocolo) $("protocoloSeci").value = s.protocolo;
+  if (s.unidade) $("unidade").value = s.unidade;
+  if (s.tipo){ $("tipo").value = s.tipo; $("tipo").onchange(); }
+  const c = norm(s.cargo || "");
+  if (/auditor/.test(c)) $("cargoSel").value = "AFRFB";
+  else if (/analista/.test(c) && /tribut/.test(c)) $("cargoSel").value = "ATRFB";
+  else if (s.cargo){ $("cargoSel").value = "outro"; $("cargoTxt").value = s.cargo; }
+  $("cargoSel").onchange();
+  $("genero").value = /auditora|servidora|tributaria/.test(c) ? "f" : "m";
+  for (let i = 1; i <= 9; i++) $("q" + i).value = (f.respostas && f.respostas[i]) || "";
+  selecionarAtividade(ativ);
+  const m = MODELOS.find(x => x.id === ativ);
+  if (m){
+    const vid = AI.minuta && AI.minuta.atividade_id === ativ ? AI.minuta.variante_id : "";
+    const v = m.variantes.find(v => v.id === vid) || m.variantes.find(v => v.resultado === res) || m.variantes[0];
+    selecionarVariante(v.id);
+    if (v.resultado !== res){ resPrincipal = res; ajustarPadroes(); montarOvr(); $("ovrSel").value = res; montarExtras(); montarCampos(); }
+  }
+  avisos(); render(); abaAtiva("ger");
+}
+$("aiAplicar").onclick = aiAplicar;
+async function aiBaixar(doc){
+  try {
+    const ano = (($("data").value || "").slice(0, 4)) || String(new Date().getFullYear());
+    const r = await aiFetch("/gerar-parecer", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
+      consulta_id: AI.cid, documento: doc, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value, numero: $("numero").value.trim(), ano})});
+    const cd = r.headers.get("Content-Disposition") || "", mm = cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)/i);
+    const a = document.createElement("a"); a.href = URL.createObjectURL(await r.blob()); a.download = mm ? decodeURIComponent(mm[1]) : doc + ".docx";
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  } catch(e){ aiMsg(e.message, true); }
+}
+$("aiDocx").onclick = () => aiBaixar("parecer"); $("aiTermo").onclick = () => aiBaixar("termo");
+$("aiRevisar").onclick = async () => {
+  try {
+    const r = await aiJson("/revisar?consulta_id=" + AI.cid, AI.minuta), el = $("aiRev");
+    el.innerHTML = '<h4>Revisão de consistência</h4>' + (r.pontos.length ? r.pontos.map(p => `<div class="aviso">[${escH(p.gravidade)}] ${escH(p.descricao)}</div>`).join("") : '<p class="ai-ok">Nenhum ponto de atenção encontrado.</p>');
+    el.scrollIntoView({behavior: "smooth", block: "nearest"});
+  } catch(e){ aiMsg(e.message, true); }
+};
+$("aiIndBox").ontoggle = async () => {
+  if (!$("aiIndBox").open) return;
+  try {
+    const i = await (await aiFetch("/indicadores")).json();
+    const tb = (t, l, k) => `<b>${t}</b><table class="ai-t">` + (l.length ? l.map(x => `<tr><td>${escH(String(x[k]))}</td><td>${x.n}</td></tr>`).join("") : '<tr><td colspan="2">sem dados</td></tr>') + "</table>";
+    $("aiInd").innerHTML = `Consultas: ${i.total_consultas} · Pareceres gerados: ${i.total_pareceres}` + tb("Por atividade", i.por_atividade, "atividade")
+      + tb("Por resultado", i.por_resultado, "resultado") + tb("Precedentes mais utilizados", i.precedentes_mais_utilizados, "precedente");
+  } catch(e){ $("aiInd").textContent = e.message; }
+};
 </script>
 </body>
 </html>

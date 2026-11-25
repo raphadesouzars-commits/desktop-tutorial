@@ -1,0 +1,232 @@
+{
+ "id": "curso_formacao_concurso",
+ "nome": "Curso de formação de concurso para outro cargo público",
+ "descricao": "Usar quando o servidor, aprovado em concurso para outro cargo público, consulta sobre a participação no respectivo curso de formação.",
+ "grupo": "Outras situações",
+ "palavrasChave": [
+  "curso de formação",
+  "curso de formação profissional",
+  "concurso público",
+  "outro cargo público",
+  "academia de polícia",
+  "polícia civil",
+  "polícia militar",
+  "papiloscopista",
+  "curso de formação de oficiais",
+  "bolsa-auxílio",
+  "segunda fase do concurso",
+  "acumulação de cargos",
+  "licença para tratar de interesses particulares"
+ ],
+ "variantes": [
+  {
+   "id": "curso_etapa_do_concurso_bolsa_auxilio",
+   "rotulo": "Curso de formação que é etapa do concurso (bolsa-auxílio, sem vínculo) – sem conflito, desde que em licença",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Servidor aprovado em concurso para outro cargo público consulta sobre participar do curso de formação, quando o edital mostra que o curso é fase do certame e a bolsa-auxílio não gera vínculo; conclusão condicionada à licença para tratar de interesses particulares.",
+   "fonte": "PAR 084/2019",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "PARTICIPAÇÃO EM CURSO DE FORMAÇÃO PARA OUTRO CARGO PÚBLICO.",
+   "ementa": [
+    "Consulta para participação em curso de formação para o cargo de {{cargo_curso}} concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "cargo_curso",
+     "rotulo": "Cargo a que se refere o curso de formação",
+     "exemplo": "Papiloscopista da Polícia Civil do Estado X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "trecho_edital",
+     "rotulo": "Trechos do edital do concurso (fases do certame, curso de formação, bolsa-auxílio)",
+     "exemplo": "1.3. O Concurso Público será composto de duas fases (...) 15.3. Enquanto durar o CFP, o candidato receberá bolsa-auxílio (...) A percepção da bolsa-auxílio não configura relação empregatícia ou vínculo estatutário, a qualquer título, do candidato com o Estado.",
+     "obrigatorio": true,
+     "multilinha": true
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Cabe esclarecer, inicialmente, que a análise sobre conflito de interesses não exclui a competência e a obrigação desta Corregedoria avaliar a legalidade da consulta sob outros aspectos previstos na legislação de pessoal aplicável ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Essa avaliação se insere na autonomia conferida a esta Corregedoria para decidir sobre assuntos regidos pela legislação de pessoal que possam ter reflexo sobre o exercício da atividade pretendida."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, a Constituição da República Federativa do Brasil de 1988 (CF) estabelece, em seu artigo 37, incisos XVI e XVII, a proibição de acumulação remunerada de cargos, empregos ou funções públicas, tanto na administração pública direta como na indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+      "(...)",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários, observado em qualquer caso o disposto no inciso XI:",
+      "a) a de dois cargos de professor;",
+      "b) a de um cargo de professor com outro técnico ou científico;",
+      "c) a de dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas;",
+      "XVII - a proibição de acumular estende-se a empregos e funções e abrange autarquias, fundações, empresas públicas, sociedades de economia mista, suas subsidiárias, e sociedades controladas, direta ou indiretamente, pelo poder público;”."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A Lei nº 8.112, de 11 de dezembro de 1990, no capítulo III do Título IV, reproduz a vedação constitucional e veda a acumulação remunerada de cargos públicos, empregos e funções públicas, senão vejamos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 118. Ressalvados os casos previstos na Constituição, é vedada a acumulação remunerada de cargos públicos.",
+      "§ 1º A proibição de acumular estende-se a cargos, empregos e funções em autarquias, fundações públicas, empresas públicas, sociedades de economia mista da União, do Distrito Federal, dos Estados, dos Territórios e dos Municípios.",
+      "§ 2º A acumulação de cargos, ainda que lícita, fica condicionada à comprovação da compatibilidade de horários.",
+      "§ 3º Considera-se acumulação proibida a percepção de vencimento de cargo ou emprego público efetivo com proventos da inatividade, salvo quando os cargos de que decorram essas remunerações forem acumuláveis na atividade.”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à atividade pretendida {{g:pelo servidor|pela servidora}} – participação no Curso de Formação Profissional de {{cargo_curso}}, o Edital que regeu o concurso prevê o seguinte:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "{{trecho_edital}}"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Analisando o teor da consulta formulada {{g:pelo servidor interessado|pela servidora interessada}}, bem como o Edital do concurso anexado aos autos, verifica-se que o curso de formação se revela como uma etapa do referido certame, tendo em vista que é composto de 2 (duas) fases."
+    },
+    {
+     "t": "p",
+     "x": "A matrícula no curso de formação pressupõe uma das etapas para investidura no cargo público, e, por conseguinte, não induz à condição de ocupante efetivo da função de {{cargo_curso}} com reflexos administrativos e financeiros. Outrossim, o recebimento de valor {{g:pelo servidor interessado|pela servidora interessada}}, a título de bolsa-auxílio, durante o período de participação no curso de formação, não caracteriza vínculo definitivo com o Estado, conforme previsto no respectivo Edital e reproduzido acima."
+    },
+    {
+     "t": "p",
+     "x": "Logo, verifica-se que estamos diante de um caso em que a atividade pretendida {{g:pelo consulente|pela consulente}} não caracterizaria infração à vedação de acumulação ilegal de cargos, empregos ou funções públicas (artigo 132, inciso XII, da Lei nº 8.112/90)."
+    },
+    {
+     "t": "p",
+     "x": "De todo o exposto acima se verifica que não há impedimentos expressos de outra ordem, não diretamente relacionados à Lei nº 12.813/2013, que inviabilizam, por si só, o exercício da atividade pretendida {{g:pelo solicitante|pela solicitante}}, e/ou prejudicam a análise deste caso no âmbito do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "Ademais, cabe ressaltar que a Controladoria-Geral da União (CGU), em resposta a consulta análoga ao presente caso, expressou entendimento, por meio da Nota Técnica nº 818/2015/CGINT/DIACI/STPC/CGU-PR, no sentido de que a participação de servidores da RFB em programa de qualificação, durante período de licença para tratar de interesses particulares, não é suficiente para configurar uma das situações de conflito de interesses descritas no artigo 5º da Lei nº 12.813/2013."
+    },
+    {
+     "t": "p",
+     "x": "Do exposto, depreende-se que a CGU entende que a participação em cursos de qualificação e/ou formação, por si só, não é incompatível com os cargos ocupados pelos servidores da RFB, e que a licença para tratar de interesse particular é relevante para garantir a compatibilidade de horários, pois se trata de um requisito básico imprescindível para a realização de qualquer atividade, privada ou não, concomitantemente com o cargo público."
+    },
+    {
+     "t": "p",
+     "x": "Dessa forma, esta {{orgao_corregedoria}}, com fundamento no entendimento adotado pela CGU, opina que no presente caso não está configurado conflito de interesses na participação {{g:do servidor|da servidora}} {{nome}} no Curso de Formação Profissional de {{cargo_curso}}, desde que haja compatibilidade de horários, o que somente será garantido por meio da concessão, anteriormente ao início do referido curso de formação, da licença para tratar de interesses particulares."
+    }
+   ]
+  },
+  {
+   "id": "curso_pressupoe_investidura_acumulacao",
+   "rotulo": "Curso de formação cuja matrícula pressupõe investidura no cargo – acumulação vedada; fora do SeCI",
+   "resultado": "outro",
+   "quandoUsar": "O edital mostra que o curso de formação não é etapa do concurso (certame já encerrado) e que a matrícula já importa investidura no outro cargo público (ex.: curso de formação de oficiais de polícia militar); tratado como acumulação ilegal de cargos, com devolução à Cogep.",
+   "fonte": "INF 131/2017",
+   "assunto": "Consulta quanto à participação em curso de formação para outro cargo público.",
+   "ementaTitulo": "PARTICIPAÇÃO EM CURSO DE FORMAÇÃO PARA OUTRO CARGO PÚBLICO. ACUMULAÇÃO DE CARGOS.",
+   "ementa": [
+    "Consulta quanto à participação no curso de formação de {{cargo_curso}}. Matrícula que pressupõe a investidura no cargo público. Vedação de acumulação de cargos públicos. Impedimento de outra ordem, não diretamente relacionado à Lei nº 12.813, de 2013."
+   ],
+   "campos": [
+    {
+     "id": "cargo_curso",
+     "rotulo": "Cargo/quadro a que se refere o curso de formação",
+     "exemplo": "Oficiais da Polícia Militar do Estado X",
+     "obrigatorio": true,
+     "multilinha": false
+    },
+    {
+     "id": "trecho_edital",
+     "rotulo": "Trechos do edital do concurso (fases do certame, curso de formação, bolsa-auxílio)",
+     "exemplo": "1.3. O Concurso Público será composto de duas fases (...) 15.3. Enquanto durar o CFP, o candidato receberá bolsa-auxílio (...) A percepção da bolsa-auxílio não configura relação empregatícia ou vínculo estatutário, a qualquer título, do candidato com o Estado.",
+     "obrigatorio": true,
+     "multilinha": true
+    },
+    {
+     "id": "condicao_cargo",
+     "rotulo": "Condição adquirida com a matrícula (completa \"já induz à condição de ...\")",
+     "exemplo": "policial militar",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Cabe esclarecer, inicialmente, que a análise sobre conflito de interesses não exclui, como se verificará no caso em comento, a competência e a obrigação de esta Corregedoria avaliar a legalidade da consulta sob outros aspectos previstos na legislação de pessoal aplicável ao caso."
+    },
+    {
+     "t": "p",
+     "x": "Essa avaliação se insere na autonomia conferida a esta Corregedoria para decidir sobre assuntos regidos pela legislação de pessoal que possam ter reflexo sobre o exercício da atividade pretendida."
+    },
+    {
+     "t": "p",
+     "x": "Nesse sentido, a atual Constituição Federal estabelece, em seu art. 37, incisos XVI e XVII, a proibição de acumulação remunerada de cargos, empregos ou funções públicas, tanto na Administração direta como na indireta:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "“Art. 37. A administração pública direta e indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios obedecerá aos princípios de legalidade, impessoalidade, moralidade, publicidade e eficiência e, também, ao seguinte:",
+      "(...)",
+      "XVI - é vedada a acumulação remunerada de cargos públicos, exceto, quando houver compatibilidade de horários, observado em qualquer caso o disposto no inciso XI:",
+      "a) a de dois cargos de professor;",
+      "b) a de um cargo de professor com outro técnico ou científico;",
+      "c) a de dois cargos ou empregos privativos de profissionais de saúde, com profissões regulamentadas;",
+      "XVII - a proibição de acumular estende-se a empregos e funções e abrange autarquias, fundações, empresas públicas, sociedades de economia mista, suas subsidiárias, e sociedades controladas, direta ou indiretamente, pelo poder público;”"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "A Lei 8.112, de 11 de dezembro de 1990, em seu capítulo III, reproduz a vedação constitucional e veda a acumulação remunerada de cargos públicos, empregos e funções públicas, senão vejamos:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 118. Ressalvados os casos previstos na Constituição, é vedada a acumulação remunerada de cargos públicos.",
+      "§ 1º A proibição de acumular estende-se a cargos, empregos e funções em autarquias, fundações públicas, empresas públicas, sociedades de economia mista da União, do Distrito Federal, dos Estados, dos Territórios e dos Municípios.",
+      "§ 2º A acumulação de cargos, ainda que lícita, fica condicionada à comprovação da compatibilidade de horários.",
+      "§ 3º Considera-se acumulação proibida a percepção de vencimento de cargo ou emprego público efetivo com proventos da inatividade, salvo quando os cargos de que decorram essas remunerações forem acumuláveis na atividade. (Incluído pela Lei nº 9.527, de 10.12.97)."
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Com relação à atividade pretendida {{g:pelo servidor|pela servidora}} – a participação no curso de formação de {{cargo_curso}}, o Edital que regeu o concurso prevê o seguinte:"
+    },
+    {
+     "t": "cit",
+     "x": [
+      "{{trecho_edital}}"
+     ]
+    },
+    {
+     "t": "p",
+     "x": "Portanto, o curso de formação não se revela como etapa do concurso, tendo em vista que o certame em questão já está encerrado."
+    },
+    {
+     "t": "p",
+     "x": "A matrícula no curso de formação pressupõe a investidura no cargo público, e por conseguinte, já induz à condição de {{condicao_cargo}} com reflexos administrativos e financeiros."
+    },
+    {
+     "t": "p",
+     "x": "Logo, verifica-se que estamos diante de um caso em que a atividade pretendida {{g:pelo consulente|pela consulente}} caracterizaria infração à vedação de acumulação ilegal de cargos públicos (artigo 132, inciso XII da Lei nº 8.112, de 11/12/1990)."
+    },
+    {
+     "t": "p",
+     "x": "De todo o exposto acima se verifica que há impedimentos expressos de outra ordem, não diretamente relacionados à Lei nº 12.813, de 2013, que inviabilizam, por si só, o exercício da atividade pretendida {{g:pelo solicitante|pela solicitante}}, e prejudicam a análise deste caso no âmbito do SeCI."
+    },
+    {
+     "t": "p",
+     "x": "Dito isso, propõe-se o encaminhamento dos autos à Coordenação-Geral de Gestão de Pessoas (Cogep), para fins de cientificação {{g:do servidor consulente|da servidora consulente}}, observando-se que se {{g:ele|ela}} optar por alguma forma de afastamento e a área de gestão de pessoas entender ser possível e que isso obsta a supracitada acumulação, os autos devem retornar a esta Corregedoria, para nova análise do caso."
+    }
+   ]
+  }
+ ]
+}

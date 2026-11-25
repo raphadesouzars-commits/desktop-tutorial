@@ -1,0 +1,204 @@
+{
+ "id": "conteudo_digital",
+ "nome": "Produção de conteúdo digital (YouTube, redes sociais, cursos online, afiliado)",
+ "descricao": "Use quando o servidor pretende criar canal ou perfil em mídias sociais, vender cursos/mentorias próprios em plataformas digitais ou atuar como afiliado promovendo produtos de terceiros.",
+ "palavrasChave": [
+  "youtube",
+  "canal",
+  "youtuber",
+  "vídeos",
+  "redes sociais",
+  "mídias sociais",
+  "instagram",
+  "tiktok",
+  "podcast",
+  "mídia digital",
+  "conteúdo digital",
+  "produtos digitais",
+  "infoproduto",
+  "monetização",
+  "monetizado",
+  "adsense",
+  "hotmart",
+  "afiliado",
+  "afiliar",
+  "mentoria",
+  "mentorias",
+  "curso online",
+  "influenciador",
+  "educação financeira"
+ ],
+ "variantes": [
+  {
+   "id": "conteudo_cursos_afiliado",
+   "rotulo": "Conteúdo em mídia digital, cursos/mentorias e afiliado – sem conflito, com ressalvas; comércio vedado (art. 117, X)",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "Canal monetizado, cursos e mentorias próprios e/ou afiliação a produtos de terceiros; desmarque os blocos que não se aplicarem.",
+   "fonte": "PAR 522/2023",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE PRODUÇÃO DE CONTEÚDO EM MÍDIA DIGITAL. YOUTUBER. CURSOS E MENTORIAS. PROMOTOR DE VENDAS EM PLATAFORMA DIGITAL. RECEBIMENTO DE VALORES PELAS PUBLICIDADES VEICULADAS.",
+   "ementa": [
+    "Pedido de autorização para o exercício das atividades de produção de conteúdo em mídia digital, com eventual recebimento de valores; de instrutor de curso e mentorias; e de afiliado em plataforma digital, promovendo produtos e recebendo comissões por vendas, concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas. Entretanto a atividade de afiliado em plataforma digital configura o exercício de comércio, que é vedado ao servidor nos termos do art. 117, X, da Lei nº 8.112/90."
+   ],
+   "campos": [
+    {
+     "id": "tema",
+     "rotulo": "Tema do conteúdo (completa “relacionados à …” / “na área de …”)",
+     "exemplo": "educação financeira e investimentos",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Em relação à atividade de youtuber, mediante a produção de vídeos educacionais relacionados à {{tema}}, o entendimento é o de que a atividade é compatível com o cargo ocupado, desde que exercida nos termos descritos {{g:pelo servidor|pela servidora}} e sem abordar informações sigilosas adquiridas no exercício do cargo e que não sejam de domínio público. A questão da monetização da atividade não é um fator determinante para a caracterização do conflito de interesses, de modo que entendemos que o canal {{g:do interessado|da interessada}} pode ser monetizado como qualquer outro."
+    },
+    {
+     "t": "p",
+     "x": "No que concerne aos cursos e mentorias, depreende-se do relatado {{g:pelo servidor|pela servidora}} que se trata de pedido de autorização para a prática de duas atividades distintas: i) treinamentos; e ii) mentorias na área de {{tema}} a serem ofertados por meio de plataformas digitais.",
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Sobre a atuação como professor, ressalta-se que o exercício do magistério por agentes públicos do Poder Executivo Federal foi tratado na Controladoria Geral da União, na condição de órgão central do Sistema de Correição do Poder Executivo Federal (SisCor-PEF), em sua Orientação Normativa (ON) CGU nº 2, de 9 de setembro de 2014.",
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "De acordo com o artigo 2º dessa Orientação, a posição apriorística é de que o magistério é permitido para os agentes públicos. Tal permissão, entretanto, não dispensa {{g:o consulente|a consulente}} da estrita observância das restrições impostas pela própria norma. Nesse sentido, importante destacar alguns trechos da ON CGU nº 2, de 2014:",
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Art. 2º É permitido o exercício de atividades de magistério por agente público, respeitadas, além do disposto na Lei n.º 12.813, de 2013:",
+      "I - as normas atinentes à compatibilidade de horários;",
+      "II - as normas atinentes à acumulação ilegal de cargos e empregos públicos; e,",
+      "III - a legislação específica aplicável ao regime jurídico e à carreira do agente.",
+      "§1º Por magistério, para fins desta Orientação Normativa, compreendem-se as seguintes atividades, ainda que exercidas de forma esporádica ou não remunerada:",
+      "I - docência em instituições de ensino, de pesquisa ou de ciência e tecnologia, públicas ou privadas;",
+      "II - capacitação ou treinamento, mediante cursos, palestras ou conferências; e",
+      "III - outras correlatas ou de suporte às dos incisos I e II deste parágrafo, tais como funções de coordenador, monitor, preceptor, avaliador, integrante de banca examinadora de discente, presidente de mesa, moderador e debatedor, observada a proibição do art. 117, X da Lei nº 8.112, de 11 de dezembro de 1990.",
+      "§2º Não se inclui entre as atividades de magistério a prestação de consultoria.",
+      "(…)",
+      "§4º O agente público fica impedido de atuar em processo de interesse da entidade em que exerça atividade de magistério.",
+      "§ 5º O impedimento a que se refere o § 4º deste artigo se estende às ações de controle, correição, avaliação, orientação, fiscalização e regulação das atividades da instituição de ensino ou que afetem os interesses desta.",
+      "(...)",
+      "Art. 5º Fica vedada a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos, nos termos do inciso II do art. 3° da Lei n.º 12.813, de 2013.",
+      "Art. 6º As atividades referidas nesta Orientação Normativa dispensam a consulta acerca da existência de conflito de interesses e o pedido de autorização para o exercício de atividade privada, previstos na Lei nº 12.813, de 2013.",
+      "Parágrafo único. O exercício de atividades de magistério para público específico que possa ter interesse em decisão do agente público, da instituição ou do colegiado do qual o mesmo participe deve ser precedido de consulta acerca da existência de conflito de interesses, nos termos da Portaria Interministerial MP/CGU nº 333, de 19 de setembro de 2013."
+     ],
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "É importante deixar claro que as aulas ministradas {{g:pelo servidor|pela servidora}} deverão abordar apenas aspectos gerais e teóricos do tema, não podendo adentrar na análise de situações específicas de empresas, mesmo que a título exemplificativo. Esta ressalva é importante em razão de os servidores da RFB possuírem acesso a informações privilegiadas, tais como o conhecimento da situação patrimonial e financeira das empresas e de eventuais procedimentos fiscais a que estas podem estar submetidas em determinado momento.",
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "No que tange à realização de mentoria, as inscrições para essa atividade devem ser abertas de modo a permitir que qualquer interessado se inscreva e a empreitada não se caracterize como “atividade de consultoria especializada para pessoas específicas”, o que é vedado pela ON CGU nº 2, de 2014, e sua prática configura situação de conflito de interesses.",
+     "opc": {
+      "id": "cursos",
+      "rotulo": "Incluir análise de cursos e mentorias (ON CGU nº 2/2014)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "No tocante à atividade de afiliado, analisando o pedido sob o prisma do disposto no inciso III, do art. 5º, da Lei nº 12.813, de 2013, não se vislumbraria incompatibilidade material entre a atividade pretendida {{g:pelo consulente|pela consulente}} e o exercício do cargo por {{g:ele ocupado|ela ocupado}}. No entanto, há vedação ao exercício de comércio prevista no regime jurídico dos servidores públicos civis da União.",
+     "opc": {
+      "id": "afiliado",
+      "rotulo": "Incluir análise da atividade de afiliado/promotor de vendas (vedação de comércio, art. 117, X)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "É proibido ao servidor “exercer o comércio”, segundo previsto no art. 117, X da Lei nº 8.112/1990. Nesse sentido, a CGU editou o Enunciado CGU/CCC n° 8, de 2019, que assim estabelece:",
+     "opc": {
+      "id": "afiliado",
+      "rotulo": "Incluir análise da atividade de afiliado/promotor de vendas (vedação de comércio, art. 117, X)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "cit",
+     "x": [
+      "Enunciado CGU/CCC n° 8, de 2019: “Vedação de Exercício do Comércio. A proibição ao exercício do comércio prevista no art. 117, X, da Lei nº 8.112, de 11 de dezembro de 1990, veda a atuação do servidor público federal como empresário individual ou como administrador de Eireli Empresária”."
+     ],
+     "opc": {
+      "id": "afiliado",
+      "rotulo": "Incluir análise da atividade de afiliado/promotor de vendas (vedação de comércio, art. 117, X)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "O servidor público, portanto, não pode ser empresário individual. É permitido, entretanto, constituir uma sociedade limitada unipessoal (art. 1.052, § 1º do Código Civil de 2002). Conforme o art. 1.060 do Código Civil de 2002, a administração da sociedade unipessoal é realizada por uma ou mais pessoas designadas no contrato social ou em ato separado. Dessa forma, desde que seja designado terceiro como administrador, conforme regramento estabelecido na legislação, não há óbice para a constituição da sociedade limitada unipessoal.",
+     "opc": {
+      "id": "afiliado",
+      "rotulo": "Incluir análise da atividade de afiliado/promotor de vendas (vedação de comércio, art. 117, X)",
+      "padrao": true
+     }
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades descritas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesse com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  },
+  {
+   "id": "somente_conteudo",
+   "rotulo": "Somente produção de conteúdo em mídia digital (canal monetizado) – sem conflito, com ressalvas",
+   "resultado": "sem_conflito_ressalvas",
+   "quandoUsar": "O servidor pretende apenas produzir e divulgar conteúdo em canal ou perfil, com eventual monetização, sem vender cursos nem promover produtos.",
+   "fonte": "PAR 522/2023",
+   "assunto": "Consulta SeCI.",
+   "ementaTitulo": "EXERCÍCIO DA ATIVIDADE DE PRODUÇÃO DE CONTEÚDO EM MÍDIA DIGITAL. RECEBIMENTO DE VALORES PELAS PUBLICIDADES VEICULADAS.",
+   "ementa": [
+    "Pedido de autorização para o exercício da atividade de produção de conteúdo em mídia digital, com eventual recebimento de valores, concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."
+   ],
+   "campos": [
+    {
+     "id": "tema",
+     "rotulo": "Tema do conteúdo (completa “relacionados à …” / “na área de …”)",
+     "exemplo": "educação financeira e investimentos",
+     "obrigatorio": true,
+     "multilinha": false
+    }
+   ],
+   "corpo": [
+    {
+     "t": "p",
+     "x": "Em relação à atividade de youtuber, mediante a produção de vídeos educacionais relacionados à {{tema}}, o entendimento é o de que a atividade é compatível com o cargo ocupado, desde que exercida nos termos descritos {{g:pelo servidor|pela servidora}} e sem abordar informações sigilosas adquiridas no exercício do cargo e que não sejam de domínio público. A questão da monetização da atividade não é um fator determinante para a caracterização do conflito de interesses, de modo que entendemos que o canal {{g:do interessado|da interessada}} pode ser monetizado como qualquer outro."
+    },
+    {
+     "t": "p",
+     "x": "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício das atividades descritas {{g:pelo servidor|pela servidora}} {{nome}} não configura conflito de interesse com base na Lei nº 12.813/2013, desde que observadas as ressalvas acima expostas."
+    }
+   ]
+  }
+ ]
+}
