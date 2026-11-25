@@ -1,6 +1,6 @@
 # Glossário
 
-**Versão 0.2 - novembro/2026**
+**Versão 0.3 - novembro/2026**
 
 ## 1. Negócio
 
@@ -36,7 +36,7 @@
 |---|---|
 | Política de IA | Portaria RFB nº 647/2026: diretrizes, limites e salvaguardas para o uso de IA na RFB |
 | Cotec | Coordenação-Geral de Tecnologia da Informação; faz a governança tecnológica de IA |
-| CTSI | Comitê que delibera sobre casos de uso de IA |
+| CTSI | Comitê de Tecnologia e Segurança da Informação; delibera sobre casos de uso de IA (autorizou o Copilot Chat na 3ª Reunião Ordinária de 2026, em 18/06) |
 | Curador | Responsável por monitorar continuamente as respostas de uma solução de IA generativa (art. 12) |
 | IA homologada | IA desenvolvida, contratada ou homologada pela RFB, usada em ambiente seguro e sob sua governança (art. 15) |
 | Soberania | Maior grau de controle institucional sobre os modelos, com preferência por ambientes sob governança da RFB (art. 14) |
@@ -49,7 +49,13 @@
 |---|---|
 | IA | Inteligência Artificial |
 | IA generativa | Modelo que produz texto a partir de instruções (prompts) |
-| Copilot | Ferramenta de IA da Microsoft usada pela RFB; o acesso programático (API) depende do que a TI disponibilizar |
+| Copilot Chat | Assistente de IA generativa conversacional integrado ao Microsoft 365, acessível pela conta corporativa da RFB, disponível aos usuários da licença E5 e homologado pela Cotec; uso aprovado pelo CTSI em 18/06/2026, inclusive com dados protegidos por sigilo legal, condicionado aos controles da Análise de Riscos |
+| Copilot (genérico) | Nome comercial de ferramentas de IA da Microsoft; neste projeto, "Copilot" significa o Copilot Chat da RFB |
+| Modo assistido | Forma de usar o Copilot Chat sem API: o AICI gera o prompt e o contexto, o parecerista os leva ao chat e cola a resposta de volta, que o AICI valida contra o acervo |
+| Prompt curto / arquivo de contexto | Alternativa ao prompt completo: o prompt traz só as instruções e o contexto vai em um arquivo (`contexto_AICI.md`) anexado ao chat |
+| Análise de Riscos específica | Estudo da área de tecnologia que identifica os controles e tratamentos de segurança exigidos para usar o Copilot Chat; condição da autorização do CTSI |
+| NT Cotec | Nota Técnica da Coordenação-Geral de Tecnologia da Informação; uma delas homologa o Copilot Chat |
+| Licença E5 | Licença Microsoft 365 em que o Copilot Chat está disponível aos usuários da RFB |
 | Copilot Studio | Plataforma Microsoft para construir agentes, que podem ser publicados por HTTPS |
 | Azure OpenAI | Serviço corporativo de modelos de linguagem na nuvem Microsoft, acessado por endpoint, deployment e chave |
 | Provedor de IA (provider) | Classe do AICI que fala com um serviço de IA específico; o restante do sistema não sabe qual é |

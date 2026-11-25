@@ -1,0 +1,1277 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "AICI-Motor",
+  "description": "Motor de apoio à análise de conflito de interesses: PDF -> fatos -> conhecimento -> minuta.",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/saude": {
+   "get": {
+    "summary": "Saude",
+    "operationId": "saude_saude_get",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/upload": {
+   "post": {
+    "summary": "Upload",
+    "operationId": "upload_upload_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "$ref": "#/components/schemas/Body_upload_upload_post"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/analisar": {
+   "post": {
+    "summary": "Analisar",
+    "operationId": "analisar_analisar_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoAnalise"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Analise"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/gerar-parecer": {
+   "post": {
+    "summary": "Gerar",
+    "operationId": "gerar_gerar_parecer_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoParecer"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/minuta": {
+   "post": {
+    "summary": "Minuta",
+    "operationId": "minuta_minuta_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoParecer"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Minuta"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ia/pacote": {
+   "post": {
+    "summary": "Ia Pacote",
+    "description": "Modo assistido: prompt + contexto para o parecerista colar no Copilot Chat (conta corporativa).",
+    "operationId": "ia_pacote_ia_pacote_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoPacote"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Pacote"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/ia/resposta": {
+   "post": {
+    "summary": "Ia Resposta",
+    "description": "Modo assistido: valida a resposta colada do Copilot Chat e refaz a minuta.",
+    "operationId": "ia_resposta_ia_resposta_post",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PedidoResposta"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Minuta"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/revisar": {
+   "post": {
+    "summary": "Revisar",
+    "operationId": "revisar_revisar_post",
+    "parameters": [
+     {
+      "name": "consulta_id",
+      "in": "query",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "title": "Consulta Id"
+      }
+     },
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/Minuta"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/indicadores": {
+   "get": {
+    "summary": "Indicadores",
+    "operationId": "indicadores_indicadores_get",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/indexar": {
+   "post": {
+    "summary": "Indexar",
+    "operationId": "indexar_indexar_post",
+    "parameters": [
+     {
+      "name": "completo",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Completo"
+      }
+     },
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/categorias": {
+   "get": {
+    "summary": "Categorias",
+    "operationId": "categorias_categorias_get",
+    "parameters": [
+     {
+      "name": "x-aici-token",
+      "in": "header",
+      "required": false,
+      "schema": {
+       "type": "string",
+       "default": "",
+       "title": "X-Aici-Token"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {}
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "Analise": {
+    "properties": {
+     "consulta_id": {
+      "type": "integer",
+      "title": "Consulta Id"
+     },
+     "fatos": {
+      "$ref": "#/components/schemas/Fatos"
+     },
+     "classificacao": {
+      "$ref": "#/components/schemas/Classificacao"
+     },
+     "precedentes": {
+      "items": {
+       "$ref": "#/components/schemas/Trecho"
+      },
+      "type": "array",
+      "title": "Precedentes"
+     },
+     "pareceres": {
+      "items": {
+       "$ref": "#/components/schemas/Trecho"
+      },
+      "type": "array",
+      "title": "Pareceres"
+     },
+     "normativos": {
+      "items": {
+       "$ref": "#/components/schemas/Trecho"
+      },
+      "type": "array",
+      "title": "Normativos"
+     },
+     "modelos": {
+      "items": {
+       "$ref": "#/components/schemas/Trecho"
+      },
+      "type": "array",
+      "title": "Modelos"
+     },
+     "minuta": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Minuta"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "avisos": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Avisos"
+     }
+    },
+    "type": "object",
+    "required": [
+     "consulta_id",
+     "fatos",
+     "classificacao"
+    ],
+    "title": "Analise"
+   },
+   "Body_upload_upload_post": {
+    "properties": {
+     "arquivo": {
+      "type": "string",
+      "contentMediaType": "application/octet-stream",
+      "title": "Arquivo"
+     },
+     "usuario": {
+      "type": "string",
+      "title": "Usuario",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "required": [
+     "arquivo"
+    ],
+    "title": "Body_upload_upload_post"
+   },
+   "Candidata": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "nome": {
+      "type": "string",
+      "title": "Nome"
+     },
+     "score": {
+      "type": "number",
+      "title": "Score"
+     },
+     "confianca": {
+      "type": "string",
+      "enum": [
+       "alta",
+       "media",
+       "baixa"
+      ],
+      "title": "Confianca"
+     },
+     "motivos": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Motivos"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "nome",
+     "score",
+     "confianca"
+    ],
+    "title": "Candidata"
+   },
+   "Classificacao": {
+    "properties": {
+     "escolhida": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Candidata"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "candidatas": {
+      "items": {
+       "$ref": "#/components/schemas/Candidata"
+      },
+      "type": "array",
+      "title": "Candidatas"
+     },
+     "metodo": {
+      "type": "string",
+      "title": "Metodo",
+      "default": "lexical"
+     },
+     "avisos": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Avisos"
+     }
+    },
+    "type": "object",
+    "title": "Classificacao"
+   },
+   "Fatos": {
+    "properties": {
+     "atividade": {
+      "type": "string",
+      "title": "Atividade",
+      "default": ""
+     },
+     "entidade": {
+      "type": "string",
+      "title": "Entidade",
+      "default": ""
+     },
+     "remuneracao": {
+      "type": "string",
+      "title": "Remuneracao",
+      "default": ""
+     },
+     "vinculo": {
+      "type": "string",
+      "title": "Vinculo",
+      "default": ""
+     },
+     "descricao": {
+      "type": "string",
+      "title": "Descricao",
+      "default": ""
+     },
+     "atribuicoes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Atribuicoes"
+     },
+     "servidor": {
+      "$ref": "#/components/schemas/Servidor"
+     },
+     "respostas": {
+      "additionalProperties": {
+       "type": "string"
+      },
+      "type": "object",
+      "title": "Respostas"
+     },
+     "origem": {
+      "type": "string",
+      "title": "Origem",
+      "default": "heuristica"
+     }
+    },
+    "type": "object",
+    "title": "Fatos",
+    "description": "Saída do Módulo 3. Os campos principais seguem a especificação do projeto."
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "Minuta": {
+    "properties": {
+     "secoes": {
+      "items": {
+       "$ref": "#/components/schemas/Secao"
+      },
+      "type": "array",
+      "title": "Secoes"
+     },
+     "resultado_sugerido": {
+      "type": "string",
+      "enum": [
+       "sem_conflito",
+       "sem_conflito_ressalvas",
+       "conflito",
+       "outro"
+      ],
+      "title": "Resultado Sugerido",
+      "default": "sem_conflito_ressalvas"
+     },
+     "ressalvas": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Ressalvas"
+     },
+     "modo": {
+      "type": "string",
+      "title": "Modo",
+      "default": "offline"
+     },
+     "atividade_id": {
+      "type": "string",
+      "title": "Atividade Id",
+      "default": ""
+     },
+     "variante_id": {
+      "type": "string",
+      "title": "Variante Id",
+      "default": ""
+     },
+     "avisos": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Avisos"
+     }
+    },
+    "type": "object",
+    "title": "Minuta",
+    "description": "Estrutura institucional fixa: I - RELATÓRIO, II - FUNDAMENTAÇÃO, III - CONCLUSÃO."
+   },
+   "Pacote": {
+    "properties": {
+     "prompt": {
+      "type": "string",
+      "title": "Prompt"
+     },
+     "prompt_curto": {
+      "type": "string",
+      "title": "Prompt Curto"
+     },
+     "contexto_md": {
+      "type": "string",
+      "title": "Contexto Md"
+     },
+     "limite_caracteres": {
+      "type": "integer",
+      "title": "Limite Caracteres"
+     },
+     "caracteres": {
+      "type": "integer",
+      "title": "Caracteres"
+     },
+     "truncado": {
+      "type": "boolean",
+      "title": "Truncado",
+      "default": false
+     },
+     "ids": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Ids"
+     },
+     "url_chat": {
+      "type": "string",
+      "title": "Url Chat",
+      "default": ""
+     },
+     "avisos": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Avisos"
+     }
+    },
+    "type": "object",
+    "required": [
+     "prompt",
+     "prompt_curto",
+     "contexto_md",
+     "limite_caracteres",
+     "caracteres"
+    ],
+    "title": "Pacote",
+    "description": "Material para o parecerista levar ao Copilot Chat (modo assistido)."
+   },
+   "Paragrafo": {
+    "properties": {
+     "texto": {
+      "type": "string",
+      "title": "Texto"
+     },
+     "tipo": {
+      "type": "string",
+      "enum": [
+       "p",
+       "cit",
+       "it"
+      ],
+      "title": "Tipo",
+      "default": "p"
+     },
+     "fontes": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Fontes"
+     }
+    },
+    "type": "object",
+    "required": [
+     "texto"
+    ],
+    "title": "Paragrafo"
+   },
+   "PedidoAnalise": {
+    "properties": {
+     "consulta_id": {
+      "type": "integer",
+      "title": "Consulta Id"
+     },
+     "gerar_minuta": {
+      "type": "boolean",
+      "title": "Gerar Minuta",
+      "default": true
+     }
+    },
+    "type": "object",
+    "required": [
+     "consulta_id"
+    ],
+    "title": "PedidoAnalise"
+   },
+   "PedidoPacote": {
+    "properties": {
+     "consulta_id": {
+      "type": "integer",
+      "title": "Consulta Id"
+     },
+     "resultado": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "sem_conflito",
+         "sem_conflito_ressalvas",
+         "conflito",
+         "outro"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resultado"
+     },
+     "atividade_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Atividade Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "consulta_id"
+    ],
+    "title": "PedidoPacote"
+   },
+   "PedidoParecer": {
+    "properties": {
+     "consulta_id": {
+      "type": "integer",
+      "title": "Consulta Id"
+     },
+     "documento": {
+      "type": "string",
+      "enum": [
+       "parecer",
+       "termo",
+       "despacho"
+      ],
+      "title": "Documento",
+      "default": "parecer"
+     },
+     "resultado": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "sem_conflito",
+         "sem_conflito_ressalvas",
+         "conflito",
+         "outro"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resultado"
+     },
+     "atividade_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Atividade Id"
+     },
+     "minuta": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/Minuta"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "numero": {
+      "type": "string",
+      "title": "Numero",
+      "default": ""
+     },
+     "ano": {
+      "type": "string",
+      "title": "Ano",
+      "default": ""
+     },
+     "destino": {
+      "type": "string",
+      "title": "Destino",
+      "default": ""
+     },
+     "validado": {
+      "type": "boolean",
+      "title": "Validado",
+      "default": false
+     }
+    },
+    "type": "object",
+    "required": [
+     "consulta_id"
+    ],
+    "title": "PedidoParecer"
+   },
+   "PedidoResposta": {
+    "properties": {
+     "consulta_id": {
+      "type": "integer",
+      "title": "Consulta Id"
+     },
+     "texto": {
+      "type": "string",
+      "title": "Texto"
+     },
+     "modo": {
+      "type": "string",
+      "enum": [
+       "texto",
+       "arquivo"
+      ],
+      "title": "Modo",
+      "default": "texto"
+     },
+     "resultado": {
+      "anyOf": [
+       {
+        "type": "string",
+        "enum": [
+         "sem_conflito",
+         "sem_conflito_ressalvas",
+         "conflito",
+         "outro"
+        ]
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Resultado"
+     },
+     "atividade_id": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Atividade Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "consulta_id",
+     "texto"
+    ],
+    "title": "PedidoResposta"
+   },
+   "Secao": {
+    "properties": {
+     "titulo": {
+      "type": "string",
+      "title": "Titulo"
+     },
+     "paragrafos": {
+      "items": {
+       "$ref": "#/components/schemas/Paragrafo"
+      },
+      "type": "array",
+      "title": "Paragrafos"
+     }
+    },
+    "type": "object",
+    "required": [
+     "titulo"
+    ],
+    "title": "Secao"
+   },
+   "Servidor": {
+    "properties": {
+     "nome": {
+      "type": "string",
+      "title": "Nome",
+      "default": ""
+     },
+     "cargo": {
+      "type": "string",
+      "title": "Cargo",
+      "default": ""
+     },
+     "matricula": {
+      "type": "string",
+      "title": "Matricula",
+      "default": ""
+     },
+     "unidade": {
+      "type": "string",
+      "title": "Unidade",
+      "default": ""
+     },
+     "processo": {
+      "type": "string",
+      "title": "Processo",
+      "default": ""
+     },
+     "protocolo": {
+      "type": "string",
+      "title": "Protocolo",
+      "default": ""
+     },
+     "tipo": {
+      "type": "string",
+      "enum": [
+       "pedido",
+       "consulta",
+       ""
+      ],
+      "title": "Tipo",
+      "default": ""
+     }
+    },
+    "type": "object",
+    "title": "Servidor"
+   },
+   "Trecho": {
+    "properties": {
+     "id": {
+      "type": "string",
+      "title": "Id"
+     },
+     "tipo": {
+      "type": "string",
+      "enum": [
+       "parecer",
+       "precedente",
+       "normativo",
+       "modelo",
+       "regra"
+      ],
+      "title": "Tipo"
+     },
+     "titulo": {
+      "type": "string",
+      "title": "Titulo"
+     },
+     "fonte": {
+      "type": "string",
+      "title": "Fonte"
+     },
+     "texto": {
+      "type": "string",
+      "title": "Texto"
+     },
+     "tema": {
+      "type": "string",
+      "title": "Tema",
+      "default": ""
+     },
+     "ano": {
+      "type": "string",
+      "title": "Ano",
+      "default": ""
+     },
+     "numero": {
+      "type": "string",
+      "title": "Numero",
+      "default": ""
+     },
+     "score": {
+      "type": "number",
+      "title": "Score",
+      "default": 0.0
+     },
+     "motivo": {
+      "type": "string",
+      "title": "Motivo",
+      "default": ""
+     },
+     "origem": {
+      "type": "string",
+      "title": "Origem",
+      "default": "COGER"
+     },
+     "extra": {
+      "additionalProperties": true,
+      "type": "object",
+      "title": "Extra"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tipo",
+     "titulo",
+     "fonte",
+     "texto"
+    ],
+    "title": "Trecho",
+    "description": "Um pedaço recuperado da base de conhecimento, sempre com a origem."
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}

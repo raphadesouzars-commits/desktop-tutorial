@@ -351,3 +351,54 @@ def test_auditoria_das_chamadas_de_ia(tmp_path):
     linhas = [json.loads(l) for l in log.read_text(encoding="utf8").splitlines()]
     assert linhas[0]["ok"] and linhas[0]["saida"] == "resposta" and linhas[0]["entrada"] == "entrada mascarada [CPF]"
     assert not linhas[1]["ok"] and "erro" in linhas[1]
+
+
+# ---------------------------------------------------------------- Copilot Chat assistido (sem API)
+def _analisado(c, pdf):
+    cid = c.post("/upload", files={"arquivo": ("c.pdf", pdf, "application/pdf")}).json()["consulta_id"]
+    assert c.post("/analisar", json={"consulta_id": cid}).status_code == 200
+    return cid
+
+
+def test_copilot_chat_assistido(settings, pdf_consulta, monkeypatch):
+    monkeypatch.delenv("AICI_TOKEN", raising=False)
+    with TestClient(_app(settings)) as c:
+        cid = _analisado(c, pdf_consulta)
+        pk = c.post("/ia/pacote", json={"consulta_id": cid}).json()
+        assert pk["caracteres"] <= pk["limite_caracteres"] and pk["url_chat"].startswith("https://m365.cloud.microsoft")
+        for marca in ("=== CASO CONCRETO ===", "=== NORMATIVOS ===", "[N1]", "[R1]", "Responda APENAS com JSON"):
+            assert marca in pk["prompt"]
+        assert "123.456.789-09" not in pk["prompt"] and "1234567" not in pk["prompt"] and "Maria Aparecida" not in pk["prompt"]
+        assert "contexto_AICI.md" in pk["prompt_curto"] and len(pk["contexto_md"]) >= len(pk["prompt"]) - 4000
+        n1 = [i for i in pk["ids"] if i.startswith("N")][0]
+        resposta = "Segue:\n```json\n" + json.dumps({"fundamentacao": [
+            {"texto": "Docência é compatível, observados os horários.", "fontes": [n1]},
+            {"texto": "Sem base.", "fontes": ["Z9"]}], "resultado_sugerido": "sem_conflito_ressalvas", "ressalvas": ["observar horários"]}) + "\n```"
+        m = c.post("/ia/resposta", json={"consulta_id": cid, "texto": resposta}).json()
+        assert m["modo"] == "copilot_chat" and m["ressalvas"] == ["observar horários"]
+        fund = [p for s in m["secoes"] if s["titulo"].startswith("II") for p in s["paragrafos"]]
+        assert fund[0]["texto"].startswith("Docência") and not any(p["texto"] == "Sem base." for p in fund)
+        # a minuta aprovada pelo parecerista segue para o Word
+        r = c.post("/gerar-parecer", json={"consulta_id": cid, "validado": True, "minuta": m, "numero": "9", "ano": "2026"})
+        d = docx.Document(str(settings.caminho("output") / f"consulta_{cid}" / "parecer_9_2026.docx"))
+        assert "Docência é compatível" in "\n".join(p.text for p in d.paragraphs)
+        # respostas inúteis são recusadas, sem derrubar nada
+        assert c.post("/ia/resposta", json={"consulta_id": cid, "texto": "não sei"}).status_code == 422
+        assert c.post("/ia/resposta", json={"consulta_id": cid, "texto": '{"fundamentacao": [ '}).status_code == 422
+        # trilha de auditoria registra pacote e respostas
+        linhas = [json.loads(l) for l in (settings.caminho("metrics") / "ia_auditoria.jsonl").read_text(encoding="utf8").splitlines()]
+        assert [l["tipo"] for l in linhas if l["provider"] == "copilot_chat_assistido"][:2] == ["pacote", "resposta"]
+
+
+def test_pacote_respeita_limite_e_so_vale_citar_o_que_foi_enviado(settings, pdf_consulta, monkeypatch):
+    monkeypatch.delenv("AICI_TOKEN", raising=False)
+    settings.dados["ia"]["copilot_chat"]["limite_caracteres"] = 3500
+    with TestClient(_app(settings)) as c:
+        cid = _analisado(c, pdf_consulta)
+        pk = c.post("/ia/pacote", json={"consulta_id": cid}).json()
+        assert pk["truncado"] and pk["caracteres"] <= 3500 and any("ficaram de fora" in a for a in pk["avisos"])
+        fora = [i for i in ("M1", "M2", "M3", "A1", "P1") if f"[{i}]" not in pk["prompt"]]
+        assert fora, "esperava que algum trecho ficasse de fora do prompt curto"
+        resp = json.dumps({"fundamentacao": [{"texto": "Cita o que não viu.", "fontes": [fora[0]]}]})
+        m = c.post("/ia/resposta", json={"consulta_id": cid, "texto": resp}).json()
+        assert not any(p["texto"] == "Cita o que não viu." for s in m["secoes"] for p in s["paragrafos"])

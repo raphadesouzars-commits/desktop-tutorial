@@ -44,6 +44,9 @@ ocr:
 ia:
   provider: offline              # offline (sem IA) | copilot (Copilot Studio/gateway) | azure (Azure OpenAI) | openai | mock (testes)
   anonimizar: true               # mascara CPF, matrícula, telefone e e-mail antes de enviar à IA
+  copilot_chat:                  # modo assistido: o parecerista leva o prompt ao Copilot Chat (conta corporativa) e cola a resposta
+    url: "https://m365.cloud.microsoft/chat"
+    limite_caracteres: 7500      # tamanho máximo do prompt colado no chat; CONFIRME o limite real com a TI e ajuste
   auditoria:                     # trilha de cada chamada à IA, para o curador (Port. RFB 647/2026, arts. 12 e 19)
     habilitada: true
     registrar_conteudo: true     # grava prompt e resposta (já mascarados) em metrics/ia_auditoria.jsonl

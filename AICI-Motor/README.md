@@ -40,7 +40,7 @@ python main.py                                         # http://127.0.0.1:8765  
 Na primeira execução o motor indexa `knowledge/` (incremental nas seguintes). Abra `gerador-parecer-conflito.html`, aba **Análise Inteligente**, informe o endereço do motor e siga as 3 etapas:
 **1 Análise** (envia o PDF; mostra fatos, enquadramento, normativos, precedentes e compromissos) -> **2 Validação humana** (você confere e marca a revisão) -> **3 Geração** (só então liberada).
 
-Testes: `python -m pytest -q`.
+Testes: `python -m pytest -q`. Documentação completa do projeto: `docs/05_Projeto_AICI/00_Indice.md`.
 
 ## Alimentando a base de conhecimento
 
@@ -61,7 +61,8 @@ Se um modelo do HTML mudar: `python scripts/exportar_categorias.py`.
 | POST | `/upload` | PDF da consulta -> texto (OCR se digitalizado); devolve `consulta_id` |
 | POST | `/analisar` | fatos + enquadramento + precedentes + pareceres + normativos + minuta |
 | POST | `/minuta` | refaz a minuta com a atividade/resultado escolhidos |
-| POST | `/gerar-parecer` | DOCX (`documento`: `parecer`, `termo` ou `despacho`) |
+| POST | `/ia/pacote`, `/ia/resposta` | modo assistido com o Copilot Chat: prompt e contexto; validação da resposta colada |
+| POST | `/gerar-parecer` | DOCX (`documento`: `parecer`, `termo` ou `despacho`); exige `validado=true` (revisão humana) |
 | POST | `/revisar` | confere a consistência da minuta |
 | GET | `/indicadores` | totais por atividade, resultado, precedente, mês |
 | POST | `/indexar` | (re)indexa `knowledge/` (`?completo=true` refaz tudo) |
@@ -71,6 +72,13 @@ Se um modelo do HTML mudar: `python scripts/exportar_categorias.py`.
 
 `pdf_reader` (1) · `ocr_service` (2) · `fact_extractor` (3) · base em `knowledge/` (4) · `indexer` (5) · `retriever` (6) · `classifier` (7) ·
 `ai_provider` (8) · `embeddings` · `prompts` + `prompts/*.txt` (9) · `report_generator` (10) · `docx_generator` (11) · `metrics_service` (12) · `analysis_service` (orquestrador).
+
+## Copilot Chat da RFB (modo assistido)
+
+O Copilot Chat (conta corporativa, Microsoft 365) é a IA homologada e autorizada pelo CTSI (3ª Reunião Ordinária de 2026, 18/06), **condicionada aos controles da Análise de Riscos**, mas não tem API para o AICI. Por isso o AICI trabalha em **modo assistido**:
+`/ia/pacote` monta o prompt (caso mascarado + regras da COGER + normativos + precedentes + pareceres + modelos, com marcadores citáveis) dentro de `ia.copilot_chat.limite_caracteres`; o parecerista o cola no Copilot Chat
+(ou anexa `contexto_AICI.md` e usa o prompt curto), copia a resposta em JSON e a cola na aba; `/ia/resposta` valida as fontes (só valem as que foram enviadas), descarta parágrafo sem fonte, e refaz a minuta. Tudo entra na trilha `metrics/ia_auditoria.jsonl`.
+O limite de caracteres padrão (7.500) é suposição: confirme com a TI. **Testado só com respostas simuladas.**
 
 ## IA: camada de provedores (`app/services/ai_provider.py`)
 

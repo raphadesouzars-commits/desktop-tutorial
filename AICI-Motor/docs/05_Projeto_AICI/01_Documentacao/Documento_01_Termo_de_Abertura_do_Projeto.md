@@ -5,14 +5,14 @@
 | Campo | Conteúdo |
 |---|---|
 | Projeto | AICI - Assistente Inteligente para Conflitos de Interesse |
-| Versão do documento | 0.2 - rascunho para análise da Cotec/TI (novembro/2026) |
+| Versão do documento | 0.3 - rascunho para análise da Cotec/TI (novembro/2026) |
 | Patrocinador | COGER - Corregedoria da Receita Federal |
 | Unidade demandante | Coordenação responsável pelos pareceres de conflito de interesses (Coger/GNP - Grupo Nacional dos Pareceristas) |
 | Responsável pela concepção | Raphael Albuquerque de Souza |
 | Gerente do projeto | [a designar] |
-| Curador da solução de IA generativa | [a designar - exigência do art. 11 da Portaria RFB nº 647/2026] |
+| Curador da solução de IA generativa | [a designar - exigência do art. 11 da Portaria RFB nº 647/2026; verificar se o curador do Copilot Chat já existe na RFB] |
 | Ponto focal da TI | [a designar pela Cotec] |
-| Situação | Protótipo funcional (motor + gerador) concluído; aguardando definição de IA homologada, ambiente e enquadramento na governança de IA |
+| Situação | Protótipo funcional (motor + gerador) concluído, com integração **assistida** ao Copilot Chat da RFB (aprovado pelo CTSI em 18/06/2026); aguardando as condições da Análise de Riscos, o enquadramento do AICI na governança de IA e a definição do ambiente de execução |
 
 ---
 
@@ -26,7 +26,7 @@ O projeto transforma esse acervo em uma **memória institucional pesquisável**,
 
 ## 2. Finalidade
 
-Desenvolver solução institucional de apoio à análise de conflitos de interesse utilizando técnicas de Inteligência Artificial compatíveis com a política de IA da Receita Federal (Portaria RFB nº 647/2026).
+Desenvolver solução institucional de apoio à análise de conflitos de interesse utilizando técnicas de Inteligência Artificial compatíveis com a política de IA da Receita Federal (Portaria RFB nº 647/2026), com o **Copilot Chat da RFB** (conta corporativa, Microsoft 365) como assistente de IA generativa.
 
 ## 3. Objetivos
 
@@ -92,7 +92,8 @@ As metas são hipóteses de partida e devem ser confirmadas pela área de negóc
 | Motor AICI (Python/FastAPI): leitura de PDF, extração de fatos, recuperação, classificação, minuta, DOCX, indicadores, auditoria | Concluído em protótipo (testes automatizados) |
 | Aba "Análise Inteligente" no gerador, com validação humana obrigatória | Concluído |
 | Documentação inicial (este conjunto) | Em elaboração |
-| Integração com IA homologada | **Pendente de definição pela TI** |
+| Modo assistido com o Copilot Chat (o AICI prepara o prompt e o contexto; o parecerista leva ao chat e cola a resposta, que é validada contra o acervo) | Concluído (testado com respostas simuladas; **não** testado com o Copilot Chat real) |
+| Integração automática (API) com a IA | Não prevista: o Copilot Chat não expõe API ao AICI; a TI deve informar se existe alternativa (Documento 04) |
 | Implantação em ambiente institucional e piloto | Pendente |
 
 ## 7. Premissas
@@ -100,13 +101,14 @@ As metas são hipóteses de partida e devem ser confirmadas pela área de negóc
 1. O gerador atual continua sendo usado normalmente durante todo o projeto (evolução incremental, sem interrupção do processo).
 2. A decisão final e o ato administrativo permanecem com o parecerista (art. 5º, parágrafo único, da Portaria RFB nº 647/2026).
 3. A biblioteca da COGER (SharePoint) será a fonte da base de conhecimento.
-4. A TI informará se existe forma homologada de acesso programático a IA generativa e em quais condições.
+4. O **Copilot Chat** é a IA de referência: conforme comunicado da RFB de 24/06/2026, o CTSI, na 3ª Reunião Ordinária de 2026 (18/06), autorizou o seu uso nas atividades da Receita Federal, inclusive as que envolvem dados protegidos por sigilo legal, **condicionado à adoção integral dos controles e tratamentos de segurança identificados em Análise de Riscos específica**, e o assistente está disponível a todos os usuários da licença E5 e homologado por NT da Cotec (o número da NT não constava legível no comunicado recebido; confirmar).
+5. A TI informará o conteúdo da Análise de Riscos do Copilot Chat (controles a adotar) e se existe acesso programático (API) ou agente publicável.
 
 ## 8. Restrições
 
-1. Uso exclusivo de IA desenvolvida, contratada ou homologada pela RFB, em ambiente seguro (art. 15 da Portaria RFB nº 647/2026).
-2. Inserção de dados pessoais ou sigilosos em solução de IA somente se expressamente autorizada (art. 16). Os pareceres e as consultas contêm dados pessoais.
-3. Casos de uso de IA devem ser submetidos previamente à Cotec (art. 10) e, por ser IA generativa, exigem curador, nível de acurácia aceitável e monitoramento contínuo (art. 11).
+1. Uso exclusivo de IA desenvolvida, contratada ou homologada pela RFB, em ambiente seguro (art. 15 da Portaria RFB nº 647/2026): na prática, o **Copilot Chat com a conta corporativa**; nenhum outro serviço de IA.
+2. Inserção de dados pessoais ou sigilosos em IA somente se expressamente autorizada (art. 16). Para o Copilot Chat, a autorização do CTSI existe, **condicionada à adoção integral dos controles da Análise de Riscos**; os pareceres e as consultas contêm dados pessoais e sigilosos.
+3. Casos de uso de IA devem ser submetidos previamente à Cotec (art. 10) e, por ser IA generativa, exigem curador, nível de acurácia aceitável e monitoramento contínuo (art. 11). Cabe confirmar com a Cotec se a autorização do Copilot Chat cobre o AICI ou se o AICI exige submissão própria.
 4. Preferência por ambientes sob governança técnica da RFB e avaliação da Cotec para modelos externos ou não soberanos (art. 14).
 5. Desenvolvimento aderente ao processo de desenvolvimento interno de sistemas institucionais da Cotec (Portaria RFB/Sucor/Cotec nº 41/2017), a confirmar.
 
@@ -126,15 +128,18 @@ As metas são hipóteses de partida e devem ser confirmadas pela área de negóc
 
 | # | Risco | Prob. | Impacto | Resposta |
 |---|---|---|---|---|
-| R1 | Não haver IA homologada acessível por API | Média | Médio | Operar em modo sem IA (já funcional); tratar IA como camada opcional |
-| R2 | Restrição ao envio de dados pessoais/sigilosos à IA (art. 16) | Alta | Alto | Mascaramento antes do envio; solicitar autorização expressa; ambiente institucional/soberano |
+| R1 | O Copilot Chat não ter API: o fluxo depende de o parecerista copiar e colar | Alta (certo) | Médio | Modo assistido implementado; validação automática da resposta; alternativas (agente Copilot Studio, API) a consultar com a TI; o modo sem IA segue disponível |
+| R2 | Descumprir os controles da Análise de Riscos do Copilot Chat (condição da autorização do CTSI) | Média | Alto | Obter e implementar integralmente os controles; mascaramento mantido como defesa adicional; orientação aos usuários; auditoria |
 | R3 | IA sugerir fundamento inexistente (alucinação) | Média | Alto | Contexto restrito ao acervo, fontes obrigatórias, descarte de parágrafo sem fonte, revisão humana obrigatória, curador |
 | R4 | Qualidade da busca insuficiente sem busca semântica | Média | Médio | Busca híbrida com embeddings locais; medir com casos reais |
 | R5 | Acervo desatualizado ou com entendimentos divergentes | Média | Alto | Governança da biblioteca (status "Validado_Humano"), prioridade para precedentes recentes e para as regras da COGER |
 | R6 | Dependência de uma pessoa (concepção e manutenção) | Média | Médio | Documentação, testes automatizados, conhecimento em arquivos (não em código), ponto focal da TI |
 | R7 | Dados pessoais do acervo expostos por falha de controle de acesso | Baixa | Alto | Execução em ambiente institucional, autenticação, dados fora do controle de versão, parecer de segurança |
 | R8 | Excesso de confiança do usuário nas sugestões | Média | Alto | Validação humana obrigatória (bloqueio técnico), avisos de baixa confiança, treinamento (art. 22) |
-| R9 | Demora da governança de IA atrasar o piloto | Alta | Médio | Piloto sem IA, em estação institucional, enquanto tramita a submissão à Cotec |
+| R9 | Demora da governança de IA atrasar o piloto | Média | Médio | Piloto pode começar no modo sem IA, em estação institucional, enquanto se confirma o enquadramento |
+| R10 | Limite de tamanho do prompt do Copilot Chat menor que o contexto necessário | Alta | Médio | Contexto repartido por trecho (limite configurável), alternativa de prompt curto com arquivo anexo; confirmar o limite real com a TI |
+| R11 | O usuário colar o prompt em outro serviço de IA (não homologado) ou em outra conta | Média | Alto | Aviso na tela; orientação (Manual do Usuário); link direto para o Copilot Chat corporativo |
+| R12 | O parecerista colar no AICI uma resposta alterada ou fora do formato | Média | Médio | Validação do JSON e das fontes; o que não tem fonte válida é descartado; revisão humana obrigatória |
 
 ## 11. Abordagem e fases
 
@@ -142,7 +147,7 @@ As metas são hipóteses de partida e devem ser confirmadas pela área de negóc
 |---|---|---|
 | 0 - Preparação | Organizar acervo, consolidar normativos, estruturar metadados | Concluída |
 | 1 - Protótipo | Motor sem IA, gerador, aba de análise, testes | Concluída |
-| 2 - Governança e ambiente | Submissão à Cotec/CTSI, definição de IA, ambiente, parecer de segurança, curador | Em andamento (depende da TI) |
+| 2 - Governança e ambiente | Confirmar o enquadramento do AICI (art. 10), obter a Análise de Riscos do Copilot Chat, designar o curador, definir o ambiente de execução, parecer de segurança | Em andamento (depende da TI) |
 | 3 - Piloto | Grupo restrito de pareceristas, casos reais, medição das metas | Pendente |
 | 4 - Inteligência adicional | Busca semântica, classificação assistida, consulta em linguagem natural | Parcial (busca semântica implementada, não validada) |
 | 5 - Integração e homologação | Integração plena com o gerador, homologação institucional | Pendente |
@@ -162,6 +167,8 @@ Prazos e esforço serão definidos com a Cotec após a Fase 2.
 - Lei nº 8.112/1990, art. 117 (vedações).
 - Portaria SE/ME nº 15.966/2020 (procedimentos no âmbito do MF).
 - Portaria RFB nº 647/2026 - Política de Inteligência Artificial da RFB.
+- Comunicado da RFB de 24/06/2026: aprovação pelo CTSI (3ª Reunião Ordinária de 2026, 18/06) do uso do Copilot Chat com garantias contratuais de segurança e proteção de dados.
+- NT da Cotec que homologa o Copilot Chat (número a confirmar).
 - Portaria RFB/Sucor/Cotec nº 41/2017 - desenvolvimento e manutenção de sistemas institucionais (Modelo de Desenvolvimento Interno).
 - Portaria Normativa CGU nº 234/2025 (revoga a Portaria CGU nº 57/2019).
 - Manual de Tratamento de Conflito de Interesses (CGU, 2022) e demais orientações da CGU.

@@ -118,31 +118,33 @@ def _fund_offline(modelo: dict | None, variante: dict | None, ctx: dict, campos:
     return out
 
 
-def _fund_ia(provider, settings, fatos: Fatos, recup: dict, minuta: Minuta, resultado: str | None) -> list[Paragrafo] | None:
+def preparar_fundamentacao(settings, fatos: Fatos, recup: dict, resultado: str | None, limite: int = 28000) -> tuple[str, str, dict]:
+    """Instrução + contexto (caso + regras + normativos + precedentes + pareceres + modelos) e o mapa marcador -> trecho.
+    Usada tanto pela chamada automática à IA quanto pelo modo assistido (Copilot Chat). Levanta ContextoInsuficiente."""
     s = settings
+    anon = bool(s.get("ia.anonimizar", True))
     resumo = (f"Atividade: {fatos.atividade}\nEntidade: {fatos.entidade}\nRemuneração: {fatos.remuneracao}\n"
               f"Vínculo: {fatos.vinculo}\nDescrição: {fatos.descricao}\nAtribuições do cargo: {'; '.join(fatos.atribuicoes)}")
-    if s.get("ia.anonimizar", True):
+    if anon:
         from ..utilities.text import anonimizar
         resumo = anonimizar(resumo, fatos.servidor.nome)
-    try:
-        ctx, mapa = C.montar_contexto(resumo, recup["normativos"], recup["precedentes"], recup["pareceres"], recup["modelos"],
-                                      bool(s.get("ia.anonimizar", True)), regras=carregar_regras(s))
-    except C.ContextoInsuficiente as e:
-        minuta.avisos.append(f"IA não utilizada: {e}.")
-        return None
+    ctx, mapa = C.montar_contexto(resumo, recup["normativos"], recup["precedentes"], recup["pareceres"], recup["modelos"],
+                                  anon, limite=limite, regras=carregar_regras(s))
     sistema = P.carregar("reasoning", s) + "\n\n" + P.carregar("draft", s)
     if resultado:
         sistema += f"\nO parecerista já definiu o resultado: {resultado}. Fundamente nessa direção, apontando eventuais riscos."
-    try:
-        bruto = provider.completar(sistema, ctx, json_mode=True)
-        dado = json.loads(re.search(r"\{.*\}", bruto, re.S).group(0))
-    except Exception as e:
-        minuta.avisos.append(f"IA indisponível ou resposta inválida ({e}); usada a fundamentação extrativa.")
-        return None
+    return sistema, ctx, mapa
+
+
+def interpretar_fundamentacao(bruto: str, mapa: dict, minuta: Minuta) -> list[Paragrafo] | None:
+    """Valida a resposta da IA (JSON) contra o acervo: descarta parágrafo sem fonte válida; registra ressalvas, resultado e lacunas."""
+    m = re.search(r"\{.*\}", bruto, re.S)
+    if not m:
+        raise ValueError("a resposta não contém um objeto JSON")
+    dado = json.loads(m.group(0))
     out = []
     for p in dado.get("fundamentacao", []):
-        fontes = [f"{mapa[m].titulo} ({mapa[m].fonte})" for m in p.get("fontes", []) if m in mapa]
+        fontes = [f"{mapa[x].titulo} ({mapa[x].fonte})" for x in p.get("fontes", []) if x in mapa]
         if not fontes:
             minuta.avisos.append("Um parágrafo da IA foi descartado por não citar fonte válida do acervo.")
             continue
@@ -152,8 +154,22 @@ def _fund_ia(provider, settings, fatos: Fatos, recup: dict, minuta: Minuta, resu
     minuta.ressalvas = [str(r) for r in dado.get("ressalvas", [])][:12]
     for lac in dado.get("lacunas", []):
         minuta.avisos.append(f"Lacuna apontada pela IA: {lac}")
-    minuta.modo = "copilot"
     return out or None
+
+
+def _fund_ia(provider, settings, fatos: Fatos, recup: dict, minuta: Minuta, resultado: str | None) -> list[Paragrafo] | None:
+    try:
+        sistema, ctx, mapa = preparar_fundamentacao(settings, fatos, recup, resultado, limite=getattr(provider, "limite_contexto", 28000))
+    except C.ContextoInsuficiente as e:
+        minuta.avisos.append(f"IA não utilizada: {e}.")
+        return None
+    try:
+        out = interpretar_fundamentacao(provider.completar(sistema, ctx, json_mode=True), mapa, minuta)
+    except Exception as e:
+        minuta.avisos.append(f"IA indisponível ou resposta inválida ({e}); usada a fundamentação extrativa.")
+        return None
+    minuta.modo = "copilot_chat" if provider.nome == "copilot_chat_assistido" else "copilot"
+    return out
 
 
 def gerar_minuta(settings, fatos: Fatos, classif: Classificacao, recup: dict, provider, resultado: str | None = None,

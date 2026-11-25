@@ -7,7 +7,7 @@ import os
 from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse
 
-from ..models.schemas import Analise, Minuta, PedidoAnalise, PedidoParecer
+from ..models.schemas import Analise, Minuta, Pacote, PedidoAnalise, PedidoPacote, PedidoParecer, PedidoResposta
 from ..services.analysis_service import ErroNegocio, Motor
 
 DOCX = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -60,6 +60,22 @@ def criar_router(motor: Motor) -> APIRouter:
     def minuta(p: PedidoParecer):
         try:
             return motor.nova_minuta(p)
+        except ErroNegocio as e:
+            raise erro(e)
+
+    @r.post("/ia/pacote", response_model=Pacote)
+    def ia_pacote(p: PedidoPacote):
+        """Modo assistido: prompt + contexto para o parecerista colar no Copilot Chat (conta corporativa)."""
+        try:
+            return motor.pacote_copilot(p)
+        except ErroNegocio as e:
+            raise erro(e)
+
+    @r.post("/ia/resposta", response_model=Minuta)
+    def ia_resposta(p: PedidoResposta):
+        """Modo assistido: valida a resposta colada do Copilot Chat e refaz a minuta."""
+        try:
+            return motor.aplicar_resposta_copilot(p)
         except ErroNegocio as e:
             raise erro(e)
 

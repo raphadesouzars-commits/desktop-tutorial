@@ -266,6 +266,24 @@ nav.tabs button.on{background:var(--acc);color:#fff}
         <button class="sec" id="aiRevisar">Revisar minuta</button>
       </div>
     </div>
+    <div class="card" id="aiChatBox" style="display:none">
+      <h2><span class="n">4</span>Copilot Chat da RFB (opcional)</h2>
+      <p class="hint">O Copilot Chat com a conta corporativa da RFB não tem API: o AICI prepara o prompt, você o leva ao chat e cola a resposta aqui. A resposta é validada contra o acervo (as fontes citadas precisam existir) antes de entrar na minuta. Use somente o Copilot Chat com a sua conta corporativa.</p>
+      <label class="chk"><input type="radio" name="aiModo" value="texto" checked> Prompt completo (cabe na caixa do chat)</label>
+      <label class="chk"><input type="radio" name="aiModo" value="arquivo"> Prompt curto + arquivo de contexto anexado (leva todo o acervo recuperado)</label>
+      <button class="sec" id="aiPacote">1. Gerar prompt</button>
+      <div id="aiPacoteBox" style="display:none">
+        <label for="aiPrompt">Prompt para colar no Copilot Chat</label><textarea id="aiPrompt" rows="6" readonly></textarea>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+          <button class="sec mini" id="aiCopiar">Copiar prompt</button>
+          <button class="sec mini" id="aiBaixarCtx">Baixar contexto_AICI.md</button>
+          <a class="chip" id="aiAbrirChat" target="_blank" rel="noopener">Abrir Copilot Chat ↗</a>
+        </div>
+        <p class="hint" id="aiPacoteInfo"></p>
+        <label for="aiResposta">2. Cole aqui a resposta do Copilot (o JSON completo)</label><textarea id="aiResposta" rows="6"></textarea>
+        <button id="aiAplicarResp" style="margin-top:6px">Aplicar resposta à minuta</button>
+      </div>
+    </div>
     <div class="card"><details id="aiIndBox"><summary>Indicadores gerenciais</summary><div id="aiInd" class="hint">Carregando…</div></details></div>
   </div>
   <div id="aiResultado"></div>
@@ -1242,6 +1260,7 @@ function aiLista(titulo, itens){
 function aiMostrar(){
   const an = AI.an, f = an.fatos, s = f.servidor, cl = an.classificacao;
   $("aiEscolha").style.display = ""; $("aiValidado").checked = false; aiTrava();
+  $("aiChatBox").style.display = ""; $("aiPacoteBox").style.display = "none"; $("aiResposta").value = "";
   const cand = (cl.candidatas || []), ids = new Set(cand.map(c => c.id));
   const outras = (AI.cats || []).filter(c => !ids.has(c.id));
   $("aiAtiv").innerHTML = cand.map(c => `<option value="${escH(c.id)}">${escH(c.nome)} (${c.confianca})</option>`).join("")
@@ -1268,12 +1287,13 @@ function aiPintar(){
   if (m && (m.ressalvas || []).length) h += '<div class="card"><h2>Compromissos e ressalvas sugeridos</h2><ul style="margin:0;padding-left:18px;font-size:13px">' + m.ressalvas.map(x => "<li>" + escH(x.replace(/\*\*/g, "")) + "</li>").join("") + '</ul><p class="hint">Entram no parecer e, se a conclusão for com ressalvas, no Termo de Compromisso.</p></div>';
   h += aiLista("Pareceres da COGER semelhantes", an.pareceres) + aiLista("Precedentes semelhantes", an.precedentes) + aiLista("Normativos relacionados", an.normativos);
   if (m){
-    h += `<div class="card ai-min"><h2>Minuta (${escH(m.modo === "copilot" ? "redigida com IA" : "extrativa, sem IA")})</h2>` + m.secoes.map(sc => `<h4>${escH(sc.titulo)}</h4>` + sc.paragrafos.map(p =>
+    h += `<div class="card ai-min"><h2>Minuta (${escH(m.modo === "copilot_chat" ? "fundamentação do Copilot Chat, validada contra o acervo" : m.modo === "copilot" ? "redigida com IA" : "extrativa, sem IA")})</h2>` + m.secoes.map(sc => `<h4>${escH(sc.titulo)}</h4>` + sc.paragrafos.map(p =>
       `<div class="pp ${p.tipo === "cit" ? "cit" : ""}">${escH(p.texto.replace(/\*\*/g, ""))}<small>origem: ${escH((p.fontes || []).join(" · ") || "—")}</small></div>`).join("")).join("") + '<div id="aiRev"></div></div>';
   }
   $("aiResultado").innerHTML = h;
 }
 async function aiRefazer(){
+  if (AI.minuta && AI.minuta.modo === "copilot_chat" && !confirm("Mudar a atividade ou a conclusão refaz a minuta e descarta a resposta do Copilot já aplicada. Continuar?")){ aiMostrar(); return; }
   aiRotulos();
   try { AI.minuta = await aiJson("/minuta", {consulta_id: AI.cid, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value}); aiPintar(); }
   catch(e){ aiMsg(e.message, true); }
@@ -1314,7 +1334,8 @@ async function aiBaixar(doc){
   try {
     const ano = (($("data").value || "").slice(0, 4)) || String(new Date().getFullYear());
     const r = await aiFetch("/gerar-parecer", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
-      consulta_id: AI.cid, documento: doc, validado: $("aiValidado").checked, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value, numero: $("numero").value.trim(), ano})});
+      consulta_id: AI.cid, documento: doc, validado: $("aiValidado").checked, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value,
+      minuta: AI.minuta && AI.minuta.modo === "copilot_chat" ? AI.minuta : null, numero: $("numero").value.trim(), ano})});
     const cd = r.headers.get("Content-Disposition") || "", mm = cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)/i);
     const a = document.createElement("a"); a.href = URL.createObjectURL(await r.blob()); a.download = mm ? decodeURIComponent(mm[1]) : doc + ".docx";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
@@ -1326,6 +1347,39 @@ $("aiRevisar").onclick = async () => {
     const r = await aiJson("/revisar?consulta_id=" + AI.cid, AI.minuta), el = $("aiRev");
     el.innerHTML = '<h4>Revisão de consistência</h4>' + (r.pontos.length ? r.pontos.map(p => `<div class="aviso">[${escH(p.gravidade)}] ${escH(p.descricao)}</div>`).join("") : '<p class="ai-ok">Nenhum ponto de atenção encontrado.</p>');
     el.scrollIntoView({behavior: "smooth", block: "nearest"});
+  } catch(e){ aiMsg(e.message, true); }
+};
+/* ---- Copilot Chat assistido ---- */
+AI.pacote = null;
+const aiModo = () => document.querySelector('input[name="aiModo"]:checked').value;
+function aiMostrarPrompt(){
+  if (!AI.pacote) return;
+  $("aiPrompt").value = aiModo() === "arquivo" ? AI.pacote.prompt_curto : AI.pacote.prompt;
+  $("aiPacoteInfo").textContent = (aiModo() === "arquivo" ? "Anexe contexto_AICI.md ao chat e cole o prompt curto." : `${AI.pacote.caracteres} de ${AI.pacote.limite_caracteres} caracteres.`)
+    + " " + (AI.pacote.avisos || []).join(" ");
+}
+document.querySelectorAll('input[name="aiModo"]').forEach(r => r.onchange = aiMostrarPrompt);
+$("aiPacote").onclick = async () => {
+  try {
+    AI.pacote = await aiJson("/ia/pacote", {consulta_id: AI.cid, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value});
+    $("aiPacoteBox").style.display = ""; $("aiAbrirChat").href = AI.pacote.url_chat || "#"; aiMostrarPrompt();
+  } catch(e){ aiMsg(e.message, true); }
+};
+async function copiarTexto(t, el){
+  try { await navigator.clipboard.writeText(t); return true; } catch(e){}
+  el.removeAttribute("readonly"); el.select(); let ok = false; try { ok = document.execCommand("copy"); } catch(e){} el.setAttribute("readonly", ""); return ok;
+}
+$("aiCopiar").onclick = async () => { const ok = await copiarTexto($("aiPrompt").value, $("aiPrompt")); aiMsg(ok ? "Prompt copiado. Cole no Copilot Chat." : "Não consegui copiar automaticamente: selecione o texto e copie (Ctrl+C).", !ok); };
+$("aiBaixarCtx").onclick = () => {
+  if (!AI.pacote) return;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([AI.pacote.contexto_md], {type: "text/markdown"})); a.download = "contexto_AICI.md";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
+$("aiAplicarResp").onclick = async () => {
+  const t = $("aiResposta").value.trim(); if (!t){ aiMsg("Cole a resposta do Copilot.", true); return; }
+  try {
+    AI.minuta = await aiJson("/ia/resposta", {consulta_id: AI.cid, texto: t, modo: aiModo(), atividade_id: $("aiAtiv").value, resultado: $("aiRes").value});
+    aiMsg("Resposta validada e aplicada à minuta (fontes conferidas). Revise antes de gerar."); aiPintar();
   } catch(e){ aiMsg(e.message, true); }
 };
 $("aiIndBox").ontoggle = async () => {

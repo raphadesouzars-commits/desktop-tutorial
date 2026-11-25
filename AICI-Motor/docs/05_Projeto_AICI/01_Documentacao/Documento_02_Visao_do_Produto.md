@@ -1,6 +1,6 @@
 # Visão do Produto - AICI
 
-**Versão 0.2 - novembro/2026**
+**Versão 0.3 - novembro/2026**
 
 ## 1. Declaração de visão
 
@@ -44,7 +44,7 @@ Limites do estado atual:
 2. **Sempre com a base.** A IA nunca recebe só o caso: o contexto leva normativos, precedentes, pareceres, modelos e as regras da COGER.
 3. **Rastreabilidade.** Cada parágrafo da minuta informa a origem (parecer/ano ou normativo); parágrafo de IA sem fonte válida é descartado.
 4. **Decisão humana garantida.** A geração do documento só é liberada após a validação do parecerista (bloqueio técnico na tela e na API).
-5. **Funciona sem IA.** Com o provedor `offline`, o AICI monta a minuta a partir dos modelos institucionais; a IA é uma camada adicional e substituível (Copilot, Azure OpenAI ou outro modelo homologado).
+5. **Funciona sem IA e com o Copilot Chat da RFB.** Sem IA, o AICI monta a minuta a partir dos modelos institucionais. Com IA, usa o **Copilot Chat** da conta corporativa (aprovado pelo CTSI em 18/06/2026): o AICI prepara o prompt com o caso e o acervo, o parecerista o leva ao chat e cola a resposta, que o AICI **valida contra o acervo** antes de aproveitar. A camada de IA é substituível (Azure OpenAI, agente Copilot Studio ou outro modelo homologado, se a TI disponibilizar acesso programático).
 6. **Preserva o que já funciona.** O Word gerado segue o padrão atual dos pareceres e o gerador offline continua disponível.
 
 ## 6. Funcionalidades
@@ -60,7 +60,7 @@ Limites do estado atual:
 | Documentos | Parecer, Termo de Compromisso (autorização com ressalvas) e despacho em Word editável, a partir de modelos |
 | Qualidade | Revisão de consistência (campos pendentes, parágrafo sem fonte, conclusão incoerente com o resultado) |
 | Gestão | Indicadores por atividade, resultado, precedente mais utilizado e mês; trilha de auditoria |
-| IA | Provedores `offline`, `mock`, `copilot`, `azure`, `openai`; busca híbrida (BM25 + embeddings locais) opcional |
+| IA | **Copilot Chat assistido** (prompt e arquivo de contexto prontos; resposta colada e validada: fontes existentes, resultado, ressalvas); provedores automáticos opcionais (`copilot`, `azure`, `openai`) se a TI disponibilizar API; busca híbrida (BM25 + embeddings locais) opcional |
 
 ### 6.2 Planejadas
 
@@ -85,6 +85,7 @@ Limites do estado atual:
 1. Análise            Enviar o PDF -> o AICI mostra fatos, enquadramento, normativos,
                       precedentes, pareceres semelhantes e compromissos
 2. Validação humana   O parecerista confere, ajusta atividade e conclusão e marca a revisão
+   (opcional)         Copilot Chat: gera o prompt, leva ao chat, cola a resposta -> o AICI valida as fontes
 3. Geração            Word do parecer / Termo de Compromisso / despacho,
                       ou preenchimento do gerador offline para edição fina
 ```
@@ -102,14 +103,15 @@ Limites do estado atual:
 ## 10. Restrições e conformidade
 
 - Portaria RFB nº 647/2026 (política de IA): supervisão humana (art. 4º, I; art. 5º), IA somente homologada (art. 15), dados pessoais e sigilosos apenas se autorizados (art. 16), curador e acurácia para IA generativa (arts. 11 e 12), registros e auditoria (arts. 19 e 20). Ver o Documento 05.
+- Copilot Chat: uso autorizado pelo CTSI (18/06/2026), inclusive com dados protegidos por sigilo legal, **condicionado à adoção integral dos controles da Análise de Riscos específica**; acessível pela conta corporativa da RFB e integrado ao Microsoft 365.
 - LGPD e sigilo funcional: os pareceres e as consultas contêm dados pessoais e devem permanecer em ambiente institucional controlado.
 
 ## 11. Roadmap
 
 | Etapa | Conteúdo |
 |---|---|
-| Agora | Piloto sem IA em estação/ambiente institucional; submissão do caso de uso à Cotec/CTSI |
-| Próxima | IA homologada integrada; busca semântica validada com casos reais; medição das metas |
+| Agora | Piloto em estação/ambiente institucional, com o Copilot Chat em modo assistido (ou sem IA); obtenção da Análise de Riscos e confirmação do enquadramento do AICI com a Cotec |
+| Próxima | Medição das metas com casos reais; busca semântica validada; avaliação de alternativas de integração (agente Copilot Studio, API) com a TI |
 | Depois | Consulta em linguagem natural; integração com SharePoint e Microsoft 365; indicadores em painel |
 | Longo prazo | Homologação institucional como sistema; evolução contínua da base e das regras da COGER |
 

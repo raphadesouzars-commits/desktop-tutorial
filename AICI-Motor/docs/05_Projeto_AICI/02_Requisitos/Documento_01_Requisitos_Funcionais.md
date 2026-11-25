@@ -1,6 +1,6 @@
 # Requisitos Funcionais
 
-**Versão 0.2 - novembro/2026**
+**Versão 0.3 - novembro/2026**
 
 Legenda de **prioridade** (MoSCoW): **M** deve, **S** deveria, **C** poderia, **W** não nesta fase.
 Legenda de **situação**: **Implementado** (existe e tem teste automatizado ou foi verificado no navegador), **Parcial** (existe com limitação descrita), **Planejado** (não existe).
@@ -42,14 +42,28 @@ Legenda de **situação**: **Implementado** (existe e tem teste automatizado ou 
 | RF018 | Gerar o Termo de Compromisso nas autorizações com ressalvas | M | Disponível somente para o resultado "sem conflito, com ressalvas"; reúne os compromissos aplicáveis, com campos para assinatura do servidor, da chefia e da Comissão de Ética | Implementado | `docx_generator.gerar_termo`; teste `test_fluxo_completo_offline` |
 | RF019 | Gerar o despacho de encaminhamento | C | Gera .docx do despacho a partir do modelo | Implementado | `docx_generator.gerar_despacho` |
 
-### 2.3 Conhecimento, IA e gestão
+### 2.3 Copilot Chat da RFB (modo assistido)
+
+O Copilot Chat (conta corporativa, Microsoft 365) é a IA homologada e autorizada pelo CTSI, mas não oferece API ao AICI. O modo assistido leva o contexto ao chat pelas mãos do parecerista.
+
+| ID | Requisito | Prior. | Critério de aceite | Situação | Evidência / observação |
+|---|---|---|---|---|---|
+| RF033 | Gerar o prompt para o Copilot Chat com o caso, as regras da COGER, os normativos, os precedentes, os pareceres e os modelos | M | `POST /ia/pacote` devolve o prompt com as seções e os marcadores [R1], [N1], [P1], [A1], [M1]; dados pessoais mascarados | Implementado | `analysis_service.pacote_copilot`; teste `test_copilot_chat_assistido`; verificado no navegador. **Não testado com o Copilot Chat real** |
+| RF034 | Oferecer prompt curto + arquivo de contexto para anexar ao chat | S | `prompt_curto` e `contexto_md` (todo o acervo recuperado) | Implementado | Botão "Baixar contexto_AICI.md" na aba |
+| RF035 | Respeitar o limite de caracteres do prompt do chat | M | O prompt completo não excede `ia.copilot_chat.limite_caracteres`; o espaço é repartido entre os trechos (prioridade normativos, precedentes, pareceres, modelos) e o aviso informa o que ficou de fora | Implementado | Teste `test_pacote_respeita_limite_e_so_vale_citar_o_que_foi_enviado`. O limite padrão (7.500) é uma suposição: **confirmar com a TI** |
+| RF036 | Validar a resposta colada do Copilot Chat antes de usá-la | M | Aceita só JSON no formato pedido; fonte que não existe (ou que não coube no prompt) invalida o parágrafo; resultado fora da lista é ignorado; resposta inválida é recusada com mensagem | Implementado | `POST /ia/resposta`; testes `test_copilot_chat_assistido`, `test_pacote_respeita_limite_e_so_vale_citar_o_que_foi_enviado` |
+| RF037 | Registrar na trilha de auditoria cada prompt gerado e cada resposta aplicada | M | `metrics/ia_auditoria.jsonl` com data, tipo (pacote ou resposta), consulta e conteúdo | Implementado | Teste `test_copilot_chat_assistido` |
+| RF038 | Orientar o usuário a usar somente o Copilot Chat da conta corporativa | M | Aviso na tela e link para o Copilot Chat corporativo | Implementado (orientação) | O AICI **não controla** onde o usuário cola o prompt |
+| RF039 | O documento Word usa a minuta validada com a resposta do Copilot | M | O gerador envia a minuta aprovada a `/gerar-parecer`; mudar atividade ou conclusão pede confirmação e descarta a resposta | Implementado | Teste `test_copilot_chat_assistido`; verificado no navegador |
+
+### 2.4 Conhecimento, IA e gestão
 
 | ID | Requisito | Prior. | Critério de aceite | Situação | Evidência / observação |
 |---|---|---|---|---|---|
 | RF020 | Indexar a biblioteca de forma incremental | M | Reprocessa só arquivos novos ou alterados e remove os excluídos; um arquivo corrompido não interrompe a indexação | Implementado | `indexer`; teste `test_indexacao_incremental` |
 | RF021 | Enviar à IA sempre o caso **junto** com normativos, precedentes/pareceres/modelos e as regras da COGER | M | Sem normativos e sem precedentes/pareceres/modelos, a IA não é chamada | Implementado | `ai_provider.montar_contexto`; testes `test_ia_nunca_recebe_so_o_caso`, `test_regras_coger_sempre_no_contexto` |
 | RF022 | Validar a resposta da IA contra o acervo | M | Categoria fora da lista é descartada; parágrafo sem fonte válida é descartado; falha da IA volta ao modo extrativo | Implementado | Testes `test_classificador_usa_so_categorias_do_html`, `test_ia_fundamentacao_com_fontes_validadas`, `test_ia_indisponivel_cai_no_extrativo` |
-| RF023 | Permitir trocar de provedor de IA por configuração | M | `ia.provider`: offline, mock, copilot, azure, openai | Implementado (sem endpoint real) | `ai_provider`; teste `test_provedores_configuracao`. **Nenhum provedor real foi exercitado** |
+| RF023 | Permitir trocar de provedor de IA por configuração | S | `ia.provider`: offline, mock, copilot, azure, openai | Implementado (sem endpoint real) | `ai_provider`; teste `test_provedores_configuracao`. **Nenhum provedor real foi exercitado.** Como o Copilot Chat não tem API, os provedores automáticos só serão usados se a TI disponibilizar acesso programático; o caminho principal é o modo assistido (RF033 a RF039) |
 | RF024 | Busca semântica por embeddings locais, combinada à busca por palavras | S | BM25 top 20 + vetores top 20, fusão (RRF) e reclassificação | Parcial | Mecanismo testado com embedder de teste (`test_busca_hibrida_acha_o_que_o_bm25_nao_acha`). **Nenhum modelo real (bge-m3 / e5) foi avaliado** |
 | RF025 | Registrar indicadores | S | Cada parecer gerado grava atividade, resultado, precedente utilizado e data; `GET /indicadores` consolida | Implementado | `metrics_service`; teste `test_fluxo_completo_offline`. Sem painel gráfico |
 | RF026 | Registrar cada chamada à IA (trilha para o curador) | M | Grava data, provedor, tamanho e, se configurado, o prompt e a resposta (já mascarados) | Implementado | `AuditedProvider`; teste `test_auditoria_das_chamadas_de_ia` |
@@ -64,12 +78,12 @@ Legenda de **situação**: **Implementado** (existe e tem teste automatizado ou 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 25 | RF001, RF003, RF005 a RF023 (exceto os parciais), RF025 a RF027, RF031 |
+| Implementado | 32 | RF001, RF003, RF005 a RF023 (exceto os parciais), RF025 a RF027, RF031, RF033 a RF039 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **32** | |
+| **Total** | **39** | |
 
-"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011) e os provedores reais de IA (RF023) estão implementados mas **não foram exercitados** contra serviços reais.
+"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF039) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas).
 
 ## 4. Matriz de rastreabilidade (RF -> componente)
 
@@ -80,7 +94,8 @@ Legenda de **situação**: **Implementado** (existe e tem teste automatizado ou 
 | `app/services/indexer.py`, `embeddings.py` | RF001 a RF003, RF020, RF024 |
 | `app/services/retriever.py` | RF001 a RF003, RF006, RF024 |
 | `app/services/classifier.py` | RF005, RF022 |
-| `app/services/ai_provider.py`, `prompts/*.txt` | RF021 a RF023, RF026, RF027 |
+| `app/services/ai_provider.py`, `prompts/*.txt` | RF021 a RF023, RF026, RF027, RF035 |
+| `analysis_service.pacote_copilot` / `aplicar_resposta_copilot` | RF033 a RF037, RF039 |
 | `app/services/report_generator.py` | RF007, RF009, RF015 |
 | `app/services/docx_generator.py`, `templates/*.docx` | RF010, RF018, RF019 |
 | `app/services/analysis_service.py`, `app/api/routes.py` | RF013, RF017 |

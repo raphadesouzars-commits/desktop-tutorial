@@ -1,7 +1,7 @@
 # Especificação Técnica e Solicitações à TI
 
 **Projeto AICI - Assistente Inteligente para Conflitos de Interesse**
-**Versão 0.2 - novembro/2026 - documento para análise da Cotec/TI**
+**Versão 0.3 - novembro/2026 - documento para análise da Cotec/TI**
 
 ---
 
@@ -18,6 +18,8 @@ O AICI tem dois componentes independentes:
 
 O gerador funciona sem o motor. O motor funciona sem IA. A IA é uma camada opcional e substituível.
 
+**IA de referência: Copilot Chat da RFB.** Conforme o comunicado de 24/06/2026, o CTSI autorizou (18/06/2026) o uso do Copilot Chat, acessível pela conta corporativa e integrado ao Microsoft 365, inclusive com dados sob sigilo legal, condicionado aos controles da Análise de Riscos. Como o Copilot Chat é uma interface conversacional, sem API disponível ao AICI até onde se sabe, o AICI opera em **modo assistido**: gera o prompt e o contexto, o parecerista os leva ao chat e cola a resposta de volta, e o AICI a valida contra o acervo. A integração automática (API) fica como alternativa a avaliar com a TI.
+
 ### A.2 Arquitetura lógica
 
 ```
@@ -33,12 +35,16 @@ O gerador funciona sem o motor. O motor funciona sem IA. A IA é uma camada opci
  |  Base de conhecimento (knowledge/)  <-  indexer  ->  índice            |
  |   pareceres | precedentes | normativos | modelos | regras_coger.md    |
  |                                                                        |
- |  AIProvider  --(opcional)-->  IA homologada (Copilot/Azure/outro)      |
+ |  Modo assistido: /ia/pacote (prompt + contexto) e /ia/resposta         |
+ |   (validação de fontes) <-> parecerista <-> Copilot Chat (conta RFB)   |
+ |  AIProvider  --(opcional, só se houver API)--> IA homologada           |
  |  SQLite (consultas, pareceres, metricas) | metrics/*.jsonl (auditoria) |
  +------------------------------------------------------------------------+
 ```
 
-Fluxo de uma consulta: PDF -> texto (OCR se preciso) -> fatos -> classificação e recuperação (BM25 e, opcionalmente, embeddings) -> montagem do contexto (caso + normativos + precedentes + pareceres + modelos + regras) -> minuta (extrativa ou com IA) -> **validação humana** -> Word.
+Fluxo de uma consulta: PDF -> texto (OCR se preciso) -> fatos -> classificação e recuperação (BM25 e, opcionalmente, embeddings) -> minuta extrativa a partir dos modelos -> (opcional) prompt para o Copilot Chat -> resposta colada e **validada contra o acervo** -> **validação humana** -> Word.
+
+Contexto enviado ao Copilot Chat: caso (mascarado) + regras da COGER + normativos + precedentes + pareceres + modelos, cada trecho com um marcador citável ([R1], [N1], [P1], [A1], [M1]). O espaço é repartido entre os trechos para caber no limite de caracteres do chat; o que não coube não pode ser citado na resposta.
 
 ### A.3 Módulos
 
@@ -50,7 +56,7 @@ Fluxo de uma consulta: PDF -> texto (OCR se preciso) -> fatos -> classificação
 | Indexador | `indexer.py`, `embeddings.py` | Lê, divide em trechos (~1.200 caracteres), indexa de forma incremental |
 | Recuperação | `retriever.py` | BM25, opcionalmente fundido com embeddings (RRF), com peso maior para a COGER |
 | Classificador | `classifier.py` | Escolhe entre as 68 categorias existentes, com confiança |
-| Provedores de IA | `ai_provider.py` | `offline`, `mock`, `copilot`, `azure`, `openai`; contexto; auditoria |
+| IA | `ai_provider.py` | Contexto com marcadores e limite; provedores opcionais (`offline`, `mock`, `copilot`, `azure`, `openai`); resposta pré-obtida (modo assistido); auditoria |
 | Prompts | `prompts/*.txt` | Instruções à IA (fatos, classificação, precedentes, raciocínio, minuta, revisão) |
 | Minuta | `report_generator.py` | I - Relatório, II - Fundamentos, III - Conclusão |
 | Word | `docx_generator.py`, `templates/*.docx` | Parecer, Termo de Compromisso, despacho |
@@ -64,6 +70,8 @@ Fluxo de uma consulta: PDF -> texto (OCR se preciso) -> fatos -> classificação
 | POST | `/upload` | Recebe o PDF; devolve `consulta_id` |
 | POST | `/analisar` | Fatos, enquadramento, normativos, precedentes, pareceres, minuta |
 | POST | `/minuta` | Refaz a minuta com atividade e resultado escolhidos |
+| POST | `/ia/pacote` | Modo assistido: prompt, prompt curto e arquivo de contexto para o Copilot Chat |
+| POST | `/ia/resposta` | Modo assistido: valida a resposta colada e refaz a minuta |
 | POST | `/gerar-parecer` | .docx (`documento`: parecer, termo ou despacho); exige `validado=true` |
 | POST | `/revisar` | Revisão de consistência |
 | GET | `/indicadores` | Consolidação por atividade, resultado, precedente e mês |
@@ -83,7 +91,7 @@ Documentação interativa em `/docs` quando o serviço está em execução.
 | Configuração | PyYAML | `config/settings.yaml` | Sim |
 | HTTP cliente | httpx | Chamadas ao provedor de IA | Sim |
 | Banco | SQLite (nativo) | Operação; PostgreSQL como evolução | Sim |
-| Testes | pytest | 20 testes automatizados | Desenvolvimento |
+| Testes | pytest | 22 testes automatizados | Desenvolvimento |
 | Busca semântica | sentence-transformers, numpy (modelos `BAAI/bge-m3` ou `intfloat/multilingual-e5-large`) | Embeddings locais | Opcional |
 | Vetores | ChromaDB | Backend vetorial alternativo | Opcional |
 | OCR | EasyOCR (PyTorch, cerca de 2 GB) | PDF digitalizado | Opcional |
@@ -113,6 +121,7 @@ Pendências de proteção de dados: criptografia em repouso, política de reten�
 - Segredos (token da IA) apenas em variáveis de ambiente, nunca no arquivo de configuração.
 - IA: contexto restrito ao acervo; mascaramento de CPF, matrícula, telefone, e-mail e nome; resposta validada; fontes obrigatórias; categoria fora da lista descartada; `openai` bloqueado sem confirmação de homologação.
 - Revisão humana obrigatória para gerar documento (tela e API).
+- Modo assistido: o AICI nunca envia dados a serviço algum; a resposta colada passa pela mesma validação de fontes da IA automática; pacote e resposta ficam na trilha de auditoria.
 - Trilha de auditoria de cada chamada à IA (data, provedor, tamanho, prompt e resposta mascarados).
 
 Não foi realizado teste de intrusão nem revisão de segurança por terceiros.
@@ -149,7 +158,8 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 ### A.11 Limitações conhecidas
 
-1. Nenhum provedor real de IA foi exercitado; só `offline` e simulações.
+1. O modo assistido foi testado só com respostas simuladas; o Copilot Chat real não foi exercitado (formato JSON seguido, tamanho do prompt, comportamento com arquivo anexo). Nenhum provedor automático de IA foi exercitado.
+1a. O AICI não controla onde o usuário cola o prompt (risco de uso de serviço não homologado).
 2. Nenhum modelo real de embeddings foi avaliado; a qualidade da busca semântica precisa ser medida.
 3. O OCR não foi testado.
 4. A acurácia da classificação e a precisão dos precedentes não foram medidas com casos reais.
@@ -159,13 +169,13 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 ### A.12 Qualidade
 
-20 testes automatizados (pytest) cobrem: leitura de PDF, extração de fatos (formulário sintético e verificação com formulário real), indexação incremental, recuperação, classificação, contexto da IA, provedores (Copilot/Azure/OpenAI/Mock), busca híbrida, backend Chroma, fluxo completo da API, validações de upload, token, CORS, geração de Word, revisão humana obrigatória e auditoria.
+22 testes automatizados (pytest) cobrem: leitura de PDF, extração de fatos (formulário sintético e verificação com formulário real), indexação incremental, recuperação, classificação, contexto da IA, provedores (Copilot/Azure/OpenAI/Mock), busca híbrida, backend Chroma, fluxo completo da API, validações de upload, token, CORS, geração de Word, revisão humana obrigatória e auditoria.
 
 ---
 
 ## Parte B - Solicitações à TI
 
-Peço o apoio da Cotec/TI para responder aos itens abaixo. A coluna "Resposta da TI" pode ser preenchida diretamente neste documento.
+Peço o apoio da Cotec/TI para responder aos itens abaixo (31 itens). A coluna "Resposta da TI" pode ser preenchida diretamente neste documento.
 
 ### B.1 Governança e enquadramento
 
@@ -179,53 +189,58 @@ Peço o apoio da Cotec/TI para responder aos itens abaixo. A coluna "Resposta da
 | 6 | Indicar o repositório de soluções de IA autorizadas a usar dados pessoais ou sigilosos e o procedimento para inclusão | Art. 16, § 1º | |
 | 7 | Designar um ponto focal da TI | - | |
 
-### B.2 IA homologada
+### B.2 Copilot Chat e IA
+
+Contexto: o comunicado da RFB de 24/06/2026 informa que o CTSI autorizou o Copilot Chat (conta corporativa, licença E5), inclusive para dados sob sigilo legal, condicionado à adoção integral dos controles da Análise de Riscos.
 
 | # | Solicitação | Resposta da TI |
 |---|---|---|
-| 8 | Qual é a forma homologada de acesso a IA generativa por sistema (API) na RFB? **A**: Copilot apenas pelo chat (sem API) / **B**: Copilot Studio com publicação HTTPS / **C**: Azure OpenAI corporativo / **D**: outro modelo ou gateway interno | |
-| 9 | Se houver API: endpoint (URL), modelo ou deployment, `api_version` (Azure), método de autenticação (chave, OAuth/Entra ID, certificado) e como obter as credenciais | |
-| 10 | Formato de requisição e resposta (ou documentação técnica) | |
-| 11 | Limites: tamanho de contexto, requisições por minuto, quotas e custos | |
-| 12 | Registro (log) das chamadas e política de retenção; se os dados enviados são usados para treinamento | |
-| 13 | Região/localização do processamento dos dados e avaliação de soberania | Art. 14 |
-| 14 | Quais dados podem ser enviados (consulta do servidor, trechos de pareceres) e qual a classificação de sigilo permitida | Art. 16 |
-| 15 | Se a resposta for "A" (somente chat): confirmação formal, pois o AICI seguirá em modo sem IA | |
+| 8 | Enviar a **Análise de Riscos específica** do Copilot Chat (ou os controles e tratamentos de segurança dela decorrentes) para que o AICI os adote integralmente | |
+| 9 | Informar o número e enviar a **NT Cotec** que homologa o Copilot Chat (o número não estava legível no comunicado) | |
+| 10 | Confirmar se o uso do Copilot Chat **pelo AICI** (prompt gerado pelo sistema, resposta colada de volta) está coberto pela autorização do CTSI ou se exige submissão própria (art. 10 da Portaria RFB nº 647/2026) | |
+| 11 | Informar o **limite de tamanho do prompt** do Copilot Chat e se aceita **arquivos anexos** (tipos, tamanho) e se o conteúdo anexado fica sob as mesmas garantias contratuais | |
+| 12 | O mascaramento de CPF, matrícula, telefone, e-mail e nome continua exigido, ou os controles da Análise de Riscos o dispensam? | |
+| 13 | Existe **acesso programático** ao Copilot (API, agente publicado no Copilot Studio, Power Automate/Graph) que a RFB possa autorizar? Se sim: endpoint, autenticação, formato, limites, registro de chamadas | |
+| 14 | A RFB pode disponibilizar um **agente** (por exemplo, no Copilot Studio) com a biblioteca da COGER no SharePoint como fonte de conhecimento? Em caso afirmativo, quais as condições e quem o mantém | |
+| 15 | Existe **curador** do Copilot Chat? Ele cobre o caso de uso do AICI (arts. 11 e 12)? Como ele acessa os registros de uso (prompts e respostas)? | |
+| 16 | Como a TI controla que os dados de consultas sejam colados **somente** no Copilot Chat corporativo (bloqueio de outras IAs, DLP, orientação)? | |
+| 17 | Há registro (log) do uso do Copilot Chat e política de retenção das conversas? As conversas podem conter dados sob sigilo e como devem ser descartadas? | |
+| 18 | Canal oficial para comunicar ocorrências de IA (art. 18, parágrafo único) | |
 
 ### B.3 Ambiente
 
 | # | Solicitação | Resposta da TI |
 |---|---|---|
-| 16 | Ambiente para executar o motor (estação, VM ou contêiner), Python 3.12 ou superior, com acesso pelos usuários da COGER via rede interna | |
-| 17 | HTTPS e autenticação institucional na frente do serviço (proxy reverso); integração com a identidade da RFB e perfis (parecerista, coordenador, curador, administrador) | |
-| 18 | Liberação de rede do servidor ao endpoint da IA | |
-| 19 | Mecanismo para sincronizar a biblioteca do SharePoint (pasta sincronizada, Graph API ou rotina agendada), com leitura de `01_Pareceres_Emitidos`, `02_Precedentes`, `03_Normativos` e `04_Modelos_Institucionais` | |
-| 20 | Autorização para instalar as dependências open source (item A.5) ou repositório interno de pacotes | |
-| 21 | Cópia de segurança, retenção, criptografia em repouso e descarte de `uploads/`, `output/`, `metrics/` e `vectorstore/` | |
-| 22 | Como a solução deve operar "no ambiente Microsoft 365" (RNF001): autenticação, hospedagem e interface | |
+| 19 | Ambiente para executar o motor (estação, VM ou contêiner), Python 3.12 ou superior, com acesso pelos usuários da COGER via rede interna | |
+| 20 | HTTPS e autenticação institucional na frente do serviço (proxy reverso); integração com a identidade da RFB e perfis (parecerista, coordenador, curador, administrador) | |
+| 21 | Liberação de rede do servidor ao endpoint da IA | |
+| 22 | Mecanismo para sincronizar a biblioteca do SharePoint (pasta sincronizada, Graph API ou rotina agendada), com leitura de `01_Pareceres_Emitidos`, `02_Precedentes`, `03_Normativos` e `04_Modelos_Institucionais` | |
+| 23 | Autorização para instalar as dependências open source (item A.5) ou repositório interno de pacotes | |
+| 24 | Cópia de segurança, retenção, criptografia em repouso e descarte de `uploads/`, `output/`, `metrics/` e `vectorstore/` | |
+| 25 | Como a solução deve operar "no ambiente Microsoft 365" (RNF001): autenticação, hospedagem e interface | |
 
 ### B.4 Busca semântica e OCR (opcionais)
 
 | # | Solicitação | Resposta da TI |
 |---|---|---|
-| 23 | Autorização para executar localmente um modelo de embeddings (`BAAI/bge-m3` ou `intfloat/multilingual-e5-large`), com download em máquina com internet e cópia para o servidor | |
-| 24 | Disponibilidade de memória (8 a 16 GB) e, se houver, GPU | |
-| 25 | Instalação do EasyOCR (PyTorch, cerca de 2 GB) para PDFs digitalizados | |
+| 26 | Autorização para executar localmente um modelo de embeddings (`BAAI/bge-m3` ou `intfloat/multilingual-e5-large`), com download em máquina com internet e cópia para o servidor | |
+| 27 | Disponibilidade de memória (8 a 16 GB) e, se houver, GPU | |
+| 28 | Instalação do EasyOCR (PyTorch, cerca de 2 GB) para PDFs digitalizados | |
 
 ### B.5 Segurança e proteção de dados
 
 | # | Solicitação | Resposta da TI |
 |---|---|---|
-| 26 | Parecer da segurança da informação sobre o desenho (Parte A) e o tratamento de dados pessoais e sigilosos | |
-| 27 | Parecer de proteção de dados (LGPD) sobre uso do acervo de pareceres e das consultas | |
-| 28 | Teste de segurança/varredura de vulnerabilidades do código e das dependências | |
+| 29 | Parecer da segurança da informação sobre o desenho (Parte A) e o tratamento de dados pessoais e sigilosos | |
+| 30 | Parecer de proteção de dados (LGPD) sobre uso do acervo de pareceres e das consultas | |
+| 31 | Teste de segurança/varredura de vulnerabilidades do código e das dependências | |
 
 ## Parte C - Próximos passos propostos
 
 1. Reunião de 30 a 45 minutos com a Cotec para apresentar a ferramenta e esclarecer os itens da Parte B.
 2. Piloto restrito sem IA, em estação ou ambiente institucional, com casos reais, para medir as metas (precisão dos precedentes, acerto da classificação, tempo de pesquisa).
 3. Em paralelo, tramitação do caso de uso (art. 10), designação do curador e definição da IA homologada.
-4. Integração da IA homologada: basta preencher `ia.provider` e as credenciais em `config/settings.yaml`; o restante do sistema não muda.
+4. Uso do Copilot Chat em modo assistido já no piloto; se a TI disponibilizar API ou agente, a integração automática entra pela camada `AIProvider`, sem alterar o restante do sistema.
 
 ## Anexos disponíveis
 

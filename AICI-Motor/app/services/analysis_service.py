@@ -7,7 +7,7 @@ import uuid
 from pathlib import Path
 
 from ..models.db import Banco
-from ..models.schemas import Analise, Fatos, Minuta, PedidoParecer, Trecho
+from ..models.schemas import Analise, Fatos, Minuta, Pacote, PedidoPacote, PedidoParecer, PedidoResposta, Trecho
 from ..utilities.text import anonimizar
 from . import ai_provider as C
 from . import docx_generator as D
@@ -126,6 +126,69 @@ class Motor:
             raise ErroNegocio("atividade_id fora da lista de categorias do HTML.")
         recup = {"pareceres": a.pareceres, "precedentes": a.precedentes, "normativos": a.normativos, "modelos": a.modelos}
         return R.gerar_minuta(self.s, a.fatos, a.classificacao, recup, self.provider, pedido.resultado, aid)
+
+    # ------------------------------------------------------------ Copilot Chat assistido (sem API)
+    def _auditar_chat(self, tipo: str, **dados) -> None:
+        """Mesma trilha da IA automática (metrics/ia_auditoria.jsonl), para o curador."""
+        from datetime import datetime
+        reg = {"quando": datetime.now().isoformat(timespec="seconds"), "provider": "copilot_chat_assistido", "tipo": tipo}
+        conteudo = bool(self.s.get("ia.auditoria.registrar_conteudo", True))
+        for k, v in dados.items():
+            reg[k] = v if (conteudo or isinstance(v, (int, bool))) else f"[{len(str(v))} caracteres]"
+        arq = self.s.caminho("metrics") / "ia_auditoria.jsonl"
+        arq.parent.mkdir(parents=True, exist_ok=True)
+        with arq.open("a", encoding="utf8") as f:
+            f.write(json.dumps(reg, ensure_ascii=False) + "\n")
+
+    def _recup(self, a: Analise) -> dict:
+        return {"pareceres": a.pareceres, "precedentes": a.precedentes, "normativos": a.normativos, "modelos": a.modelos}
+
+    def pacote_copilot(self, p: PedidoPacote) -> Pacote:
+        """Monta o prompt (e o arquivo de contexto) para o parecerista colar no Copilot Chat com a conta corporativa da RFB."""
+        a = self._analise(p.consulta_id)
+        limite = int(self.s.get("ia.copilot_chat.limite_caracteres", 7500))
+        try:
+            sistema, completo, mapa_total = R.preparar_fundamentacao(self.s, a.fatos, self._recup(a), p.resultado, limite=200000)
+            sistema, ctx, mapa = R.preparar_fundamentacao(self.s, a.fatos, self._recup(a), p.resultado,
+                                                          limite=max(limite - len(sistema) - 2, 1000))
+        except C.ContextoInsuficiente as e:
+            raise ErroNegocio(f"Não há base suficiente para montar o contexto: {e}.")
+        avisos = []
+        trunc = len(mapa) < len(mapa_total)
+        if trunc:
+            avisos.append(f"O contexto não coube em {limite} caracteres: {len(mapa_total) - len(mapa)} trecho(s) ficaram de fora. "
+                          "Para levar tudo, anexe o arquivo de contexto ao chat e use o prompt curto.")
+        pacote = Pacote(
+            prompt=sistema + "\n\n" + ctx,
+            prompt_curto=sistema + "\n\nO contexto completo (caso concreto, regras da COGER, normativos, precedentes, pareceres e modelos) está no arquivo "
+                                   "anexo contexto_AICI.md. Use somente ele e cite os marcadores [N1], [P1], [A1], [M1], [R1].",
+            contexto_md=completo, limite_caracteres=limite, caracteres=len(sistema) + 2 + len(ctx), truncado=trunc,
+            ids=sorted(mapa), url_chat=str(self.s.get("ia.copilot_chat.url", "")), avisos=avisos)
+        self._auditar_chat("pacote", consulta_id=p.consulta_id, chars=pacote.caracteres, truncado=trunc, prompt=pacote.prompt)
+        return pacote
+
+    def aplicar_resposta_copilot(self, p: PedidoResposta) -> Minuta:
+        """Valida a resposta colada (fontes, resultado) contra o acervo e refaz a minuta com ela. A resposta nunca é aceita sem validação."""
+        a = self._analise(p.consulta_id)
+        aid = p.atividade_id or (a.classificacao.escolhida.id if a.classificacao.escolhida else "generico")
+        if aid not in self.classificador.cats:
+            raise ErroNegocio("atividade_id fora da lista de categorias do HTML.")
+        self._auditar_chat("resposta", consulta_id=p.consulta_id, chars=len(p.texto), resposta=p.texto)
+        if not re.search(r"\{.*\}", p.texto, re.S):
+            raise ErroNegocio("A resposta não contém o JSON pedido. Peça ao Copilot para responder apenas com o JSON do formato indicado.")
+        try:
+            json.loads(re.search(r"\{.*\}", p.texto, re.S).group(0))
+        except ValueError:
+            raise ErroNegocio("O JSON da resposta está incompleto ou inválido. Copie a resposta inteira do Copilot (do primeiro { ao último }).")
+        limite_ctx = 200000
+        if p.modo == "texto":     # o chat recebeu o prompt completo dentro do limite: só vale citar o que coube nele
+            limite = int(self.s.get("ia.copilot_chat.limite_caracteres", 7500))
+            sistema, _, _ = R.preparar_fundamentacao(self.s, a.fatos, self._recup(a), p.resultado, limite=200000)
+            limite_ctx = max(limite - len(sistema) - 2, 1000)
+        minuta = R.gerar_minuta(self.s, a.fatos, a.classificacao, self._recup(a), C.RespostaProvider(p.texto, limite_ctx), p.resultado, aid)
+        if minuta.modo != "copilot_chat":
+            minuta.avisos.append("A resposta do Copilot não pôde ser aproveitada; a minuta foi montada só com os modelos.")
+        return minuta
 
     # ------------------------------------------------------------ documentos
     def gerar_documento(self, pedido: PedidoParecer) -> tuple[Path, str]:

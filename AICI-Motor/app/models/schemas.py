@@ -111,3 +111,30 @@ class PedidoParecer(BaseModel):
     ano: str = ""
     destino: str = ""                            # despacho
     validado: bool = False                       # o parecerista revisou fatos, enquadramento, fontes e compromissos (obrigatório)
+
+
+class PedidoPacote(BaseModel):
+    consulta_id: int
+    resultado: Optional[Resultado] = None
+    atividade_id: Optional[str] = None
+
+
+class Pacote(BaseModel):
+    """Material para o parecerista levar ao Copilot Chat (modo assistido)."""
+    prompt: str                      # instrução + contexto, dentro do limite de caracteres do chat
+    prompt_curto: str                # só a instrução: use com o arquivo de contexto anexado
+    contexto_md: str                 # contexto completo, para anexar ao chat como arquivo
+    limite_caracteres: int
+    caracteres: int
+    truncado: bool = False
+    ids: list[str] = Field(default_factory=list)
+    url_chat: str = ""
+    avisos: list[str] = Field(default_factory=list)
+
+
+class PedidoResposta(BaseModel):
+    consulta_id: int
+    texto: str                       # resposta colada do Copilot Chat
+    modo: Literal["texto", "arquivo"] = "texto"   # como o contexto foi levado ao chat
+    resultado: Optional[Resultado] = None
+    atividade_id: Optional[str] = None

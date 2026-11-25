@@ -41,6 +41,18 @@ class AIProvider(ABC):
 Provider = AIProvider   # nome antigo, mantido por compatibilidade
 
 
+class RespostaProvider(AIProvider):
+    """Devolve uma resposta já obtida (ex.: colada pelo parecerista a partir do Copilot Chat), para passar pela mesma validação de fontes."""
+    nome = "copilot_chat_assistido"
+    usa_ia = True
+
+    def __init__(self, resposta: str, limite_contexto: int = 200000):
+        self.resposta, self.limite_contexto = resposta, limite_contexto   # limite_contexto: o que o chat realmente recebeu
+
+    def completar(self, sistema, usuario, json_mode=False):
+        return self.resposta
+
+
 class OfflineProvider(AIProvider):
     """Sem IA: o motor funciona só com a base (parecer extrativo a partir dos modelos institucionais)."""
     nome = "offline"
@@ -225,23 +237,46 @@ def montar_contexto(fatos_txt: str, normativos: list[Trecho], precedentes: list[
                     modelos: list[Trecho], anonimizar_texto: bool = True, limite: int = 28000,
                     regras: Trecho | None = None) -> tuple[str, dict[str, Trecho]]:
     """Monta o contexto enviado à IA e o mapa marcador -> trecho (para validar as fontes citadas na resposta).
-    `regras` (knowledge/regras_coger.md) acompanha sempre o contexto, como marcador R1."""
+    `regras` (knowledge/regras_coger.md) acompanha sempre o contexto, como marcador R1.
+    Com limite pequeno (ex.: prompt do Copilot Chat), o espaço é repartido entre os trechos (prioridade N, P, A, M) e os que não
+    cabem ficam de fora - e deixam de poder ser citados."""
     if not normativos:
         raise ContextoInsuficiente("nenhum normativo recuperado: a IA não será chamada só com o caso")
     if not (precedentes or pareceres or modelos):
         raise ContextoInsuficiente("nenhum precedente, parecer ou modelo recuperado: a IA não será chamada só com o caso")
+    cabeca = "=== CASO CONCRETO ===\n" + fatos_txt + "\n\n"
+    tit = {"R": "REGRAS INSTITUCIONAIS DA COGER", "N": "NORMATIVOS", "P": "PRECEDENTES", "A": "PARECERES DA COGER", "M": "MODELOS INSTITUCIONAIS"}
+    regras_txt = ""
+    if regras:
+        regras_txt = regras.texto if limite >= 20000 else _regras_resumidas(regras.texto)[: int(limite * 0.2)]
+    itens = [(l, t) for l, lista in (("N", normativos), ("P", precedentes), ("A", pareceres), ("M", modelos)) for t in lista]
+    base = len(cabeca) + len(regras_txt) + 120 + 90 * 5
+    cap = min(1800, (limite - base) // max(len(itens), 1))
+    while cap < 300 and len(itens) > 2:
+        itens.pop(); cap = min(1800, (limite - base) // len(itens))
+    cap = max(cap, 150)
     mapa: dict[str, Trecho] = {}
     blocos: list[str] = []
-    grupos = [("R", "REGRAS INSTITUCIONAIS DA COGER", [regras] if regras else []), ("N", "NORMATIVOS", normativos),
-              ("P", "PRECEDENTES", precedentes), ("A", "PARECERES DA COGER", pareceres), ("M", "MODELOS INSTITUCIONAIS", modelos)]
-    for letra, titulo, itens in grupos:
-        if not itens:
-            continue
-        blocos.append(f"=== {titulo} ===")
-        for i, t in enumerate(itens, 1):
-            mid = f"{letra}{i}"
-            mapa[mid] = t
-            corpo = anonimizar(t.texto) if anonimizar_texto else t.texto
-            blocos.append(f"[{mid}] {t.titulo} ({t.fonte})\n{corpo}")
-    ctx = "=== CASO CONCRETO ===\n" + fatos_txt + "\n\n" + "\n\n".join(blocos)
-    return ctx[:limite], mapa
+    if regras:
+        mapa["R1"] = regras
+        blocos.append(f"=== {tit['R']} ===\n[R1] {regras.titulo} ({regras.fonte})\n{regras_txt}")
+    cont: dict[str, int] = {}
+    ultimo = ""
+    for letra, t in itens:
+        cont[letra] = cont.get(letra, 0) + 1
+        mid = f"{letra}{cont[letra]}"
+        corpo = anonimizar(t.texto) if anonimizar_texto else t.texto
+        corpo = corpo if len(corpo) <= cap else corpo[:cap].rsplit(" ", 1)[0] + " [...]"
+        if letra != ultimo:
+            blocos.append(f"=== {tit[letra]} ==="); ultimo = letra
+        mapa[mid] = t
+        blocos.append(f"[{mid}] {t.titulo} ({t.fonte})\n{corpo}")
+    ctx = (cabeca + "\n\n".join(blocos))[:limite]
+    return ctx, {k: v for k, v in mapa.items() if f"[{k}]" in ctx}   # só vale citar o que a IA efetivamente recebeu
+
+
+def _regras_resumidas(texto: str) -> str:
+    """Versão curta de regras_coger.md para prompts pequenos: sem a lista de categorias (seção 3) nem a seção de pendências (7)."""
+    import re
+    partes = re.split(r"(?m)^(?=## )", texto)
+    return "".join(p for p in partes if not re.match(r"## (3|7)\.", p))
