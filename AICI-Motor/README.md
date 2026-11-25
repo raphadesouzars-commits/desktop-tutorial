@@ -30,6 +30,8 @@ O código só orquestra. Atividades, categorias, textos de conclusão, deveres e
 
 ## Instalação e execução
 
+**Atalho:** no Windows, dê dois cliques em `iniciar_AICI.bat` (primeira vez instala as dependências; exige Python 3.12+ e acesso ao repositório de pacotes; **não testado em Windows**). No Linux/macOS: `./iniciar_AICI.sh`. Mantenha a janela aberta enquanto usa a aba "Análise Inteligente".
+
 ```bash
 cd AICI-Motor
 python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
