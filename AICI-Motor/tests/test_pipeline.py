@@ -402,3 +402,22 @@ def test_pacote_respeita_limite_e_so_vale_citar_o_que_foi_enviado(settings, pdf_
         resp = json.dumps({"fundamentacao": [{"texto": "Cita o que não viu.", "fontes": [fora[0]]}]})
         m = c.post("/ia/resposta", json={"consulta_id": cid, "texto": resp}).json()
         assert not any(p["texto"] == "Cita o que não viu." for s in m["secoes"] for p in s["paragrafos"])
+
+
+# ---------------------------------------------------------------- base de precedentes da CGU (um trecho por caso)
+def test_precedentes_cgu_um_trecho_por_caso(settings):
+    pasta = settings.caminho("knowledge") / "precedentes" / "CGU"
+    pasta.mkdir(parents=True)
+    (pasta / "CGU_Precedentes_Outros_Orgaos_2024-2026.md").write_text(
+        "<!-- cabeçalho -->\n\n"
+        "Protocolo SeCI nº 00001.000001/2025-01 · 2025-03-01 · Ministério Exemplo · Risco de CI mitigável\nPedido para lecionar em instituição de ensino superior privada, magistério, compatibilidade de horários.\n\n"
+        "Protocolo SeCI nº 00001.000002/2025-02 · 2025-04-02 · Banco Exemplo · Há risco de CI relevante · A.1 - MERCADO\nPedido para atuar como corretor de imóveis em horário livre.\n\n"
+        "Protocolo SeCI nº 00001.000003/2025-03 · 2025-05-03 · Agência Exemplo · Risco de CI mitigável\nPedido para lecionar em curso de pós-graduação, magistério, docência.\n", encoding="utf8")
+    store = indexer.criar_store(settings)
+    r = indexer.indexar(settings, store)
+    cgu = [c for c in store.chunks if c.fonte.endswith("Outros_Orgaos_2024-2026.md")]
+    assert len(cgu) == 3 and all(c.origem == "CGU" and c.extra.get("unitario") for c in cgu)
+    assert cgu[0].titulo.startswith("Precedente CGU/SeCI nº 00001.000001/2025-01 (Ministério Exemplo; Risco de CI mitigável)") and cgu[0].ano == "2025"
+    rec = Retriever(settings, store).recuperar(Fatos(atividade="magistério", descricao="lecionar em instituição de ensino superior, docência"))
+    do_arquivo = [t for t in rec["precedentes"] if t.fonte.endswith("Outros_Orgaos_2024-2026.md")]
+    assert len(do_arquivo) >= 2 and len({t.id for t in do_arquivo}) == len(do_arquivo)   # vários casos do mesmo arquivo, não só um

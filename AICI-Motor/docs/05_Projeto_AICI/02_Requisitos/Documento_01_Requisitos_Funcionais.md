@@ -74,6 +74,8 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF050 | Usar os termos da etapa 1 para refazer a busca nos precedentes da CGU e na biblioteca, com termos editáveis | S | Documento com vocabulário do termo sobe na lista (ex.: de 6,3 para 22,2 de pontuação e da 3ª para a 1ª posição em teste) | Implementado | Verificado em biblioteca sintética. **Ganho com casos reais não medido** |
 | RF051 | Levar o entendimento da etapa 1 (incisos, fatos, pontos de atenção, informações que faltam) ao prompt da etapa 2 | S | Aparece no caso concreto do prompt, como sugestão a confirmar | Implementado | Verificado no navegador |
 | RF052 | Aplicar as sugestões da etapa 1 somente por ação do usuário | M | "Usar esta atividade", "＋ atividade adicional" e "Marcar incisos" são botões; nada é aplicado sozinho | Implementado | Verificado no navegador |
+| RF053 | Base ampliada de precedentes da CGU (SeCI): todos os 123 casos da RFB (2014 a 2026) embutidos no gerador e os 2.576 casos de todos os órgãos como arquivos de biblioteca | S | Um trecho por caso, começando por "Protocolo SeCI nº ..."; título com protocolo, órgão e resultado; peso COGER > CGU/RFB > CGU outros órgãos; vários casos do mesmo arquivo podem aparecer | Implementado | Testes `test_precedentes_cgu_um_trecho_por_caso`; verificado no navegador (2.576 casos indexados em menos de 1 s; busca em cerca de 5 ms). Dados públicos baixados da API de busca do SeCI em 25/11/2026 |
+| RF054 | Atualizar a base da CGU por rotina | C | `parecer/atualizar_precedentes.py [--md pasta]` baixa os casos (com pausa entre páginas) e regenera o JSON da RFB e os arquivos Markdown | Implementado | Execução manual; agendamento periódico planejado |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -91,17 +93,17 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF028 | Consultar a memória institucional em linguagem natural (resposta fundamentada com os documentos citados) | S | O usuário pergunta; o sistema pesquisa e responde com as fontes | Planejado | UC004 |
 | RF029 | Sincronizar a biblioteca com o SharePoint | S | Sincronização automática e agendada | Planejado | Hoje, importação manual por script (`scripts/importar_biblioteca.py`) |
 | RF030 | Catalogação assistida do acervo (status de cada documento: não processado, classificado, validado, utilizado) | C | Metadados e status por documento, com validação humana | Parcial | Planilha de metadados no Drive (coluna `Status_IA`); sem integração com o motor |
-| RF031 | Atualizar os precedentes da CGU sobre a RFB | C | Rotina de atualização das ementas | Implementado | `parecer/atualizar_precedentes.py` (32 ementas embutidas no gerador) |
+| RF031 | Atualizar os precedentes da CGU sobre a RFB | C | Rotina de atualização das ementas | Implementado | `parecer/atualizar_precedentes.py` (123 casos da RFB embutidos no gerador; ver RF053) |
 | RF032 | Painel de indicadores gerenciais | C | Visualização gráfica por atividade, resultado, precedente e período | Planejado | Hoje, tabelas simples na aba |
 
 ## 3. Resumo da situação
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 45 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF052 |
+| Implementado | 47 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF054 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **52** | |
+| **Total** | **54** | |
 
 "Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 

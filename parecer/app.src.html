@@ -1339,7 +1339,12 @@ async function bibConectar(arquivos){
     try {
       const t = (await bibTexto(it.f)).replace(/ /g, " ").trim();
       const m = bibMeta(it.rel);
-      novo[it.rel] = {sig: it.sig, chunks: t.length < 40 ? [] : dividirChunksJs(t, 1200, 150).map((x, k) => ({id: it.rel + "#" + k, tipo: it.tipo, titulo: m.titulo, fonte: it.rel, texto: x, tema: m.tema, ano: m.ano, numero: m.numero}))};
+      const cgu = /^CGU_Precedentes/i.test(it.f.name);   // precedentes do SeCI/CGU: um trecho por caso, começando por "Protocolo SeCI nº ..."
+      const pedacos = cgu ? t.split(/\n\s*\n/).map(x => x.trim()).filter(x => /^Protocolo SeCI nº/.test(x)) : dividirChunksJs(t, 1200, 150);
+      novo[it.rel] = {sig: it.sig, chunks: t.length < 40 ? [] : pedacos.map((x, k) => {
+        const pm = cgu && x.match(/^Protocolo SeCI nº (\S+) · (\d{4})-\d{2}-\d{2} · ([^·\n]+?) · ([^·\n]+)/);
+        return {id: it.rel + "#" + k, tipo: it.tipo, titulo: pm ? `Precedente CGU/SeCI nº ${pm[1]} (${pm[3].replace(/^Secretaria Especial da /, "")}; ${pm[4].trim()})` : m.titulo, fonte: it.rel, texto: x, tema: m.tema, ano: pm ? pm[2] : m.ano, numero: m.numero, un: !!pm};
+      })};
       if (t.length < 40) semTexto++; else lidos++;
     } catch(e){ erros++; novo[it.rel] = {sig: it.sig, chunks: []}; }
     if (n % 10 === 0) await new Promise(r => setTimeout(r, 0));
@@ -1368,7 +1373,8 @@ function bibBuscar(consulta, tipo, k){
   const B = bibBM(), q = [...new Set(tokensJs(consulta))], sc = {}, k1 = 1.4, b = 0.75;
   for (const t of q){ if (!B.idf[t]) continue; for (const i of B.inv[t]){ const f = B.tf[i][t]; sc[i] = (sc[i] || 0) + B.idf[t] * f * (k1 + 1) / (f + k1 * (1 - b + b * B.docs[i].length / (B.avg || 1))); } }
   const melhor = {};
-  for (const i in sc){ const c = BIB.chunks[i]; if (c.tipo !== tipo) continue; const s = sc[i] * (tipo === "normativo" ? 1 : 1.25); if (!melhor[c.fonte] || s > melhor[c.fonte].s) melhor[c.fonte] = {c, s, comuns: q.filter(t => B.tf[i][t])}; }
+  for (const i in sc){ const c = BIB.chunks[i]; if (c.tipo !== tipo) continue; const peso = tipo === "normativo" ? 1 : /CGU_Precedentes_RFB/i.test(c.fonte) ? 1.15 : /CGU_Precedentes/i.test(c.fonte) ? 1.0 : 1.25;   // COGER > CGU/RFB > CGU outros órgãos
+    const s = sc[i] * peso, chave = c.un ? c.id : c.fonte; if (!melhor[chave] || s > melhor[chave].s) melhor[chave] = {c, s, comuns: q.filter(t => B.tf[i][t])}; }
   return Object.values(melhor).sort((a, b) => b.s - a.s).slice(0, k);
 }
 const bibConsulta = () => [$("q2").value, atv ? atv.nome + " " + (atv.palavrasChave || []).join(" ") : "", $("q3").value, (LOC.termos || []).join(" ")].join(" ");
@@ -1470,7 +1476,7 @@ function locContexto(limite){
   const qb = bibConsulta();
   bibBuscar(qb, "normativo", 3).filter(r => !/12813|333[_ ]2013/.test(r.c.fonte)).slice(0, 2).forEach(r => itens.push({l: "N", titulo: r.c.titulo, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
   precSugeridos(3).forEach(p => itens.push({l: "P", titulo: `Precedente CGU/SeCI nº ${p.n} (${dmy(p.d)}) - ${p.r}`, fonte: "precedentes da CGU (SeCI)", texto: an(p.x)}));
-  bibBuscar(qb, "precedente", 2).forEach(r => itens.push({l: "P", titulo: `Precedente da COGER: ${r.c.titulo}`, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
+  bibBuscar(qb, "precedente", 3).forEach(r => itens.push({l: "P", titulo: r.c.un ? r.c.titulo : `Precedente da COGER: ${r.c.titulo}`, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
   bibBuscar(qb, "parecer", 3).forEach(r => itens.push({l: "A", titulo: `Parecer da COGER: ${r.c.titulo}`, fonte: r.c.fonte, texto: mascaraBib(r.c.texto, d.nome)}));
   if (atv && vari){
     const ps = vari.corpo.filter(b => (!b.opc || b.opc.padrao) && b.t === "p");

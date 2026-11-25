@@ -85,11 +85,28 @@ def chunks_do_arquivo(raiz: Path, arq: Path, tam: int, sobre: int) -> list[Chunk
     if not texto.strip():
         return []
     meta = metadados(rel)
+    if arq.name.startswith("CGU_Precedentes"):      # precedentes do SeCI/CGU: um trecho por caso
+        return _chunks_cgu(texto, relstr, rel)
     titulo = arq.stem.replace("_", " ")
     cab = f"{titulo}. " if tipo != "normativo" else ""
     return [Chunk(id=f"{relstr}#{i}", tipo=tipo, titulo=titulo, fonte=relstr, texto=cab + c,
                   tema=meta["tema"], ano=meta["ano"], numero=meta["numero"], origem=meta["origem"])
             for i, c in enumerate(dividir_chunks(texto, tam, sobre))]
+
+
+_CGU = re.compile(r"^Protocolo SeCI nº (\S+) · (\d{4})-\d{2}-\d{2} · ([^·\n]+?) · ([^·\n]+)")
+
+
+def _chunks_cgu(texto: str, relstr: str, rel: Path) -> list[Chunk]:
+    out = []
+    for i, bloco in enumerate(b.strip() for b in re.split(r"\n\s*\n", texto)):
+        m = _CGU.match(bloco)
+        if not m:
+            continue
+        orgao = re.sub(r"^Secretaria Especial da ", "", m.group(3))
+        out.append(Chunk(id=f"{relstr}#{i}", tipo=TIPO_SINGULAR[rel.parts[0]], titulo=f"Precedente CGU/SeCI nº {m.group(1)} ({orgao}; {m.group(4).strip()})",
+                         fonte=relstr, texto=bloco, ano=m.group(2), origem="CGU", extra={"unitario": True}))
+    return out
 
 
 def _hash(arq: Path) -> str:

@@ -17,7 +17,7 @@
 | Documento_10_Plano_de_Implantacao_e_Piloto | Estratégia, pré-requisitos, piloto, medição, reversão |
 
 ## 02_Requisitos
-Requisitos Funcionais (52), Requisitos Não Funcionais (39), com situação e rastreabilidade.
+Requisitos Funcionais (54), Requisitos Não Funcionais (39), com situação e rastreabilidade.
 
 ## 03_Casos_Uso
 Casos_de_Uso_v02 (UC001 a UC011).

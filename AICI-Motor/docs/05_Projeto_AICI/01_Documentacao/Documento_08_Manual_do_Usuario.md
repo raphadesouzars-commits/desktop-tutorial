@@ -29,7 +29,8 @@ Há duas abas:
 2. No gerador, aba **Análise Inteligente**, cartão **Biblioteca da COGER (opcional)**: clique em **Escolher arquivos** e selecione a **pasta que contém** essas subpastas. O navegador pergunta se pode "carregar" os arquivos: confirme (nada sai do computador).
 3. Aguarde a indexação (a primeira vez pode levar vários minutos; há botão **Cancelar**). Terminando, aparece "Biblioteca conectada: N pareceres, N precedentes, N normativos".
 4. O índice fica guardado **neste navegador**. Nas próximas vezes a biblioteca já aparece conectada; para pegar arquivos novos, selecione a pasta de novo (só o que mudou é relido). **Esquecer biblioteca** apaga o índice do navegador.
-5. Ficam de fora: `_Duplicados_Revisar`, a pasta `04_Modelos_Institucionais` e `05_Projeto_AICI`. PDFs digitalizados (sem texto) são contados como "sem texto" e não são pesquisados.
+5. **Precedentes da CGU:** a pasta `02_Precedentes/CGU_SeCI` traz **2.576 casos do SeCI/CGU** (todos os órgãos, 2014 a 2026), um por trecho. Eles entram na busca como "Precedente CGU/SeCI nº ..." (com o órgão e o resultado) e podem ir ao prompt do Copilot. Os casos da RFB também já vêm embutidos no gerador (123 casos). Pareceres da COGER têm peso maior que os da CGU, e os da RFB, maior que os de outros órgãos.
+6. Ficam de fora: `_Duplicados_Revisar`, a pasta `04_Modelos_Institucionais` e `05_Projeto_AICI`. PDFs digitalizados (sem texto) são contados como "sem texto" e não são pesquisados.
 
 ### 3.0 Modo local (padrão) - o que a maioria dos usuários vai usar
 1. Abra o `gerador-parecer-conflito.html` e entre na aba **Análise Inteligente** (o modo **Local** já vem marcado).

@@ -46,7 +46,7 @@ class Retriever:
             if self.emb is None:
                 sc = sc * 1.0                       # BM25 puro: a pontuação já vem do índice lexical
             sc = sc * (peso if c.origem == "COGER" and tipo != "normativo" else 1.0)   # RN005
-            chave = c.fonte if tipo != "modelo" else c.id                                # um trecho por documento (modelo: por variante)
+            chave = c.id if (tipo == "modelo" or c.extra.get("unitario")) else c.fonte   # um trecho por documento (modelo e caso da CGU: por trecho)
             if chave not in melhor or sc > melhor[chave][1]:
                 melhor[chave] = (c, sc, comuns, sim)
         top = sorted(melhor.values(), key=lambda x: -x[1])[:k]

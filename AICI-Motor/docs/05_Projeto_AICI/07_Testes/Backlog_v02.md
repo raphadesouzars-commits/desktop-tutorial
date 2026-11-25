@@ -28,6 +28,7 @@
 | P1 | Definir o ambiente de execução e instalar o motor | **TI** |
 | P1 | Carregar o acervo real e verificar a vigência dos normativos | Concepção / Coordenação |
 | P1 | Preencher `regras_coger.md` (seção "A consolidar pela COGER") | Coordenação |
+| P2 | Agendar a atualização periódica da base de precedentes da CGU (`atualizar_precedentes.py --md`) e mostrar a data da última atualização na tela |
 | P1 | Medir, no piloto, o ganho da etapa 1 do Copilot (precisão dos precedentes com e sem) e o tempo adicional |
 | P2 | Levar a etapa 1 (entender o caso) ao motor Python, com a mesma validação |
 | P1 | Medir a indexação da biblioteca real (686 itens) no modo local e ajustar (leitura em segundo plano, limite de páginas) |

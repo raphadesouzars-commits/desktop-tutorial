@@ -1,7 +1,8 @@
 {
  "orgao": "RFB",
- "desde": "2023-11-21",
- "baixadoEm": "2026-11-21",
+ "desde": "2014-11-12",
+ "baixadoEm": "2026-11-25",
+ "total_cgu": 2576,
  "itens": [
   {
    "n": "00096.027598/2026-18",
@@ -12,20 +13,20 @@
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. ESCREVER E COMERCIALIZAR E-BOOKS SOBRE DIREITO TRIBUTÁRIO, PLANEJAMENTO TRIBUTÁRIO, PLANEJAMENTO PATRIMONIAL E MATÉRIAS CORRELATAS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado requereu autorização para escrever e-books sobre Direito Tributário, planejamento tributário, planejamento patrimonial e matérias correlatas, com intuito educacional e de informação, cuja comercialização seria realizada por meio de plataforma on-line. Em sua análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil - RFB entendeu pela existência de risco de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013, sem possibilidade de mitigação. A Controladoria-Geral da União - CGU, em sua manifestação sobre o caso concreto, concluiu que o interessado deve se abster de exercer a atividade privada sob o risco de incorrer nos riscos de conflito de interesses descritos nos incisos I e III do art. 5º da Lei nº 12.813/2013."
   },
   {
-   "n": "00096.024660/2025-21",
-   "d": "2026-05-25",
-   "r": "Não há risco de CI relevante",
-   "rec": "",
-   "t": "",
-   "x": "PEDIDO DE AUTORIZAÇÃO. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. PARTICIPAÇÃO COMO SÓCIO COTISTA EM SOCIEDADE DE ASSESSORIA DE INVESTIMENTOS. ANÁLISE PRELIMINAR PELA RFB. AUSÊNCIA DE RISCO DE CONFLITO DE INTERESSES. ERRO DE ENCAMINHAMENTO À CGU. ENCERRAMENTO SEM ANÁLISE DE MÉRITO. O interessado requereu autorização para atuar como sócio cotista de sociedade de agente autônomo de investimentos. Em análise preliminar, a Comissão de Ética da RFB concluiu que a participação societária, por si só, não configura conflito de interesses, desde que não haja atuação na gerência ou administração da pessoa jurídica, nem exercício direto da atividade de assessor de investimentos, ainda que a atividade, em tese, se relacione às hipóteses dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013. Considerando essa conclusão, a Controladoria-Geral da União entendeu desnecessária sua manifestação, nos termos dos §§ 2º e 3º do art. 6º da Portaria Interministerial nº 333/2013, reconhecendo o erro de encaminhamento e determinando o encerramento do processo sem análise de mérito."
-  },
-  {
    "n": "00096.025447/2026-17",
    "d": "2026-05-25",
    "r": "Há risco de CI relevante",
    "rec": "",
    "t": "A.1 - (CI) ATUAR OU INTERAGIR COM O MERCADO",
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. EXERCER ATIVIDADE DE PLANEJADOR FINANCEIRO. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I e III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. ART. 5º, I E III DA LEI Nº 12.813/2013. AUTORIZAÇÃO NEGADA. A interessada formulou pedido de autorização para exercer a atividade de planejador financeiro. Em sede de análise preliminar, a Comissão de Ética da Receita Federal do Brasil entendeu que a atividade que a interessada pretende exercer em âmbito privado incorreria nas situações de risco de conflito de interesses descritas nos incisos I e III do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU corroborou o entendimento firmado pela Comissão de Ética e concluiu por negar o exercício da atividade por entender que há risco de conflito de interesses em relação aos incisos I e III do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.024660/2025-21",
+   "d": "2026-05-25",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. PARTICIPAÇÃO COMO SÓCIO COTISTA EM SOCIEDADE DE ASSESSORIA DE INVESTIMENTOS. ANÁLISE PRELIMINAR PELA RFB. AUSÊNCIA DE RISCO DE CONFLITO DE INTERESSES. ERRO DE ENCAMINHAMENTO À CGU. ENCERRAMENTO SEM ANÁLISE DE MÉRITO. O interessado requereu autorização para atuar como sócio cotista de sociedade de agente autônomo de investimentos. Em análise preliminar, a Comissão de Ética da RFB concluiu que a participação societária, por si só, não configura conflito de interesses, desde que não haja atuação na gerência ou administração da pessoa jurídica, nem exercício direto da atividade de assessor de investimentos, ainda que a atividade, em tese, se relacione às hipóteses dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013. Considerando essa conclusão, a Controladoria-Geral da União entendeu desnecessária sua manifestação, nos termos dos §§ 2º e 3º do art. 6º da Portaria Interministerial nº 333/2013, reconhecendo o erro de encaminhamento e determinando o encerramento do processo sem análise de mérito."
   },
   {
    "n": "00096.024211/2025-82",
@@ -124,12 +125,12 @@
    "x": "CONSULTA. RFB. ASSISTENTE-TÉCNICO ADMINISTRATIVO DA RECEITA FEDERAL. CRIAR ESCRITÓRIO VIRTUAL DE CONTABILIDADE. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I, III E IV. AUTORIZAÇÃO NEGADA. O interessado consultou sobre a possibilidade de criar um escritório virtual de contabilidade para trabalho com contabilidade de pessoas físicas e jurídicas na modalidade home office. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil - RFB identificou potencial conflito de interesses nas atividades pleiteadas pelo interessado, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/13. Em sede de análise definitiva, a CGU corroborou em parte o entendimento exarado pela RFB de que o exercício da atividade de consultor acarreta riscos de conflito de interesses, mas nos termos dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013, devendo o requerente se abster de realizá-las."
   },
   {
-   "n": "00096.003592/2017-56",
+   "n": "00096.020418/2024-13",
    "d": "2024-12-09",
-   "r": "Perda de Objeto",
+   "r": "Há risco de CI relevante",
    "rec": "",
-   "t": "",
-   "x": "CONSULTA. RFB. AUDITOR FISCAL. EXERCER ATIVIDADE DE PALESTRANTE E INSTRUTOR NAS ÁREAS DE CONTABILIDADE TRIBUTÁRIA E LEGISLAÇÃO TRIBUTÁRIA. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III. ANÁLISE DA CGU. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. PERDA DE OBJETO. O interessado questionou sobre a existência de conflito de interesses caso viesse a exercer atividade de palestrante e instrutor nas áreas de contabilidade tributária e legislação tributária. Em sua análise preliminar, a Corregedoria da RFB entendeu pela incidência do risco de conflito de interesses elencado no inciso III, do art. 5º da Lei nº 12.813/2013. Em razão do lapso temporal entre a consulta e o envio do processo à CGU, foram solicitadas informações adicionais ao Órgão e, em resposta, a Comissão de Ética da RFB informou sobre o arquivamento do processo e sobre a orientação ao servidor de encaminhamento de nova consulta. Nesse contexto, a CGU concluiu que a solicitação deve ser encerrada no Sistema eletrônico de Prevenção de Conflito de Interesses - SeCI - sem análise de mérito, nos termos do art. 52 da Lei nº 9.784/1999, pois perdeu o objeto em razão do arquivamento na origem."
+   "t": "A.1 - (CI) ATUAR OU INTERAGIR COM O MERCADO",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. ATUAR COMO CONSULTOR DE INVESTIMENTOS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III, DA LEI Nº 12.813/2013. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III, DA LEI Nº 12.813/2013. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para exercer a atividade de Consultoria de Investimentos, também conhecida como Consultoria de Valores Mobiliários. Em sede de análise preliminar, a Comissão de Ética da Receita Federal do Brasil - CE-RFB - concluiu que o exercício da atividade privada de Consultor de Investimentos implicaria em risco de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813 de 2013. Em sede de análise definitiva, a CGU corroborou o entendimento firmado pela CE-RFB e concluiu pela negativa de autorização do exercício da atividade de Consultor de Investimentos, por entender que há risco de conflito de interesses relevante, não mitigável, com base nas situações descritas nos incisos I e III do art. 5º da Lei nº 12.813/2013."
   },
   {
    "n": "00096.019043/2024-22",
@@ -140,12 +141,12 @@
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL DO BRASIL. ATUAR COMO ANALISTA TÉCNICO DE INVESTIMENTOS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III DA LEI Nº 12.813/2013. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III DA LEI Nº 12.813/2013. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para atuar como Analista Técnico de Investimentos. Em sede de análise preliminar, a Comissão de Ética da RFB - CE-RFB - concluiu que o exercício da atividade privada apresentaria risco relevante de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813 de 2013. Em sede de análise definitiva, a CGU corroborou o entendimento firmado pela CE-RFB e concluiu pela negativa de autorização do exercício da atividade pleiteada por entender que há risco de conflito de interesses relevante com base nas situações descritas nos incisosI e III do art. 5º da Lei nº 12.813/2013."
   },
   {
-   "n": "00096.020418/2024-13",
+   "n": "00096.003592/2017-56",
    "d": "2024-12-09",
-   "r": "Há risco de CI relevante",
+   "r": "Perda de Objeto",
    "rec": "",
-   "t": "A.1 - (CI) ATUAR OU INTERAGIR COM O MERCADO",
-   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. ATUAR COMO CONSULTOR DE INVESTIMENTOS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III, DA LEI Nº 12.813/2013. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ART. 5º, INCISOS I E III, DA LEI Nº 12.813/2013. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para exercer a atividade de Consultoria de Investimentos, também conhecida como Consultoria de Valores Mobiliários. Em sede de análise preliminar, a Comissão de Ética da Receita Federal do Brasil - CE-RFB - concluiu que o exercício da atividade privada de Consultor de Investimentos implicaria em risco de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813 de 2013. Em sede de análise definitiva, a CGU corroborou o entendimento firmado pela CE-RFB e concluiu pela negativa de autorização do exercício da atividade de Consultor de Investimentos, por entender que há risco de conflito de interesses relevante, não mitigável, com base nas situações descritas nos incisos I e III do art. 5º da Lei nº 12.813/2013."
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL. EXERCER ATIVIDADE DE PALESTRANTE E INSTRUTOR NAS ÁREAS DE CONTABILIDADE TRIBUTÁRIA E LEGISLAÇÃO TRIBUTÁRIA. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III. ANÁLISE DA CGU. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. PERDA DE OBJETO. O interessado questionou sobre a existência de conflito de interesses caso viesse a exercer atividade de palestrante e instrutor nas áreas de contabilidade tributária e legislação tributária. Em sua análise preliminar, a Corregedoria da RFB entendeu pela incidência do risco de conflito de interesses elencado no inciso III, do art. 5º da Lei nº 12.813/2013. Em razão do lapso temporal entre a consulta e o envio do processo à CGU, foram solicitadas informações adicionais ao Órgão e, em resposta, a Comissão de Ética da RFB informou sobre o arquivamento do processo e sobre a orientação ao servidor de encaminhamento de nova consulta. Nesse contexto, a CGU concluiu que a solicitação deve ser encerrada no Sistema eletrônico de Prevenção de Conflito de Interesses - SeCI - sem análise de mérito, nos termos do art. 52 da Lei nº 9.784/1999, pois perdeu o objeto em razão do arquivamento na origem."
   },
   {
    "n": "00096.018961/2024-34",
@@ -204,20 +205,20 @@
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO. CRIAR E DIVULGAR VÍDEOS DE NATUREZA EDUCATIVA E INFORMATIVA RELACIONADOS A ASSUNTOS PERTINENTES A SERVIÇOS OFERECIDOS PELO SITE DA RECEITA FEDERAL E PLATAFORMA E-CAC. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ARTS. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O interessado requer autorização para criar e divulgar vídeos de natureza educativa e informativa relacionados a assuntos pertinentes a serviços oferecidos pelo site da Receita Federal e plataforma E-CAC, tendo como objetivo orientar o contribuinte a fazer um parcelamento, solicitar a restituição do Imposto de Renda e fazer uma antecipação de malha fiscal. A Comissão de Ética da RFB, corroborando entendimento firmado pela Corregedoria do órgão, entendeu haver, no caso concreto, potencial conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013. A Controladoria-Geral da União - CGU, em sua manifestação sobre o caso concreto, concluiu pela ocorrência dos riscos de conflito de interesses listados nos incisos I e III do art. 5º da Lei de Conflito de Interesses, os quais podem ser mitigados caso o interessado, mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB e à sua chefia imediata, se obrigue a observar as medidas mitigadoras propostas."
   },
   {
-   "n": "00096.017844/2023-72",
-   "d": "2024-05-15",
-   "r": "Risco de CI mitigável",
-   "rec": "",
-   "t": "A.1 - (CI) ATUAR OU INTERAGIR COM O MERCADO",
-   "x": "CONSULTA. RFB. ANALISTA TRIBUTARIO DA RECEITA FEDERAL DO BRASIL. I - ESPOSA ATUAR EM EMPRESA QUE PRESTA SERVIÇOS PARA A RFB NO MESMO LOCAL DE LOTAÇÃO DO SERVIDOR. II - REALIZAR CURSOS DE ANALISTA DE MERCADO MOBILIÁRIO/INVESTIMENTOS. III - PRESTAR CONSULTORIA NA ÁREA DE INVESTIMENTOS. ANÁLISE PRELIMINAR. I - INEXISTÊNCIA DE RISCO DE CONFLITO DE INTERESSES. II e III - RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º,?III. ANÁLISE DA CGU. I e II - RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, V. III - RISCO DE CONFLITO DE INTERESSES RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado formulou consulta sobre duas situações fáticas. Primeiramente, questionou se sua esposa poderia trabalhar em empresa que presta serviços para a RFB no mesmo local de lotação do servidor. Também indagou se poderia realizar cursos de analista de mercado mobiliário/investimentos e prestar consultoria na área de investimentos. Em sede de análise preliminar, a Comissão de Ética da RFB entendeu que a primeira situação não configura conflito de interesses. Por outro lado, entendeu que as demais situações constituem risco de conflito de interesses com base no inciso III do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU concluiu que a primeira situação pode representar risco de conflito de interesses com base no inciso V do art. 5º da Lei nº 12.813/2013, devendo o servidor fazer uso dos institutos da suspeição e/ou do impedimento caso o desempenho de suas atribuições públicas possa favorecer os interesses da empresa para a qual sua esposa pretende trabalhar. Outrossim, entendeu que o interessado pode ser autorizado a realizar cursos de analista de mercado mobiliário/investimentos, desde que se comprometa a cumprir algumas condições. Por outro lado, entendeu que o interessado deve abster-se de prestar consultoria sobre investimentos, sob risco de incorrer nas situações descritas nos incisos I e III do art. 5º da Lei nº 12.813/2013"
-  },
-  {
    "n": "00096.017981/2023-15",
    "d": "2024-05-15",
    "r": "Risco de CI mitigável",
    "rec": "",
    "t": "A.10 - (CI) MAGISTÉRIO (PALESTRANTE, INSTRUTOR OU PROFESSOR)",
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITORA FISCAL. REALIZAÇÃO DE CURSOS E PRODUÇÃO DE MATERIAIS DE APOIO QUE VERSEM SOBRE LEGISLAÇÃO E PROCEDIMENTOS ADUANEIROS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ARTS. 5º, I, II, III, IV E VII. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.812/2013, ART. 5º, I E II POSSIBILIDADE DE AUTORIZAÇÃO CONDICIONADA. A interessada requer autorização para ministrar cursos e produzir materiais de apoio que versem sobre legislação e procedimentos aduaneiros para público com interesse na área de comércio exterior. A Comissão de Ética da RFB, corroborando entendimento firmado por sua Corregedoria, entendeu haver, no caso concreto, potencial conflito de interesses, nos termos dos incisos I, II, III, IV e VII do art. 5º da Lei nº 12.813/2013. A Controladoria-Geral da União - CGU, em sua manifestação sobre o caso concreto, concluiu pela ocorrência dos riscos de conflito de interesses listados nos incisos I e II do art. 5º da Lei de Conflito de Interesses, os quais, no entanto, podem ser mitigados caso a interessada, mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB e à sua chefia imediata, obrigue-se a observar as medidas mitigadoras propostas."
+  },
+  {
+   "n": "00096.017844/2023-72",
+   "d": "2024-05-15",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "A.1 - (CI) ATUAR OU INTERAGIR COM O MERCADO",
+   "x": "CONSULTA. RFB. ANALISTA TRIBUTARIO DA RECEITA FEDERAL DO BRASIL. I - ESPOSA ATUAR EM EMPRESA QUE PRESTA SERVIÇOS PARA A RFB NO MESMO LOCAL DE LOTAÇÃO DO SERVIDOR. II - REALIZAR CURSOS DE ANALISTA DE MERCADO MOBILIÁRIO/INVESTIMENTOS. III - PRESTAR CONSULTORIA NA ÁREA DE INVESTIMENTOS. ANÁLISE PRELIMINAR. I - INEXISTÊNCIA DE RISCO DE CONFLITO DE INTERESSES. II e III - RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º,?III. ANÁLISE DA CGU. I e II - RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, V. III - RISCO DE CONFLITO DE INTERESSES RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado formulou consulta sobre duas situações fáticas. Primeiramente, questionou se sua esposa poderia trabalhar em empresa que presta serviços para a RFB no mesmo local de lotação do servidor. Também indagou se poderia realizar cursos de analista de mercado mobiliário/investimentos e prestar consultoria na área de investimentos. Em sede de análise preliminar, a Comissão de Ética da RFB entendeu que a primeira situação não configura conflito de interesses. Por outro lado, entendeu que as demais situações constituem risco de conflito de interesses com base no inciso III do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU concluiu que a primeira situação pode representar risco de conflito de interesses com base no inciso V do art. 5º da Lei nº 12.813/2013, devendo o servidor fazer uso dos institutos da suspeição e/ou do impedimento caso o desempenho de suas atribuições públicas possa favorecer os interesses da empresa para a qual sua esposa pretende trabalhar. Outrossim, entendeu que o interessado pode ser autorizado a realizar cursos de analista de mercado mobiliário/investimentos, desde que se comprometa a cumprir algumas condições. Por outro lado, entendeu que o interessado deve abster-se de prestar consultoria sobre investimentos, sob risco de incorrer nas situações descritas nos incisos I e III do art. 5º da Lei nº 12.813/2013"
   },
   {
    "n": "00096.017404/2023-15",
@@ -258,6 +259,734 @@
    "rec": "",
    "t": "",
    "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL. MINISTRAR CURSO REMUNERADO SOBRE SISTEMA DE CONTROLE DE CARGA E TRÂNSITO DE IMPORTAÇÃO (CCT-IMPORTAÇÃO) A PARTICULARES QUE SERÃO USUÁRIOS DO SISTEMA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ARTS. 5º, I, II, III E VII. ANÁLISE DA CGU. RISCO DE CONFLITO RELEVANTE. LEI Nº 12.812/2013, ART. 5º, I, II, III E VII. AUTORIZAÇÃO NEGADA. O interessado requer autorização para ministrar curso remunerado sobre sistema de controle de carga e trânsito de importação (CCT-Importação) a particulares que serão usuários do sistema. A Comissão de Ética da RFB, corroborando entendimento firmado por sua Corregedoria, entendeu haver, no caso concreto, potencial conflito de interesses, nos termos dos incisos I, II, III e VII do art. 5º da Lei nº 12.813/2013. A Controladoria-Geral da União, em sua manifestação, entendeu que o interessado não deve ser autorizado a exercer a atividade privada pretendida, sob risco de incorrer nas situações de conflito de interesses previstas nos incisos I, II, III e VII do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.016207/2023-89",
+   "d": "2023-10-26",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ANALISTA TRIBUTÁRIO. EXERCÍCIO DE ADVOCACIA NAS ÁREAS DE FAMÍLIA, SUCESSÕES E REGULARIZAÇÃO DE IMÓVEIS. ANÁLISE PRELIMINAR. IMPEDIMENTO. PORTARIA RFB Nº 444/2015, ART. 1º, I. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, III E IV. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado formulou consulta para saber se poderia exercer a advocacia nas áreas de família, sucessões e regularização de imóveis. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil – CE-RFB entendeu que haveria impedimento ao exercício da atividade pleiteada nos termos do art. 1º, I, da Portaria RFB nº 444, de 23 de março de 2015. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que, como o óbice levantado pela CE-RFB em sua análise preliminar versa sobre aspectos atinentes a norma interna da RFB e ao Estatuto da OAB, e como esse impedimento é suficiente para negar ao interessado o exercício da atividade privada em questão, não compete à CGU manifestar-se sobre o caso em tela enquanto esta matéria não for superada internamente, tendo a RFB autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.015355/2023-86",
+   "d": "2023-10-23",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL. SOCIEDADE EM EMPRESA NA ÁREA DE COMÉRCIO EXTERIOR E IMPORTAÇÃO DE MERCADORIAS JUNTAMENTE COM CÔNJUGE. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, IV E V. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para ser sócio de empresa que atuará no ramo de comércio exterior, importação de mercadorias e revenda no mercado interno. Acrescentou que sua esposa exerceria a função de sócia-administradora da empresa. A Comissão de Ética da RFB entendeu que a situação exposta pelo interessado configura risco potencial de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei 12.813/2013. A Controladoria-Geral da União, em sua manifestação, entendeu que a situação em questão envolve risco relevante de conflito de interesses, nos termos dos incisos I, IV e V do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.016002/2023-11",
+   "d": "2023-08-14",
+   "r": "",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. SRF. ANALISTA TRIBUTÁRIO. INICIAR FACULDADE DE DIREITO. ANÁLISE PRELIMINAR. GRADUAÇÃO EM DIREITO. INEXISTÊNCIA DE CONFLITO DE INTERESSES. AUTORIZAÇÃO CONCEDIDA. ATUAR COMO ADVOGADO ESPECIALIZADO EM DIREITO DO CONSUMIDOR. IMPEDIMENTO. PORTARIA RFB Nº 444/2015, ART. 1º, I. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, III E IV. ANÁLISE DA CGU. SOLICITAÇÃO NÃO ATENDE AOS REQUISITOS DE ADMISSIBILIDADE. PORTARIA INTERMINISTERIAL Nº 333/2013, ART. 3º. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado solicitou autorização para iniciar faculdade de Direito com a intenção de atuar no ramo do direito do consumidor, especialmente em ações contra planos de saúde privada. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil – CE-RFB entendeu pela possibilidade de o consulente graduar-se em Direito. Por outro lado, entendeu que haveria impedimento ao exercício da atividade de advogado especializado em Direito do Consumidor nos termos do art. 1º, I, da Portaria RFB nº 444, de 23 de março de 2015, além de considerar a existência de risco relevante de conflito de interesses com fundamento nos incisos I, III e IV do art. 5º da Lei nº 12.813/2013. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que, no tocante à pretensão do consulente de graduar-se em Direito, em que pese não se tratar de pedido de autorização para exercer atividade privada, a SRF manifestou-se sobre esse ponto e não verificou óbice, não cabendo, portanto, à CGU adentrar à análise de mérito. Sob outro enfoque, na hipótese de o interessado atuar como advogado especializado em Direito do Consumidor, considerando que o consulente ainda não iniciou a graduação em Direito, tal solicitação não se refere a uma situação concreta e, por isso, não atende aos requisitos previstos no art. 3º da Portaria Interministerial nº 333/2013."
+  },
+  {
+   "n": "00096.015587/2023-34",
+   "d": "2023-06-29",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO. RFB. PRESTAR SERVIÇOS DE CONSULTORIA E ASSESSORAMENTO TÉCNICO A EMPRESAS QUE DESEJAM FORNECER BENS E SERVIÇOS À ADMINISTRAÇÃO PÚBLICA FEDERAL, ESTADUAL E MUNICIPAL, AUXILIANDO NA ELABORAÇÃO DE PROPOSTAS, FORMULAÇÃO DE LANCES, ORGANIZAÇÃO DE DOCUMENTOS DE HABILITAÇÃO, CADASTRAMENTO EM SISTEMAS INFORMATIZADOS E OUTRAS ATIVIDADES RELACIONADAS AOS PROCESSOS DE CONTRATAÇÃO PÚBLICA. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, III E IV. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, I E IV. AUTORIZAÇÃO NEGADA. O interessado formulou pedido de autorização para prestar serviços de consultoria e assessoramento técnico a empresas que desejam fornecer bens e serviços à administração pública federal, estadual e municipal, auxiliando na elaboração de propostas, formulação de lances, organização de documentos de habilitação, cadastramento em sistemas informatizados e outras atividades relacionadas aos processos de contratação pública. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil (CE-RFB) concluiu por risco potencial de conflito de interesses, nos termos dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU corroborou parcialmente o entendimento exarado na análise prévia da CE-RFB e concluiu que o servidor deve se abster de realizar a atividade privada pretendida, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.014802/2022-15",
+   "d": "2023-06-29",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ASSISTENTE TÉCNICO-ADMINISTRATIVO. RFB. EXERCER CARGO DE ADVOGADO EM EMPRESA DE ASSESSORIA E CONSULTORIA, ESPECIFICAMENTE NA ÁREA DE LICITAÇÕES E CONTRATOS ADMINISTRATIVOS, DURANTE PERÍODO DE LICENÇA NÃO REMUNERADA. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, I E IV. AUTORIZAÇÃO CONDICIONADA. O interessado formulou pedido de autorização para exercer cargo de advogado em empresa de assessoria e consultoria, especificamente na área de licitações e contratos administrativos, durante período de licença não remunerada. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil (CE-RFB) concluiu por risco potencial de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU corroborou parcialmente o entendimento exarado na análise prévia da CE-RFB e concluiu que há risco de conflito de interesses mitigável no exercício da atividade pleiteada, visto que será exercida durante o usufruto de licença para tratar de interesses particulares, em face do disposto nos incisos I e IV do art. 5º da Lei nº 12.813/2013, sendo possível a sua autorização, observadas algumas ressalvas e condições."
+  },
+  {
+   "n": "00096.015474/2023-39",
+   "d": "2023-06-19",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. EXERCER ATIVIDADE DE ENGENHEIRO ATUANDO NA REGULARIZAÇÃO DE OBRAS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, III E IV. ANÁLISE DA CGU. RISCO DE CONFLITO RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I, III E IV. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para exercer atividade de engenheiro, atuando na regularização de obras, a qual inclui a emissão da Certidão Negativa de Débitos (CND) na Receita Federal. A Comissão de Ética da RFB entendeu que o exercício da atividade pleiteada configura risco potencial de conflito de interesses, nos termos dos incisos I, III e IV do art. 5º da Lei 12.813/2013. A Controladoria-Geral da União, em sua manifestação, entendeu que a atividade em questão envolve risco relevante de conflito de interesses, nos termos dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.015464/2023-11",
+   "d": "2023-05-09",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. CHEFE DA AGÊNCIA DA RECEITA FEDERAL EM ALAGOINHAS/BA. EXERCER A ADVOCACIA EM INVENTÁRIO EXTRAJUDICIAL. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.813/2013. ART. 5º, I, II, III e IV. AUTORIZAÇÃO CONDICIONADA. A interessada questionou sobre a existência de conflito de interesses no caso de exercer a advocacia em causa relativa ao inventário de seu pai. Em sua análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil (CE-RFB) entendeu pela incidência de risco de conflito de interesses nos termos do inciso I do art. 5º da Lei nº 12.813/2013, o qual poderia ser mitigado mediante a assinatura de Termo de Compromisso pela interessada, no qual se comprometa a cumprir algumas condições. A Controladoria-Geral da União - CGU, em sua manifestação sobre o caso concreto, entendeu que a situação exposta pela interessada poderia incorrer nos riscos de conflito de interesses listados nos incisos I, II, III e IV do art. 5º da Lei nº 12.813/2013, os quais podem ser mitigados caso a interessada, mediante assinatura de termo de compromisso junto à Comissão de Ética da Receita Federal do Brasil e à sua chefia imediata, se comprometa a observar as medidas mitigadoras propostas."
+  },
+  {
+   "n": "00096.014170/2022-73",
+   "d": "2023-01-27",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. SRF. ANALISTA TRIBUTÁRIO. EXERCER ADVOCACIA PRIVADA, EXCETO CONTRA A ADMINISTRAÇÃO PÚBLICA FEDERAL. ANÁLISE PRELIMINAR. IMPEDIMENTO. LEI Nº 8.906/1994, ART. 28, VII. PORTARIA RFB Nº 444/2015, ART. 1º, I. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I, III E IV. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado formulou consulta para saber se poderia exercer a advocacia privada, exceto contra a Administração Pública Federal. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil – CE-RFB entendeu que haveria impedimento ao exercício da atividade pleiteada nos termos do art. 28, VII, da Lei nº 8.906/1994 e do art. 1º, I, da Portaria RFB nº 444, de 23 de março de 2015. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que, como o óbice levantado pela CE-RFB em sua análise preliminar versa sobre aspectos atinentes ao Estatuto da OAB e a norma interna da SRF e, como esse impedimento é suficiente para negar ao interessado o exercício da atividade privada em questão, não compete à CGU manifestar-se sobre o caso em tela enquanto esta matéria não for superada internamente, tendo a SRF autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.012998/2022-97",
+   "d": "2022-12-23",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. SRF. ANALISTA TRIBUTÁRIO. ATUAR COMO TRABALHADOR PORTUÁRIO AVULSO NA FUNÇÃO DE CONFERENTE DE CARGA. ANÁLISE PRELIMINAR. IMPEDIMENTO. CÓDIGO DE CONDUTA DOS AGENTES PÚBLICOS EM EXERCÍCIO NA RECEITA FEDERAL . RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III E VII. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado pediu autorização para atuar como trabalhador portuário avulso na função de conferente de carga, pertencente ao quadro do Órgão Gestor de Mão de Obra - OGMO. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil – CE-RFB entendeu que haveria impedimento ao exercício da atividade pleiteada nos termos do artigo 21, § 2º, incisos I, III e IV, da Portaria RFB nº 3010, de 29 de junho de 2011, relativa ao Código de Conduta dos Agentes Públicos em Exercício na Receita Federal. Ademais, considerou que haveria risco relevante de conflito de interesses com base nos incisos III e VII do art. 5º da Lei nº 12.813/2013. A ControladoriaGeral da União, em sua manifestação sobre o caso concreto, entendeu que, como o óbice levantado pela CE-RFB em sua análise preliminar versa sobre aspectos atinentes a suas normas internas e, como esse impedimento é suficiente para negar ao interessado o pedido de autorização para o exercício da atividade privada em questão, não compete à CGU manifestar-se sobre o caso em tela enquanto esta matéria não for superada internamente, tendo a SRF autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.012220/2022-88",
+   "d": "2022-09-27",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. AUXÍLIO AO PLANEJAMENTO PREVIDENCIÁRIO DE PESSOAS FÍSICAS NA SEARA DO DIREITO PREVIDENCIÁRIO. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III E IV. ANÁLISE DA CGU. RISCO DE CONFLITO RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I, III E IV. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para esclarecer dúvidas, na forma escrita ou oral, no auxílio ao planejamento previdenciário de pessoas físicas na seara do direito previdenciário. A Comissão de Ética da RFB entendeu que o exercício da atividade pleiteada configura risco potencial de conflito de interesses, nos termos dos incisos III e IV do art. 5º da Lei 12.813/2013. A Controladoria-Geral da União, em sua manifestação, entendeu que a atividade em questão envolve risco relevante de conflito de interesses, nos termos dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.013371/2022-53",
+   "d": "2022-09-09",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL. CONSULTOR DE VALORES MOBILIÁRIOS. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado formulou consulta sobre potencial conflito de interesses caso viesse a atuar como consultor de valores mobiliários. A Comissão de Ética da Receita Federal do Brasil concluiu por risco potencial de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/13. Em sua manifestação, a Controladoria-Geral da União - CGU corroborou os termos trazidos pela Comissão, entendendo que há risco de conflito de interesses não mitigável nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.010669/2021-21",
+   "d": "2022-06-22",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. PERITO JUDICIAL NAS ÁREAS ADMINISTRATIVA, FINANCEIRA E CONTÁBIL. ANÁLISE PRELIMINAR. POTENCIAL CONFLITO DE INTERESSES. ART. 5º, I E III DA LEI Nº 12.813/2013. IMPEDIMENTO PREVISTO NA PORTARIA RFB n° 444/2015. ANÁLISE CGU. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado pediu autorização para atuar como perito judicial, no âmbito da justiça estadual, elaborando laudos que necessitem de conhecimentos administrativo, financeiro e contábil. Em sua análise preliminar, a Corregedoria da Secretaria da Receita Federal do Brasil entendeu que a atividade pretendida seria incompatível com as atribuições do cargo do interessado, nos termos do inciso III do art. 5º da Lei nº 12.813/2013, sendo também vedada pelo art. 1º, II da Portaria RFB nº 444/2015, entendimento posteriormente ratificado pela Comissão de Ética da RFB. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que, como o óbice levantado pela RFB em sua análise preliminar versa sobre aspectos atinentes à Portaria RFB nº 444/2015 e, como esse impedimento é suficiente para negar ao interessado o pedido de autorização para o exercício da atividade privada em questão, não compete à CGU manifestar-se sobre o caso em tela enquanto esta matéria não for superada internamente, tendo a RFB autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.011530/2021-11",
+   "d": "2022-03-22",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTARIO. MINISTRAR CURSOS E PALESTRAS E PRESTAR ASSESSORIA A ESCRITÓRIOS E PESSOAS FÍSICAS. ANÁLISE PRELIMINAR. PORTARIA SRF Nº 695, DE 21 DE JULHO DE 1999. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ARTS. 5º, I, II E III. ANÁLISE DA CGU. RISCO DE CONFLITO RELEVANTE. LEI Nº 12.812/2013, ART. 5º, I, II, III. AUTORIZAÇÃO NEGADA. O interessado requer autorização para ministrar cursos, realizar palestras e fornecer assessoria a escritórios e pessoas físicas que são usuários dos sistemas e aplicativos disponibilizados pela Receita Federal do Brasil. A Comissão de Ética da RFB, corroborando entendimento firmado por sua Corregedoria, entendeu haver, no caso concreto, potencial conflito de interesses, nos termos dos incisos I, II e III do art. 5º da Lei nº 12.813/2013. A Controladoria-Geral da União, em sua manifestação, entendeu que o interessado não deve ser autorizado a exercer a atividade privada pretendida, sob risco de incorrer nas situações de conflito de interesses previstas nos incisos I, II e III do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.011265/2021-54",
+   "d": "2022-03-18",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. SRF. ASSISTENTE TÉCNICO-ADMINISTRATIVO. PARTICIPAÇÃO EM LEILÕES DA RFB. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado pediu autorização para participar de leilões da RFB disponibilizados no E-CAC para aquisição de bens para uso ou consumo próprio. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil – CE-RFB entendeu que haveria impedimento ao exercício da atividade pleiteada nos termos do artigo 20 da Portaria RFB nº 3010, de 29 de junho de 2011. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que, como o óbice levantado pela CE-RFB em sua análise preliminar versa sobre aspectos atinentes a suas normas internas e, como esse impedimento é suficiente para negar ao interessado o pedido de autorização para o exercício da atividade privada em questão, não compete à CGU manifestar-se sobre o caso em tela enquanto esta matéria não for superada internamente, tendo a SRF autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.010532/2021-76",
+   "d": "2022-02-10",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL DO BRASIL. ATUAR COMO PROCURADOR DE SEUS GENITORES. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, IV. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, IV. AUTORIZAÇÃO CONDICIONADA. A interessada pediu autorização para exercer atividade de procuradora, representando os interesses de seus pais perante à Caixa Econômica Federal - CAIXA, ao Banco Santander e em outras atividades que se fizerem necessárias para vender imóvel ou comprar e vender automóvel. A CE-RFB ratificou o entendimento da Corregedoria da Receita Federal quanto à existência de impedimento à representação, por parte da interessada, de interesses gerais de seus genitores junto à CAIXA, nos termos do inciso IV do art. 5º da Lei nº 12.813/13. Todavia, não haveria impedimento à representação, pela interessada, dos interesses de seus genitores junto ao Banco Santander e em outras atividades que se fizerem necessárias para vender imóvel ou comprar e vender automóvel. A CGU, na análise do caso concreto, ratificou em parte o entendimento da CE-RFB e entendeu que a atividade envolve risco de incidir na hipótese de conflito de interesses estabelecida no inciso IV do art. 5º da Lei nº 12.813/2013, porém, o risco é mitigável mediante a adoção de medidas preventivas pela agente pública interessada. Sobre as atividades referentes à atuação junto ao Banco Santander e outras que se fizerem necessárias para vender imóvel ou comprar e vender automóvel, concluiu pela inexistência de risco de conflito de interesses."
+  },
+  {
+   "n": "00096.010055/2021-49",
+   "d": "2021-09-16",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. INVENTÁRIO EXTRAJUDICIAL. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB consulta para realizar um inventário extrajudicial. A CE-RFB, em análise preliminar, entendeu que atividade pleiteada de realizar um inventário extrajudicial pode ser realizada pelo interessado, desde que assuma os compromissos mencionados no Parecer Coger n° 115/2021. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionada à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.009625/2021-58",
+   "d": "2021-07-06",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. DESPACHANTE. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III E IV. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, III E IV. AUTORIZAÇÃO NEGADA. O interessado formulou pedido para saber se configuraria conflito de interesses exercer a atividade privada de despachante, realizando serviços relativos à RFB para pessoas digitalmente excluídas. Em sede de análise preliminar, a Comissão de Ética da RFB entendeu que o exercício da atividade pleiteada configura risco potencial de conflito de interesses, nos termos dos incisos III e IV do art. 5º da Lei 12.813/2013. Em sede de análise definitiva, a CGU corroborou o entendimento da Comissão de Ética da RFB de que a atividade privada pretendida pelo interessado acarreta o risco de incorrer nas situações de conflito de interesses descritas nos incisos III e IV do art. 5º da Lei nº 12.813/2013, acrescido do risco de incorrer na situação descrita no inciso I do mesmo artigo, devendo o interessado abster-se de realizar a atividade privada pretendida."
+  },
+  {
+   "n": "00096.009477/2021-71",
+   "d": "2021-06-24",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. EXERCÍCIO DE ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pediu autorização para exercer a advocacia. A CE-RFB, em análise preliminar, entendeu que a atividade de advocacia pode ser executada, com ressalvas, mediante o compromisso de o servidor não advogar em matéria tributária, previdenciária e aduaneira e contra a Fazenda Pública que o remunera, e adotar outras medidas mitigadoras. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionada à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.009491/2021-75",
+   "d": "2021-06-21",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. PROCURADOR DIGITAL NO AMBIENTE VIRTUAL DA RFB. ANÁLISE PRELIMINAR. POTENCIAL CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III. CÓDIGO DE CONDUTA DOS AGENTES PÚBLICOS EM EXERCÍCIO NA RFB. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, III E IV. AUTORIZAÇÃO NEGADA. O interessado solicita autorização para atuar como procurador digital no ambiente virtual da RFB (E-CAC), mediante procuração RFB com utilização de certificado digital próprio, exclusivamente para outorgantes pessoa física para serviços não-privativos de contabilidade. Em sede de análise preliminar, a Comissão de Ética da RFB entendeu pela existência de potencial conflito de interesses na atividade pleiteada, nos termos do inciso IV do art. 5º da Lei nº 12.813/2013, pois envolve situações em que o agente público, ao transitar entre a Administração Pública e o setor privado, ainda que virtualmente, poderá privilegiar interesses não condizentes com o bem público. A Comissão de Ética da RFB também entendeu que a atividade violaria o inciso IV do §2º do art. 21 do Código de Conduta dos Agentes Públicos em Exercício na Receita Federal do Brasil. Em sede de análise definitiva, a CGU concluiu que o interessado deve se abster de realizar a atividade privada pretendida, sob risco de incorrer nas situações de conflito de interesses descritas no incisos III e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.006562/2019-63",
+   "d": "2020-11-23",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR-FISCAL DA RECEITA FEDERAL. ATUAÇÃO COMO PERITO NA ÁREA DE FACILITAÇÃO DE COMÉRCIO. ANÁLISE PRELIMINAR. POTENCIAL CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III E IV. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. LEI Nº 12.813/2013, ART. 5º, I, III E IV. AUTORIZAÇÃO NEGADA. O interessado formulou pedido de autorização para atuar como perito na área de facilitação de comércio para avaliar o interesse do setor público em projeto de cooperação, a ser financiado pela agência da GIZ (Cooperação Alemã para o Desenvolvimento) em Brasília. Em sede de análise preliminar, a Secretaria Especial da Receita Federal do Brasil - RFB - entendeu que a atividade pleiteada pelo servidor pode configurar possível conflito de interesses, nos termos dos incisos III e IV do art. 5º da Lei nº 12.813/2013. Em sua manifestação, a CGU corroborou com os termos trazidos pela RFB e entendeu que o interessado não deve ser autorizado a atuar como perito na área de facilitação de comércio para avaliar o interesse do setor público em projeto de cooperação, a ser financiado pela agencia da GIZ (Cooperação Alemã para o Desenvolvimento) em Brasília, ante o risco de incorrer em uma situação de conflito de interesses, nos termos dos incisos I, III e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.008723/2020-97",
+   "d": "2020-11-17",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ANALISTA TRIBUTÁRIO. REALIZAÇÃO DE OPERAÇÕES NA BOLSA DE VALORES NACIONAL. ANÁLISE PRELIMINAR. AUSÊNCIA DE CONFLITO DE INTERESSES. ANÁLISE DA CGU. ERRO DE ENCAMINHAMENTO. PROCESSO ENCERRADO SEM ANÁLISE DE MÉRITO. O interessado formulou consulta para saber se configuraria conflito de interesses realização de operações na bolsa de valores nacional. Em sede de análise preliminar, a Comissão de Ética da Secretaria Especial da Receita Federal do Brasil - RFB, não vislumbrou incompatibilidade material entre a atividade privada pleiteada pelo interessado e o cargo do servidor na RFB. A partir do recebimento de mensagem eletrônica enviada pela RFB, na qual afirmou ter havido erro material na digitação da manifestação daquela Comissão de Ética no SeCI, a CGU entendeu que houve erro de encaminhamento do caso em tela, determinando o encerramento da presente solicitação."
+  },
+  {
+   "n": "00096.008362/2020-89",
+   "d": "2020-10-21",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO. CONSULTOR DE VALORES MOBILIÁRIOS. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado arguiu se poderia exercer atividade de Consultor de Valores Mobiliários nos termos da Instrução CVM n° 592, de 17 de novembro de 2017 e demais alterações. Em sede de análise preliminar, a Comissão de Ética da RFB, subsidiada pela Corregedoria-Geral da RFB, entendeu que o exercício da atividade-fim pretendida resta impedida em razão do conflito de interesses identificado à luz do inciso III do art. 5º da Lei nº 12.813/13. Em sua manifestação, a CGU entendeu que o interessado deve se abster de atuar como Consultor de Valores Mobiliários, nos termos da Instrução CVM nº 592, de 17 de novembro de 2017, sob risco de incidir em conflito de interesses, com fulcro nos incisos I e III do artigo 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.007979/2020-87",
+   "d": "2020-09-01",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL. INTEGRAR O CONSELHO FISCAL DE ESTATAL. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Auditor Fiscal da RFB pediu autorização para integrar o Conselho Fiscal da Empresa Brasileira de Correios e Telégrafos - ECT. A Comissão de Ética da RFB, em sua análise preliminar, firmou entendimento de que, no presente caso, haveria a existência de risco de conflito de interesses, nos termos dos incisos I e III do artigo 5º da Lei nº 12.813/2013. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu ser possível o exercício da atividade pleiteada, desde que o interessado se comprometa, mediante assinatura de Termo de Compromisso Formal junto à Comissão de Ética da RFB e à sua chefia imediata, a obedecer algumas condicionantes."
+  },
+  {
+   "n": "00096.007269/2019-13",
+   "d": "2020-09-01",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR-FISCAL DA RECEITA FEDERAL. GESTÃO DE RECURSOS DE TERCEIROS. ANÁLISE PRELIMINAR. POTENCIAL CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. AUTORIZAÇÃO NEGADA. O interessado formulou pedido de autorização para atuar como gestor de recursos de terceiros via veículos de investimentos como clubes de investimentos ou fundos de investimentos. Em sede de análise preliminar, a Secretaria Especial da Receita Federal do Brasil - RFB entendeu que a atividade explicitada pelo interessado de gestor de recursos de terceiros via clubes ou fundos de investimentos, é potencialmente geradora de risco de situação de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei de Conflito de Interesses e inciso IV do art. 21 do Código de Conduta da RFB. Em sua manifestação, a CGU corroborou com os termos trazidos pela RFB, entendendo que há risco de conflito de interesses não mitigável."
+  },
+  {
+   "n": "00096.007978/2020-32",
+   "d": "2020-07-08",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. EXERCÍCIO DE ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pediu autorização para exercer a advocacia. A CE-RFB, em análise preliminar, entendeu que a atividade de advocacia pode ser executada, com ressalvas, mediante o compromisso de o servidor não advogar em matéria tributária, previdenciária e aduaneira e contra a Fazenda Pública que o remunera, e adotar outras medidas mitigadoras. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionada à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.007920/2020-99",
+   "d": "2020-07-07",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. EXERCÍCIO DE ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pediu autorização para exercer a advocacia. A CE-RFB, em análise preliminar, entendeu que a atividade de advocacia pode ser executada, com ressalvas, mediante o compromisso de o servidor não advogar em matéria tributária, previdenciária e aduaneira e contra a Fazenda Pública que o remunera, e adotar outras medidas mitigadoras. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionado à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.007728/2020-19",
+   "d": "2020-06-02",
+   "r": "Há risco de CI relevante",
+   "rec": "Recurso Negado",
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. SÓCIO-COTISTA DE EMPRESA DE IMPORTAÇÃO. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. Auditor Fiscal da RFB perguntou se poderia constituir uma empresa de importação de prensas de recarga de munições para revenda a atiradores desportivos. A Comissão de Ética da RFB, em sua análise preliminar, firmou entendimento de que, no presente caso, haveria a existência de risco de conflito de interesses, nos termos dos incisos I, III, IV, V e VII do art. 5º da Lei nº 12.813 de 2013, assim como o disposto nos incisos I, III e IV do Código de Conduta dos Agentes Públicos em Exercício na RFB. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, entendeu que a situação envolveria risco relevante de conflito de interesses, nos termos dos incisos I, IV e V do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.007657/2020-38",
+   "d": "2020-06-02",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. EXERCÍCIO DE ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pediu autorização para exercer a advocacia. A CE-RFB, em análise preliminar, entendeu que a atividade de advocacia pode ser executada, com ressalvas, mediante o compromisso de o servidor não advogar em matéria tributária, previdenciária e aduaneira e contra a Fazenda Pública que o remunera, e adotar outras medidas mitigadoras. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionado à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.007523/2019-83",
+   "d": "2020-05-21",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO. ATUAR COMO ASSESSOR DE INVESTIMENTOS EM CORRETORA DE VALORES. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES NÃO MITIGÁVEL. ANÁLISE DA CGU. AUTORIZAÇÃO NEGADA. Analista Tributário da RFB pediu autorização para atuar como assessor de investimentos em corretora de valores. A Comissão de Ética da RFB, em sua análise preliminar, firmou entendimento de que, no presente caso, haveria a existência de risco de conflito de interesses, nos termos dos incisos I e II do artigo 5º da Lei nº 12.813/2013 e do inciso IV do art. 21 do Código de Conduta da RFB. A Controladoria-Geral da União, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados pela RFB e preconiza que a autorização para exercício da atividade privada deve ser negada."
+  },
+  {
+   "n": "00096.007250/2019-77",
+   "d": "2020-05-21",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. PRESTAÇÃO SERVIÇOS - ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pediu autorização para exercer a advocacia. A CE-RFB, em análise preliminar, entendeu que a atividade de advocacia pode ser executada, com ressalvas, mediante o compromisso de o servidor não advogar em matéria tributária, previdenciária e aduaneira e contra a Fazenda Pública que o remunera, e adotar outras medidas mitigadoras. A CGU, em sua manifestação sobre o caso concreto, corrobora os termos e fundamentos apresentados na análise preliminar da RFB e preconiza que a autorização para exercício da atividade pretendida deve estar condicionado à formalização de termo de compromisso pelo agente público relativamente ao cumprimento das condicionantes estabelecidas."
+  },
+  {
+   "n": "00096.005768/2019-76",
+   "d": "2020-05-21",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL DA RECEITA FEDERAL DO BRASIL. ATUAR COMO PROCURADOR DE PARENTE JUNTO À RFB. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O interessado pediu autorização para exercer atividade de procurador, regularmente constituído, perante a Receita Federal do Brasil, representando os interesses de sua mãe (e apenas dela), uma senhora idosa que necessitaria de seu auxílio. A CE-RFB ratificou o entendimento da Corregedoria da Receita Federal quanto à existência de impedimento à representação, por parte do interessado, de interesses gerais de sua genitora junto à RFB, nos termos do inciso XI do art. 117 da Lei nº 8.112/1990. Todavia, não haveria impedimento à representação, pelo interessado, dos interesses de sua genitora junto à RFB que envolvam benefícios previdenciários ou assistenciais, exclusivamente. A CGU, na análise do caso concreto, ratificou o entendimento da CE-RFB e entendeu que existe vedação legal, estabelecida no inciso XI do art. 117 da Lei nº 8.112/1990, à atuação do interessado como procurador de sua genitora junto a repartições públicas, incluindo a RFB, salvo quando se tratar de benefícios previdenciários ou assistenciais; ademais, a atividade envolve risco de incidir na hipótese de conflito de interesses estabelecida no inciso IV do art. 5º da Lei nº 12.813/2013, risco este mitigável mediante a adoção de medidas preventivas pelo agente público interessado."
+  },
+  {
+   "n": "00096.007000/2019-37",
+   "d": "2020-05-13",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. MAGISTÉRIO. LECIONAR EM CURSOS DE EXTENSÃO NA FORMA DE TREINAMENTOS CONTRATADOS POR ENTIDADES PRIVADAS (TURMAS IN COMPANY) RELATIVAMENTE À TEMÁTICA DE LEGISLAÇÃO TRIBUTÁRIA FEDERAL. ANÁLISE PRELIMINAR. RISCO RELEVANTE DE CONFLITO DE INTERESSES. ANÁLISE DA CGU. RISCO RELEVANTE DE CONFLITO DE INTERESSES. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. o interessado informa que recebeu convite para lecionar em cursos de extensão na forma de treinamentos contratados por entidades privadas (turmas in company), relativamente à temática de Legislação Tributária Federal. Em sua análise preliminar, a Comissão de Ética Pública Seccional da Secretaria da Receita Federal do Brasil entendeu que o fato de ser encomendado por determinada entidade e restrito aos alunos a ela vinculados poderá conferir a um curso de extensão ou mesmo de pós-graduação o caráter de consultoria, atividade incompatível com o cargo do interessado. Em sua análise, a CGU entendeu que a pretendida atividade de magistério, em se tratando de atividade docente contratada (ainda que por interposta pessoa) e dirigida a público específico de mercado e que envolveria, em tese, a oferta de cursos diferenciados que atendam às necessidades de cada cliente de maneira personalizada, se aproximaria, em termos práticos, de uma atividade de consultoria. Isso, por si somente, atrairia a possibilidade de incidência da hipótese de conflito de interesses estabelecida no inciso I, art. 5º da Lei nº 12.813/2013, bem como o risco de incidência da hipótese de conflito de interesses prevista no inciso III do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.007336/2019-16",
+   "d": "2020-04-13",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL DO BRASIL. EXERCER ADVOCACIA EXCLUSIVAMENTE NO RAMO DE DIREITO DE FAMÍLIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O consulente informou que pretendia atuar como advogado autônomo ou vinculado a escritório de advocacia. Em sua análise preliminar, a Comissão de Ética da RFB - CE-RFB, seguindo considerações da Corregedoria do órgão, entendeu que agente público em atividade no órgão, no cargo de Assistente Técnico Administrativo, não pode advogar, tendo em vista as características específicas da atividade pretendida, como, por exemplo, lidar com interesses em contraposição, defender questões privadas perante órgãos públicos, judiciais ou administrativos, situações que, contextualizadas com o fato de atuar na instituição, denotam possível ocorrência de conflito de interesses, dadas as competências da RFB decorrentes do seu múnus público. Em sede de análise definitiva, a Controladoria-Geral da União entendeu que o interessado, sob a ótica precípua da Lei nº 12.813/2013, pode ser autorizado a exercer advocacia no ramo de Direito de Família, desde que se comprometa, mediante assinatura de termo de compromisso, a observar as condicionantes elencadas nos itens 5.14 e 5.15 desta Nota Técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013. Nada obstante, haja vista as relações que podem advir do exercício da atividade pretendida, bem como em respeito aos mecanismos de prevenção de conflito de interesses, recomendamos ao servidor consultar a Ordem dos Advogados do Brasil sobre possível incompatibilidade ou impedimento ao exercício da advocacia, nos termos dos arts. 27 a 30 da Lei nº 8.906/94 - Estatuto da Advocacia."
+  },
+  {
+   "n": "00096.006891/2019-12",
+   "d": "2020-04-11",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. EXERCER ATIVIDADE NA ÁREA JURÍDICA E CONTÁBIL. ANÁLISE PRELIMINAR. CONFLITO DE INTERESSES. INCOMPATIBILIDADE MATERIAL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES EM RELAÇÃO À ATIVIDADE CONTÁBIL, TODAVIA HÁ POSSIBILIDADE DE EXERCÍCIO DA ATIVIDADE JURÍDICA, MEDIANTE AUTORIZAÇÃO CONDICIONADA. O consulente informou que pretendia exercer atividade privada na área jurídica e contábil. Em sua análise preliminar, a Comissão de Ética da Receita Federal, amparada no posicionamento da Corregedoria, considerou que existe incompatibilidade material entre o exercício da advocacia e a ocupação do cargo público de assistente técnico administrativo da RFB. Aduz que, de forma análoga, servidor de qualquer cargo em exercício na Receita Federal do Brasil, ao exercer a atividade contábil na seara privada, incorre em conflito de interesses. Em sede de análise definitiva, a Controladoria-Geral da União entendeu que o interessado não deve ser autorizado a exercer a atividade privada na área contábil, em decorrência do elevado risco de incorrer em conflito de interesses, conforme disposto no inciso III do art. 5º da Lei nº 12.813/2013. Todavia, o servidor pode ser autorizado a exercer a advocacia privada, desde que se comprometa, mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB, a observar as condicionantes elencadas nos itens 5.10 e 5.11 desta Nota Técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.006659/2019-76",
+   "d": "2020-04-11",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. EXERCER A ATIVIDADE DE PILOTAGEM DE AERONAVES EM EMPRESAS AÉREAS COM OPERAÇÕES REGULARES E NÃO REGULARES E EM ESCOLAS DE AVIAÇÃO CIVIL. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES, PORÉM MITIGÁVEL. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O consulente informou que pretendia exercer a atividade de pilotagem de aeronaves em empresas aéreas com operações regulares e não regulares e em escolas de aviação civil. Em sua análise preliminar, a Comissão de Ética da Receita Federal concluiu que o exercício das atividades poderia permear uma situação de possível conflito de interesses. Em relação à atuação em escolas de aviação civil, o colegiado entendeu que trata-se de uma atividade em que o servidor pode ter mais controle do tempo para conciliar os limites legais da profissão impostos pela Lei nº 13.475, de 2017, entre a atuação pública e a particular, de forma a não comprometer a precedência das atividades na RFB. Diante disso, a CE-RFB propôs algumas medidas mitigatórias ao interessado, no caso de autorização da atividade de pilotagem de aeronaves em empresas aéreas com operações regulares e não regulares, bem como a pilotagem de aeronaves em escolas de aviação civil em horários que não conflitem com expediente no âmbito do órgão público. Em sede de análise definitiva, a Controladoria-Geral da União entendeu que o interessado pode ser autorizado a realizar atividade privada de pilotagem de aeronaves, desde que, mediante assinatura de termo de compromisso junto à Comissão de Ética da Receita Federal, se obrigue a observar as medidas elencadas no item 5.5 desta Nota Técnica. Nada obstante, haja vista as relações que podem advir do exercício da atividade pretendida, recomendamos o servidor consultar a Agência Nacional de Aviação Civil sobre possível violação aos dispositivos da Lei nº 13.475, de 28 de agosto de 2017, que dispõe sobre o exercício da profissão de tripulante de aeronave."
+  },
+  {
+   "n": "00096.007164/2019-64",
+   "d": "2020-04-09",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. MINISTRAR CURSOS E TREINAMENTOS NA ÁREA DE COMERCIO EXTERIOR . ANÁLISE PRELIMINAR. CONFLITO DE INTERESSES, INCISO III DO ART. 5º DA LEI 12.813. ANÁLISE DA CGU. POSSIBILIDADE DE MITIGAÇÃO. AUTORIZAÇÃO CONDICIONADA. O requerente solicita autorização para ministrar cursos e treinamentos na área de comercio exterior voltado para despachantes aduaneiros, importadores e exportadores acerca de normas aduaneiras, manuais aduaneiros da Receita Federal do Brasil e procedimentos dos despachos aduaneiros no Portal Siscomex. Em sua análise preliminar, a RFB Considerou que o requerente pretende atuar na esfera privada, em matéria correlata a que atua no exercício do seu cargo público, o que caracteriza a situação de conflito de interesses descrita no art. 5º, III da Lei nº 12.813/2013. Em sede de análise definitiva, a Controladoria-Geral da União entendeu que o interessado pode ser autorizado a ministrar cursos e treinamentos na área de comercio exterior voltado para despachantes aduaneiros, importadores e exportadores acerca de normas aduaneiras, manuais aduaneiros da Receita Federal do Brasil e procedimentos dos despachos aduaneiros no Portal Siscomex, desde que, mediante a assinatura de termo de compromisso formal junto à Comissão de Ética da RFB, comprometa-se a respeitar os aspectos dispostos no item 5.10 desta Nota Técnica."
+  },
+  {
+   "n": "00096.006887/2019-46",
+   "d": "2020-04-09",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ANALISTA DO SEGURO SOCIAL. EXERCER ADVOCACIA. ANÁLISE PRELIMINAR. CONFLITO DE INTERESSES. INCISO III DO ART. 5º DA LEI 12.813/2013. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. A consulente ressaltou que com o falecimento de seu marido, estaria reestruturando o escritório de advocacia que ele era sócio majoritário, e um dos caminhos que estaria analisando seria a possibilidade de ela participar da sociedade, para isto teria que reativar a sua inscrição na OAB que encontra-se suspensa desde que ela entrou para o serviço público. Sendo assim questiona se poderia reativar a OAB e advogar, entre outros questionamentos. Em sua análise preliminar, a autorização foi negada, sob o argumento de que a situação descrita pela servidora configura conflito de interesses, nos termos do art. 5º, III, da Lei nº 12.813/2013. Em sede de análise definitiva, a Controladoria-Geral da União entendeu que o exercício da advocacia privada pela interessada, Analista do Seguro Social da Receita Federal do Brasil - RFB, não envolveria risco relevante de conflito de interesses, nos termos da Lei nº 12.813/2013, desde que respeitado o disposto nesta Nota Técnica, em especial em seu item 5.10. Esclareceu, ainda, que a manifestação sobre eventuais incompatibilidades ou impedimentos ao exercício da advocacia ou sobre constituição e funcionamento de sociedade de advogados, conforme dispositivos da Lei nº 8.906/1994, escapam à competência atribuída a Controladoria-Geral pela Lei nº 12.813/2013 e pela Portaria Interministerial nº 333/2013, devendo a interessada consultar a unidade competente da Ordem dos Advogados do Brasil - OAB - para dirimir suas dúvidas sobre essas matérias."
+  },
+  {
+   "n": "00096.003582/2017-11",
+   "d": "2020-03-27",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. EXERCER ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ANÁLISE DA CGU. ENCERRAMENTO DO PROCESSO SEM ANÁLISE DE MÉRITO. DESISTÊNCIA DO INTERESSADO. O interessado pediu autorização para exercer a advocacia. Em sua análise preliminar, a Comissão de Ética da Receita Federal do Brasil entendeu que a advocacia seria incompatível com o exercício de cargo público na RFB. Conforme e-mail datado de 06 de março de 2020, o interessado informou não ter mais interesse na demanda. Em sede de análise definitiva, a Controladoria-Geral da União dispôs pelo encerramento da solicitação nº 00096.003582/2017-11 no SeCI, sem análise de mérito, em virtude da perda de seu objeto."
+  },
+  {
+   "n": "00096.006923/2019-71",
+   "d": "2020-03-04",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AGENTE ADMINISTRATIVO. ADVOCACIA. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. A interessada solicitou autorização para exercer a advocacia privada em causas em que a União não figure como ré. Em sua análise preliminar, a Corregedoria da RFB analisou o que diz o Estatuto da Advocacia e, tendo em vista as atribuições do cargo de assistente técnico administrativo ocupado pela requerente, considerou que há incompatibilidade material entre este e a atividade de advocacia privada. Apontou também que a interessada, no exercício da atividade privada e no afã de garantir os interesses de seu cliente, poderia vir a fazer uso de informações sigilosas que teria acesso em razão do cargo que ocupa, o que feriria a moralidade. Em sede de análise definitiva, a CGU, considerando que uso ou divulgação das informações privilegiadas a que tem acesso, das quais decorrem o risco de incorrer na situação de conflito de interesses prevista no inciso I do art. 5º da Lei nº 12.813/2013 apontado pela RFB, só teriam utilidade para a requerente caso exercesse advocacia em matéria fiscal e tributária (situação em que tais informações poderiam trazer vantagem ou benefício a seus clientes), e considerando, ainda, a diversidade de áreas de atuação possíveis na advocacia privada, em homenagem ao princípio da razoabilidade e em respeito à boa fé da interessada, entendeu ser possível o exercício da atividade pleiteada desde que a servidora se comprometa, mediante assinatura de termo de compromisso junto à Comissão de Ética da Receita Federal, a obedecer uma série de condições. Nada obstante, haja vista as relações que podem advir do exercício da atividade pretendida, bem como em respeito aos mecanismos de prevenção de conflito de interesses, deve a servidora consultar a Ordem dos Advogados do Brasil sobre possível violação aos termos do art. 30 da Lei nº 8.906/1994 - Estatuto da Advocacia."
+  },
+  {
+   "n": "00096.006833/2019-81",
+   "d": "2020-03-04",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. CONTADOR. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES RELEVANTE. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES RELEVANTE. LEI Nº 12.813/2013, ART. 5º, I E III. AUTORIZAÇÃO NEGADA. O interessado solicitou autorização para exercer a atividade de contador em escritório de contabilidade ou por conta própria. Em sua análise preliminar, a Corregedoria da RFB entendeu que a atuação de servidor de qualquer cargo em exercício na Secretaria da Receita Federal do Brasil - sejam integrantes da Carreira Tributária e Aduaneira da RFB, sejam ocupantes de outros cargos administrativos, integrantes do Plano Especial de Cargos do Ministério da Economia - ME (incluindo os Assistentes Técnico-Administrativos) - na atividade contábil, por si só, ainda que praticada em horário compatível com a jornada de trabalho e com ou sem remuneração, configura conflito de interesses. Aduz que a incompatibilidade decorre do risco potencial do requerente cometer uma ilicitude, tendo em vista que ele possui conhecimentos e acesso a dados restritos que, inevitavelmente, seriam empregados nas duas sedes (pública e privada), configurando, assim, o conflito de interesses. Em sede de análise definitiva, a CGU entendeu que o interessado, Assistente Administrativo da Receita Federal do Brasil - RFB, não deve ser autorizado a exercer a atividade privada pretendida, qual seja, a contabilidade, em decorrência do risco relevante de incorrer em conflito de interesses, conforme disposto nos incisos I e III do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.006718/2019-14",
+   "d": "2020-02-06",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. CONCLUSÃO DO CURSO DE CIÊNCIAS CONTÁBEIS E REALIZAÇÃO DE ESTÁGIO. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES, NOS TERMOS DOS INCISOS I E III, DO ART. 5º, DA LEI N. 12.813/2013. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES, PASSÍVEL DE MITIGAÇÃO. O interessado informa que está concluindo o curso de ciências contábeis e, como pré-requisito para conclusão do curso, necessita realizar um estágio supervisionado. Informou, ainda, que a situação que suscita sua dúvida decorre do fato de que ele trabalha diretamente no atendimento a diversos contadores e escritórios de contabilidade, que todos os dias solicitam à RFB orientações ou informações de seu interesse. Em sua análise preliminar, a Comissão de Ética da Receita Federal, amparada no posicionamento da Corregedoria da Receita Federal, entendeu que o caso concreto implica em potencial risco de conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva, a CGU entendeu que a realização de estágio em escritório de contabilidade pelo interessado configura risco de conflito de interesses passível de mitigação, visando não incidir nas hipóteses previstas nos incisos I e III do art. 5º da Lei nº 12.813/2013. Neste sentido, em homenagem ao princípio da razoabilidade e em respeito à boa fé do interessado, e considerando que o estágio curricular constitui-se em parte essencial da formação universitária do consulente, sendo regulamentado pela Lei nº 11.788, de 25 de setembro de 2008, entendeu que o consulente pode realizar o estágio supervisionado em empresa privada, desde que se comprometa, mediante assinatura de Termo de Compromisso junto à Comissão de Ética da Secretaria da Receita Federal, a observar os condicionantes estabelecidas no item 5.13 desta Nota Técnica."
+  },
+  {
+   "n": "00096.003716/2017-11",
+   "d": "2020-01-17",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "Trata-se de consulta sobre conflito de interesses formulada pelo Sr. SAMUEL KRUGER, Auditor Fiscal da Secretaria da Receita Federal do Brasil, enviada para apreciação da Controladoria-Geral da União - CGU. Em sua demanda, protocolada via SeCI - no dia 12 de outubro de 2017, o consulente informou que pretendia atuar como professor e palestrante, fora do horário de trabalho e mediante remuneração, em eventos e cursos direcionados a profissionais da área de legislação tributária, previdenciária e trabalhista e a empresas, transmitindo o conhecimento de informações publicadas ou disponibilizadas para o público externo, com objetivo de orientar o adequado cumprimento das obrigações legais relacionadas a esta área, em especial no que tange aos sistemas eSocial e EFD-Reinf. No bojo da análise preliminar, datada de 9 de novembro de 2018, a Comissão de Ética da Receita Federal do Brasil, seguindo decisão da Corregedoria da RFB, deliberou, por unanimidade, pela existência de potencial conflito de interesses, concluindo pelo envio da consulta para análise da Controladoria Geral da União, nos termos da Portaria Interministerial nº 333/2013. A CGU, utilizando-se da faculdade conferida ao órgão pelo § 1º do art. 8º da Portaria Interministerial MP-CGU nº 333/2013, solicitou à RFB alguns esclarecimentos adicionais em 14 de novembro de 2018, os quais não foram prestados pelo órgão desde aquela data. Em virtude do lapso temporal decorrido sem manifestação da Receita Federal, a CGU solicitou à RFB para que verificasse junto ao consulente se haveria ou não interesse na continuidade do processo.Conforme e-mail datado de 3 de janeiro de 2020, o servidor informou que não teria mais interesse na continuidade da consulta no âmbito do SeCI. Desse modo, em decorrência da desistência do interessado em relação à presente demanda, determinamos o encerramento da solicitação nº 00096.003716/2017-11 no Sistema Eletrônico de Prevenção de Conflito de Interesses - SeCI, sem análise de mérito, em razão da perda de seu objeto."
+  },
+  {
+   "n": "00096.006658/2019-21",
+   "d": "2020-01-02",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. AUDITOR FISCAL DA RECEITA FEDERAL. EXERCER A ATIVIDADE DE PILOTAGEM DE AERONAVES EM EMPRESAS AÉREAS COM OPERAÇÕES REGULARES E NÃO REGULARES E EM ESCOLAS DE AVIAÇÃO CIVIL. ANÁLISE PRELIMINAR. A COMISSÃO DE ÉTICA DA RFB PROPÔS MEDIDAS MITIGATÓRIAS. ANÁLISE DA CGU. PROCESSO EM DUPLICIDADE. ANÁLISE PREJUDICADA. PERDA DE OBJETO. O solicitante informa que pretende exercer a atividade de pilotagem de aeronaves em empresas aéreas com operações regulares e não regulares e em escolas de aviação civil em horários que não coincidam com o horário de expediente na Secretaria da Receita Federal do Brasil. Em sua análise preliminar, a Comissão de Ética da RFB propôs algumas medidas mitigadoras, no caso de autorização da atividade de pilotagem de aeronaves em empresas aéreas com operações regulares e não regulares, bem como a pilotagem de aeronaves em escolas de aviação civil em horários que não conflitem com expediente no âmbito do órgão público. Em sede de análise definitiva, a CGU determinou o encerramento da Consulta nº 00096.006658/2019-21, no Sistema Eletrônico de Prevenção de Conflito de Interesses - SeCI, sem análise de mérito, em razão da perda de seu objeto – processo em duplicidade."
+  },
+  {
+   "n": "00096.006640/2019-21",
+   "d": "2019-12-19",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ASSISTENTE TÉCNICO-ADMINISTRATIVO DA SECRETARIA DA RECEITA FEDERAL DO BRASIL - RFB. ATUAÇÃO NA ÁREA DE ADVOCACIA PRIVADA. ANÁLISE PRELIMINAR DA RFB. CONFLITO DE INTERESSES. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pretende atuar na área de advocacia privada. Em sua análise preliminar, a Comissão de Ética da RFB entendeu que o interessado não pode advogar, tendo em vista as características específicas da atividade pretendida, por exemplo, de lidar com interesses em contraposição, defender questões privadas perante órgãos públicos, judiciais ou administrativos, situações que, contextualizadas com o fato de atuar na instituição, denotam possível ocorrência de conflito de interesses, dadas as competências da RFB decorrentes do seu múnus público. Em sua análise, a CGU compactuou com o entendimento exarado pela RFB de que a solicitação do interessado poderia ensejar conflito de interesses. Outrossim, ressaltou que este não deve advogar em matéria tributária, pois pode, eventualmente, questionar, como advogado, eventuais normas estabelecidas pela RFB, no âmbito da legislação tributária. No entanto, entendeu que não cabe vedação absoluta à atividade requerida, vez que o parágrafo único do art. 7º da Portaria Interministerial MP-CGU nº 333/2013 traz à CGU a faculdade de determinar medidas mitigatórias em relação ao potencial conflito de interesses identificado. Dessa forma, entendeu ser possível o exercício da atividade pleiteada desde que o servidor se comprometa, mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB, a observar medidas condicionantes. Além disso, diante das vedações e limites impostos pelo Estatuto da OAB, compete ao interessado, em relação aos demais aspectos do exercício da advocacia privada, consultar a Ordem dos Advogados do Brasil, consoante o disposto no art. 30 da Lei nº 8.906/1994."
+  },
+  {
+   "n": "00096.005943/2019-25",
+   "d": "2019-12-19",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ASSISTENTE TÉCNICO-ADMINISTRATIVO DA SECRETARIA DA RECEITA FEDERAL DO BRASIL - RFB. CONSTITUIÇÃO DE SOCIEDADE UNIPESSOAL DE ADVOCACIA. ANÁLISE PRELIMINAR DA RFB. CONFLITO DE INTERESSES. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. Assistente Técnico-Administrativo da RFB pretende constituir sociedade unipessoal de advocacia. Em sua análise preliminar, a Comissão de Ética da RFB entendeu que o interessado não pode advogar, tendo em vista as características específicas da atividade pretendida, por exemplo, de lidar com interesses em contraposição, defender questões privadas perante órgãos públicos, judiciais ou administrativos, situações que, contextualizadas com o fato de atuar na instituição, denotam possível ocorrência de conflito de interesses, dadas as competências da RFB decorrentes do seu múnus público. Em sua análise, a CGU compactuou com o entendimento exarado pela RFB de que a solicitação do interessado poderia ensejar conflito de interesses. Outrossim, ressaltou que este não deve advogar em matéria tributária, pois pode, eventualmente, questionar, como advogado, eventuais normas estabelecidas pela RFB, no âmbito da legislação tributária. No entanto, entendeu que não cabe vedação absoluta à atividade requerida, vez que o parágrafo único do art. 7º da Portaria Interministerial MP-CGU nº 333/2013 traz à CGU a faculdade de determinar medidas mitigatórias em relação ao potencial conflito de interesses identificado. Dessa forma, entendeu ser possível o exercício da atividade pleiteada desde que o servidor se comprometa, mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB, a observar medidas condicionantes. Além disso, diante das vedações e limites impostos pelo Estatuto da OAB, compete ao interessado, em relação aos demais aspectos do exercício da advocacia privada, consultar a Ordem dos Advogados do Brasil, consoante o disposto no art. 30 da Lei nº 8.906/1994."
+  },
+  {
+   "n": "00096.004739/2018-14",
+   "d": "2019-12-17",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TÉCNICO-ADMINISTRATIVO. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. INCISOS I E III DO ART. 5º DA LEI Nº 12.813/2013 E ART. 21 DO CÓDIGO DE CONDUTA DA RFB. ANÁLISE DA CGU. O RISCO DE CONFLITO DE INTERESSES PODE SER MITIGADO. INCISOS I, III E IV DO ARTIGO 5º DA LEI 12.813/2013. PARÁGRAFO ÚNICO DO ART. 7º DA PORTARIA INTERMINISTERIAL MP-CGU Nº 333/2013. SERVIDOR PODE SER AUTORIZADO A EXERCER AS ATIVIDADES TÍPICAS DE ADVOGADO, DESDE QUE OBSERVADAS AS CONDICIONANTES ELENCADAS NA RESPECTIVA NOTA TÉCNICA. O interessado efetuou uma consulta, pois pretende atuar como advogado. Em sua análise preliminar, a Comissão de Ética da Secretaria da Receita Federal do Brasil entendeu, por unanimidade, pela existência de potencial conflito de interesses no exercício da advocacia concomitantemente com a atuação do agente público na RFB, pois as atividades privadas, com ou sem remuneração, são consideradas incompatíveis com o exercício do cargo ou função quando, de alguma maneira, afrontarem o princípio da moralidade administrativa; assim como os servidores que trabalham na RFB naturalmente têm acesso a informações a respeito de assunto sigiloso capaz de trazer vantagem econômica ou financeira para si ou para terceiro. Em sede de análise definitiva, a CGU retificou o entendimento do BB, consignando que não cabe vedação absoluta à atividade requerida pelo demandante, já que o parágrafo único do art. 7º da Portaria Interministerial MP-CGU nº 333/2013 autoriza a determinação de medidas mitigatórias em relação ao potencial conflito de interesses identificado. O interessado pode ser autorizado a exercer as atividades típicas de advogado, desde que observadas as condicionantes elencadas nos parágrafos 5.18, 5.19 e 5.20 da Nota Técnica nº 1566/2019/NAOPS/CGECI/DPC/STPC, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I, III e IV do artigo 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.007290/2019-19",
+   "d": "2019-11-26",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "Trata-se de consulta em relação à qual, em sua análise preliminar, a Comissão de Ética da Receita Federal do Brasil (CE-RFB) concluiu que não há risco de conflito de interesses, nos termos da Lei nº 12.813/2013. No entanto, o pedido foi encaminhado à CGU, devido a um registro equivocado no Sistema, como explicado no e-mail anexo. Face ao entendimento prolatado na análise preliminar da referida Comissão pela inexistência de conflito de interesses, conforme a Portaria Interministerial 333 do então Ministério do Planejamento e da CGU, de 18 de setembro de 2013, a consulta em epígrafe prescinde de análise da CGU. Cabe, assim, ao colegiado ou à Coordenação-Geral de Gestão de Pessoal da RFB enviar ao interessado o resultado de sua análise."
+  },
+  {
+   "n": "00096.006037/2019-48",
+   "d": "2019-10-04",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA SOBRE CONFLITO DE INTERESSES.ANALISTA DO SEGURO SOCIAL EM EXERCÍCIO NA RFB. A SOLICITANTE QUESTIONA A POSSIBILIDADE DE EXERCER SERVIÇOS ADVOCATÍCIOS. ANÁLISE PRELIMINAR. A COMISSÃO DE ÉTICA DA SECRETARIA DA RECEITA FEDERAL, CORROBORANDO O ENTENDIMENTO FIRMADO PELA CORREGEDORIA, ENTENDEU QUE EXISTE CONFLITO DE INTERESSES NO EXERCÍCIO DA ADVOCACIA CONCOMITANTE COM A ATUAÇÃO DO AGENTE PÚBLICO NA RFB. INCISOS IX DO ART. 116 E XVIII DO ART. 117 DA LEI 8.112/90; INCISO III, ART. 5º DA LEI 12.813/2013; INCISO XIV DO DECRETO 1.171/94. POSSIBILIDADE DE USO DE INFORMAÇÃO PRIVILEGIADA. DÚVIDA A RESPEITO DA INTEGRIDADE DA INSTITUIÇÃO. ANÁLISE DA CGU. PARÁGRAFO ÚNICO, ART. 7º DA PORTARIA MP-CGU Nº 333/2013. POTENCIAL CONFLITO DE INTERESSES MITIGÁVEL. A CONSULENTE PODE SER AUTORIZADA A ATUAR COMO ADVOGADA, MAS DEVE CONSULTAR A OAB, NOS TERMOS DA LEI 8906/94 E DESDE QUE SE COMPROMETA A OBSERVAR AS CONDICIONANTES ESTABELECIDAS NOS PARÁGRAFOS 5.9 e 5.10 DA NOTA TÉCNICA. Em sua análise preliminar, a comissão de ética da SRFB, corroborando o entendimento firmado pela corregedoria, entendeu que existe conflito de interesses no exercício da advocacia concomitante com a atuação do agente público. Em síntese, a decisão do colegiado tomou por base as características específicas da atividade pretendida, que envolve lidar com interesses em contraposição, tendo em vista as competências e atribuições típicas da RFB, estendidas aos seus servidores. Em sede de análise definitiva, a CGU entendeu que o interessado pode ser autorizado a exercer as atividades típicas de advogado, desde que observadas as condicionantes elencadas nos parágrafos 5.9 e 5.10 desta nota técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013. Haja vista as relações que podem advir do exercício da atividade pretendida, bem como em respeito aos mecanismos de prevenção de conflito de interesses, deve o servidor consultar a OAB sobre possível violação aos termos da Lei nº 8.906/94."
+  },
+  {
+   "n": "00096.005780/2019-81",
+   "d": "2019-05-28",
+   "r": "Risco de CI mitigável",
+   "rec": "Decisão Reconsiderada",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. ALMEJA EXERCER SERVIÇOS ADVOCATÍCIOS. ANÁLISE PRELIMINAR. RISCO DE CONFLITO DE INTERESSES. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES, INCISO I e IV DO ART. 5º DA LEI 12.813/2013, PORÉM HÁ POSSIBILIDADE DE MITIGAÇÃO. DEVE O SERVIDOR CONSULTAR TAMBÉM A ORDEM DOS ADVOGADOS DO BRASIL SOBRE POSSÍVEL VIOLAÇÃO AOS TERMOS DO ART. 30 DA LEI Nº 8.906/94 - ESTATUTO DA ADVOCACIA. O interessado efetuou consulta, pois deseja exercer serviços advocatícios que, por disposição legal, não poderão ser exercidos contra a Fazenda Pública Federal; além disso, pretende atuar com consultoria jurídica cível, penal, processual, trabalhista, tributária, dentre outros. Em sua análise preliminar, a Comissão de Ética da Secretaria da Receita Federal do Brasil entendeu pela existência de conflito de interesses no exercício da advocacia concomitantemente com a atuação do agente público na RFB. Em sede de análise definitiva, a CGU entendeu que o servidor pode ser autorizado a exercer as atividades típicas de advogado desde que observadas as condicionantes elencadas nos parágrafos 5.9, 5.10 e 5.11 desta Nota Técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013. Deve o servidor consultar também a Ordem dos Advogados do Brasil sobre possível violação aos termos do art. 30 da Lei nº 8.906/94 - Estatuto da Advocacia."
+  },
+  {
+   "n": "00096.005821/2019-39",
+   "d": "2019-05-24",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. O SOLICITANTE RELATA O INTERESSE EM ATUAR COMO ADVOGADO. ANÁLISE PRELIMINAR. A COMISSÃO DE ÉTICA DA SECRETARIA DA RECEITA FEDERAL, CORROBORANDO O ENTENDIMENTO FIRMADO PELA CORREGEDORIA, ENTENDEU QUE EXISTE CONFLITO DE INTERESSES NO EXERCÍCIO DA ADVOCACIA SIMULTANEAMENTE COM A EXECUÇÃO DE ATIVIDADES DO CARGO DE ASSISTENTE TÉCNICO-ADMINISTRATIVO NA RFB. ANÁLISE DA CGU. O CONSULENTE PODE SER AUTORIZADO A ATUAR COMO ADVOGADO, MAS DEVE CONSULTAR A OAB, NOS TERMOS DA LEI 8906/94 E DESDE QUE SE COMPROMETA A OBSERVAR AS CONDICIONANTES ESTABELECIDAS NOS PARÁGRAFOS 5.9 e 5.10 DA NOTA TÉCNICA. Em sua solicitação, o interessado gostaria de saber se é possível exercer a advocacia privada fora do horário de trabalho. Questiona se há restrições em relação às causas possíveis de atuar e se há setores de atuação no órgão em que é possível exercer a advocacia concomitantemente com a função pública. Em sua análise preliminar, a comissão de ética da secretaria da Receita Federal do Brasil, corroborando o entendimento firmado pela corregedoria, entendeu que existe conflito de interesses no exercício da advocacia simultaneamente com a execução de atividades do cargo de assistente técnico-administrativo na RFB. Em síntese, a decisão do colegiado tomou por base as características específicas da atividade pretendida, que envolve lidar com interesses em contraposição. Em sede de análise definitiva, a CGU entendeu que o interessado pode ser autorizado a exercer as atividades típicas de advogado, desde que observadas as condicionantes elencadas nos parágrafos 5.9 e 5.10 desta nota técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013. Haja vista as relações que podem advir do exercício da atividade pretendida, bem como em respeito aos mecanismos de prevenção de conflito de interesses, deve o servidor consultar a OAB sobre possível violação aos termos da Lei nº 8.906/94 - Estatuto da Advocacia"
+  },
+  {
+   "n": "00096.005771/2019-91",
+   "d": "2019-05-17",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. O SOLICITANTE PRETENDE EXERCER A ADVOCACIA, CITANDO JURISPRUDÊNCIA DO STJ. ANÁLISE PRELIMINAR. A RFB ENTENDEU QUE PODERIA AFRONTAR O INCISO I DO ART. 5º DA LEI 12.813/2013. O COLEGIADO DA RECEITA FEDERAL TAMBÉM FRISOU QUE HÁ VEDAÇÃO PARA A ATUAÇÃO CONJUNTA DA ADVOCACIA SIMULTANEAMENTE COM AS ATRIBUIÇÕES DOS CARGOS DE ANALISTA-TRIBUTÁRIO DA RFB, EXPRESSA NO INCISO I DO ART. 1º DA PORTARIA RFB Nº 444, DE 23 DE MARÇO DE 2015. ANÁLISE DA CGU. O INTERESSADO PODE SER AUTORIZADO A EXERCER AS ATIVIDADES TÍPICAS DE ADVOGADO, DESDE QUE OBSERVADAS AS CONDICIONANTES ELENCADAS NO PARÁGRAFO 5.10 DESTA NOTA TÉCNICA, SOB RISCO DE INCORRER EM CONFLITO DE INTERESSES DESCRITAS NOS INCISOS I E IV DO ART. 5º DA LEI Nº 12.813/2013. DEVE O SERVIDOR CONSULTAR TAMBÉM A OAB SOBRE POSSÍVEL VIOLAÇÃO AOS TERMOS DO ART. 30 DA LEI Nº 8.906/94. O solicitante informa que pretende exercer a Advocacia conforme jurisprudência do STJ. Em sua análise preliminar, a Receita Federal entendeu que o exercício da advocacia pelo solicitante poderia afrontar o inciso I do art. 5º da Lei 12.813/2013. O colegiado também frisou que há vedação para a atuação conjunta da advocacia simultaneamente com as atribuições dos cargos de Analista-Tributário da RFB, expressa no inciso I do art. 1º da Portaria RFB nº 444, de 23 de março de 2015. Em sede de análise definitiva, a CGU entendeu que o servidor pode ser autorizado a exercer as atividades típicas de advogado, desde que observadas as condicionantes elencadas no parágrafo 5.10 desta Nota Técnica, sob risco de incorrer nas situações de conflito de interesses descritas nos incisos I e IV do art. 5º da Lei nº 12.813/2013. Haja vista as relações que podem advir do exercício da atividade pretendida, bem como em respeito aos mecanismos de prevenção de conflito de interesses, deve o servidor consultar também a OAB sobre possível violação aos termos do art. 30 da Lei nº 8.906/94."
+  },
+  {
+   "n": "00096.003628/2017-18",
+   "d": "2019-04-18",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL. MAGISTÉRIO SOBRE SISTEMAS DA RFB. ANÁLISE PRELIMINAR. POSSÍVEL CONFLITO DE INTERESSES. INCISOS I E III DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. RISCO DE CONFLITO DE INTERESSES MITIGÁVEL. INCISO I DO ART. 5º DA LEI Nº 12.813/2013. AUTORIZAÇÃO CONDICIONADA. O solicitante requereu autorização para dar aulas em cursos sobre o correto preenchimento, pelos empregadores, profissionais contábeis, profissionais de Recursos Humanos e empregadores domésticos do sistema eSocial e EFD-REINF. Em sua análise preliminar, a Comissão de Ética da RFB concluiu que a atividade pleiteada pelo interessado poderia configurar uma situação de conflito de interesses, haja vista que o assunto a ser ministrado como professor e palestrante diz respeito ao eSocial e EFDReinf, temas ligados diretamente à competência da RFB e sobre os quais o solicitante desenvolve e atua no âmbito do órgão. Como o servidor deteria informações privilegiadas relacionadas ao desenvolvimento e estratégias institucionais inerentes aos referidos projetos, a ministração de aulas sobre esses temas poderia ensejar um potencial conflito de interesses. Em sede de análise definitiva, a CGU, levando em conta a boa-fé do servidor em efetuar a presente solicitação no SeCI, as diretrizes postas pela ON nº 02/2014, bem como a faculdade conferida à CGU pelo parágrafo único do art. 7º da Portaria MP-CGU nº 333/2013, entendeu ser possível o exercício da atividade pleiteada desde que o servidor se comprometa mediante assinatura de termo de compromisso junto à Comissão de Ética da RFB a cumprir algumas condições."
+  },
+  {
+   "n": "00096.004743/2018-74",
+   "d": "2018-10-01",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL. AUDITOR-FISCAL. TERAPEUTA DE HIPNÓSE CLÍNICA. ANÁLISE PRELIMINAR DO BNDES. INEXISTENCIA DE ÓBICE PARA O EXERCÍCIO DA ATIVIDADE PLEITEADA. ANÁLISE DA CGU PREJUDICADA. PERDA DE OBJETO. Em sua análise preliminar, a RFB entendeu que, inexiste óbice para o exercício da atividade laboral pleiteada desde que o mesmo siga algumas recomendações no desempenho da atividade privada. Em sua análise, a CGU concluiu que não cabe a ela manifestar-se, uma vez que a RFB entendeu pela inexistência de Conflito de Interesses."
+  },
+  {
+   "n": "00096.003558/2017-81",
+   "d": "2018-05-17",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RECEITA FEDERAL DO BRASIL - RFB. AUDITOR-FISCAL. PERICIA JUDICIAL CONTABIL. ANÁLISE PRELIMINAR. VIOLAÇÃO A DISPOSITIVO DE LEGISLAÇÃO INTERNA. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. PERDA DE OBJETO. O servidor, Auditor-Fiscal da Receita Federal do Brasil, questionou se sua atuação como perito judicial contábil junto à justiça estadual teria o condão de provocar conflito de interesses com o cargo público que ocupa. Em sua análise preliminar, a Comissão de Ética da Receita Federal do Brasil alegou, em suma, que, de acordo com a Portaria RFB n°444, de março de 2015 c/c a alínea \"c\" do Art. 25 do Decreto-Lei n°9.295/46, as atividades de contabilidade, e, consequentemente, perícia contábil, estariam vedadas a agentes públicos da Carreira Tributária e Aduaneira da Receita Federal do Brasil. Em sede de análise definitiva, a CGU entendeu que as limitações impostas são um dos aspectos da legislação de pessoal que extrapola a temática do conflito de interesses, estando consignado em outros normativos que não a Lei nº 12.813/2013. Não cabe à CGU, portanto, analisar a questão prejudicial levantada, tendo a RFB autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.003997/2017-94",
+   "d": "2018-05-10",
+   "r": "Impedimento de Outra Ordem",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RFB. ASSISTENTE TÉCNICO-ADMINISTRATIVO. ADVOCACIA E CONSULTORIA JURÍDICA. ANÁLISE PRELIMINAR. INCOMPATIBILIDADE MATERIAL. INCISO XVIII, ART. 117, LEI Nº 8.112/90 E LEI 8.906/1994. ANÁLISE DA CGU. QUESTÃO PREJUDICIAL. Solicitante relatou que pretende exercer a advocacia e a consultoria jurídica, de forma eventual, para atualização da prática jurídica. Em sua análise preliminar, a Receita Federal do Brasil, por da Corregedoria-Geral, concluiu pela existência de incompatibilidade material entre o exercício da Advocacia pela interessada e o cargo de Assistente Técnico-Administrativo que ela ocupa, haja vista que, por lidar com interesses em contraposição, é inerente à atividade advocatícia a defesa de interesses privados perante órgãos públicos, judiciais ou administrativos, seja litigando contra o Estado, seja litigando contra interesses de outros particulares. Em sede de análise definitiva, a CGU entendeu que como o óbice levantado pela Corregedoria-Geral da RFB para o desempenho da atividade pretendida pelo solicitante versa sobre vedação imposta pela Lei nº 8.112/1990 e pela Lei nº Lei nº 8.906, de 1994, não cabe a este Ministério da Transparência e Controladoria-Geral da União manifestar-se sobre o caso, tendo a RFB autonomia para decidir a questão. A análise quanto à existência ou não de conflito de interesses no caso em tela resta prejudicada."
+  },
+  {
+   "n": "00096.004012/2018-29",
+   "d": "2018-04-06",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL. PROFESSOR E PALESTRANTE EM EVENTOS E CURSOS DIRECIONADOS A PROFISSIONAIS E EMPRESAS SOBRE LEGISLAÇÃO TRIBUTÁRIA, PREVIDENCIÁRIA, TRABALHISTA. ANÁLISE PRELIMINAR. ATIVIDADE INCOMPATÍVEL. INCISO III DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O solicitante requereu autorização para atuar como professor e palestrante, fora do horário de trabalho e mediante remuneração, em eventos e cursos direcionados a profissionais da área de legislação tributária, previdenciária e trabalhista e a empresas, em especial no que tange ao Sped, eSocial e EFD-Reinf, sistemas já vigentes e que entrarão em vigor a partir de 2018. Em sua análise preliminar a Comissão de Ética Pública Seccional da Secretaria da Receita Federal do Brasil entendeu que o desempenho da atividade de professor e palestrante por meio de empresa constituída para esse fim concomitantemente com as atribuições da função exercida na RFB é materialmente incompatível com o cargo de Auditor Fiscal. Já a atividade de docência em Instituições de Ensino Superior, por meio de cursos, palestras, conferências e coordenação pedagógica, seria possível a partir de cumprimento de recomendações e condicionantes deliberadas pelo órgão competente, tendo em vista as disposições da ON CGU nº 2/2014. Em sede de análise definitiva, a CGU entendeu que o solicitante pode ser autorizado a exercer as atividades de magistério concomitantemente ao desempenho das funções de auditor da Receita Federal, desde que a Comissão de Ética da RFB adote medidas para eliminar ou mitigar eventual conflito de interesses no âmbito da Receita."
+  },
+  {
+   "n": "00096.003234/2017-43",
+   "d": "2018-04-03",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. AUDITOR FISCAL. PROFESSOR E PALESTRANTE EM EVENTOS E CURSOS DIRECIONADOS A PROFISSIONAIS E EMPRESAS SOBRE LEGISLAÇÃO TRIBUTÁRIA, PREVIDENCIÁRIA, TRABALHISTA. ANÁLISE PRELIMINAR. ATIVIDADE INCOMPATÍVEL. INCISO III DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O solicitante requereu autorização para atuar como professor e palestrante, fora do horário de trabalho e mediante remuneração, em eventos e cursos direcionados a profissionais da área de legislação tributária, previdenciária e trabalhista e a empresas, em especial no que tange ao Sped, eSocial e EFD-Reinf, sistemas já vigentes e que entrarão em vigor a partir de 2018. Em sua análise preliminar a Comissão de Ética Pública Seccional da Secretaria da Receita Federal do Brasil entendeu que o desempenho da atividade de professor e palestrante por meio de empresa constituída para esse fim concomitantemente com as atribuições da função exercida na RFB é materialmente incompatível com o cargo de Auditor Fiscal. Já a atividade de docência em Instituições de Ensino Superior, por meio de cursos, palestras, conferências e coordenação pedagógica, seria possível a partir de cumprimento de recomendações e condicionantes deliberadas pelo órgão competente, tendo em vista as disposições da ON CGU nº 2/2014. Em sede de análise definitiva, a CGU entendeu que o solicitante pode ser autorizado a exercer as atividades de magistério concomitantemente ao desempenho das funções de auditor da Receita Federal, desde que a Comissão de Ética da RFB adote medidas para eliminar ou mitigar eventual conflito de interesses no âmbito da Receita."
+  },
+  {
+   "n": "00096.003786/2017-51",
+   "d": "2018-03-23",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RFB. ANALISTA TRIBUTÁRIO. PERITO JUDICIAL. ANÁLISE PRELIMINAR. POSSÍVEL CONFLITO DE INTERESSES. ANÁLISE DA CGU. CONFLITO MITIGÁVEL. AUTORIZAÇÃO CONDICIONADA. O solicitante requereu autorização para atuar como perito junto ao Poder Judiciário. Em sua análise preliminar Comissão de Ética da RFB entendeu que o solicitante pode ser autorizado a atuar como perito junto ao Poder Judiciário em matéria de fisioterapia, mas não em cálculos trabalhistas e/ou contábeis. Em sede de análise definitiva, a CGU entendeu que, nos estritos termos do pedido, o solicitante pode ser autorizado a atuar como perito junto ao Poder Judiciário, desde que se abstenha de atuar em processos que envolvam interesses da União, sob risco de incorrer na situação de conflito de interesses descrita no inciso III do art. 5º da lei nº 12.813/2013; e resguarde informações privilegiadas obtidas em razão do exercício de suas atribuições públicas, sob risco de incorrer na situação de conflito de interesses descrita no inciso I do art. 5º da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.002363/2016-33",
+   "d": "2017-10-17",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL (RFB). CONSULTORIA NA ÁREA DE PLANEJAMENTO FINANCEIRO. MAGISTÉRIO. CORREGEDORIA DA RFB. CONFLITO DE INTERESSES. INCOMPATIBILIDADE. COMISSÃO DE ÉTICA DA RFB. INEXISTÊNCIA DE CONFLITO DE INTERESSES NA ATIVIDADE DE MAGISTÉRIO. CONFLITO DE INTERESSES NA ATIVIDADE DE CONSULTORIA. ANÁLISE DA CGU. MAGISTÉRIO INEXISTÊNCIA DE CONFLITO DE INTERESSES. CONSULTORIA. CONFLITO DE INTERESSES. ART. 5º, INCISOS I E III. LEI Nº 12.813/2013. A Comissão de Ética da RFB entendeu não haver óbice em caso de exercício da docência por parte do consulente, desde que este se comprometesse a observar determinados condicionantes. Quanto ao exercício da atividade de consultoria, aquela Comissão de Ética cotejou as atribuições dos ocupantes do cargo de Auditor da RFB com o exercício da atividade de consultoria em planejamento financeiro, e concluiu que possuem natureza incompatível, não devendo ser exercidas de forma concomitante. A CGU ratificou as conclusões emitidas pela Comissão de Ética da RFB no que concerne ao exercício do magistério. Com relação à atividade de consultoria, entendeu esta CGU que atuação do servidor deve ser evitada, vez que poderia resultar em um potencial conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013, por se tratar de atividade cuja natureza é eminentemente incompatível com as atribuições exercidas por um AFRFB, ainda mais notoriamente em razão das informações a que os Auditores-Fiscais da RFB possuem acesso em razão do exercício do cargo público."
+  },
+  {
+   "n": "00096.003240/2017-17",
+   "d": "2017-09-04",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL. ASSISTENTE TÉCNICO-ADMINISTRATIVO. ATUAR COMO ADVOGADO NAS ÁREAS DE DIREITO DO CONSUMIDOR, TRABALHO, FAMÍLIA, SUCESSÕES, IMOBILIÁRIO, VIZINHANÇA E CONTRATUAL CÍVEL. ANÁLISE PRELIMINAR DA CORREGEDORIA DA RFB. CONFLITO DE INTERESSES. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. O solicitante perguntou se poderia atuar como advogado nas áreas de Direito do Consumidor, Direito do Trabalho, Direito de Família, Direito de Sucessões, Direito Imobiliário e Vizinhança e Direito Contratual Cível. Em sua análise preliminar, a Corregedoria da RFB entendeu haver incompatibilidade material entre as atividades exercidas pelo Assistente Técnico-Administrativo (ATA) da RFB e o exercício da advocacia. Já a Comissão de Ética da RFB sustentou ser possível o exercício, pelo servidor, da advocacia privada nas áreas de Direito do Consumidor, Direito do Trabalho, Direito de Família, Direito de Sucessões, Direito Imobiliário e Vizinhança e Direito Contratual Cível desde que respeitadas algumas condicionantes estabelecidas. Em sede de análise definitiva, a CGU ratificou o entendimento da Comissão de Ética da RFB e entendeu ser possível o exercício da advocacia em determinadas áreas respeitadas as condicionantes impostas."
+  },
+  {
+   "n": "00096.002772/2016-31",
+   "d": "2017-08-01",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL. AUDITOR-FISCAL. MAGISTÉRIO E CONSULTORIA EM ASSUNTOS PREVIDENCIÁRIOS. ANÁLISE PRELIMINAR. PERMISSÃO PARA O EXERCÍCIO DA MAGISTRATURA E CONFLITO DE INTERESSES QUANTO A PRESTAÇÃO DE CONSULTORIA. ANÁLISE DA CGU. PERMISSÃO CONDICIONADA. O solicitante perguntou se poderia atuar como palestrante, professor e consultor sobre o tema única e exclusivamente do ponto de vista financeiro das novas regras previdenciárias. Em sua análise preliminar, tanto a Corregedoria quanto a Comissão de Ética da Receita Federal do Brasil concluíram que o exercício das atividades de magistério, quais sejam, ministrar palestras e aulas na área previdenciária, de forma concomitante com o exercício do cargo de AFRFB, não configuram, a priori, conflito de interesses. Todavia, as atividades de consultoria e assessoria de tema previdenciário seriam incompatíveis com o exercício do cargo de AFRFB e sua prática configuraria situação de conflito de interesses. Em sede de análise definitiva, a CGU entendeu que o consulente pode exercer atividades acadêmicas, incluindo a ministração de cursos, palestras e aulas em matéria previdenciária ficando vedada, apenas, a divulgação de informação privilegiada, bem como de outras informações de acesso restrito, ainda que a título exemplificativo, para fins didáticos. Entendeu também que as atividades de consultoria e assessoria de tema previdenciário podem ser desenvolvidas desde que tenham como objeto único e exclusivamente servidores públicos, pessoas físicas, excetuando dessa atividade entidades de classe, empresas, sindicatos, etc."
+  },
+  {
+   "n": "00096.002123/2016-39",
+   "d": "2017-07-10",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL – RFB. AUDITOR-FISCAL. COORDENADOR PEDAGÓGICO E PROFESSOR NO CURSO PREPARATÓRIO PARA O EXAME DE QUALIFICAÇÃO TÉCNICA DE AJUDANTES DE DESPACHANTES ADUANEIROS E CERTIFICAÇÃO DO DESPACHANTE ADUANEIRO COMO OPERADOR ECONÔMICO AUTORIZADO – OEA. ANÁLISE PRELIMINAR. POSSÍVEL CONFLITO DE INTERESSES. INCISOS II, III e VII DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO DE INTERESSES. INCISOS II e VII DO ART. 5º DA LEI Nº 12.813/2013. O solicitante questionou se poderia atuar como coordenador pedagógico e professor no curso preparatório para o exame de qualificação técnica de ajudantes de despachantes aduaneiros e certificação do despachante aduaneiro como operador econômico autorizado – OEA. Em sua análise preliminar a Receita Federal salientou que devido ao fato do servidor ser responsável por toda a coordenação, supervisão, gerenciamento e controle de todas as atividades aduaneiras, como tributação, arrecadação e fiscalização de controle aduaneiro no âmbito da região fiscal de sua lotação, e que o público alvo do curso pretendido seriam Despachantes Aduaneiros, Ajudantes de Despachantes Aduaneiros, Consultores e Operadores do Comércio Exterior, há potencial conflito de interesses conforme incisos II, III e VII da Lei nº 12.813/2013. Em sede de análise definitiva a CGU entendeu que o exercício da atividade privada pretendida de exercer atividades pedagógicas, atuando como coordenador pedagógico e professor no curso preparatório para o exame de qualificação técnica de ajudantes de despachantes aduaneiros e certificação do despachante aduaneiro como operador econômico autorizado – OEA apresenta riscos de conflito de interesses na forma dos incisos II e VII do art. 5º da Lei nº 12.813/2013, devido ao fato do curso ser oferecido por entidade cujas atribuições tem por base os mesmos assuntos tratados pelo servidor na seara pública e para público alvo que possa ter interesse em decisão do órgão ou do colegiado que o servidor participa."
+  },
+  {
+   "n": "00096.001799/2016-13",
+   "d": "2017-07-10",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL – RFB. AUDITOR-FISCAL. MINISTRAR AULAS E COORDENAÇÃO PEDAGÓGICA DE CURSO PREPARATÓRIO PARA CONCURSO. ANÁLISE PRELIMINAR. POSSÍVEL CONFLITO DE INTERESSES. INCISOS II, III e VII DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO DE INTERESSES. INCISOS II e VII DO ART. 5º DA LEI Nº 12.813/2013. O solicitante questionou se poderia atuar informou pretende exercer atividades de magistério especificamente ministrar aulas e coordenação pedagógica de curso preparatório para concurso. Em sua análise preliminar a Receita Federal concluiu que a atividade de docência para público específico mencionado neste pedido de autorização (Despachantes Aduaneiros, Ajudantes de Despachantes Aduaneiros, Consultores e Operadores do Comércio Exterior) permite uma aproximação indevida, porque conflituosa, entre o servidor e despachantes aduaneiros e demais intervenientes do comércio exterior, suscitando, assim, potencial e relevante conflito de interesses, nos termos dos incisos II, III e VII do art. 5º da Lei nº 12.813/2013. Em sede de análise definitiva a CGU entendeu que o exercício da atividade pretendida apresenta riscos de conflito de interesses na forma dos incisos II e VII do art. 5º da Lei nº 12.813/2013, devido ao fato do curso ser oferecido por entidade cujas atribuições tem por base os mesmos assuntos tratados pelo servidor na seara pública e para público alvo que possa ter interesse em decisão do órgão ou do colegiado que o servidor participa."
+  },
+  {
+   "n": "00096.002791/2016-66",
+   "d": "2017-07-07",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. RECEITA FEDERAL DO BRASIL – RFB. ANALISTA TRIBUTÁRIO. CURSOS SOBRE OPERAÇÃO DE FERRAMENTAS E SERVIÇOS RELACIONADOS AO ADIMPLEMENTO DE OBRIGAÇÕES TRIBUTÁRIAS A CONTADORES. ANÁLISE PRELIMINAR. POSSÍVEL CONFLITO DE INTERESSES. INCISO III DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO DE INTERESSES. INCISO II DO ART. 5º DA LEI Nº 12.813/2013. O solicitante perguntou se poderia ministrar cursos de fim de semana sobre operação de ferramentas e serviços relacionados ao adimplemento de obrigações tributárias a contadores e outros profissionais interessados, ressaltando que, no exercício de sua função pública, atende a pessoas desse público alvo. Em sua análise preliminar, a Comissão de Ética Pública Setorial da Secretaria da Receita Federal do Brasil – Ceps-RFB – entendeu que a atividade pleiteada pelo servidor seria incompatível com as atribuições do cargo de Analista Tributário da RFB, podendo comprometer a precedência e o desempenho de sua função pública, tendo em vista que Analistas Tributários, conforme disposto no Decreto nº 6.641/2008, podem atuar no exame de matérias e processos administrativos do interesse do público-alvo do curso que pretende ministrar. Em sede de análise definitiva, a CGU entendeu que a ministração de cursos de fim de semana sobre operação de ferramentas e serviços relacionados ao adimplemento de obrigações tributárias a contadores e outros profissionais por Analista Tributário da Secretaria da Receita Federal do Brasil – RFB – pode representar uma situação de conflito de interesses, nos termos do inciso II do art. 5º da Lei nº 12.813/2013, tendo em vista que esse público também é atendido pelo servidor no exercício de sua função pública e pode ter interesse em processos decisórios dos quais o servidor participa."
+  },
+  {
+   "n": "00096.002167/2016-69",
+   "d": "2017-05-04",
+   "r": "",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL - RFB. ASSISTENTE TÉCNICO ADMINISTRATIVO. ADVOCACIA. ANÁLISE PRELIMINAR. INCONCLUSIVA. ANÁLISE DA CGU. SOLICITAÇÃO GENÉRICA. NÃO ATENDE AOS REQUISITOS DO ART.3º DA PORTARIA MP-CGU Nº 333/2013. No pedido, o servidor se resumiu a informar que pretende atuar em “atividade no exercício da advocacia”, não entrando em maiores detalhes em seu pleito. Em análise preliminar, a Corregedoria da RFB – Coger – entendeu que a atividade pretendida pelo consulente configura conflito de interesses, pois o servidor pode ter acesso a informações de caráter sigiloso que seriam capazes de trazer vantagem econômica ou financeira para o agente público ou para terceiros. A Comissão de Ética da RFB que entendeu não haver conflito de interesses relevante. Em sede de análise definitiva, a CGU entendeu que a total ausência de detalhamento do pedido não permite uma visão clara sobre o que o servidor pretende exercer na área privada, prejudicando que se forme um juízo de valor, no caso concreto, sobre a existência de conflito de interesses. Dessa forma, não seria possível afirmar que há potencial conflito de interesses ou resolver esse caso com o uso de condicionantes. É necessário que o solicitante descreva não apenas as atribuições de seu cargo ou emprego e as atividades efetivamente desempenhadas no setor público, como também delimite com precisão o que pretende fazer no setor privado, conforme se depreende do parágrafo único do art. 3º da Portaria Interministerial MP/CGU nº 333/2013."
+  },
+  {
+   "n": "00096.001560/2015-54",
+   "d": "2017-03-27",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA SOBRE POSSÍVEL CONFLITO DE INTERESSES. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL DO BRASIL (RFB). ARREMATAÇÃO DE IMÓVEL EM LEILÃO JUDICIAL. ANÁLISE PRELIMINAR DA RFB. AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. CONCORDA COM A ANÁLISE DA RFB. Analista Tributário da RFB submeteu consulta questionando se incorreria em conflito de interesses caso viesse a arrematar um imóvel em leilão judicial tendo a União como parte exequente. Em sua análise, a RFB não identificou incompatibilidade material em caso de participação do servidor, desde que este viesse a respeitar alguns condicionantes estipulados. Ao analisar o caso, esta CGU ratificou o entendimento exarado pelo RFB, notadamente de caráter preventivo do conflito de interesses."
+  },
+  {
+   "n": "00096.002183/2016-51",
+   "d": "2016-12-15",
+   "r": "Há risco de CI relevante",
+   "rec": "Recurso Negado",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. RECEITA FEDERAL DO BRASIL – RFB. AUDITOR-FISCAL. EXERCÍCIO DE ATIVIDADE COMO PRÁTICO DA MARINHA MERCANTE. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA PÚBLICA DA SECRETARIA DA RFB. INCOMPATIBILIDADE. PORTARIA RFB Nº 444, DE 23 DE MARÇO DE 2015. ANÁLISE DA CGU. CONFLITO DE INTERESSES RELEVANTE. INCOMPATIBILIDADE POR IMPLICAR MANUTENÇÃO DE RELAÇÃO DE NEGÓCIO COM EMPRESA CUJAS ATIVIDADES PRECÍPUAS SÃO FISCALIZADAS PELA RFB. INCISOS III E VII DO ART. 5º DA LEI Nº 12.813/2013. Consulta encaminhada pela Comissão de Ética Pública da Secretaria da Receita Federal do Brasil – Ceps-RFB a respeito da compatibilidade da atividade de Prático da Marinha Mercante com o exercício do cargo de Auditor-Fiscal da RFB. Em análise preliminar, a Ceps-RFB, considerando as informações fornecidas pelo solicitante e a manifestação da Corregedoria do órgão, entendeu que a Portaria RFB nº 444, de 23 de março de 2015, já impediria o exercício da atividade pretendida pelo solicitante, pois incompatível. Entretanto, por prudência, optou-se por levar a questão à análise desta CGU, órgão competente para manifestar-se a respeito das questões vinculadas à Lei nº 12.813/2013. Em sua análise, a CGU entendeu que o exercício da atividade de Prático da Marinha Mercante por Auditor-Fiscal da Receita Federal do Brasil configura uma situação de conflito de interesses, nos termos dos incisos III e VII do art. 5º da Lei nº 12.813/2013, tratando-se de atividade incompatível com as atribuições do cargo do solicitante, pois envolve a prestação de serviços, ainda que eventuais, a empresa cuja atividade é controlada, fiscalizada e regulada pelo ente ao qual o agente público está vinculado."
+  },
+  {
+   "n": "00096.000981/2015-68",
+   "d": "2016-08-16",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ASSISTENTE TÉCNICO-ADMINISTRATIVO DA RECEITA FEDERAL DO BRASIL (RFB). ADVOCACIA EVENTUAL. ÁREA CÍVEL, TRABALHISTA E DIREITO DO CONSUMIDOR. ANÁLISE PRELIMINAR DA CORREGEDORIA DA RFB. CONFLITO DE INTERESSES. INCOMPATIBILIDADE MATERIAL. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA STPC. RATIFICA ENTENDIMENTO DA COMISSÃO DE ÉTICA. Em sua análise preliminar, a Comissão de Ética da RFB autorizou o exercício da atividade privada no caso de o consulente se comprometer a observar formalmente um rol de condicionantes estabelecidos pela Comissão. A STPC concordou com a decisão da Comissão de Ética, autorizando o exercício da atividade privada pleiteada, com a condição de serem observados os referidos condicionantes."
+  },
+  {
+   "n": "00096.001698/2016-34",
+   "d": "2016-07-27",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO DA RECEITA FEDERAL DO BRASIL. SOCIO MINORITÁRIO DE EMPRESA DE TREINAMENTO. MAGISTÉRIO. ANÁLISE PRELIMINAR DA RFB. POTENCIAL CONFLITO DE INTERESSES, CONFORME INCISOS III E VII DO ART. 5° DA LEI N° 12.813/2013, VISTO QUE A ATIVIDADE DE MAGISTÉRIO EM QUESTÃO, AINDA QUE REALIZADO POR OUTRO PROFESSOR, GERA DÚVIDAS SOBRE INTEGRIDADE E PROBIDADE DO SERVIDOR. SEM POSSIBILIDADE DE MITIGAÇÃO. ANÁLISE DA CGU. AUTORIZAÇÃO CONDICIONADA. ASSINATURA DE TERMO DE COMPROMISSO COMPROMETENDO-SE A NÃO ATUAR PRIVADAMENTE EM ÁREA QUE SE CONFUNDA COM MATÉRIA ESPECÍFICA DA RFB, BEM COMO EM NÃO FAZER USO DE INFORMAÇÃO PRIVILEGIADA A QUE PORVENTURA TENHA ACESSO, COMPROMETENDO-SE, AINDA, A OBSERVÁ-LO RIGOROSAMENTE, SOB PENA DE INCORRER EM CONFLITO DE INTERESSES, NOS TERMOS DA LEI Nº 12.813/2013."
+  },
+  {
+   "n": "00096.000824/2015-52",
+   "d": "2015-11-26",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. AUDITOR-FISCAL DA RFB. MAGISTÉRIO E CONSULTORIA FINANCEIRA. ANÁLISE PRELIMINAR DA RFB. INEXISTÊNCIA DE CONFLITO NO EXERCÍCIO DO MAGISTÉRIO. EXISTÊNCIA DE CONFLITO NO EXERCÍCIO DE CONSULTORIA. ATIVIDADE INCOMPATÍVEL. ACESSO A INFORMAÇÕES PRIVILEGIADAS. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO NO EXERCÍCIO DO MAGISTÉRIO. EXISTÊNCIA DE CONFLITO NO EXERCÍCIO DE CONSULTORIA. INCISOS I E III, ART. 5º, LEI Nº 12.813/2013. Em análise preliminar, a RFB autorizou o exercício do magistério, com a ressalva de que as aulas abordem apenas aspectos gerais e teóricos dos investimentos, não podendo adentrar na análise de situações específicas das empresas. Por outro lado, em razão do acesso a informações privilegiadas, considerou a atividade de consultoria na área de investimentos como sendo incompatível com o exercício do cargo de AFRFB, visto que aquelas informações poderiam representar uma vantagem competitiva ao servidor. Em sua análise, esta STPC/CGU entendeu que, em relação à docência na área de finanças e investimentos, nos estritos termos apresentados, não há óbice ao seu exercício por Auditor-Fiscal da RFB, devendo-se, contudo, haver observância das recomendações apontadas. Já em relação à consultoria em finanças e investimentos, entendeu haver conflito de interesses, nos termos dos incisos I e III do art. 5º da Lei nº 12.813/2013, por se tratar de atividade cuja natureza é eminentemente incompatível com as atribuições exercidas por um AFRFB, ainda mais notoriamente em razão de sua lotação em área sensível que lida sistematicamente com informações privilegiadas."
+  },
+  {
+   "n": "00096.000828/2015-31",
+   "d": "2015-10-26",
+   "r": "",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ASSISTENTE TÉCNICO ADMINISTRATIVO. RECEITA FEDERAL DO BRASIL. EXERCER ADVOCACIA PRIVADA. ANÁLISE PRELIMINAR. AUTORIZAÇÃO COM CONDICIONANTES. ANÁLISE DA CGU. INADMISSIBILIDADE. AUSÊNCIA DOS REQUISITOS DO ART. 3º DA PORTARIA INTERMINISTERIAL MP/CGU Nº 333/2013. O pedido versa sobre o exercício da atividade privada de advocacia. Ao analisar preliminarmente o caso, a Comissão de Ética da Receita Federal do Brasil decidiu pela não ocorrencia de conflito de interesses relevante na atividade pretendida, concedendo autorização condicionada à consulente.Ao analisar o caso, a CGU decidiu pela inadimissibilidade do pedido por se tratar de pedido muito genérico, estando ausentes portanto, alguns requisitos do art. 3º da Portaria Interministerial MP/CGU nº 333/2013."
+  },
+  {
+   "n": "00096.000977/2015-16",
+   "d": "2015-09-21",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL. TESOUREIRO AUXILIAR EM LOJA MAÇÔNICA. ANÁLISE PRELIMINAR DA CORREGEDORIA E DA COMISSÃO DE ÉTICA DA RECEITA FEDERAL. INEXISTÊNCIA DE CONFLITO DE INTERESSES. AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO DE INTERESSES. AUTORIZAÇÃO CONDICIONADA. Em análise preliminar, a Receita Federal do Brasil (RFB) considerou haver, a priori, incompatibilidade material entre o exercício da atividade de Tesoureiro e o cargo de Auditor. De todo modo, ao considerar autorização condicionada, em caso análogo, por parte da CGU, bem como a pequena probabilidade de o servidor beneficiar a referida Loja, a RFB concluiu pela inexistência de conflito de interesses, desde que observadas algumas condicionantes. Em sua análise, a CGU entendeu que a mera correlação entre as áreas ou matérias de atuação entre a iniciativa privada e o setor público não é suficiente para caracterizar uma incompatibilidade, nos termos da Lei nº 12.813/2013, haja vista a necessidade de identificar um comprometimento do interesse público ou do desempenho da função pública. Assim, ao considerar que restou caracterizada a baixa probabilidade de, no exercício de suas atribuições na RFB, o servidor atuar em processos de interesse da referida loja ou de algum outro modo beneficiá-la, então a CGU ratificou o entendimento da RFB, no sentido de propor uma autorização condicionada. Desse modo, a CGU concluiu pela inexistência de conflito de interesses, desde que, mediante a assinatura de Termo de Compromisso junto à RFB, o consulente se comprometa a pautar a sua conduta, em âmbito privado, segundo algumas condicionantes específicas, como resguardar informações privilegiadas, não atuar em processos de interesse da Loja, tampouco como seu representante perante a RFB."
+  },
+  {
+   "n": "00096.000691/2015-14",
+   "d": "2015-08-31",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. MAGISTÉRIO EM MATÉRIA DE DIREITO E LEGISLAÇÃO TRIBUTÁRIA PARA PÚBLICOS DIVERSOS. DIVULGAÇÃO DE NOTÍCIAS E MATERIAIS SOBRE MATÉRIA TRIBUTÁRIA NA INTERNET. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. POTENCIAL CONFLITO DE INTERESSES SOMENTE QUANTO AO MAGISTÉRIO EM CURSOS DE CAPACITAÇÃO PARA PROFISSIONAIS DE CONTABILIDADE. PÚBLICO ESPECÍFICO COM INTERESSE EM PODER DECISÓRIO DA RFB. INCISO III, ART. 5º, LEI Nº 12.813/2013. INEXISTÊNCIA DE CONFLITO DE INTERESSES QUANTO ÀS DEMAIS ATIVIDADES. RECOMENDAÇÕES PREVENTIVAS. ANÁLISE DA CGU. RATIFICAÇÃO DE ENTENDIMENTO PRELIMINAR DA RFB. Em sua análise, a Comissão de Ética da RFB (CEPS) considerou haver potencial conflito de interesses somente quanto à pretensão do consulente de atuar como professor em cursos livres de capacitação para profissionais de contabilidade, por entender que este público tende a ser constituído por pessoas ou prepostos de empresa passíveis de serem atendidos no Plantão Fiscal onde o servidor atua, e, principalmente, um público que tem interesse em decisão da RFB. Assim, vislumbrou-se incompatibilidade material, nos termos do art. 5º, III, da Lei 12.813/2013, bem como foram propostas recomendações de cunho preventivo quanto ao exercício das demais atividades. A CGU, por sua vez, não adentrou na análise de mérito quanto ao exercício das atividades sobre as quais a RFB não identificou potencial conflito de interesses. A respeito do exercício de magistério a profissionais de contabilidade, a CGU, tendo em vista o exercício de magistério direcionado a público específico que possa ter interesse em decisão do agente ou da instituição ou de colegiado do qual o agente participe, ratificou o entendimento da RFB no sentido de haver incompatibilidade nos termos do art. 3º, III, da Lei nº 12.813/2013."
+  },
+  {
+   "n": "00096.000870/2015-51",
+   "d": "2015-07-22",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO. EXERCÍCIO DE ADVOCACIA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. POTENCIAL CONFLITO DE INTERESSES. INCOMPATIBILIDADE PREVISTA NO ESTATUTO DA OAB. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM. QUESTÃO PREJUDICIAL. Em sua análise preliminar, a Comissão de Ética da Receita Federal entendeu haver incompatibilidade, nos termos do art. 28, inciso VII, da Lei nº 8.906/94 (Estatuto da Advocacia e da OAB), no sentido de vedar a prática de advocacia concomitantemente com o exercício de cargos públicos de natureza fiscal. Em sua análise, a CGU considerou que, ainda que a Receita Federal tenha pontuado questões relacionadas a conflito de interesses, há questão prejudicial à análise desta Controladoria em virtude de impedimento expresso de outra ordem, não diretamente relacionado à Lei nº 12.813/2013, que inviabiliza por si só o exercício da atividade privada pleiteada. Não cabe, portanto, à CGU analisar a questão prejudicial levantada, tendo a Receita Federal autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.000766/2015-67",
+   "d": "2015-07-22",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO. EXERCÍCIO DE ADVOCACIA E CONCILIADOR/MEDIADOR/JUIZ LEIGO VOLUNTÁRIO JUNTO AO PODER JUDICIÁRIO. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. INCOMPATIBILIDADE PREVISTA NO ESTATUTO DA OAB AO EXERCÍCIO DE ADVOCACIA. INEXISTÊNCIA DE CONFLITO DE INTERESSES QUANTO AO EXERCÍCIO DAS DEMAIS ATIVIDADES JUNTO AO PODER JUDICIÁRIO. ANÁLISE DA CGU. IMPEDIMENTO DE OUTRA ORDEM QUANTO À ADVOCACIA. QUESTÃO PREJUDICIAL. AUTONOMIA DA RFB PARA CONCEDER AUTORIZAÇÃO PARA DEMAIS ATIVIDADES. Em sua análise preliminar, a Comissão de Ética da Receita Federal entendeu haver incompatibilidade, nos termos do art. 28, inciso VII, da Lei nº 8.906/94 (Estatuto da Advocacia e da OAB), no sentido de vedar a prática de advocacia concomitantemente com o exercício de cargos públicos de natureza fiscal. A respeito do exercício das atividades de conciliador/mediador/juiz leigo voluntário junto ao Poder Judiciário, houve manifestação pela inexistência de conflito de interesses, com a ressalva que tais atividades sejam exercidas de forma não remunerada, tendo em vista decisão do CNJ no sentido de considerar incompatível, por acumulação de cargos públicos remunerados, o exercício dessas atividades por servidor público. Em sua análise, a CGU considerou que, ainda que a Receita Federal tenha pontuado questões relacionadas a conflito de interesses, há questão prejudicial à análise desta Controladoria em virtude de impedimento expresso de outra ordem, não diretamente relacionado à Lei nº 12.813/2013, que inviabiliza por si só o exercício da atividade de advocacia. Não cabe, portanto, à CGU analisar a questão prejudicial levantada, tendo a RFB autonomia para decidir sobre a questão. Com relação ao pleito de exercício das demais atividades junto ao Poder Judiciário, a análise da RFB já foi exarada no sentido de permitir tal exercício, desde que respeitadas algumas condicionantes. Assim, não cabe manifestação da CGU sobre tal pleito, tendo a RFB autonomia para conceder tal autorização."
+  },
+  {
+   "n": "00096.000204/2014-32",
+   "d": "2015-06-16",
+   "r": "Há risco de CI relevante",
+   "rec": "Recurso Negado",
+   "t": "",
+   "x": "CONSULTA SOBRE POSSÍVEL CONFLITO DE INTERESSES. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. MINISTRAR CURSOS DE CAPACITAÇÃO JUNTO AO SINDICATO DOS DESPACHANTES ADUANEIROS DE ITAJAÍ. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RFB. EXISTÊNCIA DE CONFLITO DE INTERESSES. POTENCIAL E RELEVANTE CONFLITO DE INTERESSES, NOS TERMOS DOS INCISOS II, III E VII DO ART. 5º DA LEI Nº 12.813/2013. ANÁLISE DA CGU. CONFLITO DE INTERESSES. Auditor-Fiscal da Receita Federal do Brasil submeteu consulta questionando se suas atividades de magistério na Universidade do Vale do Itajaí (Univali) e no Sindicato dos Despachantes Aduaneiros de Itajaí configurariam conflito de interesses com o cargo público que ocupa. Em sua análise preliminar, a Comissão de Ética da RFB concluiu que o exercício da primeira atividade não configuraria conflito de interesses, no entanto, em relação à segunda atividade, concluiu pelo conflito de interesses nos termos dos incisos II, III e VII do art. 5º da Lei nº 12.813/2013. . Ao analisar o caso, esta CGU ratificou o entendimento exarado pela Comissão de Ética da RFB e decidiu pela ocorrência de conflito de interesses nos termos do art. 5° inciso II da Lei 12.813/2013, entendendo que o solicitante não pode continuar com a prestação de serviços nos moldes descritos junto ao Sindicato dos Despachantes Aduaneiros de Itajaí de forma concomitante ao exercício do seu cargo público na RFB."
+  },
+  {
+   "n": "00096.000153/2014-49",
+   "d": "2015-06-02",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "Análise de consulta deste mesmo interessado, com o mesmo objeto e idêntica descrição foi feita no âmbito do processo nº 00096.000226/2014-19, no qual esta Controladoria-Geral da União concluiu que a participação em Programa de Qualificação de Praticante de Prático por Auditor-Fiscal da Receita Federal do Brasil, durante período de licença para tratar de interesses particulares e nos termos apresentados pelo consulente, não é suficiente para configurar uma das situações de conflito de interesses descritas no art. 5º da Lei nº 12.813, de 16 de maio de 2013."
+  },
+  {
+   "n": "00096.000339/2014-14",
+   "d": "2015-05-29",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL BRASIL. PRESIDENTE DE FEDERAÇÃO ESPORTIVA. ANÁLISE PRELIMINAR. INCOMPATIBILIDADE. LEI Nº 12.813/2013, ART. 5º, III. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO DE INTERESSES. Em análise preliminar, a Comissão de Ética Setorial da Secretaria da Receita Federal do Brasil entendeu que haveria incompatibilidade material entre as atividades de Presidente da Federação Esportiva e as atribuições do cargo de Auditor-Fiscal da RFB, nos termos do inciso III do art. 5º da lei nº 12.813, de 16 de maio de 2013. Em sua análise, a CGU entendeu que potencial conflito de interesses pode ser mitigado caso o consulente abstenha-se de representar a entidade privada junto ao Ministério da Fazenda e, em especial, junto à Receita Federal do Brasil; abstenha-se, no exercício de seu cargo público, de participar de processos decisórios que possam ser do interesse da referida Federação ou dos clubes que ela representa; comprometa-se a não se apresentar como servidor público nem se valer do vínculo com a RFB para resolver questões da Federação perante órgãos ou entidades da administração pública direta ou indireta de qualquer dos Poderes da União, dos Estados, do Distrito Federal e dos Municípios; e não utilize ou permita o uso do seu cargo, ou do nome da RFB, de forma a sugerir que a RFB sanciona ou respalda suas atividades pessoais, ou avaliza qualquer opinião, produto, serviço ou entidade."
+  },
+  {
+   "n": "00096.000477/2014-87",
+   "d": "2015-05-26",
+   "r": "Há risco de CI relevante",
+   "rec": "Recurso Negado",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO PARA O EXERCÍCIO DE ATIVIDADE PRIVADA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. EXERCÍCIO DA ATIVIDADE PRIVADA DE PRÁTICO DA MARINHA MERCANTE. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RECEITA FEDERAL DO BRASIL. EXISTÊNCIA DE CONFLITO DE INTERESSES. ATIVIDADE INCOMPATÍVEL COM O EXERCÍCIO CONCOMITANTE DO CARGO PÚBLICO. ANÁLISE DA CGU. CONFLITO DE INTERESSES. Auditor-Fiscal da Receita Federal do Brasil formulou pedido de autorização para continuar exercendo a atividade de sócio-cotista da empresa Barra do Pará – Belém – Vila do Conde e Adjacências – Serviços de Praticagem Sociedade Simples Ltda, onde presta serviços de praticagem, sem administração ou gerência. Em sua análise, a Comissão de Ética da Receita Federal do Brasil informou que o exercício de tal atividade é incompatível com o exercício concomitante do cargo público por força do inciso VII do Art. 5 da Lei 12.813/2013. Informou também que tal prática não seria recomendável, pois teria o condão de prejudicar a confiança do população no trabalho prestado pela Receita Federal do Brasil. Ao analisar o caso, esta CGU ratificou o entendimento exarado pela RFB e decidiu pela ocorrência de conflito de interesses nos termos do art. 5° inciso VII da Lei 12.813/2013."
+  },
+  {
+   "n": "00096.000226/2014-19",
+   "d": "2015-05-20",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL BRASIL. EXERCER A ATRIBUIÇÃO DE PRATICANTE DE PRÁTICO DURANTE GOZO DE LICENÇA PARA TRATAR DE INTERESSES PARTICULARES. ANÁLISE PRELIMINAR. CONFLITO DE INTERESSES IRRELEVANTE. AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. CONFLITO DE INTERESSES INEXISTENTE. Em análise preliminar, a Comissão de Ética Setorial da Secretaria da Receita Federal do Brasil entendeu que, embora exista potencial conflito de interesses na prestação de serviços de praticagem por Auditor-Fiscal da RFB à empresa de transporte marítimo, que possui uma parte de sua atividade fiscalizada, ainda que indiretamente, pela RFB, a adoção de medidas condicionantes poderiam mitigar o potencial conflito ao nível da irrelevância. As condições sugeridas, no entanto, são genéricas, envolvendo restrições que se aplicam a todos os servidores em exercício no órgão. Em sua análise, a CGU entendeu que a participação em Programa de Qualificação de Praticante de Prático por Auditor-Fiscal da Receita Federal do Brasil, durante período de licença para tratar de interesses particulares e nos termos apresentados pelo consulente, não é suficiente para configurar uma das situações de conflito de interesses descritas no art. 5º da Lei nº 12.813, de 16 de maio de 2013."
+  },
+  {
+   "n": "00096.000323/2014-95",
+   "d": "2015-05-15",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. EXERCÍCIO DE DIREÇÃO DE ORGANIZAÇÃO RELIGIOSA. ANÁLISE PRELIMINAR DA RECEITA FEDERAL DO BRASIL. POTENCIAL CONFLITO DE INTERESSES. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO. Em sua análise preliminar, a Comissão de Ética Pública Seccional da Receita Federal do Brasil entendeu que existe conflito de interesses no exercício da atividade de Tesoureiro da entidade de cunho religioso. Em sua análise, a CGU considerou ser possível a atuação do consulente como tesoureiro da organização religiosa, desde que assine Termo de Compromisso junto à RFB se comprometendo a não atuar, em sua atividade de tesoureiro, na elaboração de demonstrações contábeis que venham a ser analisadas pela RFB e a não atuar, em qualquer caso, como representante da congregação religiosa perante a RFB."
+  },
+  {
+   "n": "00096.000715/2015-35",
+   "d": "2015-04-17",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. ANALISTA DO SEGURO SOCIAL. ATIVIDADE DE ADVOCACIA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA PÚBLICA SETORIAL DA RECEITA FEDERAL DO BRASIL. IMPEDIMENTO AO EXERCÍCIO DA ADVOCACIA. ANÁLISE DA CGU. QUESTÃO PREJUDICIAL. PERDA DE OBJETO. Em sua análise preliminar, a Comissão de Ética Pública Setorial da Receita Federal entendeu, dentre outras coisas, que há um impedimento ao exercício da atividade de advocacia por agente público em exercício na RFB, em decorrência da proibição expressa de que trata o inciso VII do art. 28 da Lei n° 8.906/94 (Estatuto da Advocacia). Em sua análise, a CGU entendeu que, ainda que a Receita Federal tenha pontuado questões relacionadas a conflito de interesses, há questão prejudicial à análise desta Controladoria em virtude de impedimento expresso de outra ordem, não relacionado à Lei nº 12.813/2013, que inviabiliza o exercício da atividade. Não cabe à CGU analisar a questão prejudicial levantada, tendo a Receita Federal autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.000451/2014-39",
+   "d": "2015-04-16",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. ANALISTA DO SEGURO SOCIAL. ATIVIDADE DE ADVOCACIA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA PÚBLICA SETORIAL DA RECEITA FEDERAL DO BRASIL. IMPEDIMENTO AO EXERCÍCIO DA ADVOCACIA. ANÁLISE DA CGU. QUESTÃO PREJUDICIAL. PERDA DE OBJETO. Em sua análise preliminar, a Comissão de Ética Pública Setorial da Receita Federal entendeu, dentre outras coisas, que há um impedimento ao exercício da atividade de advocacia por agente público em exercício na RFB, em decorrência da proibição expressa de que trata o inciso VII do art. 28 da Lei n° 8.906/94 (Estatuto da Advocacia). Em sua análise, a CGU entendeu que, ainda que a Receita Federal tenha pontuado questões relacionadas a conflito de interesses, há questão prejudicial à análise desta Controladoria em virtude de impedimento expresso de outra ordem, não relacionado à Lei nº 12.813/2013, que inviabiliza o exercício da atividade. Não cabe à CGU analisar a questão prejudicial levantada, tendo a Receita Federal autonomia para decidir sobre a questão."
+  },
+  {
+   "n": "00096.000685/2015-67",
+   "d": "2015-04-10",
+   "r": "Perda de Objeto",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. ANALISTA TRIBUTÁRIA DA RECEITA FEDERAL DO BRASIL. ATUAR COMO MÉDICA HOMEOPATA E TERAPEUTA EM CONSULTÓRIO PARTICULAR E ORGANIZAR EVENTOS RELACIONADOS À MEDICINA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA DA RECEITA FEDERAL. CONFLITO DE INTERESSES IRRELEVANTE. CONDICIONANTES PARA EXERCÍCIO DA ATIVIDADE PRIVADA. PROPOSIÇÃO DE AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. ESCLARECIMENTOS ACERCA DE PROCEDIMENTOS PARA CONCESSÃO DE AUTORIZAÇÃO CONDICIONADA. ERRO DE ENCAMINHAMENTO. Em análise preliminar, a Comissão de Ética da RFB entendeu que as atividades que a consulente pretende executar não dizem respeito à finalidade da Receita Federal e nem às atribuições do cargo de Analista-Tributário. Destacou, no entanto, algumas condicionantes que o consulente deveria observar no exercício da atividade privada, encaminhando a solicitação à CGU para emissão de autorização condicionada. Em sua análise, a CGU entendeu que, nos casos em que eventuais limitações à atividade privada se baseiam unicamente no cumprimento de legislações e/ou normativos internos, não se constituindo em limitação específica da atividade privada do agente, a RFB não necessita encaminhar solicitação à CGU, podendo fazer ela mesma tais recomendações, que não se constituem em condicionantes nos termos do parágrafo único do art. 7º da Portaria Interministerial CGU-MP nº 333/2013."
+  },
+  {
+   "n": "00096.000655/2015-51",
+   "d": "2015-04-10",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. EXERCÍCIO DE ATIVIDADE REMUNERADA DE ATRIZ. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA. INEXISTÊNCIA DE CONFLITO DE INTERESSES. SUGESTÃO DE AUTORIZAÇÃO CONDICIONADA. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO DE INTERESSES. ERRO DE ENCAMINHAMENTO. Em análise preliminar, a Comissão de Ética Setorial da Secretaria da Receita Federal do Brasil entendeu que o exercício da atividade privada de atriz por Auditora-Fiscal da RFB, em princípio, não infringiria o inciso III do art. 5º da Lei 12.813/2013. Entretanto, como, a depender de seu modo de execução, a atividade poderia se enquadrar no inciso II do art. 5º dessa Lei, encaminhou-se a solicitação à CGU, com proposta de autorização condicionada. Em sua análise, a CGU entendeu que eventuais limitações à atividade privada que envolvam tão somente o cumprimento de dispositivos legais ou normativos internos de aplicação geral não se enquadram no conceito de autorização condicionada, nos termos do parágrafo único do art. 7º da Portaria Interministerial CGU-MP nº 333/2013. Dessa forma, não haveria necessidade de se encaminhar a solicitação à CGU, pois a RFB tem autonomia para orientar seus servidores a respeito das obrigações impostas por seus cargos."
+  },
+  {
+   "n": "00096.000345/2014-55",
+   "d": "2015-04-02",
+   "r": "",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. ATIVIDADE PRIVADA DE PRODUTOR RURAL, MEDIANTE EXPLORAÇÃO INDIVIDUAL DE PATRIMÔNIO PRÓPRIO. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA. INEXISTÊNCIA DE CONFLITO DE INTERESSES. CONDICIONANTES PARA EXERCÍCIO DA ATIVIDADE. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO DE INTERESSES. ANÁLISE DA RFB FOI CORRETA. ERRO DE ENCAMINHAMENTO. Em análise preliminar, a Comissão de Ética da RFB entendeu que, no caso concreto, o exercício em si da atividade privada de produtor rural, mediante exploração individual de patrimônio próprio, não confronta o interesse público nem afeta a precedência da função pública. Destacou, no entanto, algumas condicionantes que o consulente deveria observar no exercício da atividade privada, encaminhando a solicitação à CGU para emissão de autorização condicionada. Em sua análise, a CGU entendeu que, nos casos em que eventuais limitações à atividade privada se baseiam unicamente no cumprimento de legislações e/ou normativos internos, não se constituindo em limitação específica da atividade privada do agente, a RFB não necessita encaminhar solicitação à CGU, podendo fazer ela mesma tais recomendações, que não se constituem em condicionantes nos termos do parágrafo único do art. 7º da Portaria Interministerial CGU-MP nº 333/2013."
+  },
+  {
+   "n": "00096.000321/2014-12",
+   "d": "2015-03-31",
+   "r": "Não há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL DA RECEITA FEDERAL DO BRASIL. AUXÍLIO NO PREENCHIMENTO DA DECLARAÇÃO DO IMPOSTO DE RENDA PESSOA FÍSICA PARA AMIGOS E PARENTES PRÓXIMOS. ANÁLISE PRELIMINAR DA RECEITA FEDERAL. CONFLITO DE INTERESSES. ATIVIDADE INCOMPATÍVEL. INCISO III, ART. 5º, LEI Nº 12.813/2013. ANÁLISE DA CGU. BAIXO RISCO DE COMPROMETIMENTO À FUNÇÃO PÚBLICA. CONFLITO DE INTERESSES IRRELEVANTE. Consulta sobre conflito de interesses por auditor-fiscal da receita federal a possibilidade de prestar auxílio ao preenchimento da Declaração do Imposto de Renda da Pessoa Física a amigos e parentes próximos. Em análise preliminar, a RFB entendeu que a atividade objeto da consulta seria incompatível com as atribuições da Receita Federal, configurando conflito de interesse nos termos do inciso III do art. 5º da Lei n. 12.813/2013. Em análise final, a CGU entendeu que a prestação de auxílio ao preenchimento da Declaração de Imposto de Renda da Pessoa Física, em caráter informal sem remuneração ou qualquer contraprestação, para amigos e parentes próximos pode ser considerada como de baixo risco de prejuízo à função pública e passível de enquadramento como conflito de interesses irrelevante."
+  },
+  {
+   "n": "00096.000141/2014-14",
+   "d": "2014-11-25",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO. PARTICIPAÇÃO EM PEÇA TEATRAL. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA. EXISTÊNCIA DE CONFLITO DE INTERESSES IRRELEVANTE. SUGESTÃO DE MEDIDAS DE MITIGAÇÃO DO CONFLITO. ANÁLISE DA CGU. INEXISTÊNCIA DE CONFLITO DE INTERESSES. AUTORIZAÇÃO CONDICIONADA. Analista Tributário da Receita Federal do Brasil (RFB) solicitou autorização para exercer atividades na área das artes cênicas com participação em peça teatral. Em sua análise, a Comissão de Ética da RFB informou que num primeiro momento o pleito do servidor poderia configurar conflito de interesses por possível colisão com o disposto no inciso VII do art. 5° da Lei n°12.813/2013. No entanto, tal enquadramento penalizaria de forma excessiva todo e qualquer servidor da RFB que pretendesse atuar em qualquer área privada.Dessa forma, analisando o caso concreto, aquela Comissão entendendeu não haver conflito de interesses relevante entre a atividade artística pretendida e o exercício das atividades públicas do agente. Enumerou algumas condicionantes para a atividade e destacou o dever de declarar-se em impedimento ou em suspeição nos casos de vislumbrar conflito entre as atividades. Esta CGU destacou que, não haveria conflito de interesses na atividade pleiteada possível de comprometer o interesse coletivo ou prejudicar o desempenho da função pública do solicitante, uma vez que essa não guarda relação direta com as finalidades precípuas da Secretaria da Receita Federal do Brasil."
+  },
+  {
+   "n": "00096.000160/2014-41",
+   "d": "2014-11-24",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA-TRIBUTÁRIA DA SECRETARIA DA RECEITA FEDERAL DO BRASIL. PSICÓLOGA. ATUAÇÃO EM CONSULTÓRIO PRÓPRIO. ANÁLISE PRELIMINAR. VEDAÇÃO. LEI Nº 12.813/2013, ART. 5º, INCISO VII. ANÁLISE DA CGU. CONFLITO INEXISTENTE. AUTORIZAÇÃO CONDICIONADA. Para que se configure uma situação de conflito de interesses, há que se demonstrar, no caso concreto, como e em que medida as atividades privadas do agente público podem causar prejuízo, seja ao órgão ou entidade ao qual esteja vinculado, seja ao desempenho de suas funções, seja ao público em geral. O ofício de psicóloga não guarda relação direta com as finalidades precípuas da Secretaria da Receita Federal do Brasil, qual seja, a administração tributária e aduaneira. O exercício da atividade particular de psicóloga por uma Analista-Tributária da RFB não possui força suficiente para, por si mesmo, colocar em dúvida a imparcialidade da agente pública ou da Receita Federal do Brasil. Isso não dispensa, no entanto, a adoção das medidas de caráter preventivo apontadas pela CEPS-RFB em sua análise preliminar, pois a servidora deve evitar, no exercício de sua atividade privada, qualquer situação que coloque em dúvida sua integridade enquanto agente pública. Caso se depare, no exercício de suas funções públicas, com demandas que envolvam seus clientes particulares, a servidora deve invocar os mecanismos da suspeição ou do impedimento, previstos no art. 22 do Código de Conduta da RFB. No mesmo sentido, a servidora deve comprometer-se, mediante assinatura de termo de compromisso, a observar as recomendações sugeridas pela Comissão de Ética da Secretaria da Receita Federal do Brasil, citadas no item 6 da Nota Técnica 2.426/2014/CGINT/DIACI/STPC/CGU-PR."
+  },
+  {
+   "n": "00096.000131/2014-89",
+   "d": "2014-11-12",
+   "r": "Há risco de CI relevante",
+   "rec": "",
+   "t": "",
+   "x": "CONSULTA. AUDITOR-FISCAL. PRESTAÇÃO DE ASSESSORIA TRIBUTÁRIA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA. EXISTÊNCIA DE CONFLITO DE INTERESSES. INCISOS I, II, III E IV, ART. 5º, LEI 12.813/2013. RISCO À IMAGEM DO SERVIDOR E DA RECEITA FEDERAL. ANÁLISE DA CGU. EXISTÊNCIA DE CONFLITO DE INTERESSES. INCISOS I, III E IV, ART. 5º, LEI 12.813/2013. Auditora-Fiscal da Receita Federal do Brasil (RFB) indaga se há conflito de interesses na prestação de orientação a pessoas em geral, inclusive a familiares e amigos, sem remuneração, quanto à interpretação da legislação tributária, a fim de auxiliá-los a cumprir com suas obrigações tributárias ou outras obrigações acessórias. Em sua análise, a Comissão de Ética da RFB (CEPS) decidiu que essa orientação configura assessoria tributária, com violação ao art. 5º da Lei 12.813/2013. Afirmou também que essa atividade pode oportunizar desvios éticos e afetar a imagem do servidor e da RFB. Por fim, manifestou-se pela existência de potencial conflito de interesses, com fundamento nos incisos I a IV do art. 5º da referida lei. Em sua análise, a CGU destacou que o escopo da atividade de “orientação tributária” pode abarcar uma variedade de objetos que suscitam outros impedimentos não estritamente atinentes à Lei 12.813/2013, os quais devem ser analisados pelos órgãos ou autoridades com competência para tanto. Destacou que o assessoramento tributário é expressamente vedado pela Lei 12.813/2013, possuindo alto potencial de comprometimento do interesse coletivo e de prejuízo ao desempenho da função pública. Observou, ainda, que essa assessoria poderia se dar por meio da utilização de informações privilegiadas e de outros expedientes indevidos. Por fim, concluiu que a natureza da atividade privada é incompatível com as atribuições do cargo de Auditor-Fiscal, vez que se trata exatamente das atividades exercidas na RFB. Nesse sentido, manifestou-se pela existência de conflito de interesses nos termos dos incisos I, III e IV do art. 5º da Lei 12.813/2013."
+  },
+  {
+   "n": "00096.000129/2014-18",
+   "d": "2014-11-12",
+   "r": "Risco de CI mitigável",
+   "rec": "",
+   "t": "",
+   "x": "PEDIDO DE AUTORIZAÇÃO. ANALISTA TRIBUTÁRIO. EXERCÍCIO DE GESTÃO CORPORATIVA DURANTE LICENÇA. ANÁLISE PRELIMINAR DA COMISSÃO DE ÉTICA. EXISTÊNCIA DE CONFLITO DE INTERESSES IRRELEVANTE. SUGESTÃO DE MEDIDAS DE MITIGAÇÃO DO CONFLITO. ANÁLISE DA CGU. ADOÇÃO DE MEDIDAS MITIGADORAS. AUTORIZAÇÃO CONDICIONADA. Analista Tributário da Receita Federal do Brasil (RFB) solicitou autorização para exercer atividades na área de gestão corporativa de empresa privada durante o gozo de Licença para Tratar de Interesses Particulares. Em sua análise, a Comissão de Ética da RFB informou que o solicitante não possui acesso a informação privilegiada que suscite conflito; que as atividades exercidas pelo servidor na área de programação e logística da RFB não são específicas da carreira de auditoria, não têm relação direta com o múnus público da RFB e não são as atividades principais da empresa a que se pretende vincular, não se identificando, portanto, incompatibilidade material entre a atividade privada e as atribuições do cargo público, tampouco entre o ramo de atividade da empresa e as atividades finalísticas da RFB. Para que se previna possível conflito em virtude de o servidor ser responsável pela supervisão da regularidade fiscal de muitas das transações realizadas pela empresa empregadora, destacou-se o dever de declarar-se em impedimento ou em suspeição. Por fim, prescreveu algumas condutas condicionantes que serviriam para minimizar os riscos e aproximar o potencial conflito ao nível da irrelevância. Esta CGU destacou que, muito embora o exercício da atividade privada possa gerar um conflito de interesses, especialmente, no que tange às atividades que tangenciam as competências da RFB, a legislação que regula a gestão de conflitos de interesses fornece mecanismos capazes de mitigar ou impedir a concretização desse conflito. Nesse sentido, ratificou o entendimento da Comissão de Ética e manifestou-se pela autorização do exercício da atividade pretendida, condicionada ao cumprimento das exigências postuladas pela RFB."
   }
  ]
 }
