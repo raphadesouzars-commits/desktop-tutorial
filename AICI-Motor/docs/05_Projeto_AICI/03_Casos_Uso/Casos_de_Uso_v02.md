@@ -16,6 +16,7 @@
 | UC008 | Manter a base de conhecimento | Administrador, Coordenador | RF020, RF029 | Parcial |
 | UC009 | Acompanhar indicadores | Coordenador | RF025, RF032 | Parcial |
 | UC010 | Supervisionar a IA (auditoria) | Curador | RF026, RF037 | Parcial |
+| UC011 | Analisar e usar o Copilot Chat no **modo local** (sem motor) | Parecerista, Copilot Chat | RF040 a RF044 | Implementado |
 
 ---
 
@@ -83,6 +84,20 @@
 - 2a. Base insuficiente (sem normativo ou sem precedente/parecer/modelo): o prompt não é gerado.
 
 **Regras:** o AICI não envia nada ao Copilot; o parecerista leva e traz o texto. O aviso na tela lembra de usar somente o Copilot Chat da conta corporativa.
+
+## UC011 - Analisar e usar o Copilot Chat no modo local (sem motor)
+
+**Ator:** Parecerista (e Copilot Chat, operado por ele). **Pré-condição:** nenhuma instalação; só o navegador e o `gerador-parecer-conflito.html`.
+
+**Fluxo principal**
+1. Na aba "Análise Inteligente" (modo Local), o parecerista escolhe o PDF e aciona "Analisar consulta".
+2. O navegador lê o arquivo, extrai o servidor e as respostas 1 a 10, sugere a atividade e os precedentes da CGU e preenche o gerador.
+3. O parecerista confere os fatos, ajusta a atividade/situação e marca os precedentes a citar.
+4. (Opcional) Gera o prompt, leva ao Copilot Chat da conta corporativa, cola a resposta de volta; o navegador valida as fontes e aplica a fundamentação ao parecer.
+5. Segue ao gerador, revisa e gera o Word.
+
+**Alternativas:** PDF digitalizado (sem texto): aviso, preencher manualmente; resposta inválida: recusada; fonte inexistente: parágrafo descartado.
+**Limites:** não consulta a biblioteca de pareceres da COGER; não há bloqueio técnico de revisão.
 
 ## UC007 - Decidir e gerar documentos
 

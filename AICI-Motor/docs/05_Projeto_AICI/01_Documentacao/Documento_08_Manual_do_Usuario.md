@@ -9,7 +9,9 @@ O AICI lê o PDF da consulta do SeCI, mostra os fatos, sugere a atividade, procu
 Há duas abas:
 
 - **Gerador de Parecer:** funciona sozinha e sem internet. Você escolhe a atividade, preenche os dados e gera o Word.
-- **Análise Inteligente (motor AICI):** usa o motor (programa em Python) para analisar o PDF. Se o motor não estiver ligado, só esta aba fica indisponível.
+- **Análise Inteligente:** tem **dois modos**:
+  - **Local (padrão, não instala nada):** a análise acontece no próprio navegador. Lê o PDF do SeCI, mostra os fatos, sugere a atividade, mostra precedentes da CGU parecidos e, se você quiser, prepara o prompt para o Copilot Chat. Não consulta a biblioteca de pareceres da COGER.
+  - **Motor AICI (avançado):** usa um programa em Python, que precisa estar instalado e ligado, e **consulta a biblioteca de pareceres, precedentes e normativos da COGER**.
 
 ## 2. Regras de uso seguro (leia antes)
 
@@ -21,6 +23,23 @@ Há duas abas:
 6. Não envie ao AICI arquivos que não sejam consultas do SeCI.
 
 ## 3. Passo a passo
+
+### 3.0 Modo local (padrão) - o que a maioria dos usuários vai usar
+1. Abra o `gerador-parecer-conflito.html` e entre na aba **Análise Inteligente** (o modo **Local** já vem marcado).
+2. Em **Consulta (PDF)**, escolha o PDF do SeCI e clique em **Analisar consulta**. Tudo é lido no seu navegador; nada é enviado.
+3. À direita aparecem: pontos de atenção, **fatos extraídos**, a **atividade** sugerida (você pode trocá-la, e a situação do modelo), e **precedentes da CGU** parecidos (marque os que quiser citar).
+4. **Sem Copilot:** clique em **Ir ao gerador de parecer**, revise, complete os campos pendentes e gere o Word, como sempre.
+5. **Com o Copilot Chat (opcional):**
+   1. Em **Copilot Chat da RFB**, confira o limite de caracteres da caixa do chat (padrão 7.500; confirme com a TI) e escolha prompt completo ou prompt curto + arquivo.
+   2. Clique em **1. Gerar prompt** e depois em **Copiar prompt** (no modo arquivo, baixe também o `contexto_AICI.md`).
+   3. Abra o **Copilot Chat com a sua conta corporativa da RFB**, cole o prompt (e anexe o arquivo, se for o caso) e envie.
+   4. Copie a resposta inteira (JSON), cole em **2. Cole aqui a resposta** e clique em **Aplicar resposta ao parecer**.
+   5. O gerador confere as fontes (descarta o que não tem fonte), coloca a fundamentação no parecer e avisa na conferência. Clique em **Ir ao gerador**, **leia e revise** tudo e gere o Word.
+   6. Se não gostar, **Remover fundamentação do Copilot** volta ao texto do modelo.
+
+No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nome), as regras da COGER, trechos da Lei nº 12.813/2013 e da Portaria Interministerial nº 333/2013, precedentes da CGU parecidos e o modelo da atividade. **Não leva pareceres da biblioteca da COGER** (isso só o motor faz). **Não há bloqueio técnico de revisão no modo local**: a revisão é sua, no gerador.
+
+> Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 
 ### 3.1 Ligar o motor
 O motor é ligado pela TI (ou por você, na estação de piloto, com `python main.py`). Na aba **Análise Inteligente**, confira o **endereço do motor** (padrão `http://127.0.0.1:8765`) e o **token**, se a TI o exigir. Clique em **Testar conexão**: deve aparecer "Conectado", o tipo de IA e o estado do índice.

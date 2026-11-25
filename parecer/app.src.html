@@ -86,8 +86,10 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
 nav.tabs{display:flex;gap:4px;padding:10px 18px 0;max-width:1500px;margin:0 auto;border-bottom:1px solid var(--line)}
 nav.tabs button{background:#fff;color:var(--acc);border-radius:8px 8px 0 0;border-bottom:none;padding:8px 16px}
 nav.tabs button.on{background:var(--acc);color:#fff}
-#paneAI{max-width:1500px;margin:0 auto;padding:18px;display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:18px}
-@media(max-width:980px){#paneAI{grid-template-columns:1fr;padding:12px}}
+#paneAI{max-width:1500px;margin:0 auto;padding:18px}
+.aigrid{display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:18px}
+@media(max-width:980px){#paneAI{padding:12px}.aigrid{grid-template-columns:1fr}}
+.aimodo{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:14px;font-size:13.5px}
 .ai-t{width:100%;border-collapse:collapse;font-size:13px}.ai-t td{border-bottom:1px solid var(--line);padding:4px 6px;vertical-align:top}.ai-t td:first-child{color:var(--mut);white-space:nowrap;width:1%}
 .ai-min{font-size:13.5px}.ai-min h4{margin:12px 0 6px}.ai-min .pp{margin:0 0 8px;text-align:justify}.ai-min .pp small{display:block;color:var(--mut);font-size:11.5px}.ai-min .pp.cit{margin-left:24px;font-style:italic}
 .ai-ok{color:var(--ok)}.ai-erro{background:var(--badbg);color:var(--bad);border-radius:6px;padding:7px 10px;font-size:13px;margin-top:8px}
@@ -237,6 +239,53 @@ nav.tabs button.on{background:var(--acc);color:#fff}
 </div>
 
 <div id="paneAI" style="display:none">
+  <div class="aimodo"><b>Modo:</b>
+    <label class="chk" style="margin:0"><input type="radio" name="aiModoApp" value="local" checked> Local - funciona aqui no navegador, sem instalar nada</label>
+    <label class="chk" style="margin:0"><input type="radio" name="aiModoApp" value="motor"> Motor AICI (avançado: exige Python e acesso à biblioteca de pareceres)</label>
+  </div>
+
+  <div class="aigrid" id="aiModoLocal">
+    <div>
+      <div class="card">
+        <h2><span class="n">1</span>Consulta (PDF)</h2>
+        <input type="file" id="locArq" accept=".pdf,.docx,.odt,.txt,application/pdf,text/plain">
+        <p class="hint">O arquivo é lido aqui mesmo, no navegador. Nada é enviado para fora: o gerador identifica o servidor, as respostas do SeCI, a atividade provável e os precedentes da CGU parecidos.</p>
+        <div style="margin-top:8px"><button id="locAnalisar">Analisar consulta</button></div>
+        <div id="locMsg" class="hint"></div>
+      </div>
+      <div class="card" id="locChatBox" style="display:none">
+        <h2><span class="n">2</span>Copilot Chat da RFB (opcional)</h2>
+        <p class="hint">Quer uma fundamentação mais elaborada? O gerador prepara o texto, você o cola no <b>Copilot Chat com a sua conta corporativa da RFB</b> e traz a resposta de volta. A resposta só entra no parecer depois de conferida (cada fundamento precisa citar uma fonte que foi enviada). Use somente o Copilot Chat corporativo.</p>
+        <label class="chk"><input type="radio" name="locModo" value="texto" checked> Prompt completo (cabe na caixa do chat)</label>
+        <label class="chk"><input type="radio" name="locModo" value="arquivo"> Prompt curto + arquivo de contexto anexado</label>
+        <label for="locLimite">Limite de caracteres da caixa do chat (confirme com a TI)</label>
+        <input type="text" id="locLimite" value="7500" style="max-width:120px">
+        <div style="margin-top:8px"><button class="sec" id="locPacote">1. Gerar prompt</button></div>
+        <div id="locPacoteBox" style="display:none">
+          <label for="locPrompt">Prompt para colar no Copilot Chat</label><textarea id="locPrompt" rows="6" readonly></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+            <button class="sec mini" id="locCopiar">Copiar prompt</button>
+            <button class="sec mini" id="locBaixarCtx">Baixar contexto_AICI.md</button>
+            <a class="chip" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener">Abrir Copilot Chat ↗</a>
+          </div>
+          <p class="hint" id="locPacoteInfo"></p>
+          <label for="locResp">2. Cole aqui a resposta do Copilot (o JSON completo)</label><textarea id="locResp" rows="6"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">
+            <button id="locAplicar">Aplicar resposta ao parecer</button>
+            <button class="sec" id="locRemover" style="display:none">Remover fundamentação do Copilot</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="locIrBox" style="display:none">
+        <h2><span class="n">3</span>Revisar e gerar o Word</h2>
+        <p class="hint">Confira tudo no gerador (a minuta aparece à direita) e gere o Word. A decisão e a assinatura são suas.</p>
+        <button id="locIr">Ir ao gerador de parecer</button>
+      </div>
+    </div>
+    <div id="locResultado"></div>
+  </div>
+
+  <div class="aigrid" id="aiModoMotor" style="display:none">
   <div>
     <div class="card">
       <h2><span class="n">1</span>Motor AICI</h2>
@@ -287,6 +336,7 @@ nav.tabs button.on{background:var(--acc);color:#fff}
     <div class="card"><details id="aiIndBox"><summary>Indicadores gerenciais</summary><div id="aiInd" class="hint">Carregando…</div></details></div>
   </div>
   <div id="aiResultado"></div>
+  </div>
 </div>
 
 <script>
@@ -296,6 +346,7 @@ const LOGO_PADRAO = "/*__LOGO__*/";
 const LOGO_DIM = /*__LOGO_DIM__*/[1300,137];
 const PDFJS_GZ = "/*__PDFJS__*/", PDFW_GZ = "/*__PDFW__*/"; // leitor de PDF (pdf.js, Apache-2.0), compactado
 const PRECEDENTES = /*__PRECEDENTES__*/{"itens":[]};
+const KB = /*__KB__*/{}; // instruções à IA, regras da COGER e normativos para o prompt do Copilot Chat (modo local)
 
 // Perguntas do formulário SeCI (redação transcrita nos pareceres de 2021 e 2022)
 const SECI = [
@@ -365,6 +416,7 @@ let atv = null, vari = null;
 const valoresCampos = {}; // por id de campo
 const valoresOpc = {};    // por id de opcional
 const extras = [];        // outras atividades do mesmo parecer: {a: modelo, v: variante, rot: como citar}
+let fundExterno = null;  // fundamentação vinda do Copilot Chat (validada), que substitui a do modelo
 let rotPrincipal = null;  // como citar a atividade principal quando há mais de uma
 const rotPadrao = m => { const t = m.nome.replace(/\s*\(.*?\)/g,"").replace(/\s+–.*$/,"").trim(); return /^[A-ZÀ-Ý]{2}/.test(t) ? t : t[0].toLowerCase() + t.slice(1); };
 let resPrincipal = "";   // conclusão escolhida para a atividade principal ("" = a do modelo)
@@ -641,6 +693,7 @@ function conferir(B, d){
   const A = [], PS = partes(); if (!PS.length) return A;
   const sim = i => /^\s*[“"]?sim\b/i.test($("q" + i).value), inc = i => $("inc" + i).checked;
   const res = PS.map(pt => pt.v.resultado), libera = res.some(r => r.startsWith("sem_")), nega = res.includes("conflito");
+  if (fundExterno && fundExterno.length) A.push("A fundamentação foi redigida com apoio do Copilot Chat e conferida apenas quanto à existência das fontes citadas: leia e revise o texto antes de assinar.");
   PS.forEach(pt => { if (pt.v.trocada) A.push(`${pt.a.nome}: a conclusão foi trocada de “${RES_ROT[pt.v.trocada]}” para “${RES_ROT[pt.v.resultado]}”. Os fundamentos do modelo foram mantidos; revise-os para que sustentem a nova conclusão (e marque os incisos do art. 5º, se for o caso).`); });
   const texto = B.filter(b => b.k === "p" || b.k === "it").map(b => b.x).join(" ");
   if (sim(7)){
@@ -909,6 +962,10 @@ function blocos(){
       if (jaDito.has(k)) continue; jaDito.add(k); fund.push({t: b.t, x});
     }
     if (conc){ const x = preencher(conc.x, d), k = chave("c", x); if (!jaDito.has(k)){ jaDito.add(k); concs.push(x); } }
+  }
+  if (fundExterno && fundExterno.length){   // fundamentação do Copilot Chat no lugar da do modelo
+    fund.length = 0;
+    for (const p of fundExterno) fund.push({t:"p", x: p.x.replace(/\[SERVIDOR\]/g, d.nome || falta("nome do servidor")).replace(/\[MATRÍCULA\]/g, d.matricula || falta("matrícula"))});
   }
   if (cfg.secoes) B.push({k:"h", x:"II. FUNDAMENTOS"});
   for (const b of fund){
@@ -1179,7 +1236,7 @@ function novaAnalise(){
   for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
   ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
   DEVERES.forEach((_, j) => $("dev" + j).checked = true);
-  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
+  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; fundExterno = null; LOC.pacote = null; LOC.aplicado = null; $("locResultado").innerHTML = ""; $("locMsg").innerHTML = ""; $("locArq").value = ""; for (const id of ["locChatBox", "locIrBox", "locPacoteBox"]) $(id).style.display = "none"; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
@@ -1202,6 +1259,159 @@ $("secoes").checked = cfg.secoes !== false;
 $("secoes").oninput = e => { cfg.secoes = e.target.checked; salvarCfg(); render(); };
 listarPrecedentes();
 montarCfg(); listarAtividades(); render();
+
+/* ---------- modo local (sem motor): análise no navegador + Copilot Chat assistido ---------- */
+const LOC = {pacote: null, aplicado: null};
+document.querySelectorAll('input[name="aiModoApp"]').forEach(r => r.onchange = () => {
+  const m = document.querySelector('input[name="aiModoApp"]:checked').value;
+  $("aiModoLocal").style.display = m === "local" ? "" : "none"; $("aiModoMotor").style.display = m === "motor" ? "" : "none";
+});
+const locMsg = (t, erro) => { $("locMsg").innerHTML = t ? (erro ? '<div class="ai-erro">' + escH(t) + "</div>" : escH(t)) : ""; };
+try { $("locLimite").value = localStorage.getItem("aiciLimite") || "7500"; } catch(e){}
+$("locLimite").oninput = () => { try { localStorage.setItem("aiciLimite", $("locLimite").value); } catch(e){} };
+function anonimizarTxt(t, nome){
+  t = t.replace(/\b\d{3}\.?\d{3}\.?\d{3}-?\d{2}\b/g, "[CPF]")
+    .replace(/(matr[íi]cula(?:\s+siape)?\s*(?:n[ºo°.]*)?\s*[:\-–]?\s*)\d[\d.\-]{3,11}\d/gi, "$1[MATRÍCULA]")
+    .replace(/\(?\b\d{2}\)?\s?9?\d{4}[-\s]?\d{4}\b/g, "[TELEFONE]")
+    .replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, "[E-MAIL]");
+  if (nome && nome.trim().length > 4){
+    const esc = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    t = t.replace(new RegExp(esc(nome.trim()), "gi"), "[SERVIDOR]");
+    nome.split(/\s+/).filter(p => p.length > 5).forEach(p => { t = t.replace(new RegExp("\\b" + esc(p) + "\\b", "gi"), "[SERVIDOR]"); });
+  }
+  return t;
+}
+const limpaModelo = t => t.replace(/\{\{g:([^|}]*)\|[^}]*\}\}/g, "$1").replace(/\{\{[^}]*\}\}/g, "[...]").replace(/\*\*/g, "");
+function resumeRegras(txt){ return txt.split(/^(?=## )/m).filter(p => !/^## (3|7)\./.test(p)).join(""); }
+function precSugeridos(n){
+  const its = PRECEDENTES.itens || [];
+  const termos = new Set(atv && atv.id !== "generico" ? (atv.palavrasChave || []).map(norm) : []);
+  norm($("q2").value).split(/[^a-z0-9]+/).filter(w => w.length >= 7).forEach(w => termos.add(w));
+  return its.map(p => { const t = norm(p.x); let sc = 0; termos.forEach(k => { if (k && t.includes(k)) sc += k.includes(" ") ? 2 : 1; }); return {p, sc}; })
+    .filter(o => o.sc >= 2).sort((a, b) => b.sc - a.sc).slice(0, n).map(o => o.p);
+}
+async function locAnalisar(){
+  const f = $("locArq").files[0]; if (!f){ locMsg("Escolha o arquivo da consulta.", true); return; }
+  locMsg("Lendo o arquivo…"); fundExterno = null; LOC.aplicado = null; LOC.pacote = null;
+  await lerArquivo(f);   // reutiliza a leitura do gerador: preenche os dados e as respostas do SeCI e identifica a atividade
+  const info = $("arqInfo").textContent;
+  if (/^Não foi possível/.test(info)){ locMsg(info, true); return; }
+  locMsg(info);
+  $("locChatBox").style.display = ""; $("locIrBox").style.display = ""; $("locPacoteBox").style.display = "none"; $("locResp").value = ""; $("locRemover").style.display = "none";
+  locMostrar();
+}
+$("locAnalisar").onclick = locAnalisar;
+function locMostrar(){
+  const d = dados(), foco = [2, 3, 9].map(i => $("q" + i).value).join(" ").trim();
+  const cand = pontuar(foco.length > 15 ? foco : $("consulta").value).slice(0, 5), ids = new Set(cand.map(x => x.m.id));
+  const outros = MODELOS.filter(m => !ids.has(m.id)).sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+  const sel = m => atv && atv.id === m.id ? " selected" : "";
+  const fatos = [["Servidor", d.nome], ["Cargo", d.cargo], ["Matrícula", d.matricula], ["Protocolo SeCI", $("protocoloSeci").value], ["Demanda", d.tipo === "pedido" ? "pedido de autorização" : "consulta"],
+    ["Processo", d.processo], ["Atividade pretendida (pergunta 2)", $("q2").value.replace(/\s+/g, " ").slice(0, 300)]].filter(r => r[1]);
+  const avs = [...document.querySelectorAll("#atencao .aviso")].map(e => e.textContent);
+  let h = "";
+  if (avs.length) h += '<div class="card"><h2>Pontos de atenção</h2>' + avs.map(a => '<div class="aviso">' + escH(a) + "</div>").join("") + "</div>";
+  h += '<div class="card"><h2>Fatos extraídos</h2><table class="ai-t">' + fatos.map(r => `<tr><td>${escH(r[0])}</td><td>${escH(String(r[1]))}</td></tr>`).join("") + "</table>"
+    + '<p class="hint">Faltou algo? Complete no gerador (passo 3). A unidade de lotação e o nº do processo normalmente não constam do PDF do SeCI.</p></div>';
+  h += `<div class="card"><h2>Atividade e situação</h2><label for="locAtiv">Atividade (enquadramento)</label><select id="locAtiv">`
+    + (cand.length ? '<optgroup label="Sugeridas">' + cand.map(x => `<option value="${escH(x.m.id)}"${sel(x.m)}>${escH(x.m.nome)} (${x.hits.length} termo${x.hits.length > 1 ? "s" : ""})</option>`).join("") + "</optgroup>" : "")
+    + '<optgroup label="Todas as atividades">' + outros.map(m => `<option value="${escH(m.id)}"${sel(m)}>${escH(m.nome)}</option>`).join("") + "</optgroup></select>"
+    + (atv ? `<label for="locVar">Situação / conclusão do modelo</label><select id="locVar">${atv.variantes.map(v => `<option value="${escH(v.id)}"${vari && vari.id === v.id ? " selected" : ""}>${escH(v.rotulo)} [${escH(RES_ROT[v.resultado] || v.resultado)}]</option>`).join("")}</select>` : "")
+    + '<p class="hint">Para trocar a conclusão do caso concreto, use o campo "Conclusão do caso concreto" no gerador.</p></div>';
+  const ps = precSugeridos(4);
+  h += '<div class="card"><h2>Precedentes da CGU parecidos</h2>' + (ps.length ? ps.map(p => `<div class="prec"><div class="h"><label class="chk" style="margin:0"><input type="checkbox" data-n="${escH(p.n)}" ${citados.has(p.n) ? "checked" : ""}> citar no parecer</label> ${escH(p.n)} · ${dmy(p.d)} <span class="badge b-outro">${escH(p.r)}</span></div><div class="x">${escH(p.x)}</div></div>`).join("")
+    : '<p class="hint">Nenhum precedente da CGU claramente parecido. A biblioteca de pareceres da COGER só é consultada pelo motor AICI (modo avançado).</p>') + "</div>";
+  if (fundExterno && LOC.aplicado) h += `<div class="card"><h2>Fundamentação do Copilot aplicada</h2><p class="hint">${fundExterno.length} parágrafo(s) aceito(s); ${LOC.aplicado.desc} descartado(s) por não citar fonte válida.${LOC.aplicado.resultado ? " Resultado sugerido pelo Copilot: <b>" + escH(RES_ROT[LOC.aplicado.resultado]) + "</b> (decisão sua)." : ""}</p>`
+    + fundExterno.map(p => `<div class="pp">${escH(p.x)}<small>origem: ${escH(p.fontes.join(" · "))}</small></div>`).join("")
+    + (LOC.aplicado.lacunas.length ? '<p class="hint"><b>Lacunas apontadas:</b> ' + escH(LOC.aplicado.lacunas.join(" | ")) + "</p>" : "") + "</div>";
+  $("locResultado").innerHTML = h;
+  $("locAtiv").onchange = e => { selecionarAtividade(e.target.value); locMostrar(); };
+  if ($("locVar")) $("locVar").onchange = e => { selecionarVariante(e.target.value); locMostrar(); };
+  $("locResultado").querySelectorAll("input[data-n]").forEach(c => c.onchange = e => { e.target.checked ? citados.add(e.target.dataset.n) : citados.delete(e.target.dataset.n); render(); });
+}
+const LOC_ROT = {2: "Atividade pretendida", 3: "Vínculo com outra pessoa ou entidade", 4: "Vínculo dessa pessoa com a RFB", 6: "Atividades exercidas na lotação",
+  7: "Acesso a informações sigilosas ou privilegiadas", 8: "Poder decisório", 9: "Possível conflito, segundo o servidor"};
+function locContexto(limite){
+  const d = dados(), an = t => anonimizarTxt(t, d.nome), res = resPrincipal || (vari ? vari.resultado : "");
+  const linhas = [`Atividade pretendida (categoria): ${atv ? rotPadrao(atv) : "[não definida]"}`, `Cargo: ${d.cargo || "[cargo]"}`,
+    `Tipo de demanda: ${d.tipo === "pedido" ? "pedido de autorização" : "consulta"}`];
+  for (const i of [2, 3, 4, 6, 7, 8, 9]){ const r = $("q" + i).value.trim(); if (r) linhas.push(`${LOC_ROT[i]}: ${an(r.replace(/\s+/g, " "))}`); }
+  const itens = [];
+  (KB.normativos || []).forEach(n => itens.push({l: "N", titulo: n.titulo, fonte: n.fonte, texto: n.texto}));
+  precSugeridos(3).forEach(p => itens.push({l: "P", titulo: `Precedente CGU/SeCI nº ${p.n} (${dmy(p.d)}) - ${p.r}`, fonte: "precedentes da CGU (SeCI)", texto: an(p.x)}));
+  if (atv && vari){
+    const ps = vari.corpo.filter(b => (!b.opc || b.opc.padrao) && b.t === "p");
+    itens.push({l: "M", titulo: `Modelo da COGER: ${atv.nome} - ${vari.rotulo}`, fonte: `modelo ${atv.id}/${vari.id} (${vari.fonte || ""})`,
+      texto: [vari.ementaTitulo || "", ...(vari.ementa || []), ...ps.slice(0, -1).map(b => b.x)].map(limpaModelo).join("\n")});
+    atv.variantes.filter(v => v.id !== vari.id).slice(0, 2).forEach(v => itens.push({l: "M", titulo: `Modelo da COGER: ${atv.nome} - ${v.rotulo}`,
+      fonte: `modelo ${atv.id}/${v.id} (${v.fonte || ""})`, texto: limpaModelo([v.quandoUsar || "", ...(v.ementa || [])].join(" "))}));
+  }
+  if (!(KB.normativos || []).length) throw new Error("Os normativos embutidos não foram encontrados nesta versão do gerador.");
+  if (!itens.some(x => x.l !== "N")) throw new Error("Escolha a atividade antes de gerar o prompt: sem precedente ou modelo, o Copilot não recebe base suficiente.");
+  const sistema = KB.prompts.reasoning + "\n\n" + KB.prompts.draft + (res ? `\nO parecerista já definiu o resultado: ${res}. Fundamente nessa direção, apontando eventuais riscos.` : "");
+  const regras = limite >= 20000 ? KB.regras : resumeRegras(KB.regras).slice(0, Math.floor(limite * 0.2));
+  const cabeca = "=== CASO CONCRETO ===\n" + linhas.join("\n") + "\n\n";
+  const base = cabeca.length + regras.length + 120 + 90 * 5;
+  let it = itens.slice(), cap = Math.min(1800, Math.floor((limite - base) / Math.max(it.length, 1)));
+  while (cap < 300 && it.length > 2){ it.pop(); cap = Math.min(1800, Math.floor((limite - base) / it.length)); }
+  cap = Math.max(cap, 150);
+  const mapa = {R1: {titulo: "Regras institucionais da COGER", fonte: "regras_coger.md"}}, blocos = [`=== REGRAS INSTITUCIONAIS DA COGER ===\n[R1] Regras institucionais da COGER (regras_coger.md)\n${regras}`];
+  const tit = {N: "NORMATIVOS", P: "PRECEDENTES", M: "MODELOS INSTITUCIONAIS"}, cont = {}; let ult = "";
+  for (const x of it){
+    cont[x.l] = (cont[x.l] || 0) + 1; const id = x.l + cont[x.l];
+    const corpo = x.texto.length <= cap ? x.texto : x.texto.slice(0, cap).replace(/\s+\S*$/, "") + " [...]";
+    if (x.l !== ult){ blocos.push(`=== ${tit[x.l]} ===`); ult = x.l; }
+    mapa[id] = {titulo: x.titulo, fonte: x.fonte}; blocos.push(`[${id}] ${x.titulo} (${x.fonte})\n${corpo}`);
+  }
+  const ctx = (cabeca + blocos.join("\n\n")).slice(0, limite), vis = {};
+  for (const k in mapa) if (ctx.includes("[" + k + "]")) vis[k] = mapa[k];
+  return {ctx, mapa: vis, sistema};
+}
+function locMostrarPrompt(){
+  const P = LOC.pacote; if (!P) return;
+  const arq = document.querySelector('input[name="locModo"]:checked').value === "arquivo";
+  $("locPrompt").value = arq ? P.curto : P.prompt;
+  $("locPacoteInfo").textContent = (arq ? "Anexe contexto_AICI.md ao chat e cole o prompt curto." : `${P.prompt.length} de ${P.limite} caracteres.`) + " " + P.avisos.join(" ");
+}
+document.querySelectorAll('input[name="locModo"]').forEach(r => r.onchange = locMostrarPrompt);
+$("locPacote").onclick = () => {
+  try {
+    const limite = Math.max(2000, parseInt($("locLimite").value, 10) || 7500);
+    const cheio = locContexto(200000), c = locContexto(Math.max(limite - cheio.sistema.length - 2, 1000));
+    const trunc = Object.keys(c.mapa).length < Object.keys(cheio.mapa).length;
+    LOC.pacote = {prompt: cheio.sistema + "\n\n" + c.ctx, limite, completo: cheio.ctx, mapaTexto: c.mapa, mapaArquivo: cheio.mapa,
+      curto: cheio.sistema + "\n\nO contexto completo (caso concreto, regras da COGER, normativos, precedentes e modelos) está no arquivo anexo contexto_AICI.md. Use somente ele e cite os marcadores [N1], [P1], [M1], [R1].",
+      avisos: trunc ? [`O contexto não coube em ${limite} caracteres: ${Object.keys(cheio.mapa).length - Object.keys(c.mapa).length} trecho(s) ficaram de fora. Para levar tudo, use o modo prompt curto + arquivo.`] : []};
+    $("locPacoteBox").style.display = ""; locMostrarPrompt(); locMsg("");
+  } catch(e){ locMsg(e.message, true); }
+};
+$("locCopiar").onclick = async () => { const ok = await copiarTexto($("locPrompt").value, $("locPrompt")); locMsg(ok ? "Prompt copiado. Cole no Copilot Chat." : "Não consegui copiar automaticamente: selecione o texto e copie (Ctrl+C).", !ok); };
+$("locBaixarCtx").onclick = () => {
+  if (!LOC.pacote) return;
+  const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([LOC.pacote.completo], {type: "text/markdown"})); a.download = "contexto_AICI.md";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+};
+$("locAplicar").onclick = () => {
+  if (!LOC.pacote){ locMsg("Gere o prompt primeiro.", true); return; }
+  const t = $("locResp").value.trim(); if (!t){ locMsg("Cole a resposta do Copilot.", true); return; }
+  const m = t.match(/\{[\s\S]*\}/);
+  if (!m){ locMsg("A resposta não contém o JSON pedido. Peça ao Copilot para responder apenas com o JSON do formato indicado.", true); return; }
+  let dado; try { dado = JSON.parse(m[0]); } catch(e){ locMsg("O JSON da resposta está incompleto ou inválido. Copie a resposta inteira (do primeiro { ao último }).", true); return; }
+  const mapa = document.querySelector('input[name="locModo"]:checked').value === "arquivo" ? LOC.pacote.mapaArquivo : LOC.pacote.mapaTexto;
+  const ok = []; let desc = 0;
+  for (const p of (dado.fundamentacao || [])){
+    const fontes = (p.fontes || []).filter(x => mapa[x]).map(x => mapa[x].titulo);
+    if (!fontes.length || !String(p.texto || "").trim()){ desc++; continue; }
+    ok.push({x: String(p.texto).trim(), fontes});
+  }
+  if (!ok.length){ locMsg("Nenhum parágrafo da resposta citou fonte válida do que foi enviado; nada foi aplicado.", true); return; }
+  fundExterno = ok;
+  LOC.aplicado = {desc, lacunas: (dado.lacunas || []).map(String), resultado: RES_ROT[dado.resultado_sugerido] ? dado.resultado_sugerido : ""};
+  $("locRemover").style.display = ""; locMsg(`Resposta validada: ${ok.length} parágrafo(s) aceito(s), ${desc} descartado(s). Revise no gerador antes de gerar o Word.`);
+  render(); locMostrar();
+};
+$("locRemover").onclick = () => { fundExterno = null; LOC.aplicado = null; $("locRemover").style.display = "none"; locMsg("Fundamentação do Copilot removida; voltou a do modelo."); render(); locMostrar(); };
+$("locIr").onclick = () => abaAtiva("ger");
 
 /* ---------- aba Análise Inteligente: conversa com o motor AICI (Python) ---------- */
 const AI = {cid: null, an: null, minuta: null, cats: null};

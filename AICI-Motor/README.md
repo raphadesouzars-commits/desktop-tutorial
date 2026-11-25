@@ -28,6 +28,11 @@ O código só orquestra. Atividades, categorias, textos de conclusão, deveres e
 | Regras institucionais que a IA sempre lê | `knowledge/regras_coger.md` |
 | Endereço da IA, limites, caminhos | `config/settings.yaml` |
 
+## Dois modos de uso
+
+- **Modo local (sem instalar nada):** abra `gerador-parecer-conflito.html` -> aba "Análise Inteligente" (modo Local). Lê o PDF no navegador, mostra fatos, atividade e precedentes da CGU e, opcionalmente, prepara o prompt do Copilot Chat e valida a resposta colada. Não usa a biblioteca de pareceres da COGER e não tem bloqueio técnico de revisão. O acervo embutido vem de `parecer/kb_local.json` (`python parecer/gerar_kb_local.py` + `python parecer/build.py`).
+- **Motor AICI (este projeto Python):** o restante deste README. Consulta a biblioteca de pareceres, precedentes e normativos da COGER, tem API, auditoria e indicadores.
+
 ## Instalação e execução
 
 **Atalho:** no Windows, dê dois cliques em `iniciar_AICI.bat` (primeira vez instala as dependências; exige Python 3.12+ e acesso ao repositório de pacotes; **não testado em Windows**). No Linux/macOS: `./iniciar_AICI.sh`. Mantenha a janela aberta enquanto usa a aba "Análise Inteligente".

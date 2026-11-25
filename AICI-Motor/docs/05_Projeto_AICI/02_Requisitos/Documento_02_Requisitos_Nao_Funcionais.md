@@ -13,7 +13,7 @@ Situação: **Atendido** (existe e foi verificado), **Parcial**, **Em aberto** (
 | RNF003 | Permitir rastreabilidade das sugestões geradas | Cada parágrafo tem a origem; cada análise e cada chamada à IA ficam registradas | **Atendido** | Origem por parágrafo na minuta; `output/consulta_<id>/analise.json`; `metrics/metricas.jsonl`; `metrics/ia_auditoria.jsonl` (prompt e resposta mascarados). Teste `test_auditoria_das_chamadas_de_ia` |
 | RNF004 | Permitir auditoria posterior | Registros imutáveis o suficiente, com data, atividade, resultado, precedente | **Parcial** | Os registros existem, mas o usuário é informado em campo livre, não por login institucional, e os arquivos não têm proteção contra alteração. Requer integração com a identidade da RFB e política de guarda |
 | RNF005 | Preservar os modelos institucionais existentes | O Word gerado segue o padrão atual; os 68 modelos permanecem íntegros | **Atendido** | Modelos em `knowledge/modelos` e `templates/*.docx` editáveis pela instituição |
-| RNF006 | Garantir revisão humana obrigatória | Geração bloqueada sem validação | **Atendido** | Bloqueio na tela e na API (HTTP 422). Teste `test_geracao_exige_validacao_humana` |
+| RNF006 | Garantir revisão humana obrigatória | Geração bloqueada sem validação | **Atendido no motor; parcial no modo local** | No motor: bloqueio na tela e na API (HTTP 422), teste `test_geracao_exige_validacao_humana`. No modo local (HTML): não há bloqueio técnico; a revisão ocorre no gerador, por ação do usuário, e a conferência avisa quando há texto do Copilot. Avaliar com a Cotec se é suficiente |
 | RNF007 | Permitir evolução incremental sem interrupção do processo atual | O gerador atual continua funcionando sem o motor | **Atendido** | O HTML é independente do motor; a aba de análise é opcional; o motor funciona sem IA |
 
 ## 2. Requisitos adicionais
@@ -28,7 +28,7 @@ Situação: **Atendido** (existe e foi verificado), **Parcial**, **Em aberto** (
 | RNF011 | Mascarar identificadores antes de enviar dados à IA | CPF, matrícula, telefone, e-mail, nome | **Atendido (limitação)** | O mascaramento é por padrões e pelo nome do servidor; **não** garante a remoção de todo dado pessoal ou sigiloso que o servidor descreva em texto livre. Com a autorização do CTSI para o Copilot Chat (inclusive dados sob sigilo legal), ele passa a ser defesa adicional; a TI decide se continua obrigatório (Análise de Riscos) |
 | RNF012 | Manter dados pessoais fora do controle de versão e em ambiente controlado | `uploads/`, `output/`, `metrics/`, `vectorstore/`, `knowledge/pareceres` e `knowledge/precedentes` ignorados pelo git | **Atendido** | Falta definir criptografia em repouso, retenção e descarte com a segurança da informação |
 | RNF013 | Controle de acesso por perfil (parecerista, coordenador, curador, administrador) | Autenticação institucional e papéis | **Planejado** | Hoje, um único token compartilhado |
-| RNF014 | Não depender de serviço externo para funcionar | Modo `offline` e busca por palavras sem download de modelos | **Atendido** | Rede fechada suportada; modelos de embeddings, se usados, devem ser copiados para o servidor |
+| RNF014 | Não depender de serviço externo para funcionar | Modo `offline` e busca por palavras sem download de modelos; modo local do HTML sem instalação | **Atendido** | Rede fechada suportada; modelos de embeddings, se usados, devem ser copiados para o servidor |
 
 ### 2.2 Qualidade das respostas (IA)
 
@@ -70,6 +70,7 @@ Situação: **Atendido** (existe e foi verificado), **Parcial**, **Em aberto** (
 | RNF033 | Aderência à Política de IA da RFB (Portaria RFB nº 647/2026) | **Parcial** | Ver o Documento 05 (matriz de conformidade) |
 | RNF036 | O limite de tamanho do prompt do Copilot Chat deve ser configurável e respeitado | **Atendido (valor a confirmar)** | `ia.copilot_chat.limite_caracteres`; o padrão de 7.500 caracteres é suposição e precisa ser confirmado com a TI |
 | RNF037 | Adotar integralmente os controles e tratamentos de segurança da Análise de Riscos do Copilot Chat (condição da autorização do CTSI) | **Em aberto** | A Análise de Riscos ainda não foi recebida; este requisito será detalhado quando ela for obtida |
+| RNF039 | Poder ser usado sem instalar programas (navegador apenas) | **Atendido** | Modo local da aba "Análise Inteligente"; o motor Python é opcional |
 | RNF038 | O usuário deve usar apenas o Copilot Chat da conta corporativa | **Parcial** | Aviso na tela, link direto e orientação no Manual do Usuário; o AICI não tem como impedir que o texto seja colado em outro serviço, o que depende de controles da TI (bloqueio de acesso a outras IAs, DLP) |
 | RNF034 | Proteção de dados pessoais (LGPD) e sigilo funcional | **Em aberto** | Parecer da segurança da informação e da proteção de dados |
 | RNF035 | Aderência ao processo de desenvolvimento de sistemas institucionais (Portaria RFB/Sucor/Cotec nº 41/2017) | **Em aberto** | A Cotec deve indicar o enquadramento e os documentos exigidos |

@@ -11,16 +11,16 @@
 | Documento_04_Especificacao_Tecnica_e_Solicitacoes_a_TI | Arquitetura, dados, segurança, medições e as 31 solicitações à Cotec/TI |
 | Documento_05_Conformidade_Politica_IA_RFB | Matriz artigo a artigo da Portaria RFB nº 647/2026 e a autorização do CTSI |
 | Documento_06_Plano_do_Projeto | EAP, marcos, RACI, comunicação, mudanças, qualidade, capacitação |
-| Documento_07_Analise_de_Riscos_e_Controles | 16 riscos, controles existentes e a implantar, reconciliação com a Análise de Riscos da Cotec |
+| Documento_07_Analise_de_Riscos_e_Controles | 17 riscos, controles existentes e a implantar, reconciliação com a Análise de Riscos da Cotec |
 | Documento_08_Manual_do_Usuario | Passo a passo do parecerista, inclusive o uso do Copilot Chat |
 | Documento_09_Manual_de_Instalacao_e_Operacao | Instalação, configuração, operação, solução de problemas |
 | Documento_10_Plano_de_Implantacao_e_Piloto | Estratégia, pré-requisitos, piloto, medição, reversão |
 
 ## 02_Requisitos
-Requisitos Funcionais (39), Requisitos Não Funcionais (38), com situação e rastreabilidade.
+Requisitos Funcionais (44), Requisitos Não Funcionais (39), com situação e rastreabilidade.
 
 ## 03_Casos_Uso
-Casos_de_Uso_v02 (UC001 a UC010).
+Casos_de_Uso_v02 (UC001 a UC011).
 
 ## 04_Arquitetura
 Arquitetura_Logica_v02 (com decisões ADR), Regras_de_Negocio_v02, Modelo_de_Dados, Especificacao_da_API, openapi.json.

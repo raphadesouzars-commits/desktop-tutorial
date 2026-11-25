@@ -16,7 +16,7 @@ O AICI tem dois componentes independentes:
 | **Gerador de pareceres** (`gerador-parecer-conflito.html`) | Página HTML única (1,6 MB), sem dependências externas, com 68 atividades/163 situações embutidas, leitor de PDF e gerador de Word. Funciona offline | No navegador do parecerista |
 | **AICI-Motor** (`AICI-Motor/`) | Serviço Python (FastAPI) que lê o PDF, extrai os fatos, pesquisa a base, classifica, monta a minuta e gera o Word. Consulta uma IA somente se configurada | Máquina local, servidor ou contêiner (a decidir) |
 
-O gerador funciona sem o motor. O motor funciona sem IA. A IA é uma camada opcional e substituível.
+O gerador funciona sem o motor (e, no **modo local** da aba "Análise Inteligente", já analisa a consulta e prepara o prompt do Copilot Chat no navegador, sem instalar nada). O motor funciona sem IA. A IA é uma camada opcional e substituível.
 
 **IA de referência: Copilot Chat da RFB.** Conforme o comunicado de 24/06/2026, o CTSI autorizou (18/06/2026) o uso do Copilot Chat, acessível pela conta corporativa e integrado ao Microsoft 365, inclusive com dados sob sigilo legal, condicionado aos controles da Análise de Riscos. Como o Copilot Chat é uma interface conversacional, sem API disponível ao AICI até onde se sabe, o AICI opera em **modo assistido**: gera o prompt e o contexto, o parecerista os leva ao chat e cola a resposta de volta, e o AICI a valida contra o acervo. A integração automática (API) fica como alternativa a avaliar com a TI.
 
@@ -151,6 +151,7 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 | Opção | Descrição | Prós | Contras |
 |---|---|---|---|
+| 0. Somente o HTML (modo local) | O parecerista abre o gerador no navegador; análise, prompt e validação da resposta ocorrem no navegador | Nada a instalar; dados não saem da estação | Sem biblioteca de pareceres da COGER e sem bloqueio técnico de revisão; acervo embutido limitado |
 | 1. Estação institucional (piloto) | Cada parecerista roda o motor na própria estação | Dados não saem da estação; atende a solução experimental (art. 16, § 2º, a confirmar) | Instalação e manutenção por usuário |
 | 2. Servidor/VM interno | Um serviço na rede interna, com proxy HTTPS e autenticação institucional | Centralizado; acervo e logs em um só lugar | Exige ambiente, segurança e operação da TI |
 | 3. Contêiner (Docker/Kubernetes) | Imagem do motor, volumes para `knowledge/` e `metrics/` | Reprodutível e escalável | Depende da plataforma da RFB |
@@ -160,6 +161,7 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 
 1. O modo assistido foi testado só com respostas simuladas; o Copilot Chat real não foi exercitado (formato JSON seguido, tamanho do prompt, comportamento com arquivo anexo). Nenhum provedor automático de IA foi exercitado.
 1a. O AICI não controla onde o usuário cola o prompt (risco de uso de serviço não homologado).
+1b. O modo local (sem motor) tem só o acervo embutido (instruções, regras, trechos de normativos, precedentes da CGU): não consulta a biblioteca de pareceres e não tem bloqueio técnico de revisão.
 2. Nenhum modelo real de embeddings foi avaliado; a qualidade da busca semântica precisa ser medida.
 3. O OCR não foi testado.
 4. A acurácia da classificação e a precisão dos precedentes não foram medidas com casos reais.

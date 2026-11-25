@@ -33,10 +33,11 @@ Os testes usam arquivos temporários e dados **sintéticos** (formulário SeCI f
 | Verificação | Resultado |
 |---|---|
 | Aba "Análise Inteligente" ponta a ponta no Chromium contra o motor real: teste de conexão, upload, análise, escolha de conclusão, Word, revisão, aplicar no gerador, indicadores, Copilot assistido (prompt, contexto, resposta válida, resposta inválida) | Sem erros |
+| **Modo local** (sem motor) no Chromium: análise do PDF, fatos, atividade, prompt (7.500 caracteres, sem vazamento de nome, CPF ou matrícula), resposta com fonte válida e fonte inventada (a inventada descartada), nome do servidor reposto no texto, aviso na conferência, Word gerado, remoção e nova análise | Sem erros |
 | Formulário real do SeCI (um exemplar): extração de servidor, cargo, matrícula, protocolo, respostas 1 a 10; classificação "conteúdo digital" | Correta |
 | Word do motor convertido em PDF e conferido visualmente (cabeçalho, ementa, parágrafos numerados, deveres, conclusão, assinaturas, campos pendentes em amarelo) | Aderente ao padrão |
 | Medições de tempo (base de 189 trechos, sem IA): leitura 0,02-0,03 s; análise 0,01-0,25 s; Word cerca de 0,1 s | Registradas (não representam o acervo real) |
 
 ## Lacunas de teste
 
-Copilot Chat real; modelos de embeddings reais; OCR; carga com o acervo completo; Windows e Edge; segurança (varredura e intrusão); acurácia com casos reais (piloto).
+Copilot Chat real (motor e modo local); modo local sem teste automatizado (só verificação no navegador); modelos de embeddings reais; OCR; carga com o acervo completo; Windows e Edge; segurança (varredura e intrusão); acurácia com casos reais (piloto).

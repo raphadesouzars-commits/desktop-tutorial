@@ -23,6 +23,7 @@ Escalas: probabilidade (B baixa, M média, A alta) e impacto (B, M, A). Exposiç
 | 13 | Dependência de uma pessoa | Concepção e manutenção concentradas | M | M | Documentação, testes automatizados, conhecimento em arquivos | Ponto focal da TI; transferência de conhecimento | Patrocinador |
 | 14 | Dependências de software vulneráveis | Bibliotecas de terceiros | M | M | Dependências mínimas e conhecidas | Varredura de vulnerabilidades; política de atualização | Cotec |
 | 15 | Texto livre do servidor conter dados que o mascaramento não alcança | Mascaramento por padrões | M | M | Aviso nas limitações; auditoria | Decisão da TI sobre o mascaramento; orientação ao parecerista | Cotec / COGER |
+| 17 | No modo local, o parecer sair sem revisão suficiente (sem bloqueio técnico) e sem consulta à biblioteca de pareceres | Modo sem motor | M | M | Conferência de coerência com aviso de texto do Copilot; fontes validadas; precedentes da CGU; Manual do Usuário | Avaliar com a Cotec bloqueio equivalente; levar a biblioteca ao modo local (arquivo exportado) | Concepção / Cotec |
 | 16 | Parecer emitido em desacordo com o modelo institucional | Alteração indevida de templates | B | M | Templates e textos institucionais em arquivos controlados | Controle de acesso a `templates/` e `institucional.json` | Coordenação |
 
 ## 2. Matriz de exposição
@@ -30,7 +31,7 @@ Escalas: probabilidade (B baixa, M média, A alta) e impacto (B, M, A). Exposiç
 | | Impacto B | Impacto M | Impacto A |
 |---|---|---|---|
 | **P alta** | | 9 | |
-| **P média** | 12 | 6, 8, 11, 13, 14, 15 | 1, 2, 3, 4, 5 |
+| **P média** | 12 | 6, 8, 11, 13, 14, 15, 17 | 1, 2, 3, 4, 5 |
 | **P baixa** | | 16 | 7, 10 |
 
 Prioridade de tratamento: 1 a 5 (impacto alto e probabilidade média), seguidos de 9.

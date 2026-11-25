@@ -5,6 +5,7 @@
    parecer/cabecalho.jpg  (imagem do cabeçalho do parecer)
    parecer/vendor/pdf*.js (pdf.js 3.11.174, para ler o formulário em PDF sem internet)
    parecer/precedentes_cgu.json (ementas da CGU; atualize com atualizar_precedentes.py)
+   parecer/kb_local.json (instruções, regras e normativos para o prompt do Copilot Chat; gerar_kb_local.py)
 Uso:  python3 parecer/build.py
 """
 import base64, gzip, json, pathlib, struct, sys
@@ -41,6 +42,8 @@ def main():
     prec = json.loads((AQUI / "precedentes_cgu.json").read_text(encoding="utf8"))
     html = html.replace('/*__PRECEDENTES__*/{"itens":[]}',
                         json.dumps(prec, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+    kb = (AQUI / "kb_local.json")
+    html = html.replace('/*__KB__*/{}', json.dumps(json.loads(kb.read_text(encoding="utf8")), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") if kb.exists() else "{}")
     for marca, arq in (("/*__PDFJS__*/", "pdf.min.js"), ("/*__PDFW__*/", "pdf.worker.min.js")):
         gz = gzip.compress((AQUI / "vendor" / arq).read_bytes(), 9, mtime=0)
         html = html.replace(marca, base64.b64encode(gz).decode())

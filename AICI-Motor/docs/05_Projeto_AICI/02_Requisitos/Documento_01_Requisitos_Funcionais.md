@@ -56,6 +56,18 @@ O Copilot Chat (conta corporativa, Microsoft 365) é a IA homologada e autorizad
 | RF038 | Orientar o usuário a usar somente o Copilot Chat da conta corporativa | M | Aviso na tela e link para o Copilot Chat corporativo | Implementado (orientação) | O AICI **não controla** onde o usuário cola o prompt |
 | RF039 | O documento Word usa a minuta validada com a resposta do Copilot | M | O gerador envia a minuta aprovada a `/gerar-parecer`; mudar atividade ou conclusão pede confirmação e descarta a resposta | Implementado | Teste `test_copilot_chat_assistido`; verificado no navegador |
 
+### 2.3a Modo local (sem motor, dentro do HTML)
+
+Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura do PDF e a identificação do gerador e leva o Copilot Chat ao mesmo fluxo assistido, sem instalar nada.
+
+| ID | Requisito | Prior. | Critério de aceite | Situação | Evidência / observação |
+|---|---|---|---|---|---|
+| RF040 | Analisar a consulta (PDF, DOCX, ODT ou TXT) no próprio navegador, sem motor e sem internet | M | Preenche servidor, cargo, matrícula, protocolo, respostas do SeCI; mostra fatos, atividade sugerida (trocável), situação e precedentes da CGU parecidos | Implementado | Aba "Análise Inteligente", modo Local; verificado no navegador. Não consulta a biblioteca de pareceres |
+| RF041 | Gerar, no navegador, o prompt para o Copilot Chat (caso mascarado, regras da COGER, normativos, precedentes da CGU, modelo da atividade) dentro do limite de caracteres | M | Prompt com marcadores [R1], [N1], [P1], [M1]; sem CPF, matrícula, telefone, e-mail e nome; limite configurável | Implementado | Verificado no navegador (7.500 caracteres, sem vazamento de identificadores). O acervo embutido: `parecer/kb_local.json` |
+| RF042 | Validar a resposta colada | M | JSON obrigatório; fonte que não foi enviada invalida o parágrafo; resposta inválida recusada com orientação | Implementado | Verificado no navegador |
+| RF043 | Aplicar a fundamentação validada ao parecer do gerador | M | A fundamentação do Copilot substitui a do modelo no Word; a conferência avisa para revisar; é possível remover | Implementado | Verificado no navegador, inclusive o Word gerado |
+| RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
+
 ### 2.4 Conhecimento, IA e gestão
 
 | ID | Requisito | Prior. | Critério de aceite | Situação | Evidência / observação |
@@ -78,12 +90,12 @@ O Copilot Chat (conta corporativa, Microsoft 365) é a IA homologada e autorizad
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 32 | RF001, RF003, RF005 a RF023 (exceto os parciais), RF025 a RF027, RF031, RF033 a RF039 |
+| Implementado | 37 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF044 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **39** | |
+| **Total** | **44** | |
 
-"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF039) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas).
+"Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local **não** busca na biblioteca de pareceres da COGER (só o motor).
 
 ## 4. Matriz de rastreabilidade (RF -> componente)
 

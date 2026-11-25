@@ -4,7 +4,7 @@
 
 ## 1. Estratégia
 
-Implantação incremental e reversível. O gerador de pareceres continua sendo a ferramenta de produção; o motor entra como apoio, primeiro em **piloto restrito**, com os pareceristas decidindo e assinando como hoje. A IA (Copilot Chat) é opcional, em modo assistido.
+Implantação incremental e reversível. **O piloto pode começar sem Python**: o modo local da aba "Análise Inteligente" roda só no navegador; o motor entra quando a TI disponibilizar o ambiente. O gerador de pareceres continua sendo a ferramenta de produção; o motor entra como apoio, primeiro em **piloto restrito**, com os pareceristas decidindo e assinando como hoje. A IA (Copilot Chat) é opcional, em modo assistido.
 
 | Fase | Escopo | Saída esperada |
 |---|---|---|

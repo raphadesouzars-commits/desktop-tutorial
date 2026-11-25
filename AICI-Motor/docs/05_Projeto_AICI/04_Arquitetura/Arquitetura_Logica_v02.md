@@ -67,6 +67,7 @@ Regras da COGER + Modelos  ------>  Montagem de contexto (marcadores citáveis)
 | ADR-12 | Mascaramento antes de qualquer envio | Minimizar exposição de dados pessoais | Não elimina dados em texto livre; decisão final da TI conforme a Análise de Riscos |
 | ADR-13 | SQLite agora, PostgreSQL depois | Simplicidade do protótipo | Camada de banco isolada em `db.py` |
 | ADR-14 | Trilha de auditoria em arquivos `.jsonl` | Simples e legível pelo curador | Sem proteção contra alteração; evoluir para armazenamento institucional |
+| ADR-15 | **Modo local no HTML** (análise e Copilot assistido sem motor) | O ambiente de uso pode não ter Python (constatado) | Duplica no navegador a montagem do prompt e a validação; só tem o acervo embutido (`kb_local.json`: instruções, regras, trechos de normativos) e os precedentes da CGU, sem a biblioteca de pareceres; sem bloqueio técnico de revisão |
 
 ## 5. Pontos de extensão
 
