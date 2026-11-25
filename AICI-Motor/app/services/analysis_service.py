@@ -9,9 +9,9 @@ from pathlib import Path
 from ..models.db import Banco
 from ..models.schemas import Analise, Fatos, Minuta, PedidoParecer, Trecho
 from ..utilities.text import anonimizar
-from . import copilot_service as C
+from . import ai_provider as C
 from . import docx_generator as D
-from . import fact_extractor, indexer, pdf_reader
+from . import embeddings, fact_extractor, indexer, pdf_reader
 from . import prompts as P
 from . import report_generator as R
 from .classifier import Classificador
@@ -27,14 +27,15 @@ class ErroNegocio(Exception):
 
 
 class Motor:
-    def __init__(self, settings, provider=None, store=None):
+    def __init__(self, settings, provider=None, store=None, embedder=None):
         self.s = settings
         for k in ("uploads", "output", "metrics", "vectorstore"):
             settings.caminho(k).mkdir(parents=True, exist_ok=True)
         self.db = Banco(settings.caminho("banco"))
         self.store = store or indexer.criar_store(settings)
         self.provider = provider or C.criar_provider(settings)
-        self.retriever = Retriever(settings, self.store)
+        self.embedder = embedder if embedder is not None else embeddings.criar_embedder(settings)
+        self.retriever = self._novo_retriever()
         self.classificador = Classificador(settings)
         self.metricas = Metricas(self.db, settings.caminho("metrics"))
 
@@ -76,7 +77,7 @@ class Motor:
             if self.s.get("ia.anonimizar", True):
                 resumo = anonimizar(resumo, fatos.servidor.nome)
             ctx, mapa = C.montar_contexto(resumo, recup["normativos"], recup["precedentes"], recup["pareceres"], [],
-                                          bool(self.s.get("ia.anonimizar", True)))
+                                          bool(self.s.get("ia.anonimizar", True)), regras=R.carregar_regras(self.s))
             bruto = self.provider.completar(P.carregar("precedents", self.s), ctx, json_mode=True)
             for it in json.loads(re.search(r"\{.*\}", bruto, re.S).group(0)).get("itens", []):
                 t = mapa.get(it.get("id"))
@@ -181,7 +182,8 @@ class Motor:
             try:
                 recup = {"normativos": a.normativos, "precedentes": a.precedentes, "pareceres": a.pareceres, "modelos": a.modelos}
                 ctx, _ = C.montar_contexto(f"{a.fatos.atividade}. {a.fatos.descricao}", recup["normativos"], recup["precedentes"],
-                                           recup["pareceres"], recup["modelos"], bool(self.s.get("ia.anonimizar", True)))
+                                           recup["pareceres"], recup["modelos"], bool(self.s.get("ia.anonimizar", True)),
+                                           regras=R.carregar_regras(self.s))
                 bruto = self.provider.completar(P.carregar("review", self.s), ctx + "\n\n=== MINUTA ===\n" + anonimizar(texto, a.fatos.servidor.nome), json_mode=True)
                 pontos += [{"gravidade": x.get("gravidade", "media"), "descricao": x.get("descricao", ""), "trecho": x.get("trecho", "")}
                            for x in json.loads(re.search(r"\{.*\}", bruto, re.S).group(0)).get("pontos", [])]
@@ -189,7 +191,11 @@ class Motor:
                 pontos.append({"gravidade": "baixa", "descricao": f"Revisão pela IA indisponível: {e}", "trecho": ""})
         return pontos
 
+    def _novo_retriever(self) -> Retriever:
+        dense = embeddings.DenseStore(self.s.caminho("vectorstore")) if self.embedder is not None else None
+        return Retriever(self.s, self.store, self.embedder, dense)
+
     def indexar(self, completo: bool = False) -> dict:
-        r = indexer.indexar(self.s, self.store, completo)
-        self.retriever = Retriever(self.s, self.store)
+        r = indexer.indexar(self.s, self.store, completo, self.embedder)
+        self.retriever = self._novo_retriever()
         return r

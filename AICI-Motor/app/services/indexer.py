@@ -198,7 +198,7 @@ def criar_store(settings, embedding_function=None):
 
 
 # ---------------------------------------------------------------- indexação
-def indexar(settings, store=None, completo: bool = False) -> dict:
+def indexar(settings, store=None, completo: bool = False, embedder=None) -> dict:
     """Indexa knowledge/. Incremental: só reprocessa arquivos novos ou alterados (hash). Remove os que sumiram."""
     store = store or criar_store(settings)
     raiz = settings.caminho("knowledge")
@@ -231,5 +231,12 @@ def indexar(settings, store=None, completo: bool = False) -> dict:
     for r in removidos:
         store.remover_fonte(r); del store.manifesto[r]
     store.salvar()
+    vetores = None
+    if embedder is not None:
+        if store.nome != "lexical":
+            erros.append("embeddings híbridos só se combinam ao backend lexical (o Chroma já é vetorial)")
+        else:
+            from .embeddings import DenseStore
+            vetores = DenseStore(settings.caminho("vectorstore")).sincronizar(store.chunks, embedder)
     return {"backend": store.nome, "novos": novos, "alterados": alterados, "removidos": len(removidos),
-            "erros": erros, "chunks": store.contagem()}
+            "erros": erros, "chunks": store.contagem(), "vetores": vetores}

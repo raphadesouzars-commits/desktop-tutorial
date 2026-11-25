@@ -9,7 +9,7 @@ from pathlib import Path
 
 from ..models.schemas import Fatos, Classificacao, Minuta, Paragrafo, Secao, Trecho
 from ..utilities.text import norm
-from . import copilot_service as C
+from . import ai_provider as C
 from . import prompts as P
 
 RESULTADOS = ("sem_conflito", "sem_conflito_ressalvas", "conflito", "outro")
@@ -61,6 +61,15 @@ def _ctx(settings, fatos: Fatos, atividade: str, variante: dict | None) -> tuple
         if q and (t := re.sub(r"\s+", " ", fatos.respostas.get(q, "")).strip().rstrip(".;")) and len(t) <= 160:
             ctx[c["id"]] = t if re.match(r"^[A-ZÀ-Ý]{2}", t) else t[:1].lower() + t[1:]
     return ctx, campos
+
+
+def carregar_regras(settings) -> Trecho | None:
+    """knowledge/regras_coger.md: segue sempre no contexto da IA (marcador R1), em vez de depender da recuperação por similaridade."""
+    arq = settings.caminho("knowledge") / "regras_coger.md"
+    if not arq.exists():
+        return None
+    return Trecho(id="regras_coger", tipo="regra", titulo="Regras institucionais da COGER", fonte="regras_coger.md",
+                  texto=arq.read_text(encoding="utf8")[:9000], origem="COGER")
 
 
 def _carregar_modelo(settings, atividade_id: str) -> dict | None:
@@ -118,7 +127,7 @@ def _fund_ia(provider, settings, fatos: Fatos, recup: dict, minuta: Minuta, resu
         resumo = anonimizar(resumo, fatos.servidor.nome)
     try:
         ctx, mapa = C.montar_contexto(resumo, recup["normativos"], recup["precedentes"], recup["pareceres"], recup["modelos"],
-                                      bool(s.get("ia.anonimizar", True)))
+                                      bool(s.get("ia.anonimizar", True)), regras=carregar_regras(s))
     except C.ContextoInsuficiente as e:
         minuta.avisos.append(f"IA não utilizada: {e}.")
         return None

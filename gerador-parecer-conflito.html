@@ -253,11 +253,12 @@ nav.tabs button.on{background:var(--acc);color:#fff}
       <div id="aiMsg" class="hint"></div>
     </div>
     <div class="card" id="aiEscolha" style="display:none">
-      <h2><span class="n">3</span>Decisão do parecerista</h2>
+      <h2><span class="n">3</span>Validação humana e geração</h2>
       <label for="aiAtiv">Atividade (enquadramento)</label><select id="aiAtiv"></select>
       <div class="hint" id="aiConf"></div>
       <label for="aiRes">Conclusão do caso concreto</label><select id="aiRes"></select>
       <p class="hint">A IA e o motor apenas sugerem; a escolha é sua. Ao mudar, a minuta ao lado é refeita.</p>
+      <label class="chk"><input type="checkbox" id="aiValidado"> Revisei os fatos extraídos, o enquadramento, as fontes e os compromissos ao lado e assumo a decisão (a IA apenas sugere).</label>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
         <button id="aiAplicar" title="Preenche o gerador (aba ao lado) com os dados, as respostas, a atividade e a conclusão">Aplicar no gerador</button>
         <button class="sec" id="aiDocx">⬇ Minuta do motor (.docx)</button>
@@ -1212,7 +1213,7 @@ const aiJson = (c, corpo) => aiFetch(c, {method: "POST", headers: {"Content-Type
 const aiMsg = (t, erro) => { $("aiMsg").innerHTML = t ? (erro ? '<div class="ai-erro">' + escH(t) + "</div>" : escH(t)) : ""; };
 $("aiTestar").onclick = async () => {
   try { const s = await (await aiFetch("/saude")).json();
-    $("aiSaude").innerHTML = `<span class="ai-ok">Conectado.</span> IA: ${escH(s.provider)} · índice (${escH(s.backend)}): ${escH(JSON.stringify(s.indice))} · OCR: ${s.ocr ? "sim" : "não"}`;
+    $("aiSaude").innerHTML = `<span class="ai-ok">Conectado.</span> IA: ${escH(s.provider)} · índice (${escH(s.backend)}): ${escH(JSON.stringify(s.indice))} · busca: ${s.embeddings ? "BM25 + vetores (" + escH(s.embeddings) + ")" : "BM25"} · OCR: ${s.ocr ? "sim" : "não"}`;
   } catch(e){ $("aiSaude").innerHTML = '<span class="ai-erro">' + escH(e.message) + "</span>"; }
 };
 const RES_AI = RES_ROT;
@@ -1240,7 +1241,7 @@ function aiLista(titulo, itens){
 }
 function aiMostrar(){
   const an = AI.an, f = an.fatos, s = f.servidor, cl = an.classificacao;
-  $("aiEscolha").style.display = "";
+  $("aiEscolha").style.display = ""; $("aiValidado").checked = false; aiTrava();
   const cand = (cl.candidatas || []), ids = new Set(cand.map(c => c.id));
   const outras = (AI.cats || []).filter(c => !ids.has(c.id));
   $("aiAtiv").innerHTML = cand.map(c => `<option value="${escH(c.id)}">${escH(c.nome)} (${c.confianca})</option>`).join("")
@@ -1264,6 +1265,7 @@ function aiPintar(){
   let h = "";
   if (av.length) h += '<div class="card"><h2>Avisos</h2>' + av.map(a => '<div class="aviso">' + escH(a) + "</div>").join("") + "</div>";
   h += '<div class="card"><h2>Fatos extraídos</h2><table class="ai-t">' + tab.map(r => `<tr><td>${escH(r[0])}</td><td>${escH(String(r[1]))}</td></tr>`).join("") + "</table></div>";
+  if (m && (m.ressalvas || []).length) h += '<div class="card"><h2>Compromissos e ressalvas sugeridos</h2><ul style="margin:0;padding-left:18px;font-size:13px">' + m.ressalvas.map(x => "<li>" + escH(x.replace(/\*\*/g, "")) + "</li>").join("") + '</ul><p class="hint">Entram no parecer e, se a conclusão for com ressalvas, no Termo de Compromisso.</p></div>';
   h += aiLista("Pareceres da COGER semelhantes", an.pareceres) + aiLista("Precedentes semelhantes", an.precedentes) + aiLista("Normativos relacionados", an.normativos);
   if (m){
     h += `<div class="card ai-min"><h2>Minuta (${escH(m.modo === "copilot" ? "redigida com IA" : "extrativa, sem IA")})</h2>` + m.secoes.map(sc => `<h4>${escH(sc.titulo)}</h4>` + sc.paragrafos.map(p =>
@@ -1276,6 +1278,11 @@ async function aiRefazer(){
   try { AI.minuta = await aiJson("/minuta", {consulta_id: AI.cid, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value}); aiPintar(); }
   catch(e){ aiMsg(e.message, true); }
 }
+function aiTrava(){
+  const ok = $("aiValidado").checked;
+  for (const id of ["aiAplicar", "aiDocx", "aiTermo"]) $(id).disabled = !ok;
+}
+$("aiValidado").onchange = aiTrava;
 $("aiAtiv").onchange = aiRefazer; $("aiRes").onchange = aiRefazer;
 function aiAplicar(){
   const an = AI.an, f = an.fatos, s = f.servidor, ativ = $("aiAtiv").value, res = $("aiRes").value;

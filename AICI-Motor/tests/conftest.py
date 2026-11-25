@@ -10,7 +10,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(RAIZ))
 
 from app.config import carregar  # noqa: E402
-from app.services.copilot_service import Provider  # noqa: E402
+from app.services.ai_provider import MockProvider  # noqa: E402
 
 SECI_LINHAS = [
     "Controladoria Geral da União", "Sistema Eletrônico de Conflito de Interesses", "Emitido em:", "27/09/2023",
@@ -71,6 +71,7 @@ def settings(tmp_path):
         (k / sub).mkdir(parents=True)
     shutil.copytree(RAIZ / "knowledge" / "modelos", k / "modelos", dirs_exist_ok=True)
     shutil.copytree(RAIZ / "knowledge" / "normativos", k / "normativos", dirs_exist_ok=True)
+    shutil.copyfile(RAIZ / "knowledge" / "regras_coger.md", k / "regras_coger.md")
     (k / "pareceres" / "PA_145_2025_Docencia.txt").write_text(
         "Parecer Coger/GNP nº 145/2025. Docência em instituição de ensino superior privada. Professor universitário, "
         "lecionar em curso de graduação noturno, compatibilidade de horários, remuneração por hora-aula. Não configura "
@@ -89,16 +90,4 @@ def settings(tmp_path):
         "prompts": str(base / "prompts"), "templates": str(base / "templates"), "categorias": str(base / "config" / "categorias.json")}})
 
 
-class IAFalsa(Provider):
-    """Provider de teste: devolve respostas programadas por prompt (reconhecido por trecho do sistema)."""
-    nome, usa_ia = "falsa", True
-
-    def __init__(self, respostas: dict[str, str]):
-        self.respostas, self.chamadas = respostas, []
-
-    def completar(self, sistema, usuario, json_mode=False):
-        self.chamadas.append((sistema, usuario))
-        for chave, resp in self.respostas.items():
-            if chave in sistema:
-                return resp
-        raise RuntimeError("sem resposta programada")
+IAFalsa = MockProvider   # provedor simulado: respostas programadas por trecho do prompt

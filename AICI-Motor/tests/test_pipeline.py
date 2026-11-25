@@ -5,7 +5,7 @@ import docx
 import pytest
 from fastapi.testclient import TestClient
 
-from app.services import copilot_service as C
+from app.services import ai_provider as C
 from app.services import fact_extractor, indexer, pdf_reader
 from app.services.classifier import Classificador
 from app.services.retriever import Retriever
@@ -101,7 +101,7 @@ def test_ia_nunca_recebe_so_o_caso():
 
 def test_copilot_formatos_e_erros(monkeypatch):
     with pytest.raises(C.ErroIA):
-        C.CopilotProvider({"endpoint": ""})
+        C.CopilotProvider({"endpoint": ""}).completar("s", "u")
     enviados = {}
 
     class R:
@@ -250,3 +250,82 @@ def test_backend_chroma(settings):
     rec = Retriever(settings, store).recuperar(Fatos(atividade="Professor universitário", descricao="lecionar em faculdade particular de Direito"))
     assert rec["pareceres"] and rec["pareceres"][0].numero == "145"
     assert indexer.indexar(settings, indexer.criar_store(settings, Hash()))["novos"] == 0
+
+
+# ---------------------------------------------------------------- busca híbrida (BM25 + embeddings)
+class EmbSinonimos:
+    """Embedder de teste: palavras do mesmo conceito caem na mesma dimensão (simula o que um modelo semântico faz)."""
+    nome = "sinonimos"
+    CONCEITOS = [{"professor", "docencia", "magisterio", "aula", "universitario", "lecionar", "ensino", "faculdade"},
+                 {"sindico", "condominio", "assembleia", "taxa"}]
+
+    def _v(self, t):
+        from app.utilities.text import tokens
+        tk = set(tokens(t))
+        v = [float(len(tk & c)) for c in self.CONCEITOS] + [0.01]
+        n = sum(x * x for x in v) ** 0.5
+        return [x / n for x in v]
+
+    def embed_documentos(self, textos): return [self._v(t) for t in textos]
+    def embed_consulta(self, texto): return self._v(texto)
+
+
+def test_busca_hibrida_acha_o_que_o_bm25_nao_acha(settings):
+    pytest.importorskip("numpy")
+    from app.services.embeddings import DenseStore
+    k = settings.caminho("knowledge")
+    for f in (k / "pareceres").glob("*"): f.unlink()
+    for f in (k / "precedentes").rglob("*.txt"): f.unlink()
+    (k / "pareceres" / "PA_300_2025_Ensino.txt").write_text(
+        "Atividade de docência e magistério em instituição de ensino, com aulas noturnas e compatibilidade de horários.", encoding="utf8")
+    (k / "pareceres" / "PA_301_2025_Condominio.txt").write_text(
+        "Síndico de condomínio, assembleia e taxa condominial.", encoding="utf8")
+    emb = EmbSinonimos()
+    store = indexer.criar_store(settings)
+    r = indexer.indexar(settings, store, embedder=emb)
+    assert r["vetores"]["vetores"] == r["chunks"]["parecer"] + r["chunks"].get("normativo", 0) + r["chunks"]["modelo"]
+    f = Fatos(atividade="Professor universitário", descricao="lecionar aula")    # nenhuma palavra em comum com o parecer 300... exceto 'aula'
+    f2 = Fatos(atividade="Professor universitário")                              # sem nenhum termo em comum
+    so_bm25 = Retriever(settings, store).recuperar(f2)["pareceres"]
+    hibrido = Retriever(settings, store, emb, DenseStore(settings.caminho("vectorstore"))).recuperar(f2)["pareceres"]
+    assert not so_bm25 or so_bm25[0].numero != "300"
+    assert hibrido[0].numero == "300" and "similaridade semântica" in hibrido[0].motivo
+    # incremental: nada mudou -> nenhum vetor novo
+    assert indexer.indexar(settings, indexer.criar_store(settings), embedder=emb)["vetores"]["novos"] == 0
+
+
+# ---------------------------------------------------------------- provedores de IA
+def test_provedores_configuracao(monkeypatch):
+    with pytest.raises(C.ErroIA):
+        C.AzureOpenAIProvider({"endpoint": "https://r.openai.azure.com"}).completar("s", "u")        # faltam deployment/api_version
+    with pytest.raises(C.ErroIA):
+        C.OpenAIProvider({}).completar("s", "u")                                                      # não homologado: nada é enviado
+    capt = {}
+
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"choices": [{"message": {"content": "azul"}}]}
+    monkeypatch.setattr(C.httpx, "post", lambda url, json, headers, timeout, verify: (capt.update(url=url, json=json, headers=headers), R())[1])
+    monkeypatch.setenv("CHAVE_AZ", "k1")
+    az = C.AzureOpenAIProvider({"endpoint": "https://r.openai.azure.com/", "deployment": "gpt-4o", "api_version": "2024-06-01",
+                                "token_env": "CHAVE_AZ", "modelo": "ignorado"})
+    assert az.completar("s", "u") == "azul"
+    assert capt["url"] == "https://r.openai.azure.com/openai/deployments/gpt-4o/chat/completions?api-version=2024-06-01"
+    assert capt["headers"]["api-key"] == "k1" and "model" not in capt["json"]
+    oa = C.OpenAIProvider({"confirmo_homologado": True, "endpoint": "https://gw.interno/v1/chat", "modelo": "m", "token_env": "CHAVE_AZ"})
+    assert oa.completar("s", "u") == "azul" and capt["headers"]["Authorization"] == "Bearer k1" and capt["json"]["model"] == "m"
+    # interface de alto nível e fábrica
+    mock = C.MockProvider({"instr": "resp"})
+    assert mock.analyze("instr", {"caso": "x", "n": [1, 2]}) == "resp" and "=== caso ===" in mock.chamadas[0][1]
+    from app.config import carregar
+    assert isinstance(C.criar_provider(carregar()), C.OfflineProvider)
+    with pytest.raises(C.ErroIA):
+        C.criar_provider(carregar(sobrescrever={"ia": {"provider": "inexistente"}}))
+
+
+def test_regras_coger_sempre_no_contexto(settings):
+    from app.services import report_generator as R
+    regras = R.carregar_regras(settings)
+    assert regras and "Categorias válidas" in regras.texto
+    ctx, mapa = C.montar_contexto("caso", [_t("normativo", 1)], [_t("precedente", 1)], [], [], regras=regras)
+    assert "REGRAS INSTITUCIONAIS DA COGER" in ctx and mapa["R1"].fonte == "regras_coger.md"

@@ -30,6 +30,7 @@ def criar_router(motor: Motor) -> APIRouter:
     def saude():
         return {"status": "ok", "provider": motor.provider.nome, "indice": motor.store.contagem(), "backend": motor.store.nome,
                 "arquivos_indexados": len(motor.store.manifesto),
+                "embeddings": motor.embedder.nome if motor.embedder else None,
                 "ocr": __import__("app.services.ocr_service", fromlist=["x"]).ocr_disponivel()}
 
     @r.post("/upload")

@@ -25,6 +25,7 @@ O código só orquestra. Atividades, categorias, textos de conclusão, deveres e
 | Linguagem institucional (abertura, conclusões, deveres, termo) | `templates/institucional.json` |
 | Aparência do Word | `templates/parecer.docx`, `termo.docx`, `despacho.docx` (estilos "AICI ...") |
 | Instruções para a IA | `prompts/*.txt` |
+| Regras institucionais que a IA sempre lê | `knowledge/regras_coger.md` |
 | Endereço da IA, limites, caminhos | `config/settings.yaml` |
 
 ## Instalação e execução
@@ -36,8 +37,8 @@ pip install -r requirements.txt
 python main.py                                         # http://127.0.0.1:8765  (documentação automática em /docs)
 ```
 
-Na primeira execução o motor indexa `knowledge/` (incremental nas seguintes). Abra `gerador-parecer-conflito.html`, aba **Análise Inteligente**,
-informe o endereço do motor e envie o PDF.
+Na primeira execução o motor indexa `knowledge/` (incremental nas seguintes). Abra `gerador-parecer-conflito.html`, aba **Análise Inteligente**, informe o endereço do motor e siga as 3 etapas:
+**1 Análise** (envia o PDF; mostra fatos, enquadramento, normativos, precedentes e compromissos) -> **2 Validação humana** (você confere e marca a revisão) -> **3 Geração** (só então liberada).
 
 Testes: `python -m pytest -q`.
 
@@ -69,38 +70,45 @@ Se um modelo do HTML mudar: `python scripts/exportar_categorias.py`.
 ## Módulos (`app/services`)
 
 `pdf_reader` (1) · `ocr_service` (2) · `fact_extractor` (3) · base em `knowledge/` (4) · `indexer` (5) · `retriever` (6) · `classifier` (7) ·
-`copilot_service` (8) · `prompts` + `prompts/*.txt` (9) · `report_generator` (10) · `docx_generator` (11) · `metrics_service` (12) · `analysis_service` (orquestrador).
+`ai_provider` (8) · `embeddings` · `prompts` + `prompts/*.txt` (9) · `report_generator` (10) · `docx_generator` (11) · `metrics_service` (12) · `analysis_service` (orquestrador).
 
-## IA (Copilot)
+## IA: camada de provedores (`app/services/ai_provider.py`)
 
-`ia.provider: offline` (padrão) funciona **sem IA**: a fundamentação sai dos modelos institucionais, cada parágrafo com a origem (PAR/ano).
-Para usar a IA homologada, em `config/settings.yaml`:
+O motor só conhece a interface `AIProvider` (`completar(sistema, usuario)` e `analyze(prompt, contexto)`); o restante do sistema nunca sabe qual provedor está por trás.
+Escolha em `config/settings.yaml` -> `ia.provider`:
 
-```yaml
-ia:
-  provider: copilot
-  copilot:
-    endpoint: "https://<gateway-homologado>/..."   # o endereço que a RFB disponibiliza
-    token_env: AICI_COPILOT_TOKEN                    # export AICI_COPILOT_TOKEN=...  (nunca no arquivo)
-    formato: openai                                   # ou custom, com corpo_template e caminho_resposta
-```
+| Provedor | Quando usar |
+|---|---|
+| `offline` (padrão) | Sem IA. O parecer sai dos modelos institucionais, cada parágrafo com a origem. **O projeto é utilizável integralmente assim.** |
+| `mock` | Testes/demonstrações. |
+| `copilot` | Copilot Studio publicado por HTTPS, ou gateway interno (`formato: openai` ou `custom`). |
+| `azure` | Azure OpenAI corporativo: a TI informa `endpoint`, `deployment` e `api_version`; a chave vai em `AICI_AZURE_KEY`. |
+| `openai` | API compatível com OpenAI; só funciona com `confirmo_homologado: true` (a API pública não é homologada pela RFB). |
 
-**Atenção:** o motor foi escrito para um gateway HTTP genérico. Eu não conheço o endpoint/contrato real do Copilot na rede da RFB - ele precisa ser configurado
-(ou o formato `custom` ajustado) com a equipe de TI; só `offline` e um provedor simulado foram testados.
+O que a TI da RFB precisa informar (um dos cenários): **(A)** Copilot só pelo chat (m365.cloud.microsoft/chat): não há como automatizar, o servidor usa à mão e o motor segue em `offline`;
+**(B)** Copilot Studio com API HTTPS; **(C)** Azure OpenAI corporativo (melhor caso). Só `offline`, `mock` e chamadas HTTP simuladas foram testados; nenhum endpoint real.
 
 Garantias aplicadas no código:
-- a IA **nunca recebe só o PDF**: `montar_contexto` exige normativos + (precedentes, pareceres ou modelos), senão não chama a IA;
+- a IA **nunca recebe só o PDF**: `montar_contexto` exige normativos + (precedentes, pareceres ou modelos), senão não chama a IA; `knowledge/regras_coger.md` acompanha sempre o contexto (marcador R1);
 - CPF, matrícula, telefone, e-mail e o nome do servidor são **mascarados** antes do envio (`ia.anonimizar`);
 - a IA só pode escolher **categorias existentes**; resposta fora da lista é descartada;
 - parágrafo da IA **sem fonte válida do contexto é descartado**; as fontes citadas viram a origem do parágrafo;
 - falha da IA -> o motor cai no modo extrativo e avisa.
 
-## Índice (RAG)
+## Regras da COGER (`knowledge/regras_coger.md`)
 
-- `indexador.backend: lexical` (padrão): BM25 em Python puro, sem dependências nem download, funciona em rede fechada. A consulta é expandida com as palavras-chave da atividade reconhecida.
-- `indexador.backend: chroma`: busca vetorial (`pip install chromadb`). Por padrão o Chroma baixa um modelo de embeddings da internet; em rede fechada, passe um
-  modelo local em `criar_store(settings, embedding_function=...)`. Integração testada com um embedding de teste, **não** com um modelo semântico real.
-- A busca semântica real ("professor universitário" ~ "docência" sem palavras em comum) depende de embeddings; no modo lexical isso é coberto só pelas palavras-chave dos modelos.
+Documento curto (categorias válidas, resultados possíveis, estrutura do parecer, deveres padrão, Termo, encaminhamento) que a IA recebe em toda chamada.
+É gerado dos dados do projeto: `python scripts/gerar_regras_coger.py`. A seção **"A consolidar pela COGER"** é preenchida à mão e preservada nas próximas gerações:
+os princípios consolidados da COGER que ainda não estão em norma nem em parecer precisam ser escritos pela equipe, o motor não os inventa.
+
+## Busca (RAG)
+
+- **BM25** (padrão): Python puro, sem download, funciona em rede fechada. A consulta é expandida com as palavras-chave da atividade reconhecida.
+- **Busca híbrida (BM25 + embeddings)**: `recuperacao.embeddings.habilitado: true` (+ `pip install sentence-transformers`). Fluxo: BM25 top 20 + vetores top 20 -> fusão por Reciprocal Rank Fusion ->
+  reclassificação com o peso COGER -> top finais. Modelos sugeridos, rodando **localmente**: `BAAI/bge-m3` ou `intfloat/multilingual-e5-large` (e5 pede os prefixos `query: ` e `passage: `).
+  Em rede fechada, baixe o modelo uma vez numa máquina com internet e aponte `modelo` para a pasta. Os vetores ficam em `vectorstore/dense.npy` e são atualizados só para trechos novos ou alterados.
+  A fusão foi testada com um embedder de teste (mostra um parecer de "docência" achado por "professor universitário", que o BM25 sozinho não acha); **nenhum modelo real foi executado aqui**, então a qualidade com bge-m3 precisa ser medida com casos reais.
+- **Chroma** (`indexador.backend: chroma`, `pip install chromadb`): alternativa vetorial pura; integração testada com embedding de teste.
 
 ## OCR
 
@@ -115,5 +123,5 @@ PDF digitalizado exige `pip install easyocr` (puxa PyTorch, ~2 GB; os modelos de
 
 ## Evolução (5-10 anos)
 
-Trocar PostgreSQL por SQLite = só `app/models/db.py`. Trocar de IA = outra classe `Provider`. Trocar o índice = outra classe de armazenamento em `indexer.py`.
+Trocar PostgreSQL por SQLite = só `app/models/db.py`. Trocar de IA = outra classe `AIProvider`. Trocar o índice = outra classe de armazenamento em `indexer.py`.
 Novas atividades/entendimentos = novos arquivos em `knowledge/`, sem mexer no código.

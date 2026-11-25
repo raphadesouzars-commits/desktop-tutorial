@@ -28,6 +28,13 @@ recuperacao:
   top_k_normativos: 4
   top_k_modelos: 2
   peso_coger: 1.25               # RN005: precedentes da COGER pesam mais que os demais
+  embeddings:                    # busca híbrida (BM25 + vetores). Requer sentence-transformers e um modelo LOCAL
+    habilitado: false
+    modelo: BAAI/bge-m3          # ou intfloat/multilingual-e5-large (prefixos "query: " / "passage: "); pode ser a pasta do modelo
+    prefixo_consulta: ""
+    prefixo_documento: ""
+    dispositivo: cpu
+    candidatos: 20               # BM25 top 20 + vetores top 20 -> fusão (RRF) -> reclassifica (peso COGER) -> top_k finais
 
 ocr:
   habilitado: true
@@ -35,7 +42,7 @@ ocr:
   min_caracteres_por_pagina: 40
 
 ia:
-  provider: offline              # offline (sem IA, extrativo) | copilot (gateway homologado, ver abaixo)
+  provider: offline              # offline (sem IA) | copilot (Copilot Studio/gateway) | azure (Azure OpenAI) | openai | mock (testes)
   anonimizar: true               # mascara CPF, matrícula, telefone e e-mail antes de enviar à IA
   temperatura: 0.1
   copilot:
@@ -51,3 +58,14 @@ ia:
     caminho_resposta: "choices.0.message.content"
     timeout_s: 120
     verificar_tls: true
+  azure:                         # Azure OpenAI corporativo: a TI informa os três campos abaixo; a chave vai na variável de ambiente
+    endpoint: ""                 # https://<recurso>.openai.azure.com
+    deployment: ""               # ex.: gpt-4o
+    api_version: ""              # ex.: 2024-06-01
+    token_env: AICI_AZURE_KEY
+    timeout_s: 120
+  openai:                        # só para modelos/gateways que a instituição tenha homologado
+    confirmo_homologado: false
+    endpoint: ""
+    modelo: ""
+    token_env: AICI_OPENAI_KEY

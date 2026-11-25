@@ -34,7 +34,7 @@ class Fatos(BaseModel):
 class Trecho(BaseModel):
     """Um pedaço recuperado da base de conhecimento, sempre com a origem."""
     id: str
-    tipo: Literal["parecer", "precedente", "normativo", "modelo"]
+    tipo: Literal["parecer", "precedente", "normativo", "modelo", "regra"]
     titulo: str
     fonte: str                      # caminho relativo em knowledge/
     texto: str
