@@ -82,7 +82,9 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
 a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10px}
 .aviso{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:7px 10px;font-size:12.5px;margin-top:8px}
 #seciPerguntas label{font-weight:500}
-.paper mark{background:#ffe866;padding:0 2px}
+.paper mark{background:#ffe866;padding:0 2px;cursor:pointer}
+.pchip{color:var(--acc);text-decoration:underline;cursor:pointer}
+.flash{outline:3px solid #ffb300 !important;outline-offset:1px;transition:outline .3s}
 nav.tabs{display:flex;gap:4px;padding:10px 18px 0;max-width:1500px;margin:0 auto;border-bottom:1px solid var(--line)}
 nav.tabs button{background:#fff;color:var(--acc);border-radius:8px 8px 0 0;border-bottom:none;padding:8px 16px}
 nav.tabs button.on{background:var(--acc);color:#fff}
@@ -102,22 +104,24 @@ nav.tabs button.on{background:var(--acc);color:#fff}
   <p>Modelos extraídos dos pareceres da Corregedoria · gera arquivo Word (.docx) editável · funciona sem internet, nada é enviado para fora do navegador</p>
 </header>
 
-<nav class="tabs"><button id="tabGer" class="on">Gerador de Parecer</button><button id="tabAI">Análise Inteligente (motor AICI)</button></nav>
+<nav class="tabs"><button id="tabGer" class="on">Gerador de Parecer</button><button id="tabAI">Análise Inteligente</button></nav>
 
 <div class="wrap" id="paneGer">
 <div id="form">
 
   <div class="card">
     <h2><span class="n">1</span>Consulta recebida</h2>
-    <label for="consulta">Cole aqui o texto do formulário SeCI (ou descreva a atividade)</label>
-    <textarea id="consulta" rows="7" placeholder="2 - Descreva a atividade que você pretende exercer fora da administração pública...&#10;Pretendo exercer a função de síndico do condomínio onde resido..."></textarea>
-    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-      <button id="btnIdent">Identificar tema</button>
-      <button class="sec" id="btnUsarForm" title="Separa o texto colado nas 10 perguntas do formulário SeCI (passo 3)">Distribuir nas 10 perguntas</button>
-    </div>
-    <label for="arqForm">Ou envie o formulário preenchido pelo servidor (PDF, DOCX, ODT ou TXT)</label>
+    <label for="arqForm">Envie o formulário do SeCI preenchido pelo servidor (PDF, DOCX, ODT ou TXT)</label>
     <input type="file" id="arqForm" accept=".pdf,.docx,.odt,.txt,application/pdf,text/plain">
-    <p class="hint" id="arqInfo">O arquivo é lido aqui mesmo no navegador, sem internet. PDF digitalizado (imagem) não tem texto para ler.</p>
+    <p class="hint" id="arqInfo">O arquivo é lido aqui mesmo, no navegador, sem internet. Os dados do servidor e as respostas são preenchidos sozinhos.</p>
+    <details id="colarBox" style="margin-top:8px">
+      <summary>Ou cole o texto da consulta</summary>
+      <textarea id="consulta" rows="6" placeholder="2 - Descreva a atividade que você pretende exercer fora da administração pública...&#10;Pretendo exercer a função de síndico do condomínio onde resido..."></textarea>
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        <button id="btnIdent">Identificar tema</button>
+        <button class="sec" id="btnUsarForm" title="Separa o texto colado nas 10 perguntas do formulário SeCI">Distribuir nas 10 perguntas</button>
+      </div>
+    </details>
     <div id="sugestoes"></div>
   </div>
 
@@ -149,27 +153,21 @@ nav.tabs button.on{background:var(--acc);color:#fff}
     <label for="nome">Nome do servidor</label>
     <input type="text" id="nome" autocomplete="off">
     <div class="row3">
-      <div><label for="genero">Tratamento</label><select id="genero"><option value="m">o servidor</option><option value="f">a servidora</option></select></div>
       <div><label for="cargoSel">Cargo</label><select id="cargoSel">
         <option value="AFRFB">Auditor-Fiscal (AFRFB)</option>
         <option value="ATRFB">Analista-Tributário (ATRFB)</option>
         <option value="outro">Outro…</option></select></div>
+      <div><label for="genero">Tratamento</label><select id="genero"><option value="m">o servidor</option><option value="f">a servidora</option></select></div>
       <div><label for="matricula">Matrícula Siape</label><input type="text" id="matricula"></div>
     </div>
     <div class="row" id="cargoOutro" style="display:none">
       <div><label for="cargoTxt">Cargo por extenso</label><input type="text" id="cargoTxt" placeholder="Técnico do Seguro Social"></div>
       <div><label for="cargoSig">Sigla</label><input type="text" id="cargoSig" placeholder="TSS"></div>
     </div>
-    <label for="unidade">Unidade de lotação (como aparece após “lotado na …”) – não consta do PDF do SeCI</label>
+    <label for="unidade">Unidade de lotação (“lotado na …”) - não consta do PDF do SeCI</label>
     <input type="text" id="unidade" placeholder="Delegacia da Receita Federal do Brasil em Salvador (DRF/SDR)">
-    <label for="equipe">Equipe/setor de exercício (opcional; entra como “e em exercício na …”)</label>
-    <input type="text" id="equipe" placeholder="Equipe de Gestão do Crédito Tributário e do Direito Creditório 2">
-    <label for="tipo">Tipo de demanda (pergunta 10 do SeCI)</label>
-    <select id="tipo"><option value="pedido">Pedido de autorização</option><option value="consulta">Consulta</option></select>
-    <label class="chk" id="lblConv"><input type="checkbox" id="converter"> Incluir parágrafo informando que a consulta será tratada como pedido de autorização (atividade de natureza continuada)</label>
-    <label class="chk"><input type="checkbox" id="incluirEnc" checked> Incluir encaminhamento à Comissão de Ética (linha da ementa e parágrafo final)</label>
-    <label>Enquadramento no art. 5º da Lei nº 12.813/2013 (opcional – entra na ementa e no encaminhamento)</label>
-    <div id="incisos" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+    <div id="camposModelo"></div>
+    <div id="opcionais"></div>
     <div id="lblTermo">
       <label class="chk"><input type="checkbox" id="termo"> Condicionar a autorização à assinatura de Termo de Compromisso perante a Comissão de Ética e a chefia imediata (entra na conclusão do parecer e habilita a geração do Termo)</label>
       <label for="compromissos">Compromissos específicos desta autorização (um por linha; entram no Termo depois dos deveres gerais)</label>
@@ -177,23 +175,34 @@ nav.tabs button.on{background:var(--acc);color:#fff}
       <div class="row"><div><label for="cidade">Cidade (local de assinatura do Termo)</label><input type="text" id="cidade" placeholder="Salvador/BA"></div>
       <div><label for="protocoloSeci">Protocolo SeCI (opcional)</label><input type="text" id="protocoloSeci" placeholder="00096.000000/2026-00"></div></div>
     </div>
-    <details id="resumoBox">
+    <details id="maisBox" style="margin-top:10px">
+      <summary>Mais opções do parecer</summary>
+      <label for="equipe">Equipe/setor de exercício (opcional; entra como “e em exercício na …”)</label>
+      <input type="text" id="equipe" placeholder="Equipe de Gestão do Crédito Tributário e do Direito Creditório 2">
+      <label for="tipo">Tipo de demanda (pergunta 10 do SeCI)</label>
+      <select id="tipo"><option value="pedido">Pedido de autorização</option><option value="consulta">Consulta</option></select>
+      <label class="chk" id="lblConv"><input type="checkbox" id="converter"> Incluir parágrafo informando que a consulta será tratada como pedido de autorização (atividade de natureza continuada)</label>
+    <label class="chk"><input type="checkbox" id="incluirEnc" checked> Incluir encaminhamento à Comissão de Ética (linha da ementa e parágrafo final)</label>
+    <label>Enquadramento no art. 5º da Lei nº 12.813/2013 (opcional – entra na ementa e no encaminhamento)</label>
+    <div id="incisos" style="display:flex;gap:12px;flex-wrap:wrap"></div>
+          <details id="resumoBox">
       <summary>Ressalvas gerais – “Em resumo, o servidor deve…” (item-padrão do parecer)</summary>
       <label class="chk"><input type="checkbox" id="resumo" checked> Incluir a lista de deveres antes da conclusão</label>
       <div id="resumoItens" style="margin-left:18px"></div>
       <label class="chk"><input type="checkbox" id="novaConsulta" checked> Incluir o registro de que alteração na situação exige nova consulta</label>
     </details>
-    <details id="seciBox" open>
-      <summary>Formulário SeCI – respostas do servidor (transcritas no parecer)</summary>
+    
+    </details>
+    <details id="seciBox" style="margin-top:6px">
+      <summary>Respostas do formulário SeCI <span id="seciStatus" class="hint"></span></summary>
       <div id="seciPerguntas"></div>
       <div id="atencao"></div>
     </details>
-    <div id="camposModelo"></div>
-    <div id="opcionais"></div>
+    
   </div>
 
   <div class="card">
-    <details id="cfgBox">
+  <details id="cfgBox">
       <summary>Configurações da unidade (ficam salvas neste navegador)</summary>
       <label for="sigla">Sigla do parecer</label>
       <input type="text" id="sigla" data-cfg>
@@ -694,7 +703,12 @@ async function lerArquivo(f){
                          : `${f.name}: texto lido, mas as perguntas do SeCI não foram reconhecidas; o conteúdo foi colocado na pergunta 2. Confira no passo 3.`) + extra;
   } catch (e){ info.textContent = "Não foi possível ler " + f.name + ": " + (e.message || e); }
 }
+function statusSeci(){
+  const n = [1,2,3,4,5,6,7,8,9].filter(i => $("q" + i).value.trim()).length;
+  $("seciStatus").textContent = n ? `- ${n} de 9 preenchidas (clique para conferir ou editar)` : "- ainda vazias";
+}
 function avisos(){
+  statusSeci();
   const sim = i => /^\s*sim\b/i.test($("q" + i).value);
   const a = [];
   if (sim(7)) a.push("Declarou acesso a informações sigilosas ou privilegiadas (pergunta 7): avalie o inciso I do art. 5º.");
@@ -1058,8 +1072,27 @@ function render(){
   }
   if (!vari) h += '<p style="margin-top:30px;color:#777;font-family:system-ui;font-size:14px">Escolha a atividade e a conclusão para ver o parecer.</p>';
   $("previa").innerHTML = h;
-  $("pend").textContent = pend ? `${pend} campo(s) por preencher – aparecem destacados em amarelo` : "";
+  const rotulos = [...new Set(B.flatMap(b => b.x ? [...b.x.matchAll(/\u0001\[(.*?)\]\u0002/g)].map(m => m[1]) : []))];
+  $("pend").innerHTML = pend ? `Falta preencher (clique para ir ao campo): ` + rotulos.map(r => `<a class="pchip" data-r="${escH(r)}">${escH(r.toLowerCase())}</a>`).join(" · ") : "✓ Nada pendente";
 }
+/* clicar em um campo amarelo (na prévia) ou na lista de pendências leva ao campo que o preenche */
+const ALVO_CAMPO = [[/^n[ºo°]?$/i, "numero"], [/^ano$/i, "data"], [/^data$/i, "data"], [/^processo$/i, "processo"], [/nome do servidor/i, "nome"], [/^cargo$|sigla do cargo/i, "cargoSel"],
+  [/unidade/i, "unidade"], [/matr[íi]cula/i, "matricula"], [/^cidade$/i, "cidade"], [/respostas do formul/i, "q2"], [/signat[áa]rio/i, "#cfgBox"], [/^atividade$/i, "busca"]];
+function focarCampo(rot){
+  const t = rot.replace(/[\[\]]/g, "").trim();
+  let el = null;
+  for (const [re, id] of ALVO_CAMPO) if (re.test(t)){ el = id[0] === "#" ? document.querySelector(id) : $(id); break; }
+  if (!el){   // campo próprio do modelo: procura o rótulo igual
+    for (const l of document.querySelectorAll("#camposModelo label")){ if (norm(l.textContent).startsWith(norm(t))){ el = l.nextElementSibling; break; } }
+  }
+  if (!el) return;
+  for (let d = el; d; d = d.parentElement) if (d.tagName === "DETAILS") d.open = true;
+  el.scrollIntoView({behavior: "smooth", block: "center"});
+  const alvo = el.tagName === "DETAILS" ? (el.querySelector("input") || el) : el;
+  setTimeout(() => { try { alvo.focus({preventScroll: true}); } catch(e){} alvo.classList.add("flash"); setTimeout(() => alvo.classList.remove("flash"), 1500); }, 250);
+}
+$("previa").addEventListener("click", e => { const m = e.target.closest("mark"); if (m) focarCampo(m.textContent); });
+$("pend").addEventListener("click", e => { const a = e.target.closest("a.pchip"); if (a) focarCampo(a.dataset.r); });
 
 /* ---------- DOCX ---------- */
 function runsXml(x, base){
@@ -1238,10 +1271,23 @@ $("atividade").onchange = e => selecionarAtividade(e.target.value);
 $("cargoSel").onchange = () => { $("cargoOutro").style.display = $("cargoSel").value === "outro" ? "" : "none"; render(); };
 $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "consulta" ? "" : "none"; render(); };
 for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta","compromissos","cidade","protocoloSeci"]) $(id).addEventListener("input", render);
-$("btnDocx").onclick = baixar;
+$("btnDocx").onclick = () => { baixar(); try { const n = $("numero").value.trim(), u = JSON.parse(localStorage.getItem("parecerUltimos") || "{}"); if (/^\d+$/.test(n)){ u.numero = n; localStorage.setItem("parecerUltimos", JSON.stringify(u)); } } catch(e){} };
 $("btnTermo").onclick = baixarTermo;
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
 const hoje = () => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; };
+const ULT_IDS = ["cidade"];   // só o que é do usuário (local de assinatura); unidade, equipe, cargo e gênero mudam a cada consulente
+function restaurarUltimos(){
+  try {
+    const u = JSON.parse(localStorage.getItem("parecerUltimos") || "{}");
+    for (const id of ULT_IDS) if (u[id] !== undefined && !$(id).value.trim()) $(id).value = u[id];
+    if (u.numero && /^\d+$/.test(u.numero)) $("numero").placeholder = "próximo: " + (+u.numero + 1);
+  } catch(e){}
+}
+function salvarUltimos(){
+  try { const u = JSON.parse(localStorage.getItem("parecerUltimos") || "{}"); for (const id of ULT_IDS) u[id] = $(id).value; localStorage.setItem("parecerUltimos", JSON.stringify(u)); } catch(e){}
+}
+for (const id of ULT_IDS) $(id).addEventListener("change", salvarUltimos);
+$("cidade").addEventListener("input", salvarUltimos);
 function novaAnalise(){
   const ids = ["consulta","numero","processo","nome","matricula","unidade","equipe","compromissos","cidade","protocoloSeci","cargoTxt","cargoSig","q1","q2","q3","q4","q5","q6","q7","q8","q9"];
   const temDados = ids.some(id => $(id).value.trim()) || atv;
@@ -1259,6 +1305,7 @@ function novaAnalise(){
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
+  restaurarUltimos();
   avisos();
   selecionarAtividade(null); // também refaz a lista, os precedentes e a prévia
   window.scrollTo({top: 0, behavior: "smooth"}); $("consulta").focus({preventScroll: true});
@@ -1277,6 +1324,7 @@ DEVERES.forEach((_, j) => $("dev" + j).addEventListener("input", render));
 $("secoes").checked = cfg.secoes !== false;
 $("secoes").oninput = e => { cfg.secoes = e.target.checked; salvarCfg(); render(); };
 listarPrecedentes();
+restaurarUltimos(); statusSeci();
 montarCfg(); listarAtividades(); render();
 
 /* ---------- biblioteca da COGER: pasta sincronizada do SharePoint, lida e indexada no navegador ---------- */

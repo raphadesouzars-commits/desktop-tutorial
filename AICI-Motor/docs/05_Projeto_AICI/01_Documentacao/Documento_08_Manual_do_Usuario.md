@@ -8,7 +8,7 @@ O AICI lê o PDF da consulta do SeCI, mostra os fatos, sugere a atividade, procu
 
 Há duas abas:
 
-- **Gerador de Parecer:** funciona sozinha e sem internet. Você escolhe a atividade, preenche os dados e gera o Word.
+- **Gerador de Parecer:** funciona sozinha e sem internet. Envie o PDF do SeCI (dados e respostas se preenchem sozinhos), escolha a atividade e gere o Word. A tela mostra só o essencial: **"Mais opções do parecer"** e **"Respostas do formulário SeCI"** ficam recolhidas (abra para conferir ou editar). Em **"Falta preencher"**, no alto, e nos **campos amarelos** da prévia, **clique para ir direto ao campo** que falta. O local de assinatura (cidade) é lembrado, e o campo do nº sugere o próximo número.
 - **Análise Inteligente:** tem **dois modos**:
   - **Local (padrão, não instala nada):** a análise acontece no próprio navegador. Lê o PDF do SeCI, mostra os fatos, sugere a atividade, mostra precedentes da CGU parecidos e, se você quiser, prepara o prompt para o Copilot Chat. Consulta a biblioteca de pareceres da COGER **se você conectar a pasta sincronizada do SharePoint** (item 3.0).
   - **Motor AICI (avançado):** usa um programa em Python, que precisa estar instalado e ligado, e **consulta a biblioteca de pareceres, precedentes e normativos da COGER**.

@@ -76,6 +76,7 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF052 | Aplicar as sugestões da etapa 1 somente por ação do usuário | M | "Usar esta atividade", "＋ atividade adicional" e "Marcar incisos" são botões; nada é aplicado sozinho | Implementado | Verificado no navegador |
 | RF053 | Base ampliada de precedentes da CGU (SeCI): todos os 123 casos da RFB (2014 a 2026) embutidos no gerador e os 2.576 casos de todos os órgãos como arquivos de biblioteca | S | Um trecho por caso, começando por "Protocolo SeCI nº ..."; título com protocolo, órgão e resultado; peso COGER > CGU/RFB > CGU outros órgãos; vários casos do mesmo arquivo podem aparecer | Implementado | Testes `test_precedentes_cgu_um_trecho_por_caso`; verificado no navegador (2.576 casos indexados em menos de 1 s; busca em cerca de 5 ms). Dados públicos baixados da API de busca do SeCI em 25/11/2026 |
 | RF054 | Atualizar a base da CGU por rotina | C | `parecer/atualizar_precedentes.py [--md pasta]` baixa os casos (com pausa entre páginas) e regenera o JSON da RFB e os arquivos Markdown | Implementado | Execução manual; agendamento periódico planejado |
+| RF055 | Preenchimento guiado no gerador: só os campos essenciais visíveis; "Mais opções" e "Respostas do formulário SeCI" recolhidas (com contagem de respostas preenchidas); campos pendentes clicáveis (na prévia e na lista "Falta preencher") que levam ao campo; local de assinatura lembrado; sugestão do próximo nº do parecer | S | O formulário vazio cai de cerca de 2.770 para cerca de 1.070 px de altura; clicar em `[PROCESSO]` na prévia leva ao campo; ao reabrir, a cidade é lembrada e o nº mostra "próximo: N+1" | Implementado | Verificado no navegador. Unidade, equipe, cargo e tratamento **não** são lembrados (mudam a cada consulente) |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -100,10 +101,10 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 47 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF054 |
+| Implementado | 48 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF055 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **54** | |
+| **Total** | **55** | |
 
 "Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 
