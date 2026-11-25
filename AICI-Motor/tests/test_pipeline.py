@@ -142,7 +142,7 @@ def test_fluxo_completo_offline(settings, pdf_consulta, monkeypatch):
         titulos = [s["titulo"] for s in a["minuta"]["secoes"]]
         assert titulos == ["I. RELATÓRIO", "II. FUNDAMENTAÇÃO", "III. CONCLUSÃO"]
         assert all(p["fontes"] for s in a["minuta"]["secoes"] for p in s["paragrafos"])   # toda frase com origem
-        r = c.post("/gerar-parecer", json={"consulta_id": cid, "numero": "300", "ano": "2026"})
+        r = c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "numero": "300", "ano": "2026"})
         assert r.status_code == 200 and r.headers["content-type"].startswith("application/vnd.openxmlformats")
         arq = settings.caminho("output") / f"consulta_{cid}" / "parecer_300_2026.docx"
         d = docx.Document(str(arq)); txt = "\n".join(p.text for p in d.paragraphs)
@@ -150,13 +150,13 @@ def test_fluxo_completo_offline(settings, pdf_consulta, monkeypatch):
             assert h in txt
         assert "{{" not in txt and "}}" not in txt
         # decisão humana: o parecerista troca a conclusão -> a conclusão e o aviso mudam
-        r2 = c.post("/gerar-parecer", json={"consulta_id": cid, "resultado": "conflito", "numero": "301", "ano": "2026"})
+        r2 = c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "resultado": "conflito", "numero": "301", "ano": "2026"})
         d2 = docx.Document(str(settings.caminho("output") / f"consulta_{cid}" / "parecer_301_2026.docx"))
         assert "configura situação de conflito de interesses" in "\n".join(p.text for p in d2.paragraphs)
         # termo só para risco mitigável; despacho sempre
-        assert c.post("/gerar-parecer", json={"consulta_id": cid, "documento": "termo", "resultado": "conflito"}).status_code == 422
-        assert c.post("/gerar-parecer", json={"consulta_id": cid, "documento": "termo", "resultado": "sem_conflito_ressalvas", "numero": "300", "ano": "2026"}).status_code == 200
-        assert c.post("/gerar-parecer", json={"consulta_id": cid, "documento": "despacho", "destino": "a Comissão de Ética"}).status_code == 200
+        assert c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "documento": "termo", "resultado": "conflito"}).status_code == 422
+        assert c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "documento": "termo", "resultado": "sem_conflito_ressalvas", "numero": "300", "ano": "2026"}).status_code == 200
+        assert c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "documento": "despacho", "destino": "a Comissão de Ética"}).status_code == 200
         ind = c.get("/indicadores").json()
         assert ind["total_consultas"] == 1 and ind["total_pareceres"] == 2 and ind["por_atividade"][0]["n"] == 2
         assert (settings.caminho("metrics") / "metricas.jsonl").read_text().count("\n") == 2
@@ -171,9 +171,9 @@ def test_api_validacoes_e_token(settings, pdf_consulta, monkeypatch):
         assert c.post("/upload", files={"arquivo": ("x.pdf", b"MZ nao eh pdf", "application/pdf")}, headers=h).status_code == 400
         assert c.post("/analisar", json={"consulta_id": 999}, headers=h).status_code == 404
         cid = c.post("/upload", files={"arquivo": ("c.pdf", pdf_consulta, "application/pdf")}, headers=h).json()["consulta_id"]
-        assert c.post("/gerar-parecer", json={"consulta_id": cid}, headers=h).status_code == 409   # ainda não analisada
+        assert c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid}, headers=h).status_code == 409   # ainda não analisada
         assert c.post("/analisar", json={"consulta_id": cid}, headers=h).status_code == 200
-        assert c.post("/gerar-parecer", json={"consulta_id": cid, "atividade_id": "inexistente"}, headers=h).status_code == 422
+        assert c.post("/gerar-parecer", json={"validado": True, "consulta_id": cid, "atividade_id": "inexistente"}, headers=h).status_code == 422
 
 
 def test_cors_do_html_aberto_como_arquivo(settings, monkeypatch):
@@ -329,3 +329,25 @@ def test_regras_coger_sempre_no_contexto(settings):
     assert regras and "Categorias válidas" in regras.texto
     ctx, mapa = C.montar_contexto("caso", [_t("normativo", 1)], [_t("precedente", 1)], [], [], regras=regras)
     assert "REGRAS INSTITUCIONAIS DA COGER" in ctx and mapa["R1"].fonte == "regras_coger.md"
+
+
+# ---------------------------------------------------------------- revisão humana obrigatória e auditoria da IA
+def test_geracao_exige_validacao_humana(settings, pdf_consulta, monkeypatch):
+    monkeypatch.delenv("AICI_TOKEN", raising=False)
+    with TestClient(_app(settings)) as c:
+        cid = c.post("/upload", files={"arquivo": ("c.pdf", pdf_consulta, "application/pdf")}).json()["consulta_id"]
+        c.post("/analisar", json={"consulta_id": cid})
+        r = c.post("/gerar-parecer", json={"consulta_id": cid})
+        assert r.status_code == 422 and "Revisão humana" in r.json()["detail"]
+        assert c.post("/gerar-parecer", json={"consulta_id": cid, "validado": True}).status_code == 200
+
+
+def test_auditoria_das_chamadas_de_ia(tmp_path):
+    log = tmp_path / "aud.jsonl"
+    p = C.AuditedProvider(C.MockProvider({"x": "resposta"}), log)
+    assert p.usa_ia and p.completar("instrução x", "entrada mascarada [CPF]") == "resposta"
+    with pytest.raises(C.ErroIA):
+        p.completar("outra", "e")
+    linhas = [json.loads(l) for l in log.read_text(encoding="utf8").splitlines()]
+    assert linhas[0]["ok"] and linhas[0]["saida"] == "resposta" and linhas[0]["entrada"] == "entrada mascarada [CPF]"
+    assert not linhas[1]["ok"] and "erro" in linhas[1]

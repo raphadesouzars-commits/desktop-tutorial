@@ -129,6 +129,8 @@ class Motor:
 
     # ------------------------------------------------------------ documentos
     def gerar_documento(self, pedido: PedidoParecer) -> tuple[Path, str]:
+        if not pedido.validado:
+            raise ErroNegocio("Revisão humana obrigatória: confirme (validado=true) que fatos, enquadramento, fontes e compromissos foram revisados.")
         a = self._analise(pedido.consulta_id)
         cid = pedido.consulta_id
         aid = pedido.atividade_id or (a.classificacao.escolhida.id if a.classificacao.escolhida else "generico")

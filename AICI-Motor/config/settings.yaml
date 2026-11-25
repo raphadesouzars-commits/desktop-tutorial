@@ -44,6 +44,9 @@ ocr:
 ia:
   provider: offline              # offline (sem IA) | copilot (Copilot Studio/gateway) | azure (Azure OpenAI) | openai | mock (testes)
   anonimizar: true               # mascara CPF, matrícula, telefone e e-mail antes de enviar à IA
+  auditoria:                     # trilha de cada chamada à IA, para o curador (Port. RFB 647/2026, arts. 12 e 19)
+    habilitada: true
+    registrar_conteudo: true     # grava prompt e resposta (já mascarados) em metrics/ia_auditoria.jsonl
   temperatura: 0.1
   copilot:
     # Preencha com o endpoint/gateway homologado pela RFB. O token NUNCA vai neste arquivo:

@@ -1314,7 +1314,7 @@ async function aiBaixar(doc){
   try {
     const ano = (($("data").value || "").slice(0, 4)) || String(new Date().getFullYear());
     const r = await aiFetch("/gerar-parecer", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify({
-      consulta_id: AI.cid, documento: doc, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value, numero: $("numero").value.trim(), ano})});
+      consulta_id: AI.cid, documento: doc, validado: $("aiValidado").checked, atividade_id: $("aiAtiv").value, resultado: $("aiRes").value, numero: $("numero").value.trim(), ano})});
     const cd = r.headers.get("Content-Disposition") || "", mm = cd.match(/filename\*?=(?:UTF-8'')?"?([^";]+)/i);
     const a = document.createElement("a"); a.href = URL.createObjectURL(await r.blob()); a.download = mm ? decodeURIComponent(mm[1]) : doc + ".docx";
     document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 4000);

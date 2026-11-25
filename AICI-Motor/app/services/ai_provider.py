@@ -177,6 +177,33 @@ class OpenAIProvider(HTTPProvider):
         return h
 
 
+class AuditedProvider(AIProvider):
+    """Registra cada chamada à IA em metrics/ia_auditoria.jsonl (RNF003/RNF004; Port. RFB 647/2026, art. 12, parágrafo único e art. 19):
+    quando, qual provedor, tamanho e, se `registrar_conteudo`, o prompt e a resposta (já com identificadores mascarados), para o curador."""
+
+    def __init__(self, interno: AIProvider, arquivo, registrar_conteudo: bool = True):
+        self.interno, self.arquivo, self.conteudo = interno, arquivo, registrar_conteudo
+        self.nome, self.usa_ia = interno.nome, interno.usa_ia
+
+    def completar(self, sistema, usuario, json_mode=False):
+        from datetime import datetime
+        import pathlib
+        reg = {"quando": datetime.now().isoformat(timespec="seconds"), "provider": self.nome, "chars_entrada": len(sistema) + len(usuario)}
+        try:
+            r = self.interno.completar(sistema, usuario, json_mode)
+            reg.update(ok=True, chars_saida=len(r))
+            if self.conteudo:
+                reg.update(sistema=sistema, entrada=usuario, saida=r)
+            return r
+        except Exception as e:
+            reg.update(ok=False, erro=str(e)[:300])
+            raise
+        finally:
+            arq = pathlib.Path(self.arquivo); arq.parent.mkdir(parents=True, exist_ok=True)
+            with arq.open("a", encoding="utf8") as f:
+                f.write(json.dumps(reg, ensure_ascii=False) + "\n")
+
+
 def criar_provider(settings) -> AIProvider:
     nome = settings.get("ia.provider", "offline")
     t = float(settings.get("ia.temperatura", 0.1))
@@ -187,7 +214,10 @@ def criar_provider(settings) -> AIProvider:
     classes = {"copilot": CopilotProvider, "azure": AzureOpenAIProvider, "openai": OpenAIProvider}
     if nome not in classes:
         raise ErroIA(f"ia.provider desconhecido: {nome} (use offline, mock, copilot, azure ou openai)")
-    return classes[nome](settings.get(f"ia.{nome}", {}) or {}, t)
+    prov = classes[nome](settings.get(f"ia.{nome}", {}) or {}, t)
+    if settings.get("ia.auditoria.habilitada", True):
+        return AuditedProvider(prov, settings.caminho("metrics") / "ia_auditoria.jsonl", bool(settings.get("ia.auditoria.registrar_conteudo", True)))
+    return prov
 
 
 # ------------------------------------------------------------------ contexto

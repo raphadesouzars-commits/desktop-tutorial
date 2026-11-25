@@ -110,3 +110,4 @@ class PedidoParecer(BaseModel):
     numero: str = ""
     ano: str = ""
     destino: str = ""                            # despacho
+    validado: bool = False                       # o parecerista revisou fatos, enquadramento, fontes e compromissos (obrigatório)
