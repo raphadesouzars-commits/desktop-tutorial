@@ -33,6 +33,7 @@ Para cada cenário: entrada, resultado esperado e critério.
 | C9 | Conclusão divergente do modelo | Parecerista troca a conclusão sugerida | Conclusão e ementa mudam; aviso para revisar os fundamentos | Aviso presente |
 | C10 | Resposta do Copilot com fonte inventada | Colar resposta com marcador inexistente | Parágrafo descartado; aviso | Nenhum fundamento sem origem na minuta |
 | C11 | Resposta do Copilot fora do formato | Colar texto sem JSON | Recusa com orientação | Mensagem clara |
+| C13 | Etapa 1 do Copilot | Caso com vocabulário diferente do dos pareceres (ex.: "professor universitário" x "magistério"); aplicar a resposta da etapa 1 | Termos refazem a busca; atividade fora da lista é descartada; parecerista confirma | Precisão dos precedentes **com** a etapa 1 maior ou igual à **sem** ela, nos mesmos casos; registrar o tempo adicional |
 | C12 | Tentativa de gerar sem revisão | Chamar a geração sem validação | Recusada (HTTP 422) | Bloqueio na tela e na API |
 
 ## 4. Protocolo de medição

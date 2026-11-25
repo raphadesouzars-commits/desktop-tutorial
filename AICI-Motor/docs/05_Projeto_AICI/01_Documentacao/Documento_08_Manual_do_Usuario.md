@@ -46,6 +46,12 @@ Há duas abas:
 
 No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nome), as regras da COGER, trechos da Lei nº 12.813/2013 e da Portaria Interministerial nº 333/2013, precedentes da CGU parecidos e o modelo da atividade. Se a **biblioteca da COGER estiver conectada**, leva também os pareceres, precedentes e normativos mais parecidos, com os nomes de servidores mascarados no cabeçalho (nomes no corpo do texto podem permanecer). **Não há bloqueio técnico de revisão no modo local**: a revisão é sua, no gerador.
 
+### 3.0b Duas etapas com o Copilot (recomendado para casos difíceis)
+- **Etapa 1 - entender o caso (opcional):** em **Copilot, etapa 1**, clique em **Gerar prompt da etapa 1**, copie, cole no Copilot Chat (conta corporativa) e traga a resposta (JSON) para o campo indicado; clique em **Aplicar entendimento**. O Copilot indica a atividade, termos de busca (sinônimos e vocabulário dos pareceres), incisos do art. 5º, fatos e pontos de atenção. À direita aparece o card **Entendimento do Copilot**: **você confirma** (botões "Usar esta atividade", "＋ atividade", "Marcar incisos") e pode **editar os termos de busca**; a lista de pareceres e precedentes é refeita com eles.
+- **Etapa 2 - fundamentação:** o prompt da etapa 2 já leva o entendimento da etapa 1 e os pareceres/precedentes melhor escolhidos. Siga o item 5 de 3.0.
+- Pule a etapa 1 quando o caso for simples ou quando a busca já trouxer bons resultados. Se a resposta da etapa 1 vier errada, use **Descartar entendimento**.
+- A atividade fora da lista, incisos inexistentes e termos exagerados são descartados automaticamente. A decisão continua sua.
+
 > Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 
 ### 3.1 Ligar o motor

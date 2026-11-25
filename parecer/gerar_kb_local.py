@@ -24,7 +24,7 @@ def main():
     port = limpa(pdf_texto(MOTOR / "knowledge/normativos/Portarias/Portaria_Interministerial_333_2013.pdf"))
     k = port.find("Art. 1")
     kb = {
-        "prompts": {n: (MOTOR / "prompts" / f"{n}.txt").read_text(encoding="utf8") for n in ("reasoning", "draft")},
+        "prompts": {n: (MOTOR / "prompts" / f"{n}.txt").read_text(encoding="utf8") for n in ("reasoning", "draft", "understand")},
         "regras": (MOTOR / "knowledge/regras_coger.md").read_text(encoding="utf8"),
         "normativos": [
             {"titulo": "Lei nº 12.813/2013 (arts. 3º a 5º)", "fonte": "normativos/Lei_12813_2013/Lei_12813_2013.pdf", "texto": limpa(lei[i:j])},

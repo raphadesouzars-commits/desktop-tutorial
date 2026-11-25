@@ -69,6 +69,11 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF045 | Conectar a biblioteca da COGER (pasta sincronizada do SharePoint) e indexá-la no navegador | S | Lê PDF, DOCX, TXT e MD de `01_`, `02_` e `03_`; ignora `_Duplicados_Revisar` e demais pastas; mostra progresso e permite cancelar; reaproveita o que não mudou; guarda o índice no navegador | Implementado (testado com biblioteca sintética) | Verificado no navegador com PDF, DOCX e TXT. **Desempenho com as centenas de PDFs reais não medido** |
 | RF046 | Pesquisar pareceres, precedentes e normativos da biblioteca conectada e mostrá-los com origem e termos em comum | S | Lista com título, ano, arquivo e trecho | Implementado | Idem |
 | RF047 | Levar ao prompt do Copilot os trechos da biblioteca (marcador [A]), com nomes de servidores mascarados no cabeçalho | S | Trechos entram no prompt, citáveis; "Servidor: ..." vira [SERVIDOR] | Implementado | Nomes no corpo do texto podem permanecer |
+| RF048 | Etapa 1 com o Copilot: gerar o prompt para entender o caso (caso mascarado + lista fechada de categorias) dentro do limite de caracteres | S | Prompt com instruções, caso e a lista "id: atividade"; o texto das respostas é encurtado se necessário para caber | Implementado | `prompts/understand.txt`; verificado no navegador (≈ 6.000 caracteres, sem nome, CPF ou matrícula) |
+| RF049 | Validar a resposta da etapa 1 | S | JSON obrigatório; atividade e atividades adicionais só da lista (fora da lista: descartada com aviso); incisos só algarismos romanos I a XI; termos saneados (máx. 20, 60 caracteres) | Implementado | Verificado no navegador |
+| RF050 | Usar os termos da etapa 1 para refazer a busca nos precedentes da CGU e na biblioteca, com termos editáveis | S | Documento com vocabulário do termo sobe na lista (ex.: de 6,3 para 22,2 de pontuação e da 3ª para a 1ª posição em teste) | Implementado | Verificado em biblioteca sintética. **Ganho com casos reais não medido** |
+| RF051 | Levar o entendimento da etapa 1 (incisos, fatos, pontos de atenção, informações que faltam) ao prompt da etapa 2 | S | Aparece no caso concreto do prompt, como sugestão a confirmar | Implementado | Verificado no navegador |
+| RF052 | Aplicar as sugestões da etapa 1 somente por ação do usuário | M | "Usar esta atividade", "＋ atividade adicional" e "Marcar incisos" são botões; nada é aplicado sozinho | Implementado | Verificado no navegador |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -93,10 +98,10 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 40 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF047 |
+| Implementado | 45 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF052 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **47** | |
+| **Total** | **52** | |
 
 "Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 

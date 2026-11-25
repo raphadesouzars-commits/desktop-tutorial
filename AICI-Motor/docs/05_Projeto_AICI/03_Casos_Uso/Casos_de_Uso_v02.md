@@ -93,7 +93,8 @@
 1. Na aba "Análise Inteligente" (modo Local), o parecerista escolhe o PDF e aciona "Analisar consulta".
 2. O navegador lê o arquivo, extrai o servidor e as respostas 1 a 10, sugere a atividade e os precedentes da CGU e preenche o gerador.
 3. O parecerista confere os fatos, ajusta a atividade/situação e marca os precedentes a citar.
-4. (Opcional) Gera o prompt, leva ao Copilot Chat da conta corporativa, cola a resposta de volta; o navegador valida as fontes e aplica a fundamentação ao parecer.
+4. (Opcional, etapa 1) Gera o prompt de entendimento, leva ao Copilot Chat, cola a resposta; o navegador valida (atividade da lista, incisos, termos), mostra o entendimento e **refaz a busca** com os termos do Copilot; o parecerista confirma ou ajusta a atividade e os termos.
+4a. (Opcional, etapa 2) Gera o prompt da fundamentação (já com o entendimento da etapa 1 e a busca refinada), leva ao Copilot Chat, cola a resposta; o navegador valida as fontes e aplica a fundamentação ao parecer.
 5. Segue ao gerador, revisa e gera o Word.
 
 **Alternativas:** PDF digitalizado (sem texto): aviso, preencher manualmente; resposta inválida: recusada; fonte inexistente: parágrafo descartado.

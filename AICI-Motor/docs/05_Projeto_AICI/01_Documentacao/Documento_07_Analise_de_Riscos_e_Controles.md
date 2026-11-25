@@ -25,6 +25,7 @@ Escalas: probabilidade (B baixa, M média, A alta) e impacto (B, M, A). Exposiç
 | 15 | Texto livre do servidor conter dados que o mascaramento não alcança | Mascaramento por padrões | M | M | Aviso nas limitações; auditoria | Decisão da TI sobre o mascaramento; orientação ao parecerista | Cotec / COGER |
 | 17 | No modo local, o parecer sair sem revisão suficiente (sem bloqueio técnico) e sem consulta à biblioteca de pareceres | Modo sem motor | M | M | Conferência de coerência com aviso de texto do Copilot; fontes validadas; precedentes da CGU; Manual do Usuário | Avaliar com a Cotec bloqueio equivalente; levar a biblioteca ao modo local (arquivo exportado) | Concepção / Cotec |
 | 18 | Índice da biblioteca (trechos de pareceres, com dados pessoais) guardado no navegador do usuário e a pasta sincronizada no computador | Conexão da biblioteca no modo local | M | A | Dados ficam na estação institucional; botão "Esquecer biblioteca"; nomes de servidores mascarados no prompt | Confirmar com a TI se a sincronização e o armazenamento no navegador são permitidos; criptografia de disco; política de retenção | Cotec |
+| 19 | Etapa 1 do Copilot sugerir atividade, incisos ou termos errados e o usuário aceitar sem crítica; caso exposto em duas rodadas | Fluxo em duas etapas | M | M | Validação da resposta (lista fechada, incisos válidos, termos saneados); sugestões só por ação do usuário; termos editáveis; etapa opcional; mascaramento nas duas etapas | Medir o ganho no piloto; incluir as duas rodadas na avaliação da TI | Concepção / Cotec |
 | 16 | Parecer emitido em desacordo com o modelo institucional | Alteração indevida de templates | B | M | Templates e textos institucionais em arquivos controlados | Controle de acesso a `templates/` e `institucional.json` | Coordenação |
 
 ## 2. Matriz de exposição
@@ -32,7 +33,8 @@ Escalas: probabilidade (B baixa, M média, A alta) e impacto (B, M, A). Exposiç
 | | Impacto B | Impacto M | Impacto A |
 |---|---|---|---|
 | **P alta** | | 9 | |
-| **P média** | 12 | 6, 8, 11, 13, 14, 15, 17 | 1, 2, 3, 4, 5, 18 |
+| **P média** | 12 | 6, 8, 11, 13, 14, 15, 17, 19 | 1, 2, 3, 4, 5, 18 |
+
 | **P baixa** | | 16 | 7, 10 |
 
 Prioridade de tratamento: 1 a 5 (impacto alto e probabilidade média), seguidos de 9.

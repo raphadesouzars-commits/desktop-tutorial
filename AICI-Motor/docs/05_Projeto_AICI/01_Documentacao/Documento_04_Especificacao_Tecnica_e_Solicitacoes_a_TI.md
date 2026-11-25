@@ -199,7 +199,7 @@ Contexto: o comunicado da RFB de 24/06/2026 informa que o CTSI autorizou o Copil
 |---|---|---|
 | 8 | Enviar a **Análise de Riscos específica** do Copilot Chat (ou os controles e tratamentos de segurança dela decorrentes) para que o AICI os adote integralmente | |
 | 9 | Informar o número e enviar a **NT Cotec** que homologa o Copilot Chat (o número não estava legível no comunicado) | |
-| 10 | Confirmar se o uso do Copilot Chat **pelo AICI** (prompt gerado pelo sistema, resposta colada de volta) está coberto pela autorização do CTSI ou se exige submissão própria (art. 10 da Portaria RFB nº 647/2026) | |
+| 10 | Confirmar se o uso do Copilot Chat **pelo AICI** (prompt gerado pelo sistema, resposta colada de volta; **em duas etapas**: entender o caso e fundamentar, com o caso mascarado indo duas vezes ao chat) está coberto pela autorização do CTSI ou se exige submissão própria (art. 10 da Portaria RFB nº 647/2026) | |
 | 11 | Informar o **limite de tamanho do prompt** do Copilot Chat e se aceita **arquivos anexos** (tipos, tamanho) e se o conteúdo anexado fica sob as mesmas garantias contratuais | |
 | 12 | O mascaramento de CPF, matrícula, telefone, e-mail e nome continua exigido, ou os controles da Análise de Riscos o dispensam? | |
 | 13 | Existe **acesso programático** ao Copilot (API, agente publicado no Copilot Studio, Power Automate/Graph) que a RFB possa autorizar? Se sim: endpoint, autenticação, formato, limites, registro de chamadas | |

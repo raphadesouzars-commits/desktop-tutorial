@@ -260,8 +260,20 @@ nav.tabs button.on{background:var(--acc);color:#fff}
         <div style="margin-top:8px"><button id="locAnalisar">Analisar consulta</button></div>
         <div id="locMsg" class="hint"></div>
       </div>
+      <div class="card" id="locE1Box" style="display:none">
+        <h2><span class="n">2</span>Copilot, etapa 1: entender o caso (opcional)</h2>
+        <p class="hint">O Copilot Chat lê o caso e devolve a atividade, os termos de busca (sinônimos e vocabulário dos pareceres), os incisos do art. 5º e os pontos de atenção. O gerador usa isso para <b>refazer a busca</b> nos precedentes e na biblioteca. Pode pular esta etapa.</p>
+        <button class="sec" id="locE1Gerar">1. Gerar prompt da etapa 1</button>
+        <div id="locE1Corpo" style="display:none">
+          <label for="locE1Prompt">Prompt da etapa 1 (cole no Copilot Chat com a conta corporativa)</label><textarea id="locE1Prompt" rows="5" readonly></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="sec mini" id="locE1Copiar">Copiar prompt</button><a class="chip" href="https://m365.cloud.microsoft/chat" target="_blank" rel="noopener">Abrir Copilot Chat ↗</a></div>
+          <p class="hint" id="locE1Info"></p>
+          <label for="locE1Resp">2. Cole aqui a resposta do Copilot (o JSON completo)</label><textarea id="locE1Resp" rows="5"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button id="locE1Aplicar">Aplicar entendimento</button><button class="sec" id="locE1Remover" style="display:none">Descartar entendimento</button></div>
+        </div>
+      </div>
       <div class="card" id="locChatBox" style="display:none">
-        <h2><span class="n">2</span>Copilot Chat da RFB (opcional)</h2>
+        <h2><span class="n">3</span>Copilot, etapa 2: fundamentação (opcional)</h2>
         <p class="hint">Quer uma fundamentação mais elaborada? O gerador prepara o texto, você o cola no <b>Copilot Chat com a sua conta corporativa da RFB</b> e traz a resposta de volta. A resposta só entra no parecer depois de conferida (cada fundamento precisa citar uma fonte que foi enviada). Use somente o Copilot Chat corporativo.</p>
         <label class="chk"><input type="radio" name="locModo" value="texto" checked> Prompt completo (cabe na caixa do chat)</label>
         <label class="chk"><input type="radio" name="locModo" value="arquivo"> Prompt curto + arquivo de contexto anexado</label>
@@ -284,7 +296,7 @@ nav.tabs button.on{background:var(--acc);color:#fff}
         </div>
       </div>
       <div class="card" id="locIrBox" style="display:none">
-        <h2><span class="n">3</span>Revisar e gerar o Word</h2>
+        <h2><span class="n">4</span>Revisar e gerar o Word</h2>
         <p class="hint">Confira tudo no gerador (a minuta aparece à direita) e gere o Word. A decisão e a assinatura são suas.</p>
         <button id="locIr">Ir ao gerador de parecer</button>
       </div>
@@ -1243,7 +1255,7 @@ function novaAnalise(){
   for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
   ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
   DEVERES.forEach((_, j) => $("dev" + j).checked = true);
-  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; fundExterno = null; LOC.pacote = null; LOC.aplicado = null; $("locResultado").innerHTML = ""; $("locMsg").innerHTML = ""; $("locArq").value = ""; for (const id of ["locChatBox", "locIrBox", "locPacoteBox"]) $(id).style.display = "none"; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
+  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; fundExterno = null; LOC.pacote = null; LOC.aplicado = null; LOC.e1 = null; LOC.termos = []; $("locE1Resp").value = ""; $("locE1Corpo").style.display = "none"; $("locResultado").innerHTML = ""; $("locMsg").innerHTML = ""; $("locArq").value = ""; for (const id of ["locE1Box", "locChatBox", "locIrBox", "locPacoteBox"]) $(id).style.display = "none"; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
@@ -1359,11 +1371,11 @@ function bibBuscar(consulta, tipo, k){
   for (const i in sc){ const c = BIB.chunks[i]; if (c.tipo !== tipo) continue; const s = sc[i] * (tipo === "normativo" ? 1 : 1.25); if (!melhor[c.fonte] || s > melhor[c.fonte].s) melhor[c.fonte] = {c, s, comuns: q.filter(t => B.tf[i][t])}; }
   return Object.values(melhor).sort((a, b) => b.s - a.s).slice(0, k);
 }
-const bibConsulta = () => [$("q2").value, atv ? atv.nome + " " + (atv.palavrasChave || []).join(" ") : "", $("q3").value].join(" ");
+const bibConsulta = () => [$("q2").value, atv ? atv.nome + " " + (atv.palavrasChave || []).join(" ") : "", $("q3").value, (LOC.termos || []).join(" ")].join(" ");
 const mascaraBib = (t, nome) => anonimizarTxt(t.replace(/((?:Servidor|Servidora|Interessad[oa]|Requerente|Peticionante)\s*:\s*)[^\n]+/gi, "$1[SERVIDOR]"), nome);
 
 /* ---------- modo local (sem motor): análise no navegador + Copilot Chat assistido ---------- */
-const LOC = {pacote: null, aplicado: null};
+const LOC = {pacote: null, aplicado: null, e1: null, termos: []};
 document.querySelectorAll('input[name="aiModoApp"]').forEach(r => r.onchange = () => {
   const m = document.querySelector('input[name="aiModoApp"]:checked').value;
   $("aiModoLocal").style.display = m === "local" ? "" : "none"; $("aiModoMotor").style.display = m === "motor" ? "" : "none";
@@ -1389,17 +1401,18 @@ function precSugeridos(n){
   const its = PRECEDENTES.itens || [];
   const termos = new Set(atv && atv.id !== "generico" ? (atv.palavrasChave || []).map(norm) : []);
   norm($("q2").value).split(/[^a-z0-9]+/).filter(w => w.length >= 7).forEach(w => termos.add(w));
+  (LOC.termos || []).map(norm).filter(t => t.length >= 4).forEach(t => termos.add(t));   // termos da etapa 1 (Copilot)
   return its.map(p => { const t = norm(p.x); let sc = 0; termos.forEach(k => { if (k && t.includes(k)) sc += k.includes(" ") ? 2 : 1; }); return {p, sc}; })
     .filter(o => o.sc >= 2).sort((a, b) => b.sc - a.sc).slice(0, n).map(o => o.p);
 }
 async function locAnalisar(){
   const f = $("locArq").files[0]; if (!f){ locMsg("Escolha o arquivo da consulta.", true); return; }
-  locMsg("Lendo o arquivo…"); fundExterno = null; LOC.aplicado = null; LOC.pacote = null;
+  locMsg("Lendo o arquivo…"); fundExterno = null; LOC.aplicado = null; LOC.pacote = null; LOC.e1 = null; LOC.termos = []; $("locE1Corpo").style.display = "none"; $("locE1Resp").value = ""; $("locE1Remover").style.display = "none";
   await lerArquivo(f);   // reutiliza a leitura do gerador: preenche os dados e as respostas do SeCI e identifica a atividade
   const info = $("arqInfo").textContent;
   if (/^Não foi possível/.test(info)){ locMsg(info, true); return; }
   locMsg(info);
-  $("locChatBox").style.display = ""; $("locIrBox").style.display = ""; $("locPacoteBox").style.display = "none"; $("locResp").value = ""; $("locRemover").style.display = "none";
+  $("locE1Box").style.display = ""; $("locChatBox").style.display = ""; $("locIrBox").style.display = ""; $("locPacoteBox").style.display = "none"; $("locResp").value = ""; $("locRemover").style.display = "none";
   locMostrar();
 }
 $("locAnalisar").onclick = locAnalisar;
@@ -1413,6 +1426,7 @@ function locMostrar(){
   const avs = [...document.querySelectorAll("#atencao .aviso")].map(e => e.textContent);
   let h = "";
   if (avs.length) h += '<div class="card"><h2>Pontos de atenção</h2>' + avs.map(a => '<div class="aviso">' + escH(a) + "</div>").join("") + "</div>";
+  h += locE1Card();
   h += '<div class="card"><h2>Fatos extraídos</h2><table class="ai-t">' + fatos.map(r => `<tr><td>${escH(r[0])}</td><td>${escH(String(r[1]))}</td></tr>`).join("") + "</table>"
     + '<p class="hint">Faltou algo? Complete no gerador (passo 3). A unidade de lotação e o nº do processo normalmente não constam do PDF do SeCI.</p></div>';
   h += `<div class="card"><h2>Atividade e situação</h2><label for="locAtiv">Atividade (enquadramento)</label><select id="locAtiv">`
@@ -1432,6 +1446,7 @@ function locMostrar(){
     + fundExterno.map(p => `<div class="pp">${escH(p.x)}<small>origem: ${escH(p.fontes.join(" · "))}</small></div>`).join("")
     + (LOC.aplicado.lacunas.length ? '<p class="hint"><b>Lacunas apontadas:</b> ' + escH(LOC.aplicado.lacunas.join(" | ")) + "</p>" : "") + "</div>";
   $("locResultado").innerHTML = h;
+  locE1Ligar();
   $("locAtiv").onchange = e => { selecionarAtividade(e.target.value); locMostrar(); };
   if ($("locVar")) $("locVar").onchange = e => { selecionarVariante(e.target.value); locMostrar(); };
   $("locResultado").querySelectorAll("input[data-n]").forEach(c => c.onchange = e => { e.target.checked ? citados.add(e.target.dataset.n) : citados.delete(e.target.dataset.n); render(); });
@@ -1443,6 +1458,13 @@ function locContexto(limite){
   const linhas = [`Atividade pretendida (categoria): ${atv ? rotPadrao(atv) : "[não definida]"}`, `Cargo: ${d.cargo || "[cargo]"}`,
     `Tipo de demanda: ${d.tipo === "pedido" ? "pedido de autorização" : "consulta"}`];
   for (const i of [2, 3, 4, 6, 7, 8, 9]){ const r = $("q" + i).value.trim(); if (r) linhas.push(`${LOC_ROT[i]}: ${an(r.replace(/\s+/g, " "))}`); }
+  if (LOC.e1){
+    const e = LOC.e1;
+    if (e.incisos.length) linhas.push("Incisos do art. 5º que podem estar em jogo (sugestão da etapa 1, a confirmar): " + e.incisos.join(", "));
+    if (e.fatos.length) linhas.push("Fatos relevantes (etapa 1): " + e.fatos.join(" | "));
+    if (e.pontos.length) linhas.push("Pontos de atenção (etapa 1): " + e.pontos.join(" | "));
+    if (e.faltam.length) linhas.push("Informações que faltam no caso: " + e.faltam.join(" | "));
+  }
   const itens = [];
   (KB.normativos || []).forEach(n => itens.push({l: "N", titulo: n.titulo, fonte: n.fonte, texto: n.texto}));
   const qb = bibConsulta();
@@ -1524,6 +1546,68 @@ $("locAplicar").onclick = () => {
 $("locRemover").onclick = () => { fundExterno = null; LOC.aplicado = null; $("locRemover").style.display = "none"; locMsg("Fundamentação do Copilot removida; voltou a do modelo."); render(); locMostrar(); };
 $("locIr").onclick = () => abaAtiva("ger");
 
+/* ---------- etapa 1 com o Copilot: entender o caso (atividade, termos de busca, incisos, pontos de atenção) ---------- */
+const ROMANOS_LEI = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI"];
+function locCasoLinhas(d, maxResp){
+  const an = t => anonimizarTxt(t, d.nome);
+  const linhas = [`Cargo: ${d.cargo || "[cargo]"}`, `Tipo de demanda: ${d.tipo === "pedido" ? "pedido de autorização" : "consulta"}`];
+  for (const i of [2, 3, 4, 6, 7, 8, 9]){ const r = $("q" + i).value.trim(); if (r) linhas.push(`${LOC_ROT[i]}: ${an(r.replace(/\s+/g, " ")).slice(0, maxResp)}`); }
+  return linhas;
+}
+function locE1Montar(limite){
+  const d = dados(), cats = MODELOS.filter(m => m.id !== "generico").map(m => `${m.id}: ${rotPadrao(m)}`).join("\n") + "\ngenerico: nenhuma das anteriores";
+  for (const maxResp of [900, 600, 400, 250]){
+    const p = KB.prompts.understand + "\n\n=== CASO CONCRETO ===\n" + locCasoLinhas(d, maxResp).join("\n") + "\n\n=== CATEGORIAS VÁLIDAS (id: atividade) ===\n" + cats;
+    if (p.length <= limite || maxResp === 250) return p;
+  }
+}
+const locE1Limite = () => Math.max(2000, parseInt($("locLimite").value, 10) || 7500);
+$("locE1Gerar").onclick = () => {
+  try {
+    const p = locE1Montar(locE1Limite());
+    $("locE1Prompt").value = p; $("locE1Corpo").style.display = "";
+    $("locE1Info").textContent = `${p.length} de ${locE1Limite()} caracteres.` + (p.length > locE1Limite() ? " Acima do limite: reduza o limite no campo da etapa 2 ou o texto da consulta." : "");
+  } catch(e){ locMsg(e.message, true); }
+};
+$("locE1Copiar").onclick = async () => { const ok = await copiarTexto($("locE1Prompt").value, $("locE1Prompt")); locMsg(ok ? "Prompt copiado. Cole no Copilot Chat." : "Não consegui copiar automaticamente: selecione o texto e copie (Ctrl+C).", !ok); };
+$("locE1Aplicar").onclick = () => {
+  const t = $("locE1Resp").value.trim(); if (!t){ locMsg("Cole a resposta do Copilot.", true); return; }
+  const m = t.match(/\{[\s\S]*\}/);
+  if (!m){ locMsg("A resposta não contém o JSON pedido. Peça ao Copilot para responder apenas com o JSON do formato indicado.", true); return; }
+  let dado; try { dado = JSON.parse(m[0]); } catch(e){ locMsg("O JSON da resposta está incompleto ou inválido. Copie a resposta inteira (do primeiro { ao último }).", true); return; }
+  const ids = new Set(MODELOS.map(x => x.id)), av = [];
+  const lista = (v, n, max) => (Array.isArray(v) ? v : []).map(x => String(x).replace(/\s+/g, " ").trim()).filter(Boolean).map(x => x.slice(0, max)).slice(0, n);
+  let ativ = ids.has(dado.atividade_id) ? dado.atividade_id : "";
+  if (!ativ){ av.push(dado.atividade_id ? `A atividade "${String(dado.atividade_id).slice(0, 40)}" não está na lista de categorias e foi descartada.` : "A resposta não indicou a atividade."); }
+  const adic = lista(dado.atividades_adicionais, 4, 60).filter(x => ids.has(x) && x !== ativ);
+  const incisos = lista(dado.incisos_art5, 11, 6).map(x => x.toUpperCase().replace(/[^IVX]/g, "")).filter(x => ROMANOS_LEI.includes(x));
+  const termos = [...new Set(lista(dado.termos_busca, 20, 60))];
+  if (!termos.length) av.push("A resposta não trouxe termos de busca; a busca continua como antes.");
+  LOC.e1 = {ativ, adic, incisos: [...new Set(incisos)], fatos: lista(dado.fatos_relevantes, 6, 300), pontos: lista(dado.pontos_de_atencao, 8, 300), faltam: lista(dado.informacoes_faltantes, 8, 300), avisos: av};
+  LOC.termos = termos;
+  $("locE1Remover").style.display = "";
+  locMsg(`Entendimento aplicado: ${termos.length} termo(s) de busca${ativ ? ", atividade sugerida: " + (MODELOS.find(x => x.id === ativ) || {}).nome : ""}. Confira e ajuste abaixo.`);
+  locMostrar();
+};
+$("locE1Remover").onclick = () => { LOC.e1 = null; LOC.termos = []; $("locE1Remover").style.display = "none"; locMsg("Entendimento do Copilot descartado; a busca voltou ao normal."); locMostrar(); };
+function locE1Card(){
+  const e = LOC.e1; if (!e) return "";
+  const nomeDe = id => (MODELOS.find(x => x.id === id) || {nome: id}).nome;
+  const ul = (t, l) => l.length ? `<p class="hint" style="margin-top:8px"><b>${t}</b></p><ul style="margin:2px 0 0;padding-left:18px;font-size:13px">${l.map(x => "<li>" + escH(x) + "</li>").join("")}</ul>` : "";
+  return '<div class="card"><h2>Entendimento do Copilot (etapa 1)</h2><p class="hint">Sugestão do Copilot, não decisão: confira. Os termos abaixo ampliam a busca; edite à vontade (um por linha).</p>'
+    + (e.ativ ? `<p style="margin:6px 0"><b>Atividade sugerida:</b> ${escH(nomeDe(e.ativ))} ${atv && atv.id === e.ativ ? '<span class="ai-ok">(já selecionada)</span>' : '<button class="sec mini" id="locE1UsarAtiv">Usar esta atividade</button>'}</p>` : "")
+    + (e.adic.length ? `<p style="margin:6px 0"><b>Outras atividades no caso:</b> ${e.adic.map(id => `<button class="sec mini" data-add="${escH(id)}">＋ ${escH(nomeDe(id))}</button>`).join(" ")}</p>` : "")
+    + (e.incisos.length ? `<p style="margin:6px 0"><b>Incisos do art. 5º apontados:</b> ${escH(e.incisos.join(", "))} ${e.incisos.some(i => ROMANOS.includes(i)) ? '<button class="sec mini" id="locE1Incisos">Marcar no parecer</button>' : ""}</p>` : "")
+    + `<label for="locTermos">Termos de busca (um por linha)</label><textarea id="locTermos" rows="5">${escH(LOC.termos.join("\n"))}</textarea>`
+    + ul("Fatos relevantes", e.fatos) + ul("Pontos de atenção", e.pontos) + ul("Informações que faltam", e.faltam) + e.avisos.map(a => '<div class="aviso">' + escH(a) + "</div>").join("") + "</div>";
+}
+function locE1Ligar(){
+  const r = $("locResultado");
+  if ($("locTermos")) $("locTermos").onchange = e => { LOC.termos = e.target.value.split("\n").map(x => x.trim()).filter(Boolean).slice(0, 25); locMostrar(); };
+  if ($("locE1UsarAtiv")) $("locE1UsarAtiv").onclick = () => { selecionarAtividade(LOC.e1.ativ); locMostrar(); };
+  r.querySelectorAll("button[data-add]").forEach(b => b.onclick = () => { if (!vari) selecionarAtividade(b.dataset.add); else adicionarExtra(b.dataset.add); b.remove(); });
+  if ($("locE1Incisos")) $("locE1Incisos").onclick = () => { LOC.e1.incisos.forEach(i => { const k = ROMANOS.indexOf(i); if (k >= 0) $("inc" + k).checked = true; }); render(); locMsg("Incisos marcados no parecer."); };
+}
 /* ---------- aba Análise Inteligente: conversa com o motor AICI (Python) ---------- */
 const AI = {cid: null, an: null, minuta: null, cats: null};
 try { $("aiUrl").value = localStorage.getItem("aiciUrl") || "http://127.0.0.1:8765"; } catch(e){ $("aiUrl").value = "http://127.0.0.1:8765"; }
