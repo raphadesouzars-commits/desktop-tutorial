@@ -29,6 +29,8 @@
 | P1 | Carregar o acervo real e verificar a vigência dos normativos | Concepção / Coordenação |
 | P1 | Preencher `regras_coger.md` (seção "A consolidar pela COGER") | Coordenação |
 | P2 | Agendar a atualização periódica da base de precedentes da CGU (`atualizar_precedentes.py --md`) e mostrar a data da última atualização na tela |
+| P1 | Medir o recomendador de atividade e situação com consultas reais do piloto (acerto da 1ª sugestão) e ajustar pesos e palavras-chave; avaliar usar os temas de todos os pareceres da biblioteca como treino |
+| P1 | Levar o recomendador ao motor Python |
 | P1 | Levar a conclusão por atividade do pedido ao motor Python e acrescentar "componentes" aos demais modelos que tratam de mais de uma atividade |
 | P1 | Medir, no piloto, o ganho da etapa 1 do Copilot (precisão dos precedentes com e sem) e o tempo adicional |
 | P2 | Levar a etapa 1 (entender o caso) ao motor Python, com a mesma validação |

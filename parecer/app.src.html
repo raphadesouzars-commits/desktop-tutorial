@@ -132,6 +132,7 @@ nav.tabs button.on{background:var(--acc);color:#fff}
     <select id="atividade" size="7" style="margin-top:6px"></select>
     <p class="hint" id="descAtv"></p>
     <label>Conclusão / situação</label>
+    <p class="hint">Escolha a situação que descreve o caso. As marcadas "parecida com o caso" têm o texto mais próximo do que o servidor pediu. Se nenhuma serve, use "Nenhuma destas situações".</p>
     <div id="variantes"></div>
     <div id="ovrBox"></div>
     <div id="extras"></div>
@@ -176,6 +177,11 @@ nav.tabs button.on{background:var(--acc);color:#fff}
       <div class="row"><div><label for="cidade">Cidade (local de assinatura do Termo)</label><input type="text" id="cidade" placeholder="Salvador/BA"></div>
       <div><label for="protocoloSeci">Protocolo SeCI (opcional)</label><input type="text" id="protocoloSeci" placeholder="00096.000000/2026-00"></div></div>
     </div>
+    <details id="ementaBox" style="margin-top:10px">
+      <summary>Ementa do parecer (editar) <span class="hint">- vem do modelo; edite se precisar</span></summary>
+      <textarea id="ementaTxt" rows="9" placeholder="Escolha a atividade e a situação para ver a ementa"></textarea>
+      <button class="sec mini" id="ementaRestaurar" style="margin-top:6px">Restaurar a ementa do modelo</button>
+    </details>
     <details id="maisBox" style="margin-top:10px">
       <summary>Mais opções do parecer</summary>
       <label for="equipe">Equipe/setor de exercício (opcional; entra como “e em exercício na …”)</label>
@@ -446,6 +452,7 @@ let atv = null, vari = null;
 const valoresCampos = {}; // por id de campo
 const valoresOpc = {};    // por id de opcional
 const extras = [];        // outras atividades do mesmo parecer: {a: modelo, v: variante, rot: como citar}
+let ementaEditada = false;   // true quando o usuário editou a ementa na caixa "Ementa do parecer"
 let fundExterno = null;  // fundamentação vinda do Copilot Chat (validada), que substitui a do modelo
 let rotPrincipal = null;  // como citar a atividade principal quando há mais de uma
 const rotPadrao = m => { const t = m.nome.replace(/\s*\(.*?\)/g,"").replace(/\s+–.*$/,"").trim(); return /^[A-ZÀ-Ý]{2}/.test(t) ? t : t[0].toLowerCase() + t.slice(1); };
@@ -472,25 +479,7 @@ const todosCampos = () => partes().flatMap(p => p.v.campos || []);
 const citados = new Set(); // protocolos de precedentes da CGU a citar
 
 /* ---------- identificação do tema ---------- */
-function pontuar(texto){
-  const t = " " + norm(texto).replace(/[^a-z0-9]+/g," ") + " ";
-  const res = [];
-  for (const m of MODELOS){
-    if (m.id === "generico") continue;
-    let sc = 0; const hits = [];
-    const termos = new Set((m.palavrasChave||[]).map(norm));
-    for (const k0 of termos){
-      const k = k0.replace(/[^a-z0-9]+/g," ").trim(); if (!k) continue;
-      // casa a palavra inteira ou com flexão simples (plural/feminino)
-      const re = new RegExp(" " + k.replace(/ /g," +") + "(s|es|a|as)? ");
-      if (re.test(t)){ sc += k.includes(" ") ? 3 : (k.length >= 6 ? 2 : (k.length <= 4 ? 2.5 : 1.2)); hits.push(k0); }
-    }
-    // bônus quando o próprio nome da atividade aparece no texto
-    for (const w of norm(m.nome).split(/[^a-z0-9]+/).filter(w => w.length >= 7)) if (t.includes(" " + w)){ sc += 1.5; break; }
-    if (sc > 0) res.push({m, sc, hits});
-  }
-  return res.sort((a,b) => b.sc - a.sc);
-}
+/* pontuar() e o recomendador estão na seção "recomendador de atividade e de situação" */
 function identificar(){
   const txt = $("consulta").value.trim();
   const box = $("sugestoes");
@@ -498,14 +487,14 @@ function identificar(){
   if (!SECI.slice(0,9).some((_, i) => $("q" + (i+1)).value.trim())) distribuir();
   // o tema é buscado sobretudo na descrição da atividade (pergunta 2) e nos vínculos (3) e riscos (9)
   const foco = [2,3,9].map(i => $("q" + i).value).join(" ").trim();
-  const r = pontuar(foco.length > 15 ? foco : txt).slice(0,4);
+  const r = pontuar(foco.length > 15 ? foco : txt, foco.length > 15 ? $("q2").value : undefined).slice(0,4);
   if (!r.length){
     box.innerHTML = '<p class="hint">Nenhuma atividade reconhecida no texto. Escolha manualmente no passo 2 ou use o modelo genérico.</p>';
     const g = MODELOS.find(m => m.id === "generico"); if (g) selecionarAtividade(g.id);
     return;
   }
   box.innerHTML = '<p class="hint">Temas sugeridos (clique para escolher):</p><div class="chips">' +
-    r.map((x,i) => `<span class="chip${i===0?" on":""}" data-id="${x.m.id}" title="Termos encontrados: ${escH(x.hits.join(", "))}">${escH(x.m.nome)}<small>${x.hits.length} termo${x.hits.length>1?"s":""}</small></span>`).join("") + "</div>" +
+    r.map((x,i) => `<span class="chip${i===0?" on":""}" data-id="${x.m.id}" title="${escH("Termos: " + x.hits.join(", ") + (x.evid.length ? " | Precedentes parecidos: " + x.evid.slice(0, 4).join("; ") : "") + (x.vari ? " | Situação mais parecida: " + x.vari.rotulo : ""))}">${escH(x.m.nome)}<small>${x.evid.length ? x.evid.length + " precedente" + (x.evid.length > 1 ? "s" : "") : x.hits.length + " termo" + (x.hits.length > 1 ? "s" : "")}</small></span>`).join("") + "</div>" +
     (r.length > 1 ? '<p class="hint">A consulta trata de mais de uma atividade? Incluir no mesmo parecer: ' + r.slice(1).map(x => `<a class="add" data-id="${x.m.id}">＋ ${escH(x.m.nome)}</a>`).join("") + "</p>" : "");
   box.querySelectorAll("a.add").forEach(a => a.onclick = () => { adicionarExtra(a.dataset.id); a.remove(); });
   box.querySelectorAll(".chip").forEach(c => c.onclick = () => {
@@ -613,8 +602,13 @@ function extrairDados(texto){
   return achados;
 }
 // campos do modelo que podem partir das respostas do formulário (pergunta de origem)
-const CAMPO_DE_PERGUNTA = {descricao_atividade:2, descricao_pretensao:2, descricao_pedido:2, atividades:2, atividade_exercida:6};
+const CAMPO_DE_PERGUNTA = {atividade_caso:2, descricao_atividade:2, descricao_pretensao:2, descricao_pedido:2, atividades:2, atividade_exercida:6};
 function sugestaoCampo(id){
+  if (id === "atividade_caso"){   // a atividade (sem o assunto) em até 160 caracteres, em minúscula: "proferir palestras e dar aulas ..."
+    let c = cabTop($("q2").value).cab.replace(/[.;,\s]+$/, "").replace(/-me\b/g, "-se");
+    if (c.length > 160) c = c.slice(0, 160).replace(/\s+\S*$/, "");
+    return c && !/^[A-ZÀ-Ý]{2}/.test(c) ? c[0].toLowerCase() + c.slice(1) : c;
+  }
   const q = CAMPO_DE_PERGUNTA[id]; if (!q || !$("q" + q)) return "";
   let t = $("q" + q).value.replace(/\s+/g," ").trim().replace(/[.;]+$/,"");
   if (!t || t.length > 160) return ""; // respostas longas não encaixam na frase do modelo
@@ -865,13 +859,14 @@ function selecionarAtividade(id){
   listarPrecedentes();
   if (!atv){ vari = null; montarExtras(); montarCampos(); render(); return; }
   const rot = {sem_conflito:"não há risco relevante", sem_conflito_ressalvas:"risco mitigável / com ressalvas", conflito:"risco relevante de conflito", outro:"impedimento de outra ordem / outros"};
+  const sugerida = melhorVariante(atv);
   atv.variantes.forEach((v,i) => {
     const l = document.createElement("label"); l.className = "var";
-    l.innerHTML = `<input type="radio" name="var" value="${v.id}"><b>${escH(v.rotulo)}</b><span class="badge b-${v.resultado}">${rot[v.resultado]||v.resultado}</span><div class="q">${escH(v.quandoUsar||"")} <i>(base: ${escH(v.fonte||"")})</i></div>`;
+    l.innerHTML = `<input type="radio" name="var" value="${v.id}"><b>${escH(v.rotulo)}</b>${v.id === "__livre__" ? "" : `<span class="badge b-${v.resultado}">${rot[v.resultado]||v.resultado}</span>`}${VAR_PARECIDAS.has(v.id) && $("q2").value.trim() ? '<span class="badge b-outro">parecida com o caso</span>' : ""}<div class="q">${escH(v.quandoUsar||"")} <i>(base: ${escH(v.fonte||"")})</i></div>`;
     l.querySelector("input").onchange = () => selecionarVariante(v.id);
     box.appendChild(l);
   });
-  selecionarVariante(atv.variantes[0].id);
+  selecionarVariante(sugerida);
 }
 function opcoesRes(v, sel){
   return `<option value="">Conforme o modelo escolhido (${escH(RES_ROT[v.resultado] || v.resultado)})</option>` + Object.keys(RES_ROT).filter(k => k !== v.resultado).map(k => `<option value="${k}"${k === sel ? " selected" : ""}>${escH(RES_ROT[k])}</option>`).join("");
@@ -883,6 +878,7 @@ function montarOvr(){
   $("ovrSel").onchange = ev => { resPrincipal = ev.target.value; ajustarPadroes(); montarExtras(); montarCampos(); render(); };
 }
 function selecionarVariante(id){
+  ementaEditada = false;
   vari = atv.variantes.find(v => v.id === id);
   document.querySelectorAll("#variantes .var").forEach(l => { const on = l.querySelector("input").value === id; l.classList.toggle("on", on); l.querySelector("input").checked = on; });
   rotPrincipal = null; resPrincipal = "";
@@ -1057,7 +1053,7 @@ function blocos(){
   B.push({k:"cab", x:`Processo nº ${d.processo || falta("processo")}`});
   B.push({k:"cab", x:`${g("Servidor","Servidora")}: ${d.nome || falta("nome do servidor")}`});
   if (!vari) return {B, d};
-  const pedido = d.tipo === "pedido";
+  const pedido = d.tipo === "pedido", iEm = B.length;
   B.push({k:"em", first:true, x:"Assunto: " + (pedido ? "Pedido de autorização para exercício de atividade privada formulado por meio do SeCI." : (vari.assunto || "Consulta SeCI."))});
   const PS = partes();
   B.push({k:"em", x: [...new Set(PS.map(pt => preencher(pt.v.ementaTitulo, d).trim()))].join(" ")});
@@ -1068,6 +1064,11 @@ function blocos(){
   if (inc.length) B.push({k:"em", x: `Lei nº 12.813/2013, art. 5º, ${incTxt}.`});
   const emEnc = conf ? cfg.ementaEncConflito : cfg.ementaEnc;
   if (enc && emEnc) B.push({k:"em", x: emEnc});
+  const emPadrao = B.slice(iEm).map(b => b.x.replace(/\u0001/g, "").replace(/\u0002/g, ""));
+  if (ementaEditada){   // o usuário editou a ementa: vale o texto dele (campos entre colchetes e em maiúsculas continuam destacados)
+    B.length = iEm;
+    $("ementaTxt").value.split("\n").map(l => l.trim()).filter(Boolean).forEach((l, k) => B.push({k: "em", first: k === 0, x: l.replace(/\[([A-ZÀ-Ý0-9 ºª\/.\-()"“”]{3,})\]/g, (m0) => M1 + m0 + M2)}));
+  } else if (document.activeElement !== $("ementaTxt")) $("ementaTxt").value = emPadrao.join("\n");
   B.push({k:"gap"});
   let n = 0;
   const P = x => B.push({k:"p", n: ++n, x});
@@ -1096,6 +1097,11 @@ function blocos(){
     corpo = corpo.filter(b => b !== conc && !(comResumo && b.t === "p" && REPETE_DEVER(b.x)));
     if (PS.length > 1) fund.push({t:"p", x:`Em relação à atividade de **${pt.rot || rotPadrao(pt.a)}**, cumpre observar o que segue.`});
     for (const b of corpo){
+      if (b.t === "p" && b.x === "{{fundamentos}}"){   // situação em branco: o texto digitado vira um parágrafo por linha
+        const tx = (valoresCampos.fundamentos || "").split("\n").map(l => l.trim()).filter(Boolean);
+        if (!tx.length) fund.push({t: "p", x: falta("fundamentos da análise")}); else tx.forEach(l => fund.push({t: "p", x: l}));
+        continue;
+      }
       // com várias atividades, fundamentos idênticos (mesma lei, mesma citação) entram uma vez só
       const x = b.t === "p" ? preencher(b.x, d) : b.x.map(l => preencher(l, d)), k = chave(b.t, x);
       if (jaDito.has(k)) continue; jaDito.add(k); fund.push({t: b.t, x});
@@ -1386,6 +1392,8 @@ $("tipo").onchange = () => { $("lblConv").style.display = $("tipo").value === "c
 for (const id of ["numero","data","processo","nome","genero","matricula","cargoTxt","cargoSig","unidade","converter","incluirEnc","termo","equipe","resumo","novaConsulta","compromissos","cidade","protocoloSeci"]) $(id).addEventListener("input", render);
 $("btnDocx").onclick = () => { baixar(); try { const n = $("numero").value.trim(), u = JSON.parse(localStorage.getItem("parecerUltimos") || "{}"); if (/^\d+$/.test(n)){ u.numero = n; localStorage.setItem("parecerUltimos", JSON.stringify(u)); } } catch(e){} };
 $("btnTermo").onclick = baixarTermo;
+$("ementaTxt").addEventListener("input", () => { ementaEditada = true; render(); });
+$("ementaRestaurar").onclick = () => { ementaEditada = false; render(); };
 $("btnCopiar").onclick = () => { navigator.clipboard.writeText(textoPuro()).then(() => { $("btnCopiar").textContent = "Copiado ✓"; setTimeout(() => $("btnCopiar").textContent = "Copiar texto", 1500); }); };
 const hoje = () => { const h = new Date(); return `${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,"0")}-${String(h.getDate()).padStart(2,"0")}`; };
 const ULT_IDS = ["cidade"];   // só o que é do usuário (local de assinatura); unidade, equipe, cargo e gênero mudam a cada consulente
@@ -1414,7 +1422,7 @@ function novaAnalise(){
   for (const id of ["incluirEnc","resumo","novaConsulta"]) $(id).checked = true;
   ROMANOS.forEach((_, i) => $("inc" + i).checked = false);
   DEVERES.forEach((_, j) => $("dev" + j).checked = true);
-  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; fundExterno = null; LOC.pacote = null; LOC.aplicado = null; LOC.e1 = null; LOC.termos = []; $("locE1Resp").value = ""; $("locE1Corpo").style.display = "none"; $("locResultado").innerHTML = ""; $("locMsg").innerHTML = ""; $("locArq").value = ""; for (const id of ["locE1Box", "locChatBox", "locIrBox", "locPacoteBox"]) $(id).style.display = "none"; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
+  citados.clear(); extras.length = 0; rotPrincipal = null; resPrincipal = ""; fundExterno = null; ementaEditada = false; LOC.pacote = null; LOC.aplicado = null; LOC.e1 = null; LOC.termos = []; $("locE1Resp").value = ""; $("locE1Corpo").style.display = "none"; $("locResultado").innerHTML = ""; $("locMsg").innerHTML = ""; $("locArq").value = ""; for (const id of ["locE1Box", "locChatBox", "locIrBox", "locPacoteBox"]) $(id).style.display = "none"; $("extras").innerHTML = ""; $("ovrBox").innerHTML = "";
   for (const k in valoresCampos) delete valoresCampos[k];
   for (const k in valoresOpc) delete valoresOpc[k];
   $("sugestoes").innerHTML = ""; $("precBox").open = false; $("resumoBox").open = false; $("lblTermo").style.display = "none";
@@ -1542,6 +1550,119 @@ function bibBuscar(consulta, tipo, k){
 const bibConsulta = () => [$("q2").value, atv ? atv.nome + " " + (atv.palavrasChave || []).join(" ") : "", $("q3").value, (LOC.termos || []).join(" ")].join(" ");
 const mascaraBib = (t, nome) => anonimizarTxt(t.replace(/((?:Servidor|Servidora|Interessad[oa]|Requerente|Peticionante)\s*:\s*)[^\n]+/gi, "$1[SERVIDOR]"), nome);
 
+/* ---------- recomendador de atividade e de situação (usa os modelos, as situações e os precedentes) ---------- */
+function varLivre(){
+  return {id: "__livre__", rotulo: "Nenhuma destas situações - redigir com base no caso concreto", resultado: "sem_conflito_ressalvas",
+    quandoUsar: "Use quando nenhuma das situações acima descreve o caso. O parecer sai com a estrutura padrão, os dados do caso e um espaço para os fundamentos (escreva, aproveite os precedentes ou aplique a resposta do Copilot).",
+    fonte: "modelo em branco", assunto: "Consulta SeCI.", ementaTitulo: "EXERCÍCIO DA ATIVIDADE PRIVADA DE {{atividade_caso}}.",
+    ementa: ["Pedido de autorização para o exercício da atividade de {{atividade_caso}}, concomitante com o cargo de {{cargo}}. Não configura conflito de interesses, desde que observadas as ressalvas."],
+    campos: [{id: "atividade_caso", rotulo: "Atividade, como constará na ementa e na conclusão", exemplo: "proferir palestras e dar aulas em minicursos"},
+             {id: "fundamentos", rotulo: "Fundamentos da análise (escreva aqui, um parágrafo por linha; ou aplique a resposta do Copilot na aba Análise Inteligente)", multilinha: true, exemplo: "A atividade ..."}],
+    corpo: [{t: "p", x: "{{fundamentos}}"}, {t: "p", x: "Portanto, no entendimento da {{orgao_corregedoria}}, o exercício da atividade de {{atividade_caso}} não configura conflito de interesses, desde que observadas as ressalvas acima expostas."}]};
+}
+MODELOS.forEach(m => { if (m.id !== "generico" && !m.variantes.some(v => v.id === "__livre__")) m.variantes.push(varLivre()); });
+let REC = null;
+function recIndice(){
+  if (REC) return REC;
+  const kwDf = {};
+  const modelos = MODELOS.filter(m => m.id !== "generico").map(m => {
+    const kws = [...new Set((m.palavrasChave || []).map(k => norm(k).replace(/[^a-z0-9]+/g, " ").trim()).filter(Boolean))];
+    kws.forEach(k => kwDf[k] = (kwDf[k] || 0) + 1);
+    return {m, kws};
+  });
+  const vars = [];
+  modelos.forEach(({m}) => m.variantes.forEach(v => { if (v.id !== "__livre__") vars.push({m, v, tok: tokensJs([m.nome, v.rotulo, v.quandoUsar, v.ementaTitulo, ...(v.ementa || [])].join(" "))}); }));
+  const df = {}, tf = vars.map(x => { const c = {}; x.tok.forEach(t => c[t] = (c[t] || 0) + 1); Object.keys(c).forEach(t => df[t] = (df[t] || 0) + 1); return c; });
+  const N = vars.length, avg = vars.reduce((s, x) => s + x.tok.length, 0) / N, idf = {};
+  for (const t in df) idf[t] = Math.log(1 + (N - df[t] + 0.5) / (df[t] + 0.5));
+  return REC = {modelos, kwDf, vars, tf, idf, avg};
+}
+function recBM(toks){
+  const R = recIndice(), sc = new Array(R.vars.length).fill(0);
+  for (const t of new Set(toks)){ if (!R.idf[t]) continue; for (let i = 0; i < R.vars.length; i++){ const f = R.tf[i][t]; if (f) sc[i] += R.idf[t] * f * 2.4 / (f + 1.4 * (0.25 + 0.75 * R.vars[i].tok.length / R.avg)); } }
+  return sc;
+}
+/* separa a atividade (o que o servidor vai fazer) do assunto (sobre o que): "proferir palestras ... , sobre legislação tributária relativa ao IRPF" */
+function cabTop(q2){
+  const t = String(q2 || "").replace(/\s+/g, " ").trim();
+  const m = t.match(/[\s,;]+(sobre|acerca d[eao]s?|a respeito d[eao]s?|relativ[ao]s?\s+(?:a|ao|aos|à|às)|referente[s]?\s+(?:a|ao|aos|à|às)|na [áa]rea d[eao]s?|relacionad[ao]s?\s+(?:a|ao|aos|à|às)|com foco em|voltad[ao]s?\s+(?:a|ao|aos|para))\s/i);
+  return m ? {cab: t.slice(0, m.index), top: t.slice(m.index)} : {cab: t, top: ""};
+}
+function recKw(tCab, tTop){
+  const R = recIndice(), out = new Map();
+  for (const {m, kws} of R.modelos){
+    let sc = 0; const hits = [];
+    for (const k of kws){
+      const re = new RegExp(" " + k.replace(/ /g, " +") + "(s|es|a|as)? "), base = k.includes(" ") ? 3 : (k.length >= 6 ? 2 : (k.length <= 4 ? 2.5 : 1.2)), w = 1 / (1 + 0.5 * (R.kwDf[k] - 1));
+      if (re.test(tCab)){ sc += base * w; hits.push(k); } else if (tTop && re.test(tTop)){ sc += 0.35 * base * w; hits.push(k + " (assunto)"); }
+    }
+    for (const w of norm(m.nome).split(/[^a-z0-9]+/).filter(w => w.length >= 7)) if (tCab.includes(" " + w)){ sc += 1.5; break; }
+    if (sc > 0) out.set(m.id, {m, sc, hits});
+  }
+  return out;
+}
+const recLimpa = t => " " + norm(t).replace(/[^a-z0-9]+/g, " ") + " ";
+/* mapa dos temas dos nomes de arquivo da biblioteca (PA_<nº>_<ano>_<Tema>) para as atividades */
+const TEMA_ATIV = {docencia: ["magisterio"], magisterio: ["magisterio"], palestras: ["palestras", "cursos_publico_especifico"], sindico: ["sindico"], advocacia: ["advocacia"], pericia: ["perito_judicial"],
+  corretagem: ["corretor_imoveis"], saude: ["medicina"], associacoes: ["direcao_associacao"], investimentos: ["investimentos"], empresario: ["socio_cotista", "empresa_privada"], conselhos: ["conselho_fiscal_sem_fins_lucrativos"]};
+let RECP = null;
+function recPrecedentes(q, k){
+  const its = PRECEDENTES.itens || [];
+  if (!RECP){ const docs = its.map(p => tokensJs(p.x.slice(0, 700))), df = {}; docs.forEach(d => new Set(d).forEach(t => df[t] = (df[t] || 0) + 1));
+    RECP = {docs, idf: Object.fromEntries(Object.entries(df).map(([t, c]) => [t, Math.log(1 + (its.length - c + 0.5) / (c + 0.5))])), avg: docs.reduce((s, d) => s + d.length, 0) / (docs.length || 1)}; }
+  const qs = new Set(tokensJs(q)), sc = docs => 0;
+  return its.map((p, i) => { const tf = {}; RECP.docs[i].forEach(t => tf[t] = (tf[t] || 0) + 1); let s = 0;
+    for (const t of qs){ const f = tf[t]; if (f && RECP.idf[t]) s += RECP.idf[t] * f * 2.4 / (f + 1.4 * (0.25 + 0.75 * RECP.docs[i].length / RECP.avg)); } return {p, s}; })
+    .filter(o => o.s > 0).sort((a, b) => b.s - a.s).slice(0, k);
+}
+/* devolve [{m, sc, hits, vari, evid}] ordenado; q2 = pergunta 2; extra = outros trechos do caso (peso menor) */
+function pontuar(texto, q2){
+  const R = recIndice(), base = q2 !== undefined ? q2 : texto, extra = q2 !== undefined ? String(texto).replace(q2, " ") : "";
+  const ct = cabTop(base), tCab = recLimpa(ct.cab), tTop = recLimpa(ct.top + " " + extra);
+  const kw = recKw(tCab, tTop);
+  const vs = recBM(tokensJs(ct.cab)), vt = recBM(tokensJs(ct.top + " " + extra));
+  const melhor = new Map();   // melhor situação de cada atividade
+  R.vars.forEach((x, i) => { const s = vs[i] + vt[i]; if (s > 0 && (!melhor.has(x.m.id) || s > melhor.get(x.m.id).s)) melhor.set(x.m.id, {s, v: x.v}); });   // dentro da atividade, o assunto também distingue as situações
+  // evidência: precedentes (da CGU embutidos e da biblioteca) parecidos com o caso e a atividade que cada um indica
+  const votos = new Map(), evid = new Map(), query = ct.cab + " " + ct.top;
+  const voto = (id, peso, rot) => { votos.set(id, (votos.get(id) || 0) + peso); (evid.get(id) || evid.set(id, []).get(id)).push(rot); };
+  const ps = recPrecedentes(query, 8), maxP = ps.length ? ps[0].s : 1;
+  for (const {p, s} of ps){
+    const k = recKw(recLimpa(p.x.slice(0, 260)), ""); let top = null; k.forEach(v => { if (!top || v.sc > top.sc) top = v; });
+    if (top) voto(top.m.id, s / maxP, `CGU ${p.n} (${p.r || "sem resultado"})`);
+  }
+  if (typeof BIB !== "undefined" && BIB.chunks.length){
+    for (const tipo of ["parecer", "precedente"]){
+      const hs = bibBuscar(query, tipo, 8), maxB = hs.length ? hs[0].s : 1;
+      for (const h of hs){
+        const tema = norm(h.c.tema).replace(/[^a-z]/g, ""), ids = TEMA_ATIV[tema] || (() => { const k = recKw(recLimpa(h.c.texto.slice(0, 260)), ""); let t = null; k.forEach(v => { if (!t || v.sc > t.sc) t = v; }); return t ? [t.m.id] : []; })();
+        ids.forEach(id => voto(id, 1.3 * h.s / maxB / ids.length, h.c.titulo));
+      }
+    }
+  }
+  const mk = Math.max(0, ...[...kw.values()].map(v => v.sc)), mv = Math.max(0, ...[...melhor.values()].map(v => v.s)), mvt = Math.max(0, ...votos.values());
+  const ids = new Set([...kw.keys(), ...melhor.keys(), ...votos.keys()]), res = [];
+  for (const id of ids){
+    const k = kw.get(id), b = melhor.get(id), m = R.modelos.find(x => x.m.id === id).m;
+    const S = 0.45 * (k && mk ? k.sc / mk : 0) + 0.40 * (b && mv ? b.s / mv : 0) + 0.15 * (mvt ? (votos.get(id) || 0) / mvt : 0);
+    if (S > 0.12) res.push({m, sc: Math.round(S * 100) / 10, hits: k ? k.hits : [], vari: b ? b.v : null, vsc: b ? b.s : 0, evid: evid.get(id) || []});
+  }
+  return res.sort((a, b) => b.sc - a.sc);
+}
+/* situação que melhor descreve o caso dentro de uma atividade; "__livre__" se nenhuma se aproxima. VAR_PARECIDAS: as que chegam perto da melhor */
+let VAR_PARECIDAS = new Set();
+function melhorVariante(a){
+  VAR_PARECIDAS = new Set();
+  const q2 = $("q2") ? $("q2").value : "", R = recIndice();
+  if (!q2.trim()) return a.variantes[0].id;
+  const ct = cabTop(q2), vs = recBM(tokensJs(ct.cab)), vt = recBM(tokensJs(ct.top)), lista = [];
+  R.vars.forEach((x, i) => { if (x.m.id === a.id) lista.push({id: x.v.id, s: vs[i] + vt[i]}); });
+  lista.sort((x, y) => y.s - x.s);
+  if (!lista.length || lista[0].s < 3.5) return "__livre__";
+  lista.filter(x => x.s >= 0.85 * lista[0].s && x.s >= 3.5).forEach(x => VAR_PARECIDAS.add(x.id));
+  return lista[0].id;
+}
+
 /* ---------- modo local (sem motor): análise no navegador + Copilot Chat assistido ---------- */
 const LOC = {pacote: null, aplicado: null, e1: null, termos: []};
 document.querySelectorAll('input[name="aiModoApp"]').forEach(r => r.onchange = () => {
@@ -1586,7 +1707,7 @@ async function locAnalisar(){
 $("locAnalisar").onclick = locAnalisar;
 function locMostrar(){
   const d = dados(), foco = [2, 3, 9].map(i => $("q" + i).value).join(" ").trim();
-  const cand = pontuar(foco.length > 15 ? foco : $("consulta").value).slice(0, 5), ids = new Set(cand.map(x => x.m.id));
+  const cand = pontuar(foco.length > 15 ? foco : $("consulta").value, foco.length > 15 ? $("q2").value : undefined).slice(0, 5), ids = new Set(cand.map(x => x.m.id));
   const outros = MODELOS.filter(m => !ids.has(m.id)).sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
   const sel = m => atv && atv.id === m.id ? " selected" : "";
   const fatos = [["Servidor", d.nome], ["Cargo", d.cargo], ["Matrícula", d.matricula], ["Protocolo SeCI", $("protocoloSeci").value], ["Demanda", d.tipo === "pedido" ? "pedido de autorização" : "consulta"],

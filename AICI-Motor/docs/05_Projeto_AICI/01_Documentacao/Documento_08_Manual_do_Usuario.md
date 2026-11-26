@@ -59,6 +59,12 @@ Quando a pergunta 2 do SeCI lista atividades (a, b, c...), o gerador mostra, no 
 ### 3.0d PDF sem texto (OCR automático)
 Alguns PDFs, como a **impressão da solicitação** emitida pelo SeCI/SERPRO, não têm texto selecionável (o texto é desenho). O gerador percebe isso e faz **OCR** sozinho, em português, no seu navegador e sem internet: aparece "OCR: lendo a página 1 de 2…" (cerca de 10 a 40 segundos por página; a primeira leitura da sessão demora um pouco mais). Os dados e as respostas são preenchidos e a tela avisa: **"o texto foi lido por OCR e pode ter erros; confira nome, matrícula, protocolo e as respostas"**. Confira sempre.
 
+### 3.0e Escolher a atividade e a situação (e o que fazer se nada serve)
+- **Temas sugeridos:** o gerador separa o que o servidor vai **fazer** do **assunto** do que ele trata e compara com os modelos, com as situações de cada modelo e com precedentes parecidos (da CGU e, se a biblioteca estiver conectada, da COGER). O número no chip mostra quantos precedentes sustentam a sugestão.
+- **Situação:** as marcadas **"parecida com o caso"** têm o texto mais próximo do pedido. Leia as descrições antes de aceitar.
+- **Nenhuma serve?** Escolha **"Nenhuma destas situações - redigir com base no caso concreto"**: o parecer sai com a estrutura padrão e você escreve os fundamentos (um parágrafo por linha), usa os precedentes ou aplica a resposta do Copilot.
+- **Ementa:** abra **"Ementa do parecer (editar)"** para ajustar o texto; **"Restaurar"** volta ao modelo.
+
 > Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 
 ### 3.1 Ligar o motor
