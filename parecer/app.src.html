@@ -5,43 +5,50 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Gerador de Parecer – Conflito de Interesses</title>
 <style>
-:root{--bg:#f3f4f1;--card:#fff;--ink:#1c2420;--mut:#5d6964;--line:#d9ddd8;--acc:#1f5a43;--acc2:#e6f0eb;--warn:#8a5a00;--warnbg:#fff3cd;--bad:#8c2f2f;--badbg:#f8e3e3;--ok:#1f5a43;--okbg:#e2f1e8}
+:root{--navy-900:#0b1830;--navy-800:#122140;--navy-700:#1a2d52;--navy-600:#22396a;--gold:#c9a13b;--gold-light:#d9b654;--gold-100:#f5ecd4;--bg:#f4f5f7;--card:#fff;--ink:#1b2333;--mut:#4b5468;--line:#e2e5ec;--acc:#1a2d52;--acc2:#eef1f7;--warn:#8a5a0c;--warnbg:#fbf1e0;--bad:#b5342a;--badbg:#f8e6e3;--ok:#2f7a4f;--okbg:#e7f4ec;--radius:12px;--shadow:0 1px 2px rgba(16,24,40,.04),0 4px 14px rgba(16,24,40,.06);--font-display:Georgia,serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-header.top{background:var(--acc);color:#fff;padding:14px 20px}
-header.top h1{margin:0;font-size:19px;font-weight:600}
-header.top p{margin:2px 0 0;font-size:13px;opacity:.85}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+header.top{background:linear-gradient(120deg,var(--navy-900) 0%,var(--navy-700) 55%,var(--navy-600) 100%);color:#fff;padding:26px 0 18px;position:relative;overflow:hidden}
+header.top::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.035) 0 2px,transparent 2px 26px);pointer-events:none}
+header.top .hero-inner{max-width:1500px;margin:0 auto;padding:0 18px;position:relative}
+header.top .eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;color:var(--gold-light);font-weight:600;margin:0 0 8px}
+header.top h1{margin:0 0 4px;font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:.01em}
+header.top p.sub{margin:0 0 18px;font-size:13.5px;color:#c7d0e3;max-width:760px}
 .wrap{display:grid;grid-template-columns:minmax(340px,520px) minmax(0,1fr);gap:18px;padding:18px;max-width:1500px;margin:0 auto}
 @media(max-width:980px){.wrap{grid-template-columns:1fr;padding:12px}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:14px}
-.card h2{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px}
-.card h2 .n{background:var(--acc);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:none}
+.card{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--navy-700);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px 18px;margin-bottom:16px}
+.card h2{margin:0 0 10px;font-size:15.5px;color:var(--navy-900);display:flex;align-items:center;gap:8px}
+.card h2 .n{background:var(--navy-900);color:var(--gold-light);border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;flex:none}
 label{display:block;font-size:12.5px;color:var(--mut);margin:8px 0 3px;font-weight:600}
-input[type=text],input[type=date],select,textarea{width:100%;padding:7px 9px;border:1px solid #bfc6c0;border-radius:6px;font:inherit;background:#fff;color:var(--ink)}
+input[type=text],input[type=password],input[type=date],select,textarea{width:100%;padding:8px 10px;border:1px solid #cfd4de;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
 textarea{resize:vertical;min-height:70px}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--acc);outline-offset:-1px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold);outline-offset:-1px;border-color:var(--gold)}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 @media(max-width:480px){.row,.row3{grid-template-columns:1fr}}
-button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--acc);background:var(--acc);color:#fff;padding:8px 14px;font-weight:600}
-button.sec{background:#fff;color:var(--acc)}
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--navy-800);background:var(--navy-800);color:#fff;padding:8px 14px;font-weight:600;transition:.15s}
+button:disabled{opacity:.45;cursor:not-allowed}
+#btnDocx,#locAnalisar,#aiEnviar,#locIr{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
+#btnDocx:hover,#locAnalisar:hover,#aiEnviar:hover,#locIr:hover{background:var(--gold-light);filter:none}
+button.sec{background:#fff;color:var(--navy-800);border-color:#cfd4de}
+button.sec:hover{border-color:var(--navy-700);background:#fbfbfc;filter:none}
 button.mini{padding:3px 8px;font-size:12px;font-weight:500}
 button:hover{filter:brightness(1.08)}
 .hint{font-size:12.5px;color:var(--mut);margin:4px 0 0}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.chip{border:1px solid var(--acc);color:var(--acc);background:#fff;border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer;font-weight:500}
-.chip.on{background:var(--acc);color:#fff}
+.chip{border:1px solid #cfd4de;color:var(--navy-800);background:#fff;text-decoration:none;display:inline-block;border-radius:999px;padding:4px 11px;font-size:13px;cursor:pointer;font-weight:500}
+.chip.on{background:var(--gold);border-color:var(--gold);color:var(--navy-900);font-weight:700}
 .chip small{opacity:.7;margin-left:4px}
-.var{border:1px solid var(--line);border-radius:7px;padding:9px 11px;margin-top:7px;cursor:pointer;display:block}
-.var.on{border-color:var(--acc);background:var(--acc2)}
+.var{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin-top:7px;cursor:pointer;display:block}
+.var.on{border-color:var(--gold);background:#fdf9ee;box-shadow:inset 3px 0 0 var(--gold)}
 .var input{margin-right:7px}
 .var b{font-size:14px}
 .var .q{font-size:12.5px;color:var(--mut);margin:3px 0 0 22px;font-weight:400}
-.badge{display:inline-block;font-size:11px;border-radius:4px;padding:1px 6px;margin-left:6px;font-weight:600;vertical-align:1px}
+.badge{display:inline-block;font-size:11px;border-radius:99px;padding:2px 9px;margin-left:6px;font-weight:600;vertical-align:1px}
 .b-sem_conflito{background:var(--okbg);color:var(--ok)}
 .b-sem_conflito_ressalvas{background:var(--warnbg);color:var(--warn)}
 .b-conflito{background:var(--badbg);color:var(--bad)}
-.b-outro{background:#e7e9ee;color:#444c5c}
+.b-outro{background:var(--acc2);color:var(--navy-700)}
 .chk{display:flex;gap:8px;align-items:flex-start;margin:7px 0;font-size:13.5px;color:var(--ink);font-weight:400}
 .chk input{margin-top:3px}
 details{margin-top:4px}
@@ -68,16 +75,16 @@ details>summary{cursor:pointer;font-weight:600;font-size:14px}
 .paper .desp{text-indent:70px;margin:18px 0 14px}
 .paper .sg{text-align:center}
 .paper .sgi{text-align:center;font-style:italic;font-size:11pt;margin-top:18px}
-.prec{border:1px solid var(--line);border-radius:6px;padding:7px 9px;margin-top:7px;font-size:12.5px}
+.prec{border:1px solid var(--line);border-radius:10px;padding:7px 9px;margin-top:7px;font-size:12.5px}
 .prec .h{font-weight:600;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .prec .x{color:var(--mut);margin-top:4px;max-height:5.8em;overflow:hidden}
 .prec.open .x{max-height:none}
 .prec a{color:var(--acc);cursor:pointer;text-decoration:underline}
-.conf{background:#fff;border:1px solid var(--line);border-left:5px solid var(--warn);border-radius:6px;padding:9px 12px;margin-bottom:10px;font-size:13px}
+.conf{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:10px;box-shadow:var(--shadow);padding:9px 12px;margin-bottom:10px;font-size:13px}
 .conf.ok{border-left-color:var(--ok)}
 .conf ul{margin:6px 0 0;padding-left:18px}
 .conf li{margin:3px 0}
-.extra{border:1px solid var(--line);border-radius:7px;padding:8px 10px;margin-top:8px;background:#fafbf9}
+.extra{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;background:#fbfbfc}
 .extra .t{font-weight:600;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px}
 a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10px}
 .aviso{background:var(--warnbg);color:var(--warn);border-radius:6px;padding:7px 10px;font-size:12.5px;margin-top:8px}
@@ -85,9 +92,16 @@ a.add{color:var(--acc);cursor:pointer;text-decoration:underline;margin-right:10p
 .paper mark{background:#ffe866;padding:0 2px;cursor:pointer}
 .pchip{color:var(--acc);text-decoration:underline;cursor:pointer}
 .flash{outline:3px solid #ffb300 !important;outline-offset:1px;transition:outline .3s}
-nav.tabs{display:flex;gap:4px;padding:10px 18px 0;max-width:1500px;margin:0 auto;border-bottom:1px solid var(--line)}
-nav.tabs button{background:#fff;color:var(--acc);border-radius:8px 8px 0 0;border-bottom:none;padding:8px 16px}
-nav.tabs button.on{background:var(--acc);color:#fff}
+nav.tabs{display:flex;flex-wrap:wrap;gap:10px}
+nav.tabs button{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 16px;text-align:left;color:#dfe4ee;font-weight:700;font-size:13px;min-width:210px}
+nav.tabs button small{display:block;font-size:11px;font-weight:600;color:#b9c3da;margin-top:3px}
+nav.tabs button:hover{background:rgba(255,255,255,.11);filter:none}
+nav.tabs button.on{background:var(--gold);border-color:var(--gold);color:var(--navy-900)}
+nav.tabs button.on small{color:var(--navy-800)}
+details>summary{color:var(--navy-900)}
+.aviso{border:1px solid #f0d9a8}
+.pchip{color:var(--navy-700)}
+.actions{background:var(--bg)}
 #paneAI{max-width:1500px;margin:0 auto;padding:18px}
 .aigrid{display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:18px}
 @media(max-width:980px){#paneAI{padding:12px}.aigrid{grid-template-columns:1fr}}
@@ -100,11 +114,13 @@ nav.tabs button.on{background:var(--acc);color:#fff}
 </head>
 <body>
 <header class="top">
-  <h1>Gerador de Parecer – Consulta de Conflito de Interesses</h1>
-  <p>Modelos extraídos dos pareceres da Corregedoria · gera arquivo Word (.docx) editável · funciona sem internet, nada é enviado para fora do navegador</p>
+  <div class="hero-inner">
+    <p class="eyebrow">Corregedoria da Receita Federal · Conflito de Interesses</p>
+    <h1>Gerador de Parecer</h1>
+    <p class="sub">Consultas e pedidos de autorização do SeCI (Lei nº 12.813/2013). Modelos extraídos dos pareceres da Corregedoria, Word editável, funciona sem internet: nada sai do seu navegador.</p>
+    <nav class="tabs"><button id="tabGer" class="on">Gerador de Parecer<small>modelo, dados e Word</small></button><button id="tabAI">Análise Inteligente<small>análise do caso, biblioteca e Copilot</small></button></nav>
+  </div>
 </header>
-
-<nav class="tabs"><button id="tabGer" class="on">Gerador de Parecer</button><button id="tabAI">Análise Inteligente</button></nav>
 
 <div class="wrap" id="paneGer">
 <div id="form">
@@ -382,7 +398,9 @@ const LOGO_DIM = /*__LOGO_DIM__*/[1300,137];
 const PDFJS_GZ = "/*__PDFJS__*/", PDFW_GZ = "/*__PDFW__*/"; // leitor de PDF (pdf.js, Apache-2.0), compactado
 const PRECEDENTES = /*__PRECEDENTES__*/{"itens":[]};
 const OCR = {js: "/*__OCR_JS__*/", worker: "/*__OCR_WORKER__*/", core: "/*__OCR_CORE__*/", por: "/*__OCR_POR__*/"};   // leitor de OCR embutido (tesseract.js), usado só quando o PDF não tem texto
-const KB = /*__KB__*/{}; // instruções à IA, regras da COGER e normativos para o prompt do Copilot Chat (modo local)
+const KB = /*__KB__*/{};
+let VOCAB = /*__VOCAB__*/{};   // termos aprendidos dos temas e descritores dos pareceres reais da COGER: {atividade: {termo: peso}}
+const PESOS_REC = {kw: 0.38, bm: 0.32, votos: 0.12, vocab: 0.18}; // instruções à IA, regras da COGER e normativos para o prompt do Copilot Chat (modo local)
 
 // Perguntas do formulário SeCI (redação transcrita nos pareceres de 2021 e 2022)
 const SECI = [
@@ -734,6 +752,7 @@ async function lerArquivo(f){
     const n = distribuir();
     for (const k in CAMPO_DE_PERGUNTA) delete valoresCampos[k];
     const ach = extrairDados(bruto);
+    if (/\b(professora|servidora|auditora|lotada|casada|aposentada|advogada|s[óo]cia|formada|graduada)\b/i.test([1,2,3,4,5,6,7,8,9].map(i => $("q" + i).value).join(" ")) && $("genero").value !== "f"){ $("genero").value = "f"; ach.push("tratamento (a servidora)"); }
     identificar();
     const extra = (porOcr ? " ATENÇÃO: o texto foi lido por OCR e pode ter erros; confira nome, matrícula, protocolo e as respostas." : "") + (ach.length ? " Dados preenchidos a partir do arquivo: " + ach.join(", ") + "." : " Nenhum dado de identificação (nome, matrícula, cargo, unidade) foi localizado no arquivo.");
     info.textContent = (n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
@@ -1640,11 +1659,14 @@ function pontuar(texto, q2){
       }
     }
   }
-  const mk = Math.max(0, ...[...kw.values()].map(v => v.sc)), mv = Math.max(0, ...[...melhor.values()].map(v => v.s)), mvt = Math.max(0, ...votos.values());
-  const ids = new Set([...kw.keys(), ...melhor.keys(), ...votos.keys()]), res = [];
+  // vocabulário aprendido dos pareceres reais (termos que a COGER usa para cada atividade)
+  const voc = new Map(), tc = new Set(tokensJs(ct.cab)), tt = new Set(tokensJs(ct.top + " " + extra));
+  for (const id in VOCAB){ let v = 0; const w = VOCAB[id]; for (const t of tc) if (w[t]) v += w[t]; for (const t of tt) if (w[t] && !tc.has(t)) v += 0.35 * w[t]; if (v > 0) voc.set(id, v); }
+  const mk = Math.max(0, ...[...kw.values()].map(v => v.sc)), mv = Math.max(0, ...[...melhor.values()].map(v => v.s)), mvt = Math.max(0, ...votos.values()), mvo = Math.max(0, ...voc.values());
+  const ids = new Set([...kw.keys(), ...melhor.keys(), ...votos.keys(), ...voc.keys()]), res = [];
   for (const id of ids){
     const k = kw.get(id), b = melhor.get(id), m = R.modelos.find(x => x.m.id === id).m;
-    const S = 0.45 * (k && mk ? k.sc / mk : 0) + 0.40 * (b && mv ? b.s / mv : 0) + 0.15 * (mvt ? (votos.get(id) || 0) / mvt : 0);
+    const W = PESOS_REC, S = W.kw * (k && mk ? k.sc / mk : 0) + W.bm * (b && mv ? b.s / mv : 0) + W.votos * (mvt ? (votos.get(id) || 0) / mvt : 0) + W.vocab * (mvo ? (voc.get(id) || 0) / mvo : 0);
     if (S > 0.12) res.push({m, sc: Math.round(S * 100) / 10, hits: k ? k.hits : [], vari: b ? b.v : null, vsc: b ? b.s : 0, evid: evid.get(id) || []});
   }
   return res.sort((a, b) => b.sc - a.sc);
@@ -1657,9 +1679,18 @@ function melhorVariante(a){
   if (!q2.trim()) return a.variantes[0].id;
   const ct = cabTop(q2), vs = recBM(tokensJs(ct.cab)), vt = recBM(tokensJs(ct.top)), lista = [];
   R.vars.forEach((x, i) => { if (x.m.id === a.id) lista.push({id: x.v.id, s: vs[i] + vt[i]}); });
+  // o que distingue cada situação dentro da atividade (termos do rótulo que as outras não têm) precisa aparecer no caso:
+  // "teletrabalho" ou "intervalo de refeição" no rótulo e ausentes do pedido derrubam a situação
+  const caso = new Set(tokensJs(q2)), rot = a.variantes.filter(v => v.id !== "__livre__").map(v => ({id: v.id, t: new Set(tokensJs(v.rotulo.split(/\s[–-]\s/)[0]))}));
+  const dfr = {}; rot.forEach(r => r.t.forEach(t => dfr[t] = (dfr[t] || 0) + 1));
+  for (const x of lista){
+    const r = rot.find(r => r.id === x.id), dist = r ? [...r.t].filter(t => dfr[t] <= Math.max(1, rot.length / 2)) : [];
+    x.cob = dist.length ? dist.filter(t => caso.has(t)).length / dist.length : 1;
+    x.s = x.s * (0.45 + 0.55 * x.cob);
+  }
   lista.sort((x, y) => y.s - x.s);
-  if (!lista.length || lista[0].s < 3.5) return "__livre__";
-  lista.filter(x => x.s >= 0.85 * lista[0].s && x.s >= 3.5).forEach(x => VAR_PARECIDAS.add(x.id));
+  if (!lista.length || lista[0].s < 3) return "__livre__";
+  lista.filter(x => x.s >= 0.85 * lista[0].s && x.s >= 3).forEach(x => VAR_PARECIDAS.add(x.id));
   return lista[0].id;
 }
 

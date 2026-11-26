@@ -82,6 +82,9 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 | RF058 | Recomendar a atividade e a situação a partir do caso e da base: separar a atividade ("proferir palestras e dar aulas") do assunto ("sobre IRPF"), pesar os termos pela raridade, casar o caso com as situações de cada modelo e somar a evidência de precedentes parecidos (CGU embutidos e biblioteca conectada, inclusive o tema dos pareceres) | M | A atividade sugerida e a situação "parecida com o caso" refletem o que o servidor vai fazer, não o assunto; os chips mostram quantos precedentes parecidos sustentam a sugestão | Implementado | Caso real que motivou a mudança: "palestras e aulas sobre IRPF" saía como "declaração de IRPF" e agora sai como Palestras (com 3 precedentes parecidos), Magistério e Cursos entre as opções. Auto-avaliação com as 160 situações dos modelos: acerto na 1ª posição de 88% para 97% e nas 3 primeiras de 94% para 100% (avaliação circular, otimista; falta medir com consultas reais) |
 | RF059 | Situação em branco: "Nenhuma destas situações - redigir com base no caso concreto" | M | Quando nenhuma situação do modelo descreve o caso (ou a pontuação é baixa), o parecer usa a estrutura padrão com a atividade, a ementa e os campos de fundamentos para escrever (um parágrafo por linha), usar os precedentes ou aplicar a resposta do Copilot | Implementado | Verificado no navegador |
 | RF060 | Ementa editável | M | Caixa "Ementa do parecer (editar)": o texto editado vale no parecer e no Word; "Restaurar a ementa do modelo" volta ao padrão; trocar a situação recarrega a ementa | Implementado | Verificado no navegador |
+| RF061 | Vocabulário aprendido dos pareceres reais da COGER e avaliação com dados reais | S | Termos que a COGER usa para cada atividade (119 temas e descritores de 476 pareceres) entram como um sinal da recomendação; só termos já presentes nos modelos ou nas ementas públicas da CGU (sem nomes de pessoas); rotina `parecer/avaliacao/treinar_vocabulario.js` com validação cruzada | Implementado | Medição com descritores reais (nomes de arquivo, texto curto e ruidoso): atividade certa na 1ª sugestão em 73,7% sem o vocabulário e **76,3%** com ele, em casos não vistos no treino; entre as 3 primeiras, 84,9% e **86,8%**. Com os nomes dos temas: 92,9% e 97,3% (vistos no treino). Abaixo da meta de 85% na 1ª sugestão: o usuário deve conferir a atividade |
+| RF062 | Situação escolhida pelo que a distingue: termos próprios de uma situação (ex.: "teletrabalho", "público específico") precisam aparecer no pedido | S | Situações cujo traço distintivo não está no caso perdem pontuação; as próximas ficam marcadas "parecida com o caso" | Implementado | Verificado com 8 casos sintéticos; sem medição com casos reais |
+| RF063 | Identidade visual alinhada à Wiki Coger (azul-marinho e dourado, cabeçalho com abas, cartões) e tratamento "a servidora" detectado pelas respostas | C | - | Implementado | Verificado no navegador |
 | RF044 | Funcionar sem instalação | M | Nenhum programa além do navegador | Implementado | Modo local é o padrão da aba |
 
 ### 2.4 Conhecimento, IA e gestão
@@ -106,10 +109,10 @@ Adicionado porque o computador de uso pode não ter Python. Reutiliza a leitura 
 
 | Situação | Quantidade | Requisitos |
 |---|---|---|
-| Implementado | 53 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF060 |
+| Implementado | 56 | RF001, RF003, RF005 a RF023, RF025 a RF027, RF031, RF033 a RF063 |
 | Parcial | 4 | RF002, RF004, RF024, RF030 |
 | Planejado | 3 | RF028, RF029, RF032 |
-| **Total** | **60** | |
+| **Total** | **63** | |
 
 "Implementado" significa que existe e foi testado em ambiente de desenvolvimento; não significa homologado nem validado com casos reais. O OCR (RF011), os provedores automáticos de IA (RF023) e o modo assistido com o Copilot Chat (RF033 a RF044, no motor e no modo local) estão implementados mas **não foram exercitados** contra serviços reais (o modo assistido foi testado com respostas simuladas). O modo local só busca na biblioteca de pareceres da COGER se o usuário conectar a pasta sincronizada.
 

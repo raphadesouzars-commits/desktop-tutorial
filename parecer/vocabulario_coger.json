@@ -1,0 +1,332 @@
+{
+ "origem": "temas e descritores de 476 pareceres da COGER; só termos presentes nos modelos ou nas ementas públicas da CGU",
+ "validacao_cruzada": {
+  "n": 476,
+  "top1_sem": 351,
+  "top3_sem": 404,
+  "top1_com": 363,
+  "top3_com": 413
+ },
+ "termos": {
+  "socio_cotista": {
+   "socia": 1.82,
+   "quotista": 1.28,
+   "contabilidade": 1.1
+  },
+  "magisterio": {
+   "presencial": 1.1,
+   "faculdade": 1.1,
+   "distancia": 1.79,
+   "treinamento": 1.49,
+   "ministrar": 1.49,
+   "magisterio": 2.52,
+   "ensino": 1.29,
+   "tutoria": 1.39,
+   "docencia": 1.48,
+   "campo": 0.73,
+   "gestao": 1.39,
+   "universitario": 1.1,
+   "informatica": 1.1,
+   "matematica": 1.1
+  },
+  "terapia_alternativa": {
+   "yoga": 1.39,
+   "terapia": 1.49,
+   "alternativa": 1.49,
+   "terapeuta": 1.39,
+   "psicologia": 1.39
+  },
+  "advocacia": {
+   "advocacia": 3.42,
+   "atrfb": 1.39,
+   "seguro": 1.1,
+   "servidor": 1.1,
+   "estagio": 1.1,
+   "analista": 0.73,
+   "periodo": 0.73,
+   "quadro": 1.1,
+   "pratica": 0.83,
+   "forense": 1.1
+  },
+  "tesoureiro": {
+   "tesoureiro": 1.46
+  },
+  "estudante": {
+   "academico": 1.04,
+   "estudante": 1.1
+  },
+  "consultoria_rh": {
+   "recurso": 1.1,
+   "humano": 1.1
+  },
+  "curso_formacao_concurso": {
+   "recebimento": 1.1,
+   "auxilio": 1.95,
+   "municipal": 1.1,
+   "retorno": 1.1,
+   "cogep": 0.73,
+   "durante": 1.1,
+   "formacao": 1.95,
+   "remuneracao": 1.1
+  },
+  "pratico": {
+   "pratico": 2.85,
+   "praticante": 2.28
+  },
+  "presidente_entidade": {
+   "radio": 1.39,
+   "comunitaria": 1.39,
+   "observatorio": 1.39,
+   "social": 0.83
+  },
+  "sindico": {
+   "sindico": 2.95,
+   "condominio": 1.82,
+   "sindica": 1.1
+  },
+  "fora_ambito_cargo_publico": {
+   "superintendente": 1.39,
+   "habitacao": 1.1
+  },
+  "radialista": {
+   "radialista": 1.39
+  },
+  "cursos_publico_especifico": {
+   "coordenador": 1.04,
+   "despachante": 1.04,
+   "contadore": 1.04
+  },
+  "area_previdenciaria": {
+   "previdenciario": 1.29
+  },
+  "clube_futebol": {
+   "clube": 2.27,
+   "futebol": 2.37,
+   "deliberativo": 1.61,
+   "membro": 1.04
+  },
+  "direcao_associacao": {
+   "associacao": 1.84,
+   "sindical": 1.39,
+   "comodoro": 1.39,
+   "iate": 1.39
+  },
+  "investimentos": {
+   "planejamento": 1.61,
+   "financeiro": 1.07,
+   "investimento": 1.3,
+   "valore": 1.39,
+   "agente": 1.61,
+   "autonomo": 1.61,
+   "financa": 1.1
+  },
+  "eireli": {
+   "pianista": 1.95,
+   "eireli": 1.07,
+   "cessao": 1.39,
+   "autorai": 1.39
+  },
+  "perito_judicial": {
+   "perito": 2.2,
+   "judicial": 1.32,
+   "contabil": 1.1,
+   "calculista": 1.39,
+   "causa": 1.39,
+   "judiciai": 1.39,
+   "trib": 1.1,
+   "prev": 1.1
+  },
+  "leilao": {
+   "leilao": 2.2,
+   "participacao": 1.67
+  },
+  "palestras": {
+   "palestra": 1.46,
+   "tributaria": 1.1
+  },
+  "organismo_internacional": {
+   "organizacao": 1.39,
+   "mundial": 1.39,
+   "aduana": 1.39
+  },
+  "nutricionista": {
+   "nutricionista": 1.39
+  },
+  "motorista_aplicativo": {
+   "motorista": 1.79,
+   "uber": 1.79,
+   "taxi": 1.1
+  },
+  "modelo_publicitario": {
+   "modelo": 1.61
+  },
+  "milhas_aereas": {
+   "milha": 1.39,
+   "aerea": 1.39,
+   "aquisicao": 1.1
+  },
+  "mestrado": {
+   "mestrado": 1.39
+  },
+  "medicina": {
+   "medica": 1.39,
+   "veterinaria": 1.95,
+   "medico": 1.39,
+   "medicina": 2.08,
+   "dentista": 1.79
+  },
+  "mediador_conciliador": {
+   "mediacao": 1.29,
+   "mediador": 2.67,
+   "remunerado": 1.39,
+   "conciliacao": 1.39,
+   "arbitragem": 1.39,
+   "conciliador": 2,
+   "juiz": 1.95,
+   "tribunal": 2.08,
+   "justica": 2.08,
+   "leigo": 1.1,
+   "juizado": 0.73,
+   "especiai": 1.1
+  },
+  "marketing": {
+   "marketing": 1.95,
+   "multinivel": 1.39,
+   "publicidade": 0.73
+  },
+  "inventariante": {
+   "inventariante": 1.61
+  },
+  "locacao_imovel_conjuge": {
+   "comercial": 1.39,
+   "inquilino": 1.39
+  },
+  "fotografia": {
+   "fotografia": 1.04
+  },
+  "filiacao_partidaria": {
+   "filiacao": 1.39
+  },
+  "filantropia": {
+   "entidade": 0.73,
+   "solicitacao": 0.73,
+   "documento": 0.73,
+   "secretaria": 1.39,
+   "filantropia": 1.1,
+   "diretora": 1.1,
+   "centro": 1.1,
+   "espirita": 1.1
+  },
+  "atividade_rural": {
+   "produtor": 0.73,
+   "rural": 1.82,
+   "fazenda": 1.39,
+   "sitio": 1.1
+  },
+  "esoterismo": {
+   "esoterismo": 1.39
+  },
+  "engenheiro": {
+   "engenheiro": 1.95,
+   "civil": 1.04,
+   "engenharia": 1.17
+  },
+  "empresa_privada": {
+   "gerencia": 0.73,
+   "sociedade": 1.07
+  },
+  "declaracao_irpf": {
+   "elaboracao": 1.39,
+   "dirpf": 1.39
+  },
+  "educador_financeiro": {
+   "educador": 1.1,
+   "rede": 0.73,
+   "sociai": 1.1
+  },
+  "economista": {
+   "economista": 1.39
+  },
+  "cooperativa_credito": {
+   "cooperativa": 1.39,
+   "credito": 1.39
+  },
+  "designer_interiores": {
+   "designer": 1.39,
+   "interiore": 1.61
+  },
+  "software": {
+   "desenvolvimento": 1.32,
+   "diversa": 0.73,
+   "emprego": 1.1,
+   "website": 1.1,
+   "criacao": 0.83,
+   "site": 1.07
+  },
+  "artes_plasticas_ilustracao": {
+   "desenhista": 1.04,
+   "arte": 1.29,
+   "plastica": 1.29
+  },
+  "nepotismo_conjuges": {
+   "delegado": 1.39,
+   "esposa": 1.1
+  },
+  "corretor_imoveis": {
+   "corretor": 2.2,
+   "imovei": 1.76
+  },
+  "contador_historias_meditacao": {
+   "contador": 1.39,
+   "historia": 1.04,
+   "meditacao": 1.39
+  },
+  "consultoria_organismo_internacional": {
+   "estudo": 1.1,
+   "consultor": 1.1
+  },
+  "conselho_fiscal_sem_fins_lucrativos": {
+   "fiscal": 2.02,
+   "fundacao": 1.39
+  },
+  "comercio": {
+   "revendedora": 1.61,
+   "herbalife": 1.1,
+   "produto": 1.61,
+   "emagrecer": 1.1,
+   "mary": 1.1,
+   "beleza": 1.1,
+   "confeccao": 1.1,
+   "bijouteria": 1.1
+  },
+  "coaching": {
+   "coaching": 2.66,
+   "coach": 1.61,
+   "concurso": 1.29
+  },
+  "tecnico_esportivo": {
+   "rugby": 1.39
+  },
+  "instrutor_aviacao": {
+   "aviacao": 1.04
+  },
+  "controle_dopagem": {
+   "dopagem": 1.39,
+   "autoridade": 1.1,
+   "brasileira": 1.1,
+   "controle": 1.1
+  },
+  "ator_audiovisual": {
+   "ator": 1.61,
+   "audiovisual": 1.1
+  },
+  "assessoria_nacionalidade_estrangeira": {
+   "consulado": 1.39,
+   "portugal": 1.1
+  },
+  "administracao_bens_proprios": {
+   "bens": 1.1,
+   "proprio": 1.1
+  }
+ }
+}

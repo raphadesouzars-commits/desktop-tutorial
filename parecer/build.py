@@ -43,6 +43,8 @@ def main():
     prec = json.loads((AQUI / "precedentes_cgu.json").read_text(encoding="utf8"))
     html = html.replace('/*__PRECEDENTES__*/{"itens":[]}',
                         json.dumps(prec, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+    voc = AQUI / "vocabulario_coger.json"
+    html = html.replace("/*__VOCAB__*/{}", json.dumps(json.loads(voc.read_text(encoding="utf8"))["termos"], ensure_ascii=False, separators=(",", ":")) if voc.exists() else "{}")
     kb = (AQUI / "kb_local.json")
     html = html.replace('/*__KB__*/{}', json.dumps(json.loads(kb.read_text(encoding="utf8")), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") if kb.exists() else "{}")
     ocr = AQUI / "vendor" / "ocr"
