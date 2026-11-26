@@ -163,7 +163,7 @@ Não representam o acervo completo nem o uso de IA/embeddings; o dimensionamento
 1a. O AICI não controla onde o usuário cola o prompt (risco de uso de serviço não homologado).
 1b. O modo local (sem motor) tem o acervo embutido (instruções, regras, trechos de normativos, precedentes da CGU) e, se o usuário **conectar a pasta sincronizada do SharePoint**, indexa a biblioteca no navegador (BM25 em JavaScript; índice em IndexedDB, que contém trechos dos pareceres, com dados pessoais). Não tem bloqueio técnico de revisão. O desempenho com as centenas de PDFs reais **não foi medido**.
 2. Nenhum modelo real de embeddings foi avaliado; a qualidade da busca semântica precisa ser medida.
-3. O OCR não foi testado.
+3. O OCR do **motor** (EasyOCR) não foi testado. O OCR do **gerador HTML** (tesseract.js, português, embutido) foi testado com um PDF real sem camada de texto (2 páginas, cerca de 10 s) e acerta os campos principais, mas qualquer OCR pode errar nomes e números: o gerador avisa para conferir.
 4. A acurácia da classificação e a precisão dos precedentes não foram medidas com casos reais.
 5. Sem autenticação por usuário nem perfis; sem criptografia em repouso.
 6. O acervo real (centenas de pareceres) ainda não foi carregado; a sincronização com o SharePoint é manual.

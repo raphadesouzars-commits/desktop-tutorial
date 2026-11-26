@@ -375,6 +375,7 @@ const LOGO_PADRAO = "/*__LOGO__*/";
 const LOGO_DIM = /*__LOGO_DIM__*/[1300,137];
 const PDFJS_GZ = "/*__PDFJS__*/", PDFW_GZ = "/*__PDFW__*/"; // leitor de PDF (pdf.js, Apache-2.0), compactado
 const PRECEDENTES = /*__PRECEDENTES__*/{"itens":[]};
+const OCR = {js: "/*__OCR_JS__*/", worker: "/*__OCR_WORKER__*/", core: "/*__OCR_CORE__*/", por: "/*__OCR_POR__*/"};   // leitor de OCR embutido (tesseract.js), usado só quando o PDF não tem texto
 const KB = /*__KB__*/{}; // instruções à IA, regras da COGER e normativos para o prompt do Copilot Chat (modo local)
 
 // Perguntas do formulário SeCI (redação transcrita nos pareceres de 2021 e 2022)
@@ -584,7 +585,7 @@ function extrairDados(texto){
   if (ic >= 0){
     const c = cab.slice(ic, ic + 400).replace(/\s+/g," ");
     if (/auditor/.test(c)){ $("cargoSel").value = "AFRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
-    else if (/analista.{0,3}tribut/.test(c)){ $("cargoSel").value = "ATRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
+    else if (/analista/.test(c) && /tribut/.test(c)){ $("cargoSel").value = "ATRFB"; achados.push("cargo"); $("cargoSel").onchange(); }
   }
   const pr = texto.match(/Protocolo\s*:\s*(\d{5}\.\d{6}\/\d{4}-\d{2})/i);
   if (pr) por("protocoloSeci", pr[1], "protocolo SeCI");
@@ -654,6 +655,38 @@ async function textoPdf(buf){
   }
   return out.join("\n");
 }
+/* ---------- OCR (PDF sem camada de texto: texto desenhado como imagem ou vetor) ---------- */
+let ocrWorker = null;
+async function ocrCarregar(msg){
+  if (ocrWorker) return ocrWorker;
+  if (!OCR.por || OCR.por.startsWith("/*")) throw new Error("esta versão do gerador não traz o leitor de OCR");
+  msg("Preparando o leitor de OCR (primeira vez nesta sessão)…");
+  const gunzipTxt = async b64 => new TextDecoder().decode(await new Response(new Blob([b64bytes(b64)]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer());
+  const jsUrl = await gunzipB64(OCR.js, "text/javascript");
+  const coreTxt = await gunzipTxt(OCR.core), workerTxt = await gunzipTxt(OCR.worker);
+  await new Promise((ok, no) => { const sc = document.createElement("script"); sc.src = jsUrl; sc.onload = ok; sc.onerror = () => no(new Error("falha ao carregar o OCR")); document.head.appendChild(sc); });
+  // o worker roda a partir de um blob (origem "null" no arquivo local): o núcleo do OCR vai dentro dele e o importScripts dele vira um "já carregado"
+  const prelude = coreTxt + "\n;const __POR__=Uint8Array.from(atob(" + JSON.stringify(OCR.por) + "),c=>c.charCodeAt(0));\n"
+    + "const __iS=self.importScripts.bind(self);self.importScripts=function(){var a=[].filter.call(arguments,function(x){return !/tesseract-core.*\\.wasm\\.js$/.test(x);});return a.length?__iS.apply(null,a):undefined;};\n"
+    + "const __fe=self.fetch.bind(self);self.fetch=function(u,o){return /\\.traineddata(\\.gz)?$/.test(String(u))?Promise.resolve(new Response(__POR__,{status:200})):__fe(u,o);};\n";
+  const workerUrl = URL.createObjectURL(new Blob([prelude + workerTxt], {type: "text/javascript"}));
+  ocrWorker = await window.Tesseract.createWorker("por", 1, {workerPath: workerUrl, workerBlobURL: false, corePath: "https://ocr.local/core", langPath: "https://ocr.local/lang", cacheMethod: "none", gzip: true});
+  await ocrWorker.setParameters({tessedit_pageseg_mode: "3", preserve_interword_spaces: "1"});   // segmentação automática: o padrão (bloco único) perde respostas curtas como "Não" e "Sim" nas caixas do formulário
+  return ocrWorker;
+}
+async function ocrPdf(buf, msg){
+  const w = await ocrCarregar(msg), lib = await carregarPdfjs();
+  const doc = await lib.getDocument({data: buf, isEvalSupported: false}).promise, out = [];
+  for (let n = 1; n <= doc.numPages; n++){
+    msg(`OCR: lendo a página ${n} de ${doc.numPages} (pode levar de 10 a 40 segundos por página)…`);
+    const pg = await doc.getPage(n), vp = pg.getViewport({scale: 3}), cv = document.createElement("canvas");
+    cv.width = Math.round(vp.width); cv.height = Math.round(vp.height);
+    const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+    await pg.render({canvasContext: cx, viewport: vp}).promise;
+    const r = await w.recognize(cv); out.push(r.data.text);
+  }
+  return out.join("\n");
+}
 async function arquivoDoZip(buf, nome){
   const dv = new DataView(buf), u8 = new Uint8Array(buf);
   let e = buf.byteLength - 22; while (e >= 0 && dv.getUint32(e, true) !== 0x06054b50) e--;
@@ -680,7 +713,16 @@ async function lerArquivo(f){
   info.textContent = "Lendo " + f.name + "…";
   try {
     let t;
-    if (ext === "pdf" || f.type === "application/pdf") t = await textoPdf(await f.arrayBuffer());
+    let porOcr = false;
+    if (ext === "pdf" || f.type === "application/pdf"){
+      const buf = await f.arrayBuffer();
+      t = await textoPdf(buf.slice(0));
+      if (t.replace(/\s/g, "").length < 40){
+        info.textContent = "O PDF não tem texto selecionável (o texto é imagem ou desenho). Lendo por OCR…";
+        try { t = await ocrPdf(buf.slice(0), m => { info.textContent = m; }); porOcr = true; }
+        catch(e){ throw new Error("o PDF não tem texto e o OCR não pôde ser usado (" + (e.message || e) + ")"); }
+      }
+    }
     else if (ext === "docx") t = textoXml(await arquivoDoZip(await f.arrayBuffer(), "word/document.xml"), "</w:p>");
     else if (ext === "odt") t = textoXml(await arquivoDoZip(await f.arrayBuffer(), "content.xml"), "</text:(p|h)>");
     else if (ext === "txt" || f.type.startsWith("text/")) t = await f.text();
@@ -699,7 +741,7 @@ async function lerArquivo(f){
     for (const k in CAMPO_DE_PERGUNTA) delete valoresCampos[k];
     const ach = extrairDados(bruto);
     identificar();
-    const extra = ach.length ? " Dados preenchidos a partir do arquivo: " + ach.join(", ") + "." : " Nenhum dado de identificação (nome, matrícula, cargo, unidade) foi localizado no arquivo.";
+    const extra = (porOcr ? " ATENÇÃO: o texto foi lido por OCR e pode ter erros; confira nome, matrícula, protocolo e as respostas." : "") + (ach.length ? " Dados preenchidos a partir do arquivo: " + ach.join(", ") + "." : " Nenhum dado de identificação (nome, matrícula, cargo, unidade) foi localizado no arquivo.");
     info.textContent = (n ? `${f.name}: ${n} pergunta(s) do formulário reconhecida(s) e preenchida(s) no passo 3. Confira as respostas.`
                          : `${f.name}: texto lido, mas as perguntas do SeCI não foram reconhecidas; o conteúdo foi colocado na pergunta 2. Confira no passo 3.`) + extra;
   } catch (e){ info.textContent = "Não foi possível ler " + f.name + ": " + (e.message || e); }

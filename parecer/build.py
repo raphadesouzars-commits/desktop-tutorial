@@ -4,6 +4,7 @@
    parecer/modelos/*.json (um arquivo por atividade)
    parecer/cabecalho.jpg  (imagem do cabeçalho do parecer)
    parecer/vendor/pdf*.js (pdf.js 3.11.174, para ler o formulário em PDF sem internet)
+   parecer/vendor/ocr/* (tesseract.js 7 + dados do português, para PDF sem camada de texto)
    parecer/precedentes_cgu.json (ementas da CGU; atualize com atualizar_precedentes.py)
    parecer/kb_local.json (instruções, regras e normativos para o prompt do Copilot Chat; gerar_kb_local.py)
 Uso:  python3 parecer/build.py
@@ -44,6 +45,11 @@ def main():
                         json.dumps(prec, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
     kb = (AQUI / "kb_local.json")
     html = html.replace('/*__KB__*/{}', json.dumps(json.loads(kb.read_text(encoding="utf8")), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/") if kb.exists() else "{}")
+    ocr = AQUI / "vendor" / "ocr"
+    if (ocr / "por.traineddata.gz").exists():     # OCR offline (tesseract.js, Apache-2.0): lê PDF cujo texto é imagem ou desenho
+        for marca, arq in (("/*__OCR_JS__*/", "tesseract.min.js"), ("/*__OCR_WORKER__*/", "worker.min.js"), ("/*__OCR_CORE__*/", "tesseract-core-simd-lstm.wasm.js")):
+            html = html.replace(marca, base64.b64encode(gzip.compress((ocr / arq).read_bytes(), 9, mtime=0)).decode())
+        html = html.replace("/*__OCR_POR__*/", base64.b64encode((ocr / "por.traineddata.gz").read_bytes()).decode())
     for marca, arq in (("/*__PDFJS__*/", "pdf.min.js"), ("/*__PDFW__*/", "pdf.worker.min.js")):
         gz = gzip.compress((AQUI / "vendor" / arq).read_bytes(), 9, mtime=0)
         html = html.replace(marca, base64.b64encode(gz).decode())

@@ -56,6 +56,9 @@ No modo local, o prompt leva o caso (sem CPF, matrícula, telefone, e-mail e nom
 ### 3.0c Pedido com várias atividades: conclusão por atividade
 Quando a pergunta 2 do SeCI lista atividades (a, b, c...), o gerador mostra, no passo 2, **"Conclusão por atividade do pedido"**. Cada atividade ganha a sua conclusão no parecer: *sem conflito*, *sem conflito com ressalvas*, *risco relevante*, *impedimento de outra ordem* (com o fundamento) ou *não analisada neste parecer*. As sugestões vêm do modelo (no caso do modelo de conteúdo digital, por exemplo, o afiliado em plataforma digital vem como impedimento por exercício do comércio, e o canal e os cursos como autorizáveis com ressalvas). **Confira cada uma.** O Termo de Compromisso e o parágrafo de autorização passam a citar só as atividades autorizadas. Se preferir uma conclusão única, desmarque "Tratar cada atividade na conclusão".
 
+### 3.0d PDF sem texto (OCR automático)
+Alguns PDFs, como a **impressão da solicitação** emitida pelo SeCI/SERPRO, não têm texto selecionável (o texto é desenho). O gerador percebe isso e faz **OCR** sozinho, em português, no seu navegador e sem internet: aparece "OCR: lendo a página 1 de 2…" (cerca de 10 a 40 segundos por página; a primeira leitura da sessão demora um pouco mais). Os dados e as respostas são preenchidos e a tela avisa: **"o texto foi lido por OCR e pode ter erros; confira nome, matrícula, protocolo e as respostas"**. Confira sempre.
+
 > Nos itens 3.1 a 3.5 a seguir, descreve-se o **modo Motor AICI (avançado)**.
 
 ### 3.1 Ligar o motor
@@ -69,7 +72,7 @@ O motor é ligado pela TI (ou por você, na estação de piloto, com `python mai
    - **Compromissos e ressalvas sugeridos**;
    - **Pareceres, precedentes e normativos semelhantes**, cada um com o arquivo de origem e o **motivo** da semelhança;
    - **Minuta**, com a **origem** de cada parágrafo.
-3. Se o PDF for digitalizado e o OCR não estiver instalado, aparece o aviso "PDF sem texto legível": use o gerador (aba 1) e digite os dados.
+3. Se o PDF for digitalizado e o OCR não estiver instalado, aparece o aviso "PDF sem texto legível": use o gerador (aba 1) e digite os dados. (No **modo local do gerador**, o OCR já vem embutido: veja o item 3.0.)
 
 ### 3.3 Etapa 2 - Validação humana
 1. Em **Atividade (enquadramento)**, confira a sugestão e a confiança (alta, média ou baixa). Se estiver errada, escolha outra na lista: a minuta é refeita.

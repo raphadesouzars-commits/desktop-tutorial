@@ -36,10 +36,11 @@ Os testes usam arquivos temporários e dados **sintéticos** (formulário SeCI f
 | **Modo local** (sem motor) no Chromium: análise do PDF, fatos, atividade, prompt (7.500 caracteres, sem vazamento de nome, CPF ou matrícula), resposta com fonte válida e fonte inventada (a inventada descartada), nome do servidor reposto no texto, aviso na conferência, Word gerado, remoção e nova análise | Sem erros |
 | **Biblioteca conectada no modo local** (pasta sintética com PDF, DOCX, TXT; `_Duplicados_Revisar` e `05_Projeto_AICI` ignoradas): indexação, pareceres/precedentes na tela, trechos no prompt como [A1] com fonte, nome de outro servidor mascarado, índice mantido após recarregar a página | Sem erros |
 | **Etapa 1 do Copilot no modo local:** prompt (≈ 6.000 caracteres, com a lista de categorias, sem identificadores), resposta com atividade válida, categoria inventada descartada, inciso inexistente descartado, termos que elevam um parecer da 3ª para a 1ª posição (6,3 -> 22,2), incisos marcados no parecer, entendimento levado ao prompt da etapa 2, termos editáveis, descarte do entendimento | Sem erros |
+| **OCR no gerador HTML:** PDF real sem texto selecionável (impressão do SeCI/SERPRO, texto em vetor, 2 páginas): lido em cerca de 10 s; nome, matrícula, protocolo, tipo, cargo (Analista-Tributário) e respostas 1 a 10 corretos, após ajustar a segmentação da página (o modo padrão perdia respostas curtas como "Não") | Sem erros |
 | Formulário real do SeCI (um exemplar): extração de servidor, cargo, matrícula, protocolo, respostas 1 a 10; classificação "conteúdo digital" | Correta |
 | Word do motor convertido em PDF e conferido visualmente (cabeçalho, ementa, parágrafos numerados, deveres, conclusão, assinaturas, campos pendentes em amarelo) | Aderente ao padrão |
 | Medições de tempo (base de 189 trechos, sem IA): leitura 0,02-0,03 s; análise 0,01-0,25 s; Word cerca de 0,1 s | Registradas (não representam o acervo real) |
 
 ## Lacunas de teste
 
-Copilot Chat real (motor e modo local); modo local sem teste automatizado (só verificação no navegador); modelos de embeddings reais; OCR; carga com o acervo completo; Windows e Edge; segurança (varredura e intrusão); acurácia com casos reais (piloto).
+Copilot Chat real (motor e modo local); modo local sem teste automatizado (só verificação no navegador); modelos de embeddings reais; OCR do motor (EasyOCR) e OCR do gerador com outros tipos de PDF (digitalizado em baixa resolução, torto); carga com o acervo completo; Windows e Edge; segurança (varredura e intrusão); acurácia com casos reais (piloto).
